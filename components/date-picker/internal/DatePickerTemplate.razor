@@ -58,7 +58,7 @@
                                 @onmouseenter="e => DateOnMouseEnter(currentColDate)"
                                 @onmouseleave="e => DateOnMouseLeave()">
                                 <div class="@innerCellCls"
-                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
+                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)" @onclick:stopPropagation="true">
                                     @if (IsCalendar)
                                     {
                                         <div class="@(PrefixCls)-calendar-date-value">

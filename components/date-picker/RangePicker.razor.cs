@@ -80,6 +80,7 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
+            _duringFocus = false;
             if (_duringManualInput)
             {
                 return;
@@ -275,8 +276,10 @@ namespace AntDesign
             return true;
         }
 
+
         private async Task OnFocus(int index)
         {
+            _duringFocus = true;
             if (index == 0)
             {
                 if (!_inputStart.IsOnFocused)
@@ -296,10 +299,22 @@ namespace AntDesign
             AutoFocus = true;
         }
 
-        protected override Task OnBlur(int index)
+        protected override async Task OnBlur(int index)
         {
+            //Await for Focus event - if it is going to happen, it will be 
+            //right after OnBlur. Best way to achieve that is to wait. 
+            //Task.Yield() does not work here.
+            await Task.Delay(1);
+            if (_duringFocus)
+            {
+                _duringFocus = false;
+                _shouldRender = false;
+                return;
+            }
             if (_openingOverlay)
-                return Task.CompletedTask;
+            {
+                return;
+            }
 
             if (_duringManualInput)
             {
@@ -319,7 +334,7 @@ namespace AntDesign
                 _duringManualInput = false;
             }
             AutoFocus = false;
-            return Task.CompletedTask;
+            return;
         }
 
         protected override void OnInitialized()
