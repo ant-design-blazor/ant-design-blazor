@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -36,7 +37,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        internal int SpaceItemCount => _items.Count;
+        internal int SpaceItemMaxIndex => _items.Max(x => x.Index);
 
         private IList<SpaceItem> _items = new List<SpaceItem>();
 
@@ -68,6 +69,15 @@ namespace AntDesign
             _items.Add(item);
             item.SetIndex(_items.Count - 1);
             _items.ForEach(x => x.ChangeSize());
+        }
+
+        internal void RemoveSpaceItem(SpaceItem item)
+        {
+            if (_items.Contains(item))
+            {
+                _items.Remove(item);
+                _items.ForEach(x => x.ChangeSize());
+            }
         }
     }
 }

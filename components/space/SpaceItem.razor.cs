@@ -12,6 +12,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        [Parameter]
+        public int Index { get => _index ?? 0; set => _index = value; }
+
         private static readonly Dictionary<string, string> _spaceSize = new()
         {
             ["small"] = "8",
@@ -20,7 +23,7 @@ namespace AntDesign
         };
 
         private string _marginStyle = "";
-        private int _index;
+        private int? _index;
 
         protected override void OnInitialized()
         {
@@ -31,7 +34,13 @@ namespace AntDesign
             ClassMapper.Add("ant-space-item");
         }
 
-        internal void SetIndex(int index) => _index = index;
+        internal void SetIndex(int index)
+        {
+            if (_index == null)
+            {
+                _index = index;
+            }
+        }
 
         internal void ChangeSize()
         {
@@ -40,11 +49,11 @@ namespace AntDesign
 
             size.Switch(sigleSize =>
             {
-                _marginStyle = direction == DirectionVHType.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{GetSize(sigleSize)};" : "") : $"margin-bottom:{GetSize(sigleSize)};";
+                _marginStyle = direction == DirectionVHType.Horizontal ? (_index != Parent.SpaceItemMaxIndex ? $"margin-right:{GetSize(sigleSize)};" : "") : $"margin-bottom:{GetSize(sigleSize)};";
             },
             arraySize =>
             {
-                _marginStyle = (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{GetSize(arraySize.Item1)};" : "") + $"margin-bottom:{GetSize(arraySize.Item2)};";
+                _marginStyle = (_index != Parent.SpaceItemMaxIndex ? $"margin-right:{GetSize(arraySize.Item1)};" : "") + $"margin-bottom:{GetSize(arraySize.Item2)};";
             });
         }
 
@@ -57,6 +66,12 @@ namespace AntDesign
             }
 
             return originalSize;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Parent?.RemoveSpaceItem(this);
+            base.Dispose(disposing);
         }
     }
 }

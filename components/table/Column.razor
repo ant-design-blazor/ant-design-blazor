@@ -233,7 +233,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                     </div>
                                 }
                                 <Space Style="width:100%">
-                                    <SpaceItem Style="@((noInput && filterCount == 1 ? "margin-right:0 !important;" : "") + "flex:auto")">
+                                    <SpaceItem Style="flex:auto" Index="0">
                                         <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width:100%;overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
                                             <SelectOptions>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
@@ -259,12 +259,15 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                             </SelectOptions>
                                         </Select>
                                     </SpaceItem>
-                                    <SpaceItem Style="@(noInput || filterCount == 1 ? "margin-right:0 !important" : null)">
-                                        @col.FilterInput(col, filter)
-                                    </SpaceItem>
+                                    @if (!noInput)
+                                    {
+                                        <SpaceItem Index="1">
+                                            @col.FilterInput(col, filter)
+                                        </SpaceItem>
+                                    }
                                     @if (filterCount > 1)
                                     {
-                                        <SpaceItem>
+                                        <SpaceItem Index="2">
                                             <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
                                             </Button>
                                         </SpaceItem>
@@ -313,8 +316,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 
     readonly Func<Column<TData>, TableFilter, RenderFragment> FilterInput = (col, filter) =>
     @<Template>
-        @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull) { }
-        else if (col._columnDataType == typeof(DateTime))
+        @if (col._columnDataType == typeof(DateTime))
         {
             <DatePicker Value="(DateTime?)filter.Value" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter, value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
         }
