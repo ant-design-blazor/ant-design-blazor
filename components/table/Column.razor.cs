@@ -75,16 +75,34 @@ namespace AntDesign
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
+        private bool _filterable;
+
+        private bool _hasFilterableAttribute;
+
         [Parameter]
-        public bool Filterable { get; set; }
+        public bool Filterable
+        {
+            get => _filterable;
+            set
+            {
+                _filterable = value;
+                _hasFilterableAttribute = true;
+            }
+        }
 
         public IEnumerable<TableFilter> _filters;
+
+        private bool _hasFiltersAttribute;
 
         [Parameter]
         public IEnumerable<TableFilter<TData>> Filters
         {
             get => _filters as IEnumerable<TableFilter<TData>>;
-            set => _filters = value;
+            set
+            {
+                _filters = value;
+                _hasFiltersAttribute = true;
+            }
         }
 
         [Parameter]
@@ -189,39 +207,54 @@ namespace AntDesign
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
 
-            if (_filters?.Any() == true)
+            if (IsHeader)
             {
-                Filterable = true;
-                _columnFilterType = TableFilterType.List;
-            }
-            else if (Filterable)
-            {
-                _columnDataType = THelper.GetUnderlyingType<TData>();
-                if (_columnDataType == typeof(bool))
+                if (_hasFiltersAttribute)
                 {
+                    if (!_hasFilterableAttribute) Filterable = true;
                     _columnFilterType = TableFilterType.List;
-
-                    _filters = new List<TableFilter>();
-
-                    var trueFilterOption = GetNewFilter();
-                    trueFilterOption.Text = Table.Locale.FilterOptions.True;
-                    trueFilterOption.Value = true;
-                    ((List<TableFilter>)_filters).Add(trueFilterOption);
-                    var falseFilterOption = GetNewFilter();
-                    falseFilterOption.Text = Table.Locale.FilterOptions.False;
-                    falseFilterOption.Value = false;
-                    ((List<TableFilter>)_filters).Add(falseFilterOption);
                 }
-                else
+                else if (_hasFilterableAttribute)
                 {
-                    _columnFilterType = TableFilterType.FieldType;
-                    InitFilters();
+                    _columnDataType = THelper.GetUnderlyingType<TData>();
+                    if (_columnDataType == typeof(bool))
+                    {
+                        _columnFilterType = TableFilterType.List;
+
+                        _filters = new List<TableFilter>();
+
+                        var trueFilterOption = GetNewFilter();
+                        trueFilterOption.Text = Table.Locale.FilterOptions.True;
+                        trueFilterOption.Value = true;
+                        ((List<TableFilter>)_filters).Add(trueFilterOption);
+                        var falseFilterOption = GetNewFilter();
+                        falseFilterOption.Text = Table.Locale.FilterOptions.False;
+                        falseFilterOption.Value = false;
+                        ((List<TableFilter>)_filters).Add(falseFilterOption);
+                    }
+                    else
+                    {
+                        _columnFilterType = TableFilterType.FieldType;
+                        InitFilters();
+                    }
                 }
             }
 
             ClassMapper
                .If("ant-table-column-has-sorters", () => Sortable)
                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (IsHeader)
+            {
+                FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
+                    new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
+                    null;
+            }
         }
 
         private string NumberFormatter(object value)
