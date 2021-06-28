@@ -55,7 +55,9 @@ namespace AntDesign
                     PropertyNameCaseInsensitive = true,
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-                return JsonSerializer.Deserialize<Locale>(content, serializerOptions);
+                var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
+                result.LocaleName = cultureName;
+                return result;
             });
         }
 
