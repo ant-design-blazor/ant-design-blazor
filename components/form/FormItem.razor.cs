@@ -241,7 +241,6 @@ namespace AntDesign
             {
                 _labelCls = $"{_prefixCls}-required";
             }
-            //  add. 如果没有设置Label参数，则尝试使用绑定字段的DisplayName
             if (_propertyReflector.DisplayName != null)
             {
                 Label ??= _propertyReflector.DisplayName;
