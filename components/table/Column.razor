@@ -233,7 +233,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                     </div>
                                 }
                                 <Space Style="width:100%">
-                                    <SpaceItem Style="flex:auto" Index="0">
+                                    <SpaceItem Style="flex:auto">
                                         <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width:100%;overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
                                             <SelectOptions>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
@@ -261,13 +261,13 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                     </SpaceItem>
                                     @if (!noInput)
                                     {
-                                        <SpaceItem Index="1">
+                                        <SpaceItem>
                                             @col.FilterInput(col, filter)
                                         </SpaceItem>
                                     }
                                     @if (filterCount > 1)
                                     {
-                                        <SpaceItem Index="2">
+                                        <SpaceItem>
                                             <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
                                             </Button>
                                         </SpaceItem>
