@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Datepicker.Locale;
@@ -574,6 +575,23 @@ namespace AntDesign
             _placeholders[index] = placeholder;
 
             StateHasChanged();
+        }
+
+        private int _htmlInputSize;
+        protected int HtmlInputSize
+        {
+            get
+            {
+                if (_htmlInputSize == 0)
+                {
+                    _htmlInputSize = InternalFormat.Length + (int)(InternalFormat.Count(ch => ch > 127) * 1.34) + 2;
+                    if (_htmlInputSize < 12)
+                    {
+                        _htmlInputSize = 12;
+                    }
+                }
+                return _htmlInputSize;
+            }
         }
 
         private string _internalFormat;
