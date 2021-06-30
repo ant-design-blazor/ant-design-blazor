@@ -2,13 +2,13 @@
 @inherits AntDomComponentBase
 
 @{ ChangeSize(); }
-<div class="@ClassMapper.Class" style="@Style @_marginStyle" @ref="Ref" id="@Id">
-    @ChildContent
-</div>
-
-@if (Parent?.Split != null && _index != Parent.SpaceItemCount - 1)
+@if (Parent?.Split != null && _index != 0)
 {
     <span class="ant-space-item-split" style="margin-right: 4px;">
         @Parent.Split
     </span>
 }
+
+<div class="@ClassMapper.Class" style="@Style @_marginStyle" @ref="Ref" id="@Id">
+    @ChildContent
+</div>
