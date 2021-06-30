@@ -584,7 +584,7 @@ namespace AntDesign
             {
                 if (_htmlInputSize == 0)
                 {
-                    _htmlInputSize = InternalFormat.Length + (int)(InternalFormat.Count(ch => ch > 127) * 1.5) + 2;
+                    _htmlInputSize = InternalFormat.Length + (int)(InternalFormat.Count(ch => ch > 127) * 1.34) + 2;
                     if (_htmlInputSize < 12)
                     {
                         _htmlInputSize = 12;
