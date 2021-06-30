@@ -879,7 +879,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task ElementScrollIntoViewAsync(ElementReference element)
         {
-            await JsInvokeAsync(JSInteropConstants.ElementScrollIntoView, element);
+            await JsInvokeAsync(JSInteropConstants.ScrollTo, element);
         }
 
         /// <summary>

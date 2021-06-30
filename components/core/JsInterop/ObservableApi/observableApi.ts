@@ -1,3 +1,1 @@
-﻿import * as resize from './resizeObserver';
-
-export { resize };
+﻿export { resizeObserver as resize } from './resizeObserver';
