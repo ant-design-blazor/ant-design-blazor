@@ -57,6 +57,7 @@
                                  ShowSuffixIcon="false"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
+                                 HtmlInputSize="@HtmlInputSize"
                                  OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-range-separator">
@@ -81,6 +82,7 @@
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
+                                 HtmlInputSize="@HtmlInputSize"
                                  OnClickClear="e => ClearValue(-1)" />
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
             </div>
