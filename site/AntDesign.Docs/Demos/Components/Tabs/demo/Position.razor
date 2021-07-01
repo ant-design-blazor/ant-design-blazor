@@ -6,21 +6,18 @@
         <Radio RadioButton Value="@TabPosition.Bottom">Bottom</Radio>
     </RadioGroup>
     <Tabs DefaultActiveKey="1" TabPosition="@position">
-        <TabPane Key="1">
-            <Tab>Tab 1</Tab>
-            <ChildContent>Content of Tab Pane 1</ChildContent>
+        <TabPane Key="1" Tab="Tab 1">
+            Content of Tab Pane 1
         </TabPane>
-        <TabPane Key="2">
-            <Tab>Tab 2</Tab>
-            <ChildContent>Content of Tab Pane 2</ChildContent>
+        <TabPane Key="2" Tab="Tab 2">
+            Content of Tab Pane 2
         </TabPane>
-        <TabPane Key="3">
-            <Tab>Tab 3</Tab>
-            <ChildContent>Content of Tab Pane 3</ChildContent>
+        <TabPane Key="3" Tab="Tab 3">
+            Content of Tab Pane 3
         </TabPane>
     </Tabs>
 </div>
 
-@code{
+@code {
     private string position = TabPosition.Top;
 }
