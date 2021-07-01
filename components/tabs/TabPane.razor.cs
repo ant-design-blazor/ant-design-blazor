@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -52,7 +56,10 @@ namespace AntDesign
         /// Show text in <see cref="TabPane"/>'s head
         /// </summary>
         [Parameter]
-        public RenderFragment Tab { get; set; }
+        public string Tab { get; set; }
+
+        [Parameter]
+        public RenderFragment TabTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }

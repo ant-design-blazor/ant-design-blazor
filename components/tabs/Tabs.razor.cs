@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -157,6 +161,13 @@ namespace AntDesign
         [Parameter]
         public Func<string, string, Task<bool>> OnEdit { get; set; } = (key, action) => Task.FromResult(true);
 
+        /// <summary>
+        /// Callback when tab is closed
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> OnClose { get; set; }
+
+
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
@@ -232,49 +243,6 @@ namespace AntDesign
             return base.SetParametersAsync(parameters);
         }
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
-            //if (Type == TabType.EditableCard && !HideAdd)
-            //{
-            //    TabBarExtraContent = (b) =>
-            //    {
-            //        b.OpenComponent<Icon>(0);
-            //        b.AddAttribute(1, "Type", "plus");
-            //        b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
-            //        b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
-            //        b.CloseComponent();
-            //    };
-            //}
-
-            //_barClassMapper.Clear()
-            //    .Add($"{PrefixCls}-bar")
-            //    .Add($"{PrefixCls}-{TabPosition}-bar")
-            //    .Add($"{PrefixCls}-{Type}-bar")
-            //    .If($"{PrefixCls}-{TabType.Card}-bar", () => Type == TabType.EditableCard)
-            //    .If($"{PrefixCls}-large-bar", () => Size == TabSize.Large)
-            //    .If($"{PrefixCls}-small-bar", () => Size == TabSize.Small);
-
-            //_prevClassMapper.Clear()
-            //    .Add($"{PrefixCls}-tab-prev")
-            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
-            //    .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
-
-            //_nextClassMapper.Clear()
-            //    .Add($"{PrefixCls}-tab-next")
-            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
-            //    .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
-
-            //_navClassMapper.Clear()
-            //    .Add($"{PrefixCls}-nav-container")
-            //    .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
-
-            //_navStyle = "transform: translate3d(0px, 0px, 0px);";
-            _inkStyle = "left: 0px; width: 0px;";
-            //_contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
-        }
-
         /// <summary>
         /// Add <see cref="TabPane"/> to <see cref="Tabs"/>
         /// </summary>
@@ -347,6 +315,12 @@ namespace AntDesign
                 }
 
                 _needRefresh = true;
+
+                if (OnClose.HasDelegate)
+                {
+                    await OnClose.InvokeAsync(pane.Key);
+                }
+
                 StateHasChanged();
             }
         }

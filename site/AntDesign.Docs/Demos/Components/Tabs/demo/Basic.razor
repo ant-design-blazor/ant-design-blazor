@@ -1,9 +1,8 @@
 ﻿<Tabs DefaultActiveKey="1" @bind-ActiveKey="@nKey" OnChange="OnTabChange">
     @foreach (var item in lstTabs)
     {
-        <TabPane Key="@item.KeyName">
-            <Tab>@item.TabName</Tab>
-            <ChildContent>@item.Content @nKey</ChildContent>
+        <TabPane Key="@item.KeyName" Tab="@item.TabName">
+            @item.Content @nKey
         </TabPane>
     }
 </Tabs>
