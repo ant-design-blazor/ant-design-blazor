@@ -42,6 +42,9 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
+        
+        [Parameter]
+        public bool DefaultExpandAllRows { get; set; }
 
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
