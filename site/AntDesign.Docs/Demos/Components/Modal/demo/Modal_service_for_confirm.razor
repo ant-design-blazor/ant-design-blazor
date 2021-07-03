@@ -1,8 +1,8 @@
 ﻿@inject ModalService ModalService
 
-<Input @bind-Value="@value" />
-<br />
-<br />
+<Input @bind-Value="@value"/>
+<br/>
+<br/>
 <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
 
@@ -14,77 +14,86 @@
 
     private async Task OpenComponent()
     {
-        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
+        RenderFragment content =@<div>value: @value <br/><Button OnClick="CloseModal">close</Button></div>;
 
-var options = new ConfirmOptions()
-{
-Title = "Confirm",
-Width = 350,
-Content = content,
-OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
-OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
-};
+        var options = new ConfirmOptions()
+        {
+            Title = "Confirm",
+            Width = 350,
+            Content = content,
+            OnOk = e =>
+            {
+                Console.WriteLine("OnOk");
+                return Task.CompletedTask;
+            },
+            OnCancel = e =>
+            {
+                Console.WriteLine("OnCancel");
+                return Task.CompletedTask;
+            }
+        };
 
-_confirmRef = await ModalService.CreateConfirmAsync(options);
+        _confirmRef = await ModalService.CreateConfirmAsync(options);
 
-_confirmRef.OnOk = () =>
-{
-Console.WriteLine("ConfirmRef OnOk");
-return Task.CompletedTask;
-};
+        _confirmRef.OnOk = () =>
+        {
+            Console.WriteLine("ConfirmRef OnOk");
+            return Task.CompletedTask;
+        };
 
-_confirmRef.OnOpen = () =>
-{
-Console.WriteLine("ConfirmRef OnOpen");
-return Task.CompletedTask;
-};
+        _confirmRef.OnOpen = () =>
+        {
+            Console.WriteLine("ConfirmRef OnOpen");
+            return Task.CompletedTask;
+        };
 
-_confirmRef.OnCancel = () =>
-{
-Console.WriteLine("ConfirmRef Confirm");
-return Task.CompletedTask;
-};
+        _confirmRef.OnCancel = () =>
+        {
+            Console.WriteLine("ConfirmRef Confirm");
+            return Task.CompletedTask;
+        };
 
-_confirmRef.OnClose = () =>
-{
-Console.WriteLine("ConfirmRef OnClose");
-return Task.CompletedTask;
-};
-}
+        _confirmRef.OnClose = () =>
+        {
+            Console.WriteLine("ConfirmRef OnClose");
+            return Task.CompletedTask;
+        };
+    }
 
-private async Task CloseModal()
-{
-if (_confirmRef != null)
-{
-await _confirmRef.CloseAsync();
-}
-}
+    private async Task CloseModal()
+    {
+        if (_confirmRef != null)
+        {
+            await _confirmRef.CloseAsync();
+        }
+    }
 
-private async Task OpenTemplate()
-{
-var options = new ConfirmOptions()
-{
-Title = "Component",
-};
+    private async Task OpenTemplate()
+    {
+        var options = new ConfirmOptions()
+        {
+            Title = "Component",
+        };
 
-var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
+        var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
 
-confirmRef.OnOpen = () =>
-{
-Console.WriteLine("Open Confirm");
-return Task.CompletedTask;
-};
+        confirmRef.OnOpen = () =>
+        {
+            Console.WriteLine("Open Confirm");
+            return Task.CompletedTask;
+        };
 
-confirmRef.OnClose = () =>
-{
-Console.WriteLine("Close Confirm");
-return Task.CompletedTask;
-};
+        confirmRef.OnClose = () =>
+        {
+            Console.WriteLine("Close Confirm");
+            return Task.CompletedTask;
+        };
 
-confirmRef.OnOk = (result) =>
-{
-Console.WriteLine($"OnOk:{result}");
-return Task.CompletedTask;
-};
-}
+        confirmRef.OnOk = (result) =>
+        {
+            Console.WriteLine($"OnOk:{result}");
+            return Task.CompletedTask;
+        };
+    }
+
 }
