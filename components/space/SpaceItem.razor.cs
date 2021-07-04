@@ -26,14 +26,16 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            Parent?.AddSpaceItem(this);
-
             ClassMapper.Add("ant-space-item");
         }
 
-        internal void SetIndex(int index) => _index = index;
+        protected override void OnParametersSet()
+        {
+            _index = Parent.SpaceItemCount++;
+            base.OnParametersSet();
+        }
 
-        internal void ChangeSize()
+        private void ChangeSize()
         {
             var size = Parent.Size;
             var direction = Parent.Direction;
