@@ -2,9 +2,31 @@
 
 @Render(Type, Attributes)
 
+@using System.Reflection
 @code {
+    static Assembly _antAssembly;
+
     [Parameter]
     public Type Type { get; set; }
+
+    [Parameter]
+    public string TypeName
+    {
+        set
+        {
+            if (Type != null) return;
+            _antAssembly ??= Assembly.GetExecutingAssembly();
+            Type componentType = 
+                _antAssembly.GetType($"AntDesign.{value}") ??
+                _antAssembly.GetType(value) ??
+                Type.GetType(value);
+            if (componentType == null)
+            {
+                throw new ArgumentException($"Not found the component with the name \"{value}\"", nameof(TypeName));
+            }
+            Type = componentType;
+        }
+    }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> Attributes { get; set; }
