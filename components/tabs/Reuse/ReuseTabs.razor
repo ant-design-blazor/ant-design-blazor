@@ -1,0 +1,14 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@CurrentUrl" OnClose="RemovePage">
+    @foreach (var item in Pages)
+    {
+        <TabPane @key="@item.Url" TabTemplate="@item.Title" Key="@item.Url" Class="@TabPaneClass" Closable ForceRender>
+            @if (Body != null)
+            {
+                @Body(item)
+            }
+        </TabPane>
+    }
+</Tabs>
