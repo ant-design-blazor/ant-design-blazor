@@ -1,0 +1,24 @@
+﻿@namespace AntDesign
+
+@Render(Type, Attributes)
+
+@code {
+    [Parameter]
+    public Type Type { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> Attributes { get; set; }
+
+    RenderFragment Render(Type componentType, Dictionary<string, object> attributes)
+    {
+        return builder =>
+        {
+            builder.OpenComponent(0, componentType);
+            if (attributes != null)
+            {
+                builder.AddMultipleAttributes(1, attributes);
+            }
+            builder.CloseComponent();
+        };
+    }
+}
