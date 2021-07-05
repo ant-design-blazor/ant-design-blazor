@@ -11,40 +11,40 @@ namespace AntDesign.Locales
 
         public CultureInfo CurrentCulture => new CultureInfo(LocaleName);
 
-        public PaginationLocale Pagination { get; set; }
+        public PaginationLocale Pagination { get; set; } = new();
 
-        public DatePickerLocale DatePicker { get; set; }
+        public DatePickerLocale DatePicker { get; set; } = new();
 
-        public TimePickerLocale TimePicker { get; set; }
+        public TimePickerLocale TimePicker { get; set; } = new();
 
-        public DatePickerLocale Calendar { get; set; }
+        public DatePickerLocale Calendar { get; set; } = new();
 
-        public TableLocale Table { get; set; }
+        public TableLocale Table { get; set; } = new();
 
-        public ModalLocale Modal { get; set; }
+        public ModalLocale Modal { get; set; } = new();
 
-        public ConfirmLocale Confirm { get; set; }
+        public ConfirmLocale Confirm { get; set; } = new();
 
-        public PopconfirmLocale Popconfirm { get; set; }
+        public PopconfirmLocale Popconfirm { get; set; } = new();
 
-        public TransferLocale Transfer { get; set; }
+        public TransferLocale Transfer { get; set; } = new();
 
-        public SelectLocale Select { get; set; }
+        public SelectLocale Select { get; set; } = new();
 
-        public UploadLocale Upload { get; set; }
+        public UploadLocale Upload { get; set; } = new();
 
-        public GlobalLocale Global { get; set; }
+        public GlobalLocale Global { get; set; } = new();
 
-        public PageHeaderLocale PageHeader { get; set; }
+        public PageHeaderLocale PageHeader { get; set; } = new();
 
-        public EmptyLocale Empty { get; set; }
+        public EmptyLocale Empty { get; set; } = new();
 
-        public IconLocale Icon { get; set; }
+        public IconLocale Icon { get; set; } = new();
 
-        public TextLocale Text { get; set; }
+        public TextLocale Text { get; set; } = new();
 
-        public FormLocale Form { get; set; }
+        public FormLocale Form { get; set; } = new();
 
-        public ImageLocale Image { get; set; }
+        public ImageLocale Image { get; set; } = new();
     }
 }
