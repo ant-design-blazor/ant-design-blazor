@@ -38,7 +38,14 @@
                 }
                 else
                 {
-                    <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
+                    if (TreeComponent.ShowLeafIcon)
+                    {
+                        <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
+                    }
+                    else
+                    {
+                        <span class="ant-tree-switcher-leaf-line"></span>
+                    }
                 }
             }
         }
