@@ -3,7 +3,7 @@
   "Pagination": {
     "items_per_page": "/ стр.",
     "jump_to": "Перейти",
-    "jump_to_confirm": "подтвердить",
+    "jump_to_confirm": "Подтвердить",
     "page": "",
     "prev_page": "Назад",
     "next_page": "Вперед",
@@ -13,19 +13,28 @@
     "next_3": "Следующие 3"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Выберите дату",
+      "yearPlaceholder": "Выберите год",
+      "quarterPlaceholder": "Выберите квартал",
+      "monthPlaceholder": "Выберите месяц",
+      "weekPlaceholder": "Выберите неделю",
       "rangePlaceholder": [ "Начальная дата", "Конечная дата" ],
-      "locale": "ru_RU",
+      "rangeYearPlaceholder": [ "Начальный год", "Конечный год" ],
+      "rangeMonthPlaceholder": [ "Начальный месяц", "Конечный месяц" ],
+      "rangeWeekPlaceholder": [ "Начальная неделя", "Конечная неделя" ],
+      "locale": "ru-RU",
       "today": "Сегодня",
       "now": "Сейчас",
       "backToToday": "Текущая дата",
-      "ok": "Ok",
+      "ok": "Ок",
       "clear": "Очистить",
       "month": "Месяц",
       "year": "Год",
       "timeSelect": "Выбрать время",
       "dateSelect": "Выбрать дату",
+      "weekSelect": "Выбрать неделю",
       "monthSelect": "Выбрать месяц",
       "yearSelect": "Выбрать год",
       "decadeSelect": "Выбрать десятилетие",
@@ -41,29 +50,53 @@
       "previousDecade": "Предыдущее десятилетие",
       "nextDecade": "Следущее десятилетие",
       "previousCentury": "Предыдущий век",
-      "nextCentury": "Следующий век"
+      "nextCentury": "Следующий век",
+      "startDate": "Начальная дата",
+      "startWeek": "Начальная неделя",
+      "startMonth": "Начальный месяц",
+      "startYear": "Начальный год",
+      "startQuarter": "Начальная четверть",
+      "endDate": "Конечная дата",
+      "endWeek": "Конечная неделя",
+      "endMonth": "Конечный месяц",
+      "endYear": "Конечный год",
+      "endQuarter": "Конечная четверть",
+      "quarterSelect": "Выберите четверть",
+      "week": "Неделя",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
     },
     "timePickerLocale": {
-      "placeholder": "Выберите время"
+      "placeholder": "Выберите время",
+      "rangePlaceholder": [ "Начальное время", "Конечное время" ]
     }
   },
   "TimePicker": {
-    "placeholder": "Выберите время"
+    "placeholder": "Выберите время",
+    "rangePlaceholder": [ "Начальное время", "Конечное время" ]
   },
   "Calendar": {
     "lang": {
       "placeholder": "Выберите дату",
+      "yearPlaceholder": "Выберите год",
+      "quarterPlaceholder": "Выберите четверть",
+      "monthPlaceholder": "Выберите месяц",
+      "weekPlaceholder": "Выберите неделю",
       "rangePlaceholder": [ "Начальная дата", "Конечная дата" ],
-      "locale": "ru_RU",
+      "rangeYearPlaceholder": [ "Начальный год", "Конечный год" ],
+      "rangeMonthPlaceholder": [ "Начальный месяц", "Конечный месяц" ],
+      "rangeWeekPlaceholder": [ "Начальная неделя", "Конечная неделя" ],
+      "locale": "ru-RU",
       "today": "Сегодня",
       "now": "Сейчас",
       "backToToday": "Текущая дата",
-      "ok": "Ok",
+      "ok": "Ок",
       "clear": "Очистить",
       "month": "Месяц",
       "year": "Год",
       "timeSelect": "Выбрать время",
       "dateSelect": "Выбрать дату",
+      "weekSelect": "Выбрать неделю",
       "monthSelect": "Выбрать месяц",
       "yearSelect": "Выбрать год",
       "decadeSelect": "Выбрать десятилетие",
@@ -82,27 +115,44 @@
       "nextCentury": "Следующий век"
     },
     "timePickerLocale": {
-      "placeholder": "Выберите время"
+      "placeholder": "Выберите время",
+      "rangePlaceholder": [ "Начальное время", "Конечное время" ]
     }
   },
-  "global": {
-    "placeholder": "Пожалуйста выберите"
-  },
+  "global": { "placeholder": "Пожалуйста выберите" },
   "Table": {
     "filterTitle": "Фильтр",
     "filterConfirm": "OK",
     "filterReset": "Сбросить",
-    "selectAll": "Выбрать всё",
+    "selectAll": "Выбрать текущую страницу",
     "selectInvert": "Инвертировать выбор",
+    "selectionAll": "Выбрать всё",
     "sortTitle": "Сортировка",
     "expand": "Развернуть строку",
     "collapse": "Свернуть строку",
     "triggerDesc": "Нажмите для сортировки по убыванию",
     "triggerAsc": "Нажмите для сортировки по возрастанию",
-    "cancelSort": "Нажмите, чтобы отменить сортировку"
+    "cancelSort": "Нажмите, чтобы отменить сортировку",
+    "filterOptions": {
+      "true": "True",
+      "false": "False",
+      "and": "И",
+      "or": "Или",
+      "equals": "Равно",
+      "notEquals": "Не равно",
+      "contains": "Содержит",
+      "startsWith": "Начинается с",
+      "endsWith": "Заканчивается на",
+      "greaterThan": "Больше",
+      "lessThan": "Меньше",
+      "greaterThanOrEquals": "Больше или Равно",
+      "lessThanOrEquals": "Меньше или равно",
+      "isNull": "Null",
+      "isNotNull": "Не Null"
+    }
   },
   "Modal": {
-    "okText": "OK",
+    "okText": "ОК",
     "cancelText": "Отмена"
   },
   "Confirm": {
@@ -110,15 +160,16 @@
     "cancelText": "Отмена",
     "yesText": "Да",
     "noText": "Нет",
-    "retryText": "повторная попытка",
-    "abortText": "прервать",
-    "ignoreText": "игнорировать"
+    "retryText": "Повторная попытка",
+    "abortText": "Прервать",
+    "ignoreText": "Игнорировать"
   },
   "Popconfirm": {
-    "okText": "OK",
+    "okText": "ОК",
     "cancelText": "Отмена"
   },
   "Transfer": {
+    "titles": [ "", "" ],
     "searchPlaceholder": "Поиск",
     "itemUnit": "элем.",
     "itemsUnit": "элем."
@@ -130,19 +181,63 @@
     "previewFile": "Предпросмотр файла",
     "downloadFile": "Загрузить файл"
   },
-  "Empty": {
-    "description": "Нет данных"
-  },
-  "Icon": {
-    "icon": "иконка"
-  },
+  "Empty": { "description": "Нет данных" },
+  "Icon": { "icon": "иконка" },
   "Text": {
-    "edit": "редактировать",
-    "copy": "копировать",
-    "copied": "скопировано",
-    "expand": "раскрыть"
+    "edit": "Редактировать",
+    "copy": "Копировать",
+    "copied": "Скопировано",
+    "expand": "Раскрыть"
   },
-  "PageHeader": {
-    "back": "назад"
+  "PageHeader": { "back": "Назад" },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Ошибка при проверке поля ${label}",
+      "required": "Пожалуйста введите ${label}",
+      "enum": "${label} должен быть одним из [${enum}]",
+      "whitespace": "${label} не может быть пустым символом",
+      "date": {
+        "format": "${label} формат даты не корректен",
+        "parse": "${label} не может быть преобразован в дату",
+        "invalid": "${label} неверная дата"
+      },
+      "types": {
+        "string": "${label} не корректный ${type}",
+        "method": "${label} не корректный ${type}",
+        "array": "${label} не корректный ${type}",
+        "object": "${label} не корректный ${type}",
+        "number": "${label} не корректный ${type}",
+        "date": "${label} не корректный ${type}",
+        "boolean": "${label} не корректный ${type}",
+        "integer": "${label} не корректный ${type}",
+        "float": "${label} не корректный ${type}",
+        "regexp": "${label} не корректный ${type}",
+        "email": "${label} не корректный ${type}",
+        "url": "${label} не корректный ${type}",
+        "hex": "${label} не корректный ${type}"
+      },
+      "string": {
+        "len": "${label} должно быть ${len} символов",
+        "min": "${label} как минимум ${min} символов",
+        "max": "${label} до ${max} символов",
+        "range": "${label} должно быть между ${min}-${max} символов"
+      },
+      "number": {
+        "len": "${label} должно быть равно ${len}",
+        "min": "${label} минимальное значение ${min}",
+        "max": "${label} максимальное значение ${max}",
+        "range": "${label} дожнно быть между ${min}-${max}"
+      },
+      "array": {
+        "len": "Должно быть ${len} ${label}",
+        "min": "Как минимум ${min} ${label}",
+        "max": "Как максимум ${max} ${label}",
+        "range": "Диапазон ${label} должнен быть между ${min}-${max}"
+      },
+      "pattern": { "mismatch": "${label} не соответствует шаблону ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Предпросмотр"
   }
 }
