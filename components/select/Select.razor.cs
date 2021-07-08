@@ -262,24 +262,18 @@ namespace AntDesign
             }
         }
 
+        bool _valueHasChanged;
+
         [Parameter]
         public override TItemValue Value
         {
             get => _selectedValue;
             set
             {
-                var hasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
-                if (hasChanged)
+                _valueHasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
+                if (_valueHasChanged)
                 {
                     _selectedValue = value;
-                    if (_isInitialized)
-                    {
-                        OnValueChange(value);
-                        if (Form?.ValidateOnChange == true)
-                        {
-                            EditContext?.NotifyFieldChanged(FieldIdentifier);
-                        }
-                    }
                 }
             }
         }
@@ -299,6 +293,8 @@ namespace AntDesign
             }
         }
 
+        bool _valuesHasChanged;
+
         [Parameter]
         public IEnumerable<TItemValue> Values
         {
@@ -307,29 +303,17 @@ namespace AntDesign
             {
                 if (value != null && _selectedValues != null)
                 {
-                    var hasChanged = !value.SequenceEqual(_selectedValues);
+                    _valuesHasChanged = !value.SequenceEqual(_selectedValues);
 
-                    if (!hasChanged)
+                    if (!_valuesHasChanged)
                         return;
 
                     _selectedValues = value;
-                    _ = OnValuesChangeAsync(value);
                 }
-                else if (value != null && _selectedValues == null)
+                else if (value != null || _selectedValues != null)
                 {
+                    _valuesHasChanged = true;
                     _selectedValues = value;
-
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value == null && _selectedValues != null)
-                {
-                    _selectedValues = default;
-
-                    _ = OnValuesChangeAsync(default);
-                }
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
         }
@@ -531,6 +515,26 @@ namespace AntDesign
         {
             if (SelectOptions == null)
                 CreateDeleteSelectOptions();
+
+            if (_valueHasChanged && _isInitialized)
+            {
+                _valueHasChanged = false;
+                OnValueChange(_selectedValue);
+                if (Form?.ValidateOnChange == true)
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
+            }
+
+            if (_valueHasChanged)
+            {
+                _valueHasChanged = false;
+                _ = OnValuesChangeAsync(_selectedValues);
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
+            }
 
             await base.OnParametersSetAsync();
         }
