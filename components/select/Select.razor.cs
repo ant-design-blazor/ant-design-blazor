@@ -303,17 +303,29 @@ namespace AntDesign
             {
                 if (value != null && _selectedValues != null)
                 {
-                    _valuesHasChanged = !value.SequenceEqual(_selectedValues);
+                    var hasChanged = !value.SequenceEqual(_selectedValues);
 
-                    if (!_valuesHasChanged)
+                    if (!hasChanged)
                         return;
 
                     _selectedValues = value;
+                    _ = OnValuesChangeAsync(value);
                 }
-                else if (value != null || _selectedValues != null)
+                else if (value != null && _selectedValues == null)
                 {
-                    _valuesHasChanged = true;
                     _selectedValues = value;
+
+                    _ = OnValuesChangeAsync(value);
+                }
+                else if (value == null && _selectedValues != null)
+                {
+                    _selectedValues = default;
+
+                    _ = OnValuesChangeAsync(default);
+                }
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
         }
@@ -526,15 +538,7 @@ namespace AntDesign
                 }
             }
 
-            if (_valueHasChanged)
-            {
-                _valueHasChanged = false;
-                _ = OnValuesChangeAsync(_selectedValues);
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
-            }
+
 
             await base.OnParametersSetAsync();
         }
