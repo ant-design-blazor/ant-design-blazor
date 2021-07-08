@@ -5,36 +5,48 @@
 <span class="@ClassMapper.Class" @onclick="OnClick">
     @if (IsShowSwitchIcon)
     {
-        @if (!SelfNode.Loading)
-        {
-            if (TreeComponent.SwitcherIconTemplate != null)
-            {
-                @TreeComponent.SwitcherIconTemplate(SelfNode)
-            }
-            else
-            {
-                <Icon Type="caret-down" Theme="outline" class="ant-tree-switcher-icon" />
-            }
-        }
-        else
+        @if (SelfNode.Loading)
         {
             <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
         }
-
-    }
-    @if (TreeComponent.ShowLine)
-    {
-        @if (!SelfNode.Loading)
+        else
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {
                 @TreeComponent.SwitcherIconTemplate(SelfNode)
             }
+            else if (!string.IsNullOrWhiteSpace(TreeComponent.SwitcherIcon))
+            {
+                <Icon Type="@TreeComponent.SwitcherIcon" Class="ant-tree-switcher-icon" />
+            }
             else
             {
-                @if (IsShowLineIcon)
+                <Icon Type="caret-down" Theme="outline" Class="ant-tree-switcher-icon" />
+            }
+        }
+    }
+
+    @if (TreeComponent.ShowLine)
+    {
+        @if (SelfNode.Loading)
+        {
+            <Icon Type="loading" Class="ant-tree-switcher-loading-icon" />
+        }
+        else
+        {
+            @if (TreeComponent.SwitcherIconTemplate != null)
+            {
+                @TreeComponent.SwitcherIconTemplate(SelfNode)
+            }
+            else if (TreeComponent.SwitcherIcon != null)
+            {
+                <Icon Type="TreeComponent.SwitcherIcon" />
+            }
+            else
+            {
+                if (IsShowLineIcon)
                 {
-                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Theme="outline" class="ant-tree-switcher-line-icon" />
+                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Class="ant-tree-switcher-line-icon" />
                 }
                 else
                 {
@@ -46,13 +58,10 @@
                     {
                         <span class="ant-tree-switcher-leaf-line"></span>
                     }
+
                 }
             }
-        }
-        else
-        {
-            <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
-        }
 
+        }
     }
 </span>

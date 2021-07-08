@@ -66,11 +66,15 @@ else
                 </span>
             </span>
         }
-        else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
+        else if ((!string.IsNullOrWhiteSpace(SelfNode.Icon) || SelfNode.IconTemplate != null) && TreeComponent.ShowIcon)
         {
             <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
                 <span class="ant-tree-iconEle ant-tree-icon__customize">
-                    @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
+                    @if (SelfNode.IconTemplate != null)
+                    {
+                        @SelfNode.IconTemplate(SelfNode)
+                    }
+                    else if (!string.IsNullOrWhiteSpace(SelfNode.Icon))
                     {
                         <Icon Type="@SelfNode.Icon" Theme="outline" />
                     }

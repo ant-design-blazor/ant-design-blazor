@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -68,6 +72,12 @@ namespace AntDesign
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
 
+        /// <summary>
+        /// Specific the Icon type of switcher 
+        /// </summary>
+        [Parameter]
+        public string SwitcherIcon { get; set; }
+
         private void SetClassMapper()
         {
             ClassMapper
@@ -99,6 +109,7 @@ namespace AntDesign
         /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
+            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
         }
 
@@ -368,7 +379,7 @@ namespace AntDesign
         ///
         /// </summary>
         [Parameter]
-        public IList<TItem> DataSource { get; set; }
+        public IEnumerable<TItem> DataSource { get; set; }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -526,11 +537,6 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-        }
-
         /// <summary>
         /// Find Node
         /// </summary>
@@ -576,31 +582,22 @@ namespace AntDesign
         /// Expand the specified tree node by default
         /// </summary>
         [Parameter]
-        public IList<string> DefaultExpandedKeys { get; set; }
+        public string[] DefaultExpandedKeys { get; set; }
 
         /// <summary>
         /// (Controlled) expands the specified tree node
         /// </summary>
         [Parameter]
-        public IList<string> ExpandedKeys { get; set; }
+        public string[] ExpandedKeys { get; set; }
 
-        ///// <summary>
-        ///// from node expand to root
-        ///// </summary>
-        ///// <param name="node">Node</param>
-        //private void ExpandToNode(TreeNode<TItem> node)
-        //{
-        //    if (node == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(node));
-        //    }
-        //    var parentNode = node.ParentNode;
-        //    while (parentNode != null)
-        //    {
-        //        parentNode.Expand(true);
-        //        parentNode = parentNode.ParentNode;
-        //    }
-        //}
+        [Parameter]
+        public EventCallback<string[]> ExpandedKeysChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<(string[] ExpandedKeys, TreeNode<TItem> Node, bool Expanded)> OnExpand { get; set; }
+
+        [Parameter]
+        public bool AutoExpandParent { get; set; }
 
         /// <summary>
         /// Expand all nodes
@@ -629,16 +626,37 @@ namespace AntDesign
             node.ChildNodes.ForEach(n => Switch(n, expanded));
         }
 
-        #endregion Expand
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        protected override Task OnFirstAfterRenderAsync()
+        internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine($"Tree OnFirstAfterRenderAsync at {DateTime.Now}");
-            return base.OnFirstAfterRenderAsync();
+            var expandedKeys = _allNodes.Select(x => x.Key).ToArray();
+            if (OnNodeLoadDelayAsync.HasDelegate && expanded == true)
+            {
+                node.SetLoading(true);
+                await OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
+                node.SetLoading(false);
+            }
+
+            if (OnExpandChanged.HasDelegate)
+            {
+                await OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
+            }
+
+            if (ExpandedKeysChanged.HasDelegate)
+            {
+                await ExpandedKeysChanged.InvokeAsync(expandedKeys);
+            }
+
+            if (OnExpand.HasDelegate)
+            {
+                await OnExpand.InvokeAsync((expandedKeys, node, expanded));
+            }
+
+            if (AutoExpandParent && expanded)
+            {
+                node.ParentNode?.Expand(true);
+            }
         }
+
+        #endregion Expand
     }
 }

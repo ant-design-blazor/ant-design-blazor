@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -42,12 +46,17 @@ namespace AntDesign
         /// </summary>
         public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
+        internal int NodeIndex { get; set; }
+
+        internal bool LastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
+
         /// <summary>
-        /// add node
+        /// add node to parent node
         /// </summary>
         /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
+            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
             IsLeaf = false;
         }
@@ -199,6 +208,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Loading { get; set; }
+
 
         /// <summary>
         ///
@@ -353,14 +363,13 @@ namespace AntDesign
         private async Task OnSwitcherClick(MouseEventArgs args)
         {
             this.Expanded = !this.Expanded;
-            if (TreeComponent.OnNodeLoadDelayAsync.HasDelegate && this.Expanded == true)
-            {
-                this.Loading = true;
-                await TreeComponent.OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
-                this.Loading = false;
-            }
-            if (TreeComponent.OnExpandChanged.HasDelegate)
-                await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
+
+            await TreeComponent?.OnNodeExpand(this, this.Expanded, args);
+        }
+
+        internal void SetLoading(bool loading)
+        {
+            this.Loading = loading;
         }
 
         /// <summary>
@@ -545,6 +554,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> IconTemplate { get; set; }
+
         private string _title;
 
         /// <summary>
@@ -606,7 +618,7 @@ namespace AntDesign
             if (this.ParentNode != null)
                 return this.ParentNode.ChildDataItems;
             else
-                return this.TreeComponent.DataSource;
+                return this.TreeComponent.DataSource.ToList();
         }
 
         #endregion data binding
