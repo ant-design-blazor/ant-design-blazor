@@ -293,8 +293,6 @@ namespace AntDesign
             }
         }
 
-        bool _valuesHasChanged;
-
         [Parameter]
         public IEnumerable<TItemValue> Values
         {
