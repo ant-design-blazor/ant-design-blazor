@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -217,30 +215,22 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
-        }
 
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            _needRefresh = true;
-            _renderedActivePane = null;
-            string type = parameters.GetValueOrDefault<string>(nameof(Type));
-            if (type == TabType.Card)
+            if (Type == TabType.Card)
             {
                 // according to ant design documents,
                 // Animated default to false when type="card"
                 Animated = false;
             }
-
-            string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
-
-            return base.SetParametersAsync(parameters);
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            _needRefresh = true;
+            _renderedActivePane = null;
 
-            _inkStyle = "left: 0px; width: 0px;";
+            base.OnParametersSet();
         }
 
         /// <summary>
