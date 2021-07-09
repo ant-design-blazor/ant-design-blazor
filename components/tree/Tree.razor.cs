@@ -218,6 +218,14 @@ namespace AntDesign
             return checkeds;
         }
 
+        public void CheckedAll()
+        {
+            foreach (var item in ChildNodes)
+            {
+                item.SetChecked(true);
+            }
+        }
+
         //取消所有选择项目
         public void DecheckedAll()
         {
