@@ -554,6 +554,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode<TItem>> IconTemplate { get; set; }
 
+        [Parameter]
+        public string SwitcherIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
+
         private string _title;
 
         /// <summary>
