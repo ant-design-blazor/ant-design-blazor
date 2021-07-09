@@ -13,7 +13,9 @@
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {
-                @TreeComponent.SwitcherIconTemplate(SelfNode)
+                <span class="ant-tree-switcher-icon">
+                    @TreeComponent.SwitcherIconTemplate(SelfNode)
+                </span>
             }
             else if (!string.IsNullOrWhiteSpace(TreeComponent.SwitcherIcon))
             {
@@ -34,34 +36,34 @@
         }
         else
         {
-            @if (TreeComponent.SwitcherIconTemplate != null)
+            if (IsShowLineIcon)
             {
-                @TreeComponent.SwitcherIconTemplate(SelfNode)
-            }
-            else if (TreeComponent.SwitcherIcon != null)
-            {
-                <Icon Type="TreeComponent.SwitcherIcon" />
-            }
-            else
-            {
-                if (IsShowLineIcon)
+                @if (TreeComponent.SwitcherIconTemplate != null)
                 {
-                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Class="ant-tree-switcher-line-icon" />
+                    <span class="ant-tree-switcher-icon">
+                        @TreeComponent.SwitcherIconTemplate(SelfNode)
+                    </span>
+                }
+                else if (TreeComponent.SwitcherIcon != null)
+                {
+                    <Icon Type="TreeComponent.SwitcherIcon" Class="ant-tree-switcher-icon" />
                 }
                 else
                 {
-                    if (TreeComponent.ShowLeafIcon)
-                    {
-                        <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
-                    }
-                    else
-                    {
-                        <span class="ant-tree-switcher-leaf-line"></span>
-                    }
-
+                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Class="ant-tree-switcher-line-icon" />
                 }
             }
-
+            else
+            {
+                if (TreeComponent.ShowLeafIcon)
+                {
+                    <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
+                }
+                else
+                {
+                    <span class="ant-tree-switcher-leaf-line"></span>
+                }
+            }
         }
     }
 </span>

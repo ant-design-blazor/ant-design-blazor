@@ -48,7 +48,10 @@ namespace AntDesign
 
         internal int NodeIndex { get; set; }
 
-        internal bool LastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
+        /// <summary>
+        /// Determine if it is the last node
+        /// </summary>
+        internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
 
         /// <summary>
         /// add node to parent node
@@ -209,12 +212,6 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
-
-        /// <summary>
-        ///
-        /// </summary>
-        internal bool IsLast { get; set; }
-
         private bool _dragTarget;
 
         /// <summary>
@@ -284,7 +281,7 @@ namespace AntDesign
 
         private void SetTreeNodeClassMapper()
         {
-            ClassMapper.Clear().Add("ant-tree-treenode")
+            ClassMapper.Add("ant-tree-treenode")
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)
@@ -292,11 +289,11 @@ namespace AntDesign
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading)
-                .If("ant-tree-treenode-leaf-last", () => IsLast)
                 .If("drop-target", () => DragTarget)
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
                 .If("drag-over", () => DragTarget && !DragTargetBottom)
-                .If("drop-container", () => TargetContainer);
+                .If("drop-container", () => TargetContainer)
+                .If("ant-tree-treenode-leaf-last", () => IsLastNode);
         }
 
         #endregion TreeNode
