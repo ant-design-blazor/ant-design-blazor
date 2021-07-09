@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -28,6 +29,8 @@ namespace AntDesign
 
         private string _navStyle;
 
+        private bool _wheelDisabled;
+
         //private string _contentStyle;
         //private bool? _prevIconEnabled;
         //private bool? _nextIconEnabled;
@@ -36,15 +39,18 @@ namespace AntDesign
         private string _tabsNavWarpPingClass;
         private string _operationStyle;
 
-        private int _navIndex;
         private int _scrollOffset;
-        private int _navTotal;
-        private int _navSection;
+        private int _listWidth;
+        private int _listHeight;
+        private int _navWidth;
+        private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
-        private bool _activePaneChanged;
 
         internal List<TabPane> _panes = new List<TabPane>();
+
+        [Inject]
+        public DomEventService DomEventService { get; set; }
 
         #region Parameters
 
@@ -209,70 +215,22 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
-        }
 
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            _needRefresh = true;
-            _renderedActivePane = null;
-            string type = parameters.GetValueOrDefault<string>(nameof(Type));
-            if (type == TabType.Card)
+            if (Type == TabType.Card)
             {
                 // according to ant design documents,
                 // Animated default to false when type="card"
                 Animated = false;
             }
-
-            string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
-            if (!string.IsNullOrEmpty(position))
-            {
-                _navIndex = 0;
-            }
-
-            return base.SetParametersAsync(parameters);
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            _needRefresh = true;
+            _renderedActivePane = null;
 
-            //if (Type == TabType.EditableCard && !HideAdd)
-            //{
-            //    TabBarExtraContent = (b) =>
-            //    {
-            //        b.OpenComponent<Icon>(0);
-            //        b.AddAttribute(1, "Type", "plus");
-            //        b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
-            //        b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
-            //        b.CloseComponent();
-            //    };
-            //}
-
-            //_barClassMapper.Clear()
-            //    .Add($"{PrefixCls}-bar")
-            //    .Add($"{PrefixCls}-{TabPosition}-bar")
-            //    .Add($"{PrefixCls}-{Type}-bar")
-            //    .If($"{PrefixCls}-{TabType.Card}-bar", () => Type == TabType.EditableCard)
-            //    .If($"{PrefixCls}-large-bar", () => Size == TabSize.Large)
-            //    .If($"{PrefixCls}-small-bar", () => Size == TabSize.Small);
-
-            //_prevClassMapper.Clear()
-            //    .Add($"{PrefixCls}-tab-prev")
-            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
-            //    .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
-
-            //_nextClassMapper.Clear()
-            //    .Add($"{PrefixCls}-tab-next")
-            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
-            //    .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
-
-            //_navClassMapper.Clear()
-            //    .Add($"{PrefixCls}-nav-container")
-            //    .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
-
-            //_navStyle = "transform: translate3d(0px, 0px, 0px);";
-            _inkStyle = "left: 0px; width: 0px;";
-            //_contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
+            base.OnParametersSet();
         }
 
         /// <summary>
@@ -393,7 +351,6 @@ namespace AntDesign
                 }
 
                 _needRefresh = true;
-                _activePaneChanged = true;
 
                 Card?.SetBody(_activePane.ChildContent);
 
@@ -409,12 +366,71 @@ namespace AntDesign
                 _afterFirstRender = true;
             }
 
+            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _scrollTabBar);
+            _listWidth = element.ClientWidth;
+            _listHeight = element.ClientHeight;
+            var navSection = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars);
+            _navWidth = navSection.ClientWidth;
+            _navHeight = navSection.ClientHeight;
+
+            if (IsHorizontal && !_wheelDisabled)
+            {
+                DomEventService.AddEventListener<string>(_scrollTabBar, "wheel", OnWheel, true, true);
+                _wheelDisabled = true;
+            }
+
+            if (!IsHorizontal && _wheelDisabled)
+            {
+                DomEventService.RemoveEventListerner<string>(_scrollTabBar, "wheel", OnWheel);
+                _wheelDisabled = false;
+            }
+
             if (_afterFirstRender && _activePane != null)
             {
                 await TryRenderInk();
                 await TryRenderNavOperation();
             }
             _needRefresh = false;
+        }
+
+        private void OnWheel(string json)
+        {
+            int maxOffset;
+            if (IsHorizontal)
+            {
+                maxOffset = _listWidth - _navWidth;
+            }
+            else
+            {
+                maxOffset = _listHeight - _navHeight;
+            }
+
+            int delta = JsonDocument.Parse(json).RootElement.GetProperty("wheelDelta").GetInt32();
+            if (delta >= 0)
+            {
+                _scrollOffset -= 100;
+            }
+            else
+            {
+                _scrollOffset += 100;
+            }
+
+            _scrollOffset = Math.Max(0, _scrollOffset);
+            _scrollOffset = Math.Min(maxOffset, _scrollOffset);
+
+            _renderedActivePane = null;
+
+            if (IsHorizontal)
+            {
+                _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+            }
+            else
+            {
+                _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+            }
+            StateHasChanged();
+
+            _renderedActivePane = _activePane;
         }
 
         private async Task TryRenderNavOperation()
@@ -477,114 +493,31 @@ namespace AntDesign
             _renderedActivePane = _activePane;
         }
 
-        //private async void OnPrevClicked()
-        //{
-        //    _needRefresh = true;
-        //    if (OnPrevClick.HasDelegate)
-        //    {
-        //        await OnPrevClick.InvokeAsync(null);
-        //    }
-
-        //    // get the old offset to the left, and _navIndex != 0 because prev will be disabled
-        //    int left = _navIndex * _navSection;
-        //    if (IsHorizontal)
-        //    {
-        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-        //    }
-        //    else
-        //    {
-        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-        //    }
-        //    // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
-        //    _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
-        //    int offset = --_navIndex * _navSection;
-        //    if (IsHorizontal)
-        //    {
-        //        _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-        //    }
-        //    else
-        //    {
-        //        _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
-        //    }
-        //    RefreshNavIcon();
-        //    _needRefresh = false;
-        //}
-
-        //private async void OnNextClicked()
-        //{
-        //    // BUG: when vertical
-        //    _needRefresh = true;
-        //    if (OnNextClick.HasDelegate)
-        //    {
-        //        await OnNextClick.InvokeAsync(null);
-        //    }
-
-        //    // get the old offset to the left
-        //    int left = _navIndex * _navSection;
-        //    if (IsHorizontal)
-        //    {
-        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-        //    }
-        //    else
-        //    {
-        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-        //    }
-        //    // calculate the current _navIndex after users resize the browser
-        //    _navIndex = left / _navSection;
-        //    int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
-        //    if (IsHorizontal)
-        //    {
-        //        _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-        //    }
-        //    else
-        //    {
-        //        _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
-        //    }
-        //    RefreshNavIcon();
-        //    _needRefresh = false;
-        //}
-
-        //private void RefreshNavIcon()
-        //{
-        //    if (_navTotal > _navSection)
-        //    {
-        //        if (_navIndex == 0)
-        //        {
-        //            // reach the first section
-        //            _prevIconEnabled = false;
-        //        }
-        //        else
-        //        {
-        //            _prevIconEnabled = true;
-        //        }
-
-        //        if ((_navIndex + 1) * _navSection > _navTotal)
-        //        {
-        //            // reach the last section
-        //            _nextIconEnabled = false;
-        //        }
-        //        else
-        //        {
-        //            _nextIconEnabled = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // hide icon
-        //        _prevIconEnabled = null;
-        //        _nextIconEnabled = null;
-        //    }
-
-        //    StateHasChanged();
-        //}
-
         protected override bool ShouldRender()
         {
             return _needRefresh || _renderedActivePane != _activePane;
+        }
+
+        private IEnumerable<TabPane> GetInvisibleTabs()
+        {
+            double average;
+            int invisibleHeadCount, visibleCount;
+
+            if (IsHorizontal)
+            {
+                average = 1.0 * _listWidth / _panes.Count;
+                visibleCount = (int)(_navWidth / average);
+            }
+            else
+            {
+                average = 1.0 * _listHeight / _panes.Count;
+                visibleCount = (int)(_navHeight / average);
+            }
+
+            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / average);
+            IEnumerable<TabPane> invisibleTabs = _panes.Take(invisibleHeadCount).Concat(_panes.Skip(invisibleHeadCount + visibleCount));
+
+            return invisibleTabs;
         }
 
         #region DRAG & DROP
