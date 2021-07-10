@@ -18,50 +18,56 @@
 
     TreeNode<GameElement> selectedNode;
 
-    List<GameElement> games = new List<GameElement>()
-{
+    List<GameElement> games = new()
+    {
         new ("0-0","0-0")
         {
-            Items=new List<GameElement>()
-{
-                new ("0-0-0","0-0-0"){
-                    Items=new List<GameElement>(){
-                         new ("0-0-0-0","0-0-0-0"),
-                         new ("0-0-0-1","0-0-0-1"),
-                         new ("0-0-0-2","0-0-0-2"),
+            Items = new List<GameElement>()
+            {
+                new ("0-0-0","0-0-0")
+                {
+                    Items = new List<GameElement>()
+                    {
+                        new ("0-0-0-0","0-0-0-0"),
+                        new ("0-0-0-1","0-0-0-1"),
+                        new ("0-0-0-2","0-0-0-2"),
                     }
                 },
-                 new ("0-0-1","0-0-1"){
-                    Items=new List<GameElement>(){
-                         new ("0-0-1-0","0-0-1-0"),
-                         new ("0-0-1-1","0-0-1-1"),
-                         new ("0-0-1-2","0-0-1-2"),
-                    }
-                 },
-                 new ("0-0-2","0-0-2"){
-                    Items=new List<GameElement>(){
-                         new ("0-0-2-0","0-0-2-0"),
-                         new ("0-0-2-1","0-0-2-1"),
-                         new ("0-0-2-2","0-0-2-2"),
-                    }
+                new ("0-0-1","0-0-1")
+                {
+                   Items = new List<GameElement>()
+                   {
+                       new ("0-0-1-0","0-0-1-0"),
+                       new ("0-0-1-1","0-0-1-1"),
+                       new ("0-0-1-2","0-0-1-2"),
+                   }
+                },
+                new ("0-0-2","0-0-2")
+                {
+                   Items = new List<GameElement>()
+                   {
+                       new ("0-0-2-0","0-0-2-0"),
+                       new ("0-0-2-1","0-0-2-1"),
+                       new ("0-0-2-2","0-0-2-2"),
+                   }
                  },
             }
         },
         new ("0-1","0-1")
         {
-            Items=new List<GameElement>()
-{
+            Items = new List<GameElement>()
+            {
                 new ("0-1-0","0-1-0"),
-                 new ("0-1-1","0-1-0"),
-                 new ("0-1-2","0-1-2"),
+                new ("0-1-1","0-1-0"),
+                new ("0-1-2","0-1-2"),
             }
         },
         new ("0-2","0-2")
         {
-            Items=new List<GameElement>()
-{
+            Items = new List<GameElement>()
+            {
                 new ("0-2-0","0-2-0"),
-                 new ("0-2-1","0-2-1"),
+                new ("0-2-1","0-2-1"),
             }
         }
     };
