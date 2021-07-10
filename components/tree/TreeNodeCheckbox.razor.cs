@@ -7,13 +7,13 @@ namespace AntDesign
     public partial class TreeNodeCheckbox<TItem> : ComponentBase
     {
         /// <summary>
-        /// 树控件本身
+        /// Root Tree
         /// </summary>
         [CascadingParameter(Name = "Tree")]
         public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
-        /// 当前节点
+        /// Current Node
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
