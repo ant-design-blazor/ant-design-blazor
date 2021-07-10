@@ -9,13 +9,13 @@ namespace AntDesign
     public partial class TreeIndent<TItem> : ComponentBase
     {
         /// <summary>
-        /// 树控件本身
+        /// Root Tree
         /// </summary>
         [CascadingParameter(Name = "Tree")]
         public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
-        /// 当前节点
+        /// Current Node
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
@@ -23,15 +23,13 @@ namespace AntDesign
         [Parameter]
         public int TreeLevel { get; set; }
 
-        private ClassMapper ClassMapper { get; set; } = new ClassMapper();
-
         /// <summary>
-        /// To find specific level node
+        /// To find specific level parent node
         /// </summary>
         /// <param name="node"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        private TreeNode<TItem> GetParentNode(TreeNode<TItem> node, int level)
+        private static TreeNode<TItem> GetParentNode(TreeNode<TItem> node, int level)
         {
             if (level > 0 && node.ParentNode != null)
             {
