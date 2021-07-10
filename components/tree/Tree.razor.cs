@@ -99,6 +99,8 @@ namespace AntDesign
         [Parameter]
         public string SwitcherIcon { get; set; }
 
+        public bool Directory { get; set; }
+
         private void SetClassMapper()
         {
             ClassMapper
@@ -106,6 +108,7 @@ namespace AntDesign
                 .If("ant-tree-show-line", () => ShowLine)
                 .If("ant-tree-icon-hide", () => ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)
+                .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)
                 .If("ant-tree-unselectable", () => !Selectable)
                 .If("ant-tree-rtl", () => RTL);
