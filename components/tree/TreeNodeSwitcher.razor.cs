@@ -22,10 +22,6 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
 
-        private bool IsShowLineIcon => !SelfNode.IsLeaf && TreeComponent.ShowLine;
-
-        private bool IsShowSwitchIcon => !SelfNode.IsLeaf && !TreeComponent.ShowLine;
-
         /// <summary>
         /// 节点是否处于展开状态
         /// </summary>

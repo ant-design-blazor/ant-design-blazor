@@ -40,7 +40,18 @@ namespace AntDesign
         /// Shows a connecting line
         /// </summary>
         [Parameter]
-        public bool ShowLine { get; set; }
+        public bool ShowLine
+        {
+            get => _showLine;
+            set
+            {
+                _showLine = value;
+                if (!_hasSetShowLeafIcon)
+                {
+                    ShowLeafIcon = _showLine;
+                }
+            }
+        }
 
         /// <summary>
         /// show treeNode icon icon
@@ -70,7 +81,17 @@ namespace AntDesign
         /// Displays the cotyledon icon
         /// </summary>
         [Parameter]
-        public bool ShowLeafIcon { get; set; } = false;
+        public bool ShowLeafIcon
+        {
+            get => _showLeafIcon;
+            set
+            {
+                _showLeafIcon = value;
+                _hasSetShowLeafIcon = true;
+            }
+        }
+
+        private bool _hasSetShowLeafIcon;
 
         /// <summary>
         /// Specific the Icon type of switcher 
@@ -330,6 +351,8 @@ namespace AntDesign
         #region Search
 
         private string _searchValue;
+        private bool _showLeafIcon;
+        private bool _showLine;
 
         /// <summary>
         /// search value
