@@ -36,7 +36,8 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-tree-switcher")
+            ClassMapper
+                .Add("ant-tree-switcher")
                 .If("ant-tree-switcher-noop", () => SelfNode.IsLeaf)
                 .If("ant-tree-switcher_open", () => IsSwitcherOpen)
                 .If("ant-tree-switcher_close", () => IsSwitcherClose);
@@ -46,12 +47,6 @@ namespace AntDesign
         {
             SetClassMap();
             base.OnInitialized();
-        }
-
-        protected override void OnParametersSet()
-        {
-            SetClassMap();
-            base.OnParametersSet();
         }
 
         [Parameter]

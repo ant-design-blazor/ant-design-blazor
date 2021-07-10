@@ -7,10 +7,8 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-
     public partial class TreeNodeTitle<TItem> : ComponentBase
     {
-
         #region fields
 
         private const double OffSETX = 25;
@@ -44,7 +42,8 @@ namespace AntDesign
 
         private void SetTitleClassMapper()
         {
-            TitleClassMapper.Clear().Add("ant-tree-node-content-wrapper")
+            TitleClassMapper
+                .Add("ant-tree-node-content-wrapper")
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
@@ -55,12 +54,6 @@ namespace AntDesign
         {
             SetTitleClassMapper();
             base.OnInitialized();
-        }
-
-        protected override void OnParametersSet()
-        {
-            SetTitleClassMapper();
-            base.OnParametersSet();
         }
 
         /// <summary>

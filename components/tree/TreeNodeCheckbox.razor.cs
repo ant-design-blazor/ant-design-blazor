@@ -22,7 +22,8 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-tree-checkbox")
+            ClassMapper
+                .Add("ant-tree-checkbox")
                 .If("ant-tree-checkbox-checked", () => SelfNode.Checked)
                 .If("ant-tree-checkbox-indeterminate", () => SelfNode.Indeterminate)
                 .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox);
@@ -32,12 +33,6 @@ namespace AntDesign
         {
             SetClassMap();
             base.OnInitialized();
-        }
-
-        protected override void OnParametersSet()
-        {
-            SetClassMap();
-            base.OnParametersSet();
         }
 
         [Parameter]

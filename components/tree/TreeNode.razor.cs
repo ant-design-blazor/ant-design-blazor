@@ -223,7 +223,6 @@ namespace AntDesign
             set
             {
                 _dragTarget = value;
-                SetTreeNodeClassMapper();
                 StateHasChanged();
             }
         }
@@ -241,7 +240,6 @@ namespace AntDesign
         {
             if (DragTargetBottom == value) return;
             this.DragTargetBottom = value;
-            SetTreeNodeClassMapper();
             StateHasChanged();
         }
 
@@ -258,7 +256,6 @@ namespace AntDesign
             if (this.ParentNode == null) return;
             if (this.ParentNode.TargetContainer == value) return;
             this.ParentNode.TargetContainer = value;
-            this.ParentNode.SetTreeNodeClassMapper();
             this.ParentNode.StateHasChanged();
         }
 
@@ -281,7 +278,8 @@ namespace AntDesign
 
         private void SetTreeNodeClassMapper()
         {
-            ClassMapper.Add("ant-tree-treenode")
+            ClassMapper
+                .Add("ant-tree-treenode")
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)
@@ -809,7 +807,6 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
-            SetTreeNodeClassMapper();
             DefaultBinding();
             base.OnParametersSet();
         }
