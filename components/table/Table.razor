@@ -5,18 +5,23 @@
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
-        @if (!HidePagination && PaginationPosition.Contains("top"))
-        {
-            <Pagination Class="@_paginationClass"
-                        Total="Total"
-                        PageSize="PageSize"
-                        Current="PageIndex"
-                        OnChange="HandlePageChange"/>
-        }
-
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>
+                    @if (!HidePagination && PaginationPosition.Contains("top"))
+                    {
+                        <Template>
+                            <Template>
+                                <Template>
+                                    <Pagination Class="@_paginationClass"
+                                                Total="_total"
+                                                PageSize="PageSize"
+                                                Current="PageIndex"
+                                                OnChange="HandlePageChange" />
+                                </Template>
+                            </Template>
+                        </Template>
+                    }
                     <CascadingValue Name="IsInitialize" Value="true" IsFixed>
                         @ChildContent(_fieldModel)
                     </CascadingValue>
@@ -45,7 +50,12 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            <Template>
+                                                <Template>
+                                                    @if (_waitingReload) { Reload(); }
+                                                    @body((this, _showItems, 0))
+                                                </Template>
+                                            </Template>
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -63,7 +73,12 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            <Template>
+                                                <Template>
+                                                    @if (_waitingReload) { Reload(); }
+                                                    @body((this, _showItems, 0))
+                                                </Template>
+                                            </Template>
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -76,7 +91,12 @@
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
-                                            @body((this, _showItems, 0))
+                                            <Template>
+                                                <Template>
+                                                    @if (_waitingReload) { Reload(); }
+                                                    @body((this, _showItems, 0))
+                                                </Template>
+                                            </Template>
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -90,17 +110,21 @@
                             </div>
                         }
                     </div>
+                    @if (!HidePagination && PaginationPosition.Contains("bottom"))
+                    {
+                        <Template>
+                            <Template>
+                                <Pagination Class="@_paginationClass"
+                                            Total="_total"
+                                            PageSize="PageSize"
+                                            Current="PageIndex"
+                                            OnChange="HandlePageChange" />
+                            </Template>
+                        </Template>
+                    }
                 </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
-        @if (!HidePagination && PaginationPosition.Contains("bottom"))
-        {
-            <Pagination Class="@_paginationClass"
-                        Total="Total"
-                        PageSize="PageSize"
-                        Current="PageIndex"
-                        OnChange="HandlePageChange" />
-        }
+        </CascadingValue>        
     </Spin>
 </div>
 

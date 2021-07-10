@@ -32,7 +32,7 @@ namespace AntDesign
 
         internal void Refresh();
 
-        internal void ReloadAndInvokeChange();
+        public void ReloadAndInvokeChange();
 
         void SetSelection(string[] keys);
 

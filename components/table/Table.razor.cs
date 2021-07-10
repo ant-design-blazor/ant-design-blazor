@@ -42,7 +42,7 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
-        
+
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -125,12 +125,13 @@ namespace AntDesign
 
         private IEnumerable<TItem> _showItems;
 
-        private IEnumerable<TItem> _dataSource;
+        private IEnumerable<TItem> _dataSource = Enumerable.Empty<TItem>();
 
         private IList<SummaryRow> _summaryRows;
 
         private bool _waitingReload;
-        private bool _waitingReloadAndInvokeChange;
+        private bool _waitingInvokeChange;
+        private bool _waitingInvokeTotalChanged;
         private bool _treeMode;
 
         private bool _hasFixLeft;
@@ -144,7 +145,7 @@ namespace AntDesign
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
 
-        private bool ServerSide => _total > _dataSourceCount;
+        private bool ServerSide => RemoteDataSource || Total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -177,7 +178,8 @@ namespace AntDesign
 
             FlushCache();
 
-            this.Reload();
+            _waitingReload = true;
+            StateHasChanged();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -229,13 +231,14 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
-        private void ReloadAndInvokeChange()
+        public void ReloadAndInvokeChange()
         {
-            var queryModel = this.Reload();
-            if (OnChange.HasDelegate)
+            if (!ServerSide)
             {
-                OnChange.InvokeAsync(queryModel);
+                _waitingReload = true;
             }
+            _waitingInvokeChange = true;
+            StateHasChanged();
         }
 
         private QueryModel<TItem> Reload()
@@ -245,27 +248,31 @@ namespace AntDesign
             if (ServerSide)
             {
                 _showItems = _dataSource;
+                _total = Total;
             }
             else
             {
-                if (_dataSource != null)
+                var query = _dataSource.AsQueryable();
+                foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
                 {
-                    var query = _dataSource.AsQueryable();
-                    foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
-                    {
-                        query = sort.SortList(query);
-                    }
+                    query = sort.SortList(query);
+                }
 
-                    foreach (var filter in queryModel.FilterModel)
-                    {
-                        query = filter.FilterList(query);
-                    }
+                foreach (var filter in queryModel.FilterModel)
+                {
+                    query = filter.FilterList(query);
+                }
 
-                    query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-                    queryModel.SetQueryableLambda(query);
+                _total = query.Count();
 
-                    _showItems = query;
-                    _total = _showItems.Count();
+                query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                queryModel.SetQueryableLambda(query);
+
+                _showItems = query;
+
+                if (_total != Total)
+                {
+                    _waitingInvokeTotalChanged = true;
                 }
             }
 
@@ -275,7 +282,6 @@ namespace AntDesign
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
             _waitingReload = false;
-            StateHasChanged();
 
             return queryModel;
         }
@@ -334,6 +340,22 @@ namespace AntDesign
             {
                 this.FinishLoadPage();
             }
+
+            if (_waitingInvokeTotalChanged)
+            {
+                _waitingInvokeTotalChanged = false;
+                if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+            }
+
+            if (_waitingInvokeChange)
+            {
+                _waitingInvokeChange = false;
+                var queryModel = BuildQueryModel();
+                if (OnChange.HasDelegate)
+                {
+                    OnChange.InvokeAsync(queryModel);
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -376,19 +398,6 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             return this._shouldRender;
         }
 

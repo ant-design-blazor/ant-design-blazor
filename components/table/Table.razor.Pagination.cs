@@ -24,14 +24,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public int Total
-        {
-            get => _total > _dataSourceCount ? _total : _dataSourceCount;
-            set
-            {
-                _total = value;
-            }
-        }
+        public int Total { get; set; }
 
         [Parameter]
         public EventCallback<int> TotalChanged { get; set; }
@@ -45,7 +38,8 @@ namespace AntDesign
                 if (_pageIndex != value)
                 {
                     _pageIndex = value;
-                    _waitingReloadAndInvokeChange = true;
+                    _waitingReload = true;
+                    _waitingInvokeChange = true;
                 }
             }
         }
@@ -62,7 +56,8 @@ namespace AntDesign
                 if (_pageSize != value)
                 {
                     _pageSize = value;
-                    _waitingReloadAndInvokeChange = true;
+                    _waitingReload = true;
+                    _waitingInvokeChange = true;
                 }
             }
         }
@@ -75,6 +70,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
+
+        [Parameter]
+        public bool RemoteDataSource { get; set; }
 
         private int _total;
         private int _dataSourceCount;
@@ -116,8 +114,6 @@ namespace AntDesign
             }
 
             ReloadAndInvokeChange();
-
-            StateHasChanged();
         }
 
         private async Task HandlePageSizeChange(PaginationEventArgs args)
@@ -135,8 +131,6 @@ namespace AntDesign
             }
 
             ReloadAndInvokeChange();
-
-            StateHasChanged();
         }
     }
 }
