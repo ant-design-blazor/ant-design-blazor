@@ -24,6 +24,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Draggable | Whether the node allows drag and drop | boolean | false |  |
 | BlockNode | Whether treeNode fill remaining horizontal space | boolean | false |  |
 | ShowLeafIcon |Displays the cotyledon icon | boolean | false |  |
+| SwitcherIcon | Customize toggle icon£¬the value is Icon types | string | null | |
 | Selectable |Whether can be selected | boolean | true |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | Checkable |  Add a Checkbox before the node | boolean  | false  |   |

@@ -24,13 +24,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | ShowIcon | 显示节点图标 | boolean | false |  |
 | Draggable | 是否允许拖拽 | boolean | false |  |
 | BlockNode | 是否节点占据一行 | boolean | false |  |
-| ShowLeafIcon |显示子叶图标 | boolean | false |  |
+| ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
+| SwitcherIcon | 设置所有节点的展开图标，值 Icon 的 Type | string | null | |
 | Selectable |是否可以选择 | boolean | true |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | Checkable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
 | CheckStrictly  |  checkable 状态下节点选择完全受控（父子节点选中状态不再关联） |  boolean | false  |   |
-| DefaultCheckedKeys  | 默认勾选的节点key |  List<string> | null |   |
-| DisableCheckKeys | 默认禁用的勾选节点 |  List<string> |  null |   |
+| DefaultSelectedKeys | 默认选中的节点key | string[] | null | |
+| DefaultCheckedKeys  | 默认勾选的节点key |  string[] | null |   |
+| DisableCheckKeys | 默认禁用的勾选节点 |  string[] |  null |   |
 | SearchValue  | 搜索节点关键字  | string  | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
 | DataSource | 数据源 | List  |  null  |   |
@@ -42,8 +44,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
 | DefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | DefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
-| DefaultExpandedKeys  |  默认展开的节点数 | List<string>  | null |   |
-| ExpandedKeys  |  （受控）展开指定的树节点 | List<string>  |  null  |   |
+| DefaultExpandedKeys  |  默认展开的节点数 | string[]  | null |   |
+| ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
+| AutoExpandParent | 是否自动展开父节点 | bool | false | |
 
 
 ### Bind 绑定值
@@ -61,7 +64,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| OnNodeLoadDelayAsync  |  异步加载书回调，方法异步使用async  | EventCallback  |   |   |
+| OnNodeLoadDelayAsync  |  异步加载书回调，方法异步使用 async  | EventCallback  |   |   |
 | OnClick |  点击节点回调 | EventCallback  |   |   |
 | OnDblClick | 双击节点回调  |  EventCallback |   |   |
 | OnContextMenu  |  右键回调 | EventCallback  |  |   |
@@ -90,7 +93,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | SwitcherIconTemplate  |  自定义展开图标 | RenderFragment  |  |   |
 
 
-
 ### TreeNode props
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
@@ -101,5 +103,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
 | Checked | 勾选  |  boolean |  false |   |
 | Title | 标题  |  string |  false |   |
+| TitleTemplate | 标题模板 | RenderFragment | null |  |
 | Icon | 标题前图标  |  string |  false |   |
+| IconTemplate | 标题前图标模板 | RenderFragment | null |  |
 | DataItem | 数据项  |  Type |  |   | 
+| SwitcherIcon | 该节点的展开图标 | string | null | |
+| SwitcherIconTemplate | 该节点的展开图标 | RenderFragment | null | |
