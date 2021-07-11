@@ -12,13 +12,11 @@
                     {
                         <Template>
                             <Template>
-                                <Template>
-                                    <Pagination Class="@_paginationClass"
-                                                Total="_total"
-                                                PageSize="PageSize"
-                                                Current="PageIndex"
-                                                OnChange="HandlePageChange" />
-                                </Template>
+                                <Pagination Class="@_paginationClass"
+                                            Total="_total"
+                                            PageSize="PageSize"
+                                            Current="PageIndex"
+                                            OnChange="HandlePageChange" />
                             </Template>
                         </Template>
                     }
@@ -50,12 +48,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            <Template>
-                                                <Template>
-                                                    @if (_waitingReload) { Reload(); }
-                                                    @body((this, _showItems, 0))
-                                                </Template>
-                                            </Template>
+                                            @body((this, null, 0))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -73,12 +66,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            <Template>
-                                                <Template>
-                                                    @if (_waitingReload) { Reload(); }
-                                                    @body((this, _showItems, 0))
-                                                </Template>
-                                            </Template>
+                                            @body((this, null, 0))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -91,12 +79,7 @@
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
-                                            <Template>
-                                                <Template>
-                                                    @if (_waitingReload) { Reload(); }
-                                                    @body((this, _showItems, 0))
-                                                </Template>
-                                            </Template>
+                                            @body((this, null, 0))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -113,13 +96,11 @@
                     @if (!HidePagination && PaginationPosition.Contains("bottom"))
                     {
                         <Template>
-                            <Template>
-                                <Pagination Class="@_paginationClass"
-                                            Total="_total"
-                                            PageSize="PageSize"
-                                            Current="PageIndex"
-                                            OnChange="HandlePageChange" />
-                            </Template>
+                            <Pagination Class="@_paginationClass"
+                                        Total="_total"
+                                        PageSize="PageSize"
+                                        Current="PageIndex"
+                                        OnChange="HandlePageChange" />
                         </Template>
                     }
                 </CascadingValue>
@@ -131,22 +112,20 @@
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
-    @<Template>
+    @<thead class="ant-table-thead">
         @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
-        <thead class="ant-table-thead">
-            <tr @attributes="headerRowAttributes">
-                <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                    @table.ChildContent(_fieldModel)
-                </CascadingValue>
-                @if (table.ScrollY != null)
-                {
-                    <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
-                }
-            </tr>
-        </thead>
-    </Template>;
+        <tr @attributes="headerRowAttributes">
+            <CascadingValue Name="IsHeader" Value="true" IsFixed>
+                @table.ChildContent(_fieldModel)
+            </CascadingValue>
+            @if (table.ScrollY != null)
+            {
+                <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+            }
+        </tr>
+    </thead>;
 
 RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
 @<Template>
@@ -171,6 +150,14 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
         var table = context.table;
         var showItems = context.showItems;
         var level = context.level;
+        if (level == 0)
+        {
+            if (table._waitingReload) 
+            {
+                table.Reload(); 
+            }
+            showItems = table._showItems;
+        }
     }
 
     @if (table._total <= 0)
