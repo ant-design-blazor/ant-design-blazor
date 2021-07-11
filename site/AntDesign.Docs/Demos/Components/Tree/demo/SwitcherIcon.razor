@@ -1,0 +1,41 @@
+﻿<Tree TItem="string"
+      ShowLine
+      SwitcherIcon="down"
+      DefaultExpandedKeys="@(new[]{"0-0-0"})"
+      OnSelect="OnSelect">
+    <SwitcherIconTemplate>
+        <Icon Type="down" />
+    </SwitcherIconTemplate>
+    <Nodes>
+        <TreeNode Title="parent 1" Key="0-0" TItem="string">
+            <Nodes>
+                <TreeNode Title="parent 1-0" Key="0-0-0" TItem="string">
+                    <Nodes>
+                        <TreeNode Title="leaf" Key="0-0-0-0" TItem="string" />
+                        <TreeNode Title="leaf" Key="0-0-0-1" TItem="string" />
+                        <TreeNode Title="leaf" Key="0-0-0-2" TItem="string" />
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="parent 1-1" Key="0-0-1" TItem="string">
+                    <Nodes>
+                        <TreeNode Title="leaf" Key="0-0-1-0" TItem="string" />
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="parent 1-2" Key="0-0-2" TItem="string">
+                    <Nodes>
+                        <TreeNode Title="leaf" Key="0-0-2-0" TItem="string" />
+                        <TreeNode Title="leaf" Key="0-0-2-1" TItem="string" />
+                    </Nodes>
+                </TreeNode>
+            </Nodes>
+        </TreeNode>
+
+    </Nodes>
+</Tree>
+
+@code {
+    void OnSelect()
+    {
+
+    }
+}
