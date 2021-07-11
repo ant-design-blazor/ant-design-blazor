@@ -23,14 +23,15 @@ Almost anything can be represented in a tree structure. Examples include directo
 | ShowIcon | show treeNode icon icon | boolean | false |  |
 | Draggable | Whether the node allows drag and drop | boolean | false |  |
 | BlockNode | Whether treeNode fill remaining horizontal space | boolean | false |  |
-| ShowLeafIcon |Displays the cotyledon icon | boolean | false |  |
+| ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | SwitcherIcon | Customize toggle icon£¬the value is Icon types | string | null | |
-| Selectable |Whether can be selected | boolean | true |  |
+| Selectable | Whether can be selected | boolean | true |  |
+| DefaultSelectedKeys | Specifies the keys of the default selected treeNodes | string[] | null |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | Checkable |  Add a Checkbox before the node | boolean  | false  |   |
 | CheckStrictly  |  Check treeNode precisely; parent treeNode and children treeNodes are not associated |  boolean | false  |   |
-| DefaultCheckedKeys  | Specifies the keys of the default checked treeNodes |  List<string> | null |   |
-| DisableCheckKeys | Disable node Checkbox |  List<string> |  null |   |
+| DefaultCheckedKeys  | Specifies the keys of the default checked treeNodes |  string[] | null |   |
+| DisableCheckKeys | Disable node Checkbox |  string[] |  null |   |
 | SearchValue  | search value  | string  | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
 | DataSource | bing datasource | List  |  null  |   |
@@ -42,9 +43,9 @@ Almost anything can be represented in a tree structure. Examples include directo
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
 | DefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | DefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
-| DefaultExpandedKeys  |  Expand the specified tree node by default | List<string>  | null |   |
-| ExpandedKeys  |  (Controlled) expands the specified tree node | List<string>  |  null  |   |
-
+| DefaultExpandedKeys  |  Expand the specified tree node by default | string[]  | null |   |
+| ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
+| AutoExpandParent | Whether to automatically expand a parent treeNode | bool | false |  |
 
 ### Bind °ó¶¨Öµ
 
@@ -100,5 +101,9 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Checked | checked  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
 | Title | title  |  string |  false |   |
+| TitleTemplate | title template | RenderFragment | null |  |
 | Icon | icon  |  string |  false |   |
+| IconTemplate | icon template | RenderFragment | null |  |
 | DataItem | dataitem |  Type |  |   | 
+| SwitcherIcon | Customize node toggle icon £¬the value is Icon types  | string | null | |
+| SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |
