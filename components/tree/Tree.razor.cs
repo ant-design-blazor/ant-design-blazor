@@ -316,6 +316,15 @@ namespace AntDesign
         /// <summary>
         /// Dechecked all selected items
         /// </summary>
+        public void CheckedAll()
+        {
+            foreach (var item in ChildNodes)
+            {
+                item.SetChecked(true);
+            }
+        }
+
+        // Decheck all of the checked nodes
         public void DecheckedAll()
         {
             foreach (var item in ChildNodes)
