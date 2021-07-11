@@ -46,10 +46,13 @@ namespace AntDesign
         /// </summary>
         public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
+        /// <summary>
+        /// record the index in children nodes list of parent node. 
+        /// </summary>
         internal int NodeIndex { get; set; }
 
         /// <summary>
-        /// Determine if it is the last node
+        /// Determine if it is the last node in the same level nodes.
         /// </summary>
         internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
 
@@ -322,13 +325,13 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 是否已展开
+        /// Whether it has been expanded
         /// </summary>
         [Parameter]
         public bool Expanded { get; set; }
 
         /// <summary>
-        /// 折叠节点
+        /// Expand the node
         /// </summary>
         /// <param name="expanded"></param>
         public void Expand(bool expanded)
@@ -338,7 +341,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 真实的展开状态，路径上只要存在折叠，那么下面的全部折叠
+        /// The real expand state, as long as there is a expaneded node on the path, then all the folds below
         /// </summary>
         internal bool RealDisplay
         {
@@ -368,17 +371,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 展开
+        /// switcher is opened
         /// </summary>
         private bool SwitcherOpen => Expanded && !IsLeaf;
 
         /// <summary>
-        /// 关闭
+        /// switcher is close
         /// </summary>
         private bool SwitcherClose => !Expanded && !IsLeaf;
 
         /// <summary>
-        /// 冒泡展开
+        /// expaned parents
         /// </summary>
         internal void OpenPropagation()
         {
@@ -477,12 +480,14 @@ namespace AntDesign
         private void UpdateCheckState(bool? halfChecked = null)
         {
             if (halfChecked == true)
-            {//如果子元素存在不确定状态，父元素必定存在不确定状态
+            {
+                //If the child node is indeterminate, the parent node must is indeterminate.
                 this.Checked = false;
                 this.Indeterminate = true;
             }
             else if (HasChildNodes == true && !DisableCheckbox)
-            {//判断当前节点的选择状态
+            {
+                //Determines the selection status of the current node
                 bool hasChecked = false;
                 bool hasUnchecked = false;
 
@@ -560,9 +565,6 @@ namespace AntDesign
 
         private string _title;
 
-        /// <summary>
-        /// 文本
-        /// </summary>
         [Parameter]
         public string Title
         {
@@ -810,7 +812,6 @@ namespace AntDesign
             DefaultBinding();
             base.OnParametersSet();
         }
-
 
         private void DefaultBinding()
         {
