@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 3
 title:
   zh-CN: 异步数据加载
   en-US: load data asynchronously
@@ -12,3 +12,4 @@ title:
 ## en-US
 
 To load data asynchronously when click to expand a treeNode.
+

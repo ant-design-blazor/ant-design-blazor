@@ -51,10 +51,10 @@
             }
             else
             {
-                <ul class="ant-transfer-list-content ng-star-inserted">
+                <ul class="ant-transfer-list-content">
                     @foreach (var item in _leftDataSource)
                     {
-                        <li @key="item" class="ant-transfer-list-content-item ng-star-inserted @(item.Disabled || Disabled ? DisabledClass : "")">
+                        <li @key="item" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : "")">
                             <Checkbox Label="@item.Key" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)">
                                 @if (Render == null)
                                 {
