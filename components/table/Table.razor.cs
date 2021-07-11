@@ -146,6 +146,7 @@ namespace AntDesign
         private ElementReference _tableBodyRef;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
+
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
