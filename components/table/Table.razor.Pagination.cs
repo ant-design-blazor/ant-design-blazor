@@ -71,8 +71,19 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
+        private bool _remoteDataSource;
+        private bool _hasRemoteDataSourceAttribute;
+
         [Parameter]
-        public bool RemoteDataSource { get; set; }
+        public bool RemoteDataSource
+        {
+            get => _remoteDataSource;
+            set
+            {
+                _remoteDataSource = value;
+                _hasRemoteDataSourceAttribute = true;
+            }
+        }
 
         private int _total;
         private int _dataSourceCount;
