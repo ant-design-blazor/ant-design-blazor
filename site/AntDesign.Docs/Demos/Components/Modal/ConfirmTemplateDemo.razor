@@ -1,5 +1,4 @@
-﻿@using System.ComponentModel
-@inherits FeedbackComponent<string, string>
+﻿@inherits FeedbackComponent<string, string>
 
 <div>
     <Text>Please input "@config"</Text>
@@ -42,5 +41,16 @@
             await base.OkCancelRefWithResult!.OnOk(value);
 
         await base.OnFeedbackOkAsync(args);
+    }
+
+    /// <summary>
+    /// If you want <b>Dispose</b> to take effect every time it is closed in Modal, which created by ModalService,
+    /// set <b>ModalOptions.DestroyOnClose = true</b>
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected override void Dispose(bool disposing)
+    {
+        Console.WriteLine("Dispose");
+        base.Dispose(disposing);
     }
 }

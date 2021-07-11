@@ -38,7 +38,7 @@ namespace AntDesign
     }
 
     /// <summary>
-    /// 
+    /// Component&lt;&gt; reference with Ok and Cancel method
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
     public interface IOkCancelRef<TResult> : IFeedbackRef
