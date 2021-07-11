@@ -1,36 +1,113 @@
 ﻿@namespace AntDesign
 @inherits ComponentBase
 @typeparam TItem
-
-<span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
-    @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
-    {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-            <span class="ant-tree-iconEle ant-tree-icon__customize">
-                @TreeComponent.TitleIconTemplate(SelfNode)
+@if (CanDraggable)
+{
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
+          @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
+          @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
+        @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
+        {
+            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+                <span class="ant-tree-iconEle ant-tree-icon__customize">
+                    @TreeComponent.TitleIconTemplate(SelfNode)
+                </span>
             </span>
-        </span>
-    }
-    else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
-    {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-            <span class="ant-tree-iconEle ant-tree-icon__customize">
-                @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
+        }
+        else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
+        {
+            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+                <span class="ant-tree-iconEle ant-tree-icon__customize">
+                    @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
+                    {
+                        <Icon Type="@SelfNode.Icon" Theme="outline" />
+                    }
+                </span>
+            </span>
+        }
+        @if (TreeComponent.TitleTemplate != null)
+        {
+            @TreeComponent.TitleTemplate(SelfNode)
+        }
+        else
+        {
+            <span class="ant-tree-title" style="pointer-events: none;">
+                @if (SelfNode.TitleTemplate != null)
                 {
-                    <Icon Type="@SelfNode.Icon" Theme="outline" />
+                    @SelfNode.TitleTemplate
+                }
+                else if (SelfNode.Matched)
+                {
+                    var value = $"<span Style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    <span>
+                        @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
+                    </span>
+                }
+                else
+                {
+                    @SelfNode.Title
                 }
             </span>
-        </span>
-    }
-
-    @if (TreeComponent.TitleTemplate != null)
-    {
-        @TreeComponent.TitleTemplate(SelfNode)
-    }
-    else
-    {
-        <span class="ant-tree-title">
-            @SelfNode.Title
-        </span>
-    }
-</span>
+        }
+        @if (SelfNode.DragTarget)
+        {
+            <div class="ant-tree-drop-indicator" style="left:@(SelfNode.DragTargetBottom?"4px":"28px");right:0;bottom:-3px;"></div>
+        }
+    </span>
+}
+else
+{
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick">
+        @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
+        {
+            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+                <span class="ant-tree-iconEle ant-tree-icon__customize">
+                    @TreeComponent.TitleIconTemplate(SelfNode)
+                </span>
+            </span>
+        }
+        else if ((!string.IsNullOrWhiteSpace(SelfNode.Icon) || SelfNode.IconTemplate != null) && TreeComponent.ShowIcon)
+        {
+            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+                <span class="ant-tree-iconEle ant-tree-icon__customize">
+                    @if (SelfNode.IconTemplate != null)
+                    {
+                        @SelfNode.IconTemplate(SelfNode)
+                    }
+                    else if (!string.IsNullOrWhiteSpace(SelfNode.Icon))
+                    {
+                        <Icon Type="@SelfNode.Icon" Theme="outline" />
+                    }
+                </span>
+            </span>
+        }
+        @if (TreeComponent.TitleTemplate != null)
+        {
+            @TreeComponent.TitleTemplate(SelfNode)
+        }
+        else if (SelfNode.TitleTemplate != null)
+        {
+            @SelfNode.TitleTemplate
+        }
+        else
+        {
+            <span class="ant-tree-title">
+                @if (SelfNode.Matched)
+                {
+                    var value = $"<span Style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    <span>
+                        @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
+                    </span>
+                }
+                else
+                {
+                    @SelfNode.Title
+                }
+            </span>
+        }
+        @if (SelfNode.DragTarget)
+        {
+            <div class="ant-tree-drop-indicator" style="left:@(SelfNode.DragTargetBottom?"4px":"28px");right:0;bottom:-3px;"></div>
+        }
+    </span>
+}

@@ -1,17 +1,10 @@
 <Search @bind-Value="@searchKey" Placeholder="Search.." />
 <Divider Text="Default search (case sensitive)"></Divider>
-<Tree ShowIcon SearchValue="@searchKey"
+<Tree ShowIcon SearchValue="@searchKey" MatchedStyle="color: #f50;"
       DataSource="games"
       TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
       IconExpression="x => x.DataItem.Icon"></Tree>
-<Divider Text="Custom search (Ignore case)"></Divider>
-<Tree ShowIcon SearchValue="@searchKey"
-      DataSource="games"
-      TitleExpression="x => x.DataItem.Text"
-      ChildrenExpression="x => x.DataItem.Items"
-      IconExpression="x => x.DataItem.Icon"
-      SearchExpression="x=> x.DataItem.Text.ToLower().Contains(searchKey.ToLower())"></Tree>
 
 @code{
     string searchKey;
