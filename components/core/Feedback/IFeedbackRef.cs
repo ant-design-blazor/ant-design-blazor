@@ -47,6 +47,4 @@ namespace AntDesign
         /// <returns></returns>
         public Task CloseAsync();
     }
-
-    
 }
