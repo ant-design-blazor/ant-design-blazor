@@ -66,4 +66,9 @@
       <Pack>false</Pack>
     </Content>
   </ItemGroup>
+
+  <Target Name="DebugMessage" BeforeTargets="Build">
+    <Message Importance="high" Text="If you have modified the style, documentation or added a new demo, please rebuild the entire solution." />
+    <Message Importance="high" Text="如果您修改了样式、文档或者新增了Demo，请重新构建整个解决方案。" />
+  </Target>
 </Project>
