@@ -138,20 +138,20 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
-        private async Task OnMaskMouseUp()
-        {
-            if (Config.MaskClosable && _dialogMouseDown)
-            {
-                await Task.Delay(4);
-                _dialogMouseDown = false;
-            }
-        }
-
         private async Task OnMaskClick()
         {
-            if (Config.MaskClosable && !_dialogMouseDown)
+            if (Config.MaskClosable)
             {
-                await CloseAsync();
+                if (_dialogMouseDown)
+                {
+                    // mask area union dialog area is clicked.
+                    _dialogMouseDown = false;
+                }
+                else
+                {
+                    // mask area erased by dialog area is clicked.
+                    await CloseAsync();
+                }
             }
         }
 
