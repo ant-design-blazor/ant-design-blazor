@@ -20,7 +20,7 @@ timeline: true
 `2021-07-13`
 
 - Table
-  - 🆕 Abiliy to have all items in a table expanded on load. [#1695](https://github.com/ant-design-blazor/ant-design-blazor/pull/1695) [@henrikwidlund](https://github.com/henrikwidlund)
+  - 🆕 Add a parameter to expand all rows on load. [#1695](https://github.com/ant-design-blazor/ant-design-blazor/pull/1695) [@henrikwidlund](https://github.com/henrikwidlund)
   - 🐞 fix the bug that changing filter and/or operator closes the filter dropdown. [#1687](https://github.com/ant-design-blazor/ant-design-blazor/pull/1687) [@anranruye](https://github.com/anranruye)
   - 🐞 allow set filters after table initialization. [#1667](https://github.com/ant-design-blazor/ant-design-blazor/pull/1667) [@anranruye](https://github.com/anranruye)
 
