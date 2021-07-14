@@ -84,10 +84,18 @@ jobs:
           FULL_VERSION=$next_version-nightly-`date "+%y%m%d%H%M"`
           echo "Version: ${FULL_VERSION}"
           echo "::set-output name=package_version::${FULL_VERSION}"
+          dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
           next_version: ${{ steps.get_next_version.outputs.next_version }}
+     
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: publish/
+          retention-days: 5
 
       - name: Push to MyGet package registry
         run: dotnet nuget push ./publish/*.nupkg --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate

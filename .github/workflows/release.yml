@@ -6,7 +6,7 @@ env:
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   release-and-publish-package:
@@ -41,6 +41,13 @@ jobs:
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: publish/
+          retention-days: 5
 
       - name: Publish Docs 🎉
         run: |
