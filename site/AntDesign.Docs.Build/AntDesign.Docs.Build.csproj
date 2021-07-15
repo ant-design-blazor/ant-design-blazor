@@ -16,24 +16,12 @@
 
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
-  </Target>
-
-  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
-    <!-- Ensure Node.js is installed -->
-    <Exec Command="node --version" ContinueOnError="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-    </Exec>
-    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-  </Target>
-
-  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
   </Target>
 
@@ -54,10 +42,4 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net5 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net5 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" />
   </Target>
-
-  <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
-  </Target>
-
 </Project>
