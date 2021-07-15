@@ -1,0 +1,95 @@
+﻿name: Publish Docs with AOT
+
+env:
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    branches:
+      - master
+      - feature
+
+jobs:
+  publish-and-deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - name: Setup .NET Core 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+      - name: "Get Last Release"
+        id: previoustag
+        run: |
+          LAST_VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
+          echo "Last Version: ${LAST_VERSION}"
+          echo "::set-output name=previous_tag::${LAST_VERSION}"
+
+      - name: "Get Next Semantic Version"
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.previous_tag }}
+
+      - name: "Get Next Version"
+        id: get_next_version
+        run: |
+          current_branch=$(git symbolic-ref --short -q HEAD)
+          echo Current git branch is $current_branch
+          next_version=''
+          if [ "$current_branch" == 'master' ] ; 
+            then
+              next_version=$patch_version
+            else
+              next_version=$minor_version
+          fi
+          echo "::set-output name=current_branch::${current_branch}"
+          FULL_VERSION=$next_version-nightly-`date "+%y%m%d%H%M"`
+          echo "Version: ${FULL_VERSION}"
+          echo "::set-output name=package_version::${FULL_VERSION}"
+        env:
+          patch_version: ${{ steps.semvers.outputs.patch }}
+          minor_version: ${{ steps.semvers.outputs.minor }}
+
+      - name: Prepare AOT workload
+        run: |
+          dotnet workload install microsoft-net-sdk-blazorwebassembly-aot
+
+      - name: Publish Docs 🎉
+        run: |
+          npm install
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
+          dotnet build
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
+        env:
+          PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
+
+      - name: Deploy Preview 🚀
+        run: |
+          npm install -g surge
+          surge --project ./cargo/wwwroot --domain $BRANCH-aot-antblazor.surge.sh
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          BRANCH: ${{ steps.get_next_version.outputs.current_branch }}

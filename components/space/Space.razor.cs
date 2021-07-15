@@ -22,8 +22,6 @@ namespace AntDesign
             set
             {
                 _size = value;
-                _items.ForEach(x => x.ChangeSize());
-                StateHasChanged();
             }
         }
 
@@ -36,7 +34,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        internal int SpaceItemCount => _items.Count;
+        internal int SpaceItemCount { get; set; }
 
         private IList<SpaceItem> _items = new List<SpaceItem>();
 
@@ -61,13 +59,6 @@ namespace AntDesign
         {
             SetClass();
             base.OnInitialized();
-        }
-
-        internal void AddSpaceItem(SpaceItem item)
-        {
-            _items.Add(item);
-            item.SetIndex(_items.Count - 1);
-            _items.ForEach(x => x.ChangeSize());
         }
     }
 }

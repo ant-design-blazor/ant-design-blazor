@@ -180,7 +180,10 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             var cacheKey = data.GetHashCode();
             if (!table._dataSourceCache.ContainsKey(cacheKey) || table._dataSourceCache[cacheKey] == null)
             {
-                var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data);
+                var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+                {
+                    Expanded = table.DefaultExpandAllRows
+                };
                 rowData.SelectedChanged += table.RowDataSelectedChanged;
                 table._dataSourceCache[cacheKey] = rowData;
             }
