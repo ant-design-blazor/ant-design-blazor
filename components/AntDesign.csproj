@@ -6,7 +6,7 @@
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <Description>Ant Design components for Blazor and Razor Components</Description>
+    <Description>🌈 A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly.</Description>
     <PackageProjectUrl>https://github.com/ant-design-blazor/ant-design-blazor</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ant-design-blazor/ant-design-blazor</RepositoryUrl>
     <PackageTags>blazor,ant-design,antd,design,razor,components</PackageTags>
@@ -52,7 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
     <PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -62,28 +61,14 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
-    <!-- Ensure Node.js is installed -->
-    <Exec Command="node --version" ContinueOnError="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-    </Exec>
-    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-  </Target>
-
-  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
-  </Target>
-
-  <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
-  </Target>
-
   <ItemGroup>
     <Content Update="**\*.razor">
       <Pack>false</Pack>
     </Content>
   </ItemGroup>
+
+  <Target Name="DebugMessage" BeforeTargets="Build">
+    <Message Importance="high" Text="If you have modified the style, documentation or added a new demo, please rebuild the entire solution." />
+    <Message Importance="high" Text="如果您修改了样式、文档或者新增了Demo，请重新构建整个解决方案。" />
+  </Target>
 </Project>
