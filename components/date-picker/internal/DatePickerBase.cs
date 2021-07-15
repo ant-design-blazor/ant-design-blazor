@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Datepicker.Locale;
@@ -104,7 +105,12 @@ namespace AntDesign
             }
             set
             {
-                if (!_isLocaleSetOutside && base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                if (!_isLocaleSetOutside && 
+                    (
+                    (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                    ||
+                    LocaleProvider.CurrentLocale.LocaleName != value.Name
+                    ))
                 {
                     _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
                 }
@@ -241,6 +247,7 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
+        protected bool _duringFocus;
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -268,6 +275,17 @@ namespace AntDesign
             this.SetClass();
 
             base.OnInitialized();
+        }
+
+        protected bool _shouldRender = true;
+        protected override bool ShouldRender()
+        {
+            if (!_shouldRender)
+            {
+                _shouldRender = true;
+                return false;
+            }
+            return base.ShouldRender();
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
@@ -372,6 +390,12 @@ namespace AntDesign
             _inputEnd.IsOnFocused = inputEndFocus;
         }
 
+        protected virtual Task PickerClicked()
+        {
+            AutoFocus = true;
+            return Task.CompletedTask;
+        }
+
         protected virtual async Task OnSelect(DateTime date)
         {
             int index = GetOnFocusPickerIndex();
@@ -394,6 +418,10 @@ namespace AntDesign
                     {
                         await Blur(1);
                         await Focus(0);
+                    }
+                    else
+                    {
+                        await Focus(index); //keep focus on current input
                     }
                 }
                 else
@@ -569,6 +597,23 @@ namespace AntDesign
             _placeholders[index] = placeholder;
 
             StateHasChanged();
+        }
+
+        private int _htmlInputSize;
+        protected int HtmlInputSize
+        {
+            get
+            {
+                if (_htmlInputSize == 0)
+                {
+                    _htmlInputSize = InternalFormat.Length + (int)(InternalFormat.Count(ch => ch > 127) * 1.34) + 2;
+                    if (_htmlInputSize < 12)
+                    {
+                        _htmlInputSize = 12;
+                    }
+                }
+                return _htmlInputSize;
+            }
         }
 
         private string _internalFormat;

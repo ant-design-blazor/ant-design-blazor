@@ -32,7 +32,7 @@ namespace AntDesign
 
         public string CancelSort { get; set; } = "Click to cancel sort";
 
-        public FilterOptions FilterOptions { get; set; }
+        public FilterOptions FilterOptions { get; set; } = new();
     }
 
     public class FilterOptions

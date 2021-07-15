@@ -23,4 +23,10 @@
         DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
         await drawerRef!.CloseAsync(value);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        Console.WriteLine("Dispose");
+        base.Dispose(disposing);
+    }
 }

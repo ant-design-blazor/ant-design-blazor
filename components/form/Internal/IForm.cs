@@ -23,6 +23,8 @@ namespace AntDesign.Internal
 
         internal void AddControl(IControlValueAccessor valueAccessor);
 
+        internal void RemoveControl(IControlValueAccessor valueAccessor);
+
         internal bool ValidateOnChange { get; }
 
         event Action<IForm> OnFinishEvent;
