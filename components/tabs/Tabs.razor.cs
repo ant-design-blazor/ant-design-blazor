@@ -242,16 +242,10 @@ namespace AntDesign
             _needRefresh = true;
             _renderedActivePane = null;
             string type = parameters.GetValueOrDefault<string>(nameof(Type));
-           
+
             // according to ant design documents,
             // Animated default to false when type="card"
             Animated = type != TabType.Card;
-
-            string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
-            if (!string.IsNullOrEmpty(position))
-            {
-                _navIndex = 0;
-            }
 
             return base.SetParametersAsync(parameters);
         }
