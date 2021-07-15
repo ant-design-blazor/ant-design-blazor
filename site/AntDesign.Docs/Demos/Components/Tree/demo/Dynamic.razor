@@ -17,7 +17,7 @@
 
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
     {
-        await Task.Delay(2000);//Ä£ÄâÒì²½Ö´ÐÐ
+        await Task.Delay(1500);
 
         var dataItem = ((Data)args.Node.DataItem);
         dataItem.Childs.Clear();

@@ -1,0 +1,32 @@
+﻿<Tree TItem="string" 
+    ShowIcon 
+    DefaultExpandAll     
+    DefaultSelectedKeys="@(new[]{"0-0-0"})"
+    >
+    <SwitcherIconTemplate>
+        @switcherIcon
+    </SwitcherIconTemplate>
+    <Nodes>
+        <TreeNode Title="parent 1" Key="0-0" Icon="smile" TItem="string">
+            <Nodes>
+                <TreeNode Title="leaf" Key="0-0-0" Icon="meh" TItem="string" />
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="leaf" Key="0-0-1" TItem="string">
+            <IconTemplate Context="node">
+                @if (node.Selected)
+                {
+                    <Icon Type="frown" Theme="fill" />
+                }
+                else
+                {
+                    <Icon Type="frown" Theme="outline" />
+                }
+            </IconTemplate>
+        </TreeNode>
+    </Nodes>
+</Tree>
+
+@code {
+    RenderFragment switcherIcon =@<Icon Type="down" />;
+}

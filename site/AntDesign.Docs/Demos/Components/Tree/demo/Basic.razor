@@ -1,30 +1,41 @@
-
-<Tree Checkable BlockNode TItem="string">
+<Tree TItem="string" Checkable
+      DefaultExpandedKeys="@(new[] { "0-0-0", "0-0-1"})"
+      DefaultSelectedKeys="@(new[] {"0-0-0", "0-0-1" })"
+      DefaultCheckedKeys="@(new[] {"0-0-0", "0-0-1" })"
+      OnSelect="OnSelect"
+      OnCheck="OnCheck">
     <Nodes>
-        <TreeNode Title="A" TItem="string">
+        <TreeNode Title="parent 1" Key="0-0" TItem="string">
             <Nodes>
-                <TreeNode Title="A1" TItem="string">
+                <TreeNode Title="parent 1-0" Key="0-0-0" Disabled TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A1-2" TItem="string"></TreeNode>
+                        <TreeNode Title="leaf" Key="0-0-0-0" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="leaf" Key="0-0-0-1" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Disabled TItem="string">
+                <TreeNode Title="parent 1-1" Key="0-0-1" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A2-2" TItem="string"></TreeNode>
-                    </Nodes>
-                </TreeNode>
-                <TreeNode Title="A3" DisableCheckbox TItem="string">
-                    <Nodes>
-                        <TreeNode Title="A3-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A3-2" DisableCheckbox TItem="string"></TreeNode>
-                        <TreeNode Title="A3-3" Disabled TItem="string"></TreeNode>
-
+                        <TreeNode Key="0-0-1-0" TItem="string">
+                            <TitleTemplate>
+                                <span style="color: #1890ff; ">sss</span>
+                            </TitleTemplate>
+                        </TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
+
+@code{
+
+    void OnSelect(TreeEventArgs<string> args)
+    {
+        Console.WriteLine("OnSelect");
+    }
+
+    void OnCheck(TreeEventArgs<string> args)
+    {
+        Console.WriteLine("onCheck");
+    }
+}
