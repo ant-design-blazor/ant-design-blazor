@@ -263,24 +263,18 @@ namespace AntDesign
             }
         }
 
+        bool _valueHasChanged;
+
         [Parameter]
         public override TItemValue Value
         {
             get => _selectedValue;
             set
             {
-                var hasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
-                if (hasChanged)
+                _valueHasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
+                if (_valueHasChanged)
                 {
                     _selectedValue = value;
-                    if (_isInitialized)
-                    {
-                        OnValueChange(value);
-                        if (Form?.ValidateOnChange == true)
-                        {
-                            EditContext?.NotifyFieldChanged(FieldIdentifier);
-                        }
-                    }
                 }
             }
         }
@@ -538,6 +532,16 @@ namespace AntDesign
             if (SelectOptions == null)
                 CreateDeleteSelectOptions();
 
+            if (_valueHasChanged && _isInitialized)
+            {
+                _valueHasChanged = false;
+                OnValueChange(_selectedValue);
+                if (Form?.ValidateOnChange == true)
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
+            }
+            
             await base.OnParametersSetAsync();
         }
 

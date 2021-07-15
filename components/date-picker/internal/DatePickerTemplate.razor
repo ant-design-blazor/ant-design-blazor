@@ -28,19 +28,26 @@
                     }
                     var startColDate = startDate;
 
-                    <tr class="@(GetRowClass?.Invoke(startColDate))"
-                        @onclick="e => OnRowSelect?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)">
-						
-						@RenderFirstCol?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)
+                <tr class="@(GetRowClass?.Invoke(startColDate))"
+                    @onclick="e => OnRowSelect?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)">
+
+                    @RenderFirstCol?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate : startColDate)
 
 
-                        @for (int col = 1; col <= MaxCol; col++)
+                    @for (int col = 1; col <= MaxCol; col++)
+                    {
+                        if (shouldStopRender)
                         {
-                            if (shouldStopRender)
-                            {
-                                break;
-                            }
+                            break;
+                        }
 
+                        if (Picker == DatePickerType.Date && row == 1 && col <= SkipDays)
+                        {
+                            <td>
+                            </td>
+                        }
+                        else
+                        {
                             var currentColDate = startDate;
 
                             string cellCls = GetCellCls(currentColDate);
@@ -51,7 +58,7 @@
                                 @onmouseenter="e => DateOnMouseEnter(currentColDate)"
                                 @onmouseleave="e => DateOnMouseLeave()">
                                 <div class="@innerCellCls"
-                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
+                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)" @onclick:stopPropagation="true">
                                     @if (IsCalendar)
                                     {
                                         <div class="@(PrefixCls)-calendar-date-value">
@@ -105,9 +112,11 @@
                             }
                         }
 
-                        @{ var endColDate = startDate;}
-                        @RenderLastCol?.Invoke(endColDate)
-                    </tr>
+                    }
+
+                    @{ var endColDate = startDate;}
+                    @RenderLastCol?.Invoke(endColDate)
+                </tr>
                 }
             </tbody>
         </table>
