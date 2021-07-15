@@ -239,8 +239,6 @@ namespace AntDesign
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            _needRefresh = true;
-            _renderedActivePane = null;
             string type = parameters.GetValueOrDefault<string>(nameof(Type));
 
             // according to ant design documents,
