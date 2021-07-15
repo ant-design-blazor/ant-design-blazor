@@ -233,8 +233,6 @@ namespace AntDesign
             base.OnParametersSet();
             _needRefresh = true;
             _renderedActivePane = null;
-
-            base.OnParametersSet();
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
