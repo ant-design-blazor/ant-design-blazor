@@ -1,12 +1,13 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
+@using System.ComponentModel
 
     <Form Model="@model"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
           LabelColSpan="8"
           WrapperColSpan="16">
-        <FormItem Label="Username">
+        <FormItem>
             <Input @bind-Value="@context.Username" />
         </FormItem>
         <FormItem Label="Password">
@@ -25,7 +26,7 @@
 {
     public class Model
     {
-        [Required]
+        [Required, DisplayName("User Name")]
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
