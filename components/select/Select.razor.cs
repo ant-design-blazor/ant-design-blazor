@@ -516,12 +516,12 @@ namespace AntDesign
                 if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
                     _showArrowIcon = SuffixIcon != null;
             }
-            _isInitialized = true;
+            //_isInitialized = true;
 
             base.OnInitialized();
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
             if (SelectOptions == null)
                 CreateDeleteSelectOptions();
@@ -535,8 +535,10 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
-            
-            await base.OnParametersSetAsync();
+
+            _isInitialized = true;
+
+            base.OnParametersSet();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
