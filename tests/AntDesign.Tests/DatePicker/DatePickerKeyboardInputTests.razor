@@ -1,0 +1,120 @@
+﻿@using AntDesign.JsInterop
+@inherits AntDesignTestBase
+
+@code {
+	[Fact]
+	public void Enter_applies_input_to_value()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+		DateTime value = DateTime.MinValue;
+		DateTime defaultValue = new DateTime(2020,1,1);
+		DateTime expectedValue = new DateTime(2020,1,2);
+		string expectedValueAsString = expectedValue.ToString("yyyy-MM-dd");
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+		);
+		//Act
+		var input = cut.Find("input");
+		input.Input(expectedValueAsString);
+		input.KeyDown("ENTER");
+		//Assert
+		cut.Instance.Value.Should().Be(expectedValue);
+		value.Should().Be(expectedValue);
+		input.GetAttribute("value").Should().Be(expectedValueAsString);
+	}
+
+	[Fact]
+	public void DefaultValue_applied_to_value_on_blur()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+		DateTime value = DateTime.MinValue;
+		DateTime defaultValue = new DateTime(2020,1,1);		
+		string defaultValueAsString = defaultValue.ToString("yyyy-MM-dd");
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+		);
+		//Act
+		var input = cut.Find("input");
+		input.Input(defaultValue.AddDays(1).ToString("yyyy-MM-dd"));
+		input.Blur();
+		//Assert
+		cut.Instance.Value.Should().Be(defaultValue);
+		value.Should().Be(defaultValue);
+		input.GetAttribute("value").Should().Be(defaultValueAsString);
+	}
+
+	[Fact]
+	public void Entering_wrong_date_reverts_to_default()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+		DateTime value = DateTime.MinValue;
+		DateTime defaultValue = new DateTime(2020,1,1);		
+		string defaultValueAsString = defaultValue.ToString("yyyy-MM-dd");
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+		);
+		//Act
+		var input = cut.Find("input");
+		input.Input("202-01-01"); //wrong year
+		input.KeyDown("ENTER");
+		//Assert
+		cut.Instance.Value.Should().Be(defaultValue);
+		value.Should().Be(defaultValue);
+		input.GetAttribute("value").Should().Be(defaultValueAsString);
+	}
+
+	[Fact]
+	public void Entering_wrong_date_reverts_to_initial()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+		DateTime? value = null;
+		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value"/>);
+		//Act
+		var input = cut.Find("input");
+		input.Input("202-01-01"); //wrong year
+		input.KeyDown("ENTER");
+		//Assert
+		value.Should().Be(null);
+		cut.Instance.Value.Should().Be(value);
+		input.GetAttribute("value").Should().Be("");
+	}
+
+	[Fact]
+	public async Task Entering_new_date_focuses_in_picker()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+			.SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
+		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+		DateTime? value = null;
+		DateTime expectedValue = new DateTime(2021,4,5);
+		string expectedValueAsString = expectedValue.ToString("yyyy-MM-dd");
+		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value"/>);
+		//Act
+		var input = cut.Find("input");
+		input.Click();
+		//Task.Delay will force to wait for overlay to render the picker panel
+		await Task.Delay(1);
+		input.Input(expectedValueAsString);
+		//Assert
+		string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(expectedValue.Month);
+		cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
+		cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(expectedValue.Year.ToString());
+		var selectedCell = cut.Find("td.ant-picker-cell-selected");
+		selectedCell.GetAttribute("title").Should().Be(expectedValueAsString);
+		selectedCell.Children[0].TextContent.Trim().Should().Be(expectedValue.Day.ToString());
+	}
+
+}

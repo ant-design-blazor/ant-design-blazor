@@ -127,3 +127,8 @@ ModalService.DestroyConfirmAsync(modelRef);
 使用 `ModalService.DestroyAllConfirmAsync()` 可以销毁弹出的确认窗（即上述的 ModalService.Info、ModalService.Success、ModalService.Error、ModalService.Warning、ModalService.Confirm）。通常用于路由监听当中，处理路由前进、后退不能销毁确认对话框的问题，而不用各处去使用实例的返回值进行关闭（ModalService.DestroyConfirmAsync(config) 适用于主动关闭，而不是路由这样被动关闭）
 
 
+## FAQ
+
+### 为什么通过`ModalService.CreateModalAsync<>`创建的Modal，在关闭后，继承自`FeedbackComponent<>`的自定义组件不会执行`Dispose`方法？
+
+Modal在关闭后默认不会从DOM中移除，因此自定义组件的`Dispose`方法不会被执行。可以通过设置`modalOptions.DestroyOnClose=true`来改变此默认行为。

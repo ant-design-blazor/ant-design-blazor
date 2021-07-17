@@ -8,11 +8,11 @@
         /// <summary>
         /// OK button text
         /// </summary>
-        public string OkText { get; set; }
+        public string OkText { get; set; } = "OK";
 
         /// <summary>
         /// Cancel button text
         /// </summary>
-        public string CancelText { get; set; }
+        public string CancelText { get; set; } = "Cancel";
     }
 }

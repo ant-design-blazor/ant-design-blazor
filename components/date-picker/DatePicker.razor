@@ -14,7 +14,7 @@
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
-            <div class="@(PrefixCls)-panel-container">
+            <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@_panelClassMapper.Class">
                     <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
@@ -40,6 +40,7 @@
                                  Onfocus="e => AutoFocus = true"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
+                                 HtmlInputSize="@HtmlInputSize"
                                  AllowClear="@AllowClear" />
             </div>
         </Unbound>

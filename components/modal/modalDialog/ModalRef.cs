@@ -54,7 +54,7 @@ namespace AntDesign
     }
 
     /// <summary>
-    /// 
+    /// ModalRef with return value
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
     public class ModalRef<TResult> : ModalRef, IOkCancelRef<TResult>
