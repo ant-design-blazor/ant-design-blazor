@@ -1,0 +1,67 @@
+﻿<div>
+    <Form @ref="_form" Model="formData" Name="advanced_search" Class="ant-advanced-search-form">
+        <Row Gutter="24">
+            @for (var i = 0; i < (_expand ? 10 : 6); i++)
+            {
+                var index = i;
+                <GridCol Span="8" @key="index">
+                    <FormItem Label="@($"Field {index}")">
+                        <Input @bind-Value="@(context[$"field-{index}"].Value)" Placeholder="placeholder" />
+                    </FormItem>
+                </GridCol>
+            }
+        </Row>
+        <Row>
+            <GridCol Span="24" Style="text-align:right;">
+                <Button Type="primary" HtmlType="submit">Search</Button>
+                <Button Style="margin: 0 8px;" OnClick="()=>{_form?.Reset();}">Clear</Button>
+                <a style="font-size:12px" @onclick="()=>{_expand=!_expand;}">
+                    <Icon Type="@(_expand?"up":"down")"></Icon>  Collapse
+                </a>
+            </GridCol>
+        </Row>
+    </Form>
+    <div class="search-result-list">Search Result List</div>
+</div>
+
+<style>
+    [data-theme='compact'] .ant-advanced-search-form,
+    .ant-advanced-search-form {
+        padding: 24px;
+        background: #fbfbfb;
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+        [data-theme='compact'] .ant-advanced-search-form .ant-form-item,
+        .ant-advanced-search-form .ant-form-item {
+            display: flex;
+        }
+
+        [data-theme='compact'] .ant-advanced-search-form .ant-form-item-control-wrapper,
+        .ant-advanced-search-form .ant-form-item-control-wrapper {
+            flex: 1;
+        }
+</style>
+
+
+@code {
+    bool _expand = false;
+    AntDesign.Internal.IForm _form;
+    Dictionary<string, FormValue> formData = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        for (var i = 0; i < 10; i++)
+        {
+            formData.Add($"field-{i}", new FormValue());
+        }
+    }
+
+    class FormValue
+    {
+        public string Value { get; set; }
+    }
+}

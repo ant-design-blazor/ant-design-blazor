@@ -3,9 +3,9 @@
     public class TransferLocale
     {
         public string NotFoundContent { get; set; }
-        public string SearchPlaceholder { get; set; }
-        public string ItemUnit { get; set; }
-        public string ItemsUnit { get; set; }
+        public string SearchPlaceholder { get; set; } = "Search here";
+        public string ItemUnit { get; set; } = "item";
+        public string ItemsUnit { get; set; } = "items";
         public string Remove { get; set; }
         public string SelectCurrent { get; set; }
         public string RemoveCurrent { get; set; }
