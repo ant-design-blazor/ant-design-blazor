@@ -76,6 +76,7 @@
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
 		DateTime? value = null;
 		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value"/>);
