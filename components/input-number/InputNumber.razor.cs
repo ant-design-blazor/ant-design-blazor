@@ -61,6 +61,9 @@ namespace AntDesign
         public TValue Min { get; set; }
 
         [Parameter]
+        public string Type { get; set; } = "number";
+
+        [Parameter]
         public bool Disabled { get; set; }
 
         [Parameter]
