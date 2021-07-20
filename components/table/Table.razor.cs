@@ -118,8 +118,19 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        private bool _remoteDataSource;
+        private bool _hasRemoteDataSourceAttribute;
+
         [Parameter]
-        public bool RemoteDataSource { get; set; }
+        public bool RemoteDataSource
+        {
+            get => _remoteDataSource;
+            set
+            {
+                _remoteDataSource = value;
+                _hasRemoteDataSourceAttribute = true;
+            }
+        }
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -146,6 +157,8 @@ namespace AntDesign
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+
+        private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -243,10 +256,10 @@ namespace AntDesign
         {
             var queryModel = BuildQueryModel();
 
-            if (RemoteDataSource)
+            if (ServerSide)
             {
                 _showItems = _dataSource;
-                _total = Total > _dataSourceCount ? Total : _dataSourceCount;
+                _total = Total;
             }
             else
             {
@@ -263,24 +276,23 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
-                    var newTotal = query.Count();                    
+                    _total = query.Count();
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    if (newTotal != _total)
+                    if (_total != Total)
                     {
-                        _total = newTotal;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
-                    if (_total != 0)
+                    _total = 0;
+                    if (_total != Total)
                     {
-                        _total = 0;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
