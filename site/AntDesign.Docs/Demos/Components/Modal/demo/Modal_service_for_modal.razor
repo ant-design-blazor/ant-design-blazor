@@ -70,6 +70,8 @@
         var modalConfig = new ModalOptions();
         modalConfig.Title = "TemplateWithResult";
         modalConfig.Style = "top:20px;";
+        // In order for Dispose in ConfirmTemplateDemo to take effect every time it is closed
+        modalConfig.DestroyOnClose = true;
 
         var modalRef = await ModalService.CreateModalAsync<ConfirmTemplateDemo, string, string>(modalConfig, value);
 

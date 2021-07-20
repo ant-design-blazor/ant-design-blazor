@@ -29,7 +29,7 @@ namespace AntDesign
         #endregion
 
         /// <summary>
-        /// 
+        /// ModalService
         /// </summary>
         protected ModalService Service { get; set; }
 
@@ -84,7 +84,7 @@ namespace AntDesign
 
 
     /// <summary>
-    /// ConfirmRef for 
+    /// ConfirmRef with return value 
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
     public class ConfirmRef<TResult> : ConfirmRef, IOkCancelRef<TResult>
