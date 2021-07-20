@@ -39,9 +39,9 @@
             {
                 <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
                 <Popconfirm Title="Sure to cancel?"
-                            OnConfirm="() => cancelEdit(data.Id)"
-                            OkText="Yes"
-                            CancelText="No">
+                        OnConfirm="() => cancelEdit(data.Id)"
+                        OkText="Yes"
+                        CancelText="No">
                     <a>Cancel</a>
                 </Popconfirm>
             }
@@ -57,7 +57,7 @@
 
 @code{
 
-    class ItemData
+    record ItemData
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -66,7 +66,7 @@
     };
 
     IDictionary<string, (bool edit, ItemData data)> editCache = new Dictionary<string, (bool edit, ItemData data)>();
-    ItemData[] listOfData = { };
+    List<ItemData> listOfData = new();
 
     int i = 0;
     string editId;
@@ -74,33 +74,28 @@
     void startEdit(string id)
     {
         var data = editCache[id];
-        data.edit = true;
-        editCache[id] = data;
+        editCache[id] = (true, data.data with { }); // add a copy in cache
     }
 
     void cancelEdit(string id)
     {
         var data = listOfData.FirstOrDefault(item => item.Id == id);
-        editCache[id] = new(false, data);
+        editCache[id] = (false, data); // recovery
     }
 
     void saveEdit(string id)
     {
-        var data = listOfData.FirstOrDefault(item => item.Id == id);
-        editCache[id] = new(false, data);
-    }
-
-    void updateEditCache()
-    {
-        listOfData.ForEach(item =>
-        {
-            editCache[item.Id] = new(false, item);
-        });
+        var index = listOfData.FindIndex(item => item.Id == id);
+        listOfData[index] = editCache[id].data; // apply the copy to data source
+        editCache[id] = (false, listOfData[index]); // don't affect rows in editing
     }
 
     protected override void OnInitialized()
     {
-        listOfData = Enumerable.Range(0, 100).Select(i => new ItemData { Id = $"{i}", Name = $"Edrward {i}", Age = 32, Address = $"London Park no. {i}" }).ToArray();
-        updateEditCache();
+        listOfData = Enumerable.Range(0, 100).Select(i => new ItemData { Id = $"{i}", Name = $"Edrward {i}", Age = 32, Address = $"London Park no. {i}" }).ToList();
+        listOfData.ForEach(item =>
+        {
+            editCache[item.Id] = (false, item);
+        });
     }
 }
