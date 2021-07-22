@@ -25,7 +25,18 @@ namespace AntDesign
 
         public string Type { get; set; }
 
-        public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null) => JsonSerializer.Deserialize<TResponseModel>(this.Response, options);
+        public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null)
+        {
+            if (options == null)
+            {
+                //Provide default configuration: ignore case
+                options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+            }
+            return JsonSerializer.Deserialize<TResponseModel>(this.Response, options);
+        }
 
         public bool IsPicture()
         {

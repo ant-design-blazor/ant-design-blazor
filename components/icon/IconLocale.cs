@@ -2,6 +2,6 @@
 {
     public class IconLocale
     {
-        public string Icon { get; set; }
+        public string Icon { get; set; } = "icon";
     }
 }

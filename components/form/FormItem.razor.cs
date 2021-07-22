@@ -125,6 +125,8 @@ namespace AntDesign
         private FieldIdentifier _fieldIdentifier;
         private PropertyInfo _fieldPropertyInfo;
 
+        private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -231,8 +233,20 @@ namespace AntDesign
             return Required ? $"{_prefixCls}-required" : _labelCls;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (CurrentEditContext != null && _validationStateChangedHandler != null)
+            {
+                CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+            }
+
+            base.Dispose(disposing);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
+            if (_control != null) return;
+
             if (control.FieldIdentifier.Model == null)
             {
                 throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
@@ -247,13 +261,15 @@ namespace AntDesign
                 _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
             }
 
-            CurrentEditContext.OnValidationStateChanged += (s, e) =>
+            _validationStateChangedHandler = (s, e) =>
             {
                 control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
             };
+
+            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
             _formValidationMessages = builder =>
             {
@@ -268,6 +284,14 @@ namespace AntDesign
             else
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
+            if (_propertyReflector.RequiredAttribute != null)
+            {
+                _labelCls = $"{_prefixCls}-required";
+            }
+            if (_propertyReflector.DisplayName != null)
+            {
+                Label ??= _propertyReflector.DisplayName;
+            }
         }
 
         ValidationResult[] IFormItem.ValidateField()

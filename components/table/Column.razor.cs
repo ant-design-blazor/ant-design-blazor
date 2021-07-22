@@ -75,16 +75,34 @@ namespace AntDesign
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
+        private bool _filterable;
+
+        private bool _hasFilterableAttribute;
+
         [Parameter]
-        public bool Filterable { get; set; }
+        public bool Filterable
+        {
+            get => _filterable;
+            set
+            {
+                _filterable = value;
+                _hasFilterableAttribute = true;
+            }
+        }
 
         private IEnumerable<TableFilter> _filters;
+
+        private bool _hasFiltersAttribute;
 
         [Parameter]
         public IEnumerable<TableFilter<TData>> Filters
         {
             get => _filters as IEnumerable<TableFilter<TData>>;
-            set => _filters = value;
+            set
+            {
+                _filters = value;
+                _hasFiltersAttribute = true;
+            }
         }
 
         [Parameter]
@@ -192,63 +210,78 @@ namespace AntDesign
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
 
-            if (_filters?.Any() == true)
+            if (IsHeader)
             {
-                Filterable = true;
-                _columnFilterType = TableFilterType.List;
-            }
-            else if (Filterable)
-            {
-                _columnDataType = THelper.GetUnderlyingType<TData>();
-                if (_columnDataType == typeof(bool))
+                if (_hasFiltersAttribute)
                 {
+                    if (!_hasFilterableAttribute) Filterable = true;
                     _columnFilterType = TableFilterType.List;
-
-                    _filters = new List<TableFilter>();
-
-                    var trueFilterOption = GetNewFilter();
-                    trueFilterOption.Text = Table.Locale.FilterOptions.True;
-                    trueFilterOption.Value = true;
-                    ((List<TableFilter>)_filters).Add(trueFilterOption);
-                    var falseFilterOption = GetNewFilter();
-                    falseFilterOption.Text = Table.Locale.FilterOptions.False;
-                    falseFilterOption.Value = false;
-                    ((List<TableFilter>)_filters).Add(falseFilterOption);
                 }
-                else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
+                else if (_hasFilterableAttribute)
                 {
-                    _columnFilterType = TableFilterType.List;
-
-                    _filters = new List<TableFilter>();
-
-                    foreach (var enumValue in Enum.GetValues(_columnDataType))
+                    _columnDataType = THelper.GetUnderlyingType<TData>();
+                    if (_columnDataType == typeof(bool))
                     {
-                        var enumName = Enum.GetName(_columnDataType, enumValue);
-                        var filterOption = GetNewFilter();
-                        // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
-                        filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                        filterOption.Value = enumValue;
-                        ((List<TableFilter>)_filters).Add(filterOption);
-                    }
-                }
-                else
-                {
-                    _columnFilterType = TableFilterType.FieldType;
-                    InitFilters();
-                }
+                        _columnFilterType = TableFilterType.List;
 
-                if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
-                {
-                    var nullFilterOption = GetNewFilter();
-                    nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
-                    nullFilterOption.Value = null;
-                    ((List<TableFilter>)_filters).Add(nullFilterOption);
+                        _filters = new List<TableFilter>();
+
+                        var trueFilterOption = GetNewFilter();
+                        trueFilterOption.Text = Table.Locale.FilterOptions.True;
+                        trueFilterOption.Value = true;
+                        ((List<TableFilter>)_filters).Add(trueFilterOption);
+                        var falseFilterOption = GetNewFilter();
+                        falseFilterOption.Text = Table.Locale.FilterOptions.False;
+                        falseFilterOption.Value = false;
+                        ((List<TableFilter>)_filters).Add(falseFilterOption);
+                    }
+                    else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
+                    {
+                        _columnFilterType = TableFilterType.List;
+
+                        _filters = new List<TableFilter>();
+
+                        foreach (var enumValue in Enum.GetValues(_columnDataType))
+                        {
+                            var enumName = Enum.GetName(_columnDataType, enumValue);
+                            var filterOption = GetNewFilter();
+                            // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
+                            filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
+                            filterOption.Value = enumValue;
+                            ((List<TableFilter>)_filters).Add(filterOption);
+                        }
+                    }
+                    else
+                    {
+                        _columnFilterType = TableFilterType.FieldType;
+                        InitFilters();
+                    }
+
+                    if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
+                    {
+                        var nullFilterOption = GetNewFilter();
+                        nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
+                        nullFilterOption.Value = null;
+                        ((List<TableFilter>)_filters).Add(nullFilterOption);
+                    }
                 }
             }
 
             ClassMapper
                .If("ant-table-column-has-sorters", () => Sortable)
                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (IsHeader)
+            {
+                FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
+                    new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
+                    null;
+            }
         }
 
         private string NumberFormatter(object value)
