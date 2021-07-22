@@ -1,4 +1,3 @@
-
 <div>
     <Tree DataSource="_datas"
           TitleExpression="x => x.DataItem.Title"
@@ -17,15 +16,12 @@
 
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
     {
-        await Task.Delay(1500);
+
+        await Task.Delay(2000);//模拟异步执行
 
         var dataItem = ((Data)args.Node.DataItem);
         dataItem.Childs.Clear();
         dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
         dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
     }
-
-
 }
-
-
