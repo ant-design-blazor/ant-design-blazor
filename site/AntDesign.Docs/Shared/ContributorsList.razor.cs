@@ -61,9 +61,11 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePath == null)
                 return;
-
+#if DEBUG
+            _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
+#else
             _avatarList = await HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={FilePath}&owner=ant-design-blazor&repo=ant-design-blazor");
-
+#endif
             StateHasChanged();
         }
 
