@@ -378,6 +378,14 @@ namespace AntDesign.Select.Internal
             await OnClearClick.InvokeAsync(args);
         }
 
+        private async Task RemoveClicked(MouseEventArgs e, SelectOptionItem<TItemValue, TItem> selectedOption)
+        {
+            if (e.Button == 0)
+            {
+                await OnRemoveSelected.InvokeAsync(selectedOption);
+            }
+        }
+
         //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
         private async void OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
 

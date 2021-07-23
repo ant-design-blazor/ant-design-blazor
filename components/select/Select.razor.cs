@@ -12,6 +12,7 @@ using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using OneOf.Types;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
@@ -421,6 +422,7 @@ namespace AntDesign
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
+        private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
@@ -437,7 +439,7 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-
+        
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -521,12 +523,15 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
             if (SelectOptions == null)
+            {
                 CreateDeleteSelectOptions();
+                _optionsHasInitialized = true;
+            }
 
-            if (_valueHasChanged && _isInitialized)
+            if (_valueHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
                 OnValueChange(_selectedValue);
@@ -535,12 +540,17 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
-            
-            await base.OnParametersSetAsync();
+
+            base.OnParametersSet();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (SelectOptions != null)
+            {
+                _optionsHasInitialized = true;
+            }
+
             if (firstRender)
             {
                 await SetInitialValuesAsync();
@@ -573,7 +583,10 @@ namespace AntDesign
             }
 
             if (_isInitialized && SelectOptions == null)
+            {
                 CreateDeleteSelectOptions();
+                _optionsHasInitialized = true;
+            }
 
             if (_waittingStateChange)
             {
@@ -918,7 +931,9 @@ namespace AntDesign
                     SelectedOptionItems[0] = selectOption;
                 }
                 else
+                {
                     SelectedOptionItems.Add(selectOption);
+                }
 
                 selectOption.IsSelected = true;
                 await ValueChanged.InvokeAsync(selectOption.Value);
@@ -1001,7 +1016,9 @@ namespace AntDesign
                         firstEnabled.IsHidden = true;
 
                     if (SelectedOptionItems.Count == 0)
+                    {
                         SelectedOptionItems.Add(firstEnabled);
+                    }
                     else
                         SelectedOptionItems[0] = firstEnabled;
 
@@ -1051,7 +1068,9 @@ namespace AntDesign
 
                     _waittingStateChange = true;
                     if (SelectedOptionItems.Count == 0)
+                    {
                         SelectedOptionItems.Add(result);
+                    }
                     else
                         SelectedOptionItems[0] = result;
                     await ValueChanged.InvokeAsync(result.Value);
@@ -1310,7 +1329,7 @@ namespace AntDesign
         /// </summary>
         protected override void OnValueChange(TItemValue value)
         {
-            if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
+            if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
             if (!_isValueEnum && EqualityComparer<TItemValue>.Default.Equals(value, default))
@@ -1373,7 +1392,9 @@ namespace AntDesign
                 }
             }
             else
+            {
                 SelectedOptionItems.Add(optionItem);
+            }
         }
 
         /// <summary>

@@ -145,7 +145,7 @@ else //ParentSelect.SelectMode != SelectMode.Default
                             <span class="@Prefix-selection-item">
                                 <span class="@Prefix-selection-item-content">@FormatLabel(selectedOption.Label)</span>
                                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                        @onmousedown="()=> OnRemoveSelected.InvokeAsync(selectedOption)" onclick="event.stopPropagation()">
+                                        @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
                                     <Icon Type="close"></Icon>
                                 </span>
                             </span>
@@ -191,7 +191,7 @@ else //ParentSelect.SelectMode != SelectMode.Default
                             <span class="@Prefix-selection-item">
                                 <span class="@Prefix-selection-item-content">@FormatLabel(selectedOption.Label)</span>
                                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                        @onmousedown="()=> OnRemoveSelected.InvokeAsync(selectedOption)" onclick="event.stopPropagation()">
+                                        @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
                                     <Icon Type="close"></Icon>
                                 </span>
                             </span>
@@ -235,7 +235,7 @@ else //ParentSelect.SelectMode != SelectMode.Default
                             <span class="@Prefix-selection-item">
                                 <span class="@Prefix-selection-item-content">@FormatLabel(selectedOption.Label)</span>
                                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                        @onmousedown="()=> OnRemoveSelected.InvokeAsync(selectedOption)" onclick="event.stopPropagation()">
+                                        @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
                                     <Icon Type="close"></Icon>
                                 </span>
                             </span>
