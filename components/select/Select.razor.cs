@@ -12,6 +12,7 @@ using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using OneOf.Types;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
@@ -438,7 +439,7 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-
+        
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -930,7 +931,9 @@ namespace AntDesign
                     SelectedOptionItems[0] = selectOption;
                 }
                 else
+                {
                     SelectedOptionItems.Add(selectOption);
+                }
 
                 selectOption.IsSelected = true;
                 await ValueChanged.InvokeAsync(selectOption.Value);
@@ -1013,7 +1016,9 @@ namespace AntDesign
                         firstEnabled.IsHidden = true;
 
                     if (SelectedOptionItems.Count == 0)
+                    {
                         SelectedOptionItems.Add(firstEnabled);
+                    }
                     else
                         SelectedOptionItems[0] = firstEnabled;
 
@@ -1063,7 +1068,9 @@ namespace AntDesign
 
                     _waittingStateChange = true;
                     if (SelectedOptionItems.Count == 0)
+                    {
                         SelectedOptionItems.Add(result);
+                    }
                     else
                         SelectedOptionItems[0] = result;
                     await ValueChanged.InvokeAsync(result.Value);
@@ -1385,7 +1392,9 @@ namespace AntDesign
                 }
             }
             else
+            {
                 SelectedOptionItems.Add(optionItem);
+            }
         }
 
         /// <summary>
