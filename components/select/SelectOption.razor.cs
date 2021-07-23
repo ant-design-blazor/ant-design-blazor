@@ -249,8 +249,9 @@ namespace AntDesign
         {
             if (SelectParent?.SelectOptions != null)
             {
-                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
-                var selectOptionItem = SelectParent.SelectOptionItems.FirstOrDefault(x => x.InternalId == InternalId);
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
+                var selectOptionItem = SelectParent.SelectOptionItems
+                    .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
                     SelectParent.SelectOptionItems.Remove(selectOptionItem);
             }
