@@ -1,32 +1,25 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 
 namespace AntDesign
 {
-    public class EnumSelect<TEnum> : Select<TEnum, EnumLookup<TEnum>>
+    public class EnumSelect<TEnum> : Select<TEnum, EnumLabelValue<TEnum>>
     {
         public EnumSelect()
         {
             if (typeof(TEnum).IsEnum)
             {
                 DataSource = Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
-                .Select(t => new EnumLookup<TEnum>
-                {
-                    Value = t,
-                    Label = Enum.GetName(typeof(TEnum), t)
-                })
+                .Select(t => new EnumLabelValue<TEnum>(Enum.GetName(typeof(TEnum), t), t))
                 .OrderBy(t => t.Value)
                 .ToList();
-                ValueName = nameof(EnumLookup<TEnum>.Value);
-                LabelName = nameof(EnumLookup<TEnum>.Label);
+                LabelName = nameof(EnumLabelValue<TEnum>.Label);
+                ValueName = nameof(EnumLabelValue<TEnum>.Value);
             }
         }
-    }
-
-    public class EnumLookup<TEnum>
-    {
-        public TEnum Value { get; set; }
-
-        public string Label { get; set; }
     }
 }
