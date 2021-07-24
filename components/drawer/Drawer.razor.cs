@@ -283,11 +283,12 @@ namespace AntDesign
                     }
                 case ComponentStatus.Closing:
                     {
+                        _status = ComponentStatus.Closed;
                         if (!_hasInvokeClosed)
                         {
                             await HandleClose(true);
                         }
-                        _status = ComponentStatus.Closed;
+                        await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                         break;
                     }
             }
@@ -353,8 +354,6 @@ namespace AntDesign
             {
                 await OnClose.InvokeAsync(this);
             }
-            await Task.Delay(300);
-            await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
         }
 
         private void CalcAnimation()
