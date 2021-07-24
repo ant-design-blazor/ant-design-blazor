@@ -20,8 +20,6 @@ namespace AntDesign
 
         public bool Mask { get; set; } = true;
 
-        public bool NoAnimation { get; set; } = false;
-
         public bool Keyboard { get; set; } = true;
 
         public OneOf<RenderFragment, string> Title { get; set; }

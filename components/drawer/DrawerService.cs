@@ -103,7 +103,6 @@ namespace AntDesign
             string title = null,
             int width = 256,
             bool mask = true,
-            bool noAnimation = false,
              string placement = "right") where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             var config = new DrawerOptions()
@@ -113,7 +112,6 @@ namespace AntDesign
                 Title = title,
                 Width = width,
                 Mask = mask,
-                NoAnimation = noAnimation,
                 Placement = placement,
             };
             return await CreateDialogAsync<TComponent, TComponentOptions, TResult>(config, options);

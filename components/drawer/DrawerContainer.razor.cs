@@ -34,11 +34,13 @@ namespace AntDesign
         /// </summary>
         private async Task DrawerService_OnCreate(DrawerRef drawerRef)
         {
-            drawerRef.Config.Visible = true;
             if (!_drawerRefs.Contains(drawerRef))
             {
                 _drawerRefs.Add(drawerRef);
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(10);
             }
+            drawerRef.Config.Visible = true;
             await InvokeAsync(StateHasChanged);
         }
 
