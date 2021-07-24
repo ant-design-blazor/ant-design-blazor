@@ -1,13 +1,9 @@
-﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" @bind-Value="p" />
+﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" />
 
 @code {
-
-    Province p = Province.Zhejiang;
-
-    void handleChange(EnumLabelValue<Province> province)
+    void handleChange(Province province)
     {
-        Console.WriteLine(province.Label);
-        Console.WriteLine(p);
+        Console.WriteLine(province);
     }
 
     public enum Province

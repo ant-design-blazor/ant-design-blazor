@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,6 +12,8 @@ namespace AntDesign
     public static class EnumHelper<T>
     {
         private static readonly Func<T, T, T> _aggregateFunction;
+
+        private static IEnumerable<T> _valueList;
 
         static EnumHelper()
         {
@@ -32,12 +33,13 @@ namespace AntDesign
             }
         }
 
-        public static IList<EnumLabelValue<T>> GetLabelValueList()
+        public static IEnumerable<T> GetValueList()
         {
-            return Enum.GetValues(typeof(T)).Cast<T>()
-                 .Select(t => new EnumLabelValue<T>(Enum.GetName(typeof(T), t), t))
-                 .OrderBy(t => t.Value)
-                 .ToList();
+            if (_valueList.Any())
+            {
+                _valueList = Enum.GetValues(typeof(T)).Cast<T>();
+            }
+            return _valueList;
         }
 
         private static Func<T, T, T> BuildAggregateFunction()

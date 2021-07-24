@@ -4,15 +4,13 @@
 
 namespace AntDesign
 {
-    public class EnumSelect<TEnum> : Select<TEnum, EnumLabelValue<TEnum>>
+    public class EnumSelect<TEnum> : Select<TEnum, TEnum>
     {
         public EnumSelect()
         {
             if (typeof(TEnum).IsEnum)
             {
-                DataSource = EnumHelper<TEnum>.GetLabelValueList();
-                LabelName = nameof(EnumLabelValue<TEnum>.Label);
-                ValueName = nameof(EnumLabelValue<TEnum>.Value);
+                DataSource = EnumHelper<TEnum>.GetValueList();
             }
         }
     }
