@@ -91,14 +91,7 @@ namespace AntDesign
             }
         }
 
-        private string InnerZIndexStyle
-        {
-            get
-            {
-                Console.WriteLine("InnerZIndexStyle  " + _status);
-                return (_status.IsOpen() || _status == ComponentStatus.Closing) ? _zIndexStyle : "z-index:-9999;";
-            }
-        }
+        private string InnerZIndexStyle => (_status.IsOpen() || _status == ComponentStatus.Closing) ? _zIndexStyle : "z-index:-9999;";
 
         [Parameter] public int OffsetX { get; set; } = 0;
 
