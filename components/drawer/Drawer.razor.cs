@@ -201,18 +201,12 @@ namespace AntDesign
 
         private ClassMapper TitleClassMapper { get; set; } = new ClassMapper();
 
-        private string WrapperStyle
-        {
-            get
-            {
-                Console.WriteLine("WrapperStyle " + _status);
-                return $@"
+        private string WrapperStyle => $@"
             {(WidthPx != null ? $"width:{WidthPx};" : "")}
             {(HeightPx != null ? $"height:{HeightPx};" : "")}
             {(Transform != null ? $"transform:{Transform};" : "")}
             {(PlacementChanging ? "transition:none;" : "")}";
-            }
-        }
+
         private static Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
         private string _drawerStyle = "";
