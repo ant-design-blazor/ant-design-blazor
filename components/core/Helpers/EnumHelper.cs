@@ -20,6 +20,7 @@ namespace AntDesign
         static EnumHelper()
         {
             _aggregateFunction = BuildAggregateFunction();
+            _valueList = Enum.GetValues(typeof(T)).Cast<T>();
         }
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
@@ -37,18 +38,14 @@ namespace AntDesign
 
         public static IEnumerable<T> GetValueList()
         {
-            if (_valueList.Any())
-            {
-                _valueList = Enum.GetValues(typeof(T)).Cast<T>();
-            }
             return _valueList;
         }
 
         public static string GetDisplayName(T t)
         {
-            var propertyInfo = typeof(T).GetProperty(t.ToString());
-            return propertyInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
-                 propertyInfo.Name;
+            var fieldInfo = typeof(T).GetField(t.ToString());
+            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
+                 fieldInfo.Name;
 
         }
 
