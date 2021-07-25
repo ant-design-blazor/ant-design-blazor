@@ -13,5 +13,10 @@ namespace AntDesign
                 DataSource = EnumHelper<TEnum>.GetValueList();
             }
         }
+
+        protected override string GetLabel(TEnum item)
+        {
+            return EnumHelper<TEnum>.GetDisplayName(item);
+        }
     }
 }

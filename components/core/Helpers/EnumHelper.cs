@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace AntDesign
 {
@@ -40,6 +42,14 @@ namespace AntDesign
                 _valueList = Enum.GetValues(typeof(T)).Cast<T>();
             }
             return _valueList;
+        }
+
+        public static string GetDisplayName(T t)
+        {
+            var propertyInfo = typeof(T).GetProperty(t.ToString());
+            return propertyInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
+                 propertyInfo.Name;
+
         }
 
         private static Func<T, T, T> BuildAggregateFunction()

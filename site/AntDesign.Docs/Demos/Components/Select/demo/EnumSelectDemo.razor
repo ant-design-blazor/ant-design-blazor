@@ -1,5 +1,6 @@
 ﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" />
 
+@using System.ComponentModel.DataAnnotations
 @code {
     void handleChange(Province province)
     {
@@ -8,6 +9,7 @@
 
     public enum Province
     {
+        [Display(Name = "浙江")]
         Zhejiang,
 
         Jiangsu
