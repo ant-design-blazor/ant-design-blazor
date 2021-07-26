@@ -251,6 +251,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                                             <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@Table?.Locale.FilterOptions.Contains"></SelectOption>
                                                             <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotContains" Label="@Table?.Locale.FilterOptions.NotContains"></SelectOption>
                                                         }
+                                                        else if (_columnDataType == typeof(Guid)) { }
                                                         else
                                                         {
                                                             <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThan" Label="@Table?.Locale.FilterOptions.GreaterThan"></SelectOption>
@@ -371,6 +372,10 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         else if (_columnDataType == typeof(ulong))
         {
             <InputNumber Value="(ulong?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="ulong?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+        }
+        else if (_columnDataType == typeof(Guid))
+        {
+            <Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => SetFilterValue(filter, value)" />
         }
         else
         {
