@@ -662,7 +662,7 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = _getLabel == null ? item.ToString() : _getLabel(item);
+                var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
 
                 bool isSelected = false;
                 if (processedSelectedCount > 0)
@@ -1311,6 +1311,11 @@ namespace AntDesign
         {
             if (_dropDown.Visible)
                 await _dropDown.GetOverlayComponent().UpdatePosition();
+        }
+
+        protected virtual string GetLabel(TItem item)
+        {
+            return item.ToString();
         }
 
         #region Events
