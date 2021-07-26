@@ -39,7 +39,7 @@ jobs:
           dotnet test --collect:"XPlat Code Coverage"
           find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
           npm install ./tests/AntDesign.Tests.Js
-	  npm --prefix ./tests/AntDesign.Tests.Js run test-ts
+          npm --prefix ./tests/AntDesign.Tests.Js run test-ts
 
       - name: Upload coverage to Codecov 
         uses: codecov/codecov-action@v1
