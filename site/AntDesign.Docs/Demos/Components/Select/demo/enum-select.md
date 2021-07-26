@@ -1,14 +1,14 @@
 ---
 order: 26
 title:
-  zh-CN: 枚举
-  en-US: Enum
+  zh-CN: 枚举选择器
+  en-US: EnumSelect
 ---
 
 ## zh-CN
 
-根据枚举生成选择器
+对于枚举类型，可使用更便捷的枚举选择器 `EnumSelect`。
 
 ## en-US
 
-Generating selectors from enum
+You can use `EnumSelect` from enum types.
