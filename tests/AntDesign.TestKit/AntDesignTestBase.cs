@@ -8,19 +8,15 @@ namespace AntDesign.Tests
 {
     public class AntDesignTestBase : TestContext, IDisposable
     {
-        public TestNavigationManager NavigationManager { get; }
-
-        protected TestContext Context => this;
+        public TestContext Context => this;
+        public NavigationManager NavigationManager => Services.GetRequiredService<NavigationManager>();
 
         public AntDesignTestBase()
         {
-            NavigationManager = new TestNavigationManager();
-
-            Context.Services.AddScoped<NavigationManager>(sp => NavigationManager);
-            Context.Services.AddAntDesign();
+            Services.AddAntDesign();
 
             //Needed for Tests using Overlay
-            Context.Services.AddScoped<AntDesign.JsInterop.DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime));
+            Services.AddScoped<AntDesign.JsInterop.DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime));
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
         }

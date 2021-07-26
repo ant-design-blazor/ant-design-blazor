@@ -1,0 +1,72 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+
+<Switch @bind-Value="@validateOnChange" CheckedChildren="ValidateOnChange" UnCheckedChildren="ValidateOnSubmit" />
+<p />
+<Form Model="@modelDefault"
+	  ValidateMode="@FormValidateMode.Default"
+	  ValidateOnChange="@validateOnChange"
+	  LabelColSpan="10"
+	  WrapperColSpan="14"
+	  Size="@AntSizeLDSType.Small">
+	<FormItem Label="Default-UserName">
+		<Input @bind-Value="@context.Username" />
+	</FormItem>
+	<FormItem WrapperColOffset="8" WrapperColSpan="16">
+		<Button Type="@ButtonType.Primary" HtmlType="submit">
+			Submit
+		</Button>
+	</FormItem>
+</Form>
+
+
+<Form Model="@modelRules"
+	  ValidateMode="@FormValidateMode.Rules"
+	  ValidateOnChange="@validateOnChange"
+	  LabelColSpan="10"
+	  WrapperColSpan="14"
+	  Size="@AntSizeLDSType.Small">
+	<FormItem Label="Rules-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+		<Input @bind-Value="@context.Username" />
+	</FormItem>
+	<FormItem Label="Rules-Number" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Type=FormFieldType.Number, Len=100 } })>
+		<Input @bind-Value="@context.Number" />
+	</FormItem>
+	<FormItem WrapperColOffset="8" WrapperColSpan="16">
+		<Button Type="@ButtonType.Primary" HtmlType="submit">
+			Submit
+		</Button>
+	</FormItem>
+</Form>
+
+<Form Model="@modelComplex"
+	  ValidateMode="@FormValidateMode.Complex"
+	  ValidateOnChange="@validateOnChange"
+	  LabelColSpan="10"
+	  WrapperColSpan="14"
+	  Size="@AntSizeLDSType.Small">
+	<FormItem Label="Complex-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+		<Input @bind-Value="@context.Username" />
+	</FormItem>
+	<FormItem WrapperColOffset="8" WrapperColSpan="16">
+		<Button Type="@ButtonType.Primary" HtmlType="submit">
+			Submit
+		</Button>
+	</FormItem>
+</Form>
+
+@code
+{
+	public class Model
+	{
+		[StringLength(5)]
+		public string Username { get; set; }
+		public decimal Number { get; set; }
+	}
+
+	private Model modelDefault = new Model();
+	private Model modelRules = new Model();
+	private Model modelComplex = new Model();
+	private bool validateOnChange = false;
+	private FormValidateMode validateMode = FormValidateMode.Complex;
+}

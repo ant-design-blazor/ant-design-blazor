@@ -9,7 +9,7 @@
 
     @if (HasStatusOrColor && ChildContent == null)
     {
-        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor}":"")}")" style="@DotColorStyle @Style"></span>
+        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor.ToLowerInvariant()}":"")}")" style="@DotColorStyle @Style"></span>
 
         @if (!string.IsNullOrEmpty(Text))
         {

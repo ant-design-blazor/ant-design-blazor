@@ -9,6 +9,17 @@ namespace AntDesign
 {
     public partial class TreeNodeTitle<TItem> : ComponentBase
     {
+        #region fields
+
+        private const double OffSETX = 25;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private double _dragTargetClientX = 0;
+
+        #endregion
+
         /// <summary>
         /// 树控件本身
         /// </summary>
@@ -31,7 +42,8 @@ namespace AntDesign
 
         private void SetTitleClassMapper()
         {
-            TitleClassMapper.Clear().Add("ant-tree-node-content-wrapper")
+            TitleClassMapper
+                .Add("ant-tree-node-content-wrapper")
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
@@ -44,12 +56,11 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
-        {
-            SetTitleClassMapper();
-            base.OnParametersSet();
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private async Task OnClick(MouseEventArgs args)
         {
             SelfNode.SetSelected(!SelfNode.Selected);
@@ -59,10 +70,103 @@ namespace AntDesign
                 await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private async Task OnDblClick(MouseEventArgs args)
         {
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragStart(DragEventArgs e)
+        {
+            TreeComponent.DragItem = SelfNode;
+            SelfNode.Expand(false);
+            if (TreeComponent.OnDragStart.HasDelegate)
+                TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// Leaving releases the target
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragLeave(DragEventArgs e)
+        {
+            SelfNode.DragTarget = false;
+            SelfNode.SetParentTargetContainer();
+            if (TreeComponent.OnDragLeave.HasDelegate)
+                TreeComponent.OnDragLeave.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragEnter(DragEventArgs e)
+        {
+            if (TreeComponent.DragItem == SelfNode) return;
+            SelfNode.DragTarget = true;
+            _dragTargetClientX = e.ClientX;
+
+            System.Diagnostics.Debug.WriteLine($"OnDragEnter {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
+
+            if (TreeComponent.OnDragEnter.HasDelegate)
+                TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// Can be treated as a child if the target is moved to the right beyond the OffsetX distance  
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragOver(DragEventArgs e)
+        {
+            if (TreeComponent.DragItem == SelfNode) return;
+            if (e.ClientX - _dragTargetClientX > OffSETX)
+            {
+                SelfNode.SetTargetBottom();
+                SelfNode.SetParentTargetContainer();
+                SelfNode.Expand(true);
+            }
+            else
+            {
+                SelfNode.SetTargetBottom(true);
+                SelfNode.SetParentTargetContainer(true);
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDrop(DragEventArgs e)
+        {
+            SelfNode.DragTarget = false;
+            SelfNode.SetParentTargetContainer();
+            if (SelfNode.DragTargetBottom)
+                TreeComponent.DragItem.DragMoveDown(SelfNode);
+            else
+                TreeComponent.DragItem.DragMoveInto(SelfNode);
+
+            if (TreeComponent.OnDrop.HasDelegate)
+                TreeComponent.OnDrop.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
+        }
+
+        /// <summary>
+        /// Drag the end
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragEnd(DragEventArgs e)
+        {
+            if (TreeComponent.OnDragEnd.HasDelegate)
+                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
         }
     }
 }

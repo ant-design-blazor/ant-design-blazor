@@ -1,0 +1,27 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inherits AntDesignTestBase
+@code {
+    enum City
+    {
+        [Display(Name = "Shanghai City")]
+        Shanghai,
+        Zhejiang,
+        Beijing,
+    }
+
+    [Fact]
+    public void Render_enum_select()
+    {
+         //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());   
+            
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect> );
+        var options = cut.FindAll(".ant-select-item-option-content");
+
+        Assert.Equal(3, options.Count);
+        Assert.Equal("Shanghai City", options[0].TextContent.Trim('\n').Trim());
+        Assert.Equal("Zhejiang", options[1].TextContent.Trim());
+        Assert.Equal("Beijing", options[2].TextContent.Trim());
+    }
+}

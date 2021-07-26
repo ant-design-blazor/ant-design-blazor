@@ -19,6 +19,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public FormConfig Form { get; set; }
+
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Inject] public ConfigService ConfigService { get; set; }

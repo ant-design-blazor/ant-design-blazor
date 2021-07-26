@@ -11,7 +11,14 @@
               EditContext="_editContext"
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
-        @Validator
+        @if(ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+        {
+            <FormRulesValidator @ref="_rulesValidator" />
+        }
+        @if (ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex))
+        {
+            @Validator
+        }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
             @if (!string.IsNullOrEmpty(Size))
             {
