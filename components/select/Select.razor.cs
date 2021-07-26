@@ -544,8 +544,8 @@ namespace AntDesign
             get => _valueName;
             set
             {
-                _getValue = SelectItemPropertyHelper.CreateGetValueFunc<TItem, TItemValue>(value);
-                _setValue = SelectItemPropertyHelper.CreateSetValueFunc<TItem, TItemValue>(value);
+                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
                 _valueName = value;
             }
         }
@@ -813,6 +813,7 @@ namespace AntDesign
         /// </summary>
         private void CreateDeleteSelectOptions()
         {
+
             if (_datasource == null)
                 return;
 
