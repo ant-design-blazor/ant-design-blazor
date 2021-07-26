@@ -6,17 +6,19 @@
 }
 
 export class uploadHelper {
-  static addFileClickEventListener(btn: HTMLElement) {
+  static addFileClickEventListener(btn: HTMLElement, event: string) {
     if (btn.addEventListener) {
-      btn.addEventListener("click", this.fileClickEvent);
+      btn.addEventListener(event, this.fileClickEvent);
     }
   }
 
-  static removeFileClickEventListener(btn: HTMLElement) {
-    btn.removeEventListener("click", this.fileClickEvent);
+  static removeFileClickEventListener(btn: HTMLElement, event: string) {
+    btn.removeEventListener(event, this.fileClickEvent);
   }
 
   private static fileClickEvent(e: MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
     const fileId = (e.currentTarget as HTMLSpanElement).attributes["data-fileid"].nodeValue;
     const element = document.getElementById(fileId) as HTMLInputElement;
     element.click();
