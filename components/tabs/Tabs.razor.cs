@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -95,7 +99,7 @@ namespace AntDesign
         /// Whether to change tabs with animation. Only works while <see cref="TabPosition"/> = <see cref="TabPosition.Top"/> or <see cref="TabPosition.Bottom"/>
         /// </summary>
         [Parameter]
-        public bool Animated { get; set; } = true;
+        public bool Animated { get; set; }
 
         /// <summary>
         /// Replace the TabBar
@@ -163,6 +167,13 @@ namespace AntDesign
         [Parameter]
         public Func<string, string, Task<bool>> OnEdit { get; set; } = (key, action) => Task.FromResult(true);
 
+        /// <summary>
+        /// Callback when tab is closed
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> OnClose { get; set; }
+
+
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
@@ -215,13 +226,6 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
-
-            if (Type == TabType.Card)
-            {
-                // according to ant design documents,
-                // Animated default to false when type="card"
-                Animated = false;
-            }
         }
 
         protected override void OnParametersSet()
@@ -229,8 +233,17 @@ namespace AntDesign
             base.OnParametersSet();
             _needRefresh = true;
             _renderedActivePane = null;
+        }
 
-            base.OnParametersSet();
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            string type = parameters.GetValueOrDefault<string>(nameof(Type));
+
+            // according to ant design documents,
+            // Animated default to false when type="card"
+            Animated = type != TabType.Card;
+
+            return base.SetParametersAsync(parameters);
         }
 
         /// <summary>
@@ -305,6 +318,12 @@ namespace AntDesign
                 }
 
                 _needRefresh = true;
+
+                if (OnClose.HasDelegate)
+                {
+                    await OnClose.InvokeAsync(pane.Key);
+                }
+
                 StateHasChanged();
             }
         }

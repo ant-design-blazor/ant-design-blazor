@@ -36,17 +36,25 @@
 		Placeholder="Choose"
 		AllowClear>
 </Select>
+<Select DataSource="@_personNames"
+        @bind-Value="@_selectedValue5"
+        Style="width: 120px;"
+        Placeholder="Choose"
+        OnSelectedItemChanged="@((personName) => Console.WriteLine($"selectedItem:{personName},selectedValue:{_selectedValue5}"))">
+</Select>
 @code
 {
-	List<Person> _list;
-	string _selectedValue1, _selectedValue2, _selectedValue3;
-	string _selectedValue4 = "lucy";
-	class Person
-	{
-		public string Value { get; set; }
-		public string Name { get; set; }
-		public bool IsDisabled { get; set; }
-	}
+    List<Person> _list;
+    List<string> _personNames;
+    string _selectedValue1, _selectedValue2, _selectedValue3;
+    string _selectedValue4 = "lucy";
+    string _selectedValue5 = "Lucy";
+    class Person
+    {
+        public string Value { get; set; }
+        public string Name { get; set; }
+        public bool IsDisabled { get; set; }
+    }
 
     protected override void OnInitialized()
     {
@@ -56,7 +64,8 @@
             new Person {Value = "lucy", Name = "Lucy"},
             new Person {Value = "disabled", Name = "Disabled", IsDisabled = true},
             new Person {Value = "yaoming", Name = "YaoMing"}
-		};
+        };
+        _personNames = new List<string> { "Jack", "Lucy", "YaoMing" };
     }
 
     private void OnSelectedItemChangedHandler(Person value)

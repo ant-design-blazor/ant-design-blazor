@@ -3,11 +3,17 @@
 
 @using AntDesign.Internal;
 
-<span class="@ClassMapper.Class @(IsPictureCard? "ant-upload-picture-card-wrapper" : "")" style="@Style" @ref="Ref">
-    @if (!IsPictureCard || !ShowUploadList)
-    {
-        <CascadingValue Value="this" IsFixed>
-            <UploadButton Action="@Action"
+<span style="@Style" @ref="Ref" class="@ClassMapper.Class @(IsPictureCard? "ant-upload-picture-card-wrapper" : "")"
+     @ondragover="@HandleDrag"
+     @ondragleave="@HandleDrag"
+     @ondrop="@HandleDrag"
+     @ondragover:stopPropagation
+     @ondragleave:stopPropagation
+     @ondrop:stopPropagation>
+        @if (!IsPictureCard || !ShowUploadList)
+        {
+            <CascadingValue Value="this" IsFixed>
+                <UploadButton Action="@Action"
                           Accept="@Accept"
                           ListType="@ListType"
                           Name="@Name"
@@ -17,10 +23,10 @@
                           Headers="@Headers"
                           Disabled="Disabled"
                           ShowButton="@ShowButton">
-                @ChildContent
-            </UploadButton>
-        </CascadingValue>
-    }
+                    @ChildContent
+                </UploadButton>
+            </CascadingValue>
+        }
 
     @if (ShowUploadList)
     {
@@ -90,7 +96,7 @@
                                                     {
                                                         <Icon Type="paper-clip" />
                                                     }
-                                                </div>                                                
+                                                </div>
                                             }
                                             else
                                             {
@@ -161,15 +167,15 @@
             {
                 <CascadingValue Value="this" IsFixed>
                     <UploadButton Action="@Action"
-                                  Accept="@Accept"
-                                  ListType="@ListType"
-                                  Name="@Name"
-                                  Directory="@Directory"
-                                  Multiple="@Multiple"
-                                  Data="@Data"
-                                  Headers="@Headers"
-                                  Disabled="Disabled"
-                                  ShowButton="@ShowButton">
+                          Accept="@Accept"
+                          ListType="@ListType"
+                          Name="@Name"
+                          Directory="@Directory"
+                          Multiple="@Multiple"
+                          Data="@Data"
+                          Headers="@Headers"
+                          Disabled="Disabled"
+                          ShowButton="@ShowButton">
                         @ChildContent
                     </UploadButton>
                 </CascadingValue>
@@ -177,4 +183,3 @@
         </div>
     }
 </span>
-

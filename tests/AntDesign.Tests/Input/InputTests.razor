@@ -119,4 +119,20 @@
 		isClearButtonVisible.Should().BeTrue();
 		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
 	}
+
+	[Fact]
+	public async Task Input_Debounce_sets_value()
+	{
+		//Arrange	
+		string value = null;
+		int debounce = 50;
+		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value DebounceMilliseconds="@debounce"/>);
+		//Act
+		cut.Find("input").Input("newValue");
+		cut.Find("input").KeyUp(String.Empty);
+		//Assert		
+		await Task.Delay(debounce + 100);		
+
+		cut.Instance.Value.Should().Be("newValue");
+	} 
 }

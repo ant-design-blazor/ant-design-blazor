@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System;
+using System.Text;
 
 namespace AntDesign
 {
@@ -50,16 +52,30 @@ namespace AntDesign
                 if (_color != value)
                 {
                     _color = value;
-                    _presetColor = IsPresetColor(_color);
-                    if (_presetColor)
-                    {
-                        _style = Style;
-                    }
-                    else
-                    {
-                        _style = $"background-color: {_color};{Style}";
-                    }
+                    _isPresetColor = IsPresetColor(_color);
+                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value  
+                    _style = GetStyle();
                 }
+            }
+        }
+
+        [Parameter]
+        public PresetColor? PresetColor
+        {
+            get
+            {
+                object result;
+
+                if (Enum.TryParse(typeof(PresetColor), _color, true, out result) == false)
+                {
+                    return null;
+                }
+
+                return (PresetColor)result;
+            }
+            set
+            {
+                Color = Enum.GetName(typeof(PresetColor), value).ToLowerInvariant();
             }
         }
 
@@ -68,6 +84,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
+
+        [Parameter]
+        public bool NoAnimation { get; set; }
 
         /// <summary>
         /// Callback executed when tag is closed
@@ -95,7 +114,8 @@ namespace AntDesign
         public bool Visible { get; set; } = true;
 
 
-        private bool _presetColor;
+        private bool _isPresetColor;
+        private bool _isCustomColor;
         private bool _closed;
         private string _color;
         private string _style;
@@ -120,14 +140,30 @@ namespace AntDesign
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)
-                .If($"{_prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
+                .If($"{_prefix}-has-color", () => _isCustomColor)
                 .If($"{_prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{_prefix}-{Color}", () => _presetColor)
+                .GetIf(() => $"{_prefix}-{_color}", () => _isPresetColor)
                 .If($"{_prefix}-checkable", () => Checkable)
                 .If($"{_prefix}-checkable-checked", () => Checked)
                 .If($"{_prefix}-rtl", () => RTL)
                 .If($"{_prefix}-clickable", () => OnClick.HasDelegate)
                 ;
+        }
+
+        private string GetStyle() {
+            StringBuilder styleBuilder = new StringBuilder();
+
+            styleBuilder.Append(Style);
+
+            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
+                styleBuilder.Append(";");
+            }
+
+            if (_isCustomColor) {
+                styleBuilder.Append($"background-color: {_color};");
+            }
+
+            return styleBuilder.ToString();
         }
 
         private async Task UpdateCheckedStatus()

@@ -11,6 +11,8 @@ namespace AntDesign.TableModels
 
         public IEnumerable<string> SelectedValues { get; }
 
+        public IList<TableFilter> Filters { get; }
+
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source);
     }
 }
