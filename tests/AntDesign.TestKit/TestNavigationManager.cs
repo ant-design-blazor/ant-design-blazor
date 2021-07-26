@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests
 {
+    [Obsolete("Use built in NavigationManager")]
     public class TestNavigationManager : NavigationManager
     {
         public delegate void NavigatedCallback(string uri, bool forceLoad);

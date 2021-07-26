@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -25,26 +29,40 @@ namespace AntDesign
         public TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
-        /// 子节点
+        ///
         /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
-        public List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
-
-        public bool HasChildNodes => ChildNodes?.Count > 0;
+        internal List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         /// <summary>
-        /// 当前节点级别
+        /// Whether child nodes exist
         /// </summary>
-        public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;//因为第一层是0，所以默认是-1
+        internal bool HasChildNodes => ChildNodes?.Count > 0;
 
         /// <summary>
-        /// 添加节点
+        /// Current Node Level
         /// </summary>
-        /// <param name=""></param>
+        public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
+
+        /// <summary>
+        /// record the index in children nodes list of parent node. 
+        /// </summary>
+        internal int NodeIndex { get; set; }
+
+        /// <summary>
+        /// Determine if it is the last node in the same level nodes.
+        /// </summary>
+        internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
+
+        /// <summary>
+        /// add node to parent node
+        /// </summary>
+        /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
+            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
             IsLeaf = false;
         }
@@ -76,7 +94,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 获得上级数据集合
+        /// Obtain the parent data set
         /// </summary>
         /// <returns></returns>
         public List<TreeNode<TItem>> GetParentNodes()
@@ -119,7 +137,7 @@ namespace AntDesign
         private string _key;
 
         /// <summary>
-        /// 指定当前节点的唯一标识符名称。
+        /// Specifies the unique identifier name of the current node。
         /// </summary>
         [Parameter]
         public string Key
@@ -140,19 +158,19 @@ namespace AntDesign
         private bool _disabled;
 
         /// <summary>
-        /// 是否禁用
+        /// The disabled state is subject to the parent node
         /// </summary>
         [Parameter]
         public bool Disabled
         {
-            get { return _disabled || (ParentNode?.Disabled ?? false); }//禁用状态受制于父节点
+            get { return _disabled || (ParentNode?.Disabled ?? false); }
             set { _disabled = value; }
         }
 
         private bool _selected;
 
         /// <summary>
-        /// 是否已选中
+        /// Selected or not
         /// </summary>
         [Parameter]
         public bool Selected
@@ -165,10 +183,19 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Setting Selection State
+        /// </summary>
+        /// <param name="value"></param>
         public void SetSelected(bool value)
         {
+            if (Disabled) return;
+            if (!TreeComponent.Selectable && TreeComponent.Checkable)
+            {
+                SetChecked(!Checked);
+                return;
+            }
             if (_selected == value) return;
-            if (Disabled == true) return;
             _selected = value;
             if (value == true)
             {
@@ -183,21 +210,91 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 是否异步加载状态(影响展开图标展示)
+        /// Whether the load state is asynchronous (affects the display of the expansion icon)
         /// </summary>
         [Parameter]
         public bool Loading { get; set; }
 
+        private bool _dragTarget;
+
+        /// <summary>
+        /// Whether or not to release the target
+        /// </summary>
+        internal bool DragTarget
+        {
+            get { return _dragTarget; }
+            set
+            {
+                _dragTarget = value;
+                StateHasChanged();
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal bool DragTargetBottom { get; private set; }
+
+        /// <summary>
+        /// Sets the node to release the target location
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetTargetBottom(bool value = false)
+        {
+            if (DragTargetBottom == value) return;
+            this.DragTargetBottom = value;
+            StateHasChanged();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        private bool TargetContainer { get; set; }
+
+        /// <summary>
+        /// Sets the drag and drop target node container
+        /// </summary>
+        internal void SetParentTargetContainer(bool value = false)
+        {
+            if (this.ParentNode == null) return;
+            if (this.ParentNode.TargetContainer == value) return;
+            this.ParentNode.TargetContainer = value;
+            this.ParentNode.StateHasChanged();
+        }
+
+        /// <summary>
+        /// Gets the children of the parent node
+        /// </summary>
+        /// <returns></returns>
+        private List<TreeNode<TItem>> GetParentChildNodes()
+        {
+            return this.ParentNode?.ChildNodes ?? TreeComponent.ChildNodes;
+        }
+
+        /// <summary>
+        /// Remove the current node
+        /// </summary>
+        public void RemoveNode()
+        {
+            GetParentChildNodes().Remove(this);
+        }
+
         private void SetTreeNodeClassMapper()
         {
-            ClassMapper.Clear().Add("ant-tree-treenode")
+            ClassMapper
+                .Add("ant-tree-treenode")
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)
                 .If("ant-tree-treenode-checkbox-checked", () => Checked)
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
-                .If("ant-tree-treenode-loading", () => Loading);
+                .If("ant-tree-treenode-loading", () => Loading)
+                .If("drop-target", () => DragTarget)
+                .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
+                .If("drag-over", () => DragTarget && !DragTargetBottom)
+                .If("drop-container", () => TargetContainer)
+                .If("ant-tree-treenode-leaf-last", () => IsLastNode);
         }
 
         #endregion TreeNode
@@ -207,7 +304,7 @@ namespace AntDesign
         private bool _isLeaf = true;
 
         /// <summary>
-        /// 是否为叶子节点
+        /// Whether it is a leaf node
         /// </summary>
         [Parameter]
         public bool IsLeaf
@@ -228,121 +325,180 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 是否已展开
+        /// Whether it has been expanded
         /// </summary>
         [Parameter]
         public bool Expanded { get; set; }
 
         /// <summary>
-        /// 折叠节点
+        /// Expand the node
         /// </summary>
         /// <param name="expanded"></param>
         public void Expand(bool expanded)
         {
+            if (Expanded == expanded) return;
             Expanded = expanded;
         }
 
         /// <summary>
-        /// 真实的展开状态，路径上只要存在折叠，那么下面的全部折叠
+        /// The real expand state, as long as there is a expaneded node on the path, then all the folds below
         /// </summary>
         internal bool RealDisplay
         {
             get
             {
-                if (string.IsNullOrEmpty(TreeComponent.SearchValue))
-                {//普通模式下节点显示规则
-                    if (ParentNode == null) return true;//第一级节点默认显示
-                    if (ParentNode.Expanded == false) return false;//上级节点如果是折叠的，必定折叠
-                    return ParentNode.RealDisplay; //否则查找路径三的级节点显示情况
-                }
-                else
-                {//筛选模式下不考虑节点是否展开，只要节点符合条件，或者存在符合条件的子节点是就展开显示
-                    return Matched || HasChildMatched;
-                }
+                if (ParentNode == null) return true;
+                if (ParentNode.Expanded == false) return false;
+                return ParentNode.RealDisplay;
             }
         }
 
+        /// <summary>
+        /// Nodes switch
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private async Task OnSwitcherClick(MouseEventArgs args)
         {
             this.Expanded = !this.Expanded;
-            if (TreeComponent.OnNodeLoadDelayAsync.HasDelegate && this.Expanded == true)
-            {
-                //自有节点被展开时才需要延迟加载
-                //如果支持异步载入，那么在展开时是调用异步载入代码
-                this.Loading = true;
-                await TreeComponent.OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
-                this.Loading = false;
-            }
-            if (TreeComponent.OnExpandChanged.HasDelegate)
-                await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
+
+            await TreeComponent?.OnNodeExpand(this, this.Expanded, args);
         }
 
+        internal void SetLoading(bool loading)
+        {
+            this.Loading = loading;
+        }
+
+        /// <summary>
+        /// switcher is opened
+        /// </summary>
         private bool SwitcherOpen => Expanded && !IsLeaf;
 
+        /// <summary>
+        /// switcher is close
+        /// </summary>
         private bool SwitcherClose => !Expanded && !IsLeaf;
+
+        /// <summary>
+        /// expaned parents
+        /// </summary>
+        internal void OpenPropagation()
+        {
+            this.Expand(true);
+            if (this.ParentNode != null)
+                this.ParentNode.OpenPropagation();
+        }
 
         #endregion Switcher
 
         #region Checkbox
 
+        /// <summary>
+        /// According to check the
+        /// </summary>
         [Parameter]
         public bool Checked { get; set; }
 
         [Parameter]
         public bool Indeterminate { get; set; }
 
-        [Parameter]
-        public bool DisableCheckbox { get; set; }//是否可以选择不受父节点控制
+        private bool _disableCheckbox;
 
         /// <summary>
-        /// 当点击选择框是触发
+        /// Disable checkbox
         /// </summary>
-        private async void OnCheckBoxClick(MouseEventArgs args)
+        [Parameter]
+        public bool DisableCheckbox
         {
-            SetChecked(!Checked);
-            if (TreeComponent.OnCheckBoxChanged.HasDelegate)
-                await TreeComponent.OnCheckBoxChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
+            get
+            {
+                return _disableCheckbox || (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false);
+            }
+            set
+            {
+                _disableCheckbox = value;
+            }
         }
 
         /// <summary>
-        /// 设置选中状态
+        /// Triggered when the selection box is clicked
+        /// </summary>
+        private async void OnCheckBoxClick(MouseEventArgs args)
+        {
+            if (DisableCheckbox)
+                return;
+            SetChecked(!Checked);
+            if (TreeComponent.OnCheck.HasDelegate)
+                await TreeComponent.OnCheck.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
+        }
+
+        /// <summary>
+        /// Set the checkbox state
         /// </summary>
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if (Disabled) return;
-            this.Checked = check;
-            this.Indeterminate = false;
-            if (HasChildNodes)
+            if (!Disabled)
             {
-                foreach (var subnode in ChildNodes)
-                    subnode?.SetChecked(check);
+                if (TreeComponent.CheckStrictly)
+                {
+                    this.Checked = check;
+                }
+                else
+                {
+                    SetChildChecked(this, check);
+                    if (ParentNode != null)
+                        ParentNode.UpdateCheckState();
+                }
             }
-            if (ParentNode != null)
-                ParentNode.UpdateCheckState();
+            else
+                TreeComponent.AddOrRemoveCheckNode(this);
+            StateHasChanged();
         }
 
         /// <summary>
-        /// 更新选中状态
+        /// Sets the checkbox status of child nodes
+        /// </summary>
+        /// <param name="subnode"></param>
+        /// <param name="check"></param>
+        private void SetChildChecked(TreeNode<TItem> subnode, bool check)
+        {
+            if (Disabled) return;
+            this.Checked = DisableCheckbox ? false : check;
+            this.Indeterminate = false;
+            TreeComponent.AddOrRemoveCheckNode(this);
+            if (subnode.HasChildNodes)
+                foreach (var child in subnode.ChildNodes)
+                    child?.SetChildChecked(child, check);
+        }
+
+        /// <summary>
+        /// Update check status
         /// </summary>
         /// <param name="halfChecked"></param>
-        public void UpdateCheckState(bool? halfChecked = null)
+        private void UpdateCheckState(bool? halfChecked = null)
         {
-            if (halfChecked.HasValue && halfChecked.Value == true)
-            {//如果子元素存在不确定状态，父元素必定存在不确定状态
+            if (halfChecked == true)
+            {
+                //If the child node is indeterminate, the parent node must is indeterminate.
                 this.Checked = false;
                 this.Indeterminate = true;
             }
-            else if (HasChildNodes == true)
-            {//判断当前节点的选择状态
+            else if (HasChildNodes == true && !DisableCheckbox)
+            {
+                //Determines the selection status of the current node
                 bool hasChecked = false;
                 bool hasUnchecked = false;
 
                 foreach (var item in ChildNodes)
                 {
-                    if (item.Indeterminate == true) break;
-                    if (item.Checked == true) hasChecked = true;
-                    if (item.Checked == false) hasUnchecked = true;
+                    if (!item.DisableCheckbox && !item.Disabled)
+                    {
+                        if (item.Indeterminate == true) break;
+                        if (item.Checked == true) hasChecked = true;
+                        if (item.Checked == false) hasUnchecked = true;
+                    }
                 }
 
                 if (hasChecked && !hasUnchecked)
@@ -361,11 +517,11 @@ namespace AntDesign
                     this.Indeterminate = true;
                 }
             }
+            TreeComponent.AddOrRemoveCheckNode(this);
 
             if (ParentNode != null)
                 ParentNode.UpdateCheckState(this.Indeterminate);
 
-            //当达到最顶级后进行刷新状态，避免每一级刷新的性能问题
             if (ParentNode == null)
                 StateHasChanged();
         }
@@ -380,7 +536,7 @@ namespace AntDesign
         private string _icon;
 
         /// <summary>
-        /// 节点前的图标，与 `ShowIcon` 组合使用
+        /// The icon in front of the node
         /// </summary>
         [Parameter]
         public string Icon
@@ -398,11 +554,17 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> IconTemplate { get; set; }
+
+        [Parameter]
+        public string SwitcherIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
+
         private string _title;
 
-        /// <summary>
-        /// 文本
-        /// </summary>
         [Parameter]
         public string Title
         {
@@ -419,6 +581,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
+
         /// <summary>
         /// title是否包含SearchValue(搜索使用)
         /// </summary>
@@ -431,7 +596,7 @@ namespace AntDesign
 
         #endregion Title
 
-        #region 数据绑定
+        #region data binding
 
         [Parameter]
         public TItem DataItem { get; set; }
@@ -456,15 +621,15 @@ namespace AntDesign
             if (this.ParentNode != null)
                 return this.ParentNode.ChildDataItems;
             else
-                return this.TreeComponent.DataSource;
+                return this.TreeComponent.DataSource.ToList();
         }
 
-        #endregion 数据绑定
+        #endregion data binding
 
-        #region 节点数据操作
+        #region Node data operation
 
         /// <summary>
-        /// 添加子节点
+        /// Add child node
         /// </summary>
         /// <param name="dataItem"></param>
         public void AddChildNode(TItem dataItem)
@@ -473,7 +638,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 节点后面添加节点
+        /// Add a node next the node
         /// </summary>
         /// <param name="dataItem"></param>
         public void AddNextNode(TItem dataItem)
@@ -486,7 +651,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 节点前面添加节点
+        /// Add a node before the node
         /// </summary>
         /// <param name="dataItem"></param>
         public void AddPreviousNode(TItem dataItem)
@@ -499,7 +664,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 删除节点
+        /// remove
         /// </summary>
         public void Remove()
         {
@@ -507,6 +672,10 @@ namespace AntDesign
             parentChildDataItems.Remove(this.DataItem);
         }
 
+        /// <summary>
+        /// The node moves into the child node
+        /// </summary>
+        /// <param name="treeNode">target node</param>
         public void MoveInto(TreeNode<TItem> treeNode)
         {
             if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
@@ -516,7 +685,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 上移节点
+        /// Move up the nodes
         /// </summary>
         public void MoveUp()
         {
@@ -528,7 +697,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 下移节点
+        /// Move down the node
         /// </summary>
         public void MoveDown()
         {
@@ -540,7 +709,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 降级节点
+        ///
         /// </summary>
         public void Downgrade()
         {
@@ -552,7 +721,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 升级节点
+        /// Upgrade nodes
         /// </summary>
         public void Upgrade()
         {
@@ -563,7 +732,49 @@ namespace AntDesign
             parentChildDataItems.Insert(index + 1, this.DataItem);
         }
 
-        #endregion 节点数据操作
+        private void AddNodeAndSelect(TItem dataItem)
+        {
+            var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(dataItem));
+            if (tn != null)
+            {
+                this.Expand(true);
+                tn.SetSelected(true);
+            }
+        }
+
+        /// <summary>
+        /// Drag and drop into child nodes
+        /// </summary>
+        /// <param name="treeNode">目标</param>
+        internal void DragMoveInto(TreeNode<TItem> treeNode)
+        {
+            if (TreeComponent.DataSource == null || !TreeComponent.DataSource.Any())
+                return;
+            if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
+
+            Remove();
+
+            treeNode.AddChildNode(this.DataItem);
+            treeNode.IsLeaf = false;
+            treeNode.Expand(true);
+        }
+
+        /// <summary>
+        /// Drag and drop to the bottom of the target
+        /// </summary>
+        /// <param name="treeNode">目标</param>
+        internal void DragMoveDown(TreeNode<TItem> treeNode)
+        {
+            if (TreeComponent.DataSource == null || !TreeComponent.DataSource.Any())
+                return;
+            if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
+            Remove();
+            treeNode.AddNextNode(this.DataItem);
+        }
+
+        #endregion Node data operation
+
+        bool _defaultBinding;
 
         protected override void OnInitialized()
 
@@ -572,23 +783,68 @@ namespace AntDesign
             if (ParentNode != null)
                 ParentNode.AddNode(this);
             else
+            {
                 TreeComponent.AddNode(this);
+                if (!TreeComponent.DefaultExpandAll && TreeComponent.DefaultExpandParent)
+                    Expand(true);
+            }
+            TreeComponent._allNodes.Add(this);
+
+            if (TreeComponent.DisabledExpression != null)
+                Disabled = TreeComponent.DisabledExpression(this);
+
+            if (TreeComponent.DefaultExpandAll)
+                Expand(true);
+            else if (TreeComponent.ExpandedKeys != null)
+            {
+                Expand(TreeComponent.ExpandedKeys.Any(k => k == this.Key));
+            }
+
+            if (TreeComponent.Selectable && TreeComponent.SelectedKeys != null)
+            {
+                this.Selected = TreeComponent.SelectedKeys.Any(k => k == this.Key);
+            }
             base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
-            SetTreeNodeClassMapper();
+            DefaultBinding();
             base.OnParametersSet();
         }
 
-        private void AddNodeAndSelect(TItem dataItem)
+        private void DefaultBinding()
         {
-            var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(dataItem));
-            if (tn != null)
+            if (!_defaultBinding)
             {
-                this.Expand(true);
-                tn.SetSelected(true);
+                _defaultBinding = true;
+                if (this.Checked)
+                    this.SetChecked(true);
+                TreeComponent.DefaultCheckedKeys?.ForEach(k =>
+                {
+                    var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.SetChecked(true);
+                });
+
+                TreeComponent.DefaultSelectedKeys?.ForEach(k =>
+                {
+                    var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.SetSelected(true);
+                });
+
+                if (!TreeComponent.DefaultExpandAll)
+                {
+                    if (this.Expanded)
+                        this.OpenPropagation();
+                    TreeComponent.DefaultExpandedKeys?.ForEach(k =>
+                    {
+                        var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                        if (node != null)
+                            node.OpenPropagation();
+                    });
+                }
             }
         }
     }

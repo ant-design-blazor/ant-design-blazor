@@ -28,6 +28,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg
 - `NotificationService.Error(config:NotificationConfig)`
 - `NotificationService.Close(key:string)`
 - `NotificationService.Destroy()`
+- `NotificationService.CreateAsync()`
+- `NotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
 
 config 参数如下：
 
@@ -39,7 +41,7 @@ config 参数如下：
 | Description | 通知提醒内容，必选                                           | string\|RenderFragment    | -                                   |
 | Duration    | 默认 4.5 秒后自动关闭，配置为 null 或者 0 则不自动关闭         | double?                   | 4.5                                 |
 | Icon        | 自定义图标                                                   | RenderFragment            | null                                |
-| Key         | 当前通知唯一标志                                             | string                    | null                                |
+| Key         | 当前通知唯一标志                                             | string                    | Guid.NewGuid().ToString()       |
 | Message     | 通知提醒标题，必选                                           | string\|RenderFragment    | -                                   |
 | OnClose     | 当通知关闭时触发的事件                                      |  event Action             | null                                |
 | OnClick     | 点击通知时触发的事件                                |  event Action              | null                                |
@@ -58,3 +60,22 @@ config 参数如下：
 | Duration  | 默认自动关闭延时，单位秒。                                   | double?                    | 4.5                               |
 | Placement | 弹出位置，可选 `NotificationPlacement.TopLeft` `NotificationPlacement.TopRight` `NotificationPlacement.BottomLeft` `NotificationPlacement.BottomRight` | NotificationPlacement? | NotificationPlacement.TopRight |
 | Rtl       | 是否开启 RTL 模式                                            | bool                       | `false`                           |
+
+## NotificationRef
+
+### 属性
+
+| 名称   | 说明                           |
+| ------ | ------------------------------ |
+| Config | 只读 `NotificationConfig` 对象 |
+
+### 方法
+
+| 名称                                                         | 说明                                 |
+| ------------------------------------------------------------ | ------------------------------------ |
+| OpenAsync()                                                  | 打开一个通知框                       |
+| UpdateConfigAsync()                                          | 修改Config属性后，更新通知框         |
+| UpdateConfigAsync(OneOf<string, RenderFragment>)             | 更新通知框的`Description`            |
+| UpdateConfigAsync(OneOf<string, RenderFragment>, OneOf<string, RenderFragment>) | 更新通知框的`Message`和`Description` |
+| CloseAsync()                                                 | 关闭通知框                           |
+

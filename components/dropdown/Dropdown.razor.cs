@@ -19,12 +19,45 @@ namespace AntDesign
 
         private string _buttonTypeRight = ButtonType.Default;
         private string _buttonTypeLeft = ButtonType.Default;
+        protected string _buttonClassRight;
+        protected string _buttonClassLeft;
+        protected string _buttonStyleRight;
+        protected string _buttonStyleLeft;
+
+        internal string RightButtonIcon => _rightButtonIcon;
+        internal string ButtonSize => _buttonSize;
+        internal string ButtonTypeRight => _buttonTypeRight;
+        internal string ButtonTypeLeft => _buttonTypeLeft;
+        internal string ButtonClassRight => _buttonClassRight;
+        internal string ButtonClassLeft => _buttonClassLeft;
+        internal string ButtonStyleRight => _buttonStyleRight;
+        internal string ButtonStyleLeft => _buttonStyleLeft;
+        internal bool ButtonDanger => _danger;
+        internal bool ButtonGhost => _ghost;
+        internal bool IsLoading => _isLoading;
+
+        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
+
         protected void ChangeRightButtonIcon(string icon)
         {
             _rightButtonIcon = icon;
 
             StateHasChanged();
         }
+        protected void ChangeButtonClass(string leftButton, string rightButton)
+        {
+            _buttonClassLeft = leftButton;
+            _buttonClassRight = rightButton;
+            StateHasChanged();
+        }
+
+        protected void ChangeButtonStyles(string leftButton, string rightButton)
+        {
+            _buttonStyleLeft = leftButton;
+            _buttonStyleRight = rightButton;
+            StateHasChanged();
+        }
+
 
         protected void ChangeButtonSize(string size)
         {
@@ -54,9 +87,10 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected void ChangeButtonType((string LeftButton, string RightButton) type)
+        protected void ChangeButtonType(string leftButton, string rightButton)
         {
-            (_buttonTypeLeft, _buttonTypeRight) = type;
+            _buttonTypeLeft = leftButton;
+            _buttonTypeRight = rightButton;
             StateHasChanged();
         }
 

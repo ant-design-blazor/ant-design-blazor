@@ -118,6 +118,20 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        private bool _remoteDataSource;
+        private bool _hasRemoteDataSourceAttribute;
+
+        [Parameter]
+        public bool RemoteDataSource
+        {
+            get => _remoteDataSource;
+            set
+            {
+                _remoteDataSource = value;
+                _hasRemoteDataSourceAttribute = true;
+            }
+        }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -144,7 +158,7 @@ namespace AntDesign
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
 
-        private bool ServerSide => _total > _dataSourceCount;
+        private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -245,6 +259,7 @@ namespace AntDesign
             if (ServerSide)
             {
                 _showItems = _dataSource;
+                _total = Total;
             }
             else
             {
@@ -261,11 +276,25 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
+                    _total = query.Count();
+
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    _total = _showItems.Count();
+                    if (_total != Total)
+                    {
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
+                }
+                else
+                {
+                    _showItems = Enumerable.Empty<TItem>();
+                    _total = 0;
+                    if (_total != Total)
+                    {
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
                 }
             }
 
@@ -362,6 +391,19 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
+
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
@@ -376,19 +418,6 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             return this._shouldRender;
         }
 
