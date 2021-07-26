@@ -14,6 +14,7 @@ namespace AntDesign
 
         private static Dictionary<Color, string> _colors = new Dictionary<Color, string>()
         {
+            { Color.None, "" },
             { Color.Red1, "background-color: #fff1f0; border-color: #fff1f0; color: rgba(0,0,0,0.85);" },
             { Color.Red2, "background-color: #ffccc7; border-color: #ffccc7; color: rgba(0,0,0,0.85);" },
             { Color.Red3, "background-color: #ffa39e; border-color: #ffa39e; color: rgba(0,0,0,0.85);" },
@@ -146,7 +147,7 @@ namespace AntDesign
             { Color.Gray10, "background-color: #262626; border-color: #262626; color: rgb(255,255,255);" },
             { Color.Gray11, "background-color: #1f1f1f; border-color: #1f1f1f; color: rgb(255,255,255);" },
             { Color.Gray12, "background-color: #141414; border-color: #141414; color: rgb(255,255,255);" },
-            { Color.Gray13, "background-color: #000000; border-color: #000000; color: rgb(255,255,255);" }
+            { Color.Gray13, "background-color: #000000; border-color: #000000; color: rgb(255,255,255);" },
         };
     }
 }

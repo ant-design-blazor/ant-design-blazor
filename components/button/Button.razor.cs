@@ -182,6 +182,12 @@ namespace AntDesign
             });
         }
 
-        private void SetButtonColorStyle() => Style += ColorHelper.GetBackgroundStyle(Color);
+        private void SetButtonColorStyle()
+        {
+            if (Color != Color.None)
+            {
+                Style += ColorHelper.GetBackgroundStyle(Color);
+            }
+        }
     }
 }

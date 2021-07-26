@@ -3,7 +3,7 @@ using Xunit;
 
 namespace AntDesign.Tests.Button
 {
-    public class ButtonTests : AntDesignTestBase
+    public partial class ButtonTests : AntDesignTestBase
     {
         [Fact]
         public void Renders_an_empty_button()
