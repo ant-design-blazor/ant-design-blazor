@@ -1,0 +1,9 @@
+﻿@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Renders_a_color_button()
+    {
+        var cut = Render<Button>(@<Button Color="Color.Red3"></Button> );
+        cut.MarkupMatches(@<button class="ant-btn ant-btn-default" style="background-color: #ffa39e; border-color: #ffa39e; color: rgba(0,0,0,0.85);" id:ignore type="button" ant-click-animating-without-extra-node="false" ></button>);
+    }
+}
