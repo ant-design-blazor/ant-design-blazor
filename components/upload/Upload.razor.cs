@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -84,11 +83,16 @@ namespace AntDesign
         [Parameter]
         public bool ShowButton { get; set; } = true;
 
+        [Parameter]
+        public bool Drag { get; set; }
+
         private bool IsText => ListType == "text";
         private bool IsPicture => ListType == "picture";
         private bool IsPictureCard => ListType == "picture-card";
 
         private ClassMapper _listClassMapper = new ClassMapper();
+
+        internal bool _dragHover;
 
         protected override void OnInitialized()
         {
@@ -96,20 +100,17 @@ namespace AntDesign
 
             var prefixCls = "ant-upload";
 
-            ClassMapper
-                .Add(prefixCls)
-                .If($"{prefixCls}-rtl", () => RTL);
-
             _listClassMapper
                 .Add($"{prefixCls}-list")
                 .Get(() => $"{prefixCls}-list-{ListType}")
                 .If($"{prefixCls}-list-rtl", () => RTL);
+
+            FileList.InsertRange(0, DefaultFileList);
         }
 
-        protected override Task OnInitializedAsync()
+        private void HandleDrag(DragEventArgs args)
         {
-            FileList.InsertRange(0, DefaultFileList);
-            return base.OnInitializedAsync();
+            _dragHover = args.Type == "dragover";
         }
 
         private async Task RemoveFile(UploadFileItem item)
