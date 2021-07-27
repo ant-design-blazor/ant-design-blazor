@@ -27,6 +27,9 @@ namespace AntDesign.Internal
         [Parameter]
         public Func<DateTime, DatePickerDisabledTime> DisabledTime { get; set; } = null;
 
+        [Parameter]
+        public EventCallback OnOkClick { get; set; }
+
         private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
