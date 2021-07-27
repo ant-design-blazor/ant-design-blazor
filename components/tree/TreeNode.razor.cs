@@ -495,7 +495,6 @@ namespace AntDesign
                 {
                     if (!item.DisableCheckbox && !item.Disabled)
                     {
-                        if (item.Indeterminate == true) break;
                         if (item.Checked == true) hasChecked = true;
                         if (item.Checked == false) hasUnchecked = true;
                     }
