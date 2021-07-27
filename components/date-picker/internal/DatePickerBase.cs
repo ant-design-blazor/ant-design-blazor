@@ -573,15 +573,16 @@ namespace AntDesign
             int tempIndex = GetOnFocusPickerIndex();
             if (index == 0)
             {
+                //Console.WriteLine($"DatePickerBase.cs.GetIndexPickerValue({index}): {PickerValues[tempIndex]}");
                 return PickerValues[tempIndex];
             }
             else
             {
                 //First picker panel will show the value, second panel shows next
                 //expected value that depends on Picker type
-                return Picker switch
+                var date = Picker switch
                 {
-                    DatePickerType.Date => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Date => (IsShowTime ? PickerValues[tempIndex] : PickerValues[tempIndex].AddMonths(1)),
                     DatePickerType.Week => PickerValues[tempIndex].AddMonths(1),
                     DatePickerType.Month => PickerValues[tempIndex].AddYears(1),
                     DatePickerType.Decade => PickerValues[tempIndex].AddYears(1),
@@ -589,6 +590,8 @@ namespace AntDesign
                     DatePickerType.Year => PickerValues[tempIndex].AddYears(10),
                     _ => DateTime.Now,
                 };
+                //Console.WriteLine($"DatePickerBase.cs.GetIndexPickerValue({index}): {date}");
+                return date;
             }
         }
 
@@ -682,6 +685,7 @@ namespace AntDesign
             if (index == null)
                 index = GetOnFocusPickerIndex();
 
+            //Console.WriteLine($"DatePickerBase.cs.ChangePickerValue: index: {index.Value}, prev value: {PickerValues[index.Value]}, new value: {date}");
             PickerValues[index.Value] = date;
             if (IsRange)
             {

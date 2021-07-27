@@ -10,9 +10,6 @@ namespace AntDesign.Internal
         public bool ShowToday { get; set; } = false;
 
         [Parameter]
-        public bool IsShowTime { get; set; } = false;
-
-        [Parameter]
         public string ShowTimeFormat { get; set; }
 
         [Parameter]
