@@ -197,9 +197,19 @@ namespace AntDesign
         {
             DateTime baseDate;
             if (IsShowTime || PickerIndex == 0)
+            {
                 baseDate = PickerValue;
+            }
             else
-                baseDate = PickerValue.AddMonths(-1);            
+            {
+                baseDate = Picker switch
+                {
+                    DatePickerType.Date => PickerValue.AddMonths(-1),
+                    DatePickerType.Week => PickerValue.AddMonths(-1),
+                    DatePickerType.Year => PickerValue.AddYears(-10),
+                    _ => PickerValue.AddYears(-1)
+                };
+            }
             ChangePickerValue(DateHelper.AddYearsSafely(baseDate, interval), null);
         }
 
@@ -209,7 +219,7 @@ namespace AntDesign
             if (IsShowTime || PickerIndex == 0)
                 baseDate = PickerValue;
             else
-                baseDate = PickerValue.AddMonths(-1);            
+                baseDate = PickerValue.AddMonths(-1);
             ChangePickerValue(DateHelper.AddMonthsSafely(baseDate, interval), null);
         }
 

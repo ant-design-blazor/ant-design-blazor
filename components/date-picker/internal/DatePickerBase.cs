@@ -604,7 +604,7 @@ namespace AntDesign
                     DatePickerType.Quarter => PickerValues[tempIndex].AddYears(1),
                     DatePickerType.Year => PickerValues[tempIndex].AddYears(10),
                     _ => DateTime.Now,
-                };                
+                };
             }
         }
 
