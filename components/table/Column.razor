@@ -49,7 +49,7 @@ else if (IsHeader && HeaderColSpan != 0)
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? HeaderTitle : false)" @attributes="headerCellAttributes">
-        @if (Sortable || _filters?.Any() == true)
+        @if (Sortable || (_filterable && _filters?.Any() == true))
         {
             @FilterToolTipSorter
         }
@@ -167,7 +167,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     RenderFragment FilterToolTipSorter =>
     @<Template>
-        @if (Filterable)
+        @if (_filterable && _filters?.Any() == true)
         {
             <div class="ant-table-filter-column">
                 @if (Sortable)
@@ -183,9 +183,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                     @HeaderTitle
                 }
 
-                <Dropdown Trigger="new[] { TriggerType.Click }" Visible="_filterOpened" Placement="PlacementType.BottomRight" TriggerReference="_filterTriggerRef" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
+                <Dropdown Trigger="new[] { TriggerType.Click }" Visible="_filterOpened" Placement="PlacementType.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
                     <Unbound>
-                        <span @ref="@_filterTriggerRef" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
+                        <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
                               @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
                             <Icon Type="filter" Theme="fill" />
                         </span>
@@ -212,18 +212,19 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                             }
                             else
                             {
-                                <div id="@("popup-container-" + Id)" style="position:relative!important"></div>
+                                <div id="@("popup-container-for-" + Id)" style="position:relative!important"></div>
                                 int filterCount = _filters.Count();
                                 @for (int index = 0; index < filterCount; index++)
                                 {
                                     var filter = _filters.ElementAt(index);
-                                    <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;" : "")">
+                                    var noInput = filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull;
+                                    <div @key="filter" style="padding:10px;min-width:150px;@(index > 0 ? "border-top:1px solid #f0f0f0" : "")">
                                         @if (index > 0)
                                         {
                                             <div>
                                                 <Space Style="margin-bottom:10px">
                                                     <SpaceItem>
-                                                        <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-" + Id)">
+                                                        <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)">
                                                             <SelectOptions>
                                                                 <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@Table?.Locale.FilterOptions.And"></SelectOption>
                                                                 <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@Table?.Locale.FilterOptions.Or"></SelectOption>
@@ -234,8 +235,8 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                             </div>
                                         }
                                         <Space Style="width:100%;">
-                                            <SpaceItem>
-                                                <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-" + Id)" DropdownMatchSelectWidth="false">
+                                            <SpaceItem Style="flex:auto">
+                                                <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" DropdownMatchSelectWidth="false">
                                                     <SelectOptions>
                                                         <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@Table?.Locale.FilterOptions.Equals"></SelectOption>
                                                         <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@Table?.Locale.FilterOptions.NotEquals"></SelectOption>
@@ -266,9 +267,12 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                                     </SelectOptions>
                                                 </Select>
                                             </SpaceItem>
-                                            <SpaceItem Style="flex:auto;">
-                                                @FilterInput(filter)
-                                            </SpaceItem>
+                                            @if (!noInput)
+                                            {
+                                                <SpaceItem>
+                                                    @FilterInput(filter)
+                                                </SpaceItem>
+                                            }
                                             @if (filterCount > 1)
                                             {
                                                 <SpaceItem>
@@ -306,28 +310,15 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     RenderFragment<TableFilter> FilterInput => filter =>
     @<Template>
-        @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNull)
+        @if (_columnDataType == typeof(DateTime))
         {
-            <div style="width:80px;"></div>
-        }
-        else if (_columnDataType == typeof(DateTime))
-        {
-            <DatePicker Value="(DateTime?)filter.Value" Format="@Format" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value)" PopupContainerSelector="@("#popup-container-" + Id)"></DatePicker>
+            <DatePicker Value="(DateTime?)filter.Value" Format="@Format" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value)" PopupContainerSelector="@("#popup-container-for-" + Id)"></DatePicker>
         }
         else if (_columnDataType.IsEnum)
         {
-            <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(_columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popup-container-" + Id)" Style="width:180px;"
-                    ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
-                <SelectOptions>
-                    @foreach (var enumValue in Enum.GetValues(_columnDataType))
-                    {
-                        var enumName = Enum.GetName(_columnDataType, enumValue);
-                        var text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                        var value = (TData)enumValue;
-                        <SelectOption TItemValue="TData" TItem="TData" Value="value" Label="@text" />
-                    }
-                </SelectOptions>
-            </Select>
+            <EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" PopupContainerSelector="@("#popup-container-for-" + Id)" 
+                        Style="width:180px;" ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
+            </EnumSelect>
         }
         else if (_columnDataType == typeof(byte))
         {
