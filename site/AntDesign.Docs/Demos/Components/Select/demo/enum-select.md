@@ -1,5 +1,5 @@
 ---
-order: 26
+order: 27
 title:
   zh-CN: 枚举选择器
   en-US: EnumSelect
