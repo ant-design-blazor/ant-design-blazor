@@ -276,7 +276,6 @@ namespace AntDesign
             return true;
         }
 
-
         private async Task OnFocus(int index)
         {
             _duringFocus = true;
@@ -517,7 +516,6 @@ namespace AntDesign
             }
         }
 
-
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             result = default;
@@ -559,6 +557,7 @@ namespace AntDesign
         {
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
+            _duringFocus = false;
         }
     }
 }
