@@ -681,7 +681,7 @@ namespace AntDesign
                 if (processedSelectedCount > 0)
                 {
                     if (SelectMode == SelectMode.Default)
-                        isSelected = value.Equals(_selectedValue);
+                        isSelected = ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true;
                     else
                         isSelected = _selectedValues.Contains(value);
                 }
