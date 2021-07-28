@@ -23,12 +23,22 @@
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(ProjectDir)node_modules') ">
     <Exec WorkingDirectory="$(ProjectDir)" Command="npm run test-ts" />    
   </Target>
+
+  <ItemGroup>
+    <Compile Remove="node_modules\**" />
+    <EmbeddedResource Remove="node_modules\**" />
+    <None Remove="node_modules\**" />
+  </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="Microsoft.JavaScript.UnitTest" Version="1.5.30526.3-beta">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>    
+  </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="coverage\" />
   </ItemGroup>
 
 </Project>
