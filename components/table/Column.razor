@@ -316,18 +316,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
         else if (_columnDataType.IsEnum)
         {
-            <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(_columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popup-container-for-" + Id)" Style="width:180px;"
-                    ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
-                <SelectOptions>
-                    @foreach (var enumValue in Enum.GetValues(_columnDataType))
-                    {
-                        var enumName = Enum.GetName(_columnDataType, enumValue);
-                        var text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                        var value = (TData)enumValue;
-                        <SelectOption TItemValue="TData" TItem="TData" Value="value" Label="@text" />
-                    }
-                </SelectOptions>
-            </Select>
+            <EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" PopupContainerSelector="@("#popup-container-for-" + Id)" 
+                        Style="width:180px;" ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
+            </EnumSelect>
         }
         else if (_columnDataType == typeof(byte))
         {

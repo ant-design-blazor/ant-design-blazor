@@ -701,7 +701,7 @@ namespace AntDesign
         internal bool IsDropdownShown() => _dropDown.IsOverlayShow();
         protected override void OnInitialized()
         {
-            if (typeof(TItemValue) != typeof(TItem) && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -876,7 +876,7 @@ namespace AntDesign
                 if (processedSelectedCount > 0)
                 {
                     if (SelectMode == SelectMode.Default)
-                        isSelected = value.Equals(_selectedValue);
+                        isSelected = ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true;
                     else
                         isSelected = _selectedValues.Contains(value);
                 }
