@@ -14,8 +14,7 @@ Select component to select value from options.
 
 ## API
 
-
-### Select props
+### Select Properties
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
@@ -71,3 +70,44 @@ Select component to select value from options.
 | Values | Get or set the selected values. | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
 | ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
+
+> Note that if you find that the dropdown menu follows the page scroll, or if you need to trigger `Select` in another popup layer, try using `GetPopupContainer={triggerNode => triggerNode.parentElement}` to fix the dropdown popup render node in the trigger's parent element.
+
+### Select Methods
+
+| Method    | Description     | Version |
+| ------- | -------- | ---- |
+| Blur()  | Stop focusing on the `Select` control. |      |
+| Focus() | Start focusing on the `Select` control. |      |
+
+### SelectOption Properties
+
+| Property      | Description                                     | Type           | Default | Version |
+| --------- | --------------------------------------- | -------------- | ------ | ---- |
+| Disabled  | Is the `SelectOption` being disabled.                                 | bool        | false  |      |
+| Title     | Title of the `select` after being selected to this `SelectOption`.  | string         | -      |      |
+| Value     | Filtered based on this property by default.                  | string          | -      |      |
+| ClassName | Class name of the `SelectOption`                     | string          | -      |      |
+
+### SelectOptGroup Properties
+
+| Property  | Description | Type                  | Default | Version |
+| ----- | ---- | --------------------- | ------ | ---- |
+| Key   |      | string                | -      |      |
+| Label | The name of the group. | string                | null     |      |
+
+## FAQ
+
+### What if I click on the `dropdownRender` content and then the floating layer closes?
+
+Go to the description in [dropdownRender example](#components-select-demo-custom-dropdown-menu).
+
+### What if the custom SelectOption style causes a scrolling exception?
+
+This is because the default option height for virtual scrolling is `32px`, if your option height is less than this value then you need to adjust it via the `ListItemHeight` property, which is used to set the scroll container height.
+
+```razor
+<Select ListItemHeight="10" ListHeight="250" />
+```
+
+Note: `ListItemHeight` and `ListHeight` are internal properties, do not modify the values if not necessary.
