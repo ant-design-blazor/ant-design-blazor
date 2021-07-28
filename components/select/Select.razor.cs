@@ -13,9 +13,7 @@ using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using OneOf.Types;
 
-#pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
 #pragma warning disable CA1305 // IFormatProvider warning
 
@@ -25,168 +23,20 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// Show clear button.
+        /// </summary>
         [Parameter] public bool AllowClear { get; set; }
+
+        /// <summary>
+        /// Whether the current search will be cleared on selecting an item.
+        /// </summary>
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
+
+        /// <summary>
+        /// Toggle the border style.
+        /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
-        [Parameter] public Action<string> OnCreateCustomTag { get; set; }
-
-        [Parameter]
-        public bool DefaultActiveFirstOption
-        {
-            get { return _defaultActiveFirstOption; }
-            set
-            {
-                _defaultActiveFirstOption = value;
-                if (!_defaultActiveFirstOption)
-                {
-                    _defaultActiveFirstOptionApplied = true;
-                }
-            }
-        }
-
-        [Parameter] public bool Disabled { get; set; }
-
-        [Parameter]
-        public string DisabledName
-        {
-            get => _disabledName;
-            set
-            {
-                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, bool>(value);
-                _disabledName = value;
-            }
-        }
-
-        [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
-        [Parameter] public bool EnableSearch { get; set; }
-
-        [Parameter]
-        public string GroupName
-        {
-            get => _groupName;
-            set
-            {
-                _getGroup = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                _groupName = value;
-            }
-        }
-
-        [Parameter] public bool HideSelected { get; set; }
-        [Parameter] public bool IgnoreItemChanges { get; set; } = true;
-        [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
-
-        /// <summary>
-        /// LabelInValue can only be used if the SelectOption is not created by DataSource.
-        /// </summary>
-        [Parameter] public bool LabelInValue { get; set; }
-
-        [Parameter]
-        public string LabelName
-        {
-            get => _labelName;
-            set
-            {
-                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
-                {
-                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
-                }
-                _labelName = value;
-            }
-        }
-
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
-        [Parameter] public bool Loading { get; set; }
-
-        /// <summary>
-        /// How long (number of characters) a tag will be.
-        /// Only for Mode = "multiple" or Mode = "tags"
-        /// </summary>
-        /// <value>
-        /// The maximum length of the tag text.
-        /// </value>
-        [Parameter] public int MaxTagTextLength { get; set; }
-
-        private OneOf<int, ResponsiveTag> _maxTagCount;
-        [Parameter]
-        public OneOf<int, ResponsiveTag> MaxTagCount
-        {
-            get { return _maxTagCount; }
-            set {
-                _maxTagCount = value;
-
-                value.Switch(intValue =>
-                {
-                    IsResponsive = false;
-                    HasTagCount = intValue > 0;
-                }, enumValue =>
-                {
-                    IsResponsive = enumValue == ResponsiveTag.Responsive;
-                    HasTagCount = false;
-                });
-            }
-        }
-        internal bool IsResponsive { get; set; }
-        internal bool HasTagCount { get; set; }
-        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
-        [Parameter] public string Mode { get; set; } = "default";
-        [Parameter] public RenderFragment NotFoundContent { get; set; }
-        [Parameter] public Action OnBlur { get; set; }
-        [Parameter] public Action OnClearSelected { get; set; }
-
-        /// <summary>
-        /// The OnDataSourceChanged event occurs after the DataSource property changes.
-        /// </summary>
-        /// <remarks>
-        /// It does not trigger if a value inside the IEnumerable&lt;TItem&gt; changes.
-        /// </remarks>
-        [Parameter] public Action OnDataSourceChanged { get; set; }
-
-        [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
-        [Parameter] public Action OnFocus { get; set; }
-        [Parameter] public Action OnMouseEnter { get; set; }
-        [Parameter] public Action OnMouseLeave { get; set; }
-        [Parameter] public Action<string> OnSearch { get; set; }
-        [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
-        [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
-        [Parameter] public bool Open { get; set; }
-        [Parameter] public string Placeholder { get; set; }
-        [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
-        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
-        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
-
-        private bool _showArrowIconChanged;
-        [Parameter]
-        public bool ShowArrowIcon
-        {
-            get { return _showArrowIcon; }
-            set {
-                _showArrowIcon = value;
-                _showArrowIconChanged = true;
-            }
-        }
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
-        [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
-        [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
-        [Parameter] public RenderFragment SuffixIcon { get; set; }
-        [Parameter] public RenderFragment PrefixIcon { get; set; }
-        [Parameter] public char[] TokenSeparators { get; set; }
-        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
-
-        [Parameter]
-        public string ValueName
-        {
-            get => _valueName;
-            set
-            {
-                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
-                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
-                _valueName = value;
-            }
-        }
-
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         /// <summary>
         /// Converts custom tag (a string) to TItemValue type.
@@ -195,6 +45,9 @@ namespace AntDesign
         public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
+        /// <summary>
+        /// The datasource for this component.
+        /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -264,22 +117,26 @@ namespace AntDesign
             }
         }
 
-        bool _valueHasChanged;
-
+        /// <summary>
+        /// Activates the first item that is not deactivated.
+        /// </summary>
         [Parameter]
-        public override TItemValue Value
+        public bool DefaultActiveFirstOption
         {
-            get => _selectedValue;
+            get { return _defaultActiveFirstOption; }
             set
             {
-                _valueHasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
-                if (_valueHasChanged)
+                _defaultActiveFirstOption = value;
+                if (!_defaultActiveFirstOption)
                 {
-                    _selectedValue = value;
+                    _defaultActiveFirstOptionApplied = true;
                 }
             }
         }
 
+        /// <summary>
+        /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
+        /// </summary>
         [Parameter]
         public TItemValue DefaultValue
         {
@@ -295,6 +152,349 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
+        /// </summary>
+        [Parameter]
+        public IEnumerable<TItemValue> DefaultValues
+        {
+            get => _defaultValues;
+            set
+            {
+                if (value != null && _defaultValues != null)
+                {
+                    var hasChanged = !value.SequenceEqual(_defaultValues);
+
+                    if (!hasChanged)
+                        return;
+
+                    _defaultValuesHasItems = value.Any();
+                    _defaultValues = value;
+                }
+                else if (value != null && _defaultValues == null)
+                {
+                    _defaultValuesHasItems = value.Any();
+                    _defaultValues = value;
+                }
+                else if (value == null && _defaultValues != null)
+                {
+                    _defaultValuesHasItems = false;
+                    _defaultValues = default;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Whether the Select component is disabled.
+        /// </summary>
+        [Parameter] public bool Disabled { get; set; }
+
+        /// <summary>
+        /// The name of the property to be used as a disabled indicator.
+        /// </summary>
+        [Parameter]
+        public string DisabledName
+        {
+            get => _disabledName;
+            set
+            {
+                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, bool>(value);
+                _disabledName = value;
+            }
+        }
+
+        /// <summary>
+        /// Will match drowdown width: 
+        /// - for boolean: true - with widest item in the dropdown list
+        /// - for string: with value (e.g.: "256px")
+        /// </summary>
+        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+
+        /// <summary>
+        /// Will not allow dropdown width to grow above stated in here value (eg. "768px")
+        /// </summary>
+        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
+
+        /// <summary>
+        /// Customize dropdown content.
+        /// </summary>
+        [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
+
+        /// <summary>
+        /// Indicates whether the search function is active or not. Always true for mode tags.
+        /// </summary>
+        [Parameter] public bool EnableSearch { get; set; }
+
+        /// <summary>
+        /// The name of the property to be used as a group indicator. 
+        /// If the value is set, the entries are displayed in groups. 
+        /// Use additional SortByGroup and SortByLabel.
+        /// </summary>
+        [Parameter]
+        public string GroupName
+        {
+            get => _groupName;
+            set
+            {
+                _getGroup = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
+                _groupName = value;
+            }
+        }
+
+        /// <summary>
+        /// Hides the selected items when they are selected.
+        /// </summary>
+        [Parameter] public bool HideSelected { get; set; }
+
+        /// <summary>
+        /// Is used to increase the speed. If you expect changes to the label name, 
+        /// group name or disabled indicator, disable this property.
+        /// </summary>
+        [Parameter] public bool IgnoreItemChanges { get; set; } = true;
+
+
+        /// <summary>
+        /// Is used to customize the item style.
+        /// </summary>
+        [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+        /// <summary>
+        /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON) 
+        /// e.g. { "value": TItemValue, "label": "Label value" }
+        /// </summary>
+        [Parameter] public bool LabelInValue { get; set; }
+
+        /// <summary>
+        /// The name of the property to be used for the label.
+        /// </summary>
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
+                }
+                _labelName = value;
+            }
+        }
+
+        /// <summary>
+        /// Is used to customize the label style.
+        /// </summary>
+        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
+
+        /// <summary>
+        /// Show loading indicator. You have to write the loading logic on your own.
+        /// </summary>
+        [Parameter] public bool Loading { get; set; }
+
+        private OneOf<int, ResponsiveTag> _maxTagCount;
+        private int _maxTagCountAsInt;
+        /// <summary>
+        /// Max tag count to show. responsive will cost render performance.
+        /// </summary>
+        [Parameter]
+        public OneOf<int, ResponsiveTag> MaxTagCount
+        {
+            get { return _maxTagCount; }
+            set
+            {
+                _maxTagCount = value;
+
+                value.Switch(intValue =>
+                {
+                    IsResponsive = false;
+                    HasTagCount = intValue > 0;
+                    _maxTagCountAsInt = intValue;
+                }, enumValue =>
+                {
+                    IsResponsive = enumValue == ResponsiveTag.Responsive;
+                    HasTagCount = false;
+                });
+            }
+        }
+        internal bool IsResponsive { get; set; }
+        internal bool HasTagCount { get; set; }
+
+        /// <summary>
+        /// Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.
+        /// </summary>
+        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
+
+        /// <summary>
+        /// How long (number of characters) a tag will be.
+        /// Only for Mode = "multiple" or Mode = "tags"
+        /// </summary>
+        /// <value>
+        /// The maximum length of the tag text.
+        /// </value>
+        [Parameter] public int MaxTagTextLength { get; set; }
+
+        /// <summary>
+        /// Set mode of Select - default | multiple | tags
+        /// </summary>
+        [Parameter] public string Mode { get; set; } = "default";
+
+        /// <summary>
+        /// Specify content to show when no result matches.
+        /// </summary>
+        [Parameter] public RenderFragment NotFoundContent { get; set; }
+
+        /// <summary>
+        /// Called when blur.
+        /// </summary>
+        [Parameter] public Action OnBlur { get; set; }
+
+        /// <summary>
+        /// Called when the user clears the selection.
+        /// </summary>
+        [Parameter] public Action OnClearSelected { get; set; }
+
+        /// <summary>
+        /// Called when custom tag is created.
+        /// </summary>
+
+        [Parameter] public Action<string> OnCreateCustomTag { get; set; }
+
+        /// <summary>
+        /// Called when the datasource changes. From null to IEnumerable<TItem>, from IEnumerable<TItem> to IEnumerable<TItem> or from IEnumerable<TItem> to null.
+        /// </summary>
+        /// <remarks>
+        /// It does not trigger if a value inside the IEnumerable&lt;TItem&gt; changes.
+        /// </remarks>
+        [Parameter] public Action OnDataSourceChanged { get; set; }
+
+        /// <summary>
+        /// Called when the dropdown visibility changes.
+        /// </summary>
+        [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
+
+        /// <summary>
+        /// Called when focus.
+        /// </summary>
+        [Parameter] public Action OnFocus { get; set; }
+
+        /// <summary>
+        /// Called when mouse enter.
+        /// </summary>
+        [Parameter] public Action OnMouseEnter { get; set; }
+
+        /// <summary>
+        /// Called when mouse leave.
+        /// </summary>
+        [Parameter] public Action OnMouseLeave { get; set; }
+
+        /// <summary>
+        /// Callback function that is fired when input changed.
+        /// </summary>
+        [Parameter] public Action<string> OnSearch { get; set; }
+
+        /// <summary>
+        /// Called when the selected item changes.
+        /// </summary>
+        [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
+
+        /// <summary>
+        /// Called when the selected items changes.
+        /// </summary>
+        [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
+
+        /// <summary>
+        /// Controlled open state of dropdown.
+        /// </summary>
+        [Parameter] public bool Open { get; set; }
+
+        /// <summary>
+        /// Placeholder of select.
+        /// </summary>
+        [Parameter] public string Placeholder { get; set; }
+
+        /// <summary>
+        /// The maximum height of the popup container.
+        /// </summary>
+        [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
+
+        /// <summary>
+        /// Use this to fix overlay problems e.g. #area
+        /// </summary>
+        [Parameter] public string PopupContainerSelector { get; set; } = "body";
+
+        /// <summary>
+        /// The custom prefix icon.
+        /// </summary>
+        [Parameter] public RenderFragment PrefixIcon { get; set; }
+
+        /// <summary>
+        /// Used for rendering select options manually.
+        /// </summary>
+        [Parameter] public RenderFragment SelectOptions { get; set; }
+
+        private bool _showArrowIconChanged;
+        /// <summary>
+        /// Whether to show the drop-down arrow
+        /// </summary>
+        [Parameter]
+        public bool ShowArrowIcon
+        {
+            get { return _showArrowIcon; }
+            set {
+                _showArrowIcon = value;
+                _showArrowIconChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Whether show search input in single mode.
+        /// </summary>
+        [Parameter] public bool ShowSearchIcon { get; set; } = true;
+
+        /// <summary>
+        /// Sort items by group name. None | Ascending | Descending
+        /// </summary>
+        [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
+
+        /// <summary>
+        /// Sort items by label value. None | Ascending | Descending
+        /// </summary>
+        [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
+
+        /// <summary>
+        /// The custom suffix icon.
+        /// </summary>
+        [Parameter] public RenderFragment SuffixIcon { get; set; }
+
+        /// <summary>
+        /// Define what characters will be treated as token separators for newly created tags.
+        /// Useful when creating new tags using only keyboard.
+        /// </summary>
+        [Parameter] public char[] TokenSeparators { get; set; }
+
+        bool _valueHasChanged;
+
+        /// <summary>
+        /// Get or set the selected value.
+        /// </summary>
+        [Parameter]
+        public override TItemValue Value
+        {
+            get => _selectedValue;
+            set
+            {
+                _valueHasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
+                if (_valueHasChanged)
+                {
+                    _selectedValue = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get or set the selected values.
+        /// </summary>
         [Parameter]
         public IEnumerable<TItemValue> Values
         {
@@ -330,36 +530,30 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Used for the two-way binding.
+        /// </summary>
+        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+
+        /// <summary>
+        /// The name of the property to be used for the value.
+        /// </summary>
         [Parameter]
-        public IEnumerable<TItemValue> DefaultValues
+        public string ValueName
         {
-            get => _defaultValues;
+            get => _valueName;
             set
             {
-                if (value != null && _defaultValues != null)
-                {
-                    var hasChanged = !value.SequenceEqual(_defaultValues);
-
-                    if (!hasChanged)
-                        return;
-
-                    _defaultValuesHasItems = value.Any();
-                    _defaultValues = value;
-                }
-                else if (value != null && _defaultValues == null)
-                {
-                    _defaultValuesHasItems = value.Any();
-                    _defaultValues = value;
-                }
-                else if (value == null && _defaultValues != null)
-                {
-                    _defaultValuesHasItems = false;
-                    _defaultValues = default;
-                }
+                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
+                _valueName = value;
             }
         }
 
-        [Parameter] public RenderFragment SelectOptions { get; set; }
+        /// <summary>
+        /// Used for the two-way binding.
+        /// </summary>
+        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }        
 
         #endregion Parameters
 
@@ -619,6 +813,7 @@ namespace AntDesign
         /// </summary>
         private void CreateDeleteSelectOptions()
         {
+
             if (_datasource == null)
                 return;
 
