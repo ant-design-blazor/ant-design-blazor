@@ -6,7 +6,7 @@
     "test-ts": "mocha -r ts-node/register -r ./tests/mochaConfig.js 'tests/**/*.ts'",
     "pretest-cov": "tsc -p . ",
     "test-cov": "nyc mocha -r ts-node/register -r source-map-support/register -r ./tests/mochaConfig.js --recursive 'tests/**/*.ts'",
-    "posttest-cov": "nyc report --reporter=cobertura > coverage.xml"
+    "posttest-cov": "nyc report --reporter=cobertura"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
@@ -25,6 +25,7 @@
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
     "cwd": "../../",
     "exclude": [
       "**/*.test.ts",
