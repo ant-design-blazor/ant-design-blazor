@@ -1,0 +1,37 @@
+﻿<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="files"
+        Drag
+        Multiple
+        OnSingleCompleted="OnSingleCompleted">        
+    <p class="ant-upload-drag-icon">
+        <Icon Type="inbox" />
+    </p>
+    <p class="ant-upload-text">Click or drag file to this area to upload</p>
+    <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+        band files
+    </p>
+</Upload>
+
+@code {
+
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+}

@@ -16,15 +16,16 @@ Tag for categorizing or markup.
 
 | Property | Description | Type | Default Value | Version | 
 | --- | --- | --- | --- | --- |
-| ChildContent | Contents of the `Tag`| RenderFragment  |-       |
-| Class | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
-| Closable | Whether the `Tag` can be closed| boolean         | false       |
 | Checkable | Whether the `Tag` can be checked | boolean         | false       |
 | Checked | 	Checked status of `Tag` | boolean         |false       |
 | CheckedChange | Callback executed when `Tag` is checked/unchecked| Action<bool>         |-       |
+| ChildContent | Contents of the `Tag`| RenderFragment  |-       |
+| Class | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
+| Closable | Whether the `Tag` can be closed| boolean         | false       |
 | Color | Color of the `Tag` | string   | -         |
 | Icon | Set the icon of the `Tag`  | string        | -         |
+| OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
 | OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
-| OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
+| PresetColor | The preset color of the `Tag` | PresetColor   | -         |
 | Visible | Whether the `Tag` is closed or not | boolean         | true         |

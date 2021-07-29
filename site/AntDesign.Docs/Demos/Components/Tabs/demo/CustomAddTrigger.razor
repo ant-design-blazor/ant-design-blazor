@@ -5,9 +5,8 @@
     <Tabs Type="@TabType.EditableCard" HideAdd @bind-ActiveKey="activeKey">
         @foreach (var pane in panes)
         {
-            <TabPane Key="@pane.Key">
-                <Tab>@pane.Title</Tab>
-                <ChildContent>@pane.Content</ChildContent>
+            <TabPane Key="@pane.Key" Tab="@pane.Title">
+                @pane.Content
             </TabPane>
         }
     </Tabs>

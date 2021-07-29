@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -8,11 +12,11 @@ using Microsoft.JSInterop;
 using Moq;
 using Xunit;
 
-namespace AntDesign.Tests.tabs
+namespace AntDesign.Tests.Tabs
 {
-    public class TabsTests : AntDesignTestBase
+    public partial class TabsTests : AntDesignTestBase
     {
-        private IRenderedComponent<Tabs> CreateTabs(Action<RenderTreeBuilder> childContent)
+        private IRenderedComponent<AntDesign.Tabs> CreateTabs(Action<RenderTreeBuilder> childContent)
         {
             var jsRuntime = new Mock<IJSRuntime>();
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
@@ -20,7 +24,7 @@ namespace AntDesign.Tests.tabs
 
             Context.Services.AddScoped(_ => jsRuntime.Object);
 
-            var cut = Context.RenderComponent<Tabs>(tabs => tabs
+            var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
                 .Add(x => x.DefaultActiveKey, "2")
                 .Add(b => b.ChildContent, b => childContent(b))
             );
@@ -32,13 +36,12 @@ namespace AntDesign.Tests.tabs
         {
             var tabPane1Builder = new ComponentParameterCollectionBuilder<TabPane>()
                 .Add(x => x.Key, key)
-                .Add(x => x.Tab, $"Tab {key}".ToRenderFragment())
+                .Add(x => x.Tab, $"Tab {key}")
                 .Add(x => x.ChildContent, $"Content {key}".ToRenderFragment());
 
             configure?.Invoke(tabPane1Builder);
 
             return tabPane1Builder.Build().ToRenderFragment<TabPane>();
-
         }
 
         [Fact]

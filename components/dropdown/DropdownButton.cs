@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -26,6 +27,52 @@ namespace AntDesign
         {
             get => base.ButtonsRender;
             set => base.ButtonsRender = value;
+        }
+
+        /// <summary>
+        /// Allows to set each button's css class either to the same string
+        /// or separately.
+        /// </summary>
+        [Parameter]
+        public OneOf<string, (string LeftButton, string RightButton)> ButtonsClass
+        {
+            get =>_buttonsClass; 
+            set
+            {
+                _buttonsClass = value;
+                _buttonsClass.Switch(
+                    single =>
+                    {
+                        ChangeButtonClass(single, single);
+                    },
+                    both =>
+                    {
+                        ChangeButtonClass(both.LeftButton, both.RightButton);
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Allows to set each button's style either to the same string
+        /// or separately. 
+        /// </summary>
+        [Parameter]
+        public OneOf<string, (string LeftButton, string RightButton)> ButtonsStyle
+        {
+            get => _buttonsStyle;
+            set
+            {
+                _buttonsStyle = value;
+                _buttonsStyle.Switch(
+                    single =>
+                    {
+                        ChangeButtonStyles(single, single);
+                    },
+                    both =>
+                    {
+                        ChangeButtonStyles(both.LeftButton, both.RightButton);
+                    });
+            }
         }
 
         /// <summary>
@@ -102,25 +149,36 @@ namespace AntDesign
             }
         }
 
-        private (string LeftButton, string RightButton) _type = (ButtonType.Default, ButtonType.Default);
+        /// <summary>
+        /// Allows to set each button's type either to the same string
+        /// or separately. Use AntDesign.ButtonType helper class.
+        /// </summary>
+        [Parameter]
+        public OneOf<string, (string LeftButton, string RightButton)> Type
+
+        {
+            get => _buttonsType;
+            set
+            {
+                _buttonsType = value;
+                _buttonsType.Switch(
+                    single =>
+                    {
+                        ChangeButtonType(single, single);
+                    },
+                    both =>
+                    {
+                        ChangeButtonType(both.LeftButton, both.RightButton);
+                    });
+            }
+        }
+
         private bool _loading;
         private bool _danger;
         private bool _ghost = false;
-
-        /// <summary>
-        /// Button type is a tuple where first item refers to LeftButton type 
-        /// and second item refers to RightButton type.
-        /// </summary>
-        [Parameter]
-        public (string LeftButton, string RightButton) Type
-        {
-            get => _type;
-            set
-            {
-                _type = value;
-                ChangeButtonType(value);
-            }
-        }
+        private OneOf<string, (string LeftButton, string RightButton)> _buttonsStyle;
+        private OneOf<string, (string LeftButton, string RightButton)> _buttonsClass;
+        private OneOf<string, (string LeftButton, string RightButton)> _buttonsType = ButtonType.Default;
 
         public DropdownButton() => IsButton = true;
 

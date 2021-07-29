@@ -141,6 +141,7 @@
       "equals": "Equal",
       "notEquals": "Not Equal",
       "contains": "Contains",
+      "notContains": "Not Contains",
       "startsWith": "Start With",
       "endsWith": "End With",
       "greaterThan": "Greater Than",

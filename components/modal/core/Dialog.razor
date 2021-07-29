@@ -9,7 +9,6 @@
         }
         <div tabindex="-1" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
              @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
-             @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onkeydown="@OnKeyDown"
              style="@_wrapStyle">
             <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")

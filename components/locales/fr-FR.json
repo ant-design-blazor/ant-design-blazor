@@ -48,7 +48,8 @@
       "previousDecade": "Décennie précédente",
       "nextDecade": "Décennie suivante",
       "previousCentury": "Siècle précédent",
-      "nextCentury": "Siècle suivant"
+      "nextCentury": "Siècle suivant",
+      "shortWeekDays": [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ]
     },
     "timePickerLocale": {
       "placeholder": "Sélectionner l'heure",

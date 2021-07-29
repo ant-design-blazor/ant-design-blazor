@@ -9,7 +9,7 @@
     Persons _model = new();
     IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };	
 
-#if NET6_0
+#if NET6_0_OR_GREATER
     [Fact]
 	public void Select_Validation_Shown() 
     {

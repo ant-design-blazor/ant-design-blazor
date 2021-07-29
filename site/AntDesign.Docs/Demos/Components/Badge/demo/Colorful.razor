@@ -1,10 +1,12 @@
-﻿<div>
+﻿@using System
+
+<div>
     <Divider Orientation="left">Presets</Divider>
     <div>
-        @foreach (var color in colors)
+        @foreach (var color in Enum.GetValues(typeof(PresetColor)))
         {
             <div key="@color">
-                <Badge Color="@color" Text="@color" />
+                <Badge PresetColor="@((PresetColor)color)" Text="@(Enum.GetName(typeof(PresetColor), color))" />
             </div>
         }
     </div>
@@ -17,6 +19,14 @@
         <Badge Color="#87d068" Text="#87d068" />
         <br />
         <Badge Color="#108ee9" Text="#108ee9" />
+        <br />
+        <Badge Color="HotPink" Text="HotPink" />
+        <br />
+        <Badge Color="DarkRed" Text="DarkRed" />
+        <br />
+        <Badge Color="rgb(143, 201, 146)" Text="rgb(143, 201, 146)" />
+        <br />
+        <Badge Color="rgb(105, 58, 236)" Text="rgb(105, 58, 236)" />
     </div>
 </div>
 
@@ -25,23 +35,3 @@
         margin-bottom: 8px;
     }
 </style>
-
-@code
-{
-    string[] colors =
-    {
-        "pink",
-        "red",
-        "yellow",
-        "orange",
-        "cyan",
-        "green",
-        "blue",
-        "purple",
-        "geekblue",
-        "magenta",
-        "volcano",
-        "gold",
-        "lime",
-    };
-}

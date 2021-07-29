@@ -27,6 +27,8 @@ To display a notification message at any of the four corners of the viewport. Ty
 - `NotificationService.Error(config:NotificationConfig)`
 - `NotificationService.Close(key:string)`
 - `NotificationService.Destroy()`
+- `NotificationService.CreateAsync()`
+- `NotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
 
 The properties of config are as follows:
 
@@ -38,7 +40,7 @@ The properties of config are as follows:
 | Description | The content of notification box (required)                                      | string\|RenderFragment    | -                                   |
 | Duration    | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically         | double?                   | 4.5                                 |
 | Icon        | Customized icon                                              | RenderFragment            | null                                |
-| Key         | The unique identifier of the Notification                                         | string                    | null                                |
+| Key         | The unique identifier of the Notification                                         | string                    | Guid.NewGuid().ToString()       |
 | Message     | The title of notification box (required)                                  | string\|RenderFragment    | -                                   |
 | OnClose     | Trigger when notification closed                                        | event Action                    | null                                |
 | OnClick     | Specify a function that will be called when the notification is clicked                         |  event Action                    | null                                |
@@ -57,3 +59,22 @@ The properties of config are as follows:
 | Duration  |  Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically                        | double?                    | 4.5                               |
 | Placement | Position of Notification, can be one of  `NotificationPlacement.TopLeft` `NotificationPlacement.TopRight` `NotificationPlacement.BottomLeft` `NotificationPlacement.BottomRight` | NotificationPlacement? | NotificationPlacement.TopRight |
 | Rtl       |  whether to enable RTL mode                                          | bool                       | `false`                           |
+
+## NotificationRef
+
+## Properties
+
+| Name   | Description                          |
+| ------ | ------------------------------------ |
+| Config | get only 'Notificationconfig' object |
+
+## Methods
+
+| Name                                                         | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| OpenAsync()                                                  | open the notification box                                    |
+| UpdateConfigAsync()                                          | After modifying the `Config` property, update the notification box |
+| UpdateConfigAsync(OneOf<string, RenderFragment>)             | update the notification box's `Description`                  |
+| UpdateConfigAsync(OneOf<string, RenderFragment>, OneOf<string, RenderFragment>) | update the notification box's `Message` and `Description`    |
+| CloseAsync()                                                 | close the notification box                                   |
+

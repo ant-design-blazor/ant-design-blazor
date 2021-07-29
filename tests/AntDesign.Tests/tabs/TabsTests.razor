@@ -1,0 +1,40 @@
+﻿@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Render_tab_pane_with_tabTemplate()
+    {
+        JSInterop.Setup<HtmlElement>("AntDesign.interop.getDomInfo", _ => true);
+
+        var cut = Context.Render(
+          @<Tabs>
+              <TabPane Key="tab1">
+                  <TabTemplate>Tab 1</TabTemplate>
+              </TabPane>
+          </Tabs>
+        );
+
+        var tabElement = cut.Find(".ant-tabs-tab-btn");
+        tabElement.InnerHtml.Trim().Should().Be("Tab 1");
+    }
+
+    [Fact]
+    public void Bind_OnClose_event()
+    {
+        JSInterop.Setup<HtmlElement>("AntDesign.interop.getDomInfo", _ => true);
+
+        var closeTab = "";
+        Action<string> OnClose = (string key) => closeTab = key;
+
+        var cut = Context.Render(
+          @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
+              <TabPane Key="tab1" Tab="Tab 1">
+              </TabPane>
+          </Tabs>
+        );
+
+        var removeElement = cut.Find(".ant-tabs-tab-remove");
+        removeElement.Click();
+
+        closeTab.Should().Be("tab1");
+    }
+}

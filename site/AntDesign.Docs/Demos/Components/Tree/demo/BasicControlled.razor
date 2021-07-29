@@ -1,34 +1,46 @@
-<Tree @ref="tree" Checkable Multiple TItem="string">
+<Tree @ref="_tree"
+      Checkable
+      TItem="string"
+      @bind-ExpandedKeys="expandedKeys"
+      @bind-CheckedKeys="checkedKeys"
+      @bind-SelectedKeys="selectedKeys"
+      OnExpand="OnExpand"
+      OnSelect="OnSelect"
+      OnCheck="OnCheck"
+      AutoExpandParent="autoExpandParent">
     <Nodes>
-        <TreeNode Title="A" Key="100" TItem="string">
+        <TreeNode Title="0-0" Key="0-0" TItem="string">
             <Nodes>
-                <TreeNode Title="A1" Key="110" TItem="string">
+                <TreeNode Title="0-0-0" Key="0-0-0" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1" Key="111" TItem="string"></TreeNode>
-                        <TreeNode Title="A2-2" Key="112" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-0-0" Key="0-0-0-0" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-0-1" Key="0-0-0-1" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-0-2" Key="0-0-0-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Key="120" Disabled TItem="string">
+                <TreeNode Title="0-0-1" Key="0-0-1" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1" Key="121" TItem="string"></TreeNode>
-                        <TreeNode Title="A1-2" Key="122" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-1-0" Key="0-0-1-0" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-1-1" Key="0-0-1-1" TItem="string"></TreeNode>
+                        <TreeNode Title="0-0-1-2" Key="0-0-1-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" Key="130" DisableCheckbox TItem="string">
-                    <Nodes>
-                        <TreeNode Title="A3-1" Key="131" TItem="string"></TreeNode>
-                        <TreeNode Title="A3-2" Key="132" DisableCheckbox TItem="string"></TreeNode>
-                        <TreeNode Title="A3-3" Key="133" Disabled TItem="string"></TreeNode>
-                    </Nodes>
-                </TreeNode>
+                <TreeNode Title="0-0-2" Key="0-0-2" TItem="string"></TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B" Key="200" TItem="string"></TreeNode>
+        <TreeNode Title="0-1" Key="0-1" TItem="string">
+            <Nodes>
+                <TreeNode Title="0-1-0-0" Key="0-1-0-0" TItem="string"></TreeNode>
+                <TreeNode Title="0-1-0-1" Key="0-1-0-1" DisableCheckbox TItem="string"></TreeNode>
+                <TreeNode Title="0-1-0-2" Key="0-1-0-2" Disabled TItem="string"></TreeNode>
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="0-2" Key="0-2" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
 
 <br />
-<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>
+@*<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>*@
 
 <Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
 
@@ -36,7 +48,7 @@
 <br />
 <br />
 
-<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
+@*<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>*@
 
 <Button OnClick="DeselectAll">Deselect All</Button>
 <br />
@@ -55,49 +67,70 @@
         }
     </ul>
 }
-@code{
+@code {
 
     string printType;
 
-    List<string> printTexts = new List<string>();
+    string[] printTexts;
 
-    Tree<string> tree;
+    Tree<string> _tree;
 
-    private void PrintCheckedNodesTitle()
-    {
-        printType = "CheckedNodesTitle";
-        printTexts = tree.CheckedTitles;
-    }
+    string[] expandedKeys;
+    string[] checkedKeys;
+    string[] selectedKeys;
+
+    bool autoExpandParent;
+
+    //private void PrintCheckedNodesTitle()
+    //{
+    //    printType = "CheckedNodesTitle";
+    //    printTexts = tree.CheckedTitles;
+    //}
 
     private void PrintCheckedNodesKey()
     {
         printType = "CheckedNodesKey";
-        printTexts = tree.CheckedKeys;
+        printTexts = _tree.CheckedKeys;
     }
 
     private void DecheckedAll()
     {
-        tree.DecheckedAll();
+        _tree.DecheckedAll();
     }
 
-    private void PrintSelectedNodes()
-    {
-        printType = "SelectedNodes";
-        printTexts = tree.SelectedTitles;
-    }
+    //private void PrintSelectedNodes()
+    //{
+    //    printType = "SelectedNodes";
+    //    printTexts = tree.SelectedTitles;
+    //}
 
     private void DeselectAll()
     {
-        tree.DeselectAll();
+        _tree.DeselectAll();
     }
 
     private void ExpandAll()
     {
-        tree.ExpandAll();
+        _tree.ExpandAll();
     }
 
     private void CollapseAll()
     {
-        tree.CollapseAll();
+        _tree.CollapseAll();
+    }
+
+    private void OnCheck(TreeEventArgs<string> e)
+    {
+        Console.WriteLine("OnCheck:" + e.Node.Key);
+    }
+
+    private void OnSelect(TreeEventArgs<string> e)
+    {
+        Console.WriteLine("OnSelect:" + e.Node.Key);
+    }
+
+    private void OnExpand((string[] ExpandedKeys, TreeNode<string> Node, bool Expanded) e)
+    {
+        Console.WriteLine("OnExpand:" + JsonSerializer.Serialize(e.ExpandedKeys));
     }
 }
