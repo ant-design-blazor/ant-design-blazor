@@ -1,0 +1,47 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+    [Fact]
+    public async Task Single_tag_creation() //issue #1645
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());         			
+		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());        
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
+		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
+		#if !NET6_0_OR_GREATER
+			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+		#endif
+
+        var cut = Render<AntDesign.Select<string, string>>(
+        @<AntDesign.Select Mode="tags"        		
+			TItemValue="string"
+			TItem="string"		
+			EnableSearch>
+			<SelectOptions>						
+				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
+			</SelectOptions>
+		</AntDesign.Select>
+	);
+		//Act
+		var input = cut.Find("input.ant-select-selection-search-input");
+		input.Input("A");
+		await Task.Delay(1);
+		input.KeyUp("ENTER");
+		await Task.Delay(1);
+		input.Input("B");
+		await Task.Delay(1);
+		input.KeyUp("ENTER");
+		await Task.Delay(1);
+		input.Input("C");
+		await Task.Delay(1);
+		input.KeyUp("ENTER");
+		await Task.Delay(1);
+		var addedTags = cut.FindAll("span.ant-select-selection-item-content")
+			.Where(d => d.TextContent.Trim() == "B");
+		//Assert
+		addedTags.Should().HaveCount(1);
+    }
+}
