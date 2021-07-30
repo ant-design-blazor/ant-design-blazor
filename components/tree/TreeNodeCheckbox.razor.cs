@@ -7,13 +7,13 @@ namespace AntDesign
     public partial class TreeNodeCheckbox<TItem> : ComponentBase
     {
         /// <summary>
-        /// 树控件本身
+        /// Root Tree
         /// </summary>
         [CascadingParameter(Name = "Tree")]
         public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
-        /// 当前节点
+        /// Current Node
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
@@ -22,23 +22,17 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-tree-checkbox")
+            ClassMapper
+                .Add("ant-tree-checkbox")
                 .If("ant-tree-checkbox-checked", () => SelfNode.Checked)
                 .If("ant-tree-checkbox-indeterminate", () => SelfNode.Indeterminate)
-                .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox)
-                ;
+                .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox);
         }
 
         protected override void OnInitialized()
         {
             SetClassMap();
             base.OnInitialized();
-        }
-
-        protected override void OnParametersSet()
-        {
-            SetClassMap();
-            base.OnParametersSet();
         }
 
         [Parameter]

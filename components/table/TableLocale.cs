@@ -32,7 +32,7 @@ namespace AntDesign
 
         public string CancelSort { get; set; } = "Click to cancel sort";
 
-        public FilterOptions FilterOptions { get; set; }
+        public FilterOptions FilterOptions { get; set; } = new();
     }
 
     public class FilterOptions
@@ -50,6 +50,8 @@ namespace AntDesign
         public string NotEquals { get; set; } = "Not Equal";
 
         public string Contains { get; set; } = "Contains";
+
+        public string NotContains { get; set; } = "Not Contains";
 
         public string StartsWith { get; set; } = "Start With";
 

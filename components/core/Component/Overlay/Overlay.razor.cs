@@ -28,6 +28,9 @@ namespace AntDesign.Internal
         public EventCallback OnOverlayMouseLeave { get; set; }
 
         [Parameter]
+        public EventCallback OnOverlayMouseUp { get; set; }
+
+        [Parameter]
         public Action OnShow { get; set; }
 
         [Parameter]

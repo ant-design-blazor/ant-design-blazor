@@ -9,7 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AntDesign.core.Helpers
+namespace AntDesign.Core.Helpers
 {
     public static class PropertyAccessHelper
     {
@@ -261,25 +261,25 @@ namespace AntDesign.core.Helpers
             {
                 switch (propertyName)
                 {
-                    case {Length: 0}:
-                    {
-                        foreach (var index in indexes)
+                    case { Length: 0 }:
                         {
-                            member = member.IndexableGetNullableItem(index);
-                        }
+                            foreach (var index in indexes)
+                            {
+                                member = member.IndexableGetNullableItem(index);
+                            }
 
-                        return member;
-                    }
+                            return member;
+                        }
                     default:
-                    {
-                        member = AccessNext(member, propertyName);
-                        foreach (var index in indexes)
                         {
-                            member = member.IndexableGetNullableItem(index);
-                        }
+                            member = AccessNext(member, propertyName);
+                            foreach (var index in indexes)
+                            {
+                                member = member.IndexableGetNullableItem(index);
+                            }
 
-                        return member;
-                    }
+                            return member;
+                        }
                 }
             }
 
@@ -294,7 +294,7 @@ namespace AntDesign.core.Helpers
                     }
                     else
                     {
-                        // Nullable Value Type 
+                        // Nullable Value Type
                         return member.NullableTypeGetPropOrNull(property);
                     }
                 }
@@ -308,7 +308,7 @@ namespace AntDesign.core.Helpers
             return TryConvertToNullable(access);
         }
 
-        #endregion Access Nullable property
+        #endregion Access nullable property
 
         #region Access not null property
 
@@ -364,15 +364,15 @@ namespace AntDesign.core.Helpers
             {
                 switch (propertyName)
                 {
-                    case {Length: 0}:
-                    {
-                        return indexes.Aggregate(member, (current, index) => current.IndexableGetItem(index));
-                    }
+                    case { Length: 0 }:
+                        {
+                            return indexes.Aggregate(member, (current, index) => current.IndexableGetItem(index));
+                        }
                     default:
-                    {
-                        member = AccessNext(member, propertyName);
-                        return indexes.Aggregate(member, (current, index) => current.IndexableGetItem(index));
-                    }
+                        {
+                            member = AccessNext(member, propertyName);
+                            return indexes.Aggregate(member, (current, index) => current.IndexableGetItem(index));
+                        }
                 }
             }
 
@@ -395,7 +395,7 @@ namespace AntDesign.core.Helpers
             return access;
         }
 
-        #endregion Access Not Null Property
+        #endregion Access not null property
 
         //
         // Branch
@@ -452,7 +452,7 @@ namespace AntDesign.core.Helpers
                                         ? Expression.Convert(propExp, typeof(Nullable<>).MakeGenericType(propExp.Type)) // T: Prop is VT: (Nullable<Prop>)C.Prop
                                         : propExp;                                                                      // T: Prop is class: C.Prop
             var falseResult = Expression.Constant(null, trueResult.Type);                                               // F: null
-            var exp = Expression.Condition(test, trueResult, falseResult);                                              // E ? T : F; 
+            var exp = Expression.Condition(test, trueResult, falseResult);                                              // E ? T : F;
             return exp;
         }
 
@@ -679,7 +679,7 @@ namespace AntDesign.core.Helpers
         private static void ArgumentNotEmpty<T>(in T[] arg, string argName)
             where T : class
         {
-            if (arg == default || arg is {Length: 0})
+            if (arg == default || arg is { Length: 0 })
             {
                 throw new ArgumentException("Value cannot be an empty collection or null.", argName);
             }
@@ -695,7 +695,7 @@ namespace AntDesign.core.Helpers
         {
             return expression switch
             {
-                MemberExpression {Expression: { }} memberExp => GetRootParameterExpression(memberExp.Expression),
+                MemberExpression { Expression: { } } memberExp => GetRootParameterExpression(memberExp.Expression),
                 ConditionalExpression conditionalExp => GetRootParameterExpression(conditionalExp.IfTrue),
                 UnaryExpression unaryExp => GetRootParameterExpression(unaryExp.Operand),
                 ParameterExpression paramExp => paramExp,
@@ -719,7 +719,7 @@ namespace AntDesign.core.Helpers
         }
 
         /// <summary>
-        /// Check if property string has index operation and parse to Expression 
+        /// Check if property string has index operation and parse to Expression
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
@@ -768,7 +768,7 @@ namespace AntDesign.core.Helpers
             {
                 var indexBegin = sp.IndexOf('[');
                 var indexEnd = sp.IndexOf(']');
-                if (indexBegin == -1 || indexEnd == -1 || indexBegin + 1 == indexEnd) // ']' not found or found "[]" which is incorrect 
+                if (indexBegin == -1 || indexEnd == -1 || indexBegin + 1 == indexEnd) // ']' not found or found "[]" which is incorrect
                 {
                     throw new InvalidOperationException();
                 }

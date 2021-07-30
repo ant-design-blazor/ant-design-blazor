@@ -20,92 +20,69 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| AllowClear | 支持清除 | Boolean | false |  |
-| AutoClearSearchValue | 是否在选中项后清空搜索框，只在 `mode` 为 `multiple` 或 `tags` 时有效。 | Boolean | true |  |
-| AutoFocus | 默认获取焦点 | Boolean | false |  |
-| DefaultActiveFirstOption | 是否默认高亮第一个选项。 | Boolean | true |  |
-| DefaultValue | 指定默认选中的条目 | string\|IEnumerable&lt;string><br />LabeledValue\|IEnumerable&lt;LabeledValue> | - |  |
-| Disabled | 是否禁用 | Boolean | false |  |
-| DropdownClassName | 下拉菜单的 className 属性 | string | - |  |
-| DropdownMatchSelectWidth | 下拉菜单和选择器同宽。默认将设置 `min-width`。`false` 时会关闭虚拟滚动 | Boolean \| number | true |  |
-| DropdownRender | 自定义下拉框内容 | (menuNode: RenderFragment, props:Properties) => RenderFragment | - |  |
-| DropdownStyle | 下拉菜单的 style 属性 | string | - |  |
-| FilterOption | 是否根据输入项进行筛选。当其为一个函数时，会接收 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`。 | Boolean or function(inputValue, option) | true |  |
-| GetPopupContainer | 菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。[示例](https://codesandbox.io/s/4j168r7jw0) | Function(triggerNode) | () => document.body |  |
-| LabelInValue | 是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 `string` 变为 `{key: string, label: RenderFragment}` 的格式 | Boolean | false |  |
-| ListHeight | 设置弹窗滚动高度 | number | 256 |  |
+| AllowClear | 支持清除 | bool | false |  |
+| AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
+| Bordered | 是否有边框 | bool | true |  |
+| CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
+| DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
+| DefaultActiveFirstOption | 是否默认高亮第一个选项  | bool | false |  |
+| DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
+| DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
+| Disabled | 是否禁用 | bool | false |  |
+| DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
+| DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
+| DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
+| DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
+| EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
+| GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
+| HideSelected | Hides the selected items when they are selected. | bool | false |  |
+| IgnoreItemChanges | Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property. | bool | true |  |
+| ItemTemplate | Is used to customize the item style. | RenderFragment&lt;TItem> |  |  |
+| LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
+| LabelName | The name of the property to be used for the label. | string |  |  |
+| LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
+| Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
-| MaxTagPlaceholder | 隐藏 tag 时显示的内容。 当 `MaxTagCount` 是 `ResponsiveTag.Responsive` 时，使用这个属性来处理要显示的逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
-| MaxTagTextLength | 隐藏 tag 时显示的内容 | int | - |  |
-| TagRender | 自定义 tag 内容 render | (props:Properties) => RenderFragment | - |  |
-| Mode | 设置 Select 的模式为多选或标签 | `multiple` \| `tags` | - |  |
-| NotFoundContent | 当下拉列表为空时显示的内容 | RenderFragment | 'Not Found' |  |
-| OptionFilterProp | 搜索时过滤对应的 option 属性，如设置为 children 表示对内嵌内容进行搜索。[示例](https://codesandbox.io/s/antd-reproduction-template-tk678) | string | value |  |
-| OptionLabelProp | 回填到选择框的 SelectOption 的属性值，默认是 SelectOption 的子元素。比如在子元素需要高亮效果时，此值可以设为 `value`。 | string | `children` （combobox 模式下为 `value`） |  |
-| Placeholder | 选择框默认文字 | string | - |  |
-| ShowArrow | 是否显示下拉小箭头 | Boolean | true |  |
-| ShowSearch | 使单选模式可搜索 | Boolean | false |  |
-| Size | 选择框大小 | `large` \| `middle` \| `small` | 无 |  |
+| MaxTagPlaceholder | 隐藏 tag 时显示的内容. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
+| MaxTagTextLength | 最大显示的 tag 文本长度. | int | - |  |
+| Mode | 设置 Select 的模式为多选或标签 - `default` \| `multiple` \| `tags` | string | default |  |
+| NotFoundContent | 当下拉列表为空时显示的内容 | RenderFragment | `Not Found` |  |
+| OnBlur | 失去焦点时回调 | Action | - |  |
+| OnClearSelected | Called when the user clears the selection. | Action | - |  |
+| OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
+| OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
+| OnDropdownVisibleChange | 展开下拉菜单的回调 | Action | - |  |
+| OnFocus | 获得焦点时回调 | Action | - |  |
+| OnMouseEnter | 鼠标移入时回调 | Action | - |  |
+| OnMouseLeave | 鼠标移出时回调 | Action | - |  |
+| OnSearch | 文本框值变化时回调 | Action&lt;string> | - |  |
+| OnSelectedItemChanged | Called when the selected item changes. | Action&lt;TItem> | - |  |
+| OnSelectedItemsChanged | Called when the selected items changes. | Action&lt;IEnumerable&lt;TItem>> | - |  |
+| Open | Controlled open state of dropdown. | bool | false |  |
+| Placeholder | 选择框默认文本 | string | - |  |
+| PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
+| PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
+| PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
+| SelectOptions | Used for rendering select options manually. | RenderFragment | - |  |
+| ShowArrowIcon | 是否显示下拉小箭头 | bool | true |  |
+| ShowSearchIcon | 使单选模式可搜索 | bool | true |  |
+| Size | The size of the component. `small` \| `default` \| `large` | string | default |  |
+| SortByGroup | Sort items by group name. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
+| SortByLabel | Sort items by label value. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
+| Style | Set CSS style. | string | `width: 100%` |  |
 | SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
-| RemoveIcon | 自定义的多选框清除图标 | RenderFragment | - |  |
-| ClearIcon | 自定义的多选框清空图标 | RenderFragment | - |  |
-| MenuItemSelectedIcon | 自定义多选时当前选中的条目图标 | RenderFragment | - |  |
-| TokenSeparators | 在 tags 和 multiple 模式下自动分词的分隔符 | IEnumerable&lt;string> |  |  |
-| Value | 指定当前选中的条目 | string\|IEnumerable&lt;string><br />LabeledValue\|IEnumerable&lt;LabeledValue> | - |  |
-| virtual | 设置 `false` 时关闭虚拟滚动 | Boolean | true | 4.1.0 |
-| OnBlur | 失去焦点时回调 | function | - |  |
-| OnChange | 选中 option，或 input 的 value 变化（combobox 模式下）时，调用此函数 | function(value, option:SelectOption/IEnumerable&lt;SelectOption>) | - |  |
-| OnDeselect | 取消选中时调用，参数为选中项的 value (或 key) 值，仅在 multiple 或 tags 模式下生效 | function(string\|number\|LabeledValue) | - |  |
-| OnFocus | 获得焦点时回调 | function | - |  |
-| OnInputKeyDown | 按键按下时回调 | function | - |  |
-| OnMouseEnter | 鼠标移入时回调 | function | - |  |
-| OnMouseLeave | 鼠标移出时回调 | function | - |  |
-| OnPopupScroll | 下拉列表滚动时的回调 | function | - |  |
-| OnSearch | 文本框值变化时回调 | function(value: string) |  |  |
-| OnSelect | 被选中时调用，参数为选中项的 value (或 key) 值 | function(string \|LabeledValue, option:SelectOption) | - |  |
-| DefaultOpen | 是否默认展开下拉菜单 | Boolean | - |  |
-| Open | 是否展开下拉菜单 | Boolean | - |  |
-| OnDropdownVisibleChange | 展开下拉菜单的回调 | function(open) | - |  |
-| Loading | 加载中状态 | Boolean | false |  |
-| Bordered | 是否有边框 | Boolean | true |  |
-
-> 注意，如果发现下拉菜单跟随页面滚动，或者需要在其他弹层中触发 Select，请尝试使用 `GetPopupContainer={triggerNode => triggerNode.parentElement}` 将下拉弹层渲染节点固定在触发器的父元素中。
-
-### Select Methods
-
-| 名称    | 说明     | 版本 |
-| ------- | -------- | ---- |
-| Blur()  | 取消焦点 |      |
-| Focus() | 获取焦点 |      |
+| TokenSeparators | Define what characters will be treated as token separators for newly created tags. Useful when creating new tags using only keyboard. | char[] | - |  |
+| Value | Get or set the selected value. | TItemValue | - |  |
+| Values | Get or set the selected values. | IEnumerable&lt;TItemValues> | - |  |
+| ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
+| ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
+| ValueName | The name of the property to be used for the value. | string | - |  |
 
 ### SelectOption props
 
-| 参数      | 说明                                     | 类型           | 默认值 | 版本 |
-| --------- | --------------------------------------- | -------------- | ------ | ---- |
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| Class | Option 器类名                  | string          | -      |      |
 | Disabled  | 是否禁用                                 | Boolean        | false  |      |
-| Title     | 选中该 SelectOption 后，Select 的 title  | string         | -      |      |
-| Value     | 默认根据此属性值进行筛选                  | string          | -      |      |
-| ClassName | SelectOption 器类名                     | string          | -      |      |
-
-### SelectOptGroup props
-
-| 参数  | 说明 | 类型                  | 默认值 | 版本 |
-| ----- | ---- | --------------------- | ------ | ---- |
-| Key   |      | string                | -      |      |
-| Label | 组名 | string                | 无     |      |
-
-## FAQ
-
-### 点击 `dropdownRender` 里的内容浮层关闭怎么办？
-
-看下 [dropdownRender 例子](#components-select-demo-custom-dropdown-menu) 里的说明。
-
-### 自定义 SelectOption 样式导致滚动异常怎么办？
-
-这是由于虚拟滚动默认选项高度为 `32px`，如果你的选项高度小于该值则需要通过 `ListItemHeight` 属性调整，而 `ListHeight` 用于设置滚动容器高度：
-
-```razor
-<Select ListItemHeight="10" ListHeight="250" />
-```
-
-注意：`ListItemHeight` 和 `ListHeight` 为内部属性，如无必要，请勿修改该值。
+| Label     | Label of Select after selecting this Option | string         | -      |      |
+| Value     | Value of Select after selecting this Option | TItemValue          | -      |      |

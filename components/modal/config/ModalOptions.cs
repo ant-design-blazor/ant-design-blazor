@@ -78,7 +78,7 @@ namespace AntDesign
                     OkButtonProps = new ButtonProps();
                 }
 
-                OkButtonProps.Loading = true;
+                OkButtonProps.Loading = value;
             }
         }
 

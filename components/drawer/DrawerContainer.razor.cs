@@ -34,11 +34,13 @@ namespace AntDesign
         /// </summary>
         private async Task DrawerService_OnCreate(DrawerRef drawerRef)
         {
-            drawerRef.Config.Visible = true;
             if (!_drawerRefs.Contains(drawerRef))
             {
                 _drawerRefs.Add(drawerRef);
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(10);
             }
+            drawerRef.Config.Visible = true;
             await InvokeAsync(StateHasChanged);
         }
 
@@ -60,12 +62,16 @@ namespace AntDesign
         /// </summary>
         private async Task DrawerService_OnClose(DrawerRef drawerRef)
         {
-            drawerRef.Config.Visible = false;
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(300);
-            if (_drawerRefs.Contains(drawerRef))
+            if (drawerRef.Config.Visible)
             {
-                _drawerRefs.Remove(drawerRef);
+                drawerRef.Config.Visible = false;
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(300);
+                if (_drawerRefs.Contains(drawerRef))
+                {
+                    _drawerRefs.Remove(drawerRef);
+                }
+                await InvokeAsync(StateHasChanged);
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -23,6 +24,20 @@ namespace AntDesign
                 NotificationService.OnClosing += CloseAsync;
                 NotificationService.OnDestroying += Destroying;
                 NotificationService.OnConfiging += Config;
+                NotificationService.OnUpdating += OnUpdating;
+            }
+        }
+
+        private async Task OnUpdating(string key, OneOf<string, RenderFragment> description, OneOf<string, RenderFragment>? message = null)
+        {
+            if (_configKeyDict.TryGetValue(key, out var oldConfig))
+            {
+                oldConfig.Description = description;
+                if (message != null)
+                {
+                    oldConfig.Message = message.Value;
+                }
+                await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -32,6 +47,7 @@ namespace AntDesign
             NotificationService.OnClosing -= CloseAsync;
             NotificationService.OnDestroying -= Destroying;
             NotificationService.OnConfiging -= Config;
+            NotificationService.OnUpdating -= OnUpdating;
 
             base.Dispose(disposing);
         }
@@ -150,6 +166,7 @@ namespace AntDesign
 
             Debug.Assert(option.Placement != null, "option.Placement != null");
             var placement = option.Placement.Value;
+            option.AnimationClass = AnimationType.Enter;
             bool canAdd = true;
             if (!_configDict.ContainsKey(placement))
             {
@@ -210,7 +227,7 @@ namespace AntDesign
                 }
 
                 //when next notification item fade out or add new notice item, item will toggle StateHasChanged
-                //StateHasChanged();
+                StateHasChanged();
             }
 
             //return Task.CompletedTask;

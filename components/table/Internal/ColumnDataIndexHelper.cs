@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using AntDesign.core.Helpers;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.TableModels;
 
 namespace AntDesign.Internal
@@ -28,27 +28,12 @@ namespace AntDesign.Internal
         private static ColumnCacheItem CreateDataIndexConfig(ColumnCacheKey key)
         {
             var (itemType, propType, dataIndex) = key;
-            Func<RowData, TProp> getValue = null;
-            LambdaExpression getFieldExpression = null;
-            var properties = dataIndex?.Split(".");
-            if (properties is {Length: > 0})
-            {
-                var canBeNull = !propType.IsValueType || Nullable.GetUnderlyingType(propType) != null;
-                var rowDataType = typeof(RowData);
-                var rowData1Type = typeof(RowData<>).MakeGenericType(itemType);
-                var rowDataExp = Expression.Parameter(rowDataType);
-                var rowData1Exp = Expression.TypeAs(rowDataExp, rowData1Type);
-                var dataMemberExp = Expression.Property(rowData1Exp, nameof(RowData<object>.Data));
 
-                var memberExp = canBeNull
-                                    ? dataMemberExp.AccessNullableProperty(properties)
-                                    : dataMemberExp.AccessProperty(properties);
-                getValue = Expression.Lambda<Func<RowData, TProp>>(memberExp, rowDataExp).Compile();
+            var getFieldExpression = PathHelper.GetLambda(dataIndex, itemType, itemType, propType, true);
 
-                getFieldExpression = canBeNull
-                                         ? itemType.BuildAccessNullablePropertyLambdaExpression(properties)
-                                         : itemType.BuildAccessPropertyLambdaExpression(properties);
-            }
+            var rowDataType = typeof(RowData<>).MakeGenericType(itemType);
+            var path = dataIndex.StartsWith('[') ? $"Data{dataIndex}" : $"Data.{dataIndex}";
+            var getValue = (Func<RowData, TProp>)PathHelper.GetDelegate(path, rowDataType, typeof(RowData), propType, true);
 
             return new ColumnCacheItem(getValue, getFieldExpression);
         }

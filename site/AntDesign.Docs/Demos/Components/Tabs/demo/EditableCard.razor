@@ -1,20 +1,20 @@
-﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" OnAddClick="OnAddClick" @bind-ActiveKey="activeKey">
+﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
     @foreach (var pane in panes)
     {
-        <TabPane Key="@pane.Key" Closable="@pane.Closable">
-            <Tab>@pane.Title</Tab>
-            <ChildContent>@pane.Content</ChildContent>
+        <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
+            @pane.Content
         </TabPane>
     }
 </Tabs>
 
-@code{
+@code {
     private string activeKey;
     private int newTabIndex;
 
     public record Pane(string Title, string Content, string Key, bool Closable = true);
 
-    List<Pane> panes = new List<Pane>() {
+    List<Pane> panes = new List<Pane>()
+    {
         new("Tab 1", "Content of Tab Pane 1","1"),
         new("Tab 2", "Content of Tab Pane 2","2"),
         new("Tab 3", "Content of Tab Pane 3","3",false),
@@ -25,5 +25,10 @@
         var key = panes.Count + 1;
         activeKey = $"newTab{newTabIndex++}";
         panes.Add(new Pane($"Tab {key}", $"Content of Tab Pane {key}", activeKey));
+    }
+
+    void OnTabClose(string key)
+    {
+        Console.WriteLine($"tab close:{key}");
     }
 }

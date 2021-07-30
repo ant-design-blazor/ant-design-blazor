@@ -6,21 +6,14 @@
     <Tabs DefaultActiveKey="0" TabPosition="@mode" Style="height: 220px;">
         @for (int i = 0; i < 30; i++)
         {
-            var myTab = i;
-            <TabPane Key="@($"{myTab}")">
-                <Tab>Tab-@myTab</Tab>
-                <ChildContent>Content of tab Pane @myTab</ChildContent>
+            var key = $"{i}";
+            <TabPane Key="@key" Tab=@($"Tab-{@key}")>
+                Content of tab Pane @key
             </TabPane>
         }
     </Tabs>
 </div>
 
-@code{
+@code {
     private string mode = TabPosition.Top;
-
-    RenderFragment<int> template = (i) =>@<TabPane Key="@i.ToString()">
-        <Tab>Tab-@i</Tab>
-        <ChildContent>Content of tab Pane @i</ChildContent>
-    </TabPane>;
-
 }

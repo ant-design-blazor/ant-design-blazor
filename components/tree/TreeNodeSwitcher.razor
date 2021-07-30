@@ -3,49 +3,66 @@
 @typeparam TItem
 
 <span class="@ClassMapper.Class" @onclick="OnClick">
-    @if (IsShowSwitchIcon)
+    @if (SelfNode.Loading)
     {
-        @if (!SelfNode.Loading)
+        <Icon Type="loading" Theme="outline" Class="ant-tree-switcher-loading-icon" />
+    }
+    else
+    {
+        <!-- node has its own switcher icon -->
+        @if (SelfNode?.SwitcherIconTemplate != null || SelfNode?.SwitcherIcon != null)
         {
-            if (TreeComponent.SwitcherIconTemplate != null)
+            if (SelfNode.SwitcherIconTemplate != null)
             {
-                @TreeComponent.SwitcherIconTemplate(SelfNode)
+                <span class="ant-tree-switcher-icon">
+                    @SelfNode.SwitcherIconTemplate(SelfNode)
+                </span>
             }
-            else
+            else if (SelfNode.SwitcherIcon != null)
             {
-                <Icon Type="caret-down" Theme="outline" class="ant-tree-switcher-icon" />
+                <Icon Type="@SelfNode.SwitcherIcon" Class="ant-tree-switcher-icon" />
             }
         }
         else
         {
-            <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
-        }
-
-    }
-    @if (TreeComponent.ShowLine)
-    {
-        @if (!SelfNode.Loading)
-        {
-            if (TreeComponent.SwitcherIconTemplate != null)
+            @if (TreeComponent.ShowLine)
             {
-                @TreeComponent.SwitcherIconTemplate(SelfNode)
-            }
-            else
-            {
-                @if (IsShowLineIcon)
+                <!-- When the node is not leaf, then show switcher icon -->
+                if (!SelfNode.IsLeaf)
                 {
-                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Theme="outline" class="ant-tree-switcher-line-icon" />
+                    @if (TreeComponent.SwitcherIconTemplate != null)
+                    {
+                        <span class="ant-tree-switcher-icon">
+                            @TreeComponent.SwitcherIconTemplate(SelfNode)
+                        </span>
+                    }
+                    else if (TreeComponent.SwitcherIcon != null)
+                    {
+                        <Icon Type="TreeComponent.SwitcherIcon" Class="ant-tree-switcher-icon" />
+                    }
+                    else
+                    {
+                        <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Class="ant-tree-switcher-line-icon" />
+                    }
                 }
                 else
                 {
-                    <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
+                    <!-- Show the leaf icon (file) or leaf line (└) -->
+                    if (TreeComponent.ShowLeafIcon)
+                    {
+                        <Icon Type="file" Theme="outline" Class="ant-tree-switcher-line-icon" />
+                    }
+                    else
+                    {
+                        <span class="ant-tree-switcher-leaf-line"></span>
+                    }
                 }
             }
+            else if (!SelfNode.IsLeaf)
+            {
+                <!-- node is not leaf and not show line, then show the default arrow icon -->
+                <Icon Type="caret-down" Theme="outline" Class="ant-tree-switcher-icon" />
+            }
         }
-        else
-        {
-            <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
-        }
-
     }
 </span>

@@ -15,11 +15,97 @@ timeline: true
 
 ---
 
+### 0.9.0
+
+🎉 截至这个版本，本项目一共迎来 101 位贡献者，是他们成就了这个项目！在此感谢他们慷慨的贡献！
+
+- Tabs
+  - 🔥 增加路由服用多标签页组件 `ReuseTabs`。([demo](https://github.com/ant-design-blazor/demo-reuse-tabs)) [#1704](https://github.com/ant-design-blazor/ant-design-blazor/pull/1704) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 `OnClose` 事件与 `TabTemplate`。[#1698](https://github.com/ant-design-blazor/ant-design-blazor/pull/1698) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 添加 Guid 类型的内置筛选器。[#1756](https://github.com/ant-design-blazor/ant-design-blazor/pull/1756) [@anranruye](https://github.com/anranruye)
+  - ⚡️ 优化内部的渲染片段。[#1597](https://github.com/ant-design-blazor/ant-design-blazor/pull/1597) [@anranruye](https://github.com/anranruye)
+  - 🛠 可通过 `ITableFilterModel` 访问 `TableFilter`，可访问 `TableFilter` 中的比较运算符和条件运算符。[#1563](https://github.com/ant-design-blazor/ant-design-blazor/pull/1563) [@anranruye](https://github.com/anranruye)
+  - 🆕 为枚举类型添加内置筛选器, 列表类型的筛选器添加支持null值。[#1439](https://github.com/ant-design-blazor/ant-design-blazor/pull/1439) [@anranruye](https://github.com/anranruye)
+  - 🆕 增加 可隐藏列[#1410](https://github.com/ant-design-blazor/ant-design-blazor/pull/1410) [@ldsenow](https://github.com/ldsenow)
+  - 🆕 增加 自定义翻页器的支持[#1409](https://github.com/ant-design-blazor/ant-design-blazor/pull/1409) [@ldsenow](https://github.com/ldsenow)
+  - 🛠 用PathHelper替换PropertyAccessHelper, 用单引号替换双引号标识字符串索引键。[#1386](https://github.com/ant-design-blazor/ant-design-blazor/pull/1386) [@Zonciu](https://github.com/Zonciu)
+  - 🐞 修复分页问题，实现 TotalChanged 回调；添加远程加载数据示例。[#1558](https://github.com/ant-design-blazor/ant-design-blazor/pull/1558) [@anranruye](https://github.com/anranruye)
+  - 📖 修复 EditRow demo 在点击取消时不恢复原值的bug。[#1745](https://github.com/ant-design-blazor/ant-design-blazor/pull/1745) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🆕 增加 EnumSelect，可将枚举转化为选项[#1759](https://github.com/ant-design-blazor/ant-design-blazor/pull/1759) [@wangj90](https://github.com/wangj90)
+  - 🐞 修复多选模式Tag重复的问题[#1766](https://github.com/ant-design-blazor/ant-design-blazor/pull/1766) [@anddrzejb](https://github.com/anddrzejb)
+  - 🚫 当数据源中的项和 Select 的 Value 属性使用相同类型时，无需指定 ValueName；当不指定 LabelName 时，将使用数据源中的项的 `ToString()` 方法的返回值作为 Label。[#1541](https://github.com/ant-design-blazor/ant-design-blazor/pull/1541) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复当使用 `SelectOption` 时不能为Select组件设置初始值的问题。[#1743](https://github.com/ant-design-blazor/ant-design-blazor/pull/1743) [@anranruye](https://github.com/anranruye)
+
+- Form
+  - 🆕 支持在 FormItem 上直接添加验证规则（不只是通过Model上的特性）。[#1516](https://github.com/ant-design-blazor/ant-design-blazor/pull/1516) [@mutouzdl](https://github.com/mutouzdl)
+  - 🆕 支持 `EditContext` 重新赋值，增加`OnFieldChanged`, `OnValidationRequested`  和 `OnValidationStateChanged` 事件[#1504](https://github.com/ant-design-blazor/ant-design-blazor/pull/1504) [@anddrzejb](https://github.com/anddrzejb)
+  - 🆕 `FormItem` 增加 `LabelStyle`  属性，支持修改其样式。[#1503](https://github.com/ant-design-blazor/ant-design-blazor/pull/1503) [@anddrzejb](https://github.com/anddrzejb)
+  - 🆕 暴露  `Form` 组件中的 `EditContext` ，使用户可以访问验证信息。[#1464](https://github.com/ant-design-blazor/ant-design-blazor/pull/1464) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复 FormItem 默认会显示属性名的问题。[#1738](https://github.com/ant-design-blazor/ant-design-blazor/pull/1738) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🆕 添加 NotificationRef 的支持。[#1498](https://github.com/ant-design-blazor/ant-design-blazor/pull/1498) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 ModalOptions.ConfirmLoading中setter错误赋值（总是true）。[#1742](https://github.com/ant-design-blazor/ant-design-blazor/pull/1742) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 dialog 系列组件被点击时导致mask的点击事件被触发的bug。[#1727](https://github.com/ant-design-blazor/ant-design-blazor/pull/1727) [@zxyao145](https://github.com/zxyao145)
+
+- Tree
+  - 🛠 接近官方功能，修复初始值问题，并支持拖拽。[#1517](https://github.com/ant-design-blazor/ant-design-blazor/pull/1517) [@lovachen](https://github.com/lovachen)
+  - 🆕 支持通过组件 API 来全选[#1722](https://github.com/ant-design-blazor/ant-design-blazor/pull/1722) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- 🆕 Button: 支持设置官方色板中的颜色[#1774](https://github.com/ant-design-blazor/ant-design-blazor/pull/1774) [@boukenka](https://github.com/boukenka)
+- 🆕 Dropdown: 增加 `ButtonsStyle` 和 `ButtonsClass` 属性来支持自定义各个按钮的样式，修改 `Type` 属性支持单个值来同时应用到两个按钮[#1659](https://github.com/ant-design-blazor/ant-design-blazor/pull/1659) [@anddrzejb](https://github.com/anddrzejb)
+- 🆕 DatePicker: `RangePicker` 支持禁用单个输入框。[#1648](https://github.com/ant-design-blazor/ant-design-blazor/pull/1648) [@mutouzdl](https://github.com/mutouzdl)
+- 🆕 Tag: 组件的 Color 属性支持十六进制色值或预设的枚举值。[#1514](https://github.com/ant-design-blazor/ant-design-blazor/pull/1514) [@MutatePat](https://github.com/MutatePat)
+- 🐞 Drawer: 修复在同时有多个 Drawer 时关闭其中一个就恢复页面滚动条的 Bug。[#1771](https://github.com/ant-design-blazor/ant-design-blazor/pull/1771) [@zxyao145](https://github.com/zxyao145)
+- 🆕 Upload: 支持拖拽上传。[#1765](https://github.com/ant-design-blazor/ant-design-blazor/pull/1765) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: 修复法语的周数翻译。[#1521](https://github.com/ant-design-blazor/ant-design-blazor/pull/1521) [@dust63](https://github.com/dust63)
+
+### 0.8.3
+
+`2021-07-13`
+
+- Table
+  - 🆕 增加属性可使 Table 可展开行默认全部展开。[#1695](https://github.com/ant-design-blazor/ant-design-blazor/pull/1695) [@henrikwidlund](https://github.com/henrikwidlund)
+  - 🐞 修复选择筛选器的 与/或 条件会关闭筛选器面板的错误。[#1687](https://github.com/ant-design-blazor/ant-design-blazor/pull/1687) [@anranruye](https://github.com/anranruye)
+  - 🐞 允许在表格初始化之后设置筛选器。[#1667](https://github.com/ant-design-blazor/ant-design-blazor/pull/1667) [@anranruye](https://github.com/anranruye)
+
+- Upload
+  - 🐞 修复 GetResponse() 反序列化，忽略大小写。[#1717](https://github.com/ant-design-blazor/ant-design-blazor/pull/1717) [@BeiYinZhiNian](https://github.com/BeiYinZhiNian)
+  - 🐞 将上传模块响应中的所有 2xx 状态代码视为成功。[#1705](https://github.com/ant-design-blazor/ant-design-blazor/pull/1705) [@henrikwidlund](https://github.com/henrikwidlund)
+
+- DatePicker
+  - 🐞 为自定义和基于文化的格式修复日期选择器宽度。[#1685](https://github.com/ant-design-blazor/ant-design-blazor/pull/1685) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 日期解析问题。[#1663](https://github.com/ant-design-blazor/ant-design-blazor/pull/1663) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 点击面板时导致 Input 框失去焦点的问题。[#1681](https://github.com/ant-design-blazor/ant-design-blazor/pull/1681) [@anddrzejb](https://github.com/anddrzejb)
+
+- Form
+  - 🆕 使用 DisplayName 特性作为 FormItem Label。[#1682](https://github.com/ant-design-blazor/ant-design-blazor/pull/1682) [@gmij](https://github.com/gmij)
+  - 🐞 修复 多个输入组件组合时只需要最上层组件设置 bind-Value 属性。[#1662](https://github.com/ant-design-blazor/ant-design-blazor/pull/1662) [@anranruye](https://github.com/anranruye)
+  - 📖 增加 form 的高级搜索 demo。[#1654](https://github.com/ant-design-blazor/ant-design-blazor/pull/1654) [@ElderJames](https://github.com/ElderJames)
+
+- i18n
+  - 🌐 修复俄语资源。[#1709](https://github.com/ant-design-blazor/ant-design-blazor/pull/1709) [@kuznecovIT](https://github.com/kuznecovIT)
+  - 🐞 当资源文件中节点缺失时，使用默认值，不抛出运行时异常。[#1710](https://github.com/ant-design-blazor/ant-design-blazor/pull/1710) [@anranruye](https://github.com/anranruye)
+
+- 🆕 Tag: 当 OnClick 事件绑定了方法时，指针变为手指。[#1660](https://github.com/ant-design-blazor/ant-design-blazor/pull/1660) [@anddrzejb](https://github.com/anddrzejb)
+- ⚡️ Modal and Drawer 组件减少重复渲染，进行文档和 demo 的更新。[#1701](https://github.com/ant-design-blazor/ant-design-blazor/pull/1701) [@zxyao145](https://github.com/zxyao145)
+- 🐞 允许在一个渲染周期内同时改变数据源和值。[#1720](https://github.com/ant-design-blazor/ant-design-blazor/pull/1720) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 标签的鼠标滚轮滚动。[#1581](https://github.com/ant-design-blazor/ant-design-blazor/pull/1581) [@Brian-Ding](https://github.com/Brian-Ding)
+- 🐞 修复 CountDown 组件 OnFinish 回调异常。[#1714](https://github.com/ant-design-blazor/ant-design-blazor/pull/1714) [@HexJacaranda](https://github.com/HexJacaranda)
+- 🐞 当弹出层大小改变时会触发 OnMaskClick 事件。[#1692](https://github.com/ant-design-blazor/ant-design-blazor/pull/1692) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 Space 子项在 "if "块中的渲染顺序问题。[#1684](https://github.com/ant-design-blazor/ant-design-blazor/pull/1684) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 Grid 的 Col 在初始化时的默认间距调整。[#1653](https://github.com/ant-design-blazor/ant-design-blazor/pull/1653) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.8.2
 
 `2021-06-17`
 
 - Table
+
   - 🐞 修复 Selection 的选择和清空功能。 [#1632](https://github.com/ant-design-blazor/ant-design-blazor/pull/1632) [@anranruye](https://github.com/anranruye)
   - 🐞 修复删除一个筛选条件后筛选器比较运算符错误的问题；移除 Is Null 和 Is Not Null 筛选条件的输入组件。[#1596](https://github.com/ant-design-blazor/ant-design-blazor/pull/1596) [@anranruye](https://github.com/anranruye)
   - 🐞 修复点击筛选图标关闭筛选器面板时不应用筛选操作的问题。[#1594](https://github.com/ant-design-blazor/ant-design-blazor/pull/1594) [@anranruye](https://github.com/anranruye)
@@ -28,26 +114,30 @@ timeline: true
   - 📖 更新“复刻官方示例”示例以使排序可用。[#1544](https://github.com/ant-design-blazor/ant-design-blazor/pull/1544) [@anranruye](https://github.com/anranruye)
 
 - Dropdown
+
   - 🐞 修复 Dropdown 的触发按钮[#1609](https://github.com/ant-design-blazor/ant-design-blazor/pull/1609) [@anddrzejb](https://github.com/anddrzejb)
   - 🐞 给按钮增加 `Loading` 属性。[#1588](https://github.com/ant-design-blazor/ant-design-blazor/pull/1588) [@anddrzejb](https://github.com/anddrzejb)
 
 - DatePicker
+
   - 🐞 增加 OnClearClick 事件回调[#1586](https://github.com/ant-design-blazor/ant-design-blazor/pull/1586) [@anddrzejb](https://github.com/anddrzejb)
   - 🐞 修复 Datepicker 在 Form 中的行为[#1617](https://github.com/ant-design-blazor/ant-design-blazor/pull/1617) [@anddrzejb](https://github.com/anddrzejb)
 
 - InputNumber
+
   - 🐞 修复可空类型的组件失去焦点时抛出的异常。[#1612](https://github.com/ant-design-blazor/ant-design-blazor/pull/1612) [@anranruye](https://github.com/anranruye)
   - 🐞 修复 InputNumber 在值计算时没包括 Parser。[#1567](https://github.com/ant-design-blazor/ant-design-blazor/pull/1567) [@anddrzejb](https://github.com/anddrzejb)
 
 - Input 系列组件 [#1530](https://github.com/ant-design-blazor/ant-design-blazor/pull/1530) [@anddrzejb](https://github.com/anddrzejb)
-  - 🐞 修复 Input 缺失的  `Bordered`、`ReadOnly`、`InputElementSuffixClass` 属性，增加 `Focus()`, `Blur()`方法。
+
+  - 🐞 修复 Input 缺失的 `Bordered`、`ReadOnly`、`InputElementSuffixClass` 属性，增加 `Focus()`, `Blur()`方法。
   - 🐞 修复 TextArea 缺失的 `TextArea` `ShowCount` 属性，修复清除按钮。
   - 🐞 修复 Search 的样式，使用 `ClassicSearchIcon` 来回滚到旧样式。
   - 🐞 修复 InputPassword 的 `ShowPassword` 和 `IconRender` 属性。
 
 - 🐞 修复 Affix 监听器移除的问题[#1616](https://github.com/ant-design-blazor/ant-design-blazor/pull/1616) [@ElderJames](https://github.com/ElderJames)
-- 🐞 修复 Drawer OffsetX 和offsetY 不起作用，并更新使用 DrawerService 的文档。[#1448](https://github.com/ant-design-blazor/ant-design-blazor/pull/1448) [@zxyao145](https://github.com/zxyao145)
-- 🐞 修复 Radio 的 defaultChecked 和RadioGroup的 DefaultValue。[#1494](https://github.com/ant-design-blazor/ant-design-blazor/pull/1494) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer OffsetX 和 offsetY 不起作用，并更新使用 DrawerService 的文档。[#1448](https://github.com/ant-design-blazor/ant-design-blazor/pull/1448) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Radio 的 defaultChecked 和 RadioGroup 的 DefaultValue。[#1494](https://github.com/ant-design-blazor/ant-design-blazor/pull/1494) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Tag 的 Status 和自定义颜色的支持，增加动画 demo。[#1631](https://github.com/ant-design-blazor/ant-design-blazor/pull/1631) [@anddrzejb](https://github.com/anddrzejb)
 - 🐞 修复 Image 组件 Style 属性的作用位置。[#1642](https://github.com/ant-design-blazor/ant-design-blazor/pull/1642) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 CheckboxGroup 组件不能在 Form 中使用的问题。[#1637](https://github.com/ant-design-blazor/ant-design-blazor/pull/1637) [@anranruye](https://github.com/anranruye)
