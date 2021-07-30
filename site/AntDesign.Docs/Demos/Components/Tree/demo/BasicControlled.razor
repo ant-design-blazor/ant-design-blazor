@@ -44,7 +44,8 @@
 
 <Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
 
-<Button OnClick="DecheckedAll">Dechecked All</Button>
+<Button OnClick="CheckAll">Check all nodes</Button>
+<Button OnClick="UncheckAll">Uncheck all nodes</Button>
 <br />
 <br />
 
@@ -93,9 +94,14 @@
         printTexts = _tree.CheckedKeys;
     }
 
-    private void DecheckedAll()
+    private void CheckAll()
     {
-        _tree.DecheckedAll();
+        _tree.CheckAll();
+    }
+
+    private void UncheckAll()
+    {
+        _tree.UncheckAll();
     }
 
     //private void PrintSelectedNodes()
