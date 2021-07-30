@@ -147,7 +147,7 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.SetResult(ConfirmResult.OK);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.OK);
             }
         }
 
@@ -174,7 +174,7 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.SetResult(ConfirmResult.Cancel);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.Cancel);
             }
         }
 
@@ -189,7 +189,7 @@ namespace AntDesign
                 Config.Button1Props.Loading = false;
                 await InvokeAsync(StateHasChanged);
                 await Close();
-                ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
@@ -204,7 +204,7 @@ namespace AntDesign
                 Config.Button2Props.Loading = false;
                 await InvokeAsync(StateHasChanged);
                 await Close();
-                ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
@@ -213,7 +213,7 @@ namespace AntDesign
             Config.Button3Props.Loading = false;
             await InvokeAsync(StateHasChanged);
             await Close();
-            ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
+            ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
         }
 
     }
