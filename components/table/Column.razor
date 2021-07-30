@@ -47,21 +47,22 @@ else if (IsHeader && HeaderColSpan != 0)
     }
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
-
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? HeaderTitle : false)" @attributes="headerCellAttributes">
-        @if (Sortable || (_filterable && _filters?.Any() == true))
-        {
-            @FilterToolTipSorter
-        }
-        else if (TitleTemplate != null)
-        {
-            @TitleTemplate
-        }
-        else
-        {
-            @HeaderTitle
-        }
-    </th>
+    <CascadingValue Name="IsHeader" Value="false" IsFixed>
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? HeaderTitle : false)" @attributes="headerCellAttributes">
+            @if (Sortable || (_filterable && _filters?.Any() == true))
+            {
+                @FilterToolTipSorter
+            }
+            else if (TitleTemplate != null)
+            {
+                @TitleTemplate
+            }
+            else
+            {
+                @HeaderTitle
+            }
+        </th>
+    </CascadingValue>    
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
@@ -81,41 +82,42 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     }
 
     var cellAttributes = OnCell?.Invoke(RowData);
-
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" @attributes="cellAttributes">
-        @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
-        {
-            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
-            @if (RowData.HasChildren)
+    <CascadingValue Name="IsBody" Value="false" IsFixed>
+        <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" @attributes="cellAttributes">
+            @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
             {
-                <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
+                @if (RowData.HasChildren)
+                {
+                    <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                }
+                else
+                {
+                    <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+                }
+            }
+
+            @if (CellRender != null)
+            {
+                @CellRender(Field)
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
             }
             else
             {
-                <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+                if (!string.IsNullOrWhiteSpace(Format))
+                {
+                    @(Formatter<TData>.Format(Field, Format))
+                }
+                else
+                {
+                    @Field
+                }
             }
-        }
-
-        @if (CellRender != null)
-        {
-            @CellRender(Field)
-        }
-        else if (ChildContent != null)
-        {
-            @ChildContent
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(Format))
-            {
-                @(Formatter<TData>.Format(Field, Format))
-            }
-            else
-            {
-                @Field
-            }
-        }
-    </td>
+        </td>
+    </CascadingValue>    
 }
 
 @code
@@ -125,7 +127,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     RenderFragment SortHeader =>
     @<Template>
         <span>
-            @if (TitleTemplate != null) @TitleTemplate else @HeaderTitle
+            @if (TitleTemplate != null)@TitleTemplate else @HeaderTitle
         </span>
         @{
             bool hasDescendingSorter = SortDirection.Descending.IsIn(SortDirections);
@@ -316,7 +318,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
         else if (_columnDataType.IsEnum)
         {
-            <EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" PopupContainerSelector="@("#popup-container-for-" + Id)" 
+            <EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" PopupContainerSelector="@("#popup-container-for-" + Id)"
                         Style="width:180px;" ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
             </EnumSelect>
         }
