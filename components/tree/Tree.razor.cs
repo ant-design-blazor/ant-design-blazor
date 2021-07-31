@@ -376,35 +376,48 @@ namespace AntDesign
             set
             {
                 _searchValue = value;
-                var allList = _allNodes.ToList();
-                List<TreeNode<TItem>> searchDatas = null, exceptList = null;
-                if (!String.IsNullOrEmpty(value))
-                    searchDatas = allList.Where(x => x.Title.Contains(value)).ToList();
-                if (searchDatas != null && searchDatas.Any())
-                    exceptList = allList.Except(searchDatas).ToList();
-                if (exceptList != null || searchDatas != null)
-                {
-                    exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
-                    searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
-                }
-                else
-                {
-                    allList.ForEach(m => { m.Matched = false; });
-                }
+                SearchNodes();
             }
         }
 
-        ///// <summary>
-        /////
-        ///// </summary>
-        //[Parameter]
-        //public EventCallback<TreeEventArgs<TItem>> OnSearchValueChanged { get; set; }
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         /// <summary>
         /// Search for matching text styles
         /// </summary>
         [Parameter]
         public string MatchedStyle { get; set; } = "";
+
+        [Parameter]
+        public string MatchedClass { get; set; }
+
+        private void SearchNodes()
+        {
+            var allList = _allNodes.ToList();
+            List<TreeNode<TItem>> searchDatas = null, exceptList = null;
+            if (SearchExpression != null)
+            {
+                searchDatas = allList.Where(x => SearchExpression(x)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(_searchValue))
+            {
+                searchDatas = allList.Where(x => x.Title.Contains(_searchValue)).ToList();
+            }
+
+            if (searchDatas != null && searchDatas.Any())
+                exceptList = allList.Except(searchDatas).ToList();
+
+            if (exceptList != null || searchDatas != null)
+            {
+                exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
+                searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
+            }
+            else
+            {
+                allList.ForEach(m => { m.Expand(false); m.Matched = false; });
+            }
+        }
 
         #endregion Search
 
