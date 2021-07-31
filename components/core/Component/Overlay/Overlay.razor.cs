@@ -379,6 +379,7 @@ namespace AntDesign.Internal
             {
                 top = triggerTop - overlay.ClientHeight - VerticalOffset;
             }
+            top -= containerElement.ClientTop;
 
             return top;
         }
@@ -432,6 +433,7 @@ namespace AntDesign.Internal
                     left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
                 }
             }
+            left -= containerElement.ClientLeft;
 
             return left;
         }
