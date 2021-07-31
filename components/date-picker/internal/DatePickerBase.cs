@@ -409,20 +409,7 @@ namespace AntDesign
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
                 {
-                    if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused && !IsDisabled(1))
-                    {
-                        await Blur(0);
-                        await Focus(1);
-                    }
-                    else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused && !IsDisabled(0))
-                    {
-                        await Blur(1);
-                        await Focus(0);
-                    }
-                    else
-                    {
-                        await Focus(index); //keep focus on current input
-                    }
+                    await SwitchFocus(index);
                 }
                 else
                 {
@@ -435,6 +422,35 @@ namespace AntDesign
             }
 
             ChangePickerValue(date, index);
+        }
+
+        public async Task OnOkClick()
+        {
+            int index = GetOnFocusPickerIndex();
+            if (!(await SwitchFocus(index)))
+            {
+                Close();
+            }
+        }
+
+        private async Task<bool> SwitchFocus(int index)
+        {
+            if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused && !IsDisabled(1))
+            {
+                await Blur(0);
+                await Focus(1);
+            }
+            else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused && !IsDisabled(0))
+            {
+                await Blur(1);
+                await Focus(0);
+            }
+            else
+            {
+                await Focus(index); //keep focus on current input
+                return false;
+            }
+            return true;
         }
 
         protected virtual async Task OnBlur(int index)
@@ -581,7 +597,7 @@ namespace AntDesign
                 //expected value that depends on Picker type
                 return Picker switch
                 {
-                    DatePickerType.Date => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Date => (IsShowTime ? PickerValues[tempIndex] : PickerValues[tempIndex].AddMonths(1)),
                     DatePickerType.Week => PickerValues[tempIndex].AddMonths(1),
                     DatePickerType.Month => PickerValues[tempIndex].AddYears(1),
                     DatePickerType.Decade => PickerValues[tempIndex].AddYears(1),

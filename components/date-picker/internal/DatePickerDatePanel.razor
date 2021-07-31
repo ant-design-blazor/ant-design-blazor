@@ -30,7 +30,7 @@
 
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate TValue="TValue"
-                        @attributes="GetAttritubes()"
+                        @attributes="GetAttributes()"
                            MaxRow="6"
                            MaxCol="7"
                            ViewStartDate="startDate"
@@ -46,7 +46,7 @@
                            SkipDays="skipDays">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
-                              @attributes="GetAttritubes()"
+                              @attributes="GetAttributes()"
                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
                               ShowPreChange="@(!(IsRange && PickerIndex == 1))"
                               ShowNextChange="@(!(IsRange && PickerIndex == 0))"
