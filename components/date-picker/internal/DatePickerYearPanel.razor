@@ -16,7 +16,7 @@
     int yearIndex = 0;
 }
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
-    <DatePickerTemplate @attributes="GetAttritubes()"
+    <DatePickerTemplate @attributes="GetAttributes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
                         MaxCol="MAX_COL"
@@ -28,7 +28,7 @@
                         OnValueSelect="date => OnSelectYear(date)"
                         GetNextColValue="date => DateHelper.AddYearsSafely(date, 1)">
         <RenderPickerHeader>
-            <DatePickerHeader @attributes="GetAttritubes()"
+            <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
                               SuperChangeDateInterval="10"
                               ShowPreChange="@false"
