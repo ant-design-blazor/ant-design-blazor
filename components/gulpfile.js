@@ -8,6 +8,9 @@ var tsify = require('tsify');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
+var gts = require("gulp-typescript");
+
+var tsProject = gts.createProject('tsconfig.json');
 
 gulp.task('less-default', function () {
   return gulp
@@ -63,8 +66,14 @@ gulp.task('ts', function () {
     .pipe(gulp.dest('wwwroot/js'));
 });
 
+gulp.task("tsSplit", function () {
+  var tsResult = gulp.src('core/JsInterop/**/*.ts')
+    .pipe(tsProject());
+return tsResult.js.pipe(gulp.dest('wwwroot/js/split'))
+});
+
 gulp.task('src', function () {
   return gulp.src(['**/*.less', '!wwwroot/**']).pipe(gulp.dest('wwwroot/less'));
 });
 
-gulp.task('default', gulp.parallel('less-default', 'less-aliyun', 'less-compact', 'less-dark', 'ts', 'src'), function () { });
+gulp.task('default', gulp.parallel('less-default', 'less-aliyun', 'less-compact', 'less-dark', 'ts', 'tsSplit', 'src'), function () { });

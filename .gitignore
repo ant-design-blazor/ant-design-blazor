@@ -343,6 +343,8 @@ package-lock.json
 /components/wwwroot/css
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
+/components/wwwroot/js/split/**/*.js.map
+/components/wwwroot/js/split/**/*.js
 /components/AntDesign.xml
 /site/**/wwwroot/docs
 /site/AntDesign.Docs/wwwroot/css/docs.css
@@ -351,3 +353,6 @@ package-lock.json
 coverage.cobertura.xml
 scripts/previewEditor/index.html
 /site/AntDesign.Docs/wwwroot/css
+/.nyc_output
+/coverage
+/tests/AntDesign.Tests.Js/coverage.xml
