@@ -26,6 +26,12 @@ namespace AntDesign
         [Parameter]
         public bool IsShowHeader { get; set; } = true;
 
+        /// <summary>
+        /// Used only by DatePickerWithTimePanel
+        /// </summary>
+        [Parameter]
+        public bool IsShowTime { get; set; } = false;
+
         [Parameter]
         public DatePickerLocale Locale { get; set; }
 
@@ -80,7 +86,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
-        protected Dictionary<string, object> GetAttritubes()
+        protected Dictionary<string, object> GetAttributes()
         {
             return new Dictionary<string, object>()
             {
@@ -104,6 +110,7 @@ namespace AntDesign
                 { "PickerIndex", PickerIndex },
                 { "IsCalendar", IsCalendar },
                 { "IsShowHeader", IsShowHeader },
+                { "IsShowTime", IsShowTime },
             };
         }
 
@@ -188,12 +195,32 @@ namespace AntDesign
 
         protected void ChangePickerYearValue(int interval)
         {
-            ChangePickerValue(DateHelper.AddYearsSafely(PickerValue, interval), null);
+            DateTime baseDate;
+            if (IsShowTime || PickerIndex == 0)
+            {
+                baseDate = PickerValue;
+            }
+            else
+            {
+                baseDate = Picker switch
+                {
+                    DatePickerType.Date => PickerValue.AddMonths(-1),
+                    DatePickerType.Week => PickerValue.AddMonths(-1),
+                    DatePickerType.Year => PickerValue.AddYears(-10),
+                    _ => PickerValue.AddYears(-1)
+                };
+            }
+            ChangePickerValue(DateHelper.AddYearsSafely(baseDate, interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            ChangePickerValue(DateHelper.AddMonthsSafely(PickerValue, interval), null);
+            DateTime baseDate;
+            if (IsShowTime || PickerIndex == 0)
+                baseDate = PickerValue;
+            else
+                baseDate = PickerValue.AddMonths(-1);
+            ChangePickerValue(DateHelper.AddMonthsSafely(baseDate, interval), null);
         }
 
         protected void Close()
