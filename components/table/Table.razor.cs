@@ -42,7 +42,7 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
-        
+
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -132,6 +132,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public bool Responsive { get; set; } = true;
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -152,7 +155,7 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
-        private ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
@@ -327,6 +330,7 @@ namespace AntDesign
 
             _wrapperClassMapper
                 .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
