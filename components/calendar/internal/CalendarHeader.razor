@@ -24,7 +24,7 @@
             DefaultValue=@Calendar.Value.Year
             TItemValue="int"
             TItem="string"
-            Style="width: 70px;"
+            Style="width: unset;"
             SortByLabel="@SortDirection.Ascending"
             OnSelectedItemChanged="@(async (item) => await OnSelectYear(item))">
             <SelectOptions>
@@ -53,7 +53,7 @@
                 @bind-Value="@_monthValue"
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
                 DefaultValue=@Calendar.Value.Month
-                Style="width: 70px;"
+                Style="width: unset;"
                 TItemValue="int"
                 TItem="string"
                 OnSelectedItemChanged="@(async (item) => await OnSelectMonth(item))">
