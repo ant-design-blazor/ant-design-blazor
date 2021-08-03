@@ -103,7 +103,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-vertical", () => !IsHorizontal)
-                .If($"{PrefixCls}-rtl", () => RTL); ;
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void OnParametersSet()

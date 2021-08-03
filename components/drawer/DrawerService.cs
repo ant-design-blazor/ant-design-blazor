@@ -81,7 +81,7 @@ namespace AntDesign
             CheckIsNull(config);
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
 
-            drawerRef.TaskCompletionSource = new TaskCompletionSource<TResult>(); ;
+            drawerRef.TaskCompletionSource = new TaskCompletionSource<TResult>();
 
             RenderFragment child = (builder) =>
             {

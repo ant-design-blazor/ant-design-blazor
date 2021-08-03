@@ -52,7 +52,7 @@ namespace AntDesign
 
         public Task Warning(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
         {
-            return PreOpen(MessageType.Warning, content, duration, onClose); ;
+            return PreOpen(MessageType.Warning, content, duration, onClose);
         }
 
         public Task Warn(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
