@@ -23,7 +23,19 @@
                     @ChildContent
                 </CascadingValue>
             </div>
+            @if (IsShowIcon)
+            {
+                <span class=@($"{_prefixCls}-children-icon")><Icon Type="@_iconMap[ValidateStatus].Type" Theme="@_iconMap[ValidateStatus].Theme" /></span>
+            }
         </div>
+        @if (!string.IsNullOrEmpty(Help))
+        {
+            <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-{ValidateStatus}")>
+                <div role="alert">
+                    @Help
+                </div>
+            </div>
+        }
         @_formValidationMessages
     </AntDesign.Col>
 </Row>

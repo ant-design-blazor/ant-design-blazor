@@ -11,6 +11,7 @@ using AntDesign.Internal.Form.Validate;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using OneOf;
+using static AntDesign.IconType;
 
 namespace AntDesign
 {
@@ -107,6 +108,31 @@ namespace AntDesign
         [Parameter]
         public FormValidationRule[] Rules { get; set; }
 
+        [Parameter]
+        public bool HasFeedback { get; set; }
+
+        [Parameter]
+        public string ValidateStatus { get; set; }
+
+        [Parameter]
+        public string Help { get; set; }
+
+        private class IconProperties
+        {
+            public string Theme { get; set; }
+            public string Type { get; set; }
+        }
+
+        private static readonly Dictionary<string, IconProperties> _iconMap = new Dictionary<string, IconProperties>()
+            {
+                {"success", new IconProperties { Theme = IconThemeType.Fill, Type = Outline.CheckCircle } },
+                {"warning", new IconProperties { Theme = IconThemeType.Fill, Type = Outline.ExclamationCircle } },
+                {"error", new IconProperties { Theme = IconThemeType.Fill, Type = Outline.CloseCircle } },
+                {"validating", new IconProperties { Theme = IconThemeType.Outline, Type = Outline.Loading } }
+            };
+
+        private bool IsShowIcon => HasFeedback && !string.IsNullOrEmpty(ValidateStatus) && _iconMap.ContainsKey(ValidateStatus);
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
@@ -148,6 +174,10 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
+                .If($"{_prefixCls}-has-feedback", () => HasFeedback)
+                .If($"{_prefixCls}-is-validating", () => ValidateStatus == "validating")
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus}", () => !string.IsNullOrEmpty(ValidateStatus) && ValidateStatus != "validating" && _iconMap.ContainsKey(ValidateStatus))
+                .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
             _labelClassMapper
