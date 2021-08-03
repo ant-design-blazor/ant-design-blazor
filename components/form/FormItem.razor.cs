@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -11,6 +12,7 @@ using AntDesign.Internal.Form.Validate;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using OneOf;
+using static AntDesign.IconType;
 
 namespace AntDesign
 {
@@ -107,6 +109,25 @@ namespace AntDesign
         [Parameter]
         public FormValidationRule[] Rules { get; set; }
 
+        [Parameter]
+        public bool HasFeedback { get; set; }
+
+        [Parameter]
+        public FormValidateStatus ValidateStatus { get; set; }
+
+        [Parameter]
+        public string Help { get; set; }
+
+        private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
+            {
+                { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
+                { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
+                { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
+                { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
+            };
+
+        private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
@@ -148,6 +169,10 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
+                .If($"{_prefixCls}-has-feedback", () => HasFeedback)
+                .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
             _labelClassMapper
