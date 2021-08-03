@@ -17,7 +17,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 ### AutoComplete
 
 | 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | Backfill | 使用键盘选择选项的时候把选中项回填到输入框中 | boolean | false |
 | Options | 自动完成的数据源 | AutocompleteDataSource | - |
 | Disabled | 是否禁用 | bool | - |
