@@ -30,17 +30,13 @@
             }
         </div>
 
-        @if (!string.IsNullOrEmpty(Help))
+        @foreach (var message in _validationMessages)
         {
             <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-{(_isValid ? "default" : "error")}")>
                 <div role="alert">
-                    @Help
+                    @message
                 </div>
             </div>
-        }
-        else
-        {
-            @_formValidationMessages
         }
     </AntDesign.Col>
 </Row>

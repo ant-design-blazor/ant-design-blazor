@@ -130,13 +130,13 @@ namespace AntDesign
 
         private EditContext EditContext => Form?.EditContext;
 
+        private string[] _validationMessages = Array.Empty<string>();
+
         private bool _isValid = true;
 
         private string _labelCls = "";
 
         private IControlValueAccessor _control;
-
-        private RenderFragment _formValidationMessages;
 
         private PropertyReflector _propertyReflector;
 
@@ -161,6 +161,11 @@ namespace AntDesign
             SetRequiredCss();
 
             Form.AddFormItem(this);
+
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
         }
 
         protected void SetClass()
@@ -280,7 +285,6 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-
             if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
                 _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
@@ -288,21 +292,19 @@ namespace AntDesign
 
             _validationStateChangedHandler = (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                this._isValid = !control.ValidationMessages.Any();
+                _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
+                this._isValid = !_validationMessages.Any();
+                control.ValidationMessages = _validationMessages;
+
+                if (!string.IsNullOrWhiteSpace(Help))
+                {
+                    _validationMessages = new[] { Help };
+                }
 
                 StateHasChanged();
             };
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
-
-            _formValidationMessages = builder =>
-            {
-                var i = 0;
-                builder.OpenComponent<FormValidationMessage<TValue>>(i++);
-                builder.AddAttribute(i++, "Control", control);
-                builder.CloseComponent();
-            };
 
             if (control.ValueExpression is not null)
                 _propertyReflector = PropertyReflector.Create(control.ValueExpression);
