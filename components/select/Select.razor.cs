@@ -109,8 +109,7 @@ namespace AntDesign
         [Parameter] public Action OnMouseEnter { get; set; }
         [Parameter] public Action OnMouseLeave { get; set; }
         [Parameter] public Action<string> OnSearch { get; set; }
-        [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
-        [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
+
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
@@ -719,40 +718,7 @@ namespace AntDesign
             await JsInvokeAsync(JSInteropConstants.ElementScrollIntoView, element);
         }
 
-        /// <summary>
-        /// Close the overlay
-        /// </summary>
-        /// <returns></returns>
-        internal async Task CloseAsync()
-        {
-            await _dropDown.Hide(true);
-        }
 
-        /// <summary>
-        /// Called by the Form reset method
-        /// </summary>
-        internal override void ResetValue()
-        {
-            _ = ClearSelectedAsync();
-        }
-
-
-        /// <summary>
-        /// Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
-        /// </summary>
-        protected async Task ClearSelectedAsync()
-        {
-            if (SelectMode == SelectMode.Default)
-            {
-                OnSelectedItemChanged?.Invoke(default);
-                await ValueChanged.InvokeAsync(default);
-            }
-            else
-            {
-                OnSelectedItemsChanged?.Invoke(default);
-                await ValuesChanged.InvokeAsync(default);
-            }
-        }
 
         /// <summary>
         /// If DefaultActiveFirstItem is True, the first item which is not IsDisabled(True) is set as selected.

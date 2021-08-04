@@ -1,0 +1,65 @@
+﻿@namespace AntDesign
+@inherits SelectBase<TItemValue, TItem>
+@typeparam TItemValue
+@typeparam TItem
+
+@using AntDesign.Internal
+@using AntDesign.Select.Internal
+
+<CascadingValue Value="this" IsFixed="true">
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls">
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
+            <OverlayTrigger @ref="@_dropDown"
+                            Visible="Open"
+                            Disabled="Disabled"
+                            Trigger="new[] { TriggerType.Click }"
+                            HiddenMode
+                            OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
+                            OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
+                            OnVisibleChange="@OnOverlayVisibleChangeAsync"
+                            PopupContainerSelector="@PopupContainerSelector"
+                            OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                            OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
+                <Overlay >
+                    <div style="@_dropdownStyle">
+                        <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
+                            <div>
+                                <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                    <Tree DataSource="DataSource" TItem="TItem" TitleExpression="TitleExpression"
+                                          KeyExpression="KeyExpression" ChildrenExpression="ChildrenExpression"
+                                          IsLeafExpression="IsLeafExpression" OnClick="OnTreeNodeClick">
+                                    </Tree>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Overlay>
+                <Unbound>
+                    <CascadingValue Value="this" Name=@("ParentSelect") IsFixed>
+                        <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
+                            <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
+                                <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                                    <SelectContent Prefix="ant-select"
+                                                   RefBack="@context"
+                                                   TItemValue="TItemValue"
+                                                   TItem="TItem"
+                                                   SearchValue="@_searchValue"
+                                                   IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                   OnInput="@OnInputAsync"
+                                                   OnKeyUp="@OnKeyUpAsync"
+                                                   OnKeyDown="@OnKeyDownAsync"
+                                                   OnFocus="@OnInputFocusAsync"
+                                                   OnBlur="@OnInputBlurAsync"
+                                                   OnClearClick="@OnInputClearClickAsync"
+                                                   OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                   Placeholder="@Placeholder"
+                                                   ShowPlaceholder="@ShowPlaceholder" />
+                                </CascadingValue>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                </Unbound>
+            </OverlayTrigger>
+        </div>
+    </CascadingValue>
+</CascadingValue>

@@ -42,6 +42,9 @@ namespace AntDesign
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
 
+        [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
+        [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
+
         internal SelectMode SelectMode => Mode.ToSelectMode();
 
         /// <summary>
@@ -108,6 +111,8 @@ namespace AntDesign
 
         internal ElementReference _dropDownRef;
 
+        private IEnumerable<TItemValue> _selectedValues;
+
         internal bool Focused { get; set; }
         protected string _searchValue = string.Empty;
         protected OverlayTrigger _dropDown;
@@ -118,6 +123,7 @@ namespace AntDesign
         internal bool HasTagCount { get; set; }
 
         [Parameter] public int MaxTagTextLength { get; set; }
+
 
         /// <summary>
         /// How long (number of characters) a tag will be.
@@ -311,6 +317,41 @@ namespace AntDesign
         internal async Task OnArrowClick(MouseEventArgs args)
         {
             await _dropDown.OnClickDiv(args);
+        }
+
+        /// <summary>
+        /// Close the overlay
+        /// </summary>
+        /// <returns></returns>
+        internal async Task CloseAsync()
+        {
+            await _dropDown.Hide(true);
+        }
+
+        /// <summary>
+        /// Called by the Form reset method
+        /// </summary>
+        internal override void ResetValue()
+        {
+            _ = ClearSelectedAsync();
+        }
+
+
+        /// <summary>
+        /// Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
+        /// </summary>
+        protected async Task ClearSelectedAsync()
+        {
+            if (SelectMode == SelectMode.Default)
+            {
+                OnSelectedItemChanged?.Invoke(default);
+                await ValueChanged.InvokeAsync(default);
+            }
+            else
+            {
+                OnSelectedItemsChanged?.Invoke(default);
+                await ValuesChanged.InvokeAsync(default);
+            }
         }
 
         protected abstract void SetClassMap();
