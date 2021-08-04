@@ -314,9 +314,9 @@ namespace AntDesign
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
 
         /// <summary>
-        /// Dechecked all selected items
+        /// Checks all nodes
         /// </summary>
-        public void CheckedAll()
+        public void CheckAll()
         {
             foreach (var item in ChildNodes)
             {
@@ -324,8 +324,10 @@ namespace AntDesign
             }
         }
 
-        // Decheck all of the checked nodes
-        public void DecheckedAll()
+        /// <summary>
+        /// Unchecks all nodes
+        /// </summary>
+        public void UncheckAll()
         {
             foreach (var item in ChildNodes)
             {
