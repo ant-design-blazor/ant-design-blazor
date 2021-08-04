@@ -395,6 +395,7 @@ namespace AntDesign
         private string _valueName;
 
         private Func<TItem, TItemValue> _getValue;
+        private bool _optionsHasInitialized;
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
