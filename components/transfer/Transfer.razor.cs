@@ -11,11 +11,9 @@ namespace AntDesign
     public partial class Transfer : AntDomComponentBase
     {
         private const string PrefixName = "ant-transfer";
-        private const string DisabledClass = "ant-transfer-list-content-item-disabled";
-        private const string FooterClass = "ant-transfer-list-with-footer";
 
         [Parameter]
-        public IList<TransferItem> DataSource { get; set; }
+        public IEnumerable<TransferItem> DataSource { get; set; }
 
         [Parameter]
         public string[] Titles { get; set; } = new string[2];
@@ -24,10 +22,10 @@ namespace AntDesign
         public string[] Operations { get; set; } = new string[2];
 
         [Parameter]
-        public bool Disabled { get; set; } = false;
+        public bool Disabled { get; set; }
 
         [Parameter]
-        public bool ShowSearch { get; set; } = false;
+        public bool ShowSearch { get; set; }
 
         [Parameter]
         public bool ShowSelectAll { get; set; } = true;
@@ -37,6 +35,7 @@ namespace AntDesign
 
         [Parameter]
         public string[] SelectedKeys { get; set; }
+
 
         [Parameter]
         public EventCallback<TransferChangeArgs> OnChange { get; set; }
@@ -57,21 +56,20 @@ namespace AntDesign
         public TransferLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Transfer;
 
         [Parameter]
-        public string Footer { get; set; } = string.Empty;
+        public string Footer { get; set; }
 
         [Parameter]
         public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment<TransferRenderProps> ChildContent { get; set; }
 
         private List<string> _targetKeys;
 
-        private bool _leftCheckAllState = false;
-        private bool _leftCheckAllIndeterminate = false;
-        private bool _rightCheckAllState = false;
-        private bool _rightCheckAllIndeterminate = false;
-
+        private bool _leftCheckAllState;
+        private bool _leftCheckAllIndeterminate;
+        private bool _rightCheckAllState;
+        private bool _rightCheckAllIndeterminate;
         private string _leftCountText = string.Empty;
         private string _rightCountText = string.Empty;
 
@@ -80,6 +78,9 @@ namespace AntDesign
 
         private IEnumerable<TransferItem> _leftDataSource;
         private IEnumerable<TransferItem> _rightDataSource;
+
+        private TransferRenderProps _leftRenderProps;
+        private TransferRenderProps _rightRenderProps;
 
         private List<string> _sourceSelectedKeys;
         private List<string> _targetSelectedKeys;
@@ -99,9 +100,34 @@ namespace AntDesign
             _targetSelectedKeys = selectedKeys.Where(key => _targetKeys.Contains(key)).ToList();
             var count = _sourceSelectedKeys.Count;
 
-            InitData();
+            _leftRenderProps = new TransferRenderProps
+            {
+                Direction = TransferDirection.Left,
+                OnItemSelectAll = EventCallback.Factory.Create(this, ((string[] Keys, bool Selected) args) => OnItemSelectAll(TransferDirection.Left, args.Keys, args.Selected)),
+                OnItemSelect = EventCallback.Factory.Create(this, ((string key, bool selected) args) => OnItemSelect(TransferDirection.Left, args.key, args.selected)),
+                SelectedKeys = SelectedKeys,
+                FilteredItems = { }
+            };
 
-            MathTitleCount();
+            _rightRenderProps = new TransferRenderProps
+            {
+                Direction = TransferDirection.Right,
+                OnItemSelectAll = EventCallback.Factory.Create(this, ((string[] Keys, bool Selected) args) => OnItemSelectAll(TransferDirection.Right, args.Keys, args.Selected)),
+                OnItemSelect = EventCallback.Factory.Create(this, ((string key, bool selected) args) => OnItemSelect(TransferDirection.Right, args.key, args.selected)),
+                SelectedKeys = { },
+                FilteredItems = { }
+            };
+        }
+
+
+        public void OnItemSelectAll(TransferDirection direction, string[] keys, bool selected)
+        {
+
+        }
+
+        public void OnItemSelect(TransferDirection direction, string key, bool selected)
+        {
+
         }
 
         private void InitData()
@@ -127,7 +153,7 @@ namespace AntDesign
             CheckAllState();
         }
 
-        private async Task SelectItem(bool isCheck, string direction, string key)
+        private async Task SelectItem(bool isCheck, TransferDirection direction, string key)
         {
             var holder = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
             var index = Array.IndexOf(holder.ToArray(), key);
@@ -149,7 +175,7 @@ namespace AntDesign
             }
         }
 
-        private async Task SelectAll(bool isCheck, string direction)
+        private async Task SelectAll(bool isCheck, TransferDirection direction)
         {
             var list = _leftDataSource;
             if (direction == TransferDirection.Right)
@@ -169,7 +195,7 @@ namespace AntDesign
             }
         }
 
-        private void HandleSelect(string direction, List<string> keys)
+        private void HandleSelect(TransferDirection direction, List<string> keys)
         {
             if (direction == TransferDirection.Left)
             {
@@ -181,7 +207,7 @@ namespace AntDesign
             }
         }
 
-        private async Task MoveItem(MouseEventArgs e, string direction)
+        private async Task MoveItem(MouseEventArgs e, TransferDirection direction)
         {
             var moveKeys = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
 
@@ -251,7 +277,7 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleSearch(ChangeEventArgs e, string direction, bool mathTileCount = true)
+        private async Task HandleSearch(ChangeEventArgs e, TransferDirection direction, bool mathTileCount = true)
         {
             if (direction == TransferDirection.Left)
             {
@@ -273,7 +299,7 @@ namespace AntDesign
             }
         }
 
-        private async Task ClearFilterValueAsync(string direction)
+        private async Task ClearFilterValueAsync(TransferDirection direction)
         {
             if (direction == TransferDirection.Left)
             {

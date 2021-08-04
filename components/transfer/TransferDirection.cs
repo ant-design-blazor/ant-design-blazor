@@ -1,8 +1,12 @@
 ﻿namespace AntDesign
 {
-    public static class TransferDirection
+    public class TransferDirection : EnumValue<TransferDirection>
     {
-        public const string Left = "left";
-        public const string Right = "right";
+        public static readonly TransferDirection Left = new("left", 0);
+        public static readonly TransferDirection Right = new("right", 1);
+
+        private TransferDirection(string name, int value) : base(name, value)
+        {
+        }
     }
 }

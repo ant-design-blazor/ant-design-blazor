@@ -1,0 +1,74 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="ant-transfer-list @((Transfer.FooterTemplate != null || Transfer.Footer != null)?FooterClass:"")">
+    <div class="ant-transfer-list-header">
+        @if (Transfer.ShowSelectAll)
+        {
+            <Checkbox Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState))" />
+        }
+        <span class="ant-transfer-list-header-selected">
+            @_countText
+        </span>
+        @if (Title != "")
+        {
+            <span class="ant-transfer-list-header-title">@Title</span>
+        }
+    </div>
+    <div class="ant-transfer-list-body @(Transfer.ShowSearch ? "ant-transfer-list-body-with-search" : "")">
+        @if (Transfer.ShowSearch)
+        {
+            <div class="ant-transfer-list-body-search-wrapper">
+                <div>
+                    <Input Class="ant-transfer-list-search" Value="@_filterValue" Placeholder="@Transfer?.Locale.SearchPlaceholder" OnInput="@(e => HandleSearch(e.Value?.ToString()))" TValue="string" />
+                    <a class="ant-transfer-list-search-action">
+                        @if (string.IsNullOrEmpty(_filterValue))
+                        {
+                            <Icon Type="search" />
+                        }
+                        else
+                        {
+                            <Icon Type="close-circle" />
+                        }
+                    </a>
+                </div>
+            </div>
+        }
+        @if (DataSource?.Any() != true)
+        {
+            <div class="ant-transfer-list-body-not-found">
+                <Empty Simple Small />
+            </div>
+        }
+        else
+        {
+            <ul class="ant-transfer-list-content ng-star-inserted">
+                @foreach (var item in DataSource)
+                {
+                    <li @key="item" class="ant-transfer-list-content-item ng-star-inserted @(item.Disabled || Disabled ? DisabledClass : "")">
+                        <Checkbox Label="@item.Key" Checked="_selectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, item.Key))" Disabled="@(item.Disabled || Disabled)">
+                            @if (Transfer.Render == null)
+                            {
+                                @item.Title
+                            }
+                            else
+                            {
+                                @Transfer.Render(item);
+                            }
+                        </Checkbox>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="ant-transfer-list-footer">
+        @if (Transfer.FooterTemplate != null)
+        {
+            @Transfer.FooterTemplate
+        }
+        else
+        {
+            @Transfer.Footer
+        }
+    </div>
+</div>
