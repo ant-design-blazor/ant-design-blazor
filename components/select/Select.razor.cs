@@ -15,13 +15,9 @@ using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 using OneOf.Types;
 
-#pragma warning disable 1591 // Disable missing XML comment
-#pragma warning disable CA1716 // Disable Select name warning
-#pragma warning disable CA1305 // IFormatProvider warning
-
 namespace AntDesign
 {
-    public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
+    public partial class Select<TItemValue, TItem> : SelectBase<TItemValue,TItem>
     {
         #region Parameters
 
@@ -70,10 +66,6 @@ namespace AntDesign
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
-        /// <summary>
-        /// LabelInValue can only be used if the SelectOption is not created by DataSource.
-        /// </summary>
-        [Parameter] public bool LabelInValue { get; set; }
 
         [Parameter]
         public string LabelName
@@ -92,7 +84,6 @@ namespace AntDesign
 
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
-
         [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
         [Parameter] public RenderFragment NotFoundContent { get; set; }
         [Parameter] public Action OnBlur { get; set; }
@@ -110,7 +101,6 @@ namespace AntDesign
         [Parameter] public Action OnMouseEnter { get; set; }
         [Parameter] public Action OnMouseLeave { get; set; }
         [Parameter] public Action<string> OnSearch { get; set; }
-
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
@@ -142,14 +132,6 @@ namespace AntDesign
                 _valueName = value;
             }
         }
-
-
-        /// <summary>
-        /// Converts custom tag (a string) to TItemValue type.
-        /// </summary>
-        [Parameter]
-        public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
-            (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         [Parameter]
         public IEnumerable<TItem> DataSource
@@ -251,40 +233,6 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public IEnumerable<TItemValue> Values
-        {
-            get => _selectedValues;
-            set
-            {
-                if (value != null && _selectedValues != null)
-                {
-                    var hasChanged = !value.SequenceEqual(_selectedValues);
-
-                    if (!hasChanged)
-                        return;
-
-                    _selectedValues = value;
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value != null && _selectedValues == null)
-                {
-                    _selectedValues = value;
-
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value == null && _selectedValues != null)
-                {
-                    _selectedValues = default;
-
-                    _ = OnValuesChangeAsync(default);
-                }
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
-            }
-        }
 
         [Parameter]
         public IEnumerable<TItemValue> DefaultValues
@@ -315,7 +263,6 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public RenderFragment SelectOptions { get; set; }
 
         #endregion Parameters
 
@@ -324,7 +271,6 @@ namespace AntDesign
         #region Properties
 
         private const string ClassPrefix = "ant-select";
-
         /// <summary>
         /// Indicates if the GroupName is used. When this value is True, the SelectOptions will be rendered in group mode.
         /// </summary>
@@ -335,29 +281,23 @@ namespace AntDesign
 
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
 
-        private string _prevSearchValue = string.Empty;
         private string _dropdownStyle = string.Empty;
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
         private IEnumerable<TItem> _datasource;
-        private IEnumerable<TItemValue> _selectedValues;
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
-
+        private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
-        private bool _isPrimitive;
         private bool _isValueEnum;
-        protected SelectContent<TItemValue, TItem> _selectContent;
         private bool _isToken;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
         private bool _defaultActiveFirstOption;
 
-        internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
-        internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-        
+
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -382,7 +322,6 @@ namespace AntDesign
 
         private Func<TItem, string> _getLabel;
 
-        private Action<TItem, string> _setLabel;
 
         private string _groupName = string.Empty;
 
@@ -395,9 +334,7 @@ namespace AntDesign
         private string _valueName;
 
         private Func<TItem, TItemValue> _getValue;
-        private bool _optionsHasInitialized;
 
-        private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
         private Expression<Func<TItemValue>> _valueExpression;
@@ -463,7 +400,6 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
-
 
             base.OnParametersSet();
         }
@@ -649,6 +585,7 @@ namespace AntDesign
             }
         }
 
+
         /// <summary>
         /// Sets the CSS classes to change the visual style
         /// </summary>
@@ -734,6 +671,14 @@ namespace AntDesign
             await JsInvokeAsync(JSInteropConstants.ElementScrollIntoView, element);
         }
 
+
+        /// <summary>
+        /// Called by the Form reset method
+        /// </summary>
+        internal override void ResetValue()
+        {
+            _ = ClearSelectedAsync();
+        }
 
 
         /// <summary>
@@ -958,105 +903,6 @@ namespace AntDesign
             return newItem;
         }
 
-        /// <summary>
-        /// Creates the select option item. Mostly meant to create new tags, that is why IsAddedTag is hardcoded to true.
-        /// </summary>
-        /// <param name="label">Creation based on passed label</param>
-        /// <param name="isActive">if set to <c>true</c> [is active].</param>
-        /// <returns></returns>
-        private SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
-        {
-            TItemValue value = CustomTagLabelToValue.Invoke(label);
-            TItem item;
-            if (_isPrimitive)
-            {
-                item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
-            }
-            else
-            {
-                if (_setValue == null)
-                {
-                    item = THelper.ChangeType<TItem>(value);
-                }
-                else
-                {
-                    item = Activator.CreateInstance<TItem>();
-                    _setValue(item, value);
-                }
-                _setLabel?.Invoke(item, _searchValue);
-            }
-            return new SelectOptionItem<TItemValue, TItem>() { Label = label, Value = value, Item = item, IsActive = isActive, IsSelected = false, IsAddedTag = true };
-        }
-
-        /// <summary>
-        /// A separate method to invoke ValuesChanged and OnSelectedItemsChanged to reduce code duplicates.
-        /// </summary>
-
-        protected void InvokeOnSelectedItemChanged(SelectOptionItem<TItemValue, TItem> selectOptionItem = null)
-        {
-            if (selectOptionItem == null)
-            {
-                OnSelectedItemsChanged?.Invoke(default);
-            }
-            else
-            {
-                if (LabelInValue && SelectOptions != null)
-                {
-                    // Embed the label into the value and return the result as json string.
-                    var valueLabel = new Select.Internal.ValueLabel<TItemValue>
-                    {
-                        Value = selectOptionItem.Value,
-                        Label = selectOptionItem.Label
-                    };
-
-                    var json = JsonSerializer.Serialize(valueLabel);
-
-                    OnSelectedItemChanged?.Invoke((TItem)Convert.ChangeType(json, typeof(TItem)));
-                }
-                else
-                {
-                    OnSelectedItemChanged?.Invoke(selectOptionItem.Item);
-                }
-            }
-        }
-
-        protected async Task InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
-        {
-            List<TItemValue> newSelectedValues;
-            if (newSelection is null || Values is null)
-            {
-                newSelectedValues = new List<TItemValue>();
-                SelectedOptionItems.Clear();
-                SelectOptionItems.Where(x => x.IsSelected)
-                    .ForEach(i =>
-                    {
-                        newSelectedValues.Add(i.Value);
-                        SelectedOptionItems.Add(i);
-                    });
-            }
-            else
-            {
-                newSelectedValues = Values.ToList();
-                if (newSelection.IsSelected)
-                {
-                    newSelectedValues.Add(newSelection.Value);
-                    SelectedOptionItems.Add(newSelection);
-                }
-                else
-                {
-                    newSelectedValues.Remove(newSelection.Value);
-                    SelectedOptionItems.Remove(newSelection);
-                }
-            }
-
-            if (ValuesChanged.HasDelegate)
-                await ValuesChanged.InvokeAsync(newSelectedValues);
-            else
-            {
-                Values = newSelectedValues;
-                StateHasChanged();
-            }
-        }
 
 
         protected virtual string GetLabel(TItem item)
@@ -1139,96 +985,6 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// The Method is called every time if the value of the @bind-Values was changed by the two-way binding.
-        /// </summary>
-        protected async Task OnValuesChangeAsync(IEnumerable<TItemValue> values)
-        {
-            if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
-                return;
-
-            if (!SelectOptionItems.Any())
-                return;
-
-            if (values == null)
-            {
-                await ValuesChanged.InvokeAsync(default);
-                OnSelectedItemsChanged?.Invoke(default);
-                return;
-            }
-
-            EvaluateValuesChangedOutsideComponent(values);
-
-            if (_dropDown.IsOverlayShow())
-            {
-                //A delay forces a refresh better than StateHasChanged().
-                //For example when a tag is added that is causing SelectContent to grow,
-                //this Task.Delay will actually allow to reposition the Overlay to match
-                //new size of SelectContent.
-                await Task.Delay(1);
-                await UpdateOverlayPositionAsync();
-            }
-
-            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
-            await ValuesChanged.InvokeAsync(Values);
-        }
-
-        /// <summary>
-        /// When bind-Values is changed outside of the component, then component
-        /// selected items have to be reselected according to new values passed.
-        /// TODO: (Perf) Consider using hash to identify if the passed values are different from currently selected.
-        /// </summary>
-        /// <param name="values">The values that need to be selected.</param>
-        private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
-        {
-            var newSelectedItems = new List<TItem>();
-            var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
-            foreach (var value in values.ToList())
-            {
-                SelectOptionItem<TItemValue, TItem> result;
-                if (SelectMode == SelectMode.Multiple)
-                {
-                    result = SelectOptionItems.FirstOrDefault(x => !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
-                    if (result != null && !result.IsDisabled)
-                    {
-                        result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
-                    }
-                    deselectList.Remove(value);
-                }
-                else
-                {
-                    result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
-                    if (result is null) //tag delivered from outside, needs to be added to the list of options
-                    {
-                        result = CreateSelectOptionItem(value.ToString(), true);
-                        result.IsSelected = true;
-                        AddedTags.Add(result);
-                        SelectOptionItems.Add(result);
-                        SelectedOptionItems.Add(result);
-                    }
-                    else if (result != null && !result.IsSelected && !result.IsDisabled)
-                    {
-                        result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
-                    }
-                    deselectList.Remove(value);
-                }
-            }
-            if (deselectList.Count > 0)
-            {
-                foreach (var item in deselectList)
-                {
-                    item.Value.IsSelected = false;
-                    SelectedOptionItems.Remove(item.Value);
-                    if (item.Value.IsAddedTag)
-                    {
-                        SelectOptionItems.Remove(item.Value);
-                        AddedTags.Remove(item.Value);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Method is called via EventCallBack if the value of the Input element was changed by keyboard
@@ -1845,6 +1601,7 @@ namespace AntDesign
         }
 
 
+
         /// <summary>
         /// Method is called via EventCallBack if the Input element loses the focus
         /// </summary>
@@ -1871,6 +1628,7 @@ namespace AntDesign
                 OnBlur?.Invoke();
             }
         }
+
 
         /// <summary>
         /// Search the first selected item, set IsActive to False for all other items and call the scrollIntoView function via JavaScript.
@@ -1951,6 +1709,7 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
         }
+
 
         #endregion Events
     }
