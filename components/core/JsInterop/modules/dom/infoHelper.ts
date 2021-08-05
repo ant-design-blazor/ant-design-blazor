@@ -116,4 +116,10 @@ export class infoHelper {
     if (dom) return dom.innerText;
     return null;
   }
+
+  static getMaxZIndex() {
+    return [...document.querySelectorAll("*")].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
+  }  
+
+  
 }

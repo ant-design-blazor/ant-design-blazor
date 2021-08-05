@@ -89,12 +89,14 @@ namespace AntDesign.Internal
         /// <summary>
         /// Callback when mouse enters trigger boundaries.
         /// </summary>
-        [Parameter] public Action OnMouseEnter { get; set; }
+        [Parameter]
+        public EventCallback OnMouseEnter { get; set; }
 
         /// <summary>
         /// Callback when mouse leaves trigger boundaries.
         /// </summary>
-        [Parameter] public Action OnMouseLeave { get; set; }
+        [Parameter]
+        public EventCallback OnMouseLeave { get; set; }
 
         /// <summary>
         /// Callback when overlay is hiding.
@@ -157,24 +159,33 @@ namespace AntDesign.Internal
         private PlacementType _paramPlacement = PlacementType.BottomLeft;
 
         [Parameter]
-        public PlacementType Placement
+        public Placement Placement
         {
             get
             {
-                return RTL ? _placement.GetRTLPlacement() : _placement;
+                return (RTL ? _placement.GetRTLPlacement() : _placement).Placement;
             }
             set
             {
-                _placement = value;
-                _paramPlacement = value;
+                _placement = PlacementType.Create(value);
+                _paramPlacement = PlacementType.Create(value);
             }
         }
+
+        internal PlacementType GetPlacementType() => _placement;
 
         /// <summary>
         /// Override default placement class which is based on `Placement` parameter. 
         /// </summary>
         [Parameter]
-        public string PlacementCls { get; set; }
+        public string PlacementCls
+        {
+            get { return _placementCls; }
+            set
+            {
+                _placementCls = value;
+            }
+        }
 
         /// <summary>
         /// Define what is going to be the container of the overlay. 
@@ -182,23 +193,29 @@ namespace AntDesign.Internal
         /// scrollable area.
         /// </summary>
         [Parameter]
-        public string PopupContainerSelector { get; set; } = "body";
+        public string PopupContainerSelector
+        {
+            get { return _popupContainerSelector; }
+            set
+            {
+                _popupContainerSelector = value;
+            }
+        }
 
         /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
         [Parameter]
-        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
-
-        /// <summary>
-        /// Manually set reference to triggering element. 
-        /// </summary>
-        [Parameter]
-        public ElementReference TriggerReference
+        public Trigger[] Trigger //TODO: this should probably be a flag not an array
         {
-            get => Ref;
-            set => Ref = value;
+            get { return _trigger.Select(t => t.Trigger).ToArray(); }
+            set
+            {
+                _trigger = value.Select(t => TriggerType.Create(t)).ToArray();
+            }
         }
+
+        internal TriggerType[] GetTriggerType() => _trigger;
 
         /// <summary>
         /// ChildElement with ElementReference set to avoid wrapping div. 
@@ -220,14 +237,26 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
+        private string _placementCls;
+        private string _popupContainerSelector = "body";
+        private TriggerType[] _trigger = new TriggerType[] { TriggerType.Hover };
+        private bool _shouldRender = true;
+
+        internal void SetShouldRender(bool shouldRender) => _shouldRender = shouldRender;
+
+        protected override bool ShouldRender()
+        {
+            if (_shouldRender)
+                return base.ShouldRender();
+            _shouldRender = true;
+            return false;
+        }
 
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
                 DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
-                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
-                DomEventService.AddEventListener("document", "scroll", OnWindowScroll, false);
             }
 
             base.OnAfterRender(firstRender);
@@ -274,8 +303,6 @@ namespace AntDesign.Internal
         protected override void Dispose(bool disposing)
         {
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
-            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
 
             if (Unbound != null)
             {
@@ -299,8 +326,13 @@ namespace AntDesign.Internal
 
                 await Show();
             }
+            else
+            {
+                _shouldRender = false;
+            }
 
-            OnMouseEnter?.Invoke();
+            if (OnMouseEnter.HasDelegate)
+                OnMouseEnter.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -313,8 +345,13 @@ namespace AntDesign.Internal
 
                 await Hide();
             }
+            else
+            {
+                _shouldRender = false;
+            }
 
-            OnMouseLeave?.Invoke();
+            if (OnMouseLeave.HasDelegate)
+                OnMouseLeave.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerFocusIn()
@@ -440,24 +477,10 @@ namespace AntDesign.Internal
             }
         }
 
-        protected async void OnWindowResize(JsonElement element)
-        {
-            RestorePlacement();
-
-            if (IsOverlayShow())
-            {
-                await GetOverlayComponent().UpdatePosition();
-            }
-        }
-
-        protected void OnWindowScroll(JsonElement element)
-        {
-            RestorePlacement();
-        }
 
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
-            return Trigger.Contains(triggerType);
+            return _trigger.Contains(triggerType);
         }
 
         protected virtual async Task OverlayVisibleChange(bool visible)
@@ -483,18 +506,13 @@ namespace AntDesign.Internal
             _placement = placement;
         }
 
-        internal void RestorePlacement()
-        {
-            _placement = _paramPlacement;
-        }
-
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
             {
                 return PlacementCls;
             }
-            return $"{PrefixCls}-placement-{Placement.Name}";
+            return $"{PrefixCls}-placement-{_placement.Name}";
         }
 
         internal virtual string GetOverlayEnterClass()
@@ -503,7 +521,7 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"ant-slide-{Placement.SlideName}-enter ant-slide-{Placement.SlideName}-enter-active ant-slide-{Placement.SlideName}";
+            return $"ant-slide-{_placement.SlideName}-enter ant-slide-{_placement.SlideName}-enter-active ant-slide-{_placement.SlideName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -512,7 +530,7 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"ant-slide-{Placement.SlideName}-leave ant-slide-{Placement.SlideName}-leave-active ant-slide-{Placement.SlideName}";
+            return $"ant-slide-{_placement.SlideName}-leave ant-slide-{_placement.SlideName}-leave-active ant-slide-{_placement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()
@@ -571,6 +589,9 @@ namespace AntDesign.Internal
         /// Toggle overlay visibility.
         /// </summary>
         /// <param name="visible">boolean: visibility true/false</param>
-        public void SetVisible(bool visible) => Visible = visible;
+        public void SetVisible(bool visible)
+        {
+            Visible = visible;
+        }
     }
 }

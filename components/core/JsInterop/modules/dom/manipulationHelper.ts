@@ -12,11 +12,17 @@ export class manipulationHelper {
     document.body.removeChild(element);
   }
 
-  static addElementTo(addElement, elementSelector) {
+  static addElementTo(addElement, elementSelector): boolean {
     let parent = domInfoHelper.get(elementSelector);
     if (parent && addElement) {
-      parent.appendChild(addElement);
+      if (parent instanceof Node && addElement instanceof Node) {
+        parent.appendChild(addElement);
+        return true;
+      } else {
+        console.log("does not implement node", parent, addElement);
+      }
     }
+    return false;
   }
 
   static delElementFrom(delElement, elementSelector) {

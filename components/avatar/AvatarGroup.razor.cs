@@ -15,7 +15,7 @@ namespace AntDesign
         public string MaxStyle { get; set; }
 
         [Parameter]
-        public PlacementType MaxPopoverPlacement { get; set; } = PlacementType.Top;
+        public Placement MaxPopoverPlacement { get; set; } = Placement.Top;
 
         private ClassMapper _popoverClassMapper = new ClassMapper();
 

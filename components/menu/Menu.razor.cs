@@ -110,7 +110,7 @@ namespace AntDesign
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
         [Parameter]
-        public TriggerType TriggerSubMenuAction { get; set; } = TriggerType.Hover;
+        public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
         internal MenuMode InternalMode { get; private set; }
 

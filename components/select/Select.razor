@@ -11,8 +11,9 @@
             <OverlayTrigger @ref="@_dropDown"
                             Visible="Open"
                             Disabled="Disabled"
-                            Trigger="new[] { TriggerType.Click }"
-                            HiddenMode                            
+                            Trigger="new[] { Trigger.Click }"
+                            HiddenMode
+                            BoundaryAdjustMode="@BoundaryAdjustMode"
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"

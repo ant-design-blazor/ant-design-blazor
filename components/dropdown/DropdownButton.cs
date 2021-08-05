@@ -186,7 +186,7 @@ namespace AntDesign
         {
             string prefixCls = "ant-btn";
             ClassMapper.Clear();
-            Placement = PlacementType.BottomRight;
+            Placement = Placement.BottomRight;
             base.OnInitialized();
             ClassMapper.If($"{prefixCls}-block", () => Block);
 

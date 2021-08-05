@@ -261,8 +261,6 @@ namespace AntDesign
                     (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
                     if (value != typedValue.Item1)
                         CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
-                    if (_toolTipLeft != null)
-                        _toolTipLeft.ChildElementMoved();
                 }
             }
         }
@@ -303,8 +301,6 @@ namespace AntDesign
                             //CurrentValue = DoubleToGeneric(_rightValue);
                             CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
                     }
-                    if (_toolTipRight != null)
-                        _toolTipRight.ChildElementMoved();
                 }
             }
         }
@@ -366,7 +362,7 @@ namespace AntDesign
         /// Set Tooltip display position. Ref Tooltip
         /// </summary>
         [Parameter]
-        public PlacementType TooltipPlacement { get; set; }
+        public Placement TooltipPlacement { get; set; }
 
         /// <summary>
         /// If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.
@@ -460,9 +456,9 @@ namespace AntDesign
                 if (!dict.ContainsKey(nameof(TooltipPlacement)))
                 {
                     if (Vertical)
-                        TooltipPlacement = PlacementType.Right;
+                        TooltipPlacement = Placement.Right;
                     else
-                        TooltipPlacement = PlacementType.Top;
+                        TooltipPlacement = Placement.Top;
                 }
             }
 
@@ -509,11 +505,9 @@ namespace AntDesign
                 if (_toolTipRight != null && HasTooltip)
                 {
                     _rightHandle = _toolTipRight.Ref;
-                    await _toolTipRight.ChildElementMoved();
                     if (_toolTipLeft != null)
                     {
                         _leftHandle = _toolTipLeft.Ref;
-                        await _toolTipLeft.ChildElementMoved();
                     }
                 }
             }
@@ -668,7 +662,7 @@ namespace AntDesign
                     _right = false;
                     if (_mouseDown)
                         RightValue = _initialLeftValue;
-                    LeftValue = rightV;                    
+                    LeftValue = rightV;
                     await FocusAsync(_leftHandle);
                 }
                 else
@@ -715,7 +709,7 @@ namespace AntDesign
                     _right = true;
                     if (_mouseDown)
                         LeftValue = _initialRightValue;
-                    RightValue = leftV;                    
+                    RightValue = leftV;
                     await FocusAsync(_rightHandle);
                 }
                 else
