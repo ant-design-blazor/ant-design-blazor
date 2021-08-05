@@ -156,7 +156,8 @@ namespace AntDesign
             int? day = null,
             int? hour = null,
             int? minute = null,
-            int? second = null)
+            int? second = null,
+            int? millisecond = null)
         {
             return date
                 .AddYears(year != null ? (int)year - date.Year : 0)
@@ -164,7 +165,8 @@ namespace AntDesign
                 .AddDays(day != null ? (int)day - date.Day : 0)
                 .AddHours(hour != null ? (int)hour - date.Hour : 0)
                 .AddMinutes(minute != null ? (int)minute - date.Minute : 0)
-                .AddSeconds(second != null ? (int)second - date.Second : 0);
+                .AddSeconds(second != null ? (int)second - date.Second : 0)
+                .AddMilliseconds((millisecond - date.Millisecond) ?? 0);
         }
 
         public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)

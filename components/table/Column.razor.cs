@@ -10,6 +10,7 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using OneOf;
 
 namespace AntDesign
 {
@@ -360,6 +361,64 @@ namespace AntDesign
         private void SetFilterValue(TableFilter filter, object value)
         {
             filter.Value = value;
+        }
+
+        private void SetFilterValue(TableFilter filter, DateTime? value)
+        {
+            if (value == null || Format?.Contains("f") == true)
+            {
+            }
+            else if (Format == null || Format.Contains("ss"))
+            {
+                value = DateHelper.CombineNewDate(value.Value, millisecond: 0);
+            }
+            else if (Format.Contains("mm"))
+            {
+                value = DateHelper.CombineNewDate(value.Value, second: 0, millisecond: 0);
+            }
+            else if (Format.Contains("HH") || Format.Contains("hh"))
+            {
+                value = DateHelper.CombineNewDate(value.Value, minute: 0, second: 0, millisecond: 0);
+            }
+            else
+            {
+                value = DateHelper.CombineNewDate(value.Value, hour: 0, minute: 0, second: 0, millisecond: 0);
+            }
+
+            filter.Value = value;
+        }
+
+        private OneOf<bool, string> GetTimeFormat()
+        {
+            if (Format == null)
+            {
+                return true;
+            }
+            if (Format.Contains("ss") || Format.Contains("f"))
+            {
+                if (Format.Contains("hh"))
+                {
+                    return "hh:mm:ss tt";
+                }
+                return "HH:mm:ss";
+            }
+            if (Format.Contains("mm"))
+            {
+                if (Format.Contains("hh"))
+                {
+                    return "hh:mm tt";
+                }
+                return "HH:mm";
+            }
+            if (Format.Contains("hh"))
+            {
+                return "hh tt";
+            }
+            if (Format.Contains("HH"))
+            {
+                return "HH";
+            }
+            return false;
         }
 
         private void FilterSelected(TableFilter filter)
