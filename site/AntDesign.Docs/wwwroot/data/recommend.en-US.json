@@ -1,10 +1,10 @@
 ﻿[
   {
-    "title": "The Story behind Ant Design 1.0: Turn Art into Technology",
-    "description": "🌺 While Ant Design is a design system, Ant Designers are a group of people. This article will tell you the story behind Ant Design 1.0.",
-    "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*h21tT45dgD8AAAAAAAAAAABkARQnAQ",
-    "href": "https://zhuanlan.zhihu.com/p/104027273",
-    "popularize": true
+    "title": "Ant Design Blazor Reuse Tabs",
+    "description": "The Blazor community has been clamouring for multiple tabs for over a year now, and it's been quite an achievement to finally implement a ReuseTabs component based on the Tabs component in conjunction with Blazor's built-in routing component in the last few days.",
+    "img": "/docs/assets/news/reuse-tabs-demo.gif",
+    "href": "https://github.com/ant-design-blazor/demo-reuse-tabs",
+    "popularize": false
   },
   {
     "title": "Ant Design Pro V5 has Supported Preview!",

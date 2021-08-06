@@ -12,6 +12,7 @@ namespace AntDesign.FilterExpression
         private readonly NumberFilterExpression _numberFilter = new NumberFilterExpression(typeof(T));
         private readonly DateFilterExpression _dateFilter = new DateFilterExpression();
         private readonly EnumFilterExpression _enumFilter = new EnumFilterExpression();
+        private readonly GuidFilterExpression _guidFilter = new GuidFilterExpression();
 
         public FilterExpressionResolver()
         {
@@ -27,13 +28,18 @@ namespace AntDesign.FilterExpression
             {
                 return _numberFilter;
             }
-            if (THelper.GetUnderlyingType<T>() == typeof(DateTime))
+            var underlyingType = THelper.GetUnderlyingType<T>();
+            if (underlyingType == typeof(DateTime))
             {
                 return _dateFilter;
             }
-            if (THelper.GetUnderlyingType<T>() == typeof(string))
+            if (underlyingType == typeof(string))
             {
                 return _stringFilter;
+            }
+            if (underlyingType == typeof(Guid))
+            {
+                return _guidFilter;
             }
             throw new NotImplementedException();
         }

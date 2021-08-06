@@ -13,7 +13,7 @@ title:
 
 注意，此示例使用 [模拟接口](https://randomuser.me/)，展示数据可能不准确，请打开网络面板查看请求。
 
-从0.9.0版本开始，需要设置 `RemoteDataSource` 为 `true`。
+从0.9.0版本开始，可以设置 `RemoteDataSource` 为 `true` 来避免在数据总条数小于等于 `PageSize` 时调用客户端筛选排序分页逻辑。
 
 ## en-US
 
@@ -23,4 +23,4 @@ Setting `rowSelection.preserveSelectedRowKeys` to keep the `key` when enable sel
 
 Note, this example use [Mock API](https://randomuser.me/) that you can look up in Network Console.
 
-From version 0.9.0, you should set `RemoteDataSource` to `true`.
+From version 0.9.0, you can set `RemoteDataSource` to `true` to forbid client side pagination behaviors(this is useful when your datasource records can not fulfill a whole page so that `Table` component doesn't know whether the data is from a local data storage or a remote one').

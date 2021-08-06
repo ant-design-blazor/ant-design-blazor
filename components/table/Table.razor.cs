@@ -42,7 +42,7 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
-        
+
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -118,8 +118,22 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        private bool _remoteDataSource;
+        private bool _hasRemoteDataSourceAttribute;
+
         [Parameter]
-        public bool RemoteDataSource { get; set; }
+        public bool RemoteDataSource
+        {
+            get => _remoteDataSource;
+            set
+            {
+                _remoteDataSource = value;
+                _hasRemoteDataSourceAttribute = true;
+            }
+        }
+
+        [Parameter]
+        public bool Responsive { get; set; } = true;
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -141,11 +155,13 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
-        private ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+
+        private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -243,10 +259,10 @@ namespace AntDesign
         {
             var queryModel = BuildQueryModel();
 
-            if (RemoteDataSource)
+            if (ServerSide)
             {
                 _showItems = _dataSource;
-                _total = Total > _dataSourceCount ? Total : _dataSourceCount;
+                _total = Total;
             }
             else
             {
@@ -263,24 +279,23 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
-                    var newTotal = query.Count();                    
+                    _total = query.Count();
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    if (newTotal != _total)
+                    if (_total != Total)
                     {
-                        _total = newTotal;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
-                    if (_total != 0)
+                    _total = 0;
+                    if (_total != Total)
                     {
-                        _total = 0;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
@@ -315,6 +330,7 @@ namespace AntDesign
 
             _wrapperClassMapper
                 .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
