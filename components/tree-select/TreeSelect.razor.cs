@@ -17,7 +17,23 @@ namespace AntDesign
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
 
-        [Parameter] public bool Multiple { get; set; }
+        private bool _multiple;
+
+        protected Tree<TItem> _tree;
+
+        [Parameter]
+        public bool Multiple
+        {
+            get => _multiple;
+            set
+            {
+                _multiple = value;
+                if (_multiple)
+                {
+                    Mode = SelectMode.Multiple.ToString("G");
+                }
+            }
+        }
 
         [Parameter] public bool Checkable { get; set; }
 
@@ -84,7 +100,7 @@ namespace AntDesign
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
 
-        [Parameter] public int HideMillisecondsDelay { get; set; } = 0;
+
 
         private string _dropdownStyle = string.Empty;
 
@@ -121,7 +137,11 @@ namespace AntDesign
                 ;
         }
 
-
+        protected override void OnInitialized()
+        {
+            SelectOptions = "".ToRenderFragment();
+            base.OnInitialized();
+        }
 
         private void OnClick()
         {
@@ -153,6 +173,14 @@ namespace AntDesign
 
         protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
+            if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
+            await SetValueAsync(selectOption);
+
+            foreach (var item in _tree.SelectedNodesDictionary.Select(x => x.Value).ToList())
+            {
+                if (item.Key == selectOption.Value.ToString())
+                    item.SetSelected(false);
+            }
         }
 
         private async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -165,29 +193,26 @@ namespace AntDesign
 
         private async Task OnTreeNodeClick(TreeEventArgs<TItem> args)
         {
+            if (!args.Node.Selected)
+                return;
             var data = args.Node;
             var item = new SelectOptionItem<TItemValue, TItem>()
             {
                 Label = TitleExpression(data),
                 Value = (TItemValue)Convert.ChangeType(KeyExpression(data), typeof(TItemValue)),
                 Item = data.DataItem,
+                IsAddedTag = SelectMode != SelectMode.Default
                 //IsSelected = true
             };
+
+
             if (SelectMode == SelectMode.Default)
             {
                 SelectOptionItems.Clear();
-                SelectedOptionItems.Clear();
-            }
-            else
-            {
-                if (SelectedOptionItems.Any(t => t.Value.Equals(item.Value)))
-                {
-                    return;
-                }
             }
 
             SelectOptionItems.Add(item);
-            SelectedOptionItems.Add(item);
+            //SelectedOptionItems.Add(item);
 
             await SetValueAsync(item);
 
@@ -195,6 +220,16 @@ namespace AntDesign
                 await CloseAsync();
         }
 
+
+        protected void OnTreeNodeUnSelect(TreeEventArgs<TItem> args)
+        {
+            if (args == null) throw new ArgumentNullException(nameof(args));
+            var key = args.Node.Key;
+            SelectOptionItems.Where(o => o.Value.ToString() == key).ForEach(o =>
+            {
+                _ = SetValueAsync(o);
+            });
+        }
 
         protected async Task SetDropdownStyleAsync()
         {
@@ -214,5 +249,6 @@ namespace AntDesign
                 maxWidth = $"max-width: {DropdownMaxWidth};";
             _dropdownStyle = minWidth + definedWidth + maxWidth;
         }
+
     }
 }
