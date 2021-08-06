@@ -47,7 +47,7 @@ namespace AntDesign
         [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
         [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
-        internal SelectMode SelectMode => Mode.ToSelectMode();
+        internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
         protected IEnumerable<TItemValue> _selectedValues;
         protected string _prevSearchValue = string.Empty;

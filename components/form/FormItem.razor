@@ -16,6 +16,7 @@
             }
         </AntDesign.Col>
     }
+
     <AntDesign.Col @attributes="GetWrapperColAttributes()" Class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>
             <div class=@($"{_prefixCls}-control-input-content")>
@@ -23,7 +24,19 @@
                     @ChildContent
                 </CascadingValue>
             </div>
+            @if (IsShowIcon)
+            {
+                <span class=@($"{_prefixCls}-children-icon")><Icon Type="@(_iconMap[ValidateStatus].type)" Theme="@(_iconMap[ValidateStatus].theme)" /></span>
+            }
         </div>
-        @_formValidationMessages
+
+        @foreach (var message in _validationMessages)
+        {
+            <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-{(_isValid ? "default" : "error")}")>
+                <div role="alert">
+                    @message
+                </div>
+            </div>
+        }
     </AntDesign.Col>
 </Row>

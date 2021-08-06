@@ -6,8 +6,8 @@
 @using AntDesign.Internal
 @using AntDesign.Select.Internal
 
-<CascadingValue Value="this" IsFixed="true">
-    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls">
+<CascadingValue Value="this" IsFixed>
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
         <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
             <OverlayTrigger @ref="@_dropDown"
                             Visible="Open"
@@ -18,16 +18,18 @@
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
                             PopupContainerSelector="@PopupContainerSelector"
-                            OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                            OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
+                            OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                            OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
                 <Overlay >
                     <div style="@_dropdownStyle">
                         <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
                             <div>
-                                <div class="" role="listbox"  style="display: flex; flex-direction: column;">
-                                    <Tree @ref="_tree" Multiple="Multiple" BlockNode DataSource="DataSource" TItem="TItem" TitleExpression="TitleExpression"
+                                <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                    <Tree DataSource="DataSource" TItem="TItem" TitleExpression="TitleExpression" 
+                                          BlockNode @ref="_tree" Multiple="Multiple" 
+                                          SelectedKeys="SelectedKeys" DefaultExpandAll="TreeDefaultExpandAll"
                                           KeyExpression="KeyExpression" ChildrenExpression="ChildrenExpression"
-                                          IsLeafExpression="IsLeafExpression" OnClick="OnTreeNodeClick" OnUnSelect="OnTreeNodeUnSelect" >
+                                          IsLeafExpression="IsLeafExpression" OnClick="OnTreeNodeClick">
                                     </Tree>
                                 </div>
                             </div>

@@ -35,8 +35,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public bool Checkable { get; set; }
-
+        [Parameter] public bool TreeCheckable { get; set; }
 
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
@@ -56,6 +55,7 @@ namespace AntDesign
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
+        [Parameter] public bool TreeDefaultExpandAll { get; set; }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -93,8 +93,6 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
-        private bool IsMultiple => Multiple || Checkable;
-
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
         [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
 
@@ -102,24 +100,32 @@ namespace AntDesign
 
 
 
+        private bool IsMultiple => Multiple || TreeCheckable;
+
+        internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
+
+        private string[] SelectedKeys => _selectedNodes.Select(x => KeyExpression(x)).ToArray();
+        private readonly IList<TreeNode<TItem>> _selectedNodes = new List<TreeNode<TItem>>();
+
         private string _dropdownStyle = string.Empty;
+        private bool _multiple;
+        private readonly string _dir = "ltr";
 
-        private string _dir = "ltr";
-
-        private bool _isComposing;
-        private bool _isDestroy = true;
-        private bool _isNotFound;
-        private bool _focused;
-        private string _inputValue = "";
+        private readonly bool _isComposing;
+        private readonly bool _isDestroy = true;
+        private readonly bool _isNotFound;
+        private readonly bool _focused;
+        private readonly string _inputValue = "";
 
 
         /// <summary>
         ///  'top' | 'center' | 'bottom'
         /// </summary>
-        private string _dropDownPosition = "bottom";
+        private readonly string _dropDownPosition = "bottom";
 
         protected override void SetClassMap()
         {
+            var classPrefix = "ant-select";
             ClassMapper
                 .Add("ant-select")
                 .Add("ant-tree-select")
@@ -127,10 +133,10 @@ namespace AntDesign
                 .If("ant-select-rtl", () => _dir == "rtl")
                 .If("ant-select-sm", () => Size == "rtl")
                 .If("ant-select-disabled", () => Disabled)
-                .If("ant-select-single", () => !IsMultiple)
+                .If("ant-select-single", () => SelectMode == SelectMode.Default)
+                .If($"ant-select-multiple", () => SelectMode != SelectMode.Default)
                 .If("ant-select-show-arrow", () => !IsMultiple)
                 .If("ant-select-show-search", () => !IsMultiple)
-                .If("ant-select-multiple", () => IsMultiple)
                 .If("ant-select-allow-clear", () => AllowClear)
                 .If("ant-select-open", () => Open)
                 .If("ant-select-focused", () => Open || Focused)
@@ -211,6 +217,7 @@ namespace AntDesign
                 SelectOptionItems.Clear();
             }
 
+            _selectedNodes.Add(data);
             SelectOptionItems.Add(item);
             //SelectedOptionItems.Add(item);
 

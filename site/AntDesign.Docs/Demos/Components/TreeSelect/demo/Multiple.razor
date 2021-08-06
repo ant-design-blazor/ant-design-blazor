@@ -3,9 +3,12 @@
 
 <TreeSelect Multiple="true" TItem="WebMenu" TItemValue="string"
             DataSource="@(LocalJsonData.GetMenusByParentId("0"))"
-            TitleExpression="m => m.DataItem.MenuName" KeyExpression="m => m.DataItem.MenuId"
+            TitleExpression="m => m.DataItem.MenuName"
+            KeyExpression="m => m.DataItem.MenuId"
             ChildrenExpression="m => LocalJsonData.GetMenusByParentId(m.DataItem.MenuId)"
-            IsLeafExpression="m => LocalJsonData.HasChild(m.DataItem.MenuId)" ValuesChanged="OnValuesChange">
+            IsLeafExpression="m => LocalJsonData.HasChild(m.DataItem.MenuId)" 
+            ValuesChanged="OnValuesChange"
+            TreeDefaultExpandAll>
 </TreeSelect>
 
 select MenuId: @selectMenuId
