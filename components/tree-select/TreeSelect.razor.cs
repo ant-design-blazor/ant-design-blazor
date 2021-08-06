@@ -17,8 +17,6 @@ namespace AntDesign
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
 
-        private bool _multiple;
-
         protected Tree<TItem> _tree;
 
         [Parameter]
