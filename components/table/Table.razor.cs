@@ -168,6 +168,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
@@ -183,6 +184,11 @@ namespace AntDesign
         {
             _summaryRows ??= new List<SummaryRow>();
             _summaryRows.Add(summaryRow);
+        }
+
+        void ITable.WaitForReloadAndInvokeChange()
+        {
+            _waitingReloadAndInvokeChange = true;
         }
 
         public void ReloadData()
@@ -351,8 +357,6 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
-
-            ReloadAndInvokeChange();
         }
 
         protected override void OnAfterRender(bool firstRender)
