@@ -426,6 +426,11 @@ namespace AntDesign
 
         public async Task OnOkClick()
         {
+            if (!IsRange)
+            {
+                Close();
+                return;
+            }
             int index = GetOnFocusPickerIndex();
             if (!(await SwitchFocus(index)))
             {
