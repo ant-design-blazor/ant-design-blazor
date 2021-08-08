@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Sider
+    public partial class Sider : AntDomComponentBase
     {
-        private static string _prefixCls = "ant-layout-sider";
+        private static readonly string _prefixCls = "ant-layout-sider";
 
         [Parameter] public bool Collapsible { get; set; }
 
@@ -57,6 +57,8 @@ namespace AntDesign
         private bool _isCollapsed;
 
         private bool _showTrigger;
+
+        private bool _brokenPoint;
 
         private Menu _menu;
 
@@ -133,23 +135,35 @@ namespace AntDesign
 
         private void OptimizeSize(decimal windowWidth)
         {
+            var originalCollapsed = _isCollapsed;
+            var originlBrokenPoint = _brokenPoint;
+
             if (windowWidth < Breakpoint?.Width)
             {
+                _brokenPoint = true;
                 _isCollapsed = true;
                 _showTrigger = true;
-                OnBreakpoint.InvokeAsync(true);
             }
             else
             {
-                _showTrigger = false;
+                _brokenPoint = false;
                 _isCollapsed = false;
+                _showTrigger = false;
             }
 
-            _menu?.CollapseUpdated(_isCollapsed);
-
-            if (OnCollapse.HasDelegate)
+            if (originlBrokenPoint != _brokenPoint && OnBreakpoint.HasDelegate)
             {
-                OnCollapse.InvokeAsync(_isCollapsed);
+                OnBreakpoint.InvokeAsync(_brokenPoint);
+            }
+
+            if (originalCollapsed != _isCollapsed)
+            {
+                _menu?.CollapseUpdated(_isCollapsed);
+
+                if (OnCollapse.HasDelegate)
+                {
+                    OnCollapse.InvokeAsync(_isCollapsed);
+                }
             }
 
             StateHasChanged();

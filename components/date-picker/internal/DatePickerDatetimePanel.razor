@@ -175,12 +175,15 @@
 
 <div class="@(PrefixCls)-footer">
     <ul class="@(PrefixCls)-ranges">
-        <li class="@(PrefixCls)-now">
-            <a class="@(PrefixCls)-now-btn"
-               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                @Locale.Lang.Now
-            </a>
-        </li>
+        @if (ShowToday)
+        {
+            <li class="@(PrefixCls)-now">
+                <a class="@(PrefixCls)-now-btn"
+                @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+                    @Locale.Lang.Now
+                </a>
+            </li>            
+        }
         <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
                        OnClick="OnOkClick">
