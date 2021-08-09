@@ -237,13 +237,8 @@ namespace AntDesign
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
             UseDefaultPickerValue[0] = false;
-            bool result = BindConverter.TryConvertTo<TValue>(
-               value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
-            if (result)
-            {
-                CurrentValue = dateTime;
-            }
+            CurrentValue = THelper.ChangeType<TValue>(value);
 
             _pickerStatus[0]._hadSelectValue = true;
 
