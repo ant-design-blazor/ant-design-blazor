@@ -1,12 +1,12 @@
 @using AntDesign.Docs.Demos.Components.TreeSelect.Demo 
 
 
-<TreeSelect TItem="WebMenu" TItemValue="string" @bind-Value="selectMenuId"
-            DataSource="@(LocalJsonData.GetMenusByParentId("0"))"
-            TitleExpression="m => m.DataItem.MenuName" 
-            KeyExpression="m => m.DataItem.MenuId"
-            ChildrenExpression="m => LocalJsonData.GetMenusByParentId(m.DataItem.MenuId)" 
-            IsLeafExpression="m => LocalJsonData.HasChild(m.DataItem.MenuId)" 
+<TreeSelect TItem="WebMenu"  @bind-Value="selectMenuId"
+            DataSource="@(LocalJsonData.Data)"
+            TitleExpression="m => m.MenuName" 
+            KeyExpression="m => m.MenuId"
+            ChildrenExpression="menuId => LocalJsonData.GetMenusByParentId(menuId)" 
+            IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)" 
             Placeholder="Please select"
             TreeDefaultExpandAll
             >

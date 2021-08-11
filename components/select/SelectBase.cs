@@ -56,7 +56,7 @@ namespace AntDesign
         protected SelectContent<TItemValue, TItem> _selectContent;
 
         [Parameter]
-        public IEnumerable<TItemValue> Values
+        public virtual IEnumerable<TItemValue> Values
         {
             get => _selectedValues;
             set

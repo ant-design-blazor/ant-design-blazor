@@ -1,0 +1,25 @@
+@using AntDesign.Docs.Demos.Components.TreeSelect.Demo
+
+
+<TreeSelect TItem="WebMenu"  @bind-Value="selectMenuId"
+            DataSource="@(LocalJsonData.Data)"
+            TitleExpression="m => m.MenuName"
+            KeyExpression="m => m.MenuId"
+            DataItemExpression="(menus, menuId) => menus.FirstOrDefault(m => m.MenuId == menuId)"
+            ChildrenExpression="menuId => LocalJsonData.GetMenusByParentId(menuId)"
+            IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)"
+            Placeholder="Please select"
+            TreeDefaultExpandAll>
+</TreeSelect>
+
+
+select MenuId:<Input Placeholder="current Select MenuId" @bind-Value="@selectMenuId" /><Button OnClick="ChangeMenuId" OnClickStopPropagation="true">Update</Button>
+
+@code{
+    private string selectMenuId = "3";
+
+    private void ChangeMenuId()
+    {
+        selectMenuId = "5";
+    }
+}

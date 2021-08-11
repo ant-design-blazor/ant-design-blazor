@@ -7,7 +7,7 @@ title:
 
 ## zh-CN
 
-最简单的用法，展示多选功能。
+最简单的用法，展示多选功能。其中RootValue用于筛选DataSources中第一级的节点。
 
 ## en-US
 

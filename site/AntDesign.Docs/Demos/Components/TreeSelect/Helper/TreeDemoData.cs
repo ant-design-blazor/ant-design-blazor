@@ -43,6 +43,8 @@ namespace AntDesign.Docs.Demos.Components.TreeSelect.Demo
             };
         }
 
+        public static IList<WebMenu> Data => _data;
+
 
         public static IList<WebMenu> GetMenusByParentId(string parentId)
         {

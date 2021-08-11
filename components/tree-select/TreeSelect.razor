@@ -1,6 +1,5 @@
 ﻿@namespace AntDesign
-@inherits SelectBase<TItemValue, TItem>
-@typeparam TItemValue
+@inherits SelectBase<string, TItem>
 @typeparam TItem
 
 @using AntDesign.Internal
@@ -25,12 +24,12 @@
                         <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
                             <div>
                                 <div class="" role="listbox" style="display: flex; flex-direction: column;">
-                                    <Tree DataSource="DataSource" TItem="TItem" TitleExpression="TitleExpression" 
+                                    <Tree DataSource="RootData" TItem="TItem" TitleExpression="TreeNodeTitleExpression" 
                                           BlockNode @ref="_tree" Multiple="Multiple" 
                                           SelectedKeys="SelectedKeys" DefaultExpandAll="TreeDefaultExpandAll"
-                                          KeyExpression="KeyExpression" ChildrenExpression="ChildrenExpression"
-                                          IsLeafExpression="IsLeafExpression" OnClick="OnTreeNodeClick" OnUnSelect="OnTreeNodeUnSelect">
-                                    </Tree>
+                                          KeyExpression="TreeNodeKeyExpression" ChildrenExpression="TreeNodeChildrenExpression"
+                                          DisabledExpression="TreeNodeDisabledExpression"
+                                          IsLeafExpression="TreeNodeIsLeafExpression" OnClick="OnTreeNodeClick" OnUnSelect="OnTreeNodeUnSelect">                                   </Tree>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +42,7 @@
                                 <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
                                     <SelectContent Prefix="ant-select"
                                                    RefBack="@context"
-                                                   TItemValue="TItemValue"
+                                                   TItemValue="string"
                                                    TItem="TItem"
                                                    SearchValue="@_searchValue"
                                                    IsOverlayShow="@_dropDown.IsOverlayShow()"
