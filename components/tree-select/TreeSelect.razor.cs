@@ -171,6 +171,8 @@ namespace AntDesign
         private readonly bool _focused;
         private string _inputValue = "";
 
+        private IEnumerable<string> _beforeSelectValues;
+
 
         /// <summary>
         ///  'top' | 'center' | 'bottom'
@@ -397,8 +399,16 @@ namespace AntDesign
             _dropdownStyle = minWidth + definedWidth + maxWidth;
             if (Multiple)
             {
-                _tree.DeselectAll();
+                if (_selectedValues == null)
+                    return;
+                if (_beforeSelectValues == null)
+                    _beforeSelectValues = _selectedValues;
+                if (!_beforeSelectValues.SequenceEqual(_selectedValues))
+                {
+                    _beforeSelectValues.Where(v => !_selectedValues.Contains(v)).ForEach(v => _tree.FindFirstOrDefaultNode(node => node.Key == v)?.SetSelected(false));
+                }
                 _selectedValues?.ForEach(v => _tree.FindFirstOrDefaultNode(node => node.Key == v)?.SetSelected(true));
+                _beforeSelectValues = _selectedValues;
             }
             else
             {
