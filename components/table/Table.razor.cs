@@ -186,11 +186,6 @@ namespace AntDesign
             _summaryRows.Add(summaryRow);
         }
 
-        void ITable.WaitForReloadAndInvokeChange()
-        {
-            _waitingReloadAndInvokeChange = true;
-        }
-
         public void ReloadData()
         {
             PageIndex = 1;
