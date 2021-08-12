@@ -395,6 +395,15 @@ namespace AntDesign
             if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
                 maxWidth = $"max-width: {DropdownMaxWidth};";
             _dropdownStyle = minWidth + definedWidth + maxWidth;
+            if (Multiple)
+            {
+                _tree.DeselectAll();
+                _selectedValues?.ForEach(v => _tree.FindFirstOrDefaultNode(node => node.Key == v)?.SetSelected(true));
+            }
+            else
+            {
+                _tree.FindFirstOrDefaultNode(node => node.Key == Value, true)?.SetSelected(true);
+            }
         }
 
 
