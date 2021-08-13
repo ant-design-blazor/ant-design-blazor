@@ -54,7 +54,5 @@ namespace AntDesign
         internal bool RowExpandable(RowData rowData);
 
         internal void AddSummaryRow(SummaryRow summaryRow);
-
-        internal void WaitForReloadAndInvokeChange();
     }
 }
