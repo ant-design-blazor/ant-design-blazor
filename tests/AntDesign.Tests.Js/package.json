@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "name": "antblazor.js-ts.tests",
+  "private": true,
+  "scripts": {
+    "test-ts": "mocha -r ts-node/register -r ./tests/mochaConfig.js 'tests/**/*.ts'",
+    "pretest-cov": "tsc -p . ",
+    "test-cov": "nyc mocha -r ts-node/register -r source-map-support/register -r ./tests/mochaConfig.js --recursive 'tests/**/*.ts'",
+    "posttest-cov": "nyc report --reporter=cobertura"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.3.2",
+    "chai": "^4.3.4",
+    "codecov": "^3.8.3",
+    "jsdom": "^11.12.0",
+    "mocha": "8.3.0",
+    "mocha-jsdom": "^2.0.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "cwd": "../../",
+    "exclude": [
+      "**/*.test.ts",
+      "**/*.js"
+    ]
+  }
+}
