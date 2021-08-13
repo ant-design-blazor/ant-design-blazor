@@ -1,12 +1,12 @@
 ﻿<Layout>
     <Sider Breakpoint="@BreakpointType.Lg"
-           CollapsedWidth="0"
-           OnBreakpoint="broken => {
-            Console.WriteLine(broken);
-        }"
-           OnCollapse="collapsed => {
-            Console.WriteLine(collapsed);
-        }">
+           CollapsedWidth="64"
+           OnBreakpoint="@(broken => {
+            Console.WriteLine($"OnBreakpoint:{broken}");
+        })"
+           OnCollapse="@(collapsed => {
+            Console.WriteLine($"collapsed:{collapsed}");
+        })">
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
             <MenuItem Key="1">

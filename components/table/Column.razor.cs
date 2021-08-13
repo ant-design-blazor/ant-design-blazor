@@ -194,6 +194,8 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
+
+                Table?.ReloadAndInvokeChange();
             }
             else if (IsBody)
             {
@@ -338,15 +340,6 @@ namespace AntDesign
             SortModel?.SetSortDirection(sortDirection);
         }
 
-        private void ToggleTreeNode()
-        {
-            bool expandValueBeforeChange = RowData.Expanded;
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData.CacheKey);
-            if (RowData.Expanded != expandValueBeforeChange)
-                Table?.Refresh();
-        }
-
         private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
         {
             filter.FilterCompareOperator = compareOperator;
@@ -423,11 +416,22 @@ namespace AntDesign
 
         private TableFilter GetNewFilter()
         {
-            return new TableFilter()
+            if (_columnFilterType == TableFilterType.FieldType)
             {
-                FilterCondition = TableFilterCondition.And,
-                FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
-            };
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.And,
+                    FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
+                };
+            }
+            else
+            {
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.Or,
+                    FilterCompareOperator = TableFilterCompareOperator.Equals
+                };
+            }
         }
 
         private void InitFilters()
