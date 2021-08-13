@@ -171,10 +171,20 @@ namespace AntDesign
             var key = e.Key.ToUpperInvariant();
             if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
-                _duringManualInput = false;
+                if (_duringManualInput)
+                {
+                    //A scenario when there are a lot of controls; 
+                    //It may happen that incorrect values were entered into one of the input
+                    //followed by ENTER key. This event may be fired before input manages
+                    //to get the value. Here we ensure that input will get that value.
+                    await Task.Delay(5);
+                    _duringManualInput = false;
+                }
                 var input = (index == 0 ? _inputStart : _inputEnd);
                 if (string.IsNullOrWhiteSpace(input.Value))
+                {
                     ClearValue(index, false);
+                }
                 else if (!await TryApplyInputValue(index, input.Value))
                     return;
 
@@ -275,7 +285,6 @@ namespace AntDesign
             }
             return true;
         }
-
 
         private async Task OnFocus(int index)
         {
@@ -517,7 +526,6 @@ namespace AntDesign
             }
         }
 
-
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             result = default;
@@ -559,6 +567,7 @@ namespace AntDesign
         {
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
+            _duringFocus = false;
         }
     }
 }

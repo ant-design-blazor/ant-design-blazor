@@ -241,7 +241,7 @@ namespace AntDesign
         {
             validationErrorMessage = null;
 
-            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))           
+            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
             {
                 result = Value;
                 return true;
@@ -400,12 +400,11 @@ namespace AntDesign
         private async Task OnBlurAsync()
         {
             _focused = false;
-            if (_inputString == null)
+            if (_inputString != null)
             {
-                await ChangeValueAsync(Value);
-                return;
+                await ConvertNumberAsync(_inputString);
+                _inputString = null;
             }
-            _inputString = null;
         }
 
         private async Task ConvertNumberAsync(string inputString)

@@ -36,11 +36,13 @@ jobs:
 
       - name: Test 📝
         run: |
-          dotnet test --collect:"XPlat Code Coverage"
-          find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage"
+          npm install ./tests/AntDesign.Tests.Js
+          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
+          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
 
       - name: Upload coverage to Codecov 
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
-          files: ./coverage.cobertura.xml
+          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
           fail_ci_if_error: false

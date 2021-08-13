@@ -1,0 +1,16 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "es2015",
+    "noEmit": true
+  },
+  "filesGlob": [
+    "../../components/core/**/*.ts" //generated source if noEmit = false
+  ]
+}
