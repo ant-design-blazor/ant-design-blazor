@@ -401,7 +401,7 @@ namespace AntDesign
             }
             else
             {
-                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current); ;
+                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
                 //Element element;
                 //if (_divRef.Id != null)
                 //{
