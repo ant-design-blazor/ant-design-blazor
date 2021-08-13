@@ -336,7 +336,7 @@ namespace AntDesign
 
             foreach (var item in _tree.SelectedNodesDictionary.Select(x => x.Value).ToList())
             {
-                if (item.Key == selectOption.Value.ToString())
+                if (item.Key == selectOption.Value)
                     item.SetSelected(false);
             }
         }
@@ -369,10 +369,11 @@ namespace AntDesign
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
             var key = args.Node.Key;
-            SelectOptionItems.Where(o => o.Value.ToString() == key).ForEach(o =>
+            var nodes = SelectOptionItems.Where(o => o.Value == key).ToArray();
+            foreach (var item in nodes)
             {
-                _ = SetValueAsync(o);
-            });
+                _ = SetValueAsync(item);
+            }
         }
 
         protected void OnSelectedChange(string[] args)
