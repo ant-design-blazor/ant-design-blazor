@@ -314,7 +314,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     @<Template>
         @if (_columnDataType == typeof(DateTime))
         {
-            <DatePicker Value="(DateTime?)filter.Value" Format="@Format" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value)" PopupContainerSelector="@("#popup-container-for-" + Id)"></DatePicker>
+            <DatePicker Value="(DateTime?)filter.Value" ShowTime="@true" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value?.AddMilliseconds(-value.Value.Millisecond))" PopupContainerSelector="@("#popup-container-for-" + Id)"></DatePicker>
         }
         else if (_columnDataType.IsEnum)
         {
