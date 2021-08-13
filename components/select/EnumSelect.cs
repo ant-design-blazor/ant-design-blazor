@@ -8,7 +8,7 @@ namespace AntDesign
     {
         public EnumSelect()
         {
-            if (typeof(TEnum).IsEnum)
+            if (THelper.GetUnderlyingType<TEnum>().IsEnum)
             {
                 DataSource = EnumHelper<TEnum>.GetValueList();
             }

@@ -20,6 +20,7 @@ namespace AntDesign.Select.Internal
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
+
         [Parameter]
         public string Prefix
         {
@@ -33,6 +34,19 @@ namespace AntDesign.Select.Internal
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
         [Parameter] public bool ShowPlaceholder { get; set; }
+        [Parameter]
+        public int MaxTagCount
+        {
+            get { return _maxTagCount; }
+            set 
+            { 
+                if (_maxTagCount != value)
+                {
+                    _maxTagCount = value;
+                    _calculatedMaxCount = _maxTagCount;
+                }
+            }
+        }
         [Parameter] public EventCallback<ChangeEventArgs> OnInput { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
@@ -361,6 +375,7 @@ namespace AntDesign.Select.Internal
         /// Indicates that a page is being refreshed 
         /// </summary>
         private bool _isReloading;
+        private int _maxTagCount;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 

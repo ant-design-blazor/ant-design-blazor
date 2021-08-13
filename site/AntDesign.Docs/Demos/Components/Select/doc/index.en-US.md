@@ -22,12 +22,15 @@ Select component to select value from options.
 | AllowClear | Show clear button. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | Bordered | Toggle the border style. | bool | true |  |
+| CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
 | DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
-| DefaultValue | `default` - The value is used during initialization and when pressing the Rest button within Forms. | TItemValue | - |  |
-| DefaultValues | `multiple` \| `tags` -  The values are used during initialization and when pressing the Rest button within Forms. | IEnumerable&lt;TItemValues> | - |  |
-| Disabled | Whether disabled select. | bool | false |  |
+| DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
+| DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
+| Disabled | Whether the Select component is disabled. | bool | false |  |
 | DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
+| DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
+| DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
@@ -37,16 +40,17 @@ Select component to select value from options.
 | LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
-| Loading | Show loading indicator. You have to write the loading logic by your own. | bool | false |  |
+| Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
 | MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
-| MaxTagPlaceholder | Placeholder for not showing tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
+| MaxTagPlaceholder | Placeholder for hidden tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | Max tag text length (number of characters) to show. | int | - |  |
 | Mode | Set mode of Select - `default` \| `multiple` \| `tags` | string | default |  |
 | NotFoundContent | Specify content to show when no result matches. | RenderFragment | `Not Found` |  |
 | OnBlur | Called when blur. | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
+| OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
 | OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
-| OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action&lt;bool> | - |  |
+| OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action | - |  |
 | OnFocus | Called when focus. | Action | - |  |
 | OnMouseEnter | Called when mouse enter. | Action | - |  |
 | OnMouseLeave | Called when mouse leave. | Action | - |  |
@@ -57,9 +61,8 @@ Select component to select value from options.
 | Placeholder | Placeholder of select. | string | - |  |
 | PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
 | PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
-| PopupContainerGrowToMatchWidestItem | Will allow the popup container to grow to match widest item. | bool | false |  |
-| PopupContainerMaxWidth  | The maximum width of the popup container. | string | `auto` |  |
 | PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
+| SelectOptions | Used for rendering select options manually. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
 | ShowSearchIcon | Whether show search input in single mode. | bool | true |  |
 | Size | The size of the component. `small` \| `default` \| `large` | string | default |  |
@@ -67,7 +70,18 @@ Select component to select value from options.
 | SortByLabel | Sort items by label value. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
 | Style | Set CSS style. | string | `width: 100%` |  |
 | SuffixIcon | The custom suffix icon. | RenderFragment | - |  |
+| TokenSeparators | Define what characters will be treated as token separators for newly created tags. Useful when creating new tags using only keyboard. | char[] | - |  |
 | Value | Get or set the selected value. | TItemValue | - |  |
 | Values | Get or set the selected values. | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
 | ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
+| ValueName | The name of the property to be used for the value. | string | - |  |
+
+### SelectOption props
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| Class | The additional class to option                  | string          | -      |      |
+| Disabled  | Disable this option                                 | Boolean        | false  |      |
+| Label     | Label of Select after selecting this Option | string         | -      |      |
+| Value     | Value of Select after selecting this Option | TItemValue          | -      |      |

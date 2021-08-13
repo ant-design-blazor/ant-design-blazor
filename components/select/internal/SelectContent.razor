@@ -154,7 +154,7 @@ else //ParentSelect.SelectMode != SelectMode.Default
                     }
                     @if (selectedItems.Count > ParentSelect.MaxTagCount.AsT0)
                     {
-                        <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" style="opacity: 1;">
+                        <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" style="opacity: 1; order: @(selectedItems.Count-1);">
                         @if (ParentMaxTagPlaceholerTemplate != null)
                         {
                             <CascadingValue Value="this" Name="SelectContent">
@@ -245,7 +245,7 @@ else //ParentSelect.SelectMode != SelectMode.Default
                     }                    
                 }
             }
-            <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:1)">
+            <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:ParentSelect.SelectedOptionItems.Count)">
                 <div class="@Prefix-selection-search" style="@_inputWidth">
                     <input @ref="ParentSelect._inputRef"
                             @oninput="OnInput"

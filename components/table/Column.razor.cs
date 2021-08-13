@@ -192,6 +192,8 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
+
+                Table?.WaitForReloadAndInvokeChange();
             }
             else if (IsBody)
             {
@@ -412,11 +414,22 @@ namespace AntDesign
 
         private TableFilter GetNewFilter()
         {
-            return new TableFilter()
+            if (_columnFilterType == TableFilterType.FieldType)
             {
-                FilterCondition = TableFilterCondition.And,
-                FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
-            };
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.And,
+                    FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
+                };
+            }
+            else
+            {
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.Or,
+                    FilterCompareOperator = TableFilterCompareOperator.Equals
+                };
+            }
         }
 
         private void InitFilters()

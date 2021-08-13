@@ -18,7 +18,7 @@
             <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panels">
-                    <div class="@_panelClassMapper.Class">
+                    <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == 1 ? "display: none;": "")">
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                     <div class="@_panelClassMapper.Class">
