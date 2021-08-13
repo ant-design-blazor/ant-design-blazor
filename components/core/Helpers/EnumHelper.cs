@@ -17,10 +17,13 @@ namespace AntDesign
 
         private static IEnumerable<T> _valueList;
 
+        private static Type _enumType;
+
         static EnumHelper()
         {
+            _enumType = THelper.GetUnderlyingType<T>();
             _aggregateFunction = BuildAggregateFunction();
-            _valueList = Enum.GetValues(typeof(T)).Cast<T>();
+            _valueList = Enum.GetValues(_enumType).Cast<T>();
         }
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
@@ -36,6 +39,11 @@ namespace AntDesign
             }
         }
 
+        public static IEnumerable<T> Split(object enumValue)
+        {
+            return enumValue?.ToString().Split(',').Select(x => (T)Enum.Parse(_enumType, x)) ?? Array.Empty<T>();
+        }
+
         public static IEnumerable<T> GetValueList()
         {
             return _valueList;
@@ -43,17 +51,15 @@ namespace AntDesign
 
         public static string GetDisplayName(T t)
         {
-            var fieldInfo = typeof(T).GetField(t.ToString());
+            var fieldInfo = _enumType.GetField(t.ToString());
             return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
                  fieldInfo.Name;
-
         }
 
         private static Func<T, T, T> BuildAggregateFunction()
         {
             var type = typeof(T);
-            var enumType = THelper.GetUnderlyingType<T>();
-            var underlyingType = Enum.GetUnderlyingType(enumType);
+            var underlyingType = Enum.GetUnderlyingType(_enumType);
             var param1 = Expression.Parameter(type);
             var param2 = Expression.Parameter(type);
             var body = Expression.Convert(

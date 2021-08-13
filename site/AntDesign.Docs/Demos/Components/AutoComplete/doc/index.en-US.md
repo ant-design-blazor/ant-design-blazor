@@ -16,7 +16,7 @@ When there is a need for autocomplete functionality.
 ### AutoComplete
 
 | Property | Description | Type | Default |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | Backfill | backfill selected item the input when using keyboard | bool | false |
 | Options | Data source for autocomplete | AutocompleteDataSource | - |
 | Disabled | Set disabled | bool | - |

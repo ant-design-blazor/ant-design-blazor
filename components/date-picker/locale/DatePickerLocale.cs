@@ -30,12 +30,12 @@ namespace AntDesign
         public string Clear { get; set; } = "Clear";
         public string Month { get; set; } = "Month";
         public string Year { get; set; } = "Year";
-        public string TimeSelect { get; set; } = "select time";
-        public string DateSelect { get; set; } = "select date";
-        public string WeekSelect { get; set; } = "Choose a week";
-        public string MonthSelect { get; set; } = "Choose a month";
-        public string YearSelect { get; set; } = "Choose a year";
-        public string DecadeSelect { get; set; } = "Choose a decade";
+        public string TimeSelect { get; set; } = "Select time";
+        public string DateSelect { get; set; } = "Select date";
+        public string WeekSelect { get; set; } = "Select week";
+        public string MonthSelect { get; set; } = "Select month";
+        public string YearSelect { get; set; } = "Select year";
+        public string DecadeSelect { get; set; } = "Select decade";
         public string MonthFormat { get; set; } = "MMM";
         public string YearMonthFormat { get; set; } = "yyyy-MM";
         public string DateFormat { get; set; } = "yyyy-MM-dd";
@@ -61,7 +61,7 @@ namespace AntDesign
         public string EndWeek { get; set; } = "End week";
         public string EndMonth { get; set; } = "End month";
         public string EndYear { get; set; } = "End year";
-        public string EndQuarter { get; set; } = "End Quarter";
+        public string EndQuarter { get; set; } = "End quarter";
         public string QuarterSelect { get; set; } = "Select quarter";
         public string Week { get; set; } = "Week";
         public string[] ShortWeekDays { get; set; } = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };

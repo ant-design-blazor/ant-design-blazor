@@ -3,7 +3,7 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = CultureInfo.Calendar;
+	var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -12,7 +12,6 @@
     if (monthFirstDayOfWeek == 0)
     {
         monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
-        Console.WriteLine($"{DateTime.Now} DatePickerDatePanel.razor monthFirstDayOfWeek: {monthFirstDayOfWeek}");
     }
 
     int diffDay = (int)Locale.FirstDayOfWeek - monthFirstDayOfWeek;
@@ -33,7 +32,7 @@
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
-                            @attributes="GetAttritubes()"
+                            @attributes="GetAttributes()"
                             MaxRow="6"
                             MaxCol="7"
                             ViewStartDate="startDate"
@@ -47,7 +46,7 @@
                             SkipDays="skipDays">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
-                                  @attributes="GetAttritubes()" />
+                                  @attributes="GetAttributes()" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
@@ -176,15 +175,18 @@
 
 <div class="@(PrefixCls)-footer">
     <ul class="@(PrefixCls)-ranges">
-        <li class="@(PrefixCls)-now">
-            <a class="@(PrefixCls)-now-btn"
-               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                @Locale.Lang.Now
-            </a>
-        </li>
+        @if (ShowToday)
+        {
+            <li class="@(PrefixCls)-now">
+                <a class="@(PrefixCls)-now-btn"
+                @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+                    @Locale.Lang.Now
+                </a>
+            </li>            
+        }
         <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
-                       OnClick="e => DatePicker.Close()">
+                       OnClick="OnOkClick">
                 @Locale.Lang.Ok
             </Button>
         </li>

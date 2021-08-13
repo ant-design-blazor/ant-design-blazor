@@ -15,7 +15,44 @@ timeline: true
 
 ---
 
+### 0.9.1
+
+2021-08-11
+
+- Table
+  - 🐞 Allow to set time in the filter. [#1827](https://github.com/ant-design-blazor/ant-design-blazor/pull/1827) [@anranruye](https://github.com/anranruye)
+  - 🐞 Use "or" filter condition for List type built-in filter. [#1804](https://github.com/ant-design-blazor/ant-design-blazor/pull/1804) [@anranruye](https://github.com/anranruye)
+  - 🐞 Fixed missing sorter model on first change. [#1823](https://github.com/ant-design-blazor/ant-design-blazor/pull/1823) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the issue that tables inside a table column throw an exception. [#1732](https://github.com/ant-design-blazor/ant-design-blazor/pull/1732) [@anranruye](https://github.com/anranruye)
+
+- DatePicker
+  - 🐞 Remain millisecond value when change the picker value. [#1829](https://github.com/ant-design-blazor/ant-design-blazor/pull/1829) [@anranruye](https://github.com/anranruye)
+  - 🐞 DatePicker: fix ShowToday behaviour when ShowTime set to true. [#1819](https://github.com/ant-design-blazor/ant-design-blazor/pull/1819) [@lukblazewicz](https://github.com/lukblazewicz)
+  - 🐞 Fixed: ShowTime issues addressed. [#1788](https://github.com/ant-design-blazor/ant-design-blazor/pull/1788) [@anddrzejb](https://github.com/anddrzejb)
+
+- Overlay
+  - 🐞 Use right positioning for bottom-right and top-right placement. [#1799](https://github.com/ant-design-blazor/ant-design-blazor/pull/1799) [@anranruye](https://github.com/anranruye)
+  - 🐞 Fixed overlay location when container element has border. [#1797](https://github.com/ant-design-blazor/ant-design-blazor/pull/1797) [@anranruye](https://github.com/anranruye)
+
+- Select
+  - 🐞 Fixed MaxTagCount behaves properly for non-responsive scenarios. [#1776](https://github.com/ant-design-blazor/ant-design-blazor/pull/1776) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 Accept `null` as select option value. [#1786](https://github.com/ant-design-blazor/ant-design-blazor/pull/1786) [@anranruye](https://github.com/anranruye)
+  - 🆕 Make EnumSelect support null option value [#1777](https://github.com/ant-design-blazor/ant-design-blazor/pull/1777) [@anranruye](https://github.com/anranruye)
+  - 🐞 Remove ValueName null check for non-datasource approach. [#1785](https://github.com/ant-design-blazor/ant-design-blazor/pull/1785) [@anranruye](https://github.com/anranruye)
+
+- Tree
+  - 🐞 Bring `SearchExpression` back. [#1796](https://github.com/ant-design-blazor/ant-design-blazor/pull/1796) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix parent checkbox state calculation in a Tree. [#1781](https://github.com/ant-design-blazor/ant-design-blazor/pull/1781) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- 🐞 Fixed AutoComplete: turn off the input autocomplete attribute. [#1825](https://github.com/ant-design-blazor/ant-design-blazor/pull/1825) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu: OnBreakpoint and OnCollapse only when they was changed. [#1815](https://github.com/ant-design-blazor/ant-design-blazor/pull/1815) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Calendar: the width of select component in the header. [#1801](https://github.com/ant-design-blazor/ant-design-blazor/pull/1801) [@anranruye](https://github.com/anranruye)
+- 🐞 Fixed InputNumber: OnChange cannot be triggered during keyboard input. [#1830](https://github.com/ant-design-blazor/ant-design-blazor/pull/1830) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal: error when confirm TaskCompletionSource SetResult repeat. [#1795](https://github.com/ant-design-blazor/ant-design-blazor/pull/1795) [@zxyao145](https://github.com/zxyao145)
+
 ### 0.9.0
+
+2021-07-27
 
 🎉 As of this release, the project has welcomed a total of 101 contributors who have made this project possible! We'd like to thank them for their generous contributions!
 

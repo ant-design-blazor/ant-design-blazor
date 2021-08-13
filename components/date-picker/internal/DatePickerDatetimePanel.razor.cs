@@ -10,9 +10,6 @@ namespace AntDesign.Internal
         public bool ShowToday { get; set; } = false;
 
         [Parameter]
-        public bool IsShowTime { get; set; } = false;
-
-        [Parameter]
         public string ShowTimeFormat { get; set; }
 
         [Parameter]
@@ -29,6 +26,9 @@ namespace AntDesign.Internal
 
         [Parameter]
         public Func<DateTime, DatePickerDisabledTime> DisabledTime { get; set; } = null;
+
+        [Parameter]
+        public EventCallback OnOkClick { get; set; }
 
         private DatePickerDisabledTime GetDisabledTime()
         {
