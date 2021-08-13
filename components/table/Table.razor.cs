@@ -42,7 +42,7 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
-        
+
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -186,18 +186,13 @@ namespace AntDesign
             _summaryRows.Add(summaryRow);
         }
 
-        void ITable.WaitForReloadAndInvokeChange()
-        {
-            _waitingReloadAndInvokeChange = true;
-        }
-
         public void ReloadData()
         {
             PageIndex = 1;
 
             FlushCache();
 
-            this.Reload();
+            this.InternalReload();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -251,14 +246,14 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
-            var queryModel = this.Reload();
+            var queryModel = this.InternalReload();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
             }
         }
 
-        private QueryModel<TItem> Reload()
+        private QueryModel<TItem> InternalReload()
         {
             var queryModel = BuildQueryModel();
 
@@ -309,8 +304,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-            _waitingReload = false;
-            StateHasChanged();
 
             return queryModel;
         }
@@ -367,6 +360,8 @@ namespace AntDesign
             {
                 this.FinishLoadPage();
             }
+
+            _shouldRender = false;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -405,7 +400,7 @@ namespace AntDesign
             else if (_waitingReload)
             {
                 _waitingReload = false;
-                Reload();
+                InternalReload();
             }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)

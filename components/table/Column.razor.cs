@@ -195,7 +195,7 @@ namespace AntDesign
                     SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
 
-                Table?.WaitForReloadAndInvokeChange();
+                Table?.ReloadAndInvokeChange();
             }
             else if (IsBody)
             {
@@ -338,15 +338,6 @@ namespace AntDesign
         {
             _sortDirection = sortDirection;
             SortModel?.SetSortDirection(sortDirection);
-        }
-
-        private void ToggleTreeNode()
-        {
-            bool expandValueBeforeChange = RowData.Expanded;
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData.CacheKey);
-            if (RowData.Expanded != expandValueBeforeChange)
-                Table?.Refresh();
         }
 
         private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
