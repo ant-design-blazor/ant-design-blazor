@@ -217,7 +217,15 @@ namespace AntDesign.Internal
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 
-            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
+            {
+                var right = ChangeOverlayLeftToRight(left, overlayElement, containerElement);
+                _overlayStyle = $"z-index:{zIndex};left: unset;right: {right}px;top: {top}px;{GetTransformOrigin()}";
+            }
+            else
+            {
+                _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            }
 
             _overlayCls = Trigger.GetOverlayEnterClass();
 
@@ -379,6 +387,7 @@ namespace AntDesign.Internal
             {
                 top = triggerTop - overlay.ClientHeight - VerticalOffset;
             }
+            top -= containerElement.ClientTop;
 
             return top;
         }
@@ -432,6 +441,7 @@ namespace AntDesign.Internal
                     left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
                 }
             }
+            left -= containerElement.ClientLeft;
 
             return left;
         }
@@ -647,9 +657,22 @@ namespace AntDesign.Internal
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 
-            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
+            {
+                var right = ChangeOverlayLeftToRight(left, overlayElement, containerElement);
+                _overlayStyle = $"z-index:{zIndex};left: unset;right: {right}px;top: {top}px;{GetTransformOrigin()}";
+            }
+            else
+            {
+                _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            }
 
             StateHasChanged();
+        }
+
+        private int ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
+        {
+            return container.ClientWidth - left - overlay.OffsetWidth;
         }
     }
 }

@@ -15,7 +15,44 @@ timeline: true
 
 ---
 
+### 0.9.1
+
+2021-08-11
+
+- Table
+  - 🐞 内置日期筛选器可以设置时间了。[#1827](https://github.com/ant-design-blazor/ant-design-blazor/pull/1827) [@anranruye](https://github.com/anranruye)
+  - 🐞 内置 列表类型筛选器改为 OR 操作[#1804](https://github.com/ant-design-blazor/ant-design-blazor/pull/1804) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 首次触发OnChange时没有传入默认排序的问题。[#1823](https://github.com/ant-design-blazor/ant-design-blazor/pull/1823) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 把另一个Table放到一个Table的Column中是引发的异常。[#1732](https://github.com/ant-design-blazor/ant-design-blazor/pull/1732) [@anranruye](https://github.com/anranruye)
+
+- DatePicker
+  - 🐞 修复 在选择改变时，毫秒丢失的问题[#1829](https://github.com/ant-design-blazor/ant-design-blazor/pull/1829) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 ShowTime 为 True时，ShowToday 设置false无效的问题。[#1819](https://github.com/ant-design-blazor/ant-design-blazor/pull/1819) [@lukblazewicz](https://github.com/lukblazewicz)
+  - 🐞 修复 RangePicker的一些问题[#1788](https://github.com/ant-design-blazor/ant-design-blazor/pull/1788) [@anddrzejb](https://github.com/anddrzejb)
+
+- Overlay
+  - 🐞 修复 定位，使 BottomRight 和 TopRight 方向使总是向右对齐。[#1799](https://github.com/ant-design-blazor/ant-design-blazor/pull/1799) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 在容器元素中的定位[#1797](https://github.com/ant-design-blazor/ant-design-blazor/pull/1797) [@anranruye](https://github.com/anranruye)
+
+- Select
+  - 🆕 使 EnumSelect 支持 null 选项[#1777](https://github.com/ant-design-blazor/ant-design-blazor/pull/1777) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 MaxTagCount 与响应式的问题。[#1776](https://github.com/ant-design-blazor/ant-design-blazor/pull/1776) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 允许把 `null` 作为选项值。[#1786](https://github.com/ant-design-blazor/ant-design-blazor/pull/1786) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 非 DataSource 方式时对 ValueName 的 null 检查。[#1785](https://github.com/ant-design-blazor/ant-design-blazor/pull/1785) [@anranruye](https://github.com/anranruye)
+
+- Tree
+  - 🐞 加回 `SearchExpression`  属性。[#1796](https://github.com/ant-design-blazor/ant-design-blazor/pull/1796) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 父节点勾选状态的问题[#1781](https://github.com/ant-design-blazor/ant-design-blazor/pull/1781) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- 🐞 修复 InputNumber 使用键盘输入时不触发 `OnChange` 的问题。[#1830](https://github.com/ant-design-blazor/ant-design-blazor/pull/1830) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Confirm 在重复点击引起异常的问题。[#1795](https://github.com/ant-design-blazor/ant-design-blazor/pull/1795) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 AutoComplete 浏览器自动填充的问题[#1825](https://github.com/ant-design-blazor/ant-design-blazor/pull/1825) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 避免重复多次触发 OnBreakpoint  和  OnCollapse。[#1815](https://github.com/ant-design-blazor/ant-design-blazor/pull/1815) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Calendar 头部选择器的宽度[#1801](https://github.com/ant-design-blazor/ant-design-blazor/pull/1801) [@anranruye](https://github.com/anranruye)
+
 ### 0.9.0
+
+2021-07-27
 
 🎉 截至这个版本，本项目一共迎来 101 位贡献者，是他们成就了这个项目！在此感谢他们慷慨的贡献！
 
