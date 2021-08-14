@@ -16,7 +16,7 @@ namespace AntDesign
         private static readonly Func<T, T, T> _aggregateFunction;
 
         private static IEnumerable<T> _valueList;
-
+        private static IEnumerable<(T Value, string Label)> _valueLabelList;
         private static Type _enumType;
 
         static EnumHelper()
@@ -24,6 +24,7 @@ namespace AntDesign
             _enumType = THelper.GetUnderlyingType<T>();
             _aggregateFunction = BuildAggregateFunction();
             _valueList = Enum.GetValues(_enumType).Cast<T>();
+            _valueLabelList = _valueList.Select(value => (value, GetDisplayName(value)));
         }
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
@@ -49,11 +50,16 @@ namespace AntDesign
             return _valueList;
         }
 
-        public static string GetDisplayName(T t)
+        public static IEnumerable<(T Value, string Label)> GetValueLabelList()
         {
-            var fieldInfo = _enumType.GetField(t.ToString());
-            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
-                 fieldInfo.Name;
+            return _valueLabelList;
+        }
+
+        public static string GetDisplayName(T enumValue)
+        {
+            var enumName = Enum.GetName(_enumType, enumValue);
+            var fieldInfo = _enumType.GetField(enumName);
+            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ?? enumName;
         }
 
         private static Func<T, T, T> BuildAggregateFunction()
