@@ -296,53 +296,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public IEnumerable<TItem> DataSource
-        {
-            get => _datasource;
-            set
-            {
-                if (value == null && _datasource == null)
-                {
-                    return;
-                }
-
-                if (value == null && _datasource != null)
-                {
-                    if (!_isInitialized)
-                    {
-                        _selectedValue = default;
-                    }
-                    else
-                    {
-                        SelectOptionItems.Clear();
-                        SelectedOptionItems.Clear();
-                        Value = default;
-
-                        _datasource = null;
-
-                        OnDataSourceChanged?.Invoke();
-                    }
-                    return;
-                }
-
-                if (value != null && !value.Any() && SelectOptionItems.Any())
-                {
-                    SelectOptionItems.Clear();
-                    SelectedOptionItems.Clear();
-
-                    Value = default;
-                    var sameObject = object.ReferenceEquals(_datasource, value);
-
-                    _datasource = value;
-
-                    if (!sameObject)
-                        OnDataSourceChanged?.Invoke();
-
-                    return;
-                }
-
-
+ 
         /// <summary>
         /// Sort items by group name. None | Ascending | Descending
         /// </summary>
@@ -357,12 +311,6 @@ namespace AntDesign
         /// The custom suffix icon.
         /// </summary>
         [Parameter] public RenderFragment SuffixIcon { get; set; }
-
-        /// <summary>
-        /// Define what characters will be treated as token separators for newly created tags.
-        /// Useful when creating new tags using only keyboard.
-        /// </summary>
-        [Parameter] public char[] TokenSeparators { get; set; }
 
         bool _valueHasChanged;
 
@@ -400,26 +348,6 @@ namespace AntDesign
         }
 
 
-
-        /// <summary>
-        /// Used for the two-way binding.
-        /// </summary>
-        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
-
-        /// <summary>
-        /// The name of the property to be used for the value.
-        /// </summary>
-        [Parameter]
-        public string ValueName
-        {
-            get => _valueName;
-            set
-            {
-                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
-                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
-                _valueName = value;
-            }
-        }
 
 
 
