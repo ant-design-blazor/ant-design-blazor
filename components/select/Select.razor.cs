@@ -24,12 +24,6 @@ namespace AntDesign
 
         [Parameter] public bool Bordered { get; set; } = true;
 
-        /// <summary>
-        /// Converts custom tag (a string) to TItemValue type.
-        /// </summary>
-        [Parameter]
-        public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
-            (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         /// <summary>
         /// The datasource for this component.
