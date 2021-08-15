@@ -105,7 +105,14 @@ namespace AntDesign
                 return;
 
             if (OnClick.HasDelegate)
+            {
                 await OnClick.InvokeAsync(args);
+            }
+
+            if (RootMenu?.OnMenuItemClicked.HasDelegate == true)
+            {
+                await RootMenu.OnMenuItemClicked.InvokeAsync(this);
+            }
 
             if (!RootMenu.Selectable)
                 return;
