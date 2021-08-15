@@ -2,7 +2,7 @@
 
 
 <TreeSelect Multiple="true" TItem="WebMenu" @bind-Values="selectMenuId"
-            DataSource="@(LocalJsonData.Data)"
+            DataSource="@(LocalJsonData.Data)" AllowClear="true"
             TitleExpression="m => m.MenuName"
             KeyExpression="m => m.MenuId"
             DataItemExpression="(menus, menuId) => menus.FirstOrDefault(m => m.MenuId == menuId)"
@@ -12,7 +12,7 @@
             TreeDefaultExpandAll>
 </TreeSelect>
 
-select MenuId: @string.Join(',', selectMenuId)
+select MenuId: @string.Join(',', selectMenuId ?? new[] { ""})
 
 <Button OnClick="ChangeMenuId" OnClickStopPropagation="true">Update</Button>
 

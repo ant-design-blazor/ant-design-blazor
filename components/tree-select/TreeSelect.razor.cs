@@ -319,9 +319,6 @@ namespace AntDesign
         {
         }
 
-        protected async Task OnInputClearClickAsync(MouseEventArgs _)
-        {
-        }
         private async Task OnOverlayVisibleChangeAsync(bool visible)
         {
             if (visible)

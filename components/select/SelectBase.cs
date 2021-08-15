@@ -39,6 +39,9 @@ namespace AntDesign
         [Parameter] public RenderFragment SuffixIcon { get; set; }
         [Parameter] public RenderFragment PrefixIcon { get; set; }
 
+
+        [Parameter] public Action OnClearSelected { get; set; }
+
         internal bool IsResponsive { get; set; }
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
@@ -54,6 +57,30 @@ namespace AntDesign
 
 
         protected SelectContent<TItemValue, TItem> _selectContent;
+
+        private SelectOptionItem<TItemValue, TItem> _activeOption;
+
+
+        /// <summary>
+        /// Currently active (highlighted) option.
+        /// It does not have to be equal to selected option.
+        /// </summary>
+        internal SelectOptionItem<TItemValue, TItem> ActiveOption
+        {
+            get { return _activeOption; }
+            set
+            {
+                if (_activeOption != value)
+                {
+                    if (_activeOption != null && _activeOption.IsActive)
+                        _activeOption.IsActive = false;
+                    _activeOption = value;
+                    if (_activeOption != null && !_activeOption.IsActive)
+                        _activeOption.IsActive = true;
+                }
+            }
+        }
+
 
         [Parameter]
         public virtual IEnumerable<TItemValue> Values
@@ -308,6 +335,8 @@ namespace AntDesign
         internal bool IsDropdownShown() => _dropDown.IsOverlayShow();
         internal bool HasTagCount { get; set; }
 
+        protected int _maxTagCountAsInt;
+
         [Parameter] public int MaxTagTextLength { get; set; }
         /// <summary>
         /// LabelInValue can only be used if the SelectOption is not created by DataSource.
@@ -324,6 +353,9 @@ namespace AntDesign
 
 
         private OneOf<int, ResponsiveTag> _maxTagCount;
+        /// <summary>
+        /// Max tag count to show. responsive will cost render performance.
+        /// </summary>
         [Parameter]
         public OneOf<int, ResponsiveTag> MaxTagCount
         {
@@ -336,6 +368,7 @@ namespace AntDesign
                 {
                     IsResponsive = false;
                     HasTagCount = intValue > 0;
+                    _maxTagCountAsInt = intValue;
                 }, enumValue =>
                 {
                     IsResponsive = enumValue == ResponsiveTag.Responsive;
@@ -558,6 +591,49 @@ namespace AntDesign
 
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
+        }
+
+
+        /// <summary>
+        /// Method is called via EventCallBack after the user clicked on the Clear icon inside the Input element.
+        /// Set the IsSelected and IsHidden properties for all items to False. It updates the overlay position if
+        /// the SelectMode is Tags or Multiple. Invoke the OnClearSelected Action. Set the Value(s) to default.
+        /// </summary>
+        protected async Task OnInputClearClickAsync(MouseEventArgs _)
+        {
+            List<SelectOptionItem<TItemValue, TItem>> tagItems = new();
+
+            SelectOptionItems.Where(c => c.IsSelected)
+                .ForEach(i =>
+                {
+                    i.IsSelected = false;
+                    i.IsHidden = false;
+                    if (i.IsAddedTag)
+                        tagItems.Add(i);
+                });
+            //When clearing, also remove all added tags that are kept after adding in SelectOptionItems
+            if (tagItems.Count > 0)
+            {
+                foreach (var item in tagItems)
+                {
+                    SelectOptionItems.Remove(item);
+                }
+            }
+            AddedTags.Clear();
+            ActiveOption = SelectOptionItems.FirstOrDefault();
+            CustomTagSelectOptionItem = null;
+            SelectedOptionItems.Clear();
+
+            await ClearSelectedAsync();
+
+            if (SelectMode != SelectMode.Default)
+            {
+                await Task.Delay(1);    // Todo - Workaround because UI does not refresh
+                await UpdateOverlayPositionAsync();
+                StateHasChanged();      // Todo - Workaround because UI does not refresh
+            }
+
+            OnClearSelected?.Invoke();
         }
 
         /// <summary>
