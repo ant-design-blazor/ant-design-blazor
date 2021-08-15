@@ -17,7 +17,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class Select<TItemValue, TItem> : SelectBase<TItemValue,TItem>
+    public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
         #region Parameters
 
@@ -207,11 +207,6 @@ namespace AntDesign
         [Parameter] public Action OnBlur { get; set; }
 
         /// <summary>
-        /// Called when the user clears the selection.
-        /// </summary>
-        [Parameter] public Action OnClearSelected { get; set; }
-
-        /// <summary>
         /// Called when custom tag is created.
         /// </summary>
 
@@ -249,15 +244,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
-        /// <summary>
-        /// The custom prefix icon.
-        /// </summary>
-        [Parameter] public RenderFragment PrefixIcon { get; set; }
-
-        /// <summary>
-        /// Used for rendering select options manually.
-        /// </summary>
-        [Parameter] public RenderFragment SelectOptions { get; set; }
 
         private bool _showArrowIconChanged;
         /// <summary>
@@ -290,21 +276,6 @@ namespace AntDesign
             }
         }
 
- 
-        /// <summary>
-        /// Sort items by group name. None | Ascending | Descending
-        /// </summary>
-        [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
-
-        /// <summary>
-        /// Sort items by label value. None | Ascending | Descending
-        /// </summary>
-        [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
-
-        /// <summary>
-        /// The custom suffix icon.
-        /// </summary>
-        [Parameter] public RenderFragment SuffixIcon { get; set; }
 
         bool _valueHasChanged;
 
@@ -377,27 +348,6 @@ namespace AntDesign
         private bool _isToken;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
         private bool _defaultActiveFirstOption;
-
-
-        /// <summary>
-        /// Currently active (highlighted) option.
-        /// It does not have to be equal to selected option.
-        /// </summary>
-        internal SelectOptionItem<TItemValue, TItem> ActiveOption
-        {
-            get { return _activeOption; }
-            set
-            {
-                if (_activeOption != value)
-                {
-                    if (_activeOption != null && _activeOption.IsActive)
-                        _activeOption.IsActive = false;
-                    _activeOption = value;
-                    if (_activeOption != null && !_activeOption.IsActive)
-                        _activeOption.IsActive = true;
-                }
-            }
-        }
 
         private string _labelName;
 
@@ -1741,47 +1691,6 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Method is called via EventCallBack after the user clicked on the Clear icon inside the Input element.
-        /// Set the IsSelected and IsHidden properties for all items to False. It updates the overlay position if
-        /// the SelectMode is Tags or Multiple. Invoke the OnClearSelected Action. Set the Value(s) to default.
-        /// </summary>
-        protected async Task OnInputClearClickAsync(MouseEventArgs _)
-        {
-            List<SelectOptionItem<TItemValue, TItem>> tagItems = new();
-
-            SelectOptionItems.Where(c => c.IsSelected)
-                .ForEach(i =>
-                {
-                    i.IsSelected = false;
-                    i.IsHidden = false;
-                    if (i.IsAddedTag)
-                        tagItems.Add(i);
-                });
-            //When clearing, also remove all added tags that are kept after adding in SelectOptionItems
-            if (tagItems.Count > 0)
-            {
-                foreach (var item in tagItems)
-                {
-                    SelectOptionItems.Remove(item);
-                }
-            }
-            AddedTags.Clear();
-            ActiveOption = SelectOptionItems.FirstOrDefault();
-            CustomTagSelectOptionItem = null;
-            SelectedOptionItems.Clear();
-
-            await ClearSelectedAsync();
-
-            if (SelectMode != SelectMode.Default)
-            {
-                await Task.Delay(1);    // Todo - Workaround because UI does not refresh
-                await UpdateOverlayPositionAsync();
-                StateHasChanged();      // Todo - Workaround because UI does not refresh
-            }
-
-            OnClearSelected?.Invoke();
-        }
 
         /// <summary>
         /// Method is called via EventCallBack if the user clicked on the Close icon of a Tag.
