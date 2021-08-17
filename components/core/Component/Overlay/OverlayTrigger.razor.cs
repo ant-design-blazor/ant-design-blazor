@@ -30,7 +30,8 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// enum for details.
         /// </summary>
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;

@@ -296,6 +296,7 @@ namespace AntDesign.Internal
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
+        private int _recurenceGuard = 0;
         private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
             if (!_hasAddOverlayToBody)
@@ -303,14 +304,14 @@ namespace AntDesign.Internal
                 await JsInvokeAsync(JSInteropConstants.AddElementTo, Ref, Trigger.PopupContainerSelector);
 
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
-
+                _recurenceGuard++;
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
                     Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, 
                     ArrowPointAtCenter, overlayTop, overlayLeft
                     );
-                if (_position is null)
+                if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
                     Console.WriteLine("Failed to add overlay to the container. Awaiting and rerunning.");
                     await Task.Delay(10);
@@ -330,6 +331,7 @@ namespace AntDesign.Internal
             {
                 await UpdatePosition(overlayLeft, overlayTop);
             }
+            _recurenceGuard = 0;
         }
 
         private string GetTransformOrigin()
