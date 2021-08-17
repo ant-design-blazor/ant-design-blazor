@@ -213,9 +213,7 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
-            //StateHasChanged();
             await InvokeAsync(StateHasChanged);
-            //DebugHelper.WriteLine(uniqueId, $"continue ");
 
             if (OnShow.HasDelegate)
                 OnShow.InvokeAsync(null);
@@ -301,7 +299,7 @@ namespace AntDesign.Internal
         {
             if (!_hasAddOverlayToBody)
             {
-                await JsInvokeAsync(JSInteropConstants.AddElementTo, Ref, Trigger.PopupContainerSelector);
+                //await JsInvokeAsync(JSInteropConstants.AddElementTo, Ref, Trigger.PopupContainerSelector);
 
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
                 _recurenceGuard++;
