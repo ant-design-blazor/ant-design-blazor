@@ -119,10 +119,15 @@ namespace AntDesign
         private string _color;
         private string _style;
 
+        protected override void OnParametersSet()
+        {
+            this._style = GetStyle();
+            base.OnParametersSet();
+        }
+
         protected override void OnInitialized()
         {
             this.UpdateClassMap();
-            this._style = GetStyle();
             base.OnInitialized();
         }
 
