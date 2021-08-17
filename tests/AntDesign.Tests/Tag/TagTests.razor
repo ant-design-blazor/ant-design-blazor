@@ -1,4 +1,4 @@
-﻿@inherits AntDesignTestBase
+@inherits AntDesignTestBase
 @code {
 	[Fact]
 	public void Renders_basic_tag()
@@ -21,7 +21,7 @@
 	public void Renders_predefined_tag(string color)
 	{
 		var cut = Context.Render(@<AntDesign.Tag Color="@color">Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore style:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore>Tag 1</span>);
 	}
 
 	[Fact]
@@ -81,5 +81,12 @@
 		tag.Click();
 		isCheckedChangeCalled.Should().BeTrue();
 	}
+
+	[Fact]
+	public void Renders_custom_style_and_custom_color_tag()
+    {
+		var cut = Context.Render(@<AntDesign.Tag Color="#108ee9" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
+        cut.MarkupMatches(@<span class="ant-tag ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #108ee9; ">Tag 1</span>);
+    }
 }
 }
