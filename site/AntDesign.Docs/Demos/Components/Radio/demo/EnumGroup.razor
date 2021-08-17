@@ -1,0 +1,19 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<EnumRadioGroup TEnum="Fruits" @bind-Value="_radioValue"></EnumRadioGroup>
+<br />
+Value: @_radioValue
+
+@code {
+	Fruits _radioValue = Fruits.Apple;
+
+	enum Fruits
+	{
+		[Display(Name = "🍎 Apple")]
+		Apple,
+
+		Pear,
+
+		Orange
+	}
+}
