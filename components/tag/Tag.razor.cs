@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -53,8 +53,7 @@ namespace AntDesign
                 {
                     _color = value;
                     _isPresetColor = IsPresetColor(_color);
-                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value  
-                    _style = GetStyle();
+                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
                 }
             }
         }
@@ -123,6 +122,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             this.UpdateClassMap();
+            this._style = GetStyle();
             base.OnInitialized();
         }
 
@@ -150,20 +150,24 @@ namespace AntDesign
                 ;
         }
 
-        private string GetStyle() {
+        private string GetStyle()
+        {
             StringBuilder styleBuilder = new StringBuilder();
 
             styleBuilder.Append(Style);
 
-            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
+            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";"))
+            {
                 styleBuilder.Append(";");
             }
 
-            if (_isCustomColor) {
+            if (_isCustomColor)
+            {
                 styleBuilder.Append($"background-color: {_color};");
             }
 
-            return styleBuilder.ToString();
+            var newStyle = styleBuilder.ToString();
+            return string.IsNullOrEmpty(newStyle) ? null : newStyle;
         }
 
         private async Task UpdateCheckedStatus()
@@ -194,7 +198,7 @@ namespace AntDesign
                 return;
             }
 
-            this._closed = true;            
+            this._closed = true;
 
             if (OnClose.HasDelegate)
             {
