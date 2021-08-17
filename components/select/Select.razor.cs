@@ -21,7 +21,9 @@ namespace AntDesign
     {
         #region Parameters
 
-
+        /// <summary>
+        /// Toggle the border style.
+        /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
 
 
@@ -163,7 +165,10 @@ namespace AntDesign
             }
         }
 
-
+        /// <summary>
+        /// Is used to increase the speed. If you expect changes to the label name, 
+        /// group name or disabled indicator, disable this property.
+        /// </summary>
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
 
 
@@ -196,9 +201,14 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
-
+        /// <summary>
+        /// Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.
+        /// </summary>
         [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
 
+        /// <summary>
+        /// Specify content to show when no result matches.
+        /// </summary>
         [Parameter] public RenderFragment NotFoundContent { get; set; }
 
         /// <summary>
@@ -224,7 +234,9 @@ namespace AntDesign
         /// Called when the dropdown visibility changes.
         /// </summary>
         [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
-
+        /// <summary>
+        /// Called when mouse enter.
+        /// </summary>
         [Parameter] public Action OnMouseEnter { get; set; }
 
         /// <summary>
@@ -259,11 +271,22 @@ namespace AntDesign
                 _showArrowIconChanged = true;
             }
         }
-
+        /// <summary>
+        /// Whether show search input in single mode.
+        /// </summary>
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
+        /// <summary>
+        /// Define what characters will be treated as token separators for newly created tags.
+        /// Useful when creating new tags using only keyboard.
+        /// </summary>
         [Parameter] public char[] TokenSeparators { get; set; }
+        /// <summary>
+        /// Used for the two-way binding.
+        /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
-
+        /// <summary>
+        /// The name of the property to be used for the value.
+        /// </summary>
         [Parameter]
         public string ValueName
         {
@@ -296,7 +319,11 @@ namespace AntDesign
             }
         }
 
-
+        /// <summary>
+        /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
+        /// </summary>        /// <summary>
+        /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
+        /// </summary>
         [Parameter]
         public TItemValue DefaultValue
         {
@@ -338,8 +365,6 @@ namespace AntDesign
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
         private IEnumerable<TItem> _datasource;
-        private IEnumerable<TItemValue> _defaultValues;
-        private bool _defaultValuesHasItems;
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
