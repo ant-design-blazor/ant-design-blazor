@@ -179,14 +179,7 @@ namespace AntDesign.Internal
         /// Override default placement class which is based on `Placement` parameter. 
         /// </summary>
         [Parameter]
-        public string PlacementCls
-        {
-            get { return _placementCls; }
-            set
-            {
-                _placementCls = value;
-            }
-        }
+        public string PlacementCls { get; set; }
 
         /// <summary>
         /// Define what is going to be the container of the overlay. 
@@ -194,14 +187,7 @@ namespace AntDesign.Internal
         /// scrollable area.
         /// </summary>
         [Parameter]
-        public string PopupContainerSelector
-        {
-            get { return _popupContainerSelector; }
-            set
-            {
-                _popupContainerSelector = value;
-            }
-        }
+        public string PopupContainerSelector { get; set; } = "body";
 
         /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
@@ -238,8 +224,6 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
-        private string _placementCls;
-        private string _popupContainerSelector = "body";
         private TriggerType[] _trigger = new TriggerType[] { TriggerType.Hover };
         private bool _shouldRender = true;
 
