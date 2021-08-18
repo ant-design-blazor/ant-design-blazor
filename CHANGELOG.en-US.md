@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 0.9.2
+
+2021-08-18
+
+- Table
+  - 🐞 Fixed prevent propagation of expand button click events. [#1850](https://github.com/ant-design-blazor/ant-design-blazor/pull/1850) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed initial load and render. [#1835](https://github.com/ant-design-blazor/ant-design-blazor/pull/1835) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Tree: `SelectedNodeChanged` would be fired twice twice. [#1849](https://github.com/ant-design-blazor/ant-design-blazor/pull/1849) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tag: Style parameters are not rendered. [#1847](https://github.com/ant-design-blazor/ant-design-blazor/pull/1847) [@JohnHao421](https://github.com/JohnHao421)
+- 🐞 Fixed Menu: `OnMenuItemClicked` should be triggered when menu `Selectable` is false. [#1843](https://github.com/ant-design-blazor/ant-design-blazor/pull/1843) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox: The checked state of `CheckboxGroup` didn't follow the value change. [#1841](https://github.com/ant-design-blazor/ant-design-blazor/pull/1841) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.9.1
 
 2021-08-11
