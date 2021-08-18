@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 0.9.2
+
+2021-08-18
+
+- Table
+  - 🐞 修复 阻止点击展开按钮时的事件穿透[#1850](https://github.com/ant-design-blazor/ant-design-blazor/pull/1850) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 服务端模式初次加载时不触发 OnChange 的问题。[#1835](https://github.com/ant-design-blazor/ant-design-blazor/pull/1835) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Tree 切换时选中节点时 SelectedNodeChanged 事件触发两次[#1849](https://github.com/ant-design-blazor/ant-design-blazor/pull/1849) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tag 组件Style参数设置无效。[#1847](https://github.com/ant-design-blazor/ant-design-blazor/pull/1847) [@JohnHao421](https://github.com/JohnHao421)
+- 🐞 修复 Menu `OnMenuItemClicked` 事件在 `Selectable=false` 时不触发的问题。[#1843](https://github.com/ant-design-blazor/ant-design-blazor/pull/1843) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 当 CheckboxGroup 的 Value 被修改时，对应选项未选中的问题。[#1841](https://github.com/ant-design-blazor/ant-design-blazor/pull/1841) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.9.1
 
 2021-08-11
