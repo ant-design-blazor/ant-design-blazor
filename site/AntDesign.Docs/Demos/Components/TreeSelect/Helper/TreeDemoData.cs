@@ -35,11 +35,12 @@ namespace AntDesign.Docs.Demos.Components.TreeSelect.Demo
         static LocalJsonData()
         {
             _data = new List<WebMenu>() {
-                new WebMenu(){ MenuId="1", MenuName="系统管理", ParentId="0", OrderBy=10},
-                new WebMenu(){ MenuId="2", MenuName="组织机构管理", ParentId="1", OrderBy=10},
-                new WebMenu(){ MenuId="3", MenuName="组织管理", ParentId="2", OrderBy=10},
-                new WebMenu(){ MenuId="4", MenuName="综合查询", ParentId="0", OrderBy=10},
-                new WebMenu(){ MenuId="5", MenuName="日常办公", ParentId="0", OrderBy=10}
+                new WebMenu(){ MenuId="1", MenuName="parent 1", ParentId="0", OrderBy=10},
+                new WebMenu(){ MenuId="2", MenuName="parent 1-0", ParentId="1", OrderBy=10},
+                new WebMenu(){ MenuId="3", MenuName="leaf1", ParentId="2", OrderBy=10},
+                new WebMenu(){ MenuId="4", MenuName="leaf2", ParentId="0", OrderBy=10},
+                new WebMenu(){ MenuId="5", MenuName="parent1-1", ParentId="0", OrderBy=10},
+                new WebMenu(){ MenuId="6", MenuName="leaf3", ParentId="5", OrderBy=10}
             };
         }
 
@@ -53,7 +54,7 @@ namespace AntDesign.Docs.Demos.Components.TreeSelect.Demo
 
         public static bool HasChild(string parentId)
         {
-            return !_data.Any(m => m.ParentId == parentId);
+            return _data.All(m => m.ParentId != parentId);
         }
     }
 
