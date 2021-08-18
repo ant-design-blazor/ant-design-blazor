@@ -68,6 +68,8 @@ namespace AntDesign
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
             else if (TreeComponent.OnContextMenu.HasDelegate && args.Button == 2)
                 await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
+
+            TreeComponent.UpdateBindData();
         }
 
         /// <summary>
