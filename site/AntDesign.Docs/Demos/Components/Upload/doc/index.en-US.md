@@ -19,32 +19,28 @@ Uploading is the process of publishing information (web pages, text, pictures, v
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| accept | File types that can be accepted. See [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) | string | - |  |
-| action | Uploading URL | string\|(file) => `Promise` | - |  |
-| method | http method of upload request | string | 'post' |  |
-| directory | support upload whole directory ([caniuse](https://caniuse.com/#feat=input-file-directory)) | boolean | false |  |
+| Accept | File types that can be accepted. See [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) | string | - |  |
+| Action | Uploading URL | string\|(file) => `Promise` | - |  |
+| Directory | support upload whole directory ([caniuse](https://caniuse.com/#feat=input-file-directory)) | boolean | false |  |
 | BeforeUpload | Hook function which will be executed before uploading each file. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
 | BeforeAllUpload & BeforeAllUploadAsync  | Hook function which will be executed before uploading. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
-| customRequest | override for the default xhr behavior allowing for additional customization and ability to implement your own XMLHttpRequest | Function | - |  |
-| data | Uploading extra params or function which can return uploading extra params. | object\|function(file) | - |  |
-| defaultFileList | Default list of files that have been uploaded. | object\[] | - |  |
-| disabled | disable upload button | boolean | false |  |
-| fileList | List of files that have been uploaded (controlled). Here is a common issue [#2423](https://github.com/ant-design/ant-design/issues/2423) when using it | object\[] | - |  |
-| headers | Set request headers, valid above IE10. | object | - |  |
-| listType | Built-in stylesheets, support for three types: `text`, `picture` or `picture-card` | string | 'text' |  |
-| multiple | Whether to support selected multiple file. `IE10+` supported. You can select multiple files with CTRL holding down while multiple is set to be true | boolean | false |  |
-| name | The name of uploading file | string | 'file' |  |
-| previewFile | Customize preview file logic | (file: File \| Blob) => Promise<dataURL: string> | - |  |
-| showUploadList | Whether to show default upload list, could be an object to specify `showPreviewIcon`, `showRemoveIcon`, `showDownloadIcon`, `removeIcon` and `downloadIcon` individually | Boolean or { showPreviewIcon?: boolean, showDownloadIcon?: boolean, showRemoveIcon?: boolean, removeIcon?: React.ReactNode, downloadIcon?: React.ReactNode } | true |  |
-| supportServerRender | Need to be turned on while the server side is rendering | boolean | false |  |
-| withCredentials | ajax upload with cookie sent | boolean | false |  |
-| openFileDialogOnClick | click open file dialog | boolean | true |  |
-| onChange | A callback function, can be executed when uploading state is changing, see [onChange](#onChange) | Function | - |  |
-| onPreview | A callback function, will be executed when file link or preview icon is clicked | Function(file) | - |  |
-| onRemove | A callback function, will be executed when removing file button is clicked, remove event will be prevented when return value is `false` or a Promise which resolve(false) or reject | Function(file): `boolean | Promise` | - |  |
-| onDownload | Click the method to download the file, pass the method to perform the method logic, do not pass the default jump to the new TAB. | Function(file): void | Jump to new TAB |  |
-| transformFile   | Customize transform file before request | Function(file): `string | Blob | File | Promise<string | Blob | File>` | - |  |
-| iconRender | custom show icon | (file: UploadFile, listType?: UploadListType) => React.ReactNode | - |  |
+| Data | Uploading extra params or function which can return uploading extra params. | object\|function(file) | - |  |
+| DefaultFileList | Default list of files that have been uploaded. | object\[] | - |  |
+| Disabled | disable upload button | boolean | false |  |
+| FileList | List of files that have been uploaded (controlled). Here is a common issue [#2423](https://github.com/ant-design/ant-design/issues/2423) when using it | object\[] | - |  |
+| Headers | Set request headers, valid above IE10. | object | - |  |
+| ListType | Built-in stylesheets, support for three types: `text`, `picture` or `picture-card` | string | 'text' |  |
+| Method | http method of upload request | string | 'post' |  |
+| Multiple | Whether to support selected multiple file. `IE10+` supported. You can select multiple files with CTRL holding down while multiple is set to be true | boolean | false |  |
+| Name | The name of uploading file | string | 'file' |  |
+| OnChange | A callback function, can be executed when uploading state is changing, see [onChange](#onChange) | Function | - |  |
+| OnCompleted | A callback function, will be executed when all uploads have succeeded or failed | Function(file) | - |  |
+| OnDownload | Click the method to download the file, pass the method to perform the method logic, do not pass the default jump to the new TAB. | Function(file): void | Jump to new TAB |  |
+| OnPreview | A callback function, will be executed when file link or preview icon is clicked | Function(file) | - |  |
+| OnRemove | A callback function, will be executed when removing file button is clicked, remove event will be prevented when return value is `false` or a Promise which resolve(false) or reject | Function(file): `boolean | Promise` | - |  |
+| OnSingleCompleted | A callback function, will be executed when an upload is complete | Function(file) | - |  |
+| ShowUploadList | Whether to show default upload list, could be an object to specify `showPreviewIcon`, `showRemoveIcon`, `showDownloadIcon`, `removeIcon` and `downloadIcon` individually | Boolean or { showPreviewIcon?: boolean, showDownloadIcon?: boolean, showRemoveIcon?: boolean, removeIcon?: React.ReactNode, downloadIcon?: React.ReactNode } | true |  |
+
 
 ### onChange
 
