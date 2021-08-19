@@ -5,7 +5,7 @@
 
 <Table TItem="Data" DataSource="_data" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" Total="_total"
        Loading="_loading" OnChange="HandleTableChange" RemoteDataSource>
-	<Column Style="width:20%;" @bind-Field="@context.Name" Sortable DefaultSortOrder="SortDirection.Ascending">@context.Name.First @context.Name.Last</Column>
+    <Column Style="width:20%;" @bind-Field="@context.Name" Sortable DefaultSortOrder="SortDirection.Ascending">@context.Name.First @context.Name.Last</Column>
     <Column Style="width:20%;" @bind-Field="@context.Gender" Filters="_genderFilters" />
     <Column @bind-Field="@context.Email" />
 </Table>
