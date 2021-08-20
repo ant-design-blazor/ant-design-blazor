@@ -85,6 +85,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Drag { get; set; }
+        
+        [Parameter]
+        public string Method { get; set; } = "post";
 
         private bool IsText => ListType == "text";
         private bool IsPicture => ListType == "picture";

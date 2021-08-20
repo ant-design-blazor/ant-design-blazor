@@ -40,4 +40,24 @@
             <div class="ant-upload-list ant-upload-list-text"></div>
         </span>);
     }
+    
+    [Fact]
+    public void Renders_custom_method()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+
+        var cut = Context.Render(@<Upload Method="put">some content</Upload>);
+
+        cut.MarkupMatches(
+          @<span class="">
+              <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
+                  <div tabindex="0" class="ant-upload" style="position:relative;" data-fileid:ignore role="button">
+                      <input type="file" style="display:none;" id:ignore>
+                      some content
+                  </div>
+              </div>
+              <div class="ant-upload-list ant-upload-list-text">
+              </div>
+          </span>);
+    }
 }
