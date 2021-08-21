@@ -18,8 +18,6 @@ namespace AntDesign.FilterExpression
         }
         public Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
-            leftExpr = Expression.Property(leftExpr, "Date");
-            rightExpr = Expression.Property(rightExpr, "Date");
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:
@@ -36,6 +34,12 @@ namespace AntDesign.FilterExpression
                     return Expression.LessThan(leftExpr, rightExpr);
                 case TableFilterCompareOperator.LessThanOrEquals:
                     return Expression.LessThanOrEqual(leftExpr, rightExpr);
+                case TableFilterCompareOperator.TheSameDateWith:
+                    return Expression.LessThanOrEqual(Expression.Property(leftExpr, "Date"),
+                        Expression.Property(rightExpr, "Date"));
+                case TableFilterCompareOperator.TheSameMonthWith:
+                    return Expression.LessThanOrEqual(Expression.Property(leftExpr, "Month"),
+                        Expression.Property(rightExpr, "Month"));
             }
             throw new InvalidOperationException();
         }

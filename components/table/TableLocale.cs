@@ -68,5 +68,9 @@ namespace AntDesign
         public string IsNull { get; set; } = "Is Null";
 
         public string IsNotNull { get; set; } = "Is Not Null";
+
+        public string TheSameDateWith { get; set; } = "The Same Date With";
+
+        public string TheSameMonthWith { get; set; } = "The Same Month With";
     }
 }
