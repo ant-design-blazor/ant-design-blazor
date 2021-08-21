@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace AntDesign.FilterExpression
@@ -17,6 +18,8 @@ namespace AntDesign.FilterExpression
         }
         public Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
+            leftExpr = Expression.Property(leftExpr, "Date");
+            rightExpr = Expression.Property(rightExpr, "Date");
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:
