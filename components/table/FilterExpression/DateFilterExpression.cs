@@ -12,7 +12,7 @@ namespace AntDesign.FilterExpression
 {
     public class DateFilterExpression : IFilterExpression
     {
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Equals;
         }
