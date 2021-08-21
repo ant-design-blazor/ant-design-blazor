@@ -35,11 +35,8 @@ namespace AntDesign.FilterExpression
                 case TableFilterCompareOperator.LessThanOrEquals:
                     return Expression.LessThanOrEqual(leftExpr, rightExpr);
                 case TableFilterCompareOperator.TheSameDateWith:
-                    return Expression.LessThanOrEqual(Expression.Property(leftExpr, "Date"),
+                    return Expression.Equal(Expression.Property(leftExpr, "Date"),
                         Expression.Property(rightExpr, "Date"));
-                case TableFilterCompareOperator.TheSameMonthWith:
-                    return Expression.LessThanOrEqual(Expression.Property(leftExpr, "Month"),
-                        Expression.Property(rightExpr, "Month"));
             }
             throw new InvalidOperationException();
         }
