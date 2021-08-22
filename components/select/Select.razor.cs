@@ -755,7 +755,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
-                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventService.AddEventListener("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);

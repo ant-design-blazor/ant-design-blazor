@@ -484,7 +484,7 @@ namespace AntDesign
                     IsFocused = true;
                     await this.FocusAsync(Ref);
                 }
-                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
+                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal);
             }
         }
 

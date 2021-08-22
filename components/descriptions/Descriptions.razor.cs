@@ -92,7 +92,7 @@ namespace AntDesign
         {
             if (firstRender && Column.IsT1)
             {
-                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
+                DomEventService.AddEventListener<object>("window", "resize", OnResize);
             }
 
             base.OnAfterRender(firstRender);

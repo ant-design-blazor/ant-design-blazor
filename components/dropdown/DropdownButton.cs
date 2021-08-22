@@ -208,12 +208,12 @@ namespace AntDesign
             if (firstRender)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
-                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
-                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
-                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
-                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+                DomEventService.AddEventListener(Ref, "click", OnUnboundClick);
+                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter);
+                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave);
+                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn);
+                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut);
+                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }

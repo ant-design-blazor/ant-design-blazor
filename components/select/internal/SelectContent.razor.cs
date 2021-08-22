@@ -108,7 +108,7 @@ namespace AntDesign.Select.Internal
             {
                 if (ParentSelect.EnableSearch)
                 {
-                    DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                    DomEventService.AddEventListener("window", "beforeunload", Reloading);
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
                 }
@@ -138,8 +138,8 @@ namespace AntDesign.Select.Internal
                     await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal, true);
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focus", OnFocusInternal, true);
+                DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal);
+                DomEventService.AddEventListener(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {

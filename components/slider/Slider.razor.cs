@@ -487,8 +487,8 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "mousemove", OnMouseMove, false);
-                DomEventService.AddEventListener("window", "mouseup", OnMouseUp, false);
+                DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
+                DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
             }
 
             base.OnAfterRender(firstRender);

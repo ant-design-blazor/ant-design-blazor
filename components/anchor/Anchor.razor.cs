@@ -129,7 +129,7 @@ namespace AntDesign
             {
                 if (GetCurrentAnchor is null)
                 {
-                    DomEventService.AddEventListener("window", "scroll", OnScroll, false);
+                    DomEventService.AddEventListener("window", "scroll", OnScroll);
                 }
             }
 

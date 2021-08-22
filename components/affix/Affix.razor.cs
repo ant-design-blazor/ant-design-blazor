@@ -92,8 +92,8 @@ namespace AntDesign
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
-                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
+                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll);
+                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize);
 
                 _rootListened = true;
             }

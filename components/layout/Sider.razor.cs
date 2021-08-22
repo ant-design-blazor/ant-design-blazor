@@ -112,7 +112,7 @@ namespace AntDesign
             if (firstRender && Breakpoint != null)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
-                DomEventService.AddEventListener<Window>("window", "resize", OnResize, false);
+                DomEventService.AddEventListener<Window>("window", "resize", OnResize);
                 OptimizeSize(dimensions.innerWidth);
             }
         }

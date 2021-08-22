@@ -370,12 +370,12 @@ namespace AntDesign
 
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                DomEventService.AddEventListener("window", "beforeunload", Reloading);
                 if (ScrollX != null)
                 {
                     await SetScrollPositionClassName();
 
-                    DomEventService.AddEventListener("window", "resize", OnResize, false);
+                    DomEventService.AddEventListener("window", "resize", OnResize);
                     DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
                 }
 

@@ -132,7 +132,7 @@ namespace AntDesign
 
             if (AutoSize)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                DomEventService.AddEventListener("window", "beforeunload", Reloading);
 
                 await CalculateRowHeightAsync();
             }

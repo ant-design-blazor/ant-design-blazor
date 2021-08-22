@@ -394,7 +394,7 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                DomEventService.AddEventListener<string>(_scrollTabBar, "wheel", OnWheel, true, true);
+                DomEventService.AddEventListener<string>(_scrollTabBar, "wheel", OnWheel, true);
                 _wheelDisabled = true;
             }
 
@@ -568,5 +568,11 @@ namespace AntDesign
         }
 
         #endregion DRAG & DROP
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<string>(_scrollTabBar, "wheel", OnWheel);
+            base.Dispose(disposing);
+        }
     }
 }

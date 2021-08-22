@@ -13,7 +13,7 @@ namespace AntDesign.JsInterop
 {
     public class DomEventService
     {
-        private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new ConcurrentDictionary<string, List<DomEventSubscription>>();
+        private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new();
 
         private readonly IJSRuntime _jsRuntime;
         private bool? _isResizeObserverSupported = null;
@@ -34,39 +34,36 @@ namespace AntDesign.JsInterop
             }
         }
 
-        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool exclusive = true, bool preventDefault = false)
+        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
-            AddEventListener<JsonElement>(dom, eventName, callback, exclusive, preventDefault);
+            AddEventListener<JsonElement>(dom, eventName, callback, preventDefault);
         }
 
-        public virtual void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true, bool preventDefault = false)
+        private Invoker<string> CreateSubscriptionInvoker(List<DomEventSubscription> domEventSubscriptions)
         {
-            if (exclusive)
+            return new Invoker<string>((p) =>
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                for (var i = 0; i < domEventSubscriptions.Count; i++)
                 {
-                    callback(p);
-                })));
-            }
-            else
-            {
-                string key = FormatKey(dom, eventName);
-                if (!_domEventListeners.ContainsKey(key))
-                {
-                    _domEventListeners[key] = new List<DomEventSubscription>();
-
-                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, DotNetObjectReference.Create(new Invoker<string>((p) =>
-                    {
-                        for (var i = 0; i < _domEventListeners[key].Count; i++)
-                        {
-                            var subscription = _domEventListeners[key][i];
-                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
-                            subscription.Delegate.DynamicInvoke(tP);
-                        }
-                    })));
+                    var subscription = domEventSubscriptions[i];
+                    object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                    subscription.Delegate.DynamicInvoke(tP);
                 }
-                _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(T)));
+            });
+        }
+
+        public virtual void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        {
+            string key = FormatKey(dom, eventName);
+            if (!_domEventListeners.ContainsKey(key))
+            {
+                _domEventListeners[key] = new List<DomEventSubscription>();
+                var invoker = CreateSubscriptionInvoker(_domEventListeners[key]);
+                var dotNetObject = DotNetObjectReference.Create(invoker);
+
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
+            _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(T)));
         }
 
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
@@ -93,22 +90,16 @@ namespace AntDesign.JsInterop
             if (!(await IsResizeObserverSupported()))
             {
                 Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
-                AddEventListener("window", "resize", action, false);
+                AddEventListener("window", "resize", action);
             }
             else
             {
                 if (!_domEventListeners.ContainsKey(key))
                 {
                     _domEventListeners[key] = new List<DomEventSubscription>();
-                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key, DotNetObjectReference.Create(new Invoker<string>((p) =>
-                    {
-                        for (var i = 0; i < _domEventListeners[key].Count; i++)
-                        {
-                            var subscription = _domEventListeners[key][i];
-                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
-                            subscription.Delegate.DynamicInvoke(tP);
-                        }
-                    })));
+                    var invoker = CreateSubscriptionInvoker(_domEventListeners[key]);
+                    var dotNetObject = DotNetObjectReference.Create(invoker);
+                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key, dotNetObject);
                     await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key, dom);
                 }
                 _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>)));

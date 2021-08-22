@@ -55,7 +55,7 @@ namespace AntDesign
             if (firstRender && Grid != null)
             {
                 await this.SetGutterStyle();
-                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
+                DomEventService.AddEventListener<object>("window", "resize", OnResize);
             }
 
             await base.OnAfterRenderAsync(firstRender);

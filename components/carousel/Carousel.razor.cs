@@ -130,7 +130,7 @@ namespace AntDesign
             if (firstRender)
             {
                 Resize();
-                DomEventService.AddEventListener("window", "resize", Resize, false);
+                DomEventService.AddEventListener("window", "resize", Resize);
             }
         }
 
