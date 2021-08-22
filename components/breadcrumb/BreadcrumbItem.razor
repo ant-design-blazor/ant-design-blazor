@@ -5,12 +5,17 @@
 
     @if (Overlay != null)
     {
-        <span class="ant-breadcrumb-overlay-link" nz-dropdown [nzDropdownMenu]="nzOverlay">
-            <span class="ant-breadcrumb-link">
-                @ChildContent
-            </span>
-            <Icon Type="down"></Icon>
-        </span>
+        <Dropdown>
+            <ChildContent>
+                <span class="ant-breadcrumb-link">
+                    @ChildContent
+                </span>
+                <Icon Type="down"></Icon>
+            </ChildContent>
+            <Overlay>
+                @Overlay
+            </Overlay>
+        </Dropdown>
     }
     else
     {
@@ -34,7 +39,7 @@
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public object Overlay { get; set; }
+    public RenderFragment Overlay { get; set; }
 
     [CascadingParameter]
     public Breadcrumb BreadCrumb { get; set; }
