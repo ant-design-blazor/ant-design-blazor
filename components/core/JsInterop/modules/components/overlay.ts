@@ -399,6 +399,7 @@ export class Overlay {
   private observe() {
     resize.create(`container-${this.blazorId}`, this.resizing.bind(this), false);
     resize.observe(`container-${this.blazorId}`, this.container);    
+    resize.observe(`container-${this.blazorId}`, this.trigger);    
     mutation.create(`trigger-${this.blazorId}`, this.mutating.bind(this), false);
     mutation.observe(`trigger-${this.blazorId}`, this.trigger, {
       attributes: true,
