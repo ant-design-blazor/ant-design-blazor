@@ -5,11 +5,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
-using AntDesign.Core.Reflection;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace AntDesign
 {
@@ -194,8 +192,6 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
-
-                Table?.ReloadAndInvokeChange();
             }
             else if (IsBody)
             {
@@ -267,6 +263,8 @@ namespace AntDesign
                         ((List<TableFilter>)_filters).Add(nullFilterOption);
                     }
                 }
+
+                Context.HeaderColumnInitialed(this);
             }
 
             ClassMapper
