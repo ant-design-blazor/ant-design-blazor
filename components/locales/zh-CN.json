@@ -149,7 +149,8 @@
       "greaterThanOrEquals": "大于或等于",
       "lessThanOrEquals": "小于或等于",
       "isNull": "为 Null",
-      "isNotNull": "不为 Null"
+      "isNotNull": "不为 Null",
+      "theSameDateWith": "等于该日期"
     }
   },
   "Modal": {

@@ -5,13 +5,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace AntDesign.FilterExpression
 {
     public class DateFilterExpression : IFilterExpression
     {
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Equals;
         }
@@ -33,6 +34,9 @@ namespace AntDesign.FilterExpression
                     return Expression.LessThan(leftExpr, rightExpr);
                 case TableFilterCompareOperator.LessThanOrEquals:
                     return Expression.LessThanOrEqual(leftExpr, rightExpr);
+                case TableFilterCompareOperator.TheSameDateWith:
+                    return Expression.Equal(Expression.Property(leftExpr, "Date"),
+                        Expression.Property(rightExpr, "Date"));
             }
             throw new InvalidOperationException();
         }
