@@ -8,7 +8,7 @@
         <Dropdown>
             <ChildContent>
                 <span class="ant-breadcrumb-link">
-                    @ChildContent
+                    @FormattedChildContent
                 </span>
                 <Icon Type="down"></Icon>
             </ChildContent>
@@ -20,7 +20,7 @@
     else
     {
         <span class="ant-breadcrumb-link">
-            @ChildContent
+            @FormattedChildContent
         </span>
     }
 
@@ -41,6 +41,14 @@
     [Parameter]
     public RenderFragment Overlay { get; set; }
 
+    [Parameter]
+    public string Href { get; set; }
+
     [CascadingParameter]
     public Breadcrumb BreadCrumb { get; set; }
+
+
+    private RenderFragment FormattedChildContent => Href is null ?
+        ChildContent :
+    @<Microsoft.AspNetCore.Components.Routing.NavLink href="@Href">@ChildContent</Microsoft.AspNetCore.Components.Routing.NavLink>;
 }
