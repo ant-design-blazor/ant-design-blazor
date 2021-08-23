@@ -88,6 +88,7 @@ namespace AntDesign.Internal
         private bool _isWaitForOverlayFirstRender = false;
 
         private bool _preVisible = false;
+        private bool _isOverlayDuringShowing = false;
         private bool _isOverlayShow = false;
         private bool _isOverlayHiding = false;
         private bool _lastDisabledState = false;
@@ -186,6 +187,8 @@ namespace AntDesign.Internal
             {
                 return;
             }
+            _isOverlayDuringShowing = true;
+
             Guid uniqueId;
             if (_isOverlayFirstRender)
             {
@@ -208,6 +211,7 @@ namespace AntDesign.Internal
 
             await AddOverlayToBody(overlayLeft, overlayTop);
             _isOverlayShow = true;
+            _isOverlayDuringShowing = false;
             _isOverlayHiding = false;
 
             _overlayCls = Trigger.GetOverlayEnterClass();
@@ -221,6 +225,19 @@ namespace AntDesign.Internal
 
         internal async Task Hide(bool force = false)
         {
+            if (_isOverlayDuringShowing)
+            {
+                //If Show() method is processing, wait up to 1000 ms
+                //for it to end processing
+                for (int i = 0; i < 100; i++)
+                {
+                    await Task.Delay(10);
+                    if (_isOverlayShow)
+                    {
+                        break;
+                    }
+                }
+            }
             if (!_isOverlayShow)
             {
                 return;
