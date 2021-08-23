@@ -196,6 +196,7 @@ export class Overlay {
     this.calculateScrollBarSizes()
 
     this.overlay.style.cssText = this.overlay.style.cssText.replace("display: none;", "");
+    this.overlay.style.top = "0px"; //reset to prevent scrollbars if do not exist
     this.removeHiddenClass()
 
     //The trigger is actually wrapping div, which can have its own dimensions (coming from styles).
