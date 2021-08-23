@@ -493,7 +493,7 @@ export class Overlay {
     //first positioning is applied by blazor - without it, a flicker is visible
     if (applyLocation) {
       this.applyLocation();      
-    }    
+    }
     return this.position;
   }
 
