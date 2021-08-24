@@ -18,6 +18,8 @@ namespace AntDesign.FilterExpression
         }
         public Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
+            leftExpr = RemoveMilliseconds(leftExpr);
+            rightExpr = RemoveMilliseconds(rightExpr);
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:
@@ -39,6 +41,13 @@ namespace AntDesign.FilterExpression
                         Expression.Property(rightExpr, "Date"));
             }
             throw new InvalidOperationException();
+        }
+
+        private static Expression RemoveMilliseconds(Expression dateTimeExpression)
+        {
+            return Expression.Subtract(dateTimeExpression,
+                Expression.Call(typeof(TimeSpan).GetMethod("FromMilliseconds")!,
+                    Expression.Convert(Expression.Property(dateTimeExpression, "Millisecond"), typeof(double))));
         }
     }
 }
