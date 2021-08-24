@@ -204,7 +204,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Will match drowdown width: 
+        /// Will match drowdown width:
         /// - for boolean: true - with widest item in the dropdown list
         /// - for string: with value (e.g.: "256px")
         /// </summary>
@@ -226,8 +226,8 @@ namespace AntDesign
         [Parameter] public bool EnableSearch { get; set; }
 
         /// <summary>
-        /// The name of the property to be used as a group indicator. 
-        /// If the value is set, the entries are displayed in groups. 
+        /// The name of the property to be used as a group indicator.
+        /// If the value is set, the entries are displayed in groups.
         /// Use additional SortByGroup and SortByLabel.
         /// </summary>
         [Parameter]
@@ -247,7 +247,7 @@ namespace AntDesign
         [Parameter] public bool HideSelected { get; set; }
 
         /// <summary>
-        /// Is used to increase the speed. If you expect changes to the label name, 
+        /// Is used to increase the speed. If you expect changes to the label name,
         /// group name or disabled indicator, disable this property.
         /// </summary>
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
@@ -259,7 +259,7 @@ namespace AntDesign
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
         /// <summary>
-        /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON) 
+        /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON)
         /// e.g. { "value": TItemValue, "label": "Label value" }
         /// </summary>
         [Parameter] public bool LabelInValue { get; set; }
@@ -553,7 +553,7 @@ namespace AntDesign
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }        
+        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         #endregion Parameters
 
@@ -634,7 +634,7 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-        
+
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -719,6 +719,16 @@ namespace AntDesign
                     _showArrowIcon = SuffixIcon != null;
             }
             _isInitialized = true;
+
+            if (_defaultValueIsNotNull)
+            {
+                Value = DefaultValue;
+            }
+
+            if (_defaultValuesHasItems)
+            {
+                Values = DefaultValues;
+            }
 
             base.OnInitialized();
         }
@@ -1187,12 +1197,12 @@ namespace AntDesign
             if (SelectMode == SelectMode.Default)
             {
                 OnSelectedItemChanged?.Invoke(default);
-                await ValueChanged.InvokeAsync(default);
+                await ValueChanged.InvokeAsync(_defaultValueIsNotNull ? DefaultValue : default);
             }
             else
             {
                 OnSelectedItemsChanged?.Invoke(default);
-                await ValuesChanged.InvokeAsync(default);
+                await ValuesChanged.InvokeAsync(_defaultValuesHasItems ? DefaultValues : default);
             }
         }
 
