@@ -19,6 +19,10 @@ namespace AntDesign
             {
                 _options = value;
                 _isOptionDefined = true;
+                if (_afterFirstRender)
+                {
+                    _currentValue = GetCurrentValueFunc();
+                }
             }
         }
 
