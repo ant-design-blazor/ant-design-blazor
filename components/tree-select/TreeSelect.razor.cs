@@ -476,18 +476,11 @@ namespace AntDesign
             {
                 if (_selectedValues == null)
                     return;
-                if (_beforeSelectValues == null)
-                    _beforeSelectValues = _selectedValues;
-                if (!_beforeSelectValues.SequenceEqual(_selectedValues))
-                {
-                    _beforeSelectValues.Where(v => !_selectedValues.Contains(v)).ForEach(v => _tree.FindFirstOrDefaultNode(node => node.Key == v)?.SetSelected(false));
-                }
-                _selectedValues?.ForEach(v => _tree.FindFirstOrDefaultNode(node => node.Key == v)?.SetSelected(true));
-                _beforeSelectValues = _selectedValues;
+                _tree._allNodes.ForEach(n => n.SetSelected(_selectedValues.Contains(n.Key)));
             }
             else
             {
-                _tree?.FindFirstOrDefaultNode(node => node.Key == Value, true)?.SetSelected(true);
+                _tree?.FindFirstOrDefaultNode(node => node.Key == Value)?.SetSelected(true);
             }
         }
 
