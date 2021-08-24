@@ -189,7 +189,6 @@ namespace AntDesign.Internal
             }
             _isOverlayDuringShowing = true;
 
-            Guid uniqueId;
             if (_isOverlayFirstRender)
             {
                 Trigger.SetShouldRender(false);
@@ -229,14 +228,7 @@ namespace AntDesign.Internal
             {
                 //If Show() method is processing, wait up to 1000 ms
                 //for it to end processing
-                for (int i = 0; i < 100; i++)
-                {
-                    await Task.Delay(10);
-                    if (_isOverlayShow)
-                    {
-                        break;
-                    }
-                }
+                await WaitFor(() => _isOverlayShow);
             }
             if (!_isOverlayShow)
             {
@@ -318,6 +310,14 @@ namespace AntDesign.Internal
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
                 _recurenceGuard++;
+
+                //In ServerSide it may happen that trigger element reference has not yet been retrieved.                    
+                if (!(await WaitFor(() => Trigger.Ref.Id is not null)))
+                {
+                    //Place where Error Boundary could be utilized
+                    throw new ArgumentNullException("Trigger.Ref.Id cannot be null when attaching overlay to it.");
+                }
+
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
                     Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
@@ -343,6 +343,31 @@ namespace AntDesign.Internal
                 await UpdatePosition(overlayLeft, overlayTop);
             }
             _recurenceGuard = 0;
+        }
+
+        /// <summary>
+        /// Will probe a check predicate every given milliseconds until predicate is true or until
+        /// runs out of number of probings.
+        /// </summary>
+        /// <param name="check">A predicate that will be run every time after waitTimeInMilisecondsPerProbing will pass.</param>
+        /// <param name="probings">Maximum number of probings. After this number is reached, the method finishes.</param>
+        /// <param name="waitTimeInMilisecondsPerProbing">How long to wait between each probing.</param>
+        /// <returns>Task</returns>
+        private async Task<bool> WaitFor(Func<bool> check, int probings = 100, int waitTimeInMilisecondsPerProbing = 10)
+        {
+            if (!check())
+            {
+                for (int i = 0; i < probings; i++)
+                {
+                    await Task.Delay(waitTimeInMilisecondsPerProbing);
+                    if (check())
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
         }
 
         private string GetTransformOrigin()
