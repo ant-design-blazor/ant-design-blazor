@@ -432,8 +432,8 @@ namespace AntDesign.Internal
             {
                 int offsetX = 10;
                 int offsetY = 10;
-#if NET5_0
-                // offsetX/offsetY were only supported in Net5
+#if NET5_0_OR_GREATER
+                // offsetX/offsetY were only supported in Net5 or grater
                 offsetX = (int)args.OffsetX;
                 offsetY = (int)args.OffsetY;
 #endif

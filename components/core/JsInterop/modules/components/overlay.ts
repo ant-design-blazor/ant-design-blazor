@@ -477,6 +477,15 @@ export class Overlay {
     if (!firstTime && !this.overlay.offsetParent) {      
       return;
     }
+    //trigger no longer visible, hide
+    if (!overlayPreset && !this.trigger.offsetParent) {
+      console.log("overlayPreset:", overlayPreset, (overlayPreset?true:false));
+      if (!this.overlay.classList.contains(this.triggerPrefixCls + "-hidden")) {
+        this.overlay.classList.add(this.triggerPrefixCls + "-hidden");
+      }
+      return this.position;
+    }
+
     this.recentPlacement = this.placement;
     this.overlayPreset = overlayPreset;
 
@@ -495,6 +504,7 @@ export class Overlay {
     if (applyLocation) {
       this.applyLocation();      
     }
+    this.logToConsole();
     return this.position;
   }
 
