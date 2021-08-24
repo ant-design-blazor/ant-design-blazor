@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 基本
-  en-US: Basic
+  zh-CN: 基本的内置树
+  en-US: BasicInnerMultiple
 ---
 
 ## zh-CN
 
-最简单的用法，展示动态下拉树功能。
+基础多选用法，使用静态树节点
 
 ## en-US
 

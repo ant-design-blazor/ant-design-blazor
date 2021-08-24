@@ -76,6 +76,33 @@ namespace AntDesign
         [Parameter]
         public Func<TItem, string> TitleExpression { get; set; }
 
+        private Dictionary<string, object> TreeAttributes
+        {
+            get
+            {
+                if (IsInnerModel)
+                {
+                    return new()
+                    {
+                        { "DefaultExpandAll", TreeDefaultExpandAll },
+                    };
+                }
+                else
+                {
+                    return new()
+                    {
+                        { "DataSource", RootData },
+                        { "TitleExpression", TreeNodeTitleExpression },
+                        { "DefaultExpandAll", TreeDefaultExpandAll },
+                        { "KeyExpression", TreeNodeKeyExpression },
+                        { "ChildrenExpression", TreeNodeChildrenExpression },
+                        { "DisabledExpression", TreeNodeDisabledExpression },
+                        { "IsLeafExpression", TreeNodeIsLeafExpression }
+                    };
+                }
+            }
+        }
+
 
         protected Func<TreeNode<TItem>, string> TreeNodeKeyExpression
         {
@@ -110,6 +137,8 @@ namespace AntDesign
                 return node => IsLeafExpression(node.DataItem);
             }
         }
+
+        private bool IsInnerModel => DataSource == null && ChildContent != null;
 
         /// <summary>
         /// Specifies a method that returns whether the expression is a leaf node.
@@ -179,7 +208,7 @@ namespace AntDesign
         /// </summary>
         private readonly string _dropDownPosition = "bottom";
 
-        private IList<TItem> RootData => ChildrenExpression(RootValue);
+        private IList<TItem> RootData => ChildrenExpression?.Invoke(RootValue);
 
         public override string Value
         {
@@ -191,6 +220,24 @@ namespace AntDesign
                 if (base.Value == value)
                     return;
                 base.Value = value;
+
+                //if (ChildContent != null && DataSource == null)
+                //{
+                //    if (SelectMode == SelectMode.Default)
+                //    {
+                //        this.ClearOptions();
+                //    }
+
+                //    if (SelectOptionItems.All(o => o.Value != value))
+                //    {
+                //        SelectOptionItems?.Add(new SelectOptionItem<string, TItem>()
+                //        {
+                //            Value = value,
+                //            Label = value
+                //        });
+                //    }
+                //}
+
                 if (SelectOptionItems.Any(o => o.Value == value))
                 {
                     _ = SetValueAsync(SelectOptionItems.First(o => o.Value == value));
@@ -204,6 +251,8 @@ namespace AntDesign
                         _ = SetValueAsync(o);
                     }
                 }
+
+
             }
         }
 
@@ -263,6 +312,12 @@ namespace AntDesign
 
         private void CreateOptions(IEnumerable<string> data)
         {
+            if (IsInnerModel)
+            {
+                CreateOptionsByTreeNode(data);
+                return;
+            }
+
             data.ForEach(menuId =>
             {
                 var d = DataItemExpression?.Invoke(DataSource, menuId);
@@ -271,6 +326,32 @@ namespace AntDesign
                     var o = CreateOption(d, true);
                 }
             });
+        }
+
+        private void CreateOptionsByTreeNode(IEnumerable<string> data)
+        {
+            data.ForEach(menuId =>
+            {
+                var d = _tree.FindFirstOrDefaultNode(n => n.Key == menuId);
+                if (d != null)
+                {
+                    var o = CreateOption(d, true);
+                }
+            });
+        }
+
+        private SelectOptionItem<string, TItem> CreateOption(TreeNode<TItem> data, bool append = false)
+        {
+            var o = new SelectOptionItem<string, TItem>()
+            {
+                Label = data.Title,
+                Value = data.Key,
+                Item = data.DataItem,
+                IsAddedTag = SelectMode != SelectMode.Default
+            };
+            if (append)
+                SelectOptionItems.Add(o);
+            return o;
         }
 
         private SelectOptionItem<string, TItem> CreateOption(TItem data, bool append = false)
@@ -294,10 +375,6 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-
-        private void OnClick()
-        {
-        }
 
         private void OnKeyDownAsync(KeyboardEventArgs args)
         {
@@ -351,7 +428,11 @@ namespace AntDesign
                 return;
 
             var data = args.Node;
-            var item = CreateOption(data.DataItem, true);
+            SelectOptionItem<string, TItem> item;
+            if (IsInnerModel)
+                item = CreateOption(data, true);
+            else
+                item = CreateOption(data.DataItem, true);
 
             //_selectedNodes.Add(data);
 
@@ -373,11 +454,6 @@ namespace AntDesign
             }
         }
 
-        protected void OnSelectedChange(string[] args)
-        {
-            Console.WriteLine(string.Join(',', args));
-        }
-
         protected async Task SetDropdownStyleAsync()
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
@@ -395,6 +471,7 @@ namespace AntDesign
             if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
                 maxWidth = $"max-width: {DropdownMaxWidth};";
             _dropdownStyle = minWidth + definedWidth + maxWidth;
+
             if (Multiple)
             {
                 if (_selectedValues == null)
@@ -410,7 +487,7 @@ namespace AntDesign
             }
             else
             {
-                _tree.FindFirstOrDefaultNode(node => node.Key == Value, true)?.SetSelected(true);
+                _tree?.FindFirstOrDefaultNode(node => node.Key == Value, true)?.SetSelected(true);
             }
         }
 

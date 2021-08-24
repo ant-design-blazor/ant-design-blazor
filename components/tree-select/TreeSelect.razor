@@ -24,12 +24,23 @@
                         <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
                             <div>
                                 <div class="" role="listbox" style="display: flex; flex-direction: column;">
-                                    <Tree DataSource="RootData" TItem="TItem" TitleExpression="TreeNodeTitleExpression" 
-                                          BlockNode @ref="_tree" Multiple="Multiple" 
-                                          SelectedKeys="SelectedKeys" DefaultExpandAll="TreeDefaultExpandAll"
-                                          KeyExpression="TreeNodeKeyExpression" ChildrenExpression="TreeNodeChildrenExpression"
-                                          DisabledExpression="TreeNodeDisabledExpression"
-                                          IsLeafExpression="TreeNodeIsLeafExpression" OnClick="OnTreeNodeClick" OnUnSelect="OnTreeNodeUnSelect">                                   </Tree>
+                                    
+                                    <Tree TItem="TItem"
+                                          BlockNode @ref="_tree" Multiple="Multiple"
+                                          @attributes="TreeAttributes"
+                                          SelectedKeys="SelectedKeys"
+                                          OnClick="OnTreeNodeClick"
+                                          OnUnSelect="OnTreeNodeUnSelect">
+                                        <Nodes>
+                                            @if (IsInnerModel)
+                                            {
+                                                <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
+                                                    @ChildContent
+                                                </CascadingValue>
+                                            }
+                                        </Nodes>
+                                        
+                                    </Tree>
                                 </div>
                             </div>
                         </div>
