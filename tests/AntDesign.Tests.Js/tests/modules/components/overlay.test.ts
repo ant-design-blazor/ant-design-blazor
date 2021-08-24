@@ -11,6 +11,7 @@ import * as sinon from 'sinon';
 import * as rewire from 'rewire'
 import { domInfo } from '../../../../../components/core/JsInterop/modules/dom/types';
 import exp = require('constants');
+import { domTypes } from '../../../../../components/core/JsInterop/modules/dom/exports';
 
 const domInfoDefaults: domInfo = {
   offsetTop: 0,
@@ -599,6 +600,7 @@ describe('Overlay calculation', () => {
     const w2 = sandbox.stub(window, 'innerWidth').get(() => testData.window.innerWidth);
     const w3 = sandbox.stub(window, 'pageXOffset').get(() => testData.window.pageXOffset);
     const w4 = sandbox.stub(window, 'pageYOffset').get(() => testData.window.pageYOffset);      
+    const w6 = sandbox.stub(triggerElement, 'offsetParent').get(() => 1);  
     const d1 = sandbox.stub(document.documentElement, 'clientHeight').get(() => testData.documentElement.clientHeight);
     const d2 = sandbox.stub(document.documentElement, 'clientWidth').get(() => testData.documentElement.clientWidth);
 
@@ -618,22 +620,22 @@ describe('Overlay calculation', () => {
     overlay.calculatePosition(false, true);    
     //assert
     if (testData.expectedCorrected.top !== null) {
-      expect(overlay.position.top).to.eq(testData.expectedCorrected.top);    
-      expect(overlay.position.bottom).to.eq(null);    
+      expect(overlay.sanitizedPosition.top).to.eq(testData.expectedCorrected.top);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(null);    
     }
     else {
-      expect(overlay.position.bottom).to.eq(testData.expectedCorrected.bottom);    
-      expect(overlay.position.top).to.eq(null);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(testData.expectedCorrected.bottom);    
+      expect(overlay.sanitizedPosition.top).to.eq(null);    
     }
     if (testData.expectedCorrected.left !== null) {
-      expect(overlay.position.left).to.eq(testData.expectedCorrected.left);
-      expect(overlay.position.right).to.eq(null);
+      expect(overlay.sanitizedPosition.left).to.eq(testData.expectedCorrected.left);
+      expect(overlay.sanitizedPosition.right).to.eq(null);
     }
     else {
-      expect(overlay.position.right).to.eq(testData.expectedCorrected.right);
-      expect(overlay.position.left).to.eq(null);
+      expect(overlay.sanitizedPosition.right).to.eq(testData.expectedCorrected.right);
+      expect(overlay.sanitizedPosition.left).to.eq(null);
     }
-    expect(overlay.position.placement).to.eq(testData.expectedCorrected.placement);
+    expect(overlay.sanitizedPosition.placement).to.eq(testData.expectedCorrected.placement);
   });
 
   itParam("(modal) should contain calculated values: ${value.theoryName}", theoryModalPositionData, (testData: positionTheory) => {
@@ -660,7 +662,8 @@ describe('Overlay calculation', () => {
     const w1 = sandbox.stub(window, 'innerHeight').get(() => testData.window.innerHeight);
     const w2 = sandbox.stub(window, 'innerWidth').get(() => testData.window.innerWidth);
     const w3 = sandbox.stub(window, 'pageXOffset').get(() => testData.window.pageXOffset);
-    const w4 = sandbox.stub(window, 'pageYOffset').get(() => testData.window.pageYOffset);      
+    const w4 = sandbox.stub(window, 'pageYOffset').get(() => testData.window.pageYOffset);
+    const w6 = sandbox.stub(triggerElement, 'offsetParent').get(() => 1);
     const d1 = sandbox.stub(document.documentElement, 'clientHeight').get(() => testData.documentElement.clientHeight);
     const d2 = sandbox.stub(document.documentElement, 'clientWidth').get(() => testData.documentElement.clientWidth);
 
@@ -680,22 +683,22 @@ describe('Overlay calculation', () => {
     overlay.calculatePosition(false, true);    
     //assert
     if (testData.expectedCorrected.top !== null) {
-      expect(overlay.position.top).to.eq(testData.expectedCorrected.top);    
-      expect(overlay.position.bottom).to.eq(null);    
+      expect(overlay.sanitizedPosition.top).to.eq(testData.expectedCorrected.top);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(null);    
     }
     else {
-      expect(overlay.position.bottom).to.eq(testData.expectedCorrected.bottom);    
-      expect(overlay.position.top).to.eq(null);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(testData.expectedCorrected.bottom);    
+      expect(overlay.sanitizedPosition.top).to.eq(null);    
     }
     if (testData.expectedCorrected.left !== null) {
-      expect(overlay.position.left).to.eq(testData.expectedCorrected.left);
-      expect(overlay.position.right).to.eq(null);
+      expect(overlay.sanitizedPosition.left).to.eq(testData.expectedCorrected.left);
+      expect(overlay.sanitizedPosition.right).to.eq(null);
     }
     else {
-      expect(overlay.position.right).to.eq(testData.expectedCorrected.right);
-      expect(overlay.position.left).to.eq(null);
+      expect(overlay.sanitizedPosition.right).to.eq(testData.expectedCorrected.right);
+      expect(overlay.sanitizedPosition.left).to.eq(null);
     }
-    expect(overlay.position.placement).to.eq(testData.expectedCorrected.placement);
+    expect(overlay.sanitizedPosition.placement).to.eq(testData.expectedCorrected.placement);
   })  
 });
 
@@ -740,6 +743,7 @@ describe('Overlay recalculation on container resize', () => {
     const w3 = sandbox.stub(window, 'pageXOffset').get(() => testData.window.pageXOffset);
     const w4 = sandbox.stub(window, 'pageYOffset').get(() => testData.window.pageYOffset);
     const w5 = sandbox.stub(overlayElement, 'offsetParent').get(() => 1); //not null and > 0 is needed   
+    const w6 = sandbox.stub(triggerElement, 'offsetParent').get(() => 1);  
     const d1 = sandbox.stub(document.documentElement, 'clientHeight').get(() => testData.documentElement.clientHeight);
     const d2 = sandbox.stub(document.documentElement, 'clientWidth').get(() => testData.documentElement.clientWidth);
     let resizeCallback;
@@ -777,21 +781,99 @@ describe('Overlay recalculation on container resize', () => {
     resizeCallback(testData.contentRect, null);
     //assert    
     if (testData.expectedCorrected.top !== null) {
-      expect(overlay.position.top).to.eq(testData.expectedCorrected.top);    
-      expect(overlay.position.bottom).to.eq(null);    
+      expect(overlay.sanitizedPosition.top).to.eq(testData.expectedCorrected.top);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(null);    
     }
     else {
-      expect(overlay.position.bottom).to.eq(testData.expectedCorrected.bottom);    
-      expect(overlay.position.top).to.eq(null);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(testData.expectedCorrected.bottom);    
+      expect(overlay.sanitizedPosition.top).to.eq(null);    
     }
     if (testData.expectedCorrected.left !== null) {
-      expect(overlay.position.left).to.eq(testData.expectedCorrected.left);
-      expect(overlay.position.right).to.eq(null);
+      expect(overlay.sanitizedPosition.left).to.eq(testData.expectedCorrected.left);
+      expect(overlay.sanitizedPosition.right).to.eq(null);
     }
     else {
-      expect(overlay.position.right).to.eq(testData.expectedCorrected.right);
-      expect(overlay.position.left).to.eq(null);
+      expect(overlay.sanitizedPosition.right).to.eq(testData.expectedCorrected.right);
+      expect(overlay.sanitizedPosition.left).to.eq(null);
     }
-    expect(overlay.position.placement).to.eq(testData.expectedCorrected.placement);
+    expect(overlay.sanitizedPosition.placement).to.eq(testData.expectedCorrected.placement);
   });
+
+  it("should not reposition when submenu's parent is hidden", () => {
+    //arrange
+    const triggerElement = domInit.addElementToBody('<div id="trigger">TriggerElement</div>');            
+    const overlayElement = domInit.addElementToBody('<div id="overlay" style="position:absolute"></div>') as HTMLDivElement;
+    const container = document.body;    
+
+    //discard variable names    
+    let offsetParent = 1;
+    let inResize = false;
+    const w1 = sandbox.stub(window, 'innerHeight').get(() => 955);
+    const w2 = sandbox.stub(window, 'innerWidth').get(() => 1920);
+    const w3 = sandbox.stub(window, 'pageXOffset').get(() => 0);
+    const w4 = sandbox.stub(window, 'pageYOffset').get(() => 1020);
+    const w5 = sandbox.stub(overlayElement, 'offsetParent').get(() => 1); //not null and > 0 is needed   
+    const w6 = sandbox.stub(triggerElement, 'offsetParent').get(() => offsetParent);      
+    const d1 = sandbox.stub(document.documentElement, 'clientHeight').get(() => 955);
+    const d2 = sandbox.stub(document.documentElement, 'clientWidth').get(() => 1903);
+    let resizeCallback;
+    let mutationCallback;
+    const o1 = sandbox.stub(resizeObserver, 'create').callsFake((key, invoker, isDotNetInvoker: boolean) => {
+      resizeCallback = invoker;
+      return;
+    });
+    const o2 = sandbox.stub(mutationObserver, 'create').callsFake((key, invoker, isDotNetInvoker: boolean) => {
+      mutationCallback = invoker;
+      return;
+    });      
+    let triggerInfo: domInfo = {
+      ...domInfoDefaults,
+      absoluteTop: 1577, absoluteLeft: 406, clientHeight: 32, clientWidth: 175, offsetHeight: 32, offsetWidth: 175      
+    }
+
+    const s7 = sandbox.stub(infoHelper, "getInfo").callsFake((element: HTMLElement) => {      
+      let elementId = element.getAttribute("id");
+      if (!elementId && element === document.body) {
+        elementId = "body";
+      }
+      let domInfo = domInfoDefaults;
+      switch (elementId) {
+        case "body": 
+          domInfo = {
+            ...domInfoDefaults,
+            absoluteTop: 0, absoluteLeft: 0, clientLeft: 0, clientTop: 0, scrollLeft: 0, scrollTop: 0, scrollHeight: 5560, scrollWidth: 1903
+          }
+          break;
+        case "trigger":
+          domInfo = triggerInfo;          
+          break;
+        case "overlay":
+          domInfo = {
+            ...domInfoDefaults,
+            clientHeight: 80, clientWidth: 123
+          }                
+          break;
+      }      
+      return domInfo;
+    }); 
+
+    //act
+    let overlay = new Overlay("testId", overlayElement, container, triggerElement, Placement.RightTop, TriggerBoundyAdjustMode.None, false, '', overlayConstraintsDefaults);
+    overlay.calculatePosition(false, true);
+    resizeCallback(null, null); //reset Overlay.duringInit;
+
+    //change test data for stubs
+    offsetParent = null;
+    triggerInfo = {
+      ...domInfoDefaults,
+      absoluteTop: 1020
+    };
+    resizeCallback({height: 900, width: 1000}, null);
+    //assert    
+    expect(overlay.sanitizedPosition.top).to.eq(1577);        
+    expect(overlay.sanitizedPosition.left).to.eq(585);    
+    expect(overlay.sanitizedPosition.right).to.eq(null);    
+    expect(overlay.sanitizedPosition.bottom).to.eq(null);    
+    expect(overlay.sanitizedPosition.placement).to.eq(Placement.RightTop);    
+  });  
 });

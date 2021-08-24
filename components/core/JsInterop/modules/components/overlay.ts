@@ -152,6 +152,7 @@ export class Overlay {
 
   private boundyAdjustMode: TriggerBoundyAdjustMode
   public position: overlayPosition;
+  public sanitizedPosition: overlayPosition;
   
   private overlayPreset: domTypes.position;
 
@@ -171,10 +172,11 @@ export class Overlay {
   private selectedHorizontalPosition: "left" | "right";
   private calculationsToPerform: Set<"horizontal"|"vertical">;
 
-  private triggerPosition: coordinates & { height?: number, width?: number } = { };
-  
+  private triggerPosition: coordinates & { height?: number, width?: number } = { };  
 
   private containerIsBody: boolean;
+  private isTriggerFixed: boolean; //refers to trigger or any of its parent having "position:fixed"
+  private lastScrollPosition: number; //used only if isTriggerFixed === true
 
   private scrollbarSize: {
     horizontalHeight: number,
@@ -219,7 +221,7 @@ export class Overlay {
 
     this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);
     this.horizontalCalculation = Overlay.setHorizontalCalculation(this.placement, this.selectedHorizontalPosition);
-
+    this.isTriggerFixed = domInfoHelper.isFixedPosition(this.trigger);
     this.observe();
   }
 
@@ -410,24 +412,41 @@ export class Overlay {
       attributeOldValue: false,
       characterDataOldValue: false
     });
+    
     if (this.containerIsBody) {
       window.addEventListener("scroll", this.onScroll.bind(this));
     }
     else {
       this.container.addEventListener("scroll", this.onScroll.bind(this));
     }
-  }
+  }  
 
   private onScroll() {
-    //Commented out code is a non-optimized calculation only if overlay stops fitting during scroll
-    //It misses active check for initialPlacement being different to current placement
-    // this.getKeyElementDimensions(false);
-    // this.containerBoundarySize = this.getContainerBoundarySize();
-    // if (!this.overlayFitsContainer("horizontal", this.position.left, this.position.right)
-    //   || !this.overlayFitsContainer("vertical", this.position.top, this.position.bottom)) {    
-    //     this.calculatePosition(true, false, this.overlayPreset)
-    // }    
-    this.calculatePosition(true, false, this.overlayPreset)
+    if (this.isTriggerFixed) {
+      if (this.lastScrollPosition !== window.pageYOffset) {      
+        let diff = window.pageYOffset - this.lastScrollPosition; //positive -> down, negative -> up        
+        this.position.top += diff;
+        this.position.bottom = Overlay.reversePositionValue(this.position.top, this.containerInfo.scrollHeight, this.overlayInfo.clientHeight);      
+        if (this.selectedVerticalPosition === "top") {        
+          this.sanitizedPosition.top = this.position.top;
+          this.overlay.style.top = this.sanitizedPosition.top + "px";        
+        } else {
+          this.sanitizedPosition.bottom = this.getAdjustedBottom();
+          this.overlay.style.bottom = this.sanitizedPosition.bottom + "px";
+        }
+        this.lastScrollPosition = window.pageYOffset;
+      }
+    } else {
+      //Commented out code is a non-optimized calculation only if overlay stops fitting during scroll
+      //It misses active check for initialPlacement being different to current placement
+      // this.getKeyElementDimensions(false);
+      // this.containerBoundarySize = this.getContainerBoundarySize();
+      // if (!this.overlayFitsContainer("horizontal", this.position.left, this.position.right)
+      //   || !this.overlayFitsContainer("vertical", this.position.top, this.position.bottom)) {    
+      //     this.calculatePosition(true, false, this.overlayPreset)
+      // }    
+      this.calculatePosition(true, false, this.overlayPreset);
+    }
   }
 
   private resizing(entries, observer) {
@@ -461,9 +480,8 @@ export class Overlay {
 
   public dispose(): void {    
     resize.dispose(`container-${this.blazorId}`);
-    mutation.disconnect(`trigger-${this.blazorId}`);
+    mutation.dispose(`trigger-${this.blazorId}`);
     this.container.removeChild(this.overlay);    
-    this.container.removeEventListener("scroll", this.onScroll);
     if (this.containerIsBody) {      
       window.removeEventListener("scroll", this.onScroll);
     }
@@ -485,7 +503,7 @@ export class Overlay {
       }
       return this.position;
     }
-
+    this.lastScrollPosition = window.pageYOffset;
     this.recentPlacement = this.placement;
     this.overlayPreset = overlayPreset;
 
@@ -502,10 +520,9 @@ export class Overlay {
     this.sanitizeCalculatedPositions();
     //first positioning is applied by blazor - without it, a flicker is visible
     if (applyLocation) {
-      this.applyLocation();      
+      this.applyLocation();
     }
-    this.logToConsole();
-    return this.position;
+    return this.sanitizedPosition;
   }
 
   /**
@@ -518,22 +535,23 @@ export class Overlay {
    * Browsers use different reference for bottom & right.
    */
   private sanitizeCalculatedPositions() {
-    this.position.zIndex = domInfoHelper.getMaxZIndex();
-    this.position.placement = this.placement;    
+    this.sanitizedPosition = { ...this.position};
+    this.sanitizedPosition.zIndex = domInfoHelper.getMaxZIndex();
+    this.sanitizedPosition.placement = this.placement;    
     if (this.selectedHorizontalPosition === "left") {
-      this.position.right = null;
+      this.sanitizedPosition.right = null;
     }
     else {
-      this.position.left = null;
-      this.position.right = this.getAdjustedRight();
+      this.sanitizedPosition.left = null;
+      this.sanitizedPosition.right = this.getAdjustedRight();
     }
 
     if (this.selectedVerticalPosition === "top") {
-      this.position.bottom = null;
+      this.sanitizedPosition.bottom = null;
     }
     else {
-      this.position.top = null;
-      this.position.bottom = this.getAdjustedBottom();
+      this.sanitizedPosition.top = null;
+      this.sanitizedPosition.bottom = this.getAdjustedBottom();
     }
   }
 
@@ -702,18 +720,18 @@ export class Overlay {
 
   private applyLocation() {
     if (this.selectedHorizontalPosition === "left") {
-      this.overlay.style.left = this.position.left + "px";
+      this.overlay.style.left = this.sanitizedPosition.left + "px";
       this.overlay.style.right = "unset";
     } else {
-      this.overlay.style.right = this.position.right + "px";
+      this.overlay.style.right = this.sanitizedPosition.right + "px";
       this.overlay.style.left = "unset";
     }
 
     if (this.selectedVerticalPosition === "top") {
-      this.overlay.style.top = this.position.top + "px";
+      this.overlay.style.top = this.sanitizedPosition.top + "px";
       this.overlay.style.bottom = "unset";
     } else {
-      this.overlay.style.bottom = this.position.bottom + "px";
+      this.overlay.style.bottom = this.sanitizedPosition.bottom + "px";
       this.overlay.style.top = "unset";
     }
 

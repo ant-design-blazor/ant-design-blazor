@@ -121,5 +121,14 @@ export class infoHelper {
     return [...document.querySelectorAll("*")].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
   }  
 
+  static isFixedPosition(element) {
+    let node = this.get(element);
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+        if (window.getComputedStyle(node).getPropertyValue('position').toLowerCase() === 'fixed')
+            { return true; }
+        node = node.parentNode;
+    }
+    return false;
+  }
   
 }
