@@ -237,7 +237,7 @@ namespace AntDesign
 
             SetClass();
 
-            if (_hasDefaultValue)
+            if (_hasDefaultValue && EqualityComparer<TValue>.Default.Equals(Value, default))
             {
                 CurrentValue = _defaultValue;
             }
