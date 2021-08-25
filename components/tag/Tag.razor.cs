@@ -37,7 +37,7 @@ namespace AntDesign
         /// Callback executed when Tag is checked/unchecked
         /// </summary>
         [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
+        public EventCallback<bool> CheckedChanged { get; set; }
 
         /// <summary>
         /// Tag color. Can either be a predefined color (string)
