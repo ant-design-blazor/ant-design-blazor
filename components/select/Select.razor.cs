@@ -720,9 +720,12 @@ namespace AntDesign
             }
             _isInitialized = true;
 
-            if (_defaultValueIsNotNull || _defaultValuesHasItems)
+            if (SelectMode == SelectMode.Default && _defaultValueIsNotNull)
             {
                 Value = DefaultValue;
+            }
+            else if (SelectMode != SelectMode.Default && _defaultValuesHasItems)
+            {
                 Values = DefaultValues;
             }
 
