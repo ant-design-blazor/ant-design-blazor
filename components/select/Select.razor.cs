@@ -720,13 +720,9 @@ namespace AntDesign
             }
             _isInitialized = true;
 
-            if (_defaultValueIsNotNull)
+            if (_defaultValueIsNotNull || _defaultValuesHasItems)
             {
                 Value = DefaultValue;
-            }
-
-            if (_defaultValuesHasItems)
-            {
                 Values = DefaultValues;
             }
 
