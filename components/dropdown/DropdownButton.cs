@@ -208,25 +208,20 @@ namespace AntDesign
             if (firstRender)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "click", OnUnboundClick);
-                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter);
-                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave);
-                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn);
-                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true);
+
+                _dotNetObjects.Add(Ref.Id + "click", DomEventService.AddExclusiveEventListener(Ref, "click", OnUnboundClick));
+                _dotNetObjects.Add(Ref.Id + "mouseover", DomEventService.AddExclusiveEventListener(Ref, "mouseover", OnUnboundMouseEnter));
+                _dotNetObjects.Add(Ref.Id + "mouseout", DomEventService.AddExclusiveEventListener(Ref, "mouseout", OnUnboundMouseLeave));
+                _dotNetObjects.Add(Ref.Id + "focusin", DomEventService.AddExclusiveEventListener(Ref, "focusin", OnUnboundFocusIn));
+                _dotNetObjects.Add(Ref.Id + "focusout", DomEventService.AddExclusiveEventListener(Ref, "focusout", OnUnboundFocusOut));
+                _dotNetObjects.Add(Ref.Id + "cliccontextmenuk", DomEventService.AddExclusiveEventListener(Ref, "contextmenu", OnContextMenu, true));
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
-
+            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
             base.Dispose(disposing);
         }
 

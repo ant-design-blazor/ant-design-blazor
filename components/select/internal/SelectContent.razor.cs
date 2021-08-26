@@ -13,7 +13,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SelectContent<TItemValue, TItem>: IDisposable
+    public partial class SelectContent<TItemValue, TItem> : IDisposable
     {
         [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
@@ -90,6 +90,7 @@ namespace AntDesign.Select.Internal
         private int _currentItemCount;
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
+        private DotNetObjectReferenceList<JsonElement> _dotNetObjects = new();
 
         protected override void OnInitialized()
         {
@@ -138,8 +139,10 @@ namespace AntDesign.Select.Internal
                     await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal);
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focus", OnFocusInternal);
+                _dotNetObjects.Add(ParentSelect._inputRef.Id + "focusout", 
+                                    DomEventService.AddExclusiveEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal));
+                _dotNetObjects.Add(ParentSelect._inputRef.Id + "focus", 
+                                    DomEventService.AddExclusiveEventListener(ParentSelect._inputRef, "focus", OnFocusInternal));
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
@@ -423,8 +426,7 @@ namespace AntDesign.Select.Internal
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
-            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
-            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
+            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
 
             if (IsDisposed) return;

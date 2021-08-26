@@ -11,6 +11,8 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.JsInterop
 {
+    public class DotNetObjectReferenceList<T> : Dictionary<string, DotNetObjectReference<Invoker<T>>> { }
+
     public class DomEventService
     {
         private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new();
@@ -34,22 +36,38 @@ namespace AntDesign.JsInterop
             }
         }
 
+        public DotNetObjectReference<Invoker<JsonElement>> AddExclusiveEventListener(
+            object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
+        {
+            return AddExclusiveEventListener<JsonElement>(dom, eventName, callback, preventDefault);
+        }
+
+        public virtual DotNetObjectReference<Invoker<T>> AddExclusiveEventListener<T>(
+            object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        {
+            var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
+            {
+                callback(p);
+            }));
+            _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
+
+            return dotNetObject;
+        }
+
+        public void RemoveExclusiveEventListener<T>(DotNetObjectReferenceList<T> dotNetObjectReferences, string id = "")
+        {
+            foreach (var (key, value) in dotNetObjectReferences)
+            {
+                if (key == id || string.IsNullOrEmpty(id))
+                {
+                    value.Dispose();
+                }
+            }
+        }
+
         public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
             AddEventListener<JsonElement>(dom, eventName, callback, preventDefault);
-        }
-
-        private Invoker<string> CreateSubscriptionInvoker(List<DomEventSubscription> domEventSubscriptions)
-        {
-            return new Invoker<string>((p) =>
-            {
-                for (var i = 0; i < domEventSubscriptions.Count; i++)
-                {
-                    var subscription = domEventSubscriptions[i];
-                    object tP = JsonSerializer.Deserialize(p, subscription.Type);
-                    subscription.Delegate.DynamicInvoke(tP);
-                }
-            });
         }
 
         public virtual void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
@@ -64,6 +82,19 @@ namespace AntDesign.JsInterop
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
             _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(T)));
+        }
+
+        private Invoker<string> CreateSubscriptionInvoker(List<DomEventSubscription> domEventSubscriptions)
+        {
+            return new Invoker<string>((p) =>
+            {
+                for (var i = 0; i < domEventSubscriptions.Count; i++)
+                {
+                    var subscription = domEventSubscriptions[i];
+                    object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                    subscription.Delegate.DynamicInvoke(tP);
+                }
+            });
         }
 
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)

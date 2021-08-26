@@ -106,5 +106,11 @@ namespace AntDesign
             _isLoading = Spinning;
             InvokeAsync(StateHasChanged);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _delayTimer?.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

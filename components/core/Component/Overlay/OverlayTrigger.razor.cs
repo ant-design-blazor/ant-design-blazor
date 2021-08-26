@@ -221,6 +221,8 @@ namespace AntDesign.Internal
 
         protected Overlay _overlay = null;
 
+        protected DotNetObjectReferenceList<JsonElement> _dotNetObjects = new();
+
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
@@ -238,12 +240,13 @@ namespace AntDesign.Internal
             if (firstRender && Unbound != null)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "click", OnUnboundClick);
-                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter);
-                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave);
-                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn);
-                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true);
+
+                _dotNetObjects.Add(Ref.Id + ".click", DomEventService.AddExclusiveEventListener(Ref, "click", OnUnboundClick));
+                _dotNetObjects.Add(Ref.Id + ".mouseover", DomEventService.AddExclusiveEventListener(Ref, "mouseover", OnUnboundMouseEnter));
+                _dotNetObjects.Add(Ref.Id + ".mouseout", DomEventService.AddExclusiveEventListener(Ref, "mouseout", OnUnboundMouseLeave));
+                _dotNetObjects.Add(Ref.Id + ".focusin", DomEventService.AddExclusiveEventListener(Ref, "focusin", OnUnboundFocusIn));
+                _dotNetObjects.Add(Ref.Id + ".focusout", DomEventService.AddExclusiveEventListener(Ref, "focusout", OnUnboundFocusOut));
+                _dotNetObjects.Add(Ref.Id + ".contextmenu", DomEventService.AddExclusiveEventListener(Ref, "contextmenu", OnContextMenu, true));
             }
             return base.OnAfterRenderAsync(firstRender);
         }
@@ -277,15 +280,7 @@ namespace AntDesign.Internal
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
             DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
 
-            if (Unbound != null)
-            {
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
-            }
+            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
             base.Dispose(disposing);
         }
 
@@ -572,5 +567,7 @@ namespace AntDesign.Internal
         /// </summary>
         /// <param name="visible">boolean: visibility true/false</param>
         public void SetVisible(bool visible) => Visible = visible;
+
+
     }
 }

@@ -50,6 +50,7 @@ namespace AntDesign
         private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
+        private DotNetObjectReferenceList<string> _dotNetObjects = new();
 
         internal List<TabPane> _panes = new List<TabPane>();
 
@@ -394,13 +395,14 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                DomEventService.AddEventListener<string>(_scrollTabBar, "wheel", OnWheel, true);
+                _dotNetObjects.Add(_scrollTabBar.Id + "wheel",
+                                    DomEventService.AddExclusiveEventListener<string>(_scrollTabBar, "wheel", OnWheel, true));
                 _wheelDisabled = true;
             }
 
             if (!IsHorizontal && _wheelDisabled)
             {
-                DomEventService.RemoveEventListerner<string>(_scrollTabBar, "wheel", OnWheel);
+                DomEventService.RemoveExclusiveEventListener(_dotNetObjects, _scrollTabBar.Id + "wheel");
                 _wheelDisabled = false;
             }
 
@@ -571,7 +573,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<string>(_scrollTabBar, "wheel", OnWheel);
+            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
             base.Dispose(disposing);
         }
     }
