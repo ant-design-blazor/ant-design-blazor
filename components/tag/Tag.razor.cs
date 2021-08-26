@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -183,9 +183,9 @@ namespace AntDesign
             }
 
             this.Checked = !this.Checked;
-            if (this.CheckedChange.HasDelegate)
+            if (this.CheckedChanged.HasDelegate)
             {
-                await this.CheckedChange.InvokeAsync(this.Checked);
+                await this.CheckedChanged.InvokeAsync(this.Checked);
             }
         }
 
