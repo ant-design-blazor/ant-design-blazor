@@ -43,6 +43,9 @@ namespace AntDesign
         [Parameter]
         public string Icon { get; set; }
 
+        [Parameter]
+        public string IconFont { get; set; }
+
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;

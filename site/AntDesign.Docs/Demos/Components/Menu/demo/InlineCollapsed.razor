@@ -1,4 +1,6 @@
-﻿<div style="width: 256px;">
+﻿@inject IconService iconService
+
+<div style="width: 256px;">
     <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
         @if (collapsed)
         {
@@ -14,7 +16,7 @@
           Mode=MenuMode.Inline
           Theme=MenuTheme.Dark
           InlineCollapsed=collapsed>
-        <MenuItem Key="1" Icon="pie-chart">
+        <MenuItem Key="1" Icon="pie-chart" IconFont="icon-c-sharp-l">
             Option 1
         </MenuItem>
         <MenuItem Key="2" Icon="desktop">
@@ -49,14 +51,19 @@
         <span>Navigation One</span>
     </span>;
 
-    RenderFragment sub2Title =
-    @<span>
-        <Icon Type="appstore" Theme="outline"></Icon>
-        <span>Navigation Two</span>
-    </span>;
+RenderFragment sub2Title =
+@<span>
+    <Icon Type="appstore" Theme="outline"></Icon>
+    <span>Navigation Two</span>
+</span>;
 
-        void ToggleCollapsed()
-        {
-            collapsed = !collapsed;
-        }
+    void ToggleCollapsed()
+    {
+        collapsed = !collapsed;
     }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_2735473_hi62ezq5579.js");
+    }
+}
