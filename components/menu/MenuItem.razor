@@ -5,7 +5,8 @@
     <Tooltip Title="@content(this)" Placement="@PlacementType.Right" Disabled="TooltipDisabled">
         <Unbound>
             <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="context.Current">
-                @if (Icon != null)
+
+                @if (Icon != null || IconFont != null)
                 {
                     <Icon Type="@Icon" IconFont="@IconFont" />
                 }
@@ -25,14 +26,10 @@
 
 @code {
     RenderFragment<MenuItem> content = item =>@<Template>
-
         <span>
             @if (item.Title != null)
             {
-
                 @item.Title
-
-
             }
             else
             {
