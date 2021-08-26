@@ -72,7 +72,6 @@ namespace AntDesign
             }
             set
             {
-                Console.WriteLine("OptionDataItems changed");
                 _optionDataItems = value.ToList();
             }
         }
