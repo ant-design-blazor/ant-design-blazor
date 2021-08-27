@@ -6,6 +6,8 @@
 		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
 			.SetResult(new HtmlElement());
 
+		JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
+
         var cut = Context.Render(
           @<Tabs>
               <TabPane Key="tab1">
@@ -23,6 +25,9 @@
 	{
 		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
 			.SetResult(new HtmlElement());
+	
+		JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
+
         var closeTab = "";
         Action<string> OnClose = (string key) => closeTab = key;
 
