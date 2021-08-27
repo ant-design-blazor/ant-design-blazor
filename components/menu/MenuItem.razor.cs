@@ -44,7 +44,7 @@ namespace AntDesign
         public string Icon { get; set; }
 
         [Parameter]
-        public string IconFont { get; set; }
+        public RenderFragment IconTemplate { get; set; }
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;

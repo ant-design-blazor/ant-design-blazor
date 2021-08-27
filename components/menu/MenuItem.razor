@@ -6,9 +6,13 @@
         <Unbound>
             <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="context.Current">
 
-                @if (Icon != null || IconFont != null)
+                @if (IconTemplate != null)
                 {
-                    <Icon Type="@Icon" IconFont="@IconFont" />
+                    @IconTemplate
+                }
+                else if (Icon != null)
+                {
+                    <Icon Type="@Icon" />
                 }
 
                 @if (RouterLink == null)
