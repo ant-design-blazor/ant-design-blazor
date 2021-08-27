@@ -496,8 +496,7 @@ export class Overlay {
       return;
     }
     //trigger no longer visible, hide
-    if (!overlayPreset && !this.trigger.offsetParent) {
-      console.log("overlayPreset:", overlayPreset, (overlayPreset?true:false));
+    if (!overlayPreset && !this.trigger.offsetParent) {      
       if (!this.overlay.classList.contains(this.triggerPrefixCls + "-hidden")) {
         this.overlay.classList.add(this.triggerPrefixCls + "-hidden");
       }

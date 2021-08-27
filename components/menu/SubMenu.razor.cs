@@ -151,7 +151,16 @@ namespace AntDesign
             base.OnParametersSet();
 
             if (!RootMenu.InlineCollapsed && RootMenu.OpenKeys.Contains(Key))
-                IsOpen = true;
+            {
+                if (RootMenu.InitialMode != RootMenu.Mode)
+                {
+                    IsOpen = false;
+                }
+                else
+                {
+                    IsOpen = true;
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

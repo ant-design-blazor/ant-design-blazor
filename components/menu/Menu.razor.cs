@@ -20,6 +20,7 @@ namespace AntDesign
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
+        internal MenuMode? InitialMode { get; private set; }
         [Parameter]
         public MenuMode Mode
         {
@@ -223,7 +224,7 @@ namespace AntDesign
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
-
+            InitialMode = Mode;
             Parent?.AddMenu(this);
 
             OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
