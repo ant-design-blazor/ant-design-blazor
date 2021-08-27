@@ -76,7 +76,7 @@
 	{
 		bool isCheckedChangeCalled = false;
 		Action<bool> onCheckedChange = (value) => { isCheckedChangeCalled = true; };
-		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable CheckedChange="onCheckedChange">Tag 1</AntDesign.Tag>);			
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable CheckedChanged="onCheckedChange">Tag 1</AntDesign.Tag>);			
 		var tag = cut.Find("span.ant-tag");
 		tag.Click();
 		isCheckedChangeCalled.Should().BeTrue();
