@@ -7,12 +7,16 @@
 	{        
 		<Tooltip Title="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
 			<Unbound Context="tooltip">
-				<li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
-					@if (Icon != null)
-					{
-						<Icon Type="@Icon" />
-					}
+				<li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">              
 
+          @if (IconTemplate != null)
+          {
+              @IconTemplate
+          }
+          else if (Icon != null)
+          {
+              <Icon Type="@Icon" />
+          }              
 					@if (RouterLink == null)
 					{
 						@content(this)
