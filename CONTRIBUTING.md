@@ -1,7 +1,6 @@
 # Contributing to ant-design-blazor
 
-We would love for you to contribute to ant-design-blazor and help make it even better than it is
-today! As a contributor, here are the guidelines we would like you to follow:
+We would love to have your contribution to make ant-design-blazor better than it is today! You can contribute by reporting issues, participating in discussions on issues or submitting pull requests. When doing so, you are expected to follow the guidelines below:
 
  - [Code of Conduct](#coc)
  - [Question or Problem?](#question)
@@ -12,11 +11,11 @@ today! As a contributor, here are the guidelines we would like you to follow:
  - [Commit Message Guidelines](#commit)
 
 ## <a name="coc"></a> Code of Conduct
-Help us keep ant-design-blazor open and inclusive. Please read and follow our [Code of Conduct][coc].
+Help us keep ant-design-blazor open and inclusive, by reading and following our [Code of Conduct][coc].
 
 ## <a name="question"></a> Got a Question or Problem?
 
-Do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests. You've got much better chances of getting your question answered on [Segmentfault](https://segmentfault.com/t/ant-design-blazor) or [Stack Overflow](https://stackoverflow.com/tags/ant-design-blazor) where the questions should be tagged with tag `ant-design-blazor`.
+Do not open issues for general support purposes as we want to keep GitHub issues for bug reports and feature requests only. You probably have already got your questions answered on [Segmentfault](https://segmentfault.com/t/ant-design-blazor) or [Stack Overflow](https://stackoverflow.com/tags/ant-design-blazor) where the questions should be tagged with tag `ant-design-blazor`.
 
 Segmentfault / Stack Overflow is a much better place to ask questions since:
 
@@ -24,7 +23,7 @@ Segmentfault / Stack Overflow is a much better place to ask questions since:
 - questions and answers stay available for public viewing so your question / answer might help someone else
 - Segmentfault's voting system assures that the best answers are prominently visible.
 
-To save your and our time, we will systematically close all issues that are requests for general support and redirect people to Segmentfault / Stack Overflow.
+To save time, we will systematically close all issues about general support and redirect people to Segmentfault / Stack Overflow.
 
 If you would like to chat about the question in real-time, you can reach out via [our slack channel][slack].
 
@@ -36,8 +35,8 @@ If you find a bug in the source code, you can help us by
 ## <a name="feature"></a> Missing a Feature?
 You can *request* a new feature by [submitting an issue](#submit-issue) to our GitHub
 Repository. If you would like to *implement* a new feature, please submit an issue with
-a  for your work first, to be sure that we can use it.
-Please consider what kind of change it is:
+a usage scene, to make it easily used.
+Please also consider what kind of change it is:
 
 * For a **Major Feature**, first open an issue and outline your proposal so that it can be
 discussed. This will also allow us to better coordinate our efforts, prevent duplication of work,
@@ -48,25 +47,25 @@ and help you to craft the change so that it is successfully accepted into the pr
 
 ### <a name="submit-issue"></a> Submitting an Issue
 
-Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
+Before you submit an issue, please search the issue tracker as there might be existing related issues for your problem and the discussion might inform you about workarounds readily available.
 
 We want to fix all the issues as soon as possible, but before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs we will systematically ask you to provide a minimal reproduction scenario using http://plnkr.co. Having a live, reproducible scenario gives us wealth of important information without going back & forth to you with additional questions like:
 
-- version of ant-design-blazor used
+- version of ant-design-blazor being used
 - 3rd-party libraries and their versions
 - and most importantly - a use-case that fails
 
-A minimal reproduce scenario using http://plnkr.co/ allows us to quickly confirm a bug (or point out coding problem) as well as confirm that we are fixing the right problem. If plunker is not a suitable way to demonstrate the problem (for example for issues related to our npm packaging), please create a standalone git repository demonstrating the problem.
+A minimal reproduce scenario using http://plnkr.co/ allows us to quickly confirm a bug (or point out a coding problem) as well as confirming that we are fixing the right problem. If plunker is not a suitable way to demonstrate the problem (for example, issues related to our npm packaging), please create a standalone git repository demonstrating the problem.
 
-We will be insisting on a minimal reproduce scenario in order to save maintainers time and ultimately be able to fix more bugs. Interestingly, from our experience users often find coding problems themselves while preparing a minimal plunk. We understand that sometimes it might be hard to extract essentials bits of code from a larger code-base but we really need to isolate the problem before we can fix it.
+We will be insisting on a minimal reproduce scenario in order to save maintainers time and ultimately be able to fix more bugs. Interestingly, from our experience, users often find coding problems themselves while preparing a minimal plunk. We understand that sometimes it might be hard to extract essential bits of code from a larger code-base but we really need to isolate the problem before we fix it.
 
-Unfortunately we are not able to investigate / fix bugs without a minimal reproduction, so if we don't hear back from you we are going to close an issue that don't have enough info to be reproduced.
+Unfortunately we are not able to investigate / fix bugs without a minimal reproduction, so if we don't hear back from you we will close your issue that doesn't have enough info to be reproduced.
 
 You can file new issues by filling out our [new issue form](https://github.com/ant-design-blazor/ant-design-blazor/issues/new).
 
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
-Before you submit your Pull Request (PR) consider the following guidelines:
+Before you submit your Pull Request (PR), consider the following guidelines:
 
 * Search [GitHub](https://github.com/ant-design-blazor/ant-design-blazor/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
@@ -97,7 +96,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 * In GitHub, send a pull request to `ant-design-blazor:master`.
 * If we suggest changes then:
   * Make the required updates.
-  * Re-run the ant-design-blazor test suites to ensure tests are still passing.
+  * Re-run the ant-design-blazor test suites to ensure tests are still passed.
   * Rebase your branch and force push to your GitHub repository (this will update your Pull Request):
 
     ```shell
@@ -145,7 +144,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 ## <a name="commit"></a> Commit Message Guidelines
 
 We have very precise rules over how our git commit messages can be formatted.  This leads to **more
-readable messages** that are easy to follow when looking through the **project history**.  But also,
+readable messages** that are easy to follow when looking through the **project history**.  Meanwhile,
 we use the git commit messages to **generate the ant-design-blazor change log**.
 
 ### Commit Message Format
@@ -162,10 +161,9 @@ format that includes a **type**, a **scope** and a **subject**:
 
 The **header** is mandatory and the **scope** of the header is optional.
 
-Any line of the commit message cannot be longer 100 characters! This allows the message to be easier
-to read on GitHub as well as in various git tools.
+Any line of the commit message cannot be longer than 100 characters! This allows the message to be easier read on GitHub as well as in various git tools.
 
-Footer should contain a [closing reference to an issue](https://help.github.com/articles/closing-issues-via-commit-messages/) if any.
+Footer should also contain a [closing reference to an issue](https://help.github.com/articles/closing-issues-via-commit-messages/) if any.
 
 Samples: (even more [samples](https://github.com/ant-design-blazor/ant-design-blazor/commits/master))
 
@@ -195,7 +193,7 @@ Must be one of the following:
 * **test**: Adding missing tests or correcting existing tests
 
 ### Scope
-The scope should be the name of the module affected (folder name or other meaningful words), and should prefix with *module:* (as perceived by person reading changelog generated from commit messages.
+The scope should be the name of the module affected (folder name or other meaningful words), and should have prefix *module:* (as perceived by person reading changelog generated from commit messages.
 
 The following are some examples:
 
@@ -208,7 +206,7 @@ There are currently a few exceptions to the "use module name" rule:
 
 * **packaging**: used for changes that change the npm package layout, e.g. public path changes, package.json changes, d.ts file/format changes, changes to bundles, etc.
 * **changelog**: used for updating the release notes in CHANGELOG.md
-* **showcase**: used for docs-app (ng.ant.design) related changes within the /showcase directory of the repo
+* **showcase**: used for docs-app (ng.ant.design) related changes within the showcase / directory of the repo
 * none/empty string: useful for `style`, `test` and `refactor` changes that are done across all packages (e.g. `style: add missing semicolons`)
 
 ### Subject
@@ -216,7 +214,7 @@ The subject contains succinct description of the change:
 
 * use the imperative, present tense: "change" not "changed" nor "changes"
 * don't capitalize first letter
-* no dot (.) at the end
+* no period (.) at the end
 
 ### Body
 Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes".
@@ -226,7 +224,7 @@ The body should include the motivation for the change and contrast this with pre
 The footer should contain any information about **Breaking Changes** and is also the place to
 reference GitHub issues that this commit **Closes**.
 
-**Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
+**Breaking Changes** should start with the words `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
 
 A detailed explanation can be found in this [document][commit-message-format].
 
