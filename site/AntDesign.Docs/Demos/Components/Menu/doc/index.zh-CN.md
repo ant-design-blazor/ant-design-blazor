@@ -66,6 +66,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | Style    | 额外的 CSS 样式  | string |     -          |         |
 | Title    | 设置收缩时展示的悬浮标题 | string  |        |      |
 | Icon | 图标的类型| string | - | |
+| IconTemplate | 自定义Icon模板，当`Icon`和`IconTemplate`同时设置时，优先使用`IconTemplate`| RenderFragment | - | |
 
 ### SubMenu
 
