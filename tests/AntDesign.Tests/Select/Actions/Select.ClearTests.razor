@@ -1,0 +1,44 @@
+﻿@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+    List<Person> _persons = new()
+    {
+        new(1, "John"),
+        new(2, "Lucy"),
+        new(3, "Jack"),
+        new(4, "Emily"),
+    };
+
+    [Fact]
+    public void DefaultSelectWithoutAllowClear()
+    {
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect());
+        var cut = Render<Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               Value="0">
+            </AntDesign.Select>);
+        Assert.Throws(typeof(ElementNotFoundException), () => cut.Find("span.ant-select-clear"));
+    }
+
+    [Fact]
+    public void DefaultSelectWithAllowClear()
+    {
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect());
+        var value = 1;
+        var cut = Render<Select<int, Person>>(
+            @<AntDesign.Select
+                 DataSource="@_persons"
+                 ValueName="@nameof(Person.Id)"
+                 LabelName="@nameof(Person.Name)"
+                 @bind-Value="value"
+                 AllowClear/>
+            );
+        var clear = cut.Find("span.ant-select-clear");
+        clear.Click();
+        value.Should().Be(default);
+    }
+}
