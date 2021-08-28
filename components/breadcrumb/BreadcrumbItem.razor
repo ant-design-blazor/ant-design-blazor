@@ -3,39 +3,54 @@
 
 <span @ref="Ref">
 
-    @if (Overlay != null)
-    {
-        <span class="ant-breadcrumb-overlay-link" nz-dropdown [nzDropdownMenu]="nzOverlay">
-            <span class="ant-breadcrumb-link">
-                @ChildContent
-            </span>
-            <Icon Type="down"></Icon>
-        </span>
-    }
-    else
-    {
-        <span class="ant-breadcrumb-link">
-            @ChildContent
-        </span>
-    }
+	@if (Overlay != null)
+	{
+		<Dropdown Placement="@PlacementType.BottomCenter">
+			<Unbound>
+				<span @ref="context.Current" class="ant-breadcrumb-overlay-link">
+					<span class="ant-breadcrumb-link">
+						@FormattedChildContent
+					</span>
+					<Icon Type="down"></Icon>
+				</span>
+			</Unbound>
+			<Overlay>
+				@Overlay
+			</Overlay>
+		</Dropdown>
+	}
+	else
+	{
+		<span class="ant-breadcrumb-link">
+			@FormattedChildContent
+		</span>
+	}
 
-    @if (BreadCrumb?.Separator != null)
-    {
-        <span class="ant-breadcrumb-separator">
-            @BreadCrumb.Separator
-        </span>
-    }
+	@if (BreadCrumb?.Separator != null)
+	{
+		<span class="ant-breadcrumb-separator">
+			@BreadCrumb.Separator
+		</span>
+	}
 
 </span>
 
 @code {
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
 
-    [Parameter]
-    public object Overlay { get; set; }
+	[Parameter]
+	public RenderFragment Overlay { get; set; }
 
-    [CascadingParameter]
-    public Breadcrumb BreadCrumb { get; set; }
+	[Parameter]
+	public string Href { get; set; }
+
+	[CascadingParameter]
+	public Breadcrumb BreadCrumb { get; set; }
+
+
+	private RenderFragment FormattedChildContent => Href is null ?
+		ChildContent :@<a href="@Href">@ChildContent</a>
+	;
 }
