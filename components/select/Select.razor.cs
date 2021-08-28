@@ -127,10 +127,6 @@ namespace AntDesign
             set
             {
                 _defaultActiveFirstOption = value;
-                if (!_defaultActiveFirstOption)
-                {
-                    _defaultActiveFirstOptionApplied = true;
-                }
             }
         }
 
@@ -618,8 +614,6 @@ namespace AntDesign
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
         private bool _optionsHasInitialized;
-        private bool _defaultValueApplied;
-        private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
         private bool _isValueEnum;
@@ -758,24 +752,16 @@ namespace AntDesign
                 DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                 await SetDropdownStyleAsync();
 
-                _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
-                _defaultActiveFirstOptionApplied = !_defaultActiveFirstOption;
-            }
-
-            if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
-            {
                 if (SelectMode == SelectMode.Default)
                 {
-                    if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
+                    if (_defaultValueIsNotNull || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValueAsync();
                     }
                 }
                 else
                 {
-                    if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
+                    if (_defaultValuesHasItems || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValuesAsync();
                     }
@@ -1244,7 +1230,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultActiveFirstOptionApplied = true;
         }
 
         /// <summary>
@@ -1286,7 +1271,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultValueApplied = true;
         }
 
         /// <summary>
@@ -1338,7 +1322,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultValueApplied = true;
         }
 
         /// <summary>
