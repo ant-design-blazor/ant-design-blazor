@@ -42,6 +42,8 @@ namespace AntDesign
             if (IsHeader)
             {
                 Table.Selection = this;
+
+                Context.HeaderColumnInitialed(this);
             }
             else if (IsBody)
             {
