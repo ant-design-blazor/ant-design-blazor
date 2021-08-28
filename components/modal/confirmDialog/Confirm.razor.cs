@@ -36,8 +36,8 @@ namespace AntDesign
 
         #endregion
 
-        private Button _cancelBtn;
-        private Button _okBtn;
+        private string _okBtnId = "ant-blazor-" + Guid.NewGuid();
+        private string _cancelBtnId = "ant-blazor-" + Guid.NewGuid();
 
         DialogOptions _dialogOptions;
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
@@ -96,11 +96,11 @@ namespace AntDesign
             if (Config.Visible && Config.AutoFocusButton != ConfirmAutoFocusButton.Null)
             {
                 var element = Config.AutoFocusButton == ConfirmAutoFocusButton.Cancel
-                    ? _cancelBtn
-                    : _okBtn;
+                    ? _cancelBtnId
+                    : _okBtnId;
                 if (element != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{element.Id}");
+                    await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{element}");
                 }
             }
             await base.OnAfterRenderAsync(firstRender);
