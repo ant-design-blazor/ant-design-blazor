@@ -1,26 +1,29 @@
-<div>
-	<Breadcrumb Separator="/">
-    <BreadcrumbItem>
-        Ant Design Blazor
-    </BreadcrumbItem>
-    <BreadcrumbItem>
-        <a>Component</a>
-    </BreadcrumbItem>
-    <BreadcrumbItem >
-        <Menu Mode=MenuMode.Horizontal>
-            <MenuItem Key="mail">
-                <Icon Type="mail" Theme="outline"></Icon>
-                Navigation One
-            </MenuItem>
-            <MenuItem Key="app" Disabled>
-                <Icon Type="appstore" Theme="outline"></Icon>
-                Navigation Two
-            </MenuItem>
-        </Menu>
-    </BreadcrumbItem>
+<Breadcrumb>
+	<BreadcrumbItem>
+		Ant Design Blazor
+	</BreadcrumbItem>
+	<BreadcrumbItem>
+		<a>Component</a>
+	</BreadcrumbItem>
+	<BreadcrumbItem>
+		<ChildContent>
+			<a>General</a>
+		</ChildContent>
+		<Overlay>
+			<Menu>
+				<MenuItem>
+					<a>General</a>
+				</MenuItem>
+				<MenuItem>
+					<a>Layout</a>
+				</MenuItem>
+				<MenuItem>
+					<a>Navigation</a>
+				</MenuItem>
+			</Menu>
+		</Overlay>
+	</BreadcrumbItem>
+	<BreadcrumbItem>
+		Button
+	</BreadcrumbItem>
 </Breadcrumb>
-</div>
-
-@code{
-    object abc { get; set; } = new object();
- }
