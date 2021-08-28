@@ -29,16 +29,19 @@ namespace AntDesign
 
         /// <summary>
         /// 列表对象集合
+        /// List object collection
         /// </summary>
         private List<AutoCompleteOption> AutoCompleteOptions { get; set; } = new List<AutoCompleteOption>();
 
         /// <summary>
         /// 列表数据集合
+        /// List data collection
         /// </summary>
         private List<AutoCompleteDataItem<TOption>> _optionDataItems = new List<AutoCompleteDataItem<TOption>>();
 
         /// <summary>
         /// 列表绑定数据源集合
+        /// List bound data source collection
         /// </summary>
         private IEnumerable<TOption> _options;
 
@@ -58,6 +61,7 @@ namespace AntDesign
 
         /// <summary>
         /// 绑定列表数据项格式的数据源
+        /// Bind the data source of the list data item format
         /// </summary>
         [Parameter]
         public IEnumerable<AutoCompleteDataItem<TOption>> OptionDataItems
@@ -89,36 +93,42 @@ namespace AntDesign
 
         /// <summary>
         /// 选项模板
+        /// Option template
         /// </summary>
         [Parameter]
         public RenderFragment<AutoCompleteDataItem<TOption>> OptionTemplate { get; set; }
 
         /// <summary>
         /// 格式化选项，可以自定义显示格式
+        /// Formatting options, you can customize the display format
         /// </summary>
         [Parameter]
         public Func<AutoCompleteDataItem<TOption>, string> OptionFormat { get; set; }
 
         /// <summary>
         /// 所有选项模板
+        /// All option templates
         /// </summary>
         [Parameter]
         public RenderFragment OverlayTemplate { get; set; }
 
         /// <summary>
         /// 对比，用于两个对象比较是否相同
+        /// Contrast, used to compare whether two objects are the same
         /// </summary>
         [Parameter]
         public Func<object, object, bool> CompareWith { get; set; } = (o1, o2) => o1?.ToString() == o2?.ToString();
 
         /// <summary>
         /// 过滤表达式
+        /// Filter expression
         /// </summary>
         [Parameter]
         public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? true : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// 允许过滤
+        /// Allow filtering
         /// </summary>
         [Parameter]
         public bool AllowFilter { get; set; } = true;
@@ -165,7 +175,7 @@ namespace AntDesign
             _inputComponent = input;
         }
 
-        #region 子控件触发事件
+        #region 子控件触发事件 / Child controls trigger events
 
         public async Task InputFocus(FocusEventArgs e)
         {
@@ -212,7 +222,7 @@ namespace AntDesign
             }
         }
 
-        #endregion 子控件触发事件
+        #endregion 子控件触发事件 / Child controls trigger events
 
         protected override void OnParametersSet()
         {
@@ -254,6 +264,7 @@ namespace AntDesign
 
         /// <summary>
         /// 打开面板
+        /// Open panel
         /// </summary>
         public void OpenPanel()
         {
@@ -270,6 +281,7 @@ namespace AntDesign
 
         /// <summary>
         /// 关闭面板
+        /// Close panel
         /// </summary>
         public void ClosePanel()
         {
@@ -289,6 +301,7 @@ namespace AntDesign
         }
 
         //设置高亮的对象
+        //Set the highlighted object
         public void SetActiveItem(AutoCompleteOption item)
         {
             this.ActiveValue = item == null ? default(TOption) : item.Value;
@@ -297,6 +310,7 @@ namespace AntDesign
         }
 
         //设置下一个激活
+        //Set the next activation
         public void SetNextItemActive()
         {
             var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
@@ -311,6 +325,7 @@ namespace AntDesign
         }
 
         //设置上一个激活
+        //Set last activation
         public void SetPreviousItemActive()
         {
             var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
@@ -331,6 +346,7 @@ namespace AntDesign
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {
                 // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
+                // If the current activation item does not exist in the list, then we need to do some processing
                 if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))
                 {
                     this.ActiveValue = this.SelectedValue;
