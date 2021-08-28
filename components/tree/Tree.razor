@@ -11,7 +11,7 @@
                     foreach (var item in DataSource)
                     {
                         <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
-				}
+				    }
                 }
                 else if (ChildContent!=null)
 				{

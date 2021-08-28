@@ -29,7 +29,7 @@
         foreach (var item in ChildDataItems)
         {
             <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
-	}
+	    }
     }
 	else if (ChildContent != null)
 	{
