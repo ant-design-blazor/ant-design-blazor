@@ -322,6 +322,7 @@ namespace AntDesign
 
         private async Task OnAfterHide()
         {
+            _hasFocus = false;
             if (ModalRef?.OnClose != null)
             {
                 await ModalRef.OnClose();
@@ -330,7 +331,6 @@ namespace AntDesign
 
         private async Task OnBeforeDialogWrapperDestroy()
         {
-            _hasFocus = false;
             await InvokeAsync(StateHasChanged);
         }
 
