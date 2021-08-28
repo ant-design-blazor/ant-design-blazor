@@ -297,6 +297,8 @@ namespace AntDesign
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
+
+                _shouldRender = true;
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -304,6 +306,7 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
+            StateHasChanged();
 
             return queryModel;
         }
