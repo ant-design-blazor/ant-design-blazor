@@ -1,26 +1,33 @@
-@using AntDesign.Docs.Demos.Components.TreeSelect.Demo 
-
-
-<TreeSelect Multiple="true" TItem="WebMenu" 
-            DataSource="@(LocalJsonData.Data)"
-            RootValue="1"
-            TitleExpression="m => m.MenuName"
-            KeyExpression="m => m.MenuId"
-            ChildrenExpression="menuId => LocalJsonData.GetMenusByParentId(menuId)"
-            IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)" 
-            ValuesChanged="OnValuesChange"
-            TreeDefaultExpandAll>
+<TreeSelect TItem="string"
+			Style="width:100%;"
+			@bind-Value="value"
+			Placeholder="Please select"
+			AllowClear
+			Multiple
+			TreeDefaultExpandAll
+			OnChange="OnValuesChange">
+	<TreeNode TItem="string" Key="parent 1" title="parent 1">
+		<TreeNode TItem="string" Key="parent 1-0" title="parent 1-0">
+			<TreeNode TItem="string" Key="leaf1" title="my leaf" />
+			<TreeNode TItem="string" Key="leaf2" title="your leaf" />
+		</TreeNode>
+		<TreeNode TItem="string" Key="parent 1-1" title="parent 1-1">
+			<TreeNode TItem="string" Key="sss">
+				<TitleTemplate>
+					<b style=" color: #08c;">sss</b>
+				</TitleTemplate>
+			</TreeNode>
+		</TreeNode>
+	</TreeNode>
 </TreeSelect>
 
-select MenuId: @selectMenuId
+@code {
 
-@code{
+	private string value;
 
-    private string selectMenuId;
-
-    public void OnValuesChange(IEnumerable<string> args)
-    {
-        selectMenuId = string.Join(',', args);
-    }
+	public void OnValuesChange(IEnumerable<string> args)
+	{
+		Console.WriteLine(string.Join(',', args));
+	}
 
 }

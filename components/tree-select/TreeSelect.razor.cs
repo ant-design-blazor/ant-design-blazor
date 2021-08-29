@@ -49,14 +49,14 @@ namespace AntDesign
 
         [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
 
-        [Parameter] public IList<TItem> DataSource { get; set; }
+        [Parameter] public IEnumerable<TItem> DataSource { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
 
         [Parameter]
-        public Func<IList<TItem>, string, TItem> DataItemExpression { get; set; }
+        public Func<IEnumerable<TItem>, string, TItem> DataItemExpression { get; set; }
 
         [Parameter]
         public Func<IList<TItem>, IEnumerable<string>, IEnumerable<TItem>> DataItemsExpression { get; set; }
@@ -147,7 +147,7 @@ namespace AntDesign
         public Func<TItem, bool> IsLeafExpression { get; set; }
 
 
-        protected Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression
+        protected Func<TreeNode<TItem>, IEnumerable<TItem>> TreeNodeChildrenExpression
         {
             get
             {
