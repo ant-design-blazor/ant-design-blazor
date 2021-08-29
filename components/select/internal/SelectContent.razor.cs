@@ -90,10 +90,12 @@ namespace AntDesign.Select.Internal
         private int _currentItemCount;
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
-        private DotNetObjectReferenceList<JsonElement> _dotNetObjects = new();
+        private DomEventListener<JsonElement> _domEventListener;
 
         protected override void OnInitialized()
         {
+            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+
             if (!_isInitialized)
             {
                 SetInputWidth();
@@ -139,10 +141,9 @@ namespace AntDesign.Select.Internal
                     await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
-                _dotNetObjects.Add(ParentSelect._inputRef.Id + "focusout", 
-                                    DomEventService.AddExclusiveEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal));
-                _dotNetObjects.Add(ParentSelect._inputRef.Id + "focus", 
-                                    DomEventService.AddExclusiveEventListener(ParentSelect._inputRef, "focus", OnFocusInternal));
+
+                _domEventListener.Add(ParentSelect._inputRef, "focusout", OnBlurInternal);
+                _domEventListener.Add(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
@@ -426,7 +427,8 @@ namespace AntDesign.Select.Internal
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
-            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
+
+            _domEventListener.Dispose();
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
 
             if (IsDisposed) return;

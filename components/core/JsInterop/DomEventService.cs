@@ -11,8 +11,6 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.JsInterop
 {
-    public class DotNetObjectReferenceList<T> : Dictionary<string, DotNetObjectReference<Invoker<T>>> { }
-
     public class DomEventService
     {
         private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new();
@@ -25,6 +23,11 @@ namespace AntDesign.JsInterop
             _jsRuntime = jsRuntime;
         }
 
+        public DomEventListener<T> CreateDomEventListerner<T>()
+        {
+            return new DomEventListener<T>(_jsRuntime);
+        }
+
         private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, bool preventDefault, Action<T> callback)
         {
             if (!_domEventListeners.ContainsKey(FormatKey(dom, eventName)))
@@ -33,35 +36,6 @@ namespace AntDesign.JsInterop
                 {
                     callback?.Invoke(p);
                 })));
-            }
-        }
-
-        public DotNetObjectReference<Invoker<JsonElement>> AddExclusiveEventListener(
-            object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
-        {
-            return AddExclusiveEventListener<JsonElement>(dom, eventName, callback, preventDefault);
-        }
-
-        public virtual DotNetObjectReference<Invoker<T>> AddExclusiveEventListener<T>(
-            object dom, string eventName, Action<T> callback, bool preventDefault = false)
-        {
-            var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
-            {
-                callback(p);
-            }));
-            _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
-
-            return dotNetObject;
-        }
-
-        public void RemoveExclusiveEventListener<T>(DotNetObjectReferenceList<T> dotNetObjectReferences, string id = "")
-        {
-            foreach (var (key, value) in dotNetObjectReferences)
-            {
-                if (key == id || string.IsNullOrEmpty(id))
-                {
-                    value.Dispose();
-                }
             }
         }
 
@@ -173,7 +147,7 @@ namespace AntDesign.JsInterop
             }
         }
 
-        private static string FormatKey(object dom, string eventName) => $"{dom}-{eventName}";
+        internal static string FormatKey(object dom, string eventName) => $"{dom}-{eventName}";
 
         public void RemoveEventListerner<T>(object dom, string eventName, Action<T> callback)
         {

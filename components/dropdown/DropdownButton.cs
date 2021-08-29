@@ -209,19 +209,19 @@ namespace AntDesign
             {
                 Ref = RefBack.Current;
 
-                _dotNetObjects.Add(Ref.Id + "click", DomEventService.AddExclusiveEventListener(Ref, "click", OnUnboundClick));
-                _dotNetObjects.Add(Ref.Id + "mouseover", DomEventService.AddExclusiveEventListener(Ref, "mouseover", OnUnboundMouseEnter));
-                _dotNetObjects.Add(Ref.Id + "mouseout", DomEventService.AddExclusiveEventListener(Ref, "mouseout", OnUnboundMouseLeave));
-                _dotNetObjects.Add(Ref.Id + "focusin", DomEventService.AddExclusiveEventListener(Ref, "focusin", OnUnboundFocusIn));
-                _dotNetObjects.Add(Ref.Id + "focusout", DomEventService.AddExclusiveEventListener(Ref, "focusout", OnUnboundFocusOut));
-                _dotNetObjects.Add(Ref.Id + "cliccontextmenuk", DomEventService.AddExclusiveEventListener(Ref, "contextmenu", OnContextMenu, true));
+                _domEventListener.Add(Ref, "click", OnUnboundClick);
+                _domEventListener.Add(Ref, "mouseover", OnUnboundMouseEnter);
+                _domEventListener.Add(Ref, "mouseout", OnUnboundMouseLeave);
+                _domEventListener.Add(Ref, "focusin", OnUnboundFocusIn);
+                _domEventListener.Add(Ref, "focusout", OnUnboundFocusOut);
+                _domEventListener.Add(Ref, "contextmenu", OnContextMenu, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
 

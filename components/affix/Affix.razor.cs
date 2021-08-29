@@ -39,6 +39,8 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
+        private DomEventListener<JsonElement> _domEventListener;
+
         #region Parameters
 
         /// <summary>
@@ -70,6 +72,8 @@ namespace AntDesign
 
             ClassMapper
                .If(PrefixCls, () => _affixed);
+
+            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -99,8 +103,8 @@ namespace AntDesign
             }
             else if (!string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(TargetSelector, "scroll", OnTargetScroll);
-                DomEventService.AddEventListener(TargetSelector, "resize", OnTargetResize);
+                _domEventListener.Add(TargetSelector, "scroll", OnTargetScroll);
+                _domEventListener.Add(TargetSelector, "resize", OnTargetResize);
                 _targetListened = true;
             }
         }
@@ -197,8 +201,7 @@ namespace AntDesign
 
             if (_targetListened)
             {
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnTargetResize);
+                _domEventListener.Dispose();
             }
         }
     }

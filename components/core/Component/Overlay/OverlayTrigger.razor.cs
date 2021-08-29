@@ -220,8 +220,13 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
+        protected DomEventListener<JsonElement> _domEventListener;
 
-        protected DotNetObjectReferenceList<JsonElement> _dotNetObjects = new();
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+        }
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -241,12 +246,12 @@ namespace AntDesign.Internal
             {
                 Ref = RefBack.Current;
 
-                _dotNetObjects.Add(Ref.Id + ".click", DomEventService.AddExclusiveEventListener(Ref, "click", OnUnboundClick));
-                _dotNetObjects.Add(Ref.Id + ".mouseover", DomEventService.AddExclusiveEventListener(Ref, "mouseover", OnUnboundMouseEnter));
-                _dotNetObjects.Add(Ref.Id + ".mouseout", DomEventService.AddExclusiveEventListener(Ref, "mouseout", OnUnboundMouseLeave));
-                _dotNetObjects.Add(Ref.Id + ".focusin", DomEventService.AddExclusiveEventListener(Ref, "focusin", OnUnboundFocusIn));
-                _dotNetObjects.Add(Ref.Id + ".focusout", DomEventService.AddExclusiveEventListener(Ref, "focusout", OnUnboundFocusOut));
-                _dotNetObjects.Add(Ref.Id + ".contextmenu", DomEventService.AddExclusiveEventListener(Ref, "contextmenu", OnContextMenu, true));
+                _domEventListener.Add(Ref, "click", OnUnboundClick);
+                _domEventListener.Add(Ref, "mouseover", OnUnboundMouseEnter);
+                _domEventListener.Add(Ref, "mouseout", OnUnboundMouseLeave);
+                _domEventListener.Add(Ref, "focusin", OnUnboundFocusIn);
+                _domEventListener.Add(Ref, "focusout", OnUnboundFocusOut);
+                _domEventListener.Add(Ref, "contextmenu", OnContextMenu, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }
@@ -279,8 +284,8 @@ namespace AntDesign.Internal
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
             DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
+            _domEventListener.Dispose();
 
-            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
             base.Dispose(disposing);
         }
 

@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -50,7 +46,7 @@ namespace AntDesign
         private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
-        private DotNetObjectReferenceList<string> _dotNetObjects = new();
+        private DomEventListener<string> _domEventListener;
 
         internal List<TabPane> _panes = new List<TabPane>();
 
@@ -227,6 +223,8 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
+
+            _domEventListener = DomEventService.CreateDomEventListerner<string>();
         }
 
         protected override void OnParametersSet()
@@ -395,14 +393,13 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                _dotNetObjects.Add(_scrollTabBar.Id + "wheel",
-                                    DomEventService.AddExclusiveEventListener<string>(_scrollTabBar, "wheel", OnWheel, true));
+                _domEventListener.Add(_scrollTabBar, "wheel", OnWheel, true);
                 _wheelDisabled = true;
             }
 
             if (!IsHorizontal && _wheelDisabled)
             {
-                DomEventService.RemoveExclusiveEventListener(_dotNetObjects, _scrollTabBar.Id + "wheel");
+                _domEventListener.Remove(_scrollTabBar, "wheel");
                 _wheelDisabled = false;
             }
 
@@ -573,7 +570,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveExclusiveEventListener(_dotNetObjects);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
     }

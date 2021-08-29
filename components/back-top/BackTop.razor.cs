@@ -34,6 +34,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
+        private DomEventListener<JsonElement> _domEventListener;
+
         protected async Task OnClickHandle()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
@@ -49,17 +51,19 @@ namespace AntDesign
         {
             SetClass();
             base.OnInitialized();
+
+            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
         }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
             {
-                DomEventService.AddEventListener("window", "scroll", OnScroll);
+                _domEventListener.Add("window", "scroll", OnScroll);
             }
             else
             {
-                DomEventService.AddEventListener(TargetSelector, "scroll", OnScroll);
+                _domEventListener.Add(TargetSelector, "scroll", OnScroll);
             }
             await base.OnFirstAfterRenderAsync();
         }
@@ -88,15 +92,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            _domEventListener.Dispose();
             base.Dispose(disposing);
-            if (string.IsNullOrWhiteSpace(TargetSelector))
-            {
-                DomEventService.RemoveEventListerner<JsonElement>("window", "scroll", OnScroll);
-            }
-            else
-            {
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnScroll);
-            }
         }
     }
 }

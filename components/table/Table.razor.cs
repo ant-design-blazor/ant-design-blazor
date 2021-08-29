@@ -160,6 +160,8 @@ namespace AntDesign
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
+        private DomEventListener<JsonElement> _domEventListener;
+
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
@@ -297,8 +299,6 @@ namespace AntDesign
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
-
-                _shouldRender = true;
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -334,6 +334,8 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
 
             if (RowTemplate != null)
             {
@@ -378,7 +380,7 @@ namespace AntDesign
                     await SetScrollPositionClassName();
 
                     DomEventService.AddEventListener("window", "resize", OnResize);
-                    DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
+                    _domEventListener.Add(_tableBodyRef, "scroll", OnScroll);
                 }
 
                 if (ScrollY != null && ScrollX != null)
@@ -485,7 +487,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
-            DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
+            _domEventListener.Dispose();
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
             base.Dispose(disposing);
         }
