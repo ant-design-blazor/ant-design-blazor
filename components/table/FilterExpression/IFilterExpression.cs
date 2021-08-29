@@ -11,7 +11,7 @@ namespace AntDesign.FilterExpression
 {
     public interface IFilterExpression
     {
-        TableFilterCompareOperator GetDefaultCampareOperator();
+        TableFilterCompareOperator GetDefaultCompareOperator();
         Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr);
     }
 }

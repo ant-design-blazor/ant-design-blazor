@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Internal
 {
@@ -190,6 +191,9 @@ namespace AntDesign.Internal
         [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
+        [Parameter]
+        public string TriggerCls { get; set; }
+
         /// <summary>
         /// Manually set reference to triggering element. 
         /// </summary>
@@ -233,19 +237,37 @@ namespace AntDesign.Internal
             base.OnAfterRender(firstRender);
         }
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && Unbound != null)
+            if (firstRender)
             {
-                Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
-                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
-                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
-                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
-                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+                if (Unbound != null)
+                {
+                    Ref = RefBack.Current;
+
+                    DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
+                    DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
+                    DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
+                    DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
+                    DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
+                    DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+                }
+
+
+                if (!string.IsNullOrWhiteSpace(TriggerCls))
+                {
+                    if (Unbound != null)
+                    {
+                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, Ref, TriggerCls);
+                    }
+                    else if (ChildContent != null)
+                    {
+                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddClsToFirstChild, Ref, TriggerCls);
+                    }
+                }
             }
-            return base.OnAfterRenderAsync(firstRender);
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
