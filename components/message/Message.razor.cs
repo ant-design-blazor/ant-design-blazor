@@ -19,7 +19,7 @@ namespace AntDesign
         {
             if (MessageService != null)
             {
-                MessageService.OnOpening += NotifyAsync; ;
+                MessageService.OnOpening += NotifyAsync;
                 MessageService.OnDestroy += Destroy;
                 MessageService.OnConfig += Config;
             }
@@ -31,7 +31,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            MessageService.OnOpening -= NotifyAsync; ;
+            MessageService.OnOpening -= NotifyAsync;
             MessageService.OnDestroy -= Destroy;
             MessageService.OnConfig -= Config;
             base.Dispose(disposing);

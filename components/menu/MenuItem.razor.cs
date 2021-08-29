@@ -43,6 +43,9 @@ namespace AntDesign
         [Parameter]
         public string Icon { get; set; }
 
+        [Parameter]
+        public RenderFragment IconTemplate { get; set; }
+
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
@@ -105,7 +108,14 @@ namespace AntDesign
                 return;
 
             if (OnClick.HasDelegate)
+            {
                 await OnClick.InvokeAsync(args);
+            }
+
+            if (RootMenu?.OnMenuItemClicked.HasDelegate == true)
+            {
+                await RootMenu.OnMenuItemClicked.InvokeAsync(this);
+            }
 
             if (!RootMenu.Selectable)
                 return;
