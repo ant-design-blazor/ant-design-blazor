@@ -194,8 +194,14 @@ namespace AntDesign.Internal
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
         [Parameter]
-        //TODO: this should probably be a flag not an array
-        public Trigger[] Trigger { get; set; } = new Trigger[] { AntDesign.Trigger.Hover };
+        public Trigger[] Trigger //TODO: this should probably be a flag not an array
+        {
+            get { return _trigger.Select(t => t.Trigger).ToArray(); }
+            set
+            {
+                _trigger = value.Select(t => TriggerType.Create(t)).ToArray();
+            }
+        }
 
         [Parameter]
         public string TriggerCls { get; set; }
@@ -206,11 +212,8 @@ namespace AntDesign.Internal
         [Parameter]
         public ElementReference TriggerReference
         {
-            get { return _trigger.Select(t => t.Trigger).ToArray(); }
-            set
-            {
-                _trigger = value.Select(t => TriggerType.Create(t)).ToArray();
-            }
+            get => Ref;
+            set => Ref = value;
         }
 
         internal TriggerType[] GetTriggerType() => _trigger;
