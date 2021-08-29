@@ -12,7 +12,7 @@ namespace AntDesign.FilterExpression
 {
     public class GuidFilterExpression : IFilterExpression
     {
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Equals;
         }

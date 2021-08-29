@@ -20,8 +20,12 @@ namespace AntDesign
         [CascadingParameter(Name = "OverlayTriggerContext")]
         public ForwardRef OverlayTriggerContext
         {
-            get { return WrapperRefBack; }
-            set { WrapperRefBack = value; }
+            get => RefBack;
+            set
+            {
+                WrapperRefBack = value;
+                RefBack = value;
+            }
         }
 
         protected override void OnInitialized()

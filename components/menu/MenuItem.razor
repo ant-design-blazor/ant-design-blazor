@@ -5,7 +5,12 @@
     <Tooltip Title="@content(this)" Placement="@PlacementType.Right" Disabled="TooltipDisabled">
         <Unbound>
             <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="context.Current">
-                @if (Icon != null)
+
+                @if (IconTemplate != null)
+                {
+                    @IconTemplate
+                }
+                else if (Icon != null)
                 {
                     <Icon Type="@Icon" />
                 }

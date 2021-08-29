@@ -1,0 +1,106 @@
+﻿<Table DataSource="@data" TItem="Data" OnExpand="OnRowExpand">
+	<RowTemplate>
+		<Column TData="string" DataIndex="Name" />
+		<Column TData="string" DataIndex="Platform" />
+		<Column TData="string" DataIndex="Version" />
+		<Column TData="int" DataIndex="UpgradeNum" />
+		<Column TData="string" DataIndex="Creator" />
+		<Column TData="DateTime" DataIndex="CreatedAt" />
+		<ActionColumn Title="Action">
+			<a>Publish</a>
+		</ActionColumn>
+	</RowTemplate>
+	<ExpandTemplate Context="rowData">
+		<Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination>
+			<Column TData="DateTime" DataIndex="Date" />
+			<Column TData="string" DataIndex="Name" />
+			<Column TData="string" Title="Status">
+				<span>
+					<Badge Status="success" />
+					Finished
+				</span>
+			</Column>
+			<Column TData="string" DataIndex="UpgradeNum" />
+			<ActionColumn Title="Action">
+				<Space Size="@("middle")">
+					<SpaceItem><a>Pause</a></SpaceItem>
+					<SpaceItem><a>Stop</a></SpaceItem>
+					<SpaceItem>
+						<Dropdown Overlay="menu">
+							<a>More <Icon Type="down" /></a>
+						</Dropdown>
+					</SpaceItem>
+				</Space>
+			</ActionColumn>
+		</Table>
+	</ExpandTemplate>
+</Table>
+
+@using AntDesign.TableModels
+@using System.ComponentModel
+@code {
+
+	RenderFragment menu =
+	@<Menu>
+		<MenuItem>Action 1</MenuItem>
+		<MenuItem>Action 2</MenuItem>
+	</Menu>;
+
+	Data[] data;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		data = Enumerable.Range(0, 3).Select(x => new Data
+		{
+			Name = "Screem",
+			Platform = "iOS",
+			Version = "10.3.4.5654",
+			UpgradeNum = 500,
+			Creator = "Jack",
+			CreatedAt = DateTime.Parse("2014-12-24 23:12:00")
+		}).ToArray();
+	}
+
+	async Task OnRowExpand(RowData<Data> rowData)
+	{
+		if (rowData.Data.NestedData != null)
+		{
+			return;
+		}
+
+		await Task.Delay(1000);
+		rowData.Data.NestedData = Enumerable.Range(0, 3).Select(i => new NestedData()
+		{
+			Key = i,
+			Date = DateTime.Parse("2014-12-24 23:12:00"),
+			Name = "This is production name",
+			UpgradeNum = "Upgraded: 56"
+		}).ToArray();
+
+		StateHasChanged();
+	}
+
+	public class Data
+	{
+		public string Name { get; set; }
+		public string Platform { get; set; }
+		public string Version { get; set; }
+		[DisplayName("Upgraded")]
+		public int UpgradeNum { get; set; }
+		public string Creator { get; set; }
+		public DateTime CreatedAt { get; set; }
+
+		public NestedData[] NestedData { get; set; }
+	}
+
+	public class NestedData
+	{
+		public int Key { get; set; }
+		public DateTime Date { get; set; }
+		public string Name { get; set; }
+		[DisplayName("Upgrade Status")]
+		public string UpgradeNum { get; set; }
+	}
+}

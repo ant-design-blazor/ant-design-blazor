@@ -17,7 +17,7 @@ namespace AntDesign.FilterExpression
             _type = type;
         }
 
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Equals;
         }
