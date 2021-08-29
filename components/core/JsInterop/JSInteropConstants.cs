@@ -145,6 +145,8 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "styleHelper.";
             public static string AddClsToFirstChild => $"{FUNC_PREFIX}addClsToFirstChild";
+            public static string AddCls => $"{FUNC_PREFIX}addCls";
+            public static string RemoveCls => $"{FUNC_PREFIX}removeCls";
             public static string RemoveClsFromFirstChild => $"{FUNC_PREFIX}removeClsFromFirstChild";
             public static string MatchMedia => $"{FUNC_PREFIX}matchMedia";
             public static string GetStyle => $"{FUNC_PREFIX}getStyle";

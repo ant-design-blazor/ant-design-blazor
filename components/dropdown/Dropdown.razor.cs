@@ -38,6 +38,11 @@ namespace AntDesign
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        public Dropdown()
+        {
+            TriggerCls = "ant-dropdown-trigger";
+        }
+
         protected void ChangeRightButtonIcon(string icon)
         {
             _rightButtonIcon = icon;

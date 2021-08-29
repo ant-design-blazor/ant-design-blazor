@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Internal
 {
@@ -190,6 +191,9 @@ namespace AntDesign.Internal
         [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
+        [Parameter]
+        public string TriggerCls { get; set; }
+
         /// <summary>
         /// Manually set reference to triggering element. 
         /// </summary>
@@ -240,20 +244,36 @@ namespace AntDesign.Internal
             base.OnAfterRender(firstRender);
         }
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && Unbound != null)
+            if (firstRender)
             {
-                Ref = RefBack.Current;
+                if (Unbound != null)
+                {
+                    Ref = RefBack.Current;
 
-                _domEventListener.Add(Ref, "click", OnUnboundClick);
-                _domEventListener.Add(Ref, "mouseover", OnUnboundMouseEnter);
-                _domEventListener.Add(Ref, "mouseout", OnUnboundMouseLeave);
-                _domEventListener.Add(Ref, "focusin", OnUnboundFocusIn);
-                _domEventListener.Add(Ref, "focusout", OnUnboundFocusOut);
-                _domEventListener.Add(Ref, "contextmenu", OnContextMenu, true);
+                    _domEventListener.Add(Ref, "click", OnUnboundClick);
+                    _domEventListener.Add(Ref, "mouseover", OnUnboundMouseEnter);
+                    _domEventListener.Add(Ref, "mouseout", OnUnboundMouseLeave);
+                    _domEventListener.Add(Ref, "focusin", OnUnboundFocusIn);
+                    _domEventListener.Add(Ref, "focusout", OnUnboundFocusOut);
+                    _domEventListener.Add(Ref, "contextmenu", OnContextMenu, true);
+                }
+
+                if (!string.IsNullOrWhiteSpace(TriggerCls))
+                {
+                    if (Unbound != null)
+                    {
+                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, Ref, TriggerCls);
+                    }
+                    else if (ChildContent != null)
+                    {
+                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddClsToFirstChild, Ref, TriggerCls);
+                    }
+                }
             }
-            return base.OnAfterRenderAsync(firstRender);
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
