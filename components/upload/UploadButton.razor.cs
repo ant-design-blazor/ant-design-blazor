@@ -41,6 +41,9 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string Action { get; set; }
+        
+        [Parameter]
+        public string Method { get; set; }
 
         [Parameter]
         public bool Disabled
@@ -148,7 +151,7 @@ namespace AntDesign.Internal
                 await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", Method);
                 index++;
             }
 

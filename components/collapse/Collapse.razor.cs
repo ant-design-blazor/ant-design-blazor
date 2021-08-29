@@ -46,7 +46,7 @@ namespace AntDesign
                 .If("ant-collapse-icon-position-left", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
                 .If("ant-collapse-icon-position-right", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
                 .If("ant-collapse-borderless", () => !this.Bordered)
-                .If("ant-collapse-rtl", () => RTL); ;
+                .If("ant-collapse-rtl", () => RTL);
         }
 
         protected override async Task OnInitializedAsync()

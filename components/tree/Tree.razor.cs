@@ -121,6 +121,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         /// <summary>
         /// tree childnodes
         /// Add values when the node is initialized
@@ -176,8 +179,6 @@ namespace AntDesign
             {
                 OnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
             }
-
-            UpdateBindData();
         }
 
         /// <summary>
@@ -188,13 +189,6 @@ namespace AntDesign
         {
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
-
-            if (OnUnSelect.HasDelegate)
-            {
-                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
-            }
-
-            UpdateBindData();
         }
 
         /// <summary>
@@ -262,7 +256,7 @@ namespace AntDesign
         /// <summary>
         /// Update binding data
         /// </summary>
-        private void UpdateBindData()
+        internal void UpdateBindData()
         {
             if (SelectedNodesDictionary.Count == 0)
             {
