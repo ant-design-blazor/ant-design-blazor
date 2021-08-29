@@ -2,6 +2,7 @@
 	  DefaultExpandedKeys="@(new[] { "0-0-0", "0-0-1"})"
 	  DefaultSelectedKeys="@(new[] {"0-0-0", "0-0-1" })"
 	  DefaultCheckedKeys="@(new[] {"0-0-0", "0-0-1" })"
+		SelectedNodeChanged="SelectedNodeChanged"
 	  OnSelect="OnSelect"
 	  OnCheck="OnCheck">
 	<TreeNode Title="parent 1" Key="0-0" TItem="string">
@@ -22,12 +23,17 @@
 @code {
 
 	void OnSelect(TreeEventArgs<string> args)
-	{
-		Console.WriteLine("OnSelect");
-	}
+    {
+        Console.WriteLine($"OnSelect {args.Node.Key}");
+    }
 
-	void OnCheck(TreeEventArgs<string> args)
+    void OnCheck(TreeEventArgs<string> args)
+    {
+        Console.WriteLine($"OnCheck {args.Node.Key}");
+    }
+
+	void SelectedNodeChanged(TreeNode<string> e)
 	{
-		Console.WriteLine("onCheck");
+		Console.WriteLine($"SelectedNodeChanged: {e?.Key}");
 	}
 }

@@ -19,6 +19,10 @@ namespace AntDesign
             {
                 _options = value;
                 _isOptionDefined = true;
+                if (_afterFirstRender)
+                {
+                    _currentValue = GetCurrentValueFunc();
+                }
             }
         }
 
@@ -26,7 +30,8 @@ namespace AntDesign
         public CheckboxGroupMixedMode MixedMode
         {
             get { return _mixedMode; }
-            set {
+            set
+            {
                 bool isChanged = _afterFirstRender && _mixedMode != value;
                 _mixedMode = value;
                 if (isChanged)
@@ -119,6 +124,29 @@ namespace AntDesign
             }
 
             _selectedValues ??= Array.Empty<string>();
+        }
+
+        protected override void OnValueChange(string[] value)
+        {
+            base.OnValueChange(value);
+
+            if (Disabled)
+            {
+                return;
+            }
+
+            _selectedValues = value;
+
+            if (Options.Value != null && Options.IsT0)
+            {
+                Options.AsT0.ForEach(x =>
+                {
+                    if (!x.Disabled)
+                    {
+                        x.Checked = x.Value.IsIn(_selectedValues);
+                    }
+                });
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)
