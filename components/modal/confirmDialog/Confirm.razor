@@ -41,10 +41,10 @@
             <div class="ant-modal-confirm-btns">
                 @{
                     RenderFragment BuildButton(ButtonProps props,
-                        Func<MouseEventArgs, Task> onClick, out Button btnRef)
+                        Func<MouseEventArgs, Task> onClick, string id = null)
                     {
-                        btnRef = null;
                         if (props == null) return null;
+                        id ??= "ant-blazor-" + Guid.NewGuid();
                         var onClickEvent = new EventCallback<MouseEventArgs>(this, onClick);
                         Button innerBtnRef = null;
                         var children = props.ChildContent!.Value;
@@ -58,7 +58,9 @@
                                                               Size="@props.Size"
                                                               Icon="@props.Icon"
                                                               Disabled="@props.Disabled"
-                                                              Danger="@props.IsDanger">
+                                                              Danger="@props.IsDanger"
+                                                              Id="@id"
+                                                              >
                         @{
                             if (children.IsT0)
                             {
@@ -70,9 +72,8 @@
                             }
                         }
                     </Button>);
-               btnRef = innerBtnRef;
-               return compontent;
-           }
+                   return compontent;
+                }
                 }
                 @switch (Config.ConfirmButtons)
                 {
@@ -81,7 +82,7 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.OK);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
                             break;
                         }
@@ -91,13 +92,13 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.OK);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
 
                             @BuildButton(Config.Button2Props, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Cancel);
-                            }, out _cancelBtn)
+                            }, _cancelBtnId)
                             ;
 
                             break;
@@ -107,13 +108,13 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Yes);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
 
                             @BuildButton(Config.Button2Props, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.No);
-                            }, out _cancelBtn)
+                            }, _cancelBtnId)
                             ;
 
                             break;
@@ -123,19 +124,19 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Yes);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
 
                             @BuildButton(Config.Button2Props, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.No);
-                            }, out _cancelBtn)
+                            }, _cancelBtnId)
                             ;
 
                             @BuildButton(Config.Button3Props, async (e) =>
                             {
                                 await HandleBtn3Click(e, ConfirmResult.Cancel);
-                            }, out _)
+                            })
                             ;
                             break;
                         }
@@ -145,13 +146,13 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Retry);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
 
                             @BuildButton(Config.Button2Props, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Cancel);
-                            }, out _cancelBtn)
+                            }, _cancelBtnId)
                             ;
 
                             break;
@@ -161,19 +162,19 @@
                             @BuildButton(Config.Button1Props, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Abort);
-                            }, out _okBtn)
+                            }, _okBtnId)
                             ;
 
                             @BuildButton(Config.Button2Props, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Retry);
-                            }, out _cancelBtn)
+                            }, _cancelBtnId)
                             ;
 
                             @BuildButton(Config.Button3Props, async (e) =>
                             {
                                 await HandleBtn3Click(e, ConfirmResult.Ignore);
-                            }, out _)
+                            })
                             ;
 
                             break;
