@@ -121,6 +121,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         /// <summary>
         /// tree childnodes
         /// Add values when the node is initialized
