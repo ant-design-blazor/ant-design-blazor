@@ -98,7 +98,15 @@ namespace AntDesign
                     }
                     else
                     {
-                        _datasourceHasChanged = !SelectOptionItems.Select(x => x.Item).SequenceEqual(value);
+                        if (KeepDataSourceElementOrder)
+                        {
+                            _datasourceHasChanged = !SelectOptionItems.Select(x => x.Item).SequenceEqual(value);
+                        }
+                        else
+                        {
+                            _datasourceHasChanged = !SelectOptionItems.Select(x => x.Item).OrderBy(x => x.GetHashCode())
+                                .SequenceEqual(value.OrderBy(x => x.GetHashCode()));
+                        }
                     }
 
                     var sameObject = object.ReferenceEquals(_datasource, value);
@@ -248,6 +256,11 @@ namespace AntDesign
         /// Is used to customize the item style.
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+        /// <summary>
+        /// Whether to keep the element order of data source for select options
+        /// </summary>
+        [Parameter] public bool KeepDataSourceElementOrder { get; set; } = true;
 
         /// <summary>
         /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON) 
@@ -812,7 +825,7 @@ namespace AntDesign
 
                         if (exists is null)
                         {
-                            //SelectOptionItems.Remove(selectOption);
+                            SelectOptionItems.Remove(selectOption);
                             if (selectOption.IsSelected)
                                 SelectedOptionItems.Remove(selectOption);
                         }
@@ -830,7 +843,10 @@ namespace AntDesign
             else if (SelectMode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
 
-            SelectOptionItems.Clear();
+            if (KeepDataSourceElementOrder)
+            {
+                SelectOptionItems.Clear();
+            }
 
             foreach (var item in _datasource)
             {
@@ -889,7 +905,10 @@ namespace AntDesign
                 }
                 else
                 {
-                    SelectOptionItems.Add(selectOption);
+                    if (KeepDataSourceElementOrder)
+                    {
+                        SelectOptionItems.Add(selectOption);
+                    }
                     if (!IgnoreItemChanges)
                     {
                         selectOption.Label = label;
