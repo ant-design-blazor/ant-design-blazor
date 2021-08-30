@@ -91,8 +91,8 @@ namespace AntDesign
         #endregion
 
         #region table
-        public static string BindTableHeaderAndBodyScroll => TableComponentHelper.BindTableHeaderAndBodyScroll;
-        public static string UnbindTableHeaderAndBodyScroll => TableComponentHelper.UnbindTableHeaderAndBodyScroll;
+        public static string BindTableScroll => TableComponentHelper.BindTableScroll;
+        public static string UnbindTableScroll => TableComponentHelper.UnbindTableScroll;
         #endregion
 
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
@@ -216,8 +216,8 @@ namespace AntDesign
         public static class TableComponentHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "tableHelper.";
-            public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
-            public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+            public static string BindTableScroll => $"{FUNC_PREFIX}bindTableScroll";
+            public static string UnbindTableScroll => $"{FUNC_PREFIX}unbindTableScroll";
         }
 
         public static class UploadComponentHelper
