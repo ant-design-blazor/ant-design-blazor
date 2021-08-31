@@ -149,14 +149,13 @@ namespace AntDesign
 
         private bool _hasFixLeft;
         private bool _hasFixRight;
-        private bool _pingRight;
-        private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
         private ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+        private ElementReference _tableRef;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -324,8 +323,8 @@ namespace AntDesign
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
                 .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
                 .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
-                .If($"{prefixCls}-ping-left", () => _pingLeft)
-                .If($"{prefixCls}-ping-right", () => _pingRight)
+                //.If($"{prefixCls}-ping-left", () => _pingLeft)
+                //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
@@ -378,17 +377,10 @@ namespace AntDesign
             if (firstRender)
             {
                 _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
-                if (ScrollX != null)
-                {
-                    await SetScrollPositionClassName();
 
-                    _domEventListener.AddShared<JsonElement>("window", "resize", OnResize);
-                    _domEventListener.AddExclusive<JsonElement>(_tableBodyRef, "scroll", OnScroll);
-                }
-
-                if (ScrollY != null && ScrollX != null)
+                if (ScrollY != null || ScrollX != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableHeaderAndBodyScroll, _tableBodyRef, _tableHeaderRef);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
                 }
             }
         }
@@ -437,61 +429,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
-
-        private async void OnScroll(JsonElement _) => await SetScrollPositionClassName();
-
-        private async Task SetScrollPositionClassName(bool clear = false)
-        {
-            if (_isReloading)
-                return;
-
-            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tableBodyRef);
-            var scrollWidth = element.ScrollWidth;
-            var scrollLeft = element.ScrollLeft;
-            var clientWidth = element.ClientWidth;
-
-            var beforePingLeft = _pingLeft;
-            var beforePingRight = _pingRight;
-
-            if ((scrollWidth == clientWidth && scrollWidth != 0) || clear)
-            {
-                _pingLeft = false;
-                _pingRight = false;
-            }
-            else if (scrollLeft == 0)
-            {
-                _pingLeft = false;
-                _pingRight = true;
-            }
-            // allow the gap between 1 px, it's magic ✨
-            else if (Math.Abs(scrollWidth - (scrollLeft + clientWidth)) < 1)
-            {
-                _pingRight = false;
-                _pingLeft = true;
-            }
-            else
-            {
-                _pingLeft = true;
-                _pingRight = true;
-            }
-
-            if (beforePingLeft != _pingLeft || beforePingRight != _pingRight)
-            {
-                _shouldRender = true;
-            }
-
-            if (!clear)
-            {
-                StateHasChanged();
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<JsonElement>("window", "resize", OnResize);
             _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
-            _domEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
 
@@ -499,9 +439,9 @@ namespace AntDesign
         {
             if (!_isReloading)
             {
-                if (ScrollY != null && ScrollX != null)
+                if (ScrollY != null || ScrollX != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+                    await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
             _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
