@@ -10,13 +10,13 @@
     }
     bodyRef.bindScroll();
     bodyRef.addEventListener('scroll', bodyRef.bindScroll);
-    bodyRef.addEventListener('resize', bodyRef.bindScroll);
+    window.addEventListener('resize', bodyRef.bindScroll);
   }
 
   static unbindTableScroll(bodyRef) {
     if (bodyRef) {
       bodyRef.removeEventListener('scroll', bodyRef.bindScroll);
-      bodyRef.removeEventListener('resize', bodyRef.bindScroll);
+      window.removeEventListener('resize', bodyRef.bindScroll);
     }
   }
 
