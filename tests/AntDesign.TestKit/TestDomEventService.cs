@@ -18,10 +18,5 @@ namespace AntDesign.Tests
         {
 
         }
-
-        public override void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
-        {
-            return;
-        }
     }
 }
