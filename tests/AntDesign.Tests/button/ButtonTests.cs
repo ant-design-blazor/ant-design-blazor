@@ -22,7 +22,7 @@ namespace AntDesign.Tests.Button
             );
 
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"">Save</button>
+                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""><span>Save</span></button>
             ");
         }
 
