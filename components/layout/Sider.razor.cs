@@ -52,6 +52,8 @@ namespace AntDesign
 
         [Inject] public DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         private int ComputedWidth => _isCollapsed ? CollapsedWidth : Width;
 
         private bool _isCollapsed;
@@ -99,6 +101,8 @@ namespace AntDesign
             }
 
             SetClass();
+
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         internal void AddMenu(Menu menu)
@@ -112,7 +116,7 @@ namespace AntDesign
             if (firstRender && Breakpoint != null)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
-                DomEventService.AddEventListener<Window>("window", "resize", OnResize);
+                _domEventListener.AddShared<Window>("window", "resize", OnResize);
                 OptimizeSize(dimensions.innerWidth);
             }
         }
@@ -171,9 +175,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            _domEventListener.RemoveShared<Window>("window", "resize", OnResize);
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<Window>("window", "resize", OnResize);
         }
     }
 }

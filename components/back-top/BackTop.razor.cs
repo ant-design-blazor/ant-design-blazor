@@ -34,7 +34,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        private DomEventListener<JsonElement> _domEventListener;
+        private DomEventListener _domEventListener;
 
         protected async Task OnClickHandle()
         {
@@ -52,18 +52,18 @@ namespace AntDesign
             SetClass();
             base.OnInitialized();
 
-            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
             {
-                _domEventListener.Add("window", "scroll", OnScroll);
+                _domEventListener.AddExclusive<JsonElement>("window", "scroll", OnScroll);
             }
             else
             {
-                _domEventListener.Add(TargetSelector, "scroll", OnScroll);
+                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnScroll);
             }
             await base.OnFirstAfterRenderAsync();
         }
@@ -92,7 +92,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            _domEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
     }

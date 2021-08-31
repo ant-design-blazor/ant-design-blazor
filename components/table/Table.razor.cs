@@ -160,7 +160,7 @@ namespace AntDesign
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
-        private DomEventListener<JsonElement> _domEventListener;
+        private DomEventListener _domEventListener;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -299,6 +299,8 @@ namespace AntDesign
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
+
+                _shouldRender = true;
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -336,7 +338,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
 
             if (RowTemplate != null)
             {
@@ -375,13 +377,13 @@ namespace AntDesign
 
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading);
+                _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
                 if (ScrollX != null)
                 {
                     await SetScrollPositionClassName();
 
-                    DomEventService.AddEventListener("window", "resize", OnResize);
-                    _domEventListener.Add(_tableBodyRef, "scroll", OnScroll);
+                    _domEventListener.AddShared<JsonElement>("window", "resize", OnResize);
+                    _domEventListener.AddExclusive<JsonElement>(_tableBodyRef, "scroll", OnScroll);
                 }
 
                 if (ScrollY != null && ScrollX != null)
@@ -487,9 +489,9 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
-            _domEventListener.Dispose();
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.RemoveShared<JsonElement>("window", "resize", OnResize);
+            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
 
@@ -502,7 +504,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
                 }
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
         }
 
         bool ITable.RowExpandable(RowData rowData)

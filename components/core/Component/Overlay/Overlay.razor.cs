@@ -71,6 +71,8 @@ namespace AntDesign.Internal
         [Inject]
         private DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
         private bool _isChildOverlayShow = false;
@@ -98,6 +100,7 @@ namespace AntDesign.Internal
 
         protected override void OnInitialized()
         {
+            _domEventListener = DomEventService.CreateDomEventListerner();
             _overlayCls = Trigger.GetOverlayHiddenClass();
             base.OnInitialized();
         }
@@ -121,7 +124,7 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading);
+                _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
             if (_lastDisabledState != Trigger.Disabled)
@@ -162,7 +165,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
             base.Dispose(disposing);
         }
 

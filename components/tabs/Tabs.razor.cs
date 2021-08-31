@@ -46,7 +46,7 @@ namespace AntDesign
         private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
-        private DomEventListener<string> _domEventListener;
+        private DomEventListener _domEventListener;
 
         internal List<TabPane> _panes = new List<TabPane>();
 
@@ -224,7 +224,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
 
-            _domEventListener = DomEventService.CreateDomEventListerner<string>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected override void OnParametersSet()
@@ -393,13 +393,13 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                _domEventListener.Add(_scrollTabBar, "wheel", OnWheel, true);
+                _domEventListener.AddExclusive<string>(_scrollTabBar, "wheel", OnWheel, true);
                 _wheelDisabled = true;
             }
 
             if (!IsHorizontal && _wheelDisabled)
             {
-                _domEventListener.Remove(_scrollTabBar, "wheel");
+                _domEventListener.RemoveExclusive(_scrollTabBar, "wheel");
                 _wheelDisabled = false;
             }
 
@@ -570,7 +570,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            _domEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
     }

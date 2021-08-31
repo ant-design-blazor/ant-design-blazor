@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace AntDesign.JsInterop
 {
+    internal class DomEventSubscriptionStore : ConcurrentDictionary<string, List<DomEventSubscription>> {}
+
     internal class DomEventSubscription
     {
         internal Delegate Delegate { get; set; }

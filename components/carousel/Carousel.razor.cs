@@ -76,6 +76,8 @@ namespace AntDesign
 
         [Inject] public DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
         public void Previous() => GoTo(_slicks.IndexOf(ActiveSlick) - 1);
@@ -124,13 +126,19 @@ namespace AntDesign
             }
         }
 
+        protected override void OnInitialized()
+        {
+            _domEventListener = DomEventService.CreateDomEventListerner();
+            base.OnInitialized();
+        }
+
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
                 Resize();
-                DomEventService.AddEventListener("window", "resize", Resize);
+                _domEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
         }
 
@@ -208,10 +216,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", Resize);
-
+            _domEventListener.RemoveShared<JsonElement>("window", "resize", Resize);
             _slicks.Clear();
-
             base.Dispose(disposing);
         }
     }

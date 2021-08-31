@@ -49,6 +49,8 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         private int _realColumn;
 
         private readonly Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int>
@@ -83,8 +85,8 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
+            _domEventListener = DomEventService.CreateDomEventListerner();
             SetClassMap();
-
             await base.OnInitializedAsync();
         }
 
@@ -92,7 +94,7 @@ namespace AntDesign
         {
             if (firstRender && Column.IsT1)
             {
-                DomEventService.AddEventListener<object>("window", "resize", OnResize);
+                _domEventListener.AddShared<object>("window", "resize", OnResize);
             }
 
             base.OnAfterRender(firstRender);
@@ -100,9 +102,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            _domEventListener.RemoveShared<object>("window", "resize", OnResize);
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
 
         private async void OnResize(object o)

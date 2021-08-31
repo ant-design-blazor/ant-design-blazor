@@ -224,21 +224,21 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
-        protected DomEventListener<JsonElement> _domEventListener;
+        protected DomEventListener _domEventListener;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("document", "mouseup", OnMouseUp);
-                DomEventService.AddEventListener("window", "resize", OnWindowResize);
-                DomEventService.AddEventListener("document", "scroll", OnWindowScroll);
+                _domEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
+                _domEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
+                _domEventListener.AddShared<JsonElement>("document", "scroll", OnWindowScroll);
             }
 
             base.OnAfterRender(firstRender);
@@ -252,12 +252,12 @@ namespace AntDesign.Internal
                 {
                     Ref = RefBack.Current;
 
-                    _domEventListener.Add(Ref, "click", OnUnboundClick);
-                    _domEventListener.Add(Ref, "mouseover", OnUnboundMouseEnter);
-                    _domEventListener.Add(Ref, "mouseout", OnUnboundMouseLeave);
-                    _domEventListener.Add(Ref, "focusin", OnUnboundFocusIn);
-                    _domEventListener.Add(Ref, "focusout", OnUnboundFocusOut);
-                    _domEventListener.Add(Ref, "contextmenu", OnContextMenu, true);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                    _domEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
                 }
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
@@ -301,10 +301,10 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
-            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
-            _domEventListener.Dispose();
+            _domEventListener.RemoveShared<JsonElement>("document", "mouseup", OnMouseUp);
+            _domEventListener.RemoveShared<JsonElement>("window", "resize", OnWindowResize);
+            _domEventListener.RemoveShared<JsonElement>("document", "scroll", OnWindowScroll);
+            _domEventListener.DisposeExclusive();
 
             base.Dispose(disposing);
         }

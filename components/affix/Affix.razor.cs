@@ -39,7 +39,7 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
-        private DomEventListener<JsonElement> _domEventListener;
+        private DomEventListener _domEventListener;
 
         #region Parameters
 
@@ -73,7 +73,7 @@ namespace AntDesign
             ClassMapper
                .If(PrefixCls, () => _affixed);
 
-            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -96,15 +96,14 @@ namespace AntDesign
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll);
-                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize);
-
+                _domEventListener.AddShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                _domEventListener.AddShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
                 _rootListened = true;
             }
             else if (!string.IsNullOrEmpty(TargetSelector))
             {
-                _domEventListener.Add(TargetSelector, "scroll", OnTargetScroll);
-                _domEventListener.Add(TargetSelector, "resize", OnTargetResize);
+                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
+                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "resize", OnTargetResize);
                 _targetListened = true;
             }
         }
@@ -195,13 +194,13 @@ namespace AntDesign
 
             if (_rootListened)
             {
-                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
-                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+                _domEventListener.RemoveShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                _domEventListener.RemoveShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
             }
 
             if (_targetListened)
             {
-                _domEventListener.Dispose();
+                _domEventListener.DisposeExclusive();
             }
         }
     }

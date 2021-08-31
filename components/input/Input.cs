@@ -241,7 +241,7 @@ namespace AntDesign
         private Timer _debounceTimer;
         private bool _autoFocus;
         private bool _isInitialized;
-        private DomEventListener<JsonElement> _domEventListener;
+        protected DomEventListener _domEventListener;
 
         private bool DebounceEnabled => DebounceMilliseconds != 0;
 
@@ -256,7 +256,7 @@ namespace AntDesign
                 Value = DefaultValue;
             }
 
-            _domEventListener = DomEventService.CreateDomEventListerner<JsonElement>();
+            _domEventListener = DomEventService.CreateDomEventListerner();
 
             SetClasses();
             _isInitialized = true;
@@ -480,21 +480,21 @@ namespace AntDesign
 
             if (firstRender)
             {
-                _domEventListener.Add(Ref, "compositionstart", OnCompositionStart);
-                _domEventListener.Add(Ref, "compositionend", OnCompositionEnd);
+                _domEventListener.AddExclusive<JsonElement>(Ref, "compositionstart", OnCompositionStart);
+                _domEventListener.AddExclusive<JsonElement>(Ref, "compositionend", OnCompositionEnd);
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
                     await this.FocusAsync(Ref);
                 }
 
-                _domEventListener.Add(Ref, "focus", OnFocusInternal);
+                _domEventListener.AddExclusive<JsonElement>(Ref, "focus", OnFocusInternal);
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            _domEventListener.DisposeExclusive();
             _debounceTimer?.Dispose();
 
             base.Dispose(disposing);

@@ -122,6 +122,8 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         #region Parameters
 
         /// <summary>
@@ -407,6 +409,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -487,8 +490,8 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
-                DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
+                _domEventListener.AddShared<JsonElement>("window", "mousemove", OnMouseMove);
+                _domEventListener.AddShared<JsonElement>("window", "mouseup", OnMouseUp);
             }
 
             base.OnAfterRender(firstRender);
@@ -496,8 +499,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "mousemove", OnMouseMove);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "mouseup", OnMouseUp);
+            _domEventListener.RemoveShared<JsonElement>("window", "mousemove", OnMouseMove);
+            _domEventListener.RemoveShared<JsonElement>("window", "mouseup", OnMouseUp);
 
             base.Dispose(disposing);
         }

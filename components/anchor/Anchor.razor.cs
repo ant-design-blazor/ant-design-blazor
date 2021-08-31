@@ -28,6 +28,8 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         #region Parameters
 
         private string _key;
@@ -119,6 +121,8 @@ namespace AntDesign
             string prefixCls = "ant-anchor";
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-rtl", () => RTL);
+
+            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -129,7 +133,7 @@ namespace AntDesign
             {
                 if (GetCurrentAnchor is null)
                 {
-                    DomEventService.AddEventListener("window", "scroll", OnScroll);
+                    _domEventListener.AddShared<JsonElement>("window", "scroll", OnScroll);
                 }
             }
 
@@ -298,8 +302,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<JsonElement>("window", "scroll", OnScroll);
+            _domEventListener.RemoveShared<JsonElement>("window", "scroll", OnScroll);
         }
     }
 }

@@ -63,9 +63,6 @@ namespace AntDesign
             {
                 Value = DefaultValue;
             }
-
-            //DomEventService.AddEventListener(Ref, "keyup", OnTextAreaKeyup);
-            // DomEventService.AddEventListener(Ref, "onmouseup", OnTextAreaMouseUp);
         }
 
         internal bool FirstTime { get; set; } = true;

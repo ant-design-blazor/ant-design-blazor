@@ -38,6 +38,8 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
+
         public bool IsVerticalAndExtra()
         {
             return this.ItemLayout == ListItemLayout.Vertical && this.Extra != null;
@@ -46,7 +48,7 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-
+            _domEventListener = DomEventService.CreateDomEventListerner();
             await base.OnInitializedAsync();
         }
 
@@ -55,7 +57,7 @@ namespace AntDesign
             if (firstRender && Grid != null)
             {
                 await this.SetGutterStyle();
-                DomEventService.AddEventListener<object>("window", "resize", OnResize);
+                _domEventListener.AddShared<object>("window", "resize", OnResize);
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -157,9 +159,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            _domEventListener.RemoveShared<object>("window", "resize", OnResize);
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
     }
 }

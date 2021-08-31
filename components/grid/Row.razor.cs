@@ -57,6 +57,7 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
+        private DomEventListener _domEventListener;
         private string _gutterStyle;
         private BreakpointType _currentBreakPoint;
 
@@ -92,6 +93,7 @@ namespace AntDesign
                 SetGutterStyle(DefaultBreakpoint.Name);
             }
 
+            _domEventListener = DomEventService.CreateDomEventListerner();
             await base.OnInitializedAsync();
         }
 
@@ -100,7 +102,7 @@ namespace AntDesign
             if (firstRender)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
-                DomEventService.AddEventListener<Window>("window", "resize", OnResize);
+                _domEventListener.AddShared<Window>("window", "resize", OnResize);
                 OptimizeSize(dimensions.innerWidth);
             }
 
@@ -181,8 +183,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<Window>("window", "resize", OnResize);
+            _domEventListener.RemoveShared<Window>("window", "resize", OnResize);
         }
     }
 
