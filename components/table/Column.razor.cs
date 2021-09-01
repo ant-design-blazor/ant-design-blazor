@@ -22,8 +22,6 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
-        [Parameter]
-        public RenderFragment<TData> CellRender { get; set; }
 
         [Parameter]
         public TData Field
@@ -68,7 +66,7 @@ namespace AntDesign
         public SortDirection DefaultSortOrder { get; set; }
 
         [Parameter]
-        public Func<RowData, Dictionary<string, object>> OnCell { get; set; }
+        public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
 
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
