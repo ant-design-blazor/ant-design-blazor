@@ -9,8 +9,8 @@
         <Nodes>
             <TreeNode Title="parent 1-0" Key="0-0-0" TItem="string">
                 <Nodes>
-                    <TreeNode Title="leaf" Key="0-0-0-0" TItem="string"></TreeNode>
-                    <TreeNode Title="leaf" Key="0-0-0-1" TItem="string"></TreeNode>
+                    <TreeNode Title="leaf A" Key="0-0-0-0" TItem="string"></TreeNode>
+                    <TreeNode Title="leaf B" Key="0-0-0-1" TItem="string"></TreeNode>
                 </Nodes>
             </TreeNode>
             <TreeNode Title="parent 1-1" Key="0-0-1" TItem="string">
@@ -31,6 +31,6 @@ select MenuId: @string.Join(',', selectMenuId ?? new[] { "" })
 
 @code{
 
-    private IEnumerable<string> selectMenuId = new[] { "" };
+    private IEnumerable<string> selectMenuId = null;
 
 }

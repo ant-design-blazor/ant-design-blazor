@@ -314,7 +314,8 @@ namespace AntDesign
         {
             if (IsInnerModel)
             {
-                CreateOptionsByTreeNode(data);
+                var d1 = data.Where(d => !SelectOptionItems.Any(o => o.Value == d));
+                CreateOptionsByTreeNode(d1);
                 return;
             }
 
