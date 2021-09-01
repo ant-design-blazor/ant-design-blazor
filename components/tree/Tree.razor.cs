@@ -189,6 +189,11 @@ namespace AntDesign
         {
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
+
+            if (OnUnSelect.HasDelegate)
+            {
+                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+            }
         }
 
         /// <summary>

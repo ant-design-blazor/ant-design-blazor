@@ -147,7 +147,7 @@ namespace AntDesign
         public Func<TItem, bool> IsLeafExpression { get; set; }
 
 
-        protected Func<TreeNode<TItem>, IEnumerable<TItem>> TreeNodeChildrenExpression
+        protected Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression
         {
             get
             {
@@ -208,7 +208,7 @@ namespace AntDesign
         /// </summary>
         private readonly string _dropDownPosition = "bottom";
 
-        private IList<TItem> RootData => ChildrenExpression?.Invoke(RootValue);
+        private IEnumerable<TItem> RootData => ChildrenExpression?.Invoke(RootValue);
 
         public override string Value
         {
