@@ -50,7 +50,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | OnBlur | 失去焦点时回调 | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
-| OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
+| OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
 | OnDropdownVisibleChange | 展开下拉菜单的回调 | Action | - |  |
 | OnFocus | 获得焦点时回调 | Action | - |  |
 | OnMouseEnter | 鼠标移入时回调 | Action | - |  |

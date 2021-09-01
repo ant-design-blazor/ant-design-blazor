@@ -49,7 +49,7 @@ Select component to select value from options.
 | OnBlur | Called when blur. | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
-| OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
+| OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action | - |  |
 | OnFocus | Called when focus. | Action | - |  |
 | OnMouseEnter | Called when mouse enter. | Action | - |  |

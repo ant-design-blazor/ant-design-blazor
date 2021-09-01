@@ -46,8 +46,7 @@ namespace AntDesign
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
 
-        //When true, will prevent execution of CreateDeleteSelectOptions()
-        private bool _alredyRecreatedSelectOptions = false;
+        bool _dataSourceHasChanged = false;
         /// <summary>
         /// The datasource for this component.
         /// </summary>        
@@ -87,40 +86,30 @@ namespace AntDesign
                     SelectedOptionItems.Clear();
 
                     Value = default;
-                    var sameObject = object.ReferenceEquals(_datasource, value);
 
                     _datasource = value;
 
-                    if (!sameObject)
-                        OnDataSourceChanged?.Invoke();
+                    OnDataSourceChanged?.Invoke();
 
                     return;
                 }
 
                 if (value != null)
                 {
-                    bool hasChanged;
-
                     if (_datasource == null)
                     {
-                        hasChanged = true;
+                        _dataSourceHasChanged = true;
                     }
                     else
                     {
-                        hasChanged = !value.SequenceEqual(_datasource);
+                        _dataSourceHasChanged = !value.SequenceEqual(_datasource)
+                            || (_optionsHasInitialized && SelectOptionItems.Count != _datasource.Count());
                     }
 
-                    if (hasChanged)
+                    if (_dataSourceHasChanged)
                     {
                         OnDataSourceChanged?.Invoke();
-
                         _datasource = value;
-                        if (_optionsHasInitialized)
-                        {
-
-                            CreateDeleteSelectOptions();
-                            _alredyRecreatedSelectOptions = true;
-                        }
                     }
                 }
             }
@@ -497,14 +486,7 @@ namespace AntDesign
                 if (_valueHasChanged)
                 {
                     _selectedValue = value;
-                    if (_isInitialized)
-                    {
-                        OnValueChange(value);
-                        if (Form?.ValidateOnChange == true)
-                        {
-                            EditContext?.NotifyFieldChanged(FieldIdentifier);
-                        }
-                    }
+                    _valueHasChanged = _isInitialized;
                 }
             }
         }
@@ -744,8 +726,22 @@ namespace AntDesign
         {
             if (SelectOptions == null)
             {
-                CreateDeleteSelectOptions();
-                _optionsHasInitialized = true;
+                if (!_optionsHasInitialized || _dataSourceHasChanged)
+                {
+                    CreateDeleteSelectOptions();
+                    _optionsHasInitialized = true;
+                    _dataSourceHasChanged = false;
+                }
+            }
+
+            if (_valueHasChanged && _optionsHasInitialized)
+            {
+                _valueHasChanged = false;
+                OnValueChange(_selectedValue);
+                if (Form?.ValidateOnChange == true)
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
             }
 
             base.OnParametersSet();
@@ -823,11 +819,6 @@ namespace AntDesign
 
             if (_datasource == null)
                 return;
-            if (_alredyRecreatedSelectOptions)
-            {
-                _alredyRecreatedSelectOptions = false;
-                return;
-            }
 
             Dictionary<TItem, SelectOptionItem<TItemValue, TItem>> dataStoreToSelectOptionItemsMatch = new();
             // Compare items of SelectOptions and the datastore

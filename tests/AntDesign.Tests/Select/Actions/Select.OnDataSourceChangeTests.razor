@@ -32,7 +32,7 @@
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_item_added()
+    public async Task Action_fired_when_datasource_item_added()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -51,11 +51,11 @@
         _persons.Add(new Person(5, "Fank"));
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
-        handlerCalled.Should().BeFalse();
+        handlerCalled.Should().BeTrue();
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_item_removed()
+    public async Task Action_fired_when_datasource_item_removed()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -74,11 +74,11 @@
         _persons.RemoveAt(0);
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
-        handlerCalled.Should().BeFalse();
+        handlerCalled.Should().BeTrue();
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_cleared()
+    public async Task Action_fired_when_datasource_cleared()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -98,7 +98,7 @@
         _persons.Clear();
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
-        handlerCalled.Should().BeFalse();
+        handlerCalled.Should().BeTrue();
     }
 
     [Fact] //Issues: #1536 & #1719
