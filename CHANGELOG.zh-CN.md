@@ -15,6 +15,42 @@ timeline: true
 
 ---
 
+### 0.9.3
+
+2021-08-29
+
+- Table
+
+  - 🆕 新增 时间列内置筛选器 `等于该日期` 条件，只匹配日期。[#1856](https://github.com/ant-design-blazor/ant-design-blazor/pull/1856) [@iamSmallY](https://github.com/iamSmallY)
+  [#1889](https://github.com/ant-design-blazor/ant-design-blazor/pull/1889) [@anranruye](https://github.com/anranruye)
+  - 📖 增加 表格嵌套的示例。[#1884](https://github.com/ant-design-blazor/ant-design-blazor/pull/1884) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 时间列内置筛选器在筛选时将忽略毫秒。[#1864](https://github.com/ant-design-blazor/ant-design-blazor/pull/1864) [@iamSmallY](https://github.com/iamSmallY)
+  - 🐞 修复 使用客户端模式翻页、排序、筛选等操作不刷新的问题。[#1858](https://github.com/ant-design-blazor/ant-design-blazor/pull/1858) [@ElderJames](https://github.com/ElderJames)
+  [#1875](https://github.com/ant-design/ant-design/pull/1875) [@nikolaykrondev](https://github.com/nikolaykrondev)
+  - 🐞 修复 初始化后 OnChange 调用多次的问题。[#1855](https://github.com/ant-design-blazor/ant-design-blazor/pull/1855) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Breadcrumb 的 Href 和 Overlay 下拉菜单。 [#1859](https://github.com/ant-design-blazor/ant-design-blazor/pull/1859) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🆕 新增 MenuItem 的 IconTemplate。 [#1879](https://github.com/ant-design-blazor/ant-design-blazor/pull/1879) [@Guyiming](https://github.com/Guyiming)
+- 🆕 新增 Upload 指定 Http Method 的支持。[#1853](https://github.com/ant-design-blazor/ant-design-blazor/pull/1853) [@SapientGuardian](https://github.com/SapientGuardian)
+- 🐞 修复 Tag 中 Checked 属性的双向绑定。[#1876](https://github.com/ant-design-blazor/ant-design-blazor/pull/1876) [@stefanodriussi](https://github.com/stefanodriussi)
+- 🐞 修复 AutoComplete 下拉菜单定位问题。[#1860](https://github.com/ant-design-blazor/ant-design-blazor/pull/1860) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 InputNumber 的 DefaultValue 默认绑定问题。[#1871](https://github.com/ant-design-blazor/ant-design-blazor/pull/1871) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 的CheckboxGroup 可选项被修改后，选择时引发异常的问题。 [#1863](https://github.com/ant-design-blazor/ant-design-blazor/pull/1863) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 Modal 和 Confirm 无法自动 focus 的 bug。[#1838](https://github.com/ant-design-blazor/ant-design-blazor/pull/1838) [@zxyao145](https://github.com/zxyao145)
+
+### 0.9.2
+
+2021-08-18
+
+- Table
+  - 🐞 修复 阻止点击展开按钮时的事件穿透[#1850](https://github.com/ant-design-blazor/ant-design-blazor/pull/1850) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 服务端模式初次加载时不触发 OnChange 的问题。[#1835](https://github.com/ant-design-blazor/ant-design-blazor/pull/1835) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Tree 切换时选中节点时 SelectedNodeChanged 事件触发两次[#1849](https://github.com/ant-design-blazor/ant-design-blazor/pull/1849) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tag 组件Style参数设置无效。[#1847](https://github.com/ant-design-blazor/ant-design-blazor/pull/1847) [@JohnHao421](https://github.com/JohnHao421)
+- 🐞 修复 Menu `OnMenuItemClicked` 事件在 `Selectable=false` 时不触发的问题。[#1843](https://github.com/ant-design-blazor/ant-design-blazor/pull/1843) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 当 CheckboxGroup 的 Value 被修改时，对应选项未选中的问题。[#1841](https://github.com/ant-design-blazor/ant-design-blazor/pull/1841) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.9.1
 
 2021-08-11

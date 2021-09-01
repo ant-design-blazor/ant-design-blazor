@@ -5,18 +5,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace AntDesign.FilterExpression
 {
     public class DateFilterExpression : IFilterExpression
     {
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Equals;
         }
         public Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
+            leftExpr = RemoveMilliseconds(leftExpr);
+            rightExpr = RemoveMilliseconds(rightExpr);
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:
@@ -33,8 +36,18 @@ namespace AntDesign.FilterExpression
                     return Expression.LessThan(leftExpr, rightExpr);
                 case TableFilterCompareOperator.LessThanOrEquals:
                     return Expression.LessThanOrEqual(leftExpr, rightExpr);
+                case TableFilterCompareOperator.TheSameDateWith:
+                    return Expression.Equal(Expression.Property(leftExpr, "Date"),
+                        Expression.Property(rightExpr, "Date"));
             }
             throw new InvalidOperationException();
+        }
+
+        private static Expression RemoveMilliseconds(Expression dateTimeExpression)
+        {
+            return Expression.Subtract(dateTimeExpression,
+                Expression.Call(typeof(TimeSpan).GetMethod("FromMilliseconds")!,
+                    Expression.Convert(Expression.Property(dateTimeExpression, "Millisecond"), typeof(double))));
         }
     }
 }

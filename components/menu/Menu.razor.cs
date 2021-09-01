@@ -157,9 +157,6 @@ namespace AntDesign
 
             StateHasChanged();
 
-            if (OnMenuItemClicked.HasDelegate)
-                OnMenuItemClicked.InvokeAsync(item);
-
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
 

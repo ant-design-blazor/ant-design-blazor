@@ -72,7 +72,7 @@ namespace AntDesign
         /// <summary>
         /// 
         /// </summary>
-        public ConfirmAutoFocusButton AutoFocusButton { get; set; }
+        public ConfirmAutoFocusButton AutoFocusButton { get; set; } = ConfirmAutoFocusButton.Ok;
 
         /// <summary>
         /// set OK button type for the leftmost button: OK or Yes button

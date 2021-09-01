@@ -12,7 +12,7 @@ namespace AntDesign.FilterExpression
 {
     public class StringFilterExpression : IFilterExpression
     {
-        public TableFilterCompareOperator GetDefaultCampareOperator()
+        public TableFilterCompareOperator GetDefaultCompareOperator()
         {
             return TableFilterCompareOperator.Contains;
         }

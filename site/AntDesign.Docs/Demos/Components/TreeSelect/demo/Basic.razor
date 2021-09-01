@@ -1,19 +1,31 @@
-@using AntDesign.Docs.Demos.Components.TreeSelect.Demo 
-
-
-<TreeSelect TItem="WebMenu"  @bind-Value="selectMenuId"
-            DataSource="@(LocalJsonData.Data)"
-            TitleExpression="m => m.MenuName" 
-            KeyExpression="m => m.MenuId"
-            ChildrenExpression="menuId => LocalJsonData.GetMenusByParentId(menuId)" 
-            IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)" 
-            Placeholder="Please select"
-            TreeDefaultExpandAll
-            >
+<TreeSelect TItem="string"
+			Style="width:100%;"
+			@bind-Value="value"
+			Placeholder="Please select"
+			AllowClear
+			TreeDefaultExpandAll
+			OnChange="OnChange">
+	<TreeNode TItem="string" Key="parent 1" Title="parent 1">
+		<TreeNode TItem="string" Key="parent 1-0" title="parent 1-0">
+			<TreeNode TItem="string" Key="leaf1" title="leaf1" />
+			<TreeNode TItem="string" Key="leaf2" title="leaf2" />
+		</TreeNode>
+		<TreeNode TItem="string" Key="parent 1-1" title="parent 1-1">
+			<TreeNode TItem="string" Key="leaf3">
+				<TitleTemplate>
+					<b Style="color:#08c;">leaf3</b>
+				</TitleTemplate>
+			</TreeNode>
+		</TreeNode>
+	</TreeNode>
 </TreeSelect>
 
-select MenuId: @selectMenuId
 
-@code{
-    private string selectMenuId;
+@code {
+	private string value;
+
+	public void OnChange()
+	{
+
+	}
 }
