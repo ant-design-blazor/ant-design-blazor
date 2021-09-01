@@ -61,18 +61,12 @@ namespace AntDesign
 
                 if (value == null && _datasource != null)
                 {
-                    if (!_isInitialized)
-                    {
-                        _selectedValue = default;
-                    }
-                    else
+                    if (_isInitialized)
                     {
                         SelectOptionItems.Clear();
                         SelectedOptionItems.Clear();
-                        Value = default;
-
+                        _datasourceHasChanged = true;
                         _datasource = null;
-
                         OnDataSourceChanged?.Invoke();
                     }
                     return;
@@ -83,35 +77,44 @@ namespace AntDesign
                     SelectOptionItems.Clear();
                     SelectedOptionItems.Clear();
 
-                    Value = default;
+                    _datasourceHasChanged = true;
+
                     var sameObject = object.ReferenceEquals(_datasource, value);
 
-                    _datasource = value;
-
                     if (!sameObject)
+                    {
+                        _datasource = value;
                         OnDataSourceChanged?.Invoke();
+                    }
 
                     return;
                 }
 
                 if (value != null)
                 {
-                    bool hasChanged;
-
                     if (_datasource == null)
                     {
-                        hasChanged = true;
+                        _datasourceHasChanged = true;
                     }
                     else
                     {
-                        hasChanged = !value.SequenceEqual(_datasource);
+                        if (KeepDataSourceElementOrder)
+                        {
+                            _datasourceHasChanged = !SelectOptionItems.Select(x => x.Item).SequenceEqual(value);
+                        }
+                        else
+                        {
+                            _datasourceHasChanged = !SelectOptionItems.Select(x => x.Item).OrderBy(x => x.GetHashCode())
+                                .SequenceEqual(value.OrderBy(x => x.GetHashCode()));
+                        }
                     }
 
-                    if (hasChanged)
-                    {
-                        OnDataSourceChanged?.Invoke();
+                    var sameObject = object.ReferenceEquals(_datasource, value);
 
+                    if (!sameObject)
+                    {
                         _datasource = value;
+                        OnDataSourceChanged?.Invoke();
                     }
                 }
             }
@@ -127,10 +130,6 @@ namespace AntDesign
             set
             {
                 _defaultActiveFirstOption = value;
-                if (!_defaultActiveFirstOption)
-                {
-                    _defaultActiveFirstOptionApplied = true;
-                }
             }
         }
 
@@ -257,6 +256,11 @@ namespace AntDesign
         /// Is used to customize the item style.
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
+        /// <summary>
+        /// Whether to keep the element order of data source for select options
+        /// </summary>
+        [Parameter] public bool KeepDataSourceElementOrder { get; set; } = true;
 
         /// <summary>
         /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON) 
@@ -441,7 +445,8 @@ namespace AntDesign
         public bool ShowArrowIcon
         {
             get { return _showArrowIcon; }
-            set {
+            set
+            {
                 _showArrowIcon = value;
                 _showArrowIconChanged = true;
             }
@@ -485,10 +490,7 @@ namespace AntDesign
             set
             {
                 _valueHasChanged = !EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
-                if (_valueHasChanged)
-                {
-                    _selectedValue = value;
-                }
+                _selectedValue = value;
             }
         }
 
@@ -553,7 +555,7 @@ namespace AntDesign
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }        
+        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         #endregion Parameters
 
@@ -613,13 +615,12 @@ namespace AntDesign
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
         private IEnumerable<TItem> _datasource;
+        bool _datasourceHasChanged;
         private IEnumerable<TItemValue> _selectedValues;
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
         private bool _optionsHasInitialized;
-        private bool _defaultValueApplied;
-        private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
         private bool _isValueEnum;
@@ -634,7 +635,7 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-        
+
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -731,9 +732,10 @@ namespace AntDesign
                 _optionsHasInitialized = true;
             }
 
-            if (_valueHasChanged && _optionsHasInitialized)
+            if (_valueHasChanged || _datasourceHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
+                _datasourceHasChanged = false;
                 OnValueChange(_selectedValue);
                 if (Form?.ValidateOnChange == true)
                 {
@@ -758,24 +760,16 @@ namespace AntDesign
                 DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                 await SetDropdownStyleAsync();
 
-                _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
-                _defaultActiveFirstOptionApplied = !_defaultActiveFirstOption;
-            }
-
-            if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
-            {
                 if (SelectMode == SelectMode.Default)
                 {
-                    if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
+                    if (_defaultValueIsNotNull || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValueAsync();
                     }
                 }
                 else
                 {
-                    if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
+                    if (_defaultValuesHasItems || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValuesAsync();
                     }
@@ -849,22 +843,24 @@ namespace AntDesign
             else if (SelectMode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
 
+            if (KeepDataSourceElementOrder)
+            {
+                SelectOptionItems.Clear();
+            }
+
             foreach (var item in _datasource)
             {
                 TItemValue value = _getValue == null ? THelper.ChangeType<TItemValue>(item) : _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
-                SelectOptionItem<TItemValue, TItem> updateSelectOption = null;
 
                 if (dataStoreToSelectOptionItemsMatch.TryGetValue(item, out selectOption))
                 {
-                    var result = EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, value);
-
-                    if (result)
+                    exists = EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, value);
+                    if (!exists)
                     {
-                        exists = true;
-                        updateSelectOption = selectOption;
+                        _datasourceHasChanged = true;
                     }
                 }
 
@@ -876,7 +872,7 @@ namespace AntDesign
                 if (processedSelectedCount > 0)
                 {
                     if (SelectMode == SelectMode.Default)
-                        isSelected = ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true;
+                        isSelected = EqualityComparer<TItemValue>.Default.Equals(value, _selectedValue);
                     else
                         isSelected = _selectedValues.Contains(value);
                 }
@@ -907,20 +903,27 @@ namespace AntDesign
                         SelectedOptionItems.Add(newItem);
                     }
                 }
-                else if (exists && !IgnoreItemChanges)
+                else
                 {
-                    updateSelectOption.Label = label;
-                    updateSelectOption.IsDisabled = disabled;
-                    updateSelectOption.GroupName = groupName;
-                    updateSelectOption.IsHidden = isSelected && HideSelected;
-                    if (isSelected)
+                    if (KeepDataSourceElementOrder)
                     {
-                        if (!updateSelectOption.IsSelected)
+                        SelectOptionItems.Add(selectOption);
+                    }
+                    if (!IgnoreItemChanges)
+                    {
+                        selectOption.Label = label;
+                        selectOption.IsDisabled = disabled;
+                        selectOption.GroupName = groupName;
+                        selectOption.IsHidden = isSelected && HideSelected;
+                        if (isSelected)
                         {
-                            updateSelectOption.IsSelected = isSelected;
-                            SelectedOptionItems.Add(updateSelectOption);
+                            if (!selectOption.IsSelected)
+                            {
+                                selectOption.IsSelected = isSelected;
+                                SelectedOptionItems.Add(selectOption);
+                            }
+                            processedSelectedCount--;
                         }
-                        processedSelectedCount--;
                     }
                 }
             }
@@ -1134,7 +1137,8 @@ namespace AntDesign
                 }
 
                 selectOption.IsSelected = true;
-                await ValueChanged.InvokeAsync(selectOption.Value);
+                if (!EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, Value))
+                    await ValueChanged.InvokeAsync(selectOption.Value);
                 InvokeOnSelectedItemChanged(selectOption);
             }
             else
@@ -1187,7 +1191,8 @@ namespace AntDesign
             if (SelectMode == SelectMode.Default)
             {
                 OnSelectedItemChanged?.Invoke(default);
-                await ValueChanged.InvokeAsync(default);
+                if (!EqualityComparer<TItemValue>.Default.Equals(default, Value))
+                    await ValueChanged.InvokeAsync(default);
             }
             else
             {
@@ -1222,7 +1227,8 @@ namespace AntDesign
 
                     if (SelectMode == SelectMode.Default)
                     {
-                        await ValueChanged.InvokeAsync(firstEnabled.Value);
+                        if (!EqualityComparer<TItemValue>.Default.Equals(firstEnabled.Value, Value))
+                            await ValueChanged.InvokeAsync(firstEnabled.Value);
 
                         if (!ValueChanged.HasDelegate)
                             await InvokeStateHasChangedAsync();
@@ -1244,7 +1250,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultActiveFirstOptionApplied = true;
         }
 
         /// <summary>
@@ -1271,7 +1276,8 @@ namespace AntDesign
                     }
                     else
                         SelectedOptionItems[0] = result;
-                    await ValueChanged.InvokeAsync(result.Value);
+                    if (!EqualityComparer<TItemValue>.Default.Equals(result.Value, Value))
+                        await ValueChanged.InvokeAsync(result.Value);
                 }
                 else
                 {
@@ -1286,7 +1292,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultValueApplied = true;
         }
 
         /// <summary>
@@ -1338,7 +1343,6 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
-            _defaultValueApplied = true;
         }
 
         /// <summary>
@@ -1367,7 +1371,8 @@ namespace AntDesign
                             result.IsHidden = true;
                         SelectedOptionItems.Add(result);
                         OnSelectedItemChanged?.Invoke(result.Item);
-                        await ValueChanged.InvokeAsync(result.Value);
+                        if (!EqualityComparer<TItemValue>.Default.Equals(result.Value, Value))
+                            await ValueChanged.InvokeAsync(result.Value);
                     }
                 }
             }
@@ -1577,7 +1582,8 @@ namespace AntDesign
             if (HideSelected)
                 result.IsHidden = true;
 
-            ValueChanged.InvokeAsync(result.Value);
+            if (!EqualityComparer<TItemValue>.Default.Equals(result.Value, Value))
+                ValueChanged.InvokeAsync(result.Value);
         }
 
         /// <summary>
