@@ -166,6 +166,8 @@ namespace AntDesign
         [Parameter]
         public double Min { get; set; } = 0;
 
+        private double MinMaxDelta => Max - Min;
+
         /// <summary>
         /// dual thumb mode
         /// </summary>
@@ -399,6 +401,12 @@ namespace AntDesign
         public object GetTooltipPopupContainer { get; set; }
 
         #endregion Parameters
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            SetStyle();
+        }
 
         public async override Task SetParametersAsync(ParameterView parameters)
         {
@@ -649,7 +657,7 @@ namespace AntDesign
                     }
                 }
 
-                double rightV = Max * handleNewPosition / sliderLength;
+                double rightV = (MinMaxDelta * handleNewPosition / sliderLength) + Min;
                 if (rightV < LeftValue)
                 {
                     _right = false;
@@ -696,7 +704,7 @@ namespace AntDesign
                     }
                 }
 
-                double leftV = Max * handleNewPosition / sliderLength;
+                double leftV = (MinMaxDelta * handleNewPosition / sliderLength) + Min;
                 if (leftV > RightValue)
                 {
                     _right = true;
@@ -714,11 +722,11 @@ namespace AntDesign
 
         private void SetStyle()
         {
-            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(RightValue / Max));
+            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank((RightValue - Min) / MinMaxDelta));
             if (Range)
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / Max));
-                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank((LeftValue - Min) / MinMaxDelta), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / MinMaxDelta));
+                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank((LeftValue - Min) / MinMaxDelta));
             }
             else
             {
