@@ -159,6 +159,7 @@ WebAssembly 静态托管页面示例
   $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
+  $ dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
   $ npm start
   ```
 
