@@ -45,9 +45,12 @@ namespace AntDesign
         public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
+
+        //When true, will prevent execution of CreateDeleteSelectOptions()
+        private bool _alredyRecreatedSelectOptions = false;
         /// <summary>
         /// The datasource for this component.
-        /// </summary>
+        /// </summary>        
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -112,6 +115,12 @@ namespace AntDesign
                         OnDataSourceChanged?.Invoke();
 
                         _datasource = value;
+                        if (_optionsHasInitialized)
+                        {
+
+                            CreateDeleteSelectOptions();
+                            _alredyRecreatedSelectOptions = true;
+                        }
                     }
                 }
             }
@@ -488,6 +497,14 @@ namespace AntDesign
                 if (_valueHasChanged)
                 {
                     _selectedValue = value;
+                    if (_isInitialized)
+                    {
+                        OnValueChange(value);
+                        if (Form?.ValidateOnChange == true)
+                        {
+                            EditContext?.NotifyFieldChanged(FieldIdentifier);
+                        }
+                    }
                 }
             }
         }
@@ -553,7 +570,7 @@ namespace AntDesign
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }        
+        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         #endregion Parameters
 
@@ -731,16 +748,6 @@ namespace AntDesign
                 _optionsHasInitialized = true;
             }
 
-            if (_valueHasChanged && _optionsHasInitialized)
-            {
-                _valueHasChanged = false;
-                OnValueChange(_selectedValue);
-                if (Form?.ValidateOnChange == true)
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
-            }
-
             base.OnParametersSet();
         }
 
@@ -816,6 +823,11 @@ namespace AntDesign
 
             if (_datasource == null)
                 return;
+            if (_alredyRecreatedSelectOptions)
+            {
+                _alredyRecreatedSelectOptions = false;
+                return;
+            }
 
             Dictionary<TItem, SelectOptionItem<TItemValue, TItem>> dataStoreToSelectOptionItemsMatch = new();
             // Compare items of SelectOptions and the datastore

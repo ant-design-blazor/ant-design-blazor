@@ -92,11 +92,72 @@
             ValueName="@nameof(Person.Id)"
             Value="0"
             OnDataSourceChanged="OnDataSourceChangedHandler">
-        </AntDesign.Select>);
+        </AntDesign.Select>
+    );
         //Act
         _persons.Clear();
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
         handlerCalled.Should().BeFalse();
+    }
+
+    [Fact] //Issues: #1536 & #1719
+    public void DataSource_and_value_change_in_single_render()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 0;
+        Action<int> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"            
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                AllowClear
+                >
+            </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters => 
+            parameters
+                .Add(p => p.DataSource, new List<Person>() { new Person(5, "NewPerson") })
+                .Add(p => p.Value, 5)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(1);
+        selectedItem.TextContent.Trim().Should().Be("NewPerson");
+        value.Should().Be(5);
+    }
+
+    [Fact] //Issue: #1905
+    public void Delayed_DataSource_set_and_value_set()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 2;
+        Action<int> ValueChanged = (v) => value = v;
+        var persons = new List<Person>();
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                >
+            </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(4);
+        selectedItem.TextContent.Trim().Should().Be("Lucy");
+        value.Should().Be(2);
     }
 }  
