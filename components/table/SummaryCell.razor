@@ -1,5 +1,15 @@
 ﻿@namespace AntDesign
+@using AntDesign.TableModels
 @inherits ColumnBase
 
-<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">@ChildContent</td>
-
+<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
+	@if (CellRender != null)
+	{
+		var cellData = new CellData(RowData);
+		@CellRender(cellData)
+	}
+	else
+	{
+		@ChildContent
+	}
+</td>
