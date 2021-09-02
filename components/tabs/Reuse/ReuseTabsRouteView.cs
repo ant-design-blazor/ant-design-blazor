@@ -50,7 +50,6 @@ namespace AntDesign
                 builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
                 {
                     b.OpenComponent(20, layoutType);
-                    b.AddAttribute(21, "Body", body);
                     b.CloseComponent();
                 }));
             }
