@@ -4,37 +4,36 @@
 
 @if (ChildContent != null)
 {
-	@if (IsButton)
-	{
-		<div class="@ClassMapper.Class"
-			 style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
-			 id="@Id"         			 
-			 >        
-			@buttons((this, ChildContent))
-		</div>		
-	}
-	else
-	{
-		<div class="@ClassMapper.Class"
-			 style="display: inline-block; width: fit-content; @Style"
-			 id="@Id"
-			 @ref="@Ref"			 
-			 @onclick="OnClickDiv"
-			 @onmouseenter="OnTriggerMouseEnter"
-			 @onmouseleave="OnTriggerMouseLeave"
-			 @oncontextmenu="OnTriggerContextmenu"
-			 @oncontextmenu:preventDefault
-			 >		
-			 @ChildContent
-		 </div>
-	}
+    @if (IsButton)
+    {
+        <div class="@ClassMapper.Class"
+             style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
+             id="@Id"
+			 @ref="Ref">
+            @buttons((this, ChildContent))
+        </div>
+    }
+    else
+    {
+        <div class="@ClassMapper.Class"
+             style="display: inline-block; width: fit-content; @Style"
+             id="@Id"
+             @ref="@Ref"
+             @onclick="OnClickDiv"
+             @onmouseenter="OnTriggerMouseEnter"
+             @onmouseleave="OnTriggerMouseLeave"
+             @oncontextmenu="OnTriggerContextmenu"
+             @oncontextmenu:preventDefault>
+                @ChildContent
+        </div>
+    }
 }
 
 @if (Unbound != null)
 {
     @if (IsButton)
     {
-		@buttons((this, Unbound(default)))
+        @buttons((this, Unbound(default)))
     }
     else
     {
@@ -52,38 +51,36 @@
 
 
 @code {
-	RenderFragment<(Dropdown dropdown, RenderFragment childContent)> buttons = data => @<CascadingValue Value="@data.dropdown" IsFixed>			
-		<DropdownGroupButton>
-			<LeftButton>
-				<Button @key="1" 
-					Size="@data.dropdown.ButtonSize" 
-					Class="@data.dropdown.ButtonClassLeft"
-					Type="@data.dropdown.ButtonTypeLeft" 
-					Disabled="@data.dropdown.Disabled" 
-					Danger="@data.dropdown.ButtonDanger" 
-					Ghost="@data.dropdown.ButtonGhost"					
-					Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
-					@attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnClick) })"
-					>
-					@data.childContent
-				</Button>
-			</LeftButton>
-			<RightButton>
-				<span @ref="@data.dropdown.Ref">
-					<Button @key="2" 
-						Size="@data.dropdown.ButtonSize" 						
-						Type="@data.dropdown.ButtonTypeRight" 
-						Disabled="@data.dropdown.Disabled" 						
-						Class="@("ant-dropdown-trigger " + @data.dropdown.ButtonClassRight)" 
-						Icon="@data.dropdown.RightButtonIcon" 
-						Danger="@data.dropdown.ButtonDanger" 
-						Loading="@data.dropdown.IsLoading"
-						Ghost="@data.dropdown.ButtonGhost"
-						Style="@(data.dropdown.Block ? "flex: 0 0 auto;" + data.dropdown.ButtonStyleRight : data.dropdown.ButtonStyleRight)"
-						@attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnTriggerClick) })"
-						/>
-				</span>
-			</RightButton>
-		</DropdownGroupButton>
-	</CascadingValue>;
+    RenderFragment<(Dropdown dropdown, RenderFragment childContent)> buttons = data =>@<CascadingValue Value="@data.dropdown" IsFixed>
+        <DropdownGroupButton>
+            <LeftButton>
+                <Button @key="1"
+                        Size="@data.dropdown.ButtonSize"
+                        Class="@data.dropdown.ButtonClassLeft"
+                        Type="@data.dropdown.ButtonTypeLeft"
+                        Disabled="@data.dropdown.Disabled"
+                        Danger="@data.dropdown.ButtonDanger"
+                        Ghost="@data.dropdown.ButtonGhost"
+                        Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
+                        @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnClick) })">
+                    @data.childContent
+                </Button>
+            </LeftButton>
+            <RightButton>
+                <span @ref="@data.dropdown.Ref">
+                    <Button @key="2"
+                            Size="@data.dropdown.ButtonSize"
+                            Type="@data.dropdown.ButtonTypeRight"
+                            Disabled="@data.dropdown.Disabled"
+                            Class="@("ant-dropdown-trigger " + @data.dropdown.ButtonClassRight)"
+                            Icon="@data.dropdown.RightButtonIcon"
+                            Danger="@data.dropdown.ButtonDanger"
+                            Loading="@data.dropdown.IsLoading"
+                            Ghost="@data.dropdown.ButtonGhost"
+                            Style="@(data.dropdown.Block ? "flex: 0 0 auto;" + data.dropdown.ButtonStyleRight : data.dropdown.ButtonStyleRight)"
+                            @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnTriggerClick) })" />
+                </span>
+            </RightButton>
+        </DropdownGroupButton>
+    </CascadingValue>;
 }
