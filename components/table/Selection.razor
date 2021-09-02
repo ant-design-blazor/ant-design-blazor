@@ -1,48 +1,62 @@
 ﻿@namespace AntDesign
+@using AntDesign.TableModels
 @inherits ColumnBase
 
 @if (IsInitialize)
 {
-    return;
+	return;
 }
 else if (IsPlaceholder)
 {
-    <td style="padding: 0px; border: 0px; height: 0px;"></td>
+	<td style="padding: 0px; border: 0px; height: 0px;"></td>
 }
 else if (IsMeasure)
 {
-    <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
+	<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
 }
 else if (IsColGroup)
 {
-    if (Width != null)
-    {
-        <col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
-    }
-    else
-    {
-        <col class="ant-table-selection-col">
-    }
+	if (Width != null)
+	{
+		<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+	}
+	else
+	{
+		<col class="ant-table-selection-col">
+	}
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
-        @if (Type == "checkbox")
-        {
-            <Checkbox Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
-        }
-    </th>
-}   
+	<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
+		@if (Type == "checkbox")
+		{
+			<Checkbox Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
+		}
+	</th>
+}
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
-        @if (Type == "checkbox")
-        {
-            <Checkbox Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
-        }
-        else if (Type == "radio")
-        {
-            <Radio Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool" />
-        }
-    </td>
+	<td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+
+		@if (CellRender != null)
+		{
+			var cellData = new CellData(RowData);
+            @CellRender(cellData)
+		}
+		else if (ChildContent != null)
+		{
+			@ChildContent
+		}
+		else
+		{
+			@if (Type == "checkbox")
+			{
+				<Checkbox Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
+			}
+			else if (Type == "radio")
+			{
+				<Radio Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool" />
+			}
+		}
+	</td>
 }
