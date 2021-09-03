@@ -108,7 +108,7 @@ namespace AntDesign.Components.Authentication
 
     internal static class AttributeAuthorizeDataCache
     {
-        private static readonly ConcurrentDictionary<Type, IAuthorizeData[]> _cache = new();
+        private static readonly ConcurrentDictionary<Type, IAuthorizeData[]> _cache = new ConcurrentDictionary<Type, IAuthorizeData[]>();
 
         public static IAuthorizeData[] GetAuthorizeDataForType(Type type)
         {
@@ -134,7 +134,7 @@ namespace AntDesign.Components.Authentication
 
                 if (allAttributes[i] is IAuthorizeData authorizeData)
                 {
-                    authorizeDatas ??= new();
+                    authorizeDatas ??= new List<IAuthorizeData>();
                     authorizeDatas.Add(authorizeData);
                 }
             }
