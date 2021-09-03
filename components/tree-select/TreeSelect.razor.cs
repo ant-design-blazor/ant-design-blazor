@@ -76,7 +76,8 @@ namespace AntDesign
         [Parameter]
         public Func<TItem, string> TitleExpression { get; set; }
 
-        private Dictionary<string, object> TreeAttributes
+
+        protected virtual Dictionary<string, object> TreeAttributes
         {
             get
             {
@@ -84,7 +85,13 @@ namespace AntDesign
                 {
                     return new()
                     {
+                        { "DataSource", DataSource },
+                        { "TitleExpression", DataSource == null ? null : TreeNodeTitleExpression },
                         { "DefaultExpandAll", TreeDefaultExpandAll },
+                        { "KeyExpression", DataSource == null ? null : TreeNodeKeyExpression },
+                        { "ChildrenExpression", DataSource == null ? null : ChildrenExpression },
+                        { "DisabledExpression", DataSource == null ? null : TreeNodeDisabledExpression },
+                        { "IsLeafExpression", DataSource == null ? null : TreeNodeIsLeafExpression }
                     };
                 }
                 else
@@ -138,7 +145,20 @@ namespace AntDesign
             }
         }
 
-        private bool IsInnerModel => DataSource == null && ChildContent != null;
+
+        private bool? _isInnerModel;
+        [Parameter]
+        public bool IsInnerModel
+        {
+            get
+            {
+                return _isInnerModel ?? DataSource == null && ChildContent != null;
+            }
+            set
+            {
+                _isInnerModel = value;
+            }
+        }
 
         /// <summary>
         /// Specifies a method that returns whether the expression is a leaf node.
@@ -151,14 +171,18 @@ namespace AntDesign
         {
             get
             {
-                return node => ChildrenExpression(TreeNodeKeyExpression(node));
+                return IsInnerModel ? ChildrenExpression : node => ChildrenMethodExpression(TreeNodeKeyExpression(node));
             }
         }
         /// <summary>
         /// Specifies a method  to return a child node
         /// </summary>
         [Parameter]
-        public Func<string, IList<TItem>> ChildrenExpression { get; set; }
+        public Func<string, IList<TItem>> ChildrenMethodExpression { get; set; }
+
+
+        [Parameter]
+        public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
 
 
         protected Func<TreeNode<TItem>, bool> TreeNodeDisabledExpression
@@ -208,7 +232,7 @@ namespace AntDesign
         /// </summary>
         private readonly string _dropDownPosition = "bottom";
 
-        private IEnumerable<TItem> RootData => ChildrenExpression?.Invoke(RootValue);
+        protected IEnumerable<TItem> RootData => ChildrenMethodExpression?.Invoke(RootValue);
 
         public override string Value
         {
