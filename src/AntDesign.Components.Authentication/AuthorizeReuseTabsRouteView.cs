@@ -39,7 +39,6 @@ namespace AntDesign.Components.Authentication
             _renderAuthorizeRouteViewCoreDelegate = RenderAuthorizeRouteViewCore;
         }
 
-
         [Parameter]
         public object Resource { get; set; }
 
@@ -60,7 +59,6 @@ namespace AntDesign.Components.Authentication
             }
         }
 
-        //委托
         private void RenderAuthorizeRouteViewCore(RenderTreeBuilder builder)
         {
             builder.OpenComponent<AuthorizeRouteViewCore>(0);
@@ -72,14 +70,12 @@ namespace AntDesign.Components.Authentication
             builder.CloseComponent();
         }
 
-        //未授权委托
         private void RenderNotAuthorizedInDefaultLayout(RenderTreeBuilder builder, AuthenticationState authenticationState)
         {
             var content = NotAuthorized ?? _defaultNotAuthorizedContent;
             RenderContentInDefaultLayout(builder, content(authenticationState));
         }
 
-        //已授权委托
         private void RenderAuthorizingInDefaultLayout(RenderTreeBuilder builder)
         {
             var content = Authorizing ?? _defaultAuthorizingContent;
@@ -103,8 +99,6 @@ namespace AntDesign.Components.Authentication
                 => AttributeAuthorizeDataCache.GetAuthorizeDataForType(RouteData.PageType);
         }
     }
-
-
 
     internal static class AttributeAuthorizeDataCache
     {
