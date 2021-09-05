@@ -241,7 +241,7 @@ namespace AntDesign
         private Timer _debounceTimer;
         private bool _autoFocus;
         private bool _isInitialized;
-        protected DomEventListener _domEventListener;
+        protected IDomEventListener _domEventListener;
 
         private bool DebounceEnabled => DebounceMilliseconds != 0;
 

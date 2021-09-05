@@ -76,7 +76,7 @@ namespace AntDesign
 
         [Inject] public DomEventService DomEventService { get; set; }
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 

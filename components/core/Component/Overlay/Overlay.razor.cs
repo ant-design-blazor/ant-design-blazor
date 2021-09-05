@@ -71,7 +71,7 @@ namespace AntDesign.Internal
         [Inject]
         private DomEventService DomEventService { get; set; }
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;

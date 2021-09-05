@@ -90,7 +90,7 @@ namespace AntDesign.Select.Internal
         private int _currentItemCount;
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         protected override void OnInitialized()
         {

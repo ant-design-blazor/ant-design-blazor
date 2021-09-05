@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace AntDesign.JsInterop
 {
-    internal class DomEventSubscriptionStore : ConcurrentDictionary<string, List<DomEventSubscription>> {}
+    public class DomEventSubscriptionStore : ConcurrentDictionary<string, List<DomEventSubscription>> {}
 
-    internal class DomEventSubscription
+    public class DomEventSubscription
     {
         internal Delegate Delegate { get; set; }
         internal Type Type { get; set; }

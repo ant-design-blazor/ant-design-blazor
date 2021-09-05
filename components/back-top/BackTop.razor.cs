@@ -34,7 +34,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         protected async Task OnClickHandle()
         {

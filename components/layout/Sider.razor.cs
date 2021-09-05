@@ -52,7 +52,7 @@ namespace AntDesign
 
         [Inject] public DomEventService DomEventService { get; set; }
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         private int ComputedWidth => _isCollapsed ? CollapsedWidth : Width;
 

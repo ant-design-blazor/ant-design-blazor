@@ -678,7 +678,7 @@ namespace AntDesign
         private bool _showArrowIcon = true;
         private Expression<Func<TItemValue>> _valueExpression;
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         #endregion Properties
 

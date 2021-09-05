@@ -46,7 +46,7 @@ namespace AntDesign
         private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         internal List<TabPane> _panes = new List<TabPane>();
 

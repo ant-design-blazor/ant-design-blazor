@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using AntDesign.JsInterop;
 using Microsoft.JSInterop;
 
 namespace AntDesign.Tests
@@ -17,6 +17,11 @@ namespace AntDesign.Tests
         public TestDomEventService(IJSRuntime js) : base(js)
         {
 
+        }
+
+        public override IDomEventListener CreateDomEventListerner()
+        {
+            return new TestDomEventListerner();
         }
     }
 }

@@ -159,7 +159,7 @@ namespace AntDesign
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;

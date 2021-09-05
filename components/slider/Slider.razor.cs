@@ -122,7 +122,7 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
-        private DomEventListener _domEventListener;
+        private IDomEventListener _domEventListener;
 
         #region Parameters
 

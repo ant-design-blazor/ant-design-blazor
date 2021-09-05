@@ -11,15 +11,15 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.JsInterop
 {
-    public class DomEventListener
+    public class DomEventListener : IDomEventListener
     {
         private Dictionary<string, IDisposable> _dotNetObjectStore = new();
         private bool? _isResizeObserverSupported = null;
 
         private readonly IJSRuntime _jsRuntime;
-        internal DomEventSubscriptionStore _domEventSubscriptionsStore;
+        private readonly DomEventSubscriptionStore _domEventSubscriptionsStore;
 
-        internal DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore)
+        public DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore)
         {
             _jsRuntime = jsRuntime;
             _domEventSubscriptionsStore = domEventSubscriptionStore;

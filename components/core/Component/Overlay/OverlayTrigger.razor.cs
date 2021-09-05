@@ -224,7 +224,7 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
-        protected DomEventListener _domEventListener;
+        protected IDomEventListener _domEventListener;
 
         protected override void OnInitialized()
         {

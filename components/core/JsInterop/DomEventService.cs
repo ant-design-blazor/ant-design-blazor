@@ -22,7 +22,7 @@ namespace AntDesign.JsInterop
             _jsRuntime = jsRuntime;
         }
 
-        public DomEventListener CreateDomEventListerner()
+        public virtual IDomEventListener CreateDomEventListerner()
         {
             return new DomEventListener(_jsRuntime, _domEventSubscriptionStore);
         }
