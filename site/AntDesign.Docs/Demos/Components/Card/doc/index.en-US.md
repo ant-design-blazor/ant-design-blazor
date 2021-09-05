@@ -31,7 +31,7 @@ Card
 | Loading |Shows a loading indicator while the contents of the card are being fetched | boolean |-        |
 | Size |	Size of card | RenderFragment |-        |
 | Title |	Card title | String or RenderFragement |-        |
-| Type |ard style type, can be set to inner or not set | string |-        |
+| Type |Card style type, can be set to inner or not set | string |-        |
 
 Card.Grid
 
