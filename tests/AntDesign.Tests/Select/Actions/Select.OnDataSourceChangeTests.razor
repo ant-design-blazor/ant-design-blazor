@@ -1,6 +1,17 @@
 ﻿@inherits AntDesignTestBase
 @code {
     record Person(int Id, string Name);
+    class PersonClass 
+    {
+        public PersonClass(int id, string name) 
+        {
+            Id = id;
+            Name = name;
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     List<Person> _persons = new List<Person>
     {
         new Person(1, "John"),
@@ -9,8 +20,16 @@
         new Person(4, "Emily"),
     };
 
+    List<PersonClass> _personsClass = new List<PersonClass>
+    {
+        new PersonClass(1, "John"),
+        new PersonClass(2, "Lucy"),
+        new PersonClass(3, "Jack"),
+        new PersonClass(4, "Emily"),
+    };
+
     [Fact]
-    public async Task Action_fired_when_datasource_changed()
+    public void Action_fired_when_datasource_changed()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -32,7 +51,31 @@
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_item_added()
+    public void Action_fired_when_datasource_item_replaced()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;
+
+        var cut = Render<AntDesign.Select<int, Person>>(
+        @<AntDesign.Select DataSource="@_persons"            
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Id)"
+            Value="0"
+            OnDataSourceChanged="OnDataSourceChangedHandler">
+        </AntDesign.Select>
+    );
+        //Act
+        _persons[2] = new Person(2, "ReplacedPersonItem");
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));        
+        //Assert
+        handlerCalled.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Action_fired_when_datasource_item_added()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -51,11 +94,11 @@
         _persons.Add(new Person(5, "Fank"));
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
-        handlerCalled.Should().BeFalse();
+        handlerCalled.Should().BeTrue();
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_item_removed()
+    public void Action_fired_when_datasource_item_removed()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -74,11 +117,11 @@
         _persons.RemoveAt(0);
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
-        handlerCalled.Should().BeFalse();
+        handlerCalled.Should().BeTrue();
     }
 
     [Fact]
-    public async Task Action_not_fired_when_datasource_cleared()
+    public void Action_fired_when_datasource_cleared()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -92,11 +135,123 @@
             ValueName="@nameof(Person.Id)"
             Value="0"
             OnDataSourceChanged="OnDataSourceChangedHandler">
-        </AntDesign.Select>);
+        </AntDesign.Select>
+    );
         //Act
         _persons.Clear();
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
+        handlerCalled.Should().BeTrue();
+    }
+
+    [Fact] //Issues: #1536 & #1719
+    public void DataSource_and_value_change_in_single_render()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 0;
+        Action<int> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"            
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                AllowClear
+                >
+            </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters => 
+            parameters
+                .Add(p => p.DataSource, new List<Person>() { new Person(5, "NewPerson") })
+                .Add(p => p.Value, 5)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(1);
+        selectedItem.TextContent.Trim().Should().Be("NewPerson");
+        value.Should().Be(5);
+    }
+
+    [Fact] //Issue: #1905
+    public void Delayed_DataSource_set_and_value_set()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 2;
+        Action<int> ValueChanged = (v) => value = v;
+        var persons = new List<Person>();
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                >
+            </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(4);
+        selectedItem.TextContent.Trim().Should().Be("Lucy");
+        value.Should().Be(2);
+    }
+
+    [Fact] 
+    public async Task Do_not_react_when_DataSource_not_changed()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());         			
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;
+        var persons = new List<Person>();
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="2"
+                OnDataSourceChanged="OnDataSourceChangedHandler"
+                >
+            </AntDesign.Select>
+        );        
+        //Act        
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert
         handlerCalled.Should().BeFalse();
     }
+
+    [Fact]
+    public void React_to_label_change()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;     
+        var cut = Render<AntDesign.Select<int, PersonClass>>(
+        @<AntDesign.Select DataSource="@_personsClass"
+            LabelName="@nameof(PersonClass.Name)"
+            ValueName="@nameof(PersonClass.Id)"
+            IgnoreItemChanges="false"
+            Value="2"
+            OnDataSourceChanged="OnDataSourceChangedHandler"
+            >
+        </AntDesign.Select>
+        );
+        //Act
+        _personsClass[1].Name = "Lucie";        
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _personsClass));        
+        //Assert
+        cut.Find("span.ant-select-selection-item").TextContent.Trim().Should().Be(_personsClass[1].Name);
+        handlerCalled.Should().BeTrue();
+    }
+
 }  
