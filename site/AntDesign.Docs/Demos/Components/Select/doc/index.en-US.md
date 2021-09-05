@@ -24,7 +24,7 @@ Select component to select value from options.
 | Bordered | Toggle the border style. | bool | true |  |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
-| DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default .Net is going to be used. | IEqualityComparer&lt;TItem> | - |  |
+| DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
 | DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
 | DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |

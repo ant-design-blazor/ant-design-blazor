@@ -75,6 +75,10 @@ namespace AntDesign
             {
                 _dataSourceItemShallowCopyMehtod = this.GetType().GetGenericArguments()[1]
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (DataSourceEqualityComparer is null)
+                {
+                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
+                }
             }
             return _dataSourceItemShallowCopyMehtod;
         }
@@ -707,7 +711,7 @@ namespace AntDesign
 
         private string _labelName;
 
-        private Func<TItem, string> _getLabel;
+        internal Func<TItem, string> _getLabel;
 
         private Action<TItem, string> _setLabel;
 
@@ -721,7 +725,7 @@ namespace AntDesign
 
         private string _valueName;
 
-        private Func<TItem, TItemValue> _getValue;
+        internal Func<TItem, TItemValue> _getValue;
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;

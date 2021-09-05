@@ -204,6 +204,30 @@
         value.Should().Be(2);
     }
 
+    [Fact] 
+    public async Task Do_not_react_when_DataSource_not_changed()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());         			
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;
+        var persons = new List<Person>();
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="2"
+                OnDataSourceChanged="OnDataSourceChangedHandler"
+                >
+            </AntDesign.Select>
+        );        
+        //Act        
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert
+        handlerCalled.Should().BeFalse();
+    }
+
     [Fact]
     public void React_to_label_change()
     {
