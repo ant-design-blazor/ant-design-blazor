@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
@@ -45,9 +46,46 @@ namespace AntDesign
         public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
+        bool _dataSourceHasChanged = false;
+        IEnumerable<TItem> _dataSourceShallowCopy;
+        private bool? _isTItemPrimitive;
+        private bool IsTItemPrimitive
+        {
+            get
+            {
+                if (_isTItemPrimitive is null)
+                {
+                    _isTItemPrimitive = IsSimpleType(typeof(TItem));
+                }
+                return _isTItemPrimitive!.Value;
+            }
+        }
+
+        /// <summary>
+        /// MethodInfo will contain attached MemberwiseClone protected
+        /// method. Due to its protection level, it has to be accessed
+        /// using reflection. It will be used during generation of 
+        /// the DataSource shallow copy (which is a new list of DataSource
+        /// items with shallow copy of each item).
+        /// </summary>
+        private MethodInfo _dataSourceItemShallowCopyMehtod;
+        private MethodInfo GetDataSourceItemCloneMethod()
+        {
+            if (_dataSourceItemShallowCopyMehtod is null)
+            {
+                _dataSourceItemShallowCopyMehtod = this.GetType().GetGenericArguments()[1]
+                    .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (DataSourceEqualityComparer is null)
+                {
+                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
+                }
+            }
+            return _dataSourceItemShallowCopyMehtod;
+        }
+
         /// <summary>
         /// The datasource for this component.
-        /// </summary>
+        /// </summary>        
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -72,6 +110,7 @@ namespace AntDesign
                         Value = default;
 
                         _datasource = null;
+                        _dataSourceShallowCopy = null;
 
                         OnDataSourceChanged?.Invoke();
                     }
@@ -84,38 +123,51 @@ namespace AntDesign
                     SelectedOptionItems.Clear();
 
                     Value = default;
-                    var sameObject = object.ReferenceEquals(_datasource, value);
 
                     _datasource = value;
+                    _dataSourceShallowCopy = value.ToList();
 
-                    if (!sameObject)
-                        OnDataSourceChanged?.Invoke();
+                    OnDataSourceChanged?.Invoke();
 
                     return;
                 }
 
                 if (value != null)
                 {
-                    bool hasChanged;
-
                     if (_datasource == null)
                     {
-                        hasChanged = true;
+                        _dataSourceHasChanged = true;
                     }
                     else
                     {
-                        hasChanged = !value.SequenceEqual(_datasource);
+                        _dataSourceHasChanged = !value.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
                     }
 
-                    if (hasChanged)
+                    if (_dataSourceHasChanged)
                     {
                         OnDataSourceChanged?.Invoke();
-
                         _datasource = value;
+                        if (IsTItemPrimitive)
+                        {
+                            _dataSourceShallowCopy = _datasource.ToList();
+                        }
+                        else
+                        {
+                            var cloneMethod = GetDataSourceItemCloneMethod();
+                            _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
+                        }
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// EqualityComparer that will be used during DataSource change 
+        /// detection. If no comparer set, default .Net is going to be
+        /// used.
+        /// </summary>
+        [Parameter]
+        public IEqualityComparer<TItem> DataSourceEqualityComparer { get; set; }
 
         /// <summary>
         /// Activates the first item that is not deactivated.
@@ -441,7 +493,8 @@ namespace AntDesign
         public bool ShowArrowIcon
         {
             get { return _showArrowIcon; }
-            set {
+            set
+            {
                 _showArrowIcon = value;
                 _showArrowIconChanged = true;
             }
@@ -488,6 +541,7 @@ namespace AntDesign
                 if (_valueHasChanged)
                 {
                     _selectedValue = value;
+                    _valueHasChanged = _isInitialized;
                 }
             }
         }
@@ -553,7 +607,7 @@ namespace AntDesign
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }        
+        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         #endregion Parameters
 
@@ -617,11 +671,11 @@ namespace AntDesign
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
+        private bool _afterFirstRender;
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
-        private bool _isPrimitive;
         private bool _isValueEnum;
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
@@ -634,7 +688,7 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
-        
+
         /// <summary>
         /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
@@ -657,7 +711,7 @@ namespace AntDesign
 
         private string _labelName;
 
-        private Func<TItem, string> _getLabel;
+        internal Func<TItem, string> _getLabel;
 
         private Action<TItem, string> _setLabel;
 
@@ -671,7 +725,7 @@ namespace AntDesign
 
         private string _valueName;
 
-        private Func<TItem, TItemValue> _getValue;
+        internal Func<TItem, TItemValue> _getValue;
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
@@ -713,7 +767,6 @@ namespace AntDesign
 
             if (!_isInitialized)
             {
-                _isPrimitive = IsSimpleType(typeof(TItem));
                 _isValueEnum = typeof(TItemValue).IsEnum;
                 if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
                     _showArrowIcon = SuffixIcon != null;
@@ -727,8 +780,12 @@ namespace AntDesign
         {
             if (SelectOptions == null)
             {
-                CreateDeleteSelectOptions();
-                _optionsHasInitialized = true;
+                if (!_optionsHasInitialized || _dataSourceHasChanged)
+                {
+                    CreateDeleteSelectOptions();
+                    _optionsHasInitialized = true;
+                    _dataSourceHasChanged = false;
+                }
             }
 
             if (_valueHasChanged && _optionsHasInitialized)
@@ -740,8 +797,36 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
-
             base.OnParametersSet();
+        }
+
+        /// <summary>
+        /// Used only when ChildElement SelectOptions is used.
+        /// Will run this process if after initalization an item
+        /// is added that is also marked as selected.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task ProcessSelectedSelectOptions()
+        {
+            if (_isInitialized && _afterFirstRender)
+            {
+                if (Mode == "default")
+                {
+                    if (LastValueBeforeReset is not null)
+                    {
+                        OnValueChange(LastValueBeforeReset);
+                        LastValueBeforeReset = default;
+                    }
+                    else
+                    {
+                        OnValueChange(Value);
+                    }
+                }
+                else
+                {
+                    await OnValuesChangeAsync(Values);
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -795,6 +880,7 @@ namespace AntDesign
             }
 
             await base.OnAfterRenderAsync(firstRender);
+            _afterFirstRender = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -1428,7 +1514,7 @@ namespace AntDesign
         {
             TItemValue value = CustomTagLabelToValue.Invoke(label);
             TItem item;
-            if (_isPrimitive)
+            if (IsTItemPrimitive)
             {
                 item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
             }
@@ -1533,6 +1619,14 @@ namespace AntDesign
         }
 
         #region Events
+        /// <summary>
+        /// When newly set Value is not found in SelectOptionItems, it is reset to
+        /// default. This property holds the value before reset. It may be needed 
+        /// to be reaplied (for example when new Value is set at the same time
+        /// as new SelectOption is added, but Value in the component is set 
+        /// before new SelectOptionItem has been created).        
+        /// </summary>
+        internal TItemValue LastValueBeforeReset { get; set; }
 
         /// <summary>
         /// The Method is called every time if the value of the @bind-Value was changed by the two-way binding.
@@ -1552,6 +1646,11 @@ namespace AntDesign
 
             if (result == null)
             {
+                if (SelectOptions is not null)
+                {
+                    LastValueBeforeReset = value;
+                }
+
                 if (!AllowClear)
                     _ = TrySetDefaultValueAsync();
                 else
@@ -1898,7 +1997,7 @@ namespace AntDesign
                 {
                     CustomTagSelectOptionItem.Label = searchValue;
                     CustomTagSelectOptionItem.Value = value;
-                    if (_isPrimitive)
+                    if (IsTItemPrimitive)
                     {
                         CustomTagSelectOptionItem.Item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
                     }
