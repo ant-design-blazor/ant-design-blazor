@@ -24,6 +24,7 @@ Select component to select value from options.
 | Bordered | Toggle the border style. | bool | true |  |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
+| DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
 | DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
 | DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
@@ -49,7 +50,7 @@ Select component to select value from options.
 | OnBlur | Called when blur. | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
-| OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
+| OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action | - |  |
 | OnFocus | Called when focus. | Action | - |  |
 | OnMouseEnter | Called when mouse enter. | Action | - |  |

@@ -1,0 +1,121 @@
+﻿@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+    class PersonClass 
+    {
+        public PersonClass(int id, string name) 
+        {
+            Id = id;
+            Name = name;
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    List<PersonClass> _personsClass = new List<PersonClass>
+    {
+        new PersonClass(1, "John"),
+        new PersonClass(2, "Lucy"),
+        new PersonClass(3, "Jack"),
+        new PersonClass(4, "Emily"),
+    };
+
+
+    [Fact]
+    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+    public void Keep_value_when_corresponding_item_in_DataSource_removed() 
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        var selectedPersion = _persons[2];
+        int value = 0;
+        Action<int> ValueChanged = (v) => value = v;        
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@selectedPersion.Id"
+                ValueChanged="@ValueChanged"
+                >
+            </AntDesign.Select>
+        );
+        var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
+        //Act
+        _persons.Remove(_persons.First(x => x.Id == value));        
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert        
+        prevSelectedItem.Should().Be(selectedPersion.Name);
+        cut.Invoking(c => c.Find(".ant-select-selection-item"))
+            .Should().Throw<Bunit.ElementNotFoundException>();
+        value.Should().Be(selectedPersion.Id);
+        cut.Instance.Value.Should().Be(selectedPersion.Id);
+    }
+
+//Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+//    [Fact]
+//    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+//    public void Keep_value_when_DataSource_changed() 
+//    {
+//        //Arrange
+//        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+//            .SetResult(new AntDesign.JsInterop.DomRect());
+//        var selectedPersion = _persons[2];
+//        int value = 0;
+//        Action<int> ValueChanged = (v) => value = v;        
+//        var cut = Render<AntDesign.Select<int, Person>>(
+//            @<AntDesign.Select DataSource="@_persons"
+//                LabelName="@nameof(Person.Name)"
+//                ValueName="@nameof(Person.Id)"
+//                Value="@selectedPersion.Id"
+//                ValueChanged="@ValueChanged"
+//                >
+//            </AntDesign.Select>
+//        );
+//        var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
+//        //Act
+//        _persons.Remove(_persons.First(x => x.Id == value));
+//        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, new List<Person>()));
+//        //Assert        
+//        prevSelectedItem.Should().Be(selectedPersion.Name);
+//        cut.Invoking(c => c.Find(".ant-select-selection-item"))
+//            .Should().Throw<Bunit.ElementNotFoundException>();
+//        value.Should().Be(selectedPersion.Id);
+//        cut.Instance.Value.Should().Be(selectedPersion.Id);
+//    }
+
+//Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+//    [Fact]
+//    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+//    public void Keep_value_when_changed_to_nonexisting_in_DataSource() 
+//    {
+//        //Arrange
+//        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+//            .SetResult(new AntDesign.JsInterop.DomRect());
+//        var selectedPersion = _persons[2];
+//        int value = 0;
+//        Action<int> ValueChanged = (v) => value = v;        
+//        var cut = Render<AntDesign.Select<int, Person>>(
+//            @<AntDesign.Select DataSource="@_persons"
+//                LabelName="@nameof(Person.Name)"
+//                ValueName="@nameof(Person.Id)"
+//                Value="@selectedPersion.Id"
+//                ValueChanged="@ValueChanged"
+//                >
+//            </AntDesign.Select>
+//        );        
+//        //Act        
+//        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, 10));
+//        //Assert
+//        value.Should().Be(10);
+//        cut.Instance.Value.Should().Be(10);
+//    }
+}
