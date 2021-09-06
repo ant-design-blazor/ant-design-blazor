@@ -25,6 +25,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | Bordered | 是否有边框 | bool | true |  |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
+| DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | 是否默认高亮第一个选项  | bool | false |  |
 | DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
 | DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
@@ -50,7 +51,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | OnBlur | 失去焦点时回调 | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
-| OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
+| OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
 | OnDropdownVisibleChange | 展开下拉菜单的回调 | Action | - |  |
 | OnFocus | 获得焦点时回调 | Action | - |  |
 | OnMouseEnter | 鼠标移入时回调 | Action | - |  |
