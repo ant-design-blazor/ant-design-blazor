@@ -1,0 +1,17 @@
+﻿@page "/counter"
+@attribute [ReuseTabsPageTitle("Counter")]
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<Button Type="primary" @onclick="IncrementCount">Click me</Button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
