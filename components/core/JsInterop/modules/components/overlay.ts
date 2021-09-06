@@ -242,7 +242,7 @@ export class Overlay {
       switch (placement) {
         case Placement.LeftTop:
         case Placement.RightTop:          
-          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {        
+          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {               
             return { 
               top: triggerTop,
               bottom: Overlay.reversePositionValue(triggerTop, container.scrollHeight, overlayHeight) 
@@ -261,7 +261,7 @@ export class Overlay {
           }; 
         case Placement.Left:
         case Placement.Right:
-          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {            
+          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {     
             let position: verticalPosition = { 
               top: triggerTop + (triggerHeight / 2) - (overlayHeight / 2)
             };
@@ -285,7 +285,7 @@ export class Overlay {
           };           
         case Placement.LeftBottom:
         case Placement.RightBottom:
-          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {        
+          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {  
             let position: verticalPosition = { 
               bottom: triggerBottom,
               top: Overlay.reversePositionValue(triggerBottom, container.scrollHeight, overlayHeight)
@@ -510,17 +510,17 @@ export class Overlay {
 
     this.restoreInitialPlacement();
 
-    //add a very basic check - if overlay width exceeds container width, left defaults to 0 
+    //add a very basic check - if overlay width exceeds container width, left defaults to 0     
     this.calculationsToPerform = this.getNominalPositions();
     if (this.calculationsToPerform.size > 0) {
       this.adjustToContainerBoundaries();
     }
 
-    this.sanitizeCalculatedPositions();
+    this.sanitizeCalculatedPositions();    
     //first positioning is applied by blazor - without it, a flicker is visible
     if (applyLocation) {
       this.applyLocation();
-    }
+    }    
     return this.sanitizedPosition;
   }
 
@@ -581,16 +581,17 @@ export class Overlay {
       directionsToCalculate.add("horizontal");
     }
     //same for height exceeding container height - top defaults to 0   
-    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && height < this.overlayInfo.clientHeight) {
+    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && height < this.overlayInfo.clientHeight) {      
       if (this.selectedVerticalPosition === "top") {
         this.position.top = 0;
       } else {
         this.position.bottom = 0;
       }
     } else {
+      
       let verticalPosition = this.getVerticalPosition();
       this.position.top = verticalPosition.top;
-      this.position.bottom = verticalPosition.bottom;
+      this.position.bottom = verticalPosition.bottom;      
       directionsToCalculate.add("vertical");
     }
     return directionsToCalculate;
@@ -649,7 +650,13 @@ export class Overlay {
           clientWidth: this.overlayInfo.clientWidth,
           offsetHeight: this.overlayInfo.offsetHeight,
           offsetWidth: this.overlayInfo.offsetWidth,
-          class: this.overlay.className
+          class: this.overlay.className,
+          appliedCssPosition: {
+            overlay_style_top: this.overlay.style.top,
+            overlay_style_bottom: this.overlay.style.bottom,
+            overlay_style_left: this.overlay.style.left,
+            overlay_style_right: this.overlay.style.right
+          }
         },
         window: {
           innerHeight: window.innerHeight,
@@ -665,7 +672,7 @@ export class Overlay {
         scrollbars: this.scrollbarSize,
         overlayPreset: this.overlayPreset,
         overlayConstraints: this.overlayConstraints,
-        position: this.position,        
+        position: this.position,                
         placment: {
          initialPlacement: this.initialPlacement,
          recentPlacement: this.recentPlacement,
@@ -790,7 +797,7 @@ export class Overlay {
       this.triggerPosition.top = this.containerInfo.scrollTop + this.triggerInfo.absoluteTop
         - this.containerInfo.absoluteTop - this.containerInfo.clientTop;
     }
-
+    
     if (this.selectedVerticalPosition === "top"){
       position = this.verticalCalculation(this.triggerPosition.top, this.triggerPosition.height, this.containerInfo,
         this.triggerInfo, this.overlayInfo.clientHeight, this.overlayConstraints);
@@ -952,6 +959,7 @@ export class Overlay {
       const positionCache: overlayPosition = { ...this.position };
       const selectedPositionCache = this.selectedHorizontalPosition;
       const placementCache = this.placement;
+      const horizontalCalculationCache = this.horizontalCalculation;
       let visibleHeightBeforeAdjustment = this.overlayVisibleHeight;
 
       this.getHorizontalAdjustment();
@@ -962,6 +970,7 @@ export class Overlay {
         this.position = positionCache;
         this.selectedHorizontalPosition = selectedPositionCache;
         this.placement = placementCache;
+        this.horizontalCalculation = horizontalCalculationCache;
       }
     }
   }
@@ -976,6 +985,7 @@ export class Overlay {
       const positionCache: overlayPosition = { ...this.position };
       const selectedPositionCache = this.selectedVerticalPosition;
       const placementCache = this.placement;
+      const verticalCalculationCache = this.verticalCalculation;
       let visibleHeightBeforeAdjustment = this.overlayVisibleWidth;
 
       this.getVerticalAdjustment();      
@@ -986,6 +996,7 @@ export class Overlay {
         this.position = positionCache;
         this.selectedVerticalPosition = selectedPositionCache;
         this.placement = placementCache;
+        this.verticalCalculation = verticalCalculationCache;
       }
     }
   }
@@ -1012,7 +1023,7 @@ export class Overlay {
   private getVerticalAdjustment() {
     this.placement = Overlay.reverseVerticalPlacementMap.get(this.placement)(this.selectedVerticalPosition);
     this.selectedVerticalPosition = Overlay.appliedStylePositionMap.get(this.placement).vertical;
-    this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);     
+    this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);
     let verticalPosition = this.getVerticalPosition();
     this.position.top = verticalPosition.top;
     this.position.bottom = verticalPosition.bottom;

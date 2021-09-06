@@ -31,6 +31,13 @@ const domInfoDefaults: domInfo = {
   absoluteLeft: 0
 }
 
+type cooridnates = {
+  top: number,
+  bottom: number, 
+  left: number, 
+  right: number 
+}
+
 describe ('Overlay maps test', () => {
   const rewModule = rewire('../../../../../components/core/JsInterop/modules/components/overlay');
   const rewClass = rewModule.__get__('Overlay');
@@ -309,9 +316,8 @@ type positionTheory = {
     scrollLeft?: number,
     scrollTop?: number
   },    
-  expected: { top: number, bottom: number, left: number, right: number }
-  expectedCorrected: { top: number, bottom: number, left: number, right: number,
-    placement?: Placement }
+  expected: cooridnates
+  expectedCorrected: cooridnates & { placement?: Placement }
 };
 
 const theoryPositionData: Array<positionTheory> = [
@@ -469,8 +475,59 @@ const theoryPositionData: Array<positionTheory> = [
       },       
        expected: { top: 1542, bottom: 2399, left: 550, right: 1321 },
        expectedCorrected: { top: null, bottom: -629, left: 550, right: null, placement: Placement.Top }
+    },
+    { 
+      theoryName: "trigger scrolled parttially  out of screen",
+      trigger: { triggerBoundyAdjustMode: TriggerBoundyAdjustMode.InView },
+      overlay: { 
+        placement: Placement.BottomLeft },
+      window: { innerWidth: 1920, innerHeight: 955, pageXOffset: 0, pageYOffset: 934},
+      documentElement: { clientHeight: 955, clientWidth: 1903 },
+      getInfo: {
+        "body": { absoluteTop: 0, absoluteLeft: 0, clientLeft: 0, clientTop: 0, scrollLeft: 0, scrollTop: 0, scrollHeight: 9505, scrollWidth: 1903},
+        "trigger": { absoluteTop: 869, absoluteLeft: 406, clientHeight: 30, clientWidth: 136, offsetHeight: 32, offsetWidth: 138},
+        "overlay": { clientHeight: 309, clientWidth: 280 },
+      },       
+       expected: { top: 905, bottom: 8291, left: 406, right: 1217 },
+       expectedCorrected: { top: 905, bottom: null, left: 406, right: null, placement: Placement.BottomLeft }
     }
   ];  
+
+type scrollTheory = positionTheory & {
+  scrollSteps: Array<{x?: number, y?: number, expectedAfterScroll: cooridnates & { placement?: Placement } }>,    
+}
+
+const theoryScrollData: Array<scrollTheory> = [
+    { 
+      theoryName: "trigger scrolled parttially  out of screen",
+      trigger: { triggerBoundyAdjustMode: TriggerBoundyAdjustMode.InView },
+      overlay: { 
+        placement: Placement.BottomLeft },
+      window: { innerWidth: 1920, innerHeight: 955, pageXOffset: 0, pageYOffset: 0},
+      documentElement: { clientHeight: 955, clientWidth: 1903 },
+      getInfo: {
+        "body": { absoluteTop: 0, absoluteLeft: 0, clientLeft: 0, clientTop: 0, scrollLeft: 0, scrollTop: 0, scrollHeight: 9505, scrollWidth: 1903},
+        "trigger": { absoluteTop: 439, absoluteLeft: 406, clientHeight: 30, clientWidth: 136, offsetHeight: 32, offsetWidth: 138},
+        "overlay": { clientHeight: 309, clientWidth: 280 },
+      },       
+      expected: { top: 475, bottom: 8721, left: 406, right: 1217 },
+      expectedCorrected: { top: 475, bottom: null, left: 406, right: null, placement: Placement.BottomLeft },
+      scrollSteps: [ 
+        {
+          y: 476,
+          expectedAfterScroll: { top: 475, bottom: null, left: 406, right: null, placement: Placement.BottomLeft }
+        }, 
+        {
+          y: 477,
+          expectedAfterScroll: { top: 475, bottom: null, left: 406, right: null, placement: Placement.BottomLeft }           
+        }, 
+        {
+          y:0,
+          expectedAfterScroll: { top: 475, bottom: null, left: 406, right: null, placement: Placement.BottomLeft }
+        } 
+        ]
+    }
+]
 
 const theoryModalPositionData: Array<positionTheory> = [
     { 
@@ -493,7 +550,7 @@ const theoryModalPositionData: Array<positionTheory> = [
       },
        expected: { top: 344, bottom: 571, left: 724, right: 1083 },
        expectedCorrected: { top: 344, bottom: null, left: 724, right: null, placement: Placement.BottomLeft }
-    }
+    },
 ];
 
 describe('Overlay position functions', () => {        
@@ -700,6 +757,107 @@ describe('Overlay calculation', () => {
     }
     expect(overlay.sanitizedPosition.placement).to.eq(testData.expectedCorrected.placement);
   })  
+
+  itParam("scrollScenarios: ${value.theoryName}", theoryScrollData, (testData: scrollTheory) => {
+    //arrange
+    let container;
+    let containerParent;
+    let triggerElement;
+    const triggerElementHtml = '<div id="trigger">TriggerElement</div>';
+    if (testData.getInfo.hasOwnProperty("body")) {
+      container = document.body;    
+      triggerElement = domInit.addElementToBody(triggerElementHtml);                  
+    } else {            
+      let containerHtml: string = '<div id="container"></div>'
+      if (testData.containerParentElement) {
+        containerHtml = `<div id="containerParent">${containerHtml}</div>`
+        containerParent = domInit.addElementToBody(containerHtml)
+        container = containerParent.firstChild;
+
+        const c1 = sandbox.stub(container.parentElement, 'clientHeight').get(() => testData.containerParentElement.clientHeight);
+        const c2 = sandbox.stub(container.parentElement, 'clientWidth').get(() => testData.containerParentElement.clientWidth);
+        const c3 = sandbox.stub(container.parentElement, 'scrollLeft').get(() => testData.containerParentElement.scrollLeft);
+        const c4 = sandbox.stub(container.parentElement, 'scrollTop').get(() => testData.containerParentElement.scrollTop);   
+      } else {
+        container = domInit.addElementToBody(containerHtml)
+      }
+      container.insertAdjacentHTML("afterbegin", triggerElementHtml);
+      triggerElement = container.firstChild;
+    }
+
+    const overlayElement = domInit.addElementToBody('<div id="overlay" style="position:absolute"></div>') as HTMLDivElement;
+    let pageXOffset = testData.window.pageXOffset;
+    let pageYOffset = testData.window.pageYOffset;
+    //discard variable names    
+    const w1 = sandbox.stub(window, 'innerHeight').get(() => testData.window.innerHeight);
+    const w2 = sandbox.stub(window, 'innerWidth').get(() => testData.window.innerWidth);
+    const w3 = sandbox.stub(window, 'pageXOffset').get(() => pageXOffset);
+    const w4 = sandbox.stub(window, 'pageYOffset').get(() => pageYOffset);      
+    const w5 = sandbox.stub(overlayElement, 'offsetParent').get(() => 1); //not null and > 0 is needed   
+    const w6 = sandbox.stub(triggerElement, 'offsetParent').get(() => 1);  
+    const d1 = sandbox.stub(document.documentElement, 'clientHeight').get(() => testData.documentElement.clientHeight);
+    const d2 = sandbox.stub(document.documentElement, 'clientWidth').get(() => testData.documentElement.clientWidth);
+
+    const o1 = sandbox.stub(resizeObserver, 'create').callsFake((key, invoker, isDotNetInvoker: boolean) => null);
+    const o2 = sandbox.stub(mutationObserver, 'create').callsFake((key, invoker, isDotNetInvoker: boolean) => null);    
+
+    const s7 = sandbox.stub(infoHelper, "getInfo").callsFake((element: HTMLElement) => {      
+      let elementId = element.getAttribute("id");
+      if (!elementId && element === document.body) {
+        elementId = "body";
+      }
+      return testData.getInfo[elementId];
+    }); 
+
+    //act
+    let overlay = new Overlay("testId", overlayElement, container, triggerElement, testData.overlay.placement, testData.trigger.triggerBoundyAdjustMode, false, '', overlayConstraintsDefaults);
+    overlay.calculatePosition(false, true);
+
+    //assert
+    if (testData.expectedCorrected.top !== null) {
+      expect(overlay.sanitizedPosition.top).to.eq(testData.expectedCorrected.top);    
+      expect(overlay.sanitizedPosition.bottom).to.eq(null);    
+    }
+    else {
+      expect(overlay.sanitizedPosition.bottom).to.eq(testData.expectedCorrected.bottom);    
+      expect(overlay.sanitizedPosition.top).to.eq(null);    
+    }
+    if (testData.expectedCorrected.left !== null) {
+      expect(overlay.sanitizedPosition.left).to.eq(testData.expectedCorrected.left);
+      expect(overlay.sanitizedPosition.right).to.eq(null);
+    }
+    else {
+      expect(overlay.sanitizedPosition.right).to.eq(testData.expectedCorrected.right);
+      expect(overlay.sanitizedPosition.left).to.eq(null);
+    }
+    expect(overlay.sanitizedPosition.placement).to.eq(testData.expectedCorrected.placement);
+    
+    for(let i = 0; i < testData.scrollSteps.length; i++) {
+      let scrollStep = testData.scrollSteps[i];
+      pageXOffset = scrollStep.x ?? pageXOffset;
+      pageYOffset = scrollStep.y ?? pageYOffset;
+      overlay.calculatePosition(true, false, null);
+
+      if (scrollStep.expectedAfterScroll.top !== null) {
+        expect(overlay.sanitizedPosition.top).to.eq(scrollStep.expectedAfterScroll.top);    
+        expect(overlay.sanitizedPosition.bottom).to.eq(null);    
+      }
+      else {
+        expect(overlay.sanitizedPosition.bottom).to.eq(scrollStep.expectedAfterScroll.bottom);    
+        expect(overlay.sanitizedPosition.top).to.eq(null);    
+      }
+      if (scrollStep.expectedAfterScroll.left !== null) {
+        expect(overlay.sanitizedPosition.left).to.eq(scrollStep.expectedAfterScroll.left);
+        expect(overlay.sanitizedPosition.right).to.eq(null);
+      }
+      else {
+        expect(overlay.sanitizedPosition.right).to.eq(scrollStep.expectedAfterScroll.right);
+        expect(overlay.sanitizedPosition.left).to.eq(null);
+      }
+      expect(overlay.sanitizedPosition.placement).to.eq(scrollStep.expectedAfterScroll.placement);
+
+    }
+  });  
 });
 
 type resizeTheory = positionTheory & {
