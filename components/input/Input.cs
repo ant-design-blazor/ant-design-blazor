@@ -193,6 +193,9 @@ namespace AntDesign
         [Parameter]
         public string WrapperStyle { get; set; }
 
+        [Parameter]
+        public bool StopPropagation { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
@@ -451,9 +454,10 @@ namespace AntDesign
                     return;
                 }
 
-                _debounceTimer?.Dispose();
                 if (_debounceTimer != null)
                 {
+                    await _debounceTimer.DisposeAsync();
+                    
                     _debounceTimer = null;
                 }
             }
@@ -641,6 +645,13 @@ namespace AntDesign
                 //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
                 //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+                
+                if (StopPropagation)
+                {
+                    builder.AddEventStopPropagationAttribute(78, "onchange", true);
+                    builder.AddEventStopPropagationAttribute(79, "onblur", true);
+                }
+                
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
