@@ -7,7 +7,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DropdownButton : Dropdown
+    public partial class DropdownButton : Dropdown
     {
         /// <summary>
         /// Option to fit button width to its parent width

@@ -13,7 +13,7 @@ namespace AntDesign
     /// <summary>
     /// Base class for input type components.
     /// </summary>
-    public class Input<TValue> : AntInputComponentBase<TValue>
+    public partial class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
 

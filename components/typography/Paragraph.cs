@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
-    public class Paragraph : TypographyBase
+    public partial class Paragraph : TypographyBase
     {
         [Parameter]
         public bool Code { get; set; } = false;

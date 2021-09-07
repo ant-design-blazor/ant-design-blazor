@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -86,5 +89,30 @@ namespace AntDesign
 
         private string _class;
         private string _style;
+
+        public virtual Dictionary<string, object> CascadingAttributes { get; set; }
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            ApplyCascadingAttributes(parameters);
+            return base.SetParametersAsync(parameters);
+        }
+
+        protected void ApplyCascadingAttributes(ParameterView parameters)
+        {
+            if (parameters.TryGetValue("CascadingAttributes", out Dictionary<string, object> cascadingAttributes) && cascadingAttributes?.Any() == true)
+            {
+                var parametersDictionary = parameters.ToDictionary();
+                var additionalParametersDictionary = new Dictionary<string, object>();
+                foreach (var attribute in cascadingAttributes)
+                {
+                    if (!parametersDictionary.ContainsKey(attribute.Key))
+                    {
+                        additionalParametersDictionary.Add(attribute.Key, attribute.Value);
+                    }
+                }
+                ParameterView.FromDictionary(additionalParametersDictionary).SetParameterProperties(this);
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class SimpleSelect : Select<string, string> { }
+    public partial class SimpleSelect : Select<string, string> { }
 
-    public class SimpleSelectOption : SelectOption<string, string> { }
+    public partial class SimpleSelectOption : SelectOption<string, string> { }
 }
