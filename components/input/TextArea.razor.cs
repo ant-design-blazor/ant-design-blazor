@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -28,10 +26,39 @@ namespace AntDesign
         private uint _minRows = DEFAULT_MIN_ROWS;
         private uint _maxRows = uint.MaxValue;
         private bool _hasMinOrMaxSet;
+        private bool _hasMinSet;
         private DotNetObjectReference<TextArea> _reference;
 
+        /// <summary>
+        /// Will adjust (grow or shrink) the `TextArea` according to content. 
+        /// Can work in connection with `MaxRows` & `MinRows`.
+        /// Sets resize attribute of the textarea HTML element to: none.
+        /// </summary>
         [Parameter]
-        public bool AutoSize { get; set; }
+        public bool AutoSize
+        {
+            get => _autoSize;
+            set
+            {
+                if (_hasMinOrMaxSet && !value)
+                {
+                    Debug.WriteLine("AntBlazor.TextArea: AutoSize cannot be set to false when either MinRows or MaxRows has been set.AutoSize has been switched to true.");
+                    _autoSize = true;
+                }
+                else
+                {
+                    _autoSize = value;
+                }
+                if (_autoSize)
+                {
+                    _resizeStyle = "resize: none";
+                }
+                else
+                {
+                    _resizeStyle = "";
+                }
+            }
+        }
 
         /// <summary>
         /// When `false`, value will be set to `null` when content is empty 
@@ -58,12 +85,13 @@ namespace AntDesign
                 if (value >= MinRows)
                 {
                     _maxRows = value;
+                    Debug.WriteLineIf(!AutoSize, "AntBlazor.TextArea: AutoSize cannot be set to false when either MinRows or MaxRows has been set.AutoSize has been switched to true.");
                     AutoSize = true;
                 }
                 else
                 {
                     _maxRows = uint.MaxValue;
-                    Debug.WriteLine($"Value of {nameof(MaxRows)}({MaxRows}) has to be between {nameof(MinRows)}({MinRows}) and {uint.MaxValue}");
+                    Debug.WriteLine($"AntBlazor.TextArea: Value of {nameof(MaxRows)}({MaxRows}) has to be between {nameof(MinRows)}({MinRows}) and {uint.MaxValue}");
                 }
             }
         }
@@ -83,18 +111,27 @@ namespace AntDesign
             set
             {
                 _hasMinOrMaxSet = true;
+                _hasMinSet = true;
                 if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
                 {
                     _minRows = value;
+                    Debug.WriteLineIf(!AutoSize, "AntBlazor.TextArea: AutoSize cannot be set to false when either MinRows or MaxRows has been set.AutoSize has been switched to true.");
                     AutoSize = true;
                 }
                 else
                 {
                     _minRows = DEFAULT_MIN_ROWS;
-                    Debug.WriteLine($"Value of {nameof(MinRows)}({MinRows}) has to be between {DEFAULT_MIN_ROWS} and {nameof(MaxRows)}({MaxRows})");
+                    Debug.WriteLine($"AntBlazor.TextArea: Value of {nameof(MinRows)}({MinRows}) has to be between {DEFAULT_MIN_ROWS} and {nameof(MaxRows)}({MaxRows})");
                 }
             }
         }
+
+        /// <summary>
+        /// Sets the height of the TextArea expressed in number of rows.
+        /// Default value is 3.
+        /// </summary>
+        [Parameter]
+        public uint Rows { get; set; } = 3;
 
         /// <summary>
         /// Callback when the size changes
@@ -133,40 +170,24 @@ namespace AntDesign
             if (AutoSize)
             {
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-
-                await CalculateRowHeightAsync();
             }
+            await CalculateRowHeightAsync();
         }
 
         protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
         {
+            validationErrorMessage = null;
             if (string.IsNullOrWhiteSpace(value))
             {
                 if (DefaultToEmptyString)
                     result = string.Empty;
                 else
                     result = default;
-                validationErrorMessage = null;
                 return true;
             }
+            result = value;
+            return true;
 
-            var success = BindConverter.TryConvertTo<string>(
-               value, CultureInfo.CurrentCulture, out var parsedValue);
-
-            if (success)
-            {
-                result = parsedValue;
-                validationErrorMessage = null;
-
-                return true;
-            }
-            else
-            {
-                result = default;
-                validationErrorMessage = $"{FieldIdentifier.FieldName} field isn't valid.";
-
-                return false;
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -189,6 +210,8 @@ namespace AntDesign
         /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+        private bool _autoSize;
+        private string _resizeStyle = "";
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -205,33 +228,39 @@ namespace AntDesign
             {
                 _reference = DotNetObjectReference.Create<TextArea>(this);
             }
-            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.RegisterResizeTextArea, Ref, MinRows, MaxRows, _reference);
 
-            //            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.GetTextAreaInfo, Ref);
+            uint rows = Rows;
+            if (_hasMinSet)
+                rows = MinRows;
+
+            TextAreaInfo textAreaInfo;
+            if (AutoSize)
+            {
+                textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
+                    JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, Ref, rows, MaxRows, _reference);
+            }
+            else
+            {
+                textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
+                    JSInteropConstants.InputComponentHelper.GetTextAreaInfo, Ref);
+            }
+
             _rowHeight = textAreaInfo.LineHeight;
             _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
                 + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
-            uint rows = (uint)(textAreaInfo.ScrollHeight / _rowHeight);
-            if (_hasMinOrMaxSet)
-                rows = Math.Max((uint)MinRows, rows);
-
-            double height = 0;
             if (rows > MaxRows)
             {
-                rows = MaxRows;
-
-                height = rows * _rowHeight + _offsetHeight;
-                Style = $"height: {height}px;";
+                Style = $"height: {MaxRows * _rowHeight + _offsetHeight}px;{_resizeStyle};overflow-x: hidden";
             }
             else
             {
-                height = rows * _rowHeight + _offsetHeight;
-                Style = $"height: {height}px;overflow-y: hidden;";
+                string overflow = _autoSize ? "hidden" : "visible";
+                Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: {overflow};{_resizeStyle};overflow-x: hidden";
             }
         }
 
-        private class TextAreaInfo
+        internal class TextAreaInfo
         {
             public double ScrollHeight { get; set; }
             public double LineHeight { get; set; }
