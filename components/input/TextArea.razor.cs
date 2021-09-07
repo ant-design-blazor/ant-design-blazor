@@ -132,7 +132,7 @@ namespace AntDesign
 
             if (AutoSize)
             {
-                _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
                 await CalculateRowHeightAsync();
             }
         }
@@ -173,7 +173,7 @@ namespace AntDesign
             if (AutoSize && !_isReloading)
             {
                 _reference?.Dispose();
-                _domEventListener.Dispose();
+                DomEventListener.Dispose();
 
                 _ = InvokeAsync(async () =>
                 {

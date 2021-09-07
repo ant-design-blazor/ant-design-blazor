@@ -41,12 +41,22 @@ namespace AntDesign.Tests
             return;
         }
 
+        public void Dispose()
+        {
+            return;
+        }
+
         public void DisposeExclusive()
         {
             return;
         }
 
         public async ValueTask DisposeResizeObserver(ElementReference dom)
+        {
+            return;
+        }
+
+        public void DisposeShared()
         {
             return;
         }

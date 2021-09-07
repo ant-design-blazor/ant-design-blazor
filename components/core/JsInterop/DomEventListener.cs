@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -106,7 +105,7 @@ namespace AntDesign.JsInterop
             while (find)
             {
                 var (key, subscription) = _domEventSubscriptionsStore.FindDomEventSubscription(_id);
-                if (subscription != null)
+                if (!string.IsNullOrEmpty(key) && subscription != null)
                 {
                     _domEventSubscriptionsStore[key].Remove(subscription);
                 }

@@ -46,12 +46,11 @@ namespace AntDesign
         private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
-        private IDomEventListener _domEventListener;
 
         internal List<TabPane> _panes = new List<TabPane>();
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -223,8 +222,6 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
-
-            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected override void OnParametersSet()
@@ -393,13 +390,13 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                _domEventListener.AddExclusive<string>(_scrollTabBar, "wheel", OnWheel, true);
+                DomEventListener.AddExclusive<string>(_scrollTabBar, "wheel", OnWheel, true);
                 _wheelDisabled = true;
             }
 
             if (!IsHorizontal && _wheelDisabled)
             {
-                _domEventListener.RemoveExclusive(_scrollTabBar, "wheel");
+                DomEventListener.RemoveExclusive(_scrollTabBar, "wheel");
                 _wheelDisabled = false;
             }
 
@@ -570,7 +567,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.DisposeExclusive();
+            DomEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
     }

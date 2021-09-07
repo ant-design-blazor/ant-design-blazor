@@ -217,28 +217,21 @@ namespace AntDesign.Internal
         public bool Visible { get; set; } = false;
 
         [Inject]
-        protected DomEventService DomEventService { get; set; }
+        protected IDomEventListener DomEventListener { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
-        protected IDomEventListener _domEventListener;
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            _domEventListener = DomEventService.CreateDomEventListerner();
-        }
 
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
-                _domEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
-                _domEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
-                _domEventListener.AddShared<JsonElement>("document", "scroll", OnWindowScroll);
+                DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
+                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
+                DomEventListener.AddShared<JsonElement>("document", "scroll", OnWindowScroll);
             }
 
             base.OnAfterRender(firstRender);
@@ -252,12 +245,12 @@ namespace AntDesign.Internal
                 {
                     Ref = RefBack.Current;
 
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-                    _domEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
                 }
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
@@ -301,7 +294,7 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
 
             base.Dispose(disposing);
         }

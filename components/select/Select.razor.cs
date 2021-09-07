@@ -557,7 +557,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] private DomEventService DomEventService { get; set; }
+        [Inject] private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
 
@@ -678,10 +678,7 @@ namespace AntDesign
         private bool _showArrowIcon = true;
         private Expression<Func<TItemValue>> _valueExpression;
 
-        private IDomEventListener _domEventListener;
-
         #endregion Properties
-
 
         private static bool IsSimpleType(Type type)
         {
@@ -723,8 +720,6 @@ namespace AntDesign
             }
             _isInitialized = true;
 
-            _domEventListener = DomEventService.CreateDomEventListerner();
-
             base.OnInitialized();
         }
 
@@ -759,7 +754,8 @@ namespace AntDesign
             if (firstRender)
             {
                 await SetInitialValuesAsync();
-                _domEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
+
+                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -803,7 +799,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 

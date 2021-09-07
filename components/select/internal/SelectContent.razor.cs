@@ -57,7 +57,7 @@ namespace AntDesign.Select.Internal
         [Parameter] public string SearchValue { get; set; }
         [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
         [Inject] protected IJSRuntime Js { get; set; }
-        [Inject] private DomEventService DomEventService { get; set; }
+        [Inject] private IDomEventListener DomEventListener { get; set; }
         protected ElementReference Ref
         {
             get { return _ref; }
@@ -90,12 +90,9 @@ namespace AntDesign.Select.Internal
         private int _currentItemCount;
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
-        private IDomEventListener _domEventListener;
 
         protected override void OnInitialized()
         {
-            _domEventListener = DomEventService.CreateDomEventListerner();
-
             if (!_isInitialized)
             {
                 SetInputWidth();
@@ -111,7 +108,7 @@ namespace AntDesign.Select.Internal
             {
                 if (ParentSelect.EnableSearch)
                 {
-                    _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+                    DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
                 }
@@ -138,13 +135,11 @@ namespace AntDesign.Select.Internal
                         _suffixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _suffixRef);
                         _suffixElement.Width += 7;
                     }
-
-                    await _domEventListener.AddResizeObserver(_overflow, OnOveralyResize);
+                    await DomEventListener.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
-
-                _domEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
-                _domEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
@@ -423,14 +418,12 @@ namespace AntDesign.Select.Internal
                 {
                     await Task.Delay(100);
                     if (ParentSelect.IsResponsive)
-                        await _domEventListener.DisposeResizeObserver(_overflow);
-
+                        await DomEventListener.DisposeResizeObserver(_overflow);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
-
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
 
             if (IsDisposed) return;
 

@@ -36,7 +36,6 @@ namespace AntDesign
 
         public Dictionary<string, object> Attributes { get; set; }
 
-        [Inject] private DomEventService DomEventService { get; set; }
         internal List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
 
         private string DropdownStyle { get; set; }

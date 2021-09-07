@@ -55,9 +55,8 @@ namespace AntDesign
         public BreakpointType DefaultBreakpoint { get; set; } = BreakpointType.Xxl;
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
-        private IDomEventListener _domEventListener;
         private string _gutterStyle;
         private BreakpointType _currentBreakPoint;
 
@@ -93,7 +92,6 @@ namespace AntDesign
                 SetGutterStyle(DefaultBreakpoint.Name);
             }
 
-            _domEventListener = DomEventService.CreateDomEventListerner();
             await base.OnInitializedAsync();
         }
 
@@ -102,7 +100,7 @@ namespace AntDesign
             if (firstRender)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
-                _domEventListener.AddShared<Window>("window", "resize", OnResize);
+                DomEventListener.AddShared<Window>("window", "resize", OnResize);
                 OptimizeSize(dimensions.innerWidth);
             }
 
@@ -182,7 +180,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
     }

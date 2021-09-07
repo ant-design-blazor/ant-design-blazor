@@ -26,9 +26,7 @@ namespace AntDesign
         private bool _linksChanged = false;
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
-
-        private IDomEventListener _domEventListener;
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -121,8 +119,6 @@ namespace AntDesign
             string prefixCls = "ant-anchor";
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-rtl", () => RTL);
-
-            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -133,7 +129,7 @@ namespace AntDesign
             {
                 if (GetCurrentAnchor is null)
                 {
-                    _domEventListener.AddShared<JsonElement>("window", "scroll", OnScroll);
+                    DomEventListener.AddShared<JsonElement>("window", "scroll", OnScroll);
                 }
             }
 
@@ -301,8 +297,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            DomEventListener.Dispose();
             base.Dispose(disposing);
-            _domEventListener.Dispose();
         }
     }
 }

@@ -133,7 +133,7 @@ namespace AntDesign
         }
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -158,8 +158,6 @@ namespace AntDesign
         private ElementReference _tableRef;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
-
-        private IDomEventListener _domEventListener;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -337,8 +335,6 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _domEventListener = DomEventService.CreateDomEventListerner();
-
             if (RowTemplate != null)
             {
                 ChildContent = RowTemplate;
@@ -376,7 +372,7 @@ namespace AntDesign
 
             if (firstRender)
             {
-                _domEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
                 if (ScrollY != null || ScrollX != null)
                 {
@@ -431,7 +427,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -444,7 +440,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)

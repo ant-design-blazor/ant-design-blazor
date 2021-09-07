@@ -37,9 +37,7 @@ namespace AntDesign
         private string _affixStyle;
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
-
-        private IDomEventListener _domEventListener;
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -72,8 +70,6 @@ namespace AntDesign
 
             ClassMapper
                .If(PrefixCls, () => _affixed);
-
-            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -96,14 +92,14 @@ namespace AntDesign
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
-                _domEventListener.AddShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
-                _domEventListener.AddShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+                DomEventListener.AddShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                DomEventListener.AddShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
                 _rootListened = true;
             }
             else if (!string.IsNullOrEmpty(TargetSelector))
             {
-                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
-                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "resize", OnTargetResize);
+                DomEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
+                DomEventListener.AddExclusive<JsonElement>(TargetSelector, "resize", OnTargetResize);
                 _targetListened = true;
             }
         }
@@ -192,7 +188,7 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
         }
     }
 }

@@ -74,9 +74,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] public DomEventService DomEventService { get; set; }
-
-        private IDomEventListener _domEventListener;
+        [Inject] public IDomEventListener DomEventListener { get; set; }
 
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
@@ -126,19 +124,13 @@ namespace AntDesign
             }
         }
 
-        protected override void OnInitialized()
-        {
-            _domEventListener = DomEventService.CreateDomEventListerner();
-            base.OnInitialized();
-        }
-
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
                 Resize();
-                _domEventListener.AddShared<JsonElement>("window", "resize", Resize);
+                DomEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
         }
 
@@ -216,7 +208,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.Dispose();
+            DomEventListener.Dispose();
             _slicks.Clear();
             base.Dispose(disposing);
         }

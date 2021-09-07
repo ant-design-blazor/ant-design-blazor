@@ -10,7 +10,7 @@ namespace AntDesign
         private bool _visible = false;
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         [Parameter]
         public string Icon { get; set; } = "vertical-align-top";
@@ -34,8 +34,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        private IDomEventListener _domEventListener;
-
         protected async Task OnClickHandle()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
@@ -51,19 +49,17 @@ namespace AntDesign
         {
             SetClass();
             base.OnInitialized();
-
-            _domEventListener = DomEventService.CreateDomEventListerner();
         }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
             {
-                _domEventListener.AddExclusive<JsonElement>("window", "scroll", OnScroll);
+                DomEventListener.AddExclusive<JsonElement>("window", "scroll", OnScroll);
             }
             else
             {
-                _domEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnScroll);
+                DomEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnScroll);
             }
             await base.OnFirstAfterRenderAsync();
         }
@@ -92,7 +88,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.DisposeExclusive();
+            DomEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
     }

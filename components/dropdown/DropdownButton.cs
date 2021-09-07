@@ -209,19 +209,19 @@ namespace AntDesign
             {
                 Ref = RefBack.Current;
 
-                _domEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
-                _domEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-                _domEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-                _domEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-                _domEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-                _domEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.DisposeExclusive();
+            DomEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
 
