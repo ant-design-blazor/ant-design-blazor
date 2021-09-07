@@ -28,18 +28,18 @@
     {
         JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new DomRect());
-        var value = 1;
-        var cut = Render<Select<int, Person>>(
+        int? value = 1;
+        var cut = Render<Select<int?, Person>>(
             @<AntDesign.Select
                  DataSource="@_persons"
                  ValueName="@nameof(Person.Id)"
                  LabelName="@nameof(Person.Name)"
-                 @bind-Value="value"
+                 @bind-Value="@value"
                  AllowClear/>
             );
         var clear = cut.Find("span.ant-select-clear");
         clear.Click();
-        value.Should().Be(default);
+        value.Should().Be(default(int?));
     }
 
     IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };
