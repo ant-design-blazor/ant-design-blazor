@@ -1,5 +1,4 @@
-﻿@using System.Net.Sockets
-@inherits AntDesignTestBase
+﻿@inherits AntDesignTestBase
 @code {
     record Person(int Id, string Name);
     List<Person> _persons = new()
@@ -21,7 +20,7 @@
                                ValueName="@nameof(Person.Id)"
                                Value="0">
             </AntDesign.Select>);
-        Assert.Throws(typeof(ElementNotFoundException), () => cut.Find("span.ant-select-clear"));
+        cut.Invoking(c => c.Find("span.ant-select-clear")).Should().Throw<ElementNotFoundException>();
     }
 
     [Fact]
@@ -64,7 +63,7 @@
                 </SelectOptions>
             </Select>
             );
-        Assert.Throws(typeof(ElementNotFoundException), () => cut.Find("span.ant-select-clear"));
+        cut.Invoking(c => c.Find("span.ant-select-clear")).Should().Throw<ElementNotFoundException>();
     }
 
     [Fact]
@@ -87,7 +86,7 @@
                 </SelectOptions>
             </Select>
             );
-        Assert.Throws(typeof(ElementNotFoundException), () => cut.Find("span.ant-select-clear"));
+        cut.Invoking(c => c.Find("span.ant-select-clear")).Should().Throw<ElementNotFoundException>();
     }
 
     [Fact]
