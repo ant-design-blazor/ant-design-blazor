@@ -1,6 +1,5 @@
 ﻿@namespace AntDesign
 @inherits Input<string>
-<!--TODO: minheight, maxheight, onResize-->
 
 @{
     Dictionary<string, object> attributes =
@@ -19,7 +18,7 @@
             { "style", Style },
             { "class", ClassMapper.Class },
             { "disabled", Disabled },
-			{ "readonly", ReadOnly },
+			{ "readonly", ReadOnly },            
          };
 
     if (Attributes != null)
@@ -34,13 +33,13 @@
 		@if (Suffix != null)
 		{
 			<span class="@_warpperClassMapper.Class">
-				<textarea @ref="Ref" @attributes="attributes"/>
+				<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 				@Suffix				
 			</span>		
 		}
 		else
 		{
-			<textarea @ref="Ref" @attributes="attributes"/>
+			<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 		}
 		<AntDesign.Text Style="float: right; pointer-events: none; white-space: nowrap; color: rgba(0, 0, 0, 0.45)">&nbsp;@($"/ {MaxLength}")</AntDesign.Text>
 	</div>
@@ -50,12 +49,12 @@ else
 	@if (Suffix != null)
 	{
 		<span class="@_warpperClassMapper.Class">
-			<textarea @ref="Ref" @attributes="attributes"/>
+			<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 			@Suffix				
 		</span>
 	}
 	else
 	{
-		<textarea @ref="Ref" @attributes="attributes"/>	
+		<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>	
 	}
 }

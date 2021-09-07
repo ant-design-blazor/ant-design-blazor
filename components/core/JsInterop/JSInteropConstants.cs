@@ -184,6 +184,7 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "inputHelper.";
             public static string RegisterResizeTextArea => $"{FUNC_PREFIX}registerResizeTextArea";
+            public static string GetTextAreaInfo => $"{FUNC_PREFIX}getTextAreaInfo";
             public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
             public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
         }
