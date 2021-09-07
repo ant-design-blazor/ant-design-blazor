@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
     <JavaScriptTestRoot>tests\</JavaScriptTestRoot>
     <JavaScriptTestFramework>Mocha</JavaScriptTestFramework>
     <GenerateProgramFile>false</GenerateProgramFile> 

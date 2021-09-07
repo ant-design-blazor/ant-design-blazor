@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net5;</TargetFrameworks>
-    <IsPackable>false</IsPackable>
+    <TargetFrameworks>net5</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

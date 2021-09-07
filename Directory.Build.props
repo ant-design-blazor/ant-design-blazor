@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <RazorLangVersion>3.0</RazorLangVersion>
+  </PropertyGroup>
   <PropertyGroup Label="BasePath">
     <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
