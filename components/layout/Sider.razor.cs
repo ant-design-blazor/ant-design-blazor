@@ -175,7 +175,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<Window>("window", "resize", OnResize);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
     }

@@ -430,8 +430,7 @@ namespace AntDesign.Select.Internal
                 });
             }
 
-            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
-            _domEventListener.DisposeExclusive();
+            _domEventListener.Dispose();
 
             if (IsDisposed) return;
 

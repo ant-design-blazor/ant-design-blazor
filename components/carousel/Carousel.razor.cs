@@ -216,7 +216,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<JsonElement>("window", "resize", Resize);
+            _domEventListener.Dispose();
             _slicks.Clear();
             base.Dispose(disposing);
         }

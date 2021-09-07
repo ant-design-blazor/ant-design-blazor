@@ -803,7 +803,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<JsonElement>("window", "resize", OnWindowResize);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
 

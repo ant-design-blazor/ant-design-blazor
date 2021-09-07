@@ -165,7 +165,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
-            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
 

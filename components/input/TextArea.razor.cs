@@ -173,7 +173,7 @@ namespace AntDesign
             if (AutoSize && !_isReloading)
             {
                 _reference?.Dispose();
-                _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
+                _domEventListener.Dispose();
 
                 _ = InvokeAsync(async () =>
                 {

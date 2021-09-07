@@ -499,9 +499,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<JsonElement>("window", "mousemove", OnMouseMove);
-            _domEventListener.RemoveShared<JsonElement>("window", "mouseup", OnMouseUp);
-
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
 

@@ -20,5 +20,7 @@ namespace AntDesign.JsInterop
         void RemoveExclusive(object dom, string eventName);
         ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback);
         void RemoveShared<T>(object dom, string eventName, Action<T> callback);
+        void DisposeShared();
+        void Dispose();
     }
 }

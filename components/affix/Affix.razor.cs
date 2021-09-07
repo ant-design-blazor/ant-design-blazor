@@ -192,16 +192,7 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            if (_rootListened)
-            {
-                _domEventListener.RemoveShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
-                _domEventListener.RemoveShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
-            }
-
-            if (_targetListened)
-            {
-                _domEventListener.DisposeExclusive();
-            }
+            _domEventListener.Dispose();
         }
     }
 }

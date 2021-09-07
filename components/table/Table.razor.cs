@@ -431,7 +431,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -444,7 +444,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            _domEventListener.RemoveShared<JsonElement>("window", "beforeunload", Reloading);
+            _domEventListener.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)

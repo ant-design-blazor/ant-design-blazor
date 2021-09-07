@@ -18,11 +18,13 @@ namespace AntDesign.JsInterop
 
         private readonly IJSRuntime _jsRuntime;
         private readonly DomEventSubscriptionStore _domEventSubscriptionsStore;
+        private readonly string _id;
 
         public DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore)
         {
             _jsRuntime = jsRuntime;
             _domEventSubscriptionsStore = domEventSubscriptionStore;
+            _id = Guid.NewGuid().ToString();
         }
 
         private static string FormatKey(object dom, string eventName) => $"{dom}-{eventName}";
@@ -81,7 +83,7 @@ namespace AntDesign.JsInterop
 
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
-            _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(T)));
+            _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(T), _id));
         }
 
         public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
@@ -90,10 +92,26 @@ namespace AntDesign.JsInterop
             if (_domEventSubscriptionsStore.ContainsKey(key))
             {
                 var subscription = _domEventSubscriptionsStore[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
+                if (subscription != null && subscription.Id == _id)
+                {
+                    _domEventSubscriptionsStore[key].Remove(subscription);
+                }
+            }
+        }
+
+        public void DisposeShared()
+        {
+            bool find = true;
+
+            while (find)
+            {
+                var (key, subscription) = _domEventSubscriptionsStore.FindDomEventSubscription(_id);
                 if (subscription != null)
                 {
                     _domEventSubscriptionsStore[key].Remove(subscription);
                 }
+                else
+                    find = false;
             }
         }
 
@@ -124,7 +142,7 @@ namespace AntDesign.JsInterop
                     })));
                     await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key, dom);
                 }
-                _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>)));
+                _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>), _id));
             }
         }
 
@@ -168,7 +186,6 @@ namespace AntDesign.JsInterop
 
         #endregion
 
-
         #region EventListenerToFirstChild
 
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
@@ -205,6 +222,12 @@ namespace AntDesign.JsInterop
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            DisposeExclusive();
+            DisposeShared();
+        }
     }
 
     public class Invoker<T>
@@ -213,7 +236,7 @@ namespace AntDesign.JsInterop
 
         public Invoker(Action<T> invoker)
         {
-            this._action = invoker;
+            _action = invoker;
         }
 
         [JSInvokable]

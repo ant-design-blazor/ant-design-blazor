@@ -302,7 +302,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            _domEventListener.RemoveShared<JsonElement>("window", "scroll", OnScroll);
+            _domEventListener.Dispose();
         }
     }
 }
