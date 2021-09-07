@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,6 +50,13 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool AllowClear { get; set; }
+
+        /// <summary>
+        /// Controls the autocomplete attribute of the input HTML element.
+        /// Default = true
+        /// </summary>
+        [Parameter]
+        public bool AutoComplete { get; set; } = true;
 
         [Parameter]
         public bool AutoFocus
@@ -168,8 +174,11 @@ namespace AntDesign
         [Parameter]
         public bool ReadOnly { get; set; }
 
+        /// <summary>
+        /// Controls onclick & blur event propagation.
+        /// </summary>
         [Parameter]
-        public bool AutoComplete { get; set; } = true;
+        public bool StopPropagation { get; set; }
 
         /// <summary>
         /// The suffix icon for the Input.
@@ -451,9 +460,10 @@ namespace AntDesign
                     return;
                 }
 
-                _debounceTimer?.Dispose();
                 if (_debounceTimer != null)
                 {
+                    await _debounceTimer.DisposeAsync();
+                    
                     _debounceTimer = null;
                 }
             }
@@ -639,6 +649,13 @@ namespace AntDesign
                 //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
                 //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+
+                if (StopPropagation)
+                {
+                    builder.AddEventStopPropagationAttribute(78, "onchange", true);
+                    builder.AddEventStopPropagationAttribute(79, "onblur", true);
+                }
+
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
