@@ -317,7 +317,6 @@ namespace AntDesign.Internal
                     //Place where Error Boundary could be utilized
                     throw new ArgumentNullException("Trigger.Ref.Id cannot be null when attaching overlay to it.");
                 }
-
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
                     Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,

@@ -11,7 +11,7 @@ import * as sinon from 'sinon';
 import * as rewire from 'rewire'
 import { domInfo } from '../../../../../components/core/JsInterop/modules/dom/types';
 import exp = require('constants');
-import { domTypes } from '../../../../../components/core/JsInterop/modules/dom/exports';
+import { domInfoHelper, domTypes } from '../../../../../components/core/JsInterop/modules/dom/exports';
 
 const domInfoDefaults: domInfo = {
   offsetTop: 0,
@@ -314,7 +314,8 @@ type positionTheory = {
     clientHeight?: number,
     clientWidth?: number,
     scrollLeft?: number,
-    scrollTop?: number
+    scrollTop?: number,
+    zIndex?: number
   },    
   expected: cooridnates
   expectedCorrected: cooridnates & { placement?: Placement }
@@ -462,6 +463,27 @@ const theoryPositionData: Array<positionTheory> = [
        expectedCorrected: { top: 168, bottom: null, left: null, right: 215, placement: Placement.BottomRight }
     },
     { 
+      theoryName: "popup in container (based on autocomplete)",
+      trigger: { triggerBoundyAdjustMode: TriggerBoundyAdjustMode.InView },
+      overlay: { 
+        placement: Placement.BottomLeft },
+      window: { innerWidth: 1920, innerHeight: 955, pageXOffset: 0, pageYOffset: 1137.5999755859375},
+      documentElement: { clientHeight: 955, clientWidth: 1903 },
+      getInfo: {
+        "container": { absoluteTop: 1701, absoluteLeft: 416, clientLeft: 0, clientTop: 0, clientHeight: 1000, clientWidth: 581, offsetHeight: 1000, offsetWidth: 581, scrollLeft: 0, scrollTop: 0, scrollHeight: 1000, scrollWidth: 581},
+        "trigger": { absoluteTop: 1801, absoluteLeft: 516, clientHeight: 30, clientWidth: 379, offsetHeight: 32, offsetWidth: 381},
+        "overlay": { clientHeight: 200, clientWidth: 379 },
+      },       
+      containerParentElement: {
+        clientWidth: 581,
+        clientHeight: 183,
+        scrollLeft: 0,
+        scrollTop: 0
+      },
+       expected: { top: 136, bottom: 664, left: 100, right: 102 },
+       expectedCorrected: { top: null, bottom: 904, left: 100, right: null, placement: Placement.TopLeft }
+    },    
+    { 
       theoryName: "scenario 11 trigger not in viewport (tooltip)",
       trigger: { triggerBoundyAdjustMode: TriggerBoundyAdjustMode.InView },
       overlay: { 
@@ -546,11 +568,34 @@ const theoryModalPositionData: Array<positionTheory> = [
         clientWidth: 1903,
         clientHeight: 0,
         scrollLeft: 0,
-        scrollTop: 0
+        scrollTop: 0,
+        zIndex: 1000
       },
        expected: { top: 344, bottom: 571, left: 724, right: 1083 },
        expectedCorrected: { top: 344, bottom: null, left: 724, right: null, placement: Placement.BottomLeft }
     },
+    { 
+      theoryName: "modal on page top with overlay fitting better abover trigger but not fitting in body",
+      trigger: { triggerBoundyAdjustMode: TriggerBoundyAdjustMode.InView },
+      overlay: { 
+        placement: Placement.BottomLeft },
+      window: { innerWidth: 1920, innerHeight: 955, pageXOffset: 0, pageYOffset: 0},
+      documentElement: { clientHeight: 955, clientWidth: 1920 },
+      getInfo: {
+        "container": { absoluteTop: 100, absoluteLeft: 700, clientLeft: 0, clientTop: 0, clientHeight: 279, clientWidth: 520, offsetHeight: 279, offsetWidth: 520, scrollLeft: 0, scrollTop: 0, scrollHeight: 279, scrollWidth: 520},
+        "trigger": { absoluteTop: 250, absoluteLeft: 803, clientHeight: 22, clientWidth: 128, offsetHeight: 24, offsetWidth: 130},
+        "overlay": { clientHeight: 311, clientWidth: 280 },
+      },       
+      containerParentElement: {
+        clientWidth: 520,
+        clientHeight: 303,
+        scrollLeft: 0,
+        scrollTop: 0,
+        zIndex: 1000
+      },
+       expected: { top: 178, bottom: -210, left: 103, right: 137 },
+       expectedCorrected: { top: 178, bottom: null, left: 103, right: null, placement: Placement.BottomLeft }
+    },    
 ];
 
 describe('Overlay position functions', () => {        
@@ -634,7 +679,7 @@ describe('Overlay calculation', () => {
       triggerElement = domInit.addElementToBody(triggerElementHtml);                  
     } else {            
       let containerHtml: string = '<div id="container"></div>'
-      if (testData.containerParentElement) {
+      if (testData.containerParentElement) {        
         containerHtml = `<div id="containerParent">${containerHtml}</div>`
         containerParent = domInit.addElementToBody(containerHtml)
         container = containerParent.firstChild;
@@ -643,6 +688,7 @@ describe('Overlay calculation', () => {
         const c2 = sandbox.stub(container.parentElement, 'clientWidth').get(() => testData.containerParentElement.clientWidth);
         const c3 = sandbox.stub(container.parentElement, 'scrollLeft').get(() => testData.containerParentElement.scrollLeft);
         const c4 = sandbox.stub(container.parentElement, 'scrollTop').get(() => testData.containerParentElement.scrollTop);   
+        const c5 = sandbox.stub(infoHelper, 'findAncestorWithZIndex').callsFake((element: HTMLElement) => testData.containerParentElement.zIndex);
       } else {
         container = domInit.addElementToBody(containerHtml)
       }
@@ -709,6 +755,7 @@ describe('Overlay calculation', () => {
     const c2 = sandbox.stub(container.parentElement, 'clientWidth').get(() => testData.containerParentElement.clientWidth);
     const c3 = sandbox.stub(container.parentElement, 'scrollLeft').get(() => testData.containerParentElement.scrollLeft);
     const c4 = sandbox.stub(container.parentElement, 'scrollTop').get(() => testData.containerParentElement.scrollTop);        
+    const c5 = sandbox.stub(infoHelper, 'findAncestorWithZIndex').callsFake((element: HTMLElement) => testData.containerParentElement.zIndex);    
 
     container.insertAdjacentHTML("afterbegin", triggerElementHtml);
     triggerElement = container.firstChild;

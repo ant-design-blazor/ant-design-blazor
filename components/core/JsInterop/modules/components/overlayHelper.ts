@@ -11,9 +11,9 @@ export class overlayHelper {
     verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,    
     overlayTop?: number, overlayLeft?: number
   ): overlayPosition {      
-    let overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
-    let containerElement = domInfoHelper.get(containerSelector) as HTMLElement;
-    let triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;
+    const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
+    const containerElement = domInfoHelper.get(containerSelector) as HTMLElement;
+    const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;
 
     if (!domManipulationHelper.addElementTo(overlaySelector, containerElement)) {
       console.log("Failed to add overlay. Details:", {

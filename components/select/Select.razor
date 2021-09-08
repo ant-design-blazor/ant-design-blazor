@@ -24,7 +24,7 @@
                     <div style="@_dropdownStyle">
                         @if (SelectOptions != null) 
                         {
-                            <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
+                            <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
                                 <div>
                                     <div class="" role="listbox" style="display: flex; flex-direction: column;">
                                         @if (CustomTagSelectOptionItem != null) 

@@ -21,6 +21,7 @@ Cascader
 | 参数                 |  说明	                                          |  类型               |  默认值  |  
 | -------------------- | ---------------------------------------------------- | --------------------- | --------- |  
 | AllowClear           |  whether allow clear                                      |  bool               |  true	      |
+| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  change value on each selection if set to true, see above demo for details  |  bool               |  false	      |
 | Style                |  additional css class                                       |  string             |  -	          |
 | DefaultValue         |  initial selected value                                      |  string             |  -	          |
