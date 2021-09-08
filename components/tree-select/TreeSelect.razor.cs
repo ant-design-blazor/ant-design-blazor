@@ -81,32 +81,16 @@ namespace AntDesign
         {
             get
             {
-                if (IsInnerModel)
+                return new()
                 {
-                    return new()
-                    {
-                        { "DataSource", DataSource },
-                        { "TitleExpression", DataSource == null ? null : TreeNodeTitleExpression },
-                        { "DefaultExpandAll", TreeDefaultExpandAll },
-                        { "KeyExpression", DataSource == null ? null : TreeNodeKeyExpression },
-                        { "ChildrenExpression", DataSource == null ? null : ChildrenExpression },
-                        { "DisabledExpression", DataSource == null ? null : TreeNodeDisabledExpression },
-                        { "IsLeafExpression", DataSource == null ? null : TreeNodeIsLeafExpression }
-                    };
-                }
-                else
-                {
-                    return new()
-                    {
-                        { "DataSource", RootData },
-                        { "TitleExpression", TreeNodeTitleExpression },
-                        { "DefaultExpandAll", TreeDefaultExpandAll },
-                        { "KeyExpression", TreeNodeKeyExpression },
-                        { "ChildrenExpression", TreeNodeChildrenExpression },
-                        { "DisabledExpression", TreeNodeDisabledExpression },
-                        { "IsLeafExpression", TreeNodeIsLeafExpression }
-                    };
-                }
+                    { "DataSource", DataSource },
+                    { "TitleExpression", DataSource == null ? null : TreeNodeTitleExpression },
+                    { "DefaultExpandAll", TreeDefaultExpandAll },
+                    { "KeyExpression", DataSource == null ? null : TreeNodeKeyExpression },
+                    { "ChildrenExpression", DataSource == null ? null : ChildrenExpression },
+                    { "DisabledExpression", DataSource == null ? null : TreeNodeDisabledExpression },
+                    { "IsLeafExpression", DataSource == null ? null : TreeNodeIsLeafExpression }
+                };
             }
         }
 
@@ -146,19 +130,7 @@ namespace AntDesign
         }
 
 
-        private bool? _isInnerModel;
-        [Parameter]
-        public bool IsInnerModel
-        {
-            get
-            {
-                return _isInnerModel ?? DataSource == null && ChildContent != null;
-            }
-            set
-            {
-                _isInnerModel = value;
-            }
-        }
+        private bool IsInnerModel => ChildContent != null;
 
         /// <summary>
         /// Specifies a method that returns whether the expression is a leaf node.
@@ -167,22 +139,18 @@ namespace AntDesign
         public Func<TItem, bool> IsLeafExpression { get; set; }
 
 
-        protected Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression
+        protected virtual Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression
         {
             get
             {
-                return IsInnerModel ? ChildrenExpression : node => ChildrenMethodExpression(TreeNodeKeyExpression(node));
+                return ChildrenExpression;
             }
         }
-        /// <summary>
-        /// Specifies a method  to return a child node
-        /// </summary>
-        [Parameter]
-        public Func<string, IList<TItem>> ChildrenMethodExpression { get; set; }
+
 
 
         [Parameter]
-        public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
+        public virtual Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
 
 
         protected Func<TreeNode<TItem>, bool> TreeNodeDisabledExpression
@@ -218,21 +186,8 @@ namespace AntDesign
         private bool _multiple;
         private readonly string _dir = "ltr";
 
-        private readonly bool _isComposing;
-        private readonly bool _isDestroy = true;
-        private readonly bool _isNotFound;
-        private readonly bool _focused;
-        private string _inputValue = "";
-
-        private IEnumerable<string> _beforeSelectValues;
 
 
-        /// <summary>
-        ///  'top' | 'center' | 'bottom'
-        /// </summary>
-        private readonly string _dropDownPosition = "bottom";
-
-        protected IEnumerable<TItem> RootData => ChildrenMethodExpression?.Invoke(RootValue);
 
         public override string Value
         {
@@ -244,23 +199,6 @@ namespace AntDesign
                 if (base.Value == value)
                     return;
                 base.Value = value;
-
-                //if (ChildContent != null && DataSource == null)
-                //{
-                //    if (SelectMode == SelectMode.Default)
-                //    {
-                //        this.ClearOptions();
-                //    }
-
-                //    if (SelectOptionItems.All(o => o.Value != value))
-                //    {
-                //        SelectOptionItems?.Add(new SelectOptionItem<string, TItem>()
-                //        {
-                //            Value = value,
-                //            Label = value
-                //        });
-                //    }
-                //}
 
                 if (SelectOptionItems.Any(o => o.Value == value))
                 {
@@ -279,8 +217,6 @@ namespace AntDesign
 
             }
         }
-
-        private string[] DefaultValues => Values?.ToArray();
 
         public override IEnumerable<string> Values
         {

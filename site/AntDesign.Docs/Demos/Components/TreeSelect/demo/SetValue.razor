@@ -1,7 +1,7 @@
 @using AntDesign.Docs.Demos.Components.TreeSelect.Demo
 
 
-<TreeSelect TItem="WebMenu"  @bind-Value="selectMenuId"
+<SimpleTreeSelect TItem="WebMenu"  @bind-Value="selectMenuId"
             DataSource="@(LocalJsonData.Data)"
             TitleExpression="m => m.MenuName"
             KeyExpression="m => m.MenuId"
@@ -10,7 +10,7 @@
             IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)"
             Placeholder="Please select"
             TreeDefaultExpandAll>
-</TreeSelect>
+</SimpleTreeSelect>
 
 
 select MenuId:<Input Placeholder="current Select MenuId" @bind-Value="@selectMenuId" /><Button OnClick="ChangeMenuId" OnClickStopPropagation="true">Update</Button>
