@@ -56,7 +56,7 @@ jobs:
           git remote add origin https://github.com/ant-design-blazor/ant-design-blazor.git
           git fetch origin pull/$PULL_NUMBER/head:fork
           git checkout fork
-          npm install
+          npm ci
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 

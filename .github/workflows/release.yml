@@ -36,7 +36,7 @@ jobs:
           VERSION=`git describe --tags`
           echo "Publishing Version: ${VERSION}"
           echo "::set-output name=package_version::${VERSION}"
-          npm install
+          npm ci
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=$VERSION -c Release -o publish
