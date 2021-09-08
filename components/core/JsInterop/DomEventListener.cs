@@ -26,7 +26,11 @@ namespace AntDesign.JsInterop
             _id = Guid.NewGuid().ToString();
         }
 
-        private static string FormatKey(object dom, string eventName) => $"{dom}-{eventName}";
+        private string FormatKey(object dom, string eventName)
+        {
+            var selector = dom is ElementReference eleRef ? eleRef.Id : dom.ToString();
+            return $"DEL-{_id}-{selector}-{eventName}";
+        }
 
         public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
         {
