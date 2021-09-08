@@ -29,6 +29,10 @@ namespace AntDesign.JsInterop
         private string FormatKey(object dom, string eventName)
         {
             var selector = dom is ElementReference eleRef ? eleRef.Id : dom.ToString();
+            if (selector.IsIn("window", "document"))
+            {
+                return $"DEL-{selector}-{eventName}";
+            }
             return $"DEL-{_id}-{selector}-{eventName}";
         }
 
