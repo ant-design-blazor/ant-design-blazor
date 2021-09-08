@@ -189,6 +189,11 @@ namespace AntDesign
         {
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
+
+            if (OnUnSelect.HasDelegate)
+            {
+                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+            }
         }
 
         /// <summary>
@@ -503,6 +508,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnSelect { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeEventArgs<TItem>> OnUnSelect { get; set; }
 
         /// <summary>
         /// Click the expansion tree node icon to call back
