@@ -87,7 +87,7 @@ namespace AntDesign
                     { "TitleExpression", DataSource == null ? null : TreeNodeTitleExpression },
                     { "DefaultExpandAll", TreeDefaultExpandAll },
                     { "KeyExpression", DataSource == null ? null : TreeNodeKeyExpression },
-                    { "ChildrenExpression", DataSource == null ? null : ChildrenExpression },
+                    { "ChildrenExpression", DataSource == null ? null : TreeNodeChildrenExpression },
                     { "DisabledExpression", DataSource == null ? null : TreeNodeDisabledExpression },
                     { "IsLeafExpression", DataSource == null ? null : TreeNodeIsLeafExpression }
                 };
@@ -143,15 +143,12 @@ namespace AntDesign
         {
             get
             {
-                return ChildrenExpression;
+                return node => ChildrenExpression == null ? null : ChildrenExpression(node.DataItem);
             }
         }
 
-
-
         [Parameter]
-        public virtual Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
-
+        public virtual Func<TItem, IList<TItem>> ChildrenExpression { get; set; }
 
         protected Func<TreeNode<TItem>, bool> TreeNodeDisabledExpression
         {

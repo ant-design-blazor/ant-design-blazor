@@ -22,19 +22,6 @@ namespace AntDesign
         [Parameter]
         public Func<string, IList<TItem>> ChildrenMethodExpression { get; set; }
 
-
-        [Parameter]
-        public override Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression
-        {
-            get
-            {
-                throw new NotImplementedException("please use ChildrenMethodExpression");
-            }
-            set
-            {
-                throw new NotImplementedException("please use ChildrenMethodExpression");
-            }
-        }
         protected override Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression => node => ChildrenMethodExpression(TreeNodeKeyExpression(node));
 
 

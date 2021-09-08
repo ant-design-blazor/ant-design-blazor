@@ -6,10 +6,10 @@
                   @bind-Value="@value"
                   Placeholder="Please select"
                   AllowClear
-                  TitleExpression="node => node.Title"
-                  KeyExpression="node => node.Value"
-                  ChildrenExpression="node => node.DataItem.Children "
-            IsLeafExpression="node => node.Children == null "
+                  TitleExpression="data => data.Title"
+                  KeyExpression="data => data.Value"
+                  ChildrenExpression="data => data.Children "
+				  IsLeafExpression="data => data.Children == null "
                   TreeDefaultExpandAll>
 </TreeSelect>
 
@@ -24,7 +24,7 @@
             Title = "Node1",
             Value = "0-0",
             Children = new Data[]
-        {
+			{
                 new()
                 {
                     Title = "Child Node1",
@@ -42,9 +42,7 @@
             Title = "Node2",
             Value = "0-1",
         }
-        };
-
-
+    };
 
     public class Data
     {
