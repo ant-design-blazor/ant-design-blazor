@@ -44,6 +44,7 @@ And 4 other properties additionally.
 | Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
 | Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
 | Size | Set the size of `Button`.         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
-| Type | Type of the button.         | ButtonType | `ButtonType.Default` | 
+| Type | Type of the button.         | ButtonType | `ButtonType.Default` |
+| NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
 
 
