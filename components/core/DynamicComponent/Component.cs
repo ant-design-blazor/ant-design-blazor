@@ -37,14 +37,14 @@ namespace AntDesign
         }
 
         [Parameter(CaptureUnmatchedValues = true)]
-        public Dictionary<string, object> Attributes { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenComponent(0, Type);
-            if (Attributes != null)
+            if (Parameters != null)
             {
-                builder.AddMultipleAttributes(1, Attributes);
+                builder.AddMultipleAttributes(1, Parameters);
             }
             builder.CloseComponent();
         }
