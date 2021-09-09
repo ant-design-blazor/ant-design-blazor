@@ -37,7 +37,7 @@ namespace AntDesign
         private string _affixStyle;
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -92,15 +92,14 @@ namespace AntDesign
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
-                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
-
+                DomEventListener.AddShared<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                DomEventListener.AddShared<JsonElement>(RootScollSelector, "resize", OnWindowResize);
                 _rootListened = true;
             }
             else if (!string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(TargetSelector, "scroll", OnTargetScroll);
-                DomEventService.AddEventListener(TargetSelector, "resize", OnTargetResize);
+                DomEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
+                DomEventListener.AddExclusive<JsonElement>(TargetSelector, "resize", OnTargetResize);
                 _targetListened = true;
             }
         }
@@ -189,17 +188,7 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            if (_rootListened)
-            {
-                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
-                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
-            }
-
-            if (_targetListened)
-            {
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnTargetResize);
-            }
+            DomEventListener.Dispose();
         }
     }
 }

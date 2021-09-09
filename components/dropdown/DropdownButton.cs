@@ -208,25 +208,20 @@ namespace AntDesign
             if (firstRender)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
-                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
-                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
-                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
-                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+
+                DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
-
+            DomEventListener.DisposeExclusive();
             base.Dispose(disposing);
         }
 

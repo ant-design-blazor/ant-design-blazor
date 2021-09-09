@@ -133,7 +133,7 @@ namespace AntDesign
         }
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -372,7 +372,7 @@ namespace AntDesign
 
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading);
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
                 if (ScrollY != null || ScrollX != null)
                 {
@@ -427,7 +427,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -440,7 +440,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)

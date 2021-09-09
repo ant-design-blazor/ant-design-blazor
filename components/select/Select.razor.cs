@@ -617,7 +617,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] private DomEventService DomEventService { get; set; }
+        [Inject] private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
 
@@ -847,7 +847,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
-                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -892,7 +892,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
