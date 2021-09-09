@@ -26,7 +26,7 @@ namespace AntDesign
         private bool _linksChanged = false;
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -129,7 +129,7 @@ namespace AntDesign
             {
                 if (GetCurrentAnchor is null)
                 {
-                    DomEventService.AddEventListener("window", "scroll", OnScroll, false);
+                    DomEventListener.AddShared<JsonElement>("window", "scroll", OnScroll);
                 }
             }
 
@@ -297,9 +297,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            DomEventListener.Dispose();
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<JsonElement>("window", "scroll", OnScroll);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace AntDesign
         protected virtual bool EnableOnPressEnter => OnPressEnter.HasDelegate;
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        protected IDomEventListener DomEventListener { get; set; }
 
         /// <summary>
         /// The label text displayed before (on the left side of) the input field.
@@ -487,23 +487,21 @@ namespace AntDesign
 
             if (firstRender)
             {
-                DomEventService.AddEventListener(Ref, "compositionstart", OnCompositionStart);
-                DomEventService.AddEventListener(Ref, "compositionend", OnCompositionEnd);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionstart", OnCompositionStart);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionend", OnCompositionEnd);
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
                     await this.FocusAsync(Ref);
                 }
-                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
+
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focus", OnFocusInternal);
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focus", OnFocusInternal);
-
+            DomEventListener.DisposeExclusive();
             _debounceTimer?.Dispose();
 
             base.Dispose(disposing);

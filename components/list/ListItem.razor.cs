@@ -36,7 +36,7 @@ namespace AntDesign
         [CascadingParameter(Name = "ItemClick")] public Action ItemClick { get; set; }
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         public bool IsVerticalAndExtra()
         {
@@ -46,7 +46,6 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-
             await base.OnInitializedAsync();
         }
 
@@ -55,7 +54,7 @@ namespace AntDesign
             if (firstRender && Grid != null)
             {
                 await this.SetGutterStyle();
-                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
+                DomEventListener.AddShared<object>("window", "resize", OnResize);
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -157,9 +156,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            DomEventListener.Dispose();
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
     }
 }
