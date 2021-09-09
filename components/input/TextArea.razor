@@ -33,13 +33,13 @@
 		@if (Suffix != null)
 		{
 			<span class="@_warpperClassMapper.Class">
-				<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
+				<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 				@Suffix				
 			</span>		
 		}
 		else
 		{
-			<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
+			<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 		}
 		<AntDesign.Text Style="float: right; pointer-events: none; white-space: nowrap; color: rgba(0, 0, 0, 0.45)">&nbsp;@($"/ {MaxLength}")</AntDesign.Text>
 	</div>
@@ -49,12 +49,12 @@ else
 	@if (Suffix != null)
 	{
 		<span class="@_warpperClassMapper.Class">
-			<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
+			<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
 			@Suffix				
 		</span>
 	}
 	else
 	{
-		<textarea @ref="Ref" @attributes="attributes" @onclick:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>	
+		<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>	
 	}
 }
