@@ -69,7 +69,7 @@ namespace AntDesign.Internal
         public bool HiddenMode { get; set; } = false;
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
@@ -121,7 +121,7 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
             if (_lastDisabledState != Trigger.Disabled)
@@ -162,7 +162,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
