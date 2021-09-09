@@ -625,6 +625,7 @@ export class Overlay {
    * Very basic logging, useful during debugging.
    * @param extraMessage 
    */
+  /* istanbul ignore next */
   private logToConsole(extraMessage = "") {
     console.log(extraMessage + " Overlay position:", this.position,
       "Input",
