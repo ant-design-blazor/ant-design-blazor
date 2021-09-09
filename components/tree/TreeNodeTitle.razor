@@ -4,8 +4,8 @@
 @if (CanDraggable)
 {
     <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
-          @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
-          @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
+      @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
+      @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
         @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
         {
             <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
@@ -92,9 +92,9 @@ else
         else
         {
             <span class="ant-tree-title">
-                @if (SelfNode.Matched)
+                @if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
-                    var value = $"<span Style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
                     <span>
                         @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
                     </span>

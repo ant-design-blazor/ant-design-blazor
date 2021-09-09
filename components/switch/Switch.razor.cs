@@ -50,7 +50,6 @@ namespace AntDesign
                 .If($"{_prefixCls}-loading", () => Loading)
                 .If($"{_prefixCls}-small", () => Size == "small")
                 .If($"{_prefixCls}-rtl", () => RTL);
-                ;
         }
 
         private async Task HandleClick(MouseEventArgs e)

@@ -171,6 +171,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
@@ -194,7 +195,7 @@ namespace AntDesign
 
             FlushCache();
 
-            this.Reload();
+            this.InternalReload();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -248,14 +249,14 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
-            var queryModel = this.Reload();
+            var queryModel = this.InternalReload();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
             }
         }
 
-        private QueryModel<TItem> Reload()
+        private QueryModel<TItem> InternalReload()
         {
             var queryModel = BuildQueryModel();
 
@@ -299,6 +300,8 @@ namespace AntDesign
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
+
+                _shouldRender = true;
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -306,7 +309,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-            _waitingReload = false;
             StateHasChanged();
 
             return queryModel;
@@ -355,8 +357,6 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
-
-            ReloadAndInvokeChange();
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -367,6 +367,8 @@ namespace AntDesign
             {
                 this.FinishLoadPage();
             }
+
+            _shouldRender = false;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -405,7 +407,7 @@ namespace AntDesign
             else if (_waitingReload)
             {
                 _waitingReload = false;
-                Reload();
+                InternalReload();
             }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)

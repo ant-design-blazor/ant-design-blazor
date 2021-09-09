@@ -9,27 +9,35 @@ namespace AntDesign
 {
     public class AutoCompleteSearch : Search, IAutoCompleteInput
     {
+        public AutoCompleteSearch()
+        {
+            AutoComplete = false;
+        }
 
         [CascadingParameter]
-        public IAutoCompleteRef AutoComplete { get; set; }
+        public IAutoCompleteRef Component { get; set; }
 
         [CascadingParameter(Name = "OverlayTriggerContext")]
         public ForwardRef OverlayTriggerContext
         {
-            get { return WrapperRefBack; }
-            set { WrapperRefBack = value; }
+            get => RefBack;
+            set
+            {
+                WrapperRefBack = value;
+                RefBack = value;
+            }
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (AutoComplete != null) AutoComplete?.SetInputComponent(this);
+            if (Component != null) Component?.SetInputComponent(this);
         }
 
         internal override async Task OnFocusAsync(FocusEventArgs e)
         {
-            if (AutoComplete != null) await AutoComplete?.InputFocus(e);
+            if (Component != null) await Component?.InputFocus(e);
 
             await base.OnFocusAsync(e);
 
@@ -39,7 +47,7 @@ namespace AntDesign
         {
             await base.OnkeyDownAsync(args);
 
-            if (AutoComplete != null) await AutoComplete?.InputKeyDown(args);
+            if (Component != null) await Component?.InputKeyDown(args);
         }
 
 
@@ -47,7 +55,7 @@ namespace AntDesign
         {
             base.OnInputAsync(args);
 
-            if (AutoComplete != null) await AutoComplete?.InputInput(args);
+            if (Component != null) await Component?.InputInput(args);
         }
 
 

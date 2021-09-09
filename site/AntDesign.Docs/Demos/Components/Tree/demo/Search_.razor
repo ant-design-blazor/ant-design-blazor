@@ -1,40 +1,49 @@
-<Search @bind-Value="@searchKey" Placeholder="Search.." />
-<Divider Text="Default search (case sensitive)"></Divider>
-<Tree ShowIcon SearchValue="@searchKey" MatchedStyle="color: #f50;"
-      DataSource="games"
-      TitleExpression="x => x.DataItem.Text"
-      ChildrenExpression="x => x.DataItem.Items"
-      IconExpression="x => x.DataItem.Icon"></Tree>
+<div>
+  <Search @bind-Value="@searchKey" Placeholder="Search.." />
+  <Tree ShowIcon 
+        SearchValue="@searchKey" 
+        MatchedClass="site-tree-search-value"
+        DataSource="games"
+        TitleExpression="x => x.DataItem.Text"
+        ChildrenExpression="x => x.DataItem.Items"
+        IconExpression="x => x.DataItem.Icon"></Tree>
+</div>
 
-@code{
+<style>
+    .site-tree-search-value {
+        color: #f50;
+    }
+</style>
+
+@code {
     string searchKey;
 
     List<GameElement> games = new List<GameElement>()
-{
+    {
         new ("100","XBox","windows")
         {
-            Items=new List<GameElement>()
-{
+            Items = new List<GameElement>()
+            {
                 new ("101","Halo"),
-                 new ("102","Gears of War"),
-                 new ("103","Forza Motosport"),
+                new ("102","Gears of War"),
+                new ("103","Forza Motosport"),
             }
         },
         new ("200","PlayStation","desktop")
         {
-            Items=new List<GameElement>()
-{
+            Items = new List<GameElement>()
+            {
                 new ("201","Uncharted"),
-                 new ("202","God Of War"),
-                 new ("203","The Order:1886"),
+                new ("202","God Of War"),
+                new ("203","The Order:1886"),
             }
         },
-                new ("300","Switch","mobile")
+        new ("300","Switch","mobile")
         {
-            Items=new List<GameElement>()
-{
+            Items = new List<GameElement>()
+            {
                 new ("301","Super Mario Bros"),
-                 new ("302","The Legend of Zelda"),
+                new ("302","The Legend of Zelda"),
             }
         }
     };
@@ -43,7 +52,6 @@
     {
         public List<GameElement> Items { get; set; } = new List<GameElement>();
     }
-
 }
 
 

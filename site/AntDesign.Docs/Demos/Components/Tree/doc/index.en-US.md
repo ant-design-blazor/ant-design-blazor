@@ -33,7 +33,9 @@ Almost anything can be represented in a tree structure. Examples include directo
 | DefaultCheckedKeys  | Specifies the keys of the default checked treeNodes |  string[] | null |   |
 | DisableCheckKeys | Disable node Checkbox |  string[] |  null |   |
 | SearchValue  | search value  | string  | null  |   |
+| SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
+| MatchedClass | The  class name of matching text | string | null |  |
 | DataSource | bing datasource | List  |  null  |   |
 | TitleExpression  |  Specifies a method that returns the text of the node. | Func  |   |   |
 | KeyExpression |  Specifies a method that returns the key of the node. |  Func |   |   |

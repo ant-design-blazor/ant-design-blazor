@@ -263,6 +263,8 @@ namespace AntDesign
                         ((List<TableFilter>)_filters).Add(nullFilterOption);
                     }
                 }
+
+                Context.HeaderColumnInitialed(this);
             }
 
             ClassMapper
@@ -412,11 +414,22 @@ namespace AntDesign
 
         private TableFilter GetNewFilter()
         {
-            return new TableFilter()
+            if (_columnFilterType == TableFilterType.FieldType)
             {
-                FilterCondition = TableFilterCondition.And,
-                FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
-            };
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.And,
+                    FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
+                };
+            }
+            else
+            {
+                return new TableFilter()
+                {
+                    FilterCondition = TableFilterCondition.Or,
+                    FilterCompareOperator = TableFilterCompareOperator.Equals
+                };
+            }
         }
 
         private void InitFilters()
