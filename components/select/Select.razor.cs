@@ -47,6 +47,7 @@ namespace AntDesign
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         bool _dataSourceHasChanged = false;
+        IEnumerable<TItem> _dataSourceCopy;
         IEnumerable<TItem> _dataSourceShallowCopy;
         private bool? _isTItemPrimitive;
         private bool IsTItemPrimitive
@@ -87,79 +88,7 @@ namespace AntDesign
         /// The datasource for this component.
         /// </summary>        
         [Parameter]
-        public IEnumerable<TItem> DataSource
-        {
-            get => _datasource;
-            set
-            {
-                if (value == null && _datasource == null)
-                {
-                    return;
-                }
-
-                if (value == null && _datasource != null)
-                {
-                    if (!_isInitialized)
-                    {
-                        _selectedValue = default;
-                    }
-                    else
-                    {
-                        SelectOptionItems.Clear();
-                        SelectedOptionItems.Clear();
-                        Value = default;
-
-                        _datasource = null;
-                        _dataSourceShallowCopy = null;
-
-                        OnDataSourceChanged?.Invoke();
-                    }
-                    return;
-                }
-
-                if (value != null && !value.Any() && SelectOptionItems.Any())
-                {
-                    SelectOptionItems.Clear();
-                    SelectedOptionItems.Clear();
-
-                    Value = default;
-
-                    _datasource = value;
-                    _dataSourceShallowCopy = value.ToList();
-
-                    OnDataSourceChanged?.Invoke();
-
-                    return;
-                }
-
-                if (value != null)
-                {
-                    if (_datasource == null)
-                    {
-                        _dataSourceHasChanged = true;
-                    }
-                    else
-                    {
-                        _dataSourceHasChanged = !value.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
-                    }
-
-                    if (_dataSourceHasChanged)
-                    {
-                        OnDataSourceChanged?.Invoke();
-                        _datasource = value;
-                        if (IsTItemPrimitive)
-                        {
-                            _dataSourceShallowCopy = _datasource.ToList();
-                        }
-                        else
-                        {
-                            var cloneMethod = GetDataSourceItemCloneMethod();
-                            _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
-                        }
-                    }
-                }
-            }
-        }
+        public IEnumerable<TItem> DataSource { get; set; }
 
         /// <summary>
         /// EqualityComparer that will be used during DataSource change 
@@ -778,6 +707,7 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
+            EvaluateDataSourceChange();
             if (SelectOptions == null)
             {
                 if (!_optionsHasInitialized || _dataSourceHasChanged)
@@ -798,6 +728,89 @@ namespace AntDesign
                 }
             }
             base.OnParametersSet();
+        }
+
+        private void EvaluateDataSourceChange()
+        {
+            if (DataSource == null && _datasource == null)
+            {
+                return;
+            }
+
+            if (DataSource == null && _datasource != null)
+            {
+                if (!_isInitialized)
+                {
+                    _selectedValue = default;
+                }
+                else
+                {
+                    SelectOptionItems.Clear();
+                    SelectedOptionItems.Clear();
+                    Value = default;
+
+                    _datasource = null;
+                    _dataSourceShallowCopy = null;
+
+                    OnDataSourceChanged?.Invoke();
+                }
+                return;
+            }
+
+            if (DataSource != null && !DataSource.Any() && SelectOptionItems.Any())
+            {
+                SelectOptionItems.Clear();
+                SelectedOptionItems.Clear();
+
+                Value = default;
+
+                _datasource = DataSource;
+                _dataSourceShallowCopy = DataSource.ToList();
+
+                OnDataSourceChanged?.Invoke();
+
+                return;
+            }
+
+            if (DataSource != null)
+            {
+                if (_datasource == null)
+                {
+                    _dataSourceHasChanged = true;
+                }
+                else if (IsTItemPrimitive)
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceCopy);
+                }
+                else if (_getValue is null)
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceCopy) ||
+                        !DataSource.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
+                }
+                else
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
+                }
+
+                if (_dataSourceHasChanged)
+                {
+                    OnDataSourceChanged?.Invoke();
+                    _datasource = DataSource;
+                    if (IsTItemPrimitive)
+                    {
+                        _dataSourceCopy = _datasource.ToList();
+                    }
+                    else
+                    {
+                        if (_getValue is null)
+                        {
+                            _dataSourceCopy = _datasource.ToList();
+                        }
+                        var cloneMethod = GetDataSourceItemCloneMethod();
+                        _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -937,7 +950,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = _getValue == null ? THelper.ChangeType<TItemValue>(item) : _getValue(item);
+                TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
