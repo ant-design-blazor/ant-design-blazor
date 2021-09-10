@@ -37,7 +37,7 @@ namespace AntDesign
         /// Callback executed when Tag is checked/unchecked
         /// </summary>
         [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
+        public EventCallback<bool> CheckedChanged { get; set; }
 
         /// <summary>
         /// Tag color. Can either be a predefined color (string)
@@ -53,8 +53,7 @@ namespace AntDesign
                 {
                     _color = value;
                     _isPresetColor = IsPresetColor(_color);
-                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value  
-                    _style = GetStyle();
+                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
                 }
             }
         }
@@ -120,6 +119,12 @@ namespace AntDesign
         private string _color;
         private string _style;
 
+        protected override void OnParametersSet()
+        {
+            this._style = GetStyle();
+            base.OnParametersSet();
+        }
+
         protected override void OnInitialized()
         {
             this.UpdateClassMap();
@@ -150,20 +155,24 @@ namespace AntDesign
                 ;
         }
 
-        private string GetStyle() {
+        private string GetStyle()
+        {
             StringBuilder styleBuilder = new StringBuilder();
 
             styleBuilder.Append(Style);
 
-            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
+            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";"))
+            {
                 styleBuilder.Append(";");
             }
 
-            if (_isCustomColor) {
+            if (_isCustomColor)
+            {
                 styleBuilder.Append($"background-color: {_color};");
             }
 
-            return styleBuilder.ToString();
+            var newStyle = styleBuilder.ToString();
+            return string.IsNullOrEmpty(newStyle) ? null : newStyle;
         }
 
         private async Task UpdateCheckedStatus()
@@ -174,9 +183,9 @@ namespace AntDesign
             }
 
             this.Checked = !this.Checked;
-            if (this.CheckedChange.HasDelegate)
+            if (this.CheckedChanged.HasDelegate)
             {
-                await this.CheckedChange.InvokeAsync(this.Checked);
+                await this.CheckedChanged.InvokeAsync(this.Checked);
             }
         }
 
@@ -194,7 +203,7 @@ namespace AntDesign
                 return;
             }
 
-            this._closed = true;            
+            this._closed = true;
 
             if (OnClose.HasDelegate)
             {

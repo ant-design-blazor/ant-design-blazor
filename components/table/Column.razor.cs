@@ -192,8 +192,6 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
-
-                Table?.WaitForReloadAndInvokeChange();
             }
             else if (IsBody)
             {
@@ -265,6 +263,8 @@ namespace AntDesign
                         ((List<TableFilter>)_filters).Add(nullFilterOption);
                     }
                 }
+
+                Context.HeaderColumnInitialed(this);
             }
 
             ClassMapper

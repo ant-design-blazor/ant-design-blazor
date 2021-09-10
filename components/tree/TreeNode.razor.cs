@@ -34,6 +34,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         internal List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         /// <summary>
@@ -501,7 +504,7 @@ namespace AntDesign
                             hasUnchecked = true;
                             break;
                         }
-                        else if (item.Checked) 
+                        else if (item.Checked)
                         {
                             hasChecked = true;
                         }

@@ -53,16 +53,16 @@
         </Overlay>
         <Unbound>
             <CascadingValue Value="this" IsFixed="@true">
-                @if (ChildContent == null)
-                {
-                    <AutoCompleteInput RefBack="context" @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />
-                }
-                else
-                {
-                    <CascadingValue Value="context" Name="OverlayTriggerContext">
+                <CascadingValue Value="context" Name="OverlayTriggerContext">
+                    @if (ChildContent == null)
+                    {
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />
+                    }
+                    else
+                    {
                         @ChildContent
-                    </CascadingValue>
-                }                    
+                    }
+                </CascadingValue>
             </CascadingValue>
         </Unbound>
     </OverlayTrigger>

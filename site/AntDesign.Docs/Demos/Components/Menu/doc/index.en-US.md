@@ -63,6 +63,7 @@ More layouts with navigation: [Layout](/components/layout).
 | Style    | Additional CSS style  | string |     -          |         |
 | Title | Title of the menu item | string |  |  |
 | Icon | The icon of the menu item | string | - | |
+| IconTemplate | Custom icon template, when `Icon` and `IconTemplate` are set at the same time, `IconTemplate` is preferred| RenderFragment | - | |
 
 ### SubMenu
 
