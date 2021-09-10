@@ -74,6 +74,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        [Parameter]
+        public Action OnTextboxFocus { get; set; }
+
         private readonly bool _isNullable;
         private bool _hasDefaultValue;
 
@@ -411,6 +414,8 @@ namespace AntDesign
         {
             _focused = true;
             CurrentValue = Value;
+
+            OnTextboxFocus?.Invoke();
         }
 
         private async Task OnBlurAsync()
