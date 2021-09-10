@@ -15,6 +15,8 @@ namespace AntDesign
         public static string GetScroll => DomInfoHelper.GetScroll;
         public static string HasFocus => DomInfoHelper.HasFocus;
         public static string GetInnerText => DomInfoHelper.GetInnerText;
+        public static string GetMaxZIndex => DomInfoHelper.GetMaxZIndex;
+
         #endregion
 
         #region styleManipulation
@@ -87,7 +89,7 @@ namespace AntDesign
         #region overlay
         public static string AddPreventEnterOnOverlayVisible => OverlayComponentHelper.AddPreventEnterOnOverlayVisible;
         public static string RemovePreventEnterOnOverlayVisible => OverlayComponentHelper.RemovePreventEnterOnOverlayVisible;
-        public static string GetMaxZIndex => OverlayComponentHelper.GetMaxZIndex;
+        //public static string AddOverlayToContainer => OverlayComponentHelper.AddOverlayToContainer;
         #endregion
 
         #region table
@@ -109,6 +111,7 @@ namespace AntDesign
             public static string GetScroll => $"{FUNC_PREFIX}getScroll";
             public static string HasFocus => $"{FUNC_PREFIX}hasFocus";
             public static string GetInnerText => $"{FUNC_PREFIX}getInnerText";
+            public static string GetMaxZIndex => $"{FUNC_PREFIX}getMaxZIndex";
         }
 
         public static class EventHelper
@@ -211,7 +214,9 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "overlayHelper.";
             public static string AddPreventEnterOnOverlayVisible => $"{FUNC_PREFIX}addPreventEnterOnOverlayVisible";
             public static string RemovePreventEnterOnOverlayVisible => $"{FUNC_PREFIX}removePreventEnterOnOverlayVisible";
-            public static string GetMaxZIndex => $"{FUNC_PREFIX}getMaxZIndex";
+            public static string AddOverlayToContainer => $"{FUNC_PREFIX}addOverlayToContainer";
+            public static string UpdateOverlayPosition => $"{FUNC_PREFIX}updateOverlayPosition";
+            public static string DeleteOverlayFromContainer => $"{FUNC_PREFIX}deleteOverlayFromContainer";
         }
 
         public static class TableComponentHelper

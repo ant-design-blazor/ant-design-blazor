@@ -35,6 +35,12 @@ namespace AntDesign
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
 
         /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
+
+        /// <summary>
         /// Toggle the border style.
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
@@ -657,6 +663,7 @@ namespace AntDesign
         }
 
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
+        private ElementReference _scrollableSelectDiv;
 
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
@@ -1180,7 +1187,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task ElementScrollIntoViewAsync(ElementReference element)
         {
-            await JsInvokeAsync(JSInteropConstants.ScrollTo, element);
+            await JsInvokeAsync(JSInteropConstants.ScrollTo, element, _scrollableSelectDiv);
         }
 
         /// <summary>
@@ -2153,9 +2160,6 @@ namespace AntDesign
                         currentSelected.IsActive = true;
                         ActiveOption = currentSelected;
 
-                        // ToDo: Sometime the element does not scroll, you have to call the function twice
-                        await ElementScrollIntoViewAsync(currentSelected.Ref);
-                        await Task.Delay(1);
                         await ElementScrollIntoViewAsync(currentSelected.Ref);
                     }
 
@@ -2258,9 +2262,6 @@ namespace AntDesign
                         currentSelected.IsActive = true;
                         ActiveOption = currentSelected;
 
-                        // ToDo: Sometime the element does not scroll, you have to call the function twice
-                        await ElementScrollIntoViewAsync(currentSelected.Ref);
-                        await Task.Delay(1);
                         await ElementScrollIntoViewAsync(currentSelected.Ref);
                     }
 
@@ -2498,9 +2499,6 @@ namespace AntDesign
 
                 currentSelected.IsActive = true;
                 ActiveOption = currentSelected;
-                // ToDo: Sometime the element does not scroll, you have to call the function twice
-                await ElementScrollIntoViewAsync(currentSelected.Ref);
-                await Task.Delay(1);
                 await ElementScrollIntoViewAsync(currentSelected.Ref);
             }
             else if (ActiveOption == null)//position on first element in the list
