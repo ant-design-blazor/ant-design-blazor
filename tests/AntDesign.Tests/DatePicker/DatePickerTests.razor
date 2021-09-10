@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using AntDesign.Core.JsInterop.Modules.Components
 @inherits AntDesignTestBase
 
 @code {
@@ -22,6 +23,8 @@
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
 			.SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
 		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
 
 		DateTime value = new DateTime(2021,4,5);		
