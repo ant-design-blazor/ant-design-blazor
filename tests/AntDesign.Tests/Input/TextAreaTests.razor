@@ -10,14 +10,21 @@
     };
 
 
+    private void JSCommonMock()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.InputComponentHelper.DisposeResizeTextArea, _ => true);   
+    }
+
 	[Fact]
 	public void TextArea_ShowCount_shows_initial_value()
 	{
-		//Arrange
+        //Arrange
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
 		string value = "0123456789";
-		var cut = Render(@<AntDesign.TextArea ShowCount MaxLength=100 Value=@value/>);
+		var cut = Render(
+    @<AntDesign.TextArea ShowCount MaxLength=100 Value=@value/>);
 		//Act
 		var divWrapper = cut.Find("div");
 		var attribute = divWrapper.GetAttribute("data-count");
@@ -29,6 +36,7 @@
 	public async Task TextArea_ShowCount_increase()
 	{
 		//Arrange	
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
 		string value = "";
@@ -47,6 +55,7 @@
 	public void TextArea_ReadOnly_creates_attribute()
 	{
 		//Arrange
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
 		var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea ReadOnly Value="@("0123456789")"/>);
@@ -60,6 +69,7 @@
 	public void TextArea_Rows_creates_with_expected_height()
 	{
         //Arrange
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
         uint rows = 4;
@@ -80,6 +90,7 @@
 	public void TextArea_MinRows_creates_with_expected_height()
 	{
         //Arrange
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         uint rows = 4;
@@ -93,17 +104,51 @@
 		//Act && Assert
         var textAreaElement = cut.Find("textarea");
         var styleAttribute = textAreaElement.GetAttribute("style");
-        styleAttribute.Should().Contain($"height: {expectedHeight}px");        
+        styleAttribute.Should().Contain($"height: {expectedHeight}px");
 	}
 
 	[Fact]
 	public void TextArea_AutoSize_is_true_when_MinRows_set()
 	{
         //Arrange
+        JSCommonMock();
         JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea MinRows="1" AutoSize="false"/>);
         //Act && Assert
         cut.Instance.AutoSize.Should().BeTrue();
+	}
+
+	[Fact]
+	public void TextArea_AutoSize_is_true_when_MaxRows_set()
+	{
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+            .SetResult(_textAreaInfo);
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea MaxRows="4" AutoSize="false"/>);
+        //Act && Assert
+        cut.Instance.AutoSize.Should().BeTrue();
+	}
+
+	[Fact]
+	public void TextArea_MaxRows_will_take_precedence_over_Rows()
+	{
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+            .SetResult(_textAreaInfo);
+        uint rows = 4;
+        double expectedHeight = rows * _textAreaInfo.LineHeight +
+                            _textAreaInfo.PaddingTop +
+                            _textAreaInfo.PaddingBottom +
+                            _textAreaInfo.BorderBottom +
+                            _textAreaInfo.BorderTop;
+
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Rows="10" MaxRows="@rows"/>);
+        //Act && Assert
+         var textAreaElement = cut.Find("textarea");
+        var styleAttribute = textAreaElement.GetAttribute("style");
+        styleAttribute.Should().Contain($"height: {expectedHeight}px");
 	}
 }
