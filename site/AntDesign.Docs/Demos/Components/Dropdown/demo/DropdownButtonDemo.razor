@@ -77,7 +77,7 @@
                 </DropdownButton>    
 			</SpaceItem>
 			<SpaceItem>
-                <Dropdown Trigger="@(new TriggerType[] { TriggerType.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -152,7 +152,7 @@
                 </DropdownButton>    
 			</SpaceItem>
 			<SpaceItem>
-                <Dropdown Trigger="@(new TriggerType[] { TriggerType.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>

@@ -194,7 +194,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 						@HeaderTitle
 					}
 
-					<Dropdown Trigger="new[] { TriggerType.Click }" Visible="_filterOpened" Placement="PlacementType.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
+					<Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
 						<Unbound>
 							<span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
 					  	@onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
@@ -235,7 +235,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 												<div>
 													<Space Style="margin-bottom:10px">
 														<SpaceItem>
-															<Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)">
+															<Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None">
 																<SelectOptions>
 																	<SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@Table?.Locale.FilterOptions.And"></SelectOption>
 																	<SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@Table?.Locale.FilterOptions.Or"></SelectOption>
@@ -247,7 +247,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 											}
 											<Space Style="width:100%;">
 												<SpaceItem Style="flex:auto">
-													<Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" DropdownMatchSelectWidth="false">
+													<Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" DropdownMatchSelectWidth="false">
 														<SelectOptions>
 															<SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@Table?.Locale.FilterOptions.Equals"></SelectOption>
 															<SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@Table?.Locale.FilterOptions.NotEquals"></SelectOption>
@@ -335,18 +335,24 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 				if (filter.FilterCompareOperator != TableFilterCompareOperator.TheSameDateWith)
 				{
 					<DatePicker Value="(DateTime?)filter.Value" ShowTime="@true"
-				TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value?.AddMilliseconds(-value.Value.Millisecond))" PopupContainerSelector="@("#popup-container-for-" + Id)"></DatePicker>
+								TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value?.AddMilliseconds(-value.Value.Millisecond))" 
+								PopupContainerSelector="@("#popup-container-for-" + Id)"
+								BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"/>
 				}
 				else
 				{
-					<DatePicker Value="(DateTime?)filter.Value" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value)" PopupContainerSelector="@("#popup-container-for-" + Id)"></DatePicker>
+					<DatePicker Value="(DateTime?)filter.Value" TValue="DateTime?" ValueChanged="value => SetFilterValue(filter, value)" 
+								PopupContainerSelector="@("#popup-container-for-" + Id)"
+								BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"/>
 				}
 			}
 			else if (_columnDataType.IsEnum)
 			{
-				<EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" PopupContainerSelector="@("#popup-container-for-" + Id)"
-				Style="width:180px;" ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))">
-				</EnumSelect>
+				<EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" 
+					PopupContainerSelector="@("#popup-container-for-" + Id)"
+					Style="width:180px;" 
+					ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))"
+					BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"/>				
 			}
 			else if (_columnDataType == typeof(byte))
 			{

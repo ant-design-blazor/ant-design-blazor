@@ -17,9 +17,15 @@ export class resizeObserver {
   // @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
   private static resizeObservers: Map<string, ResizeObserver> = new Map<string, ResizeObserver>();
 
-  static create(key, invoker) {
+  static create(key, invoker, isDotNetInvoker: boolean = true ) {
     // @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
-    const observer = new ResizeObserver((entries, observer) => resizeObserver.observerCallBack(entries, observer, invoker));
+    let observer;
+        
+    if (isDotNetInvoker) {
+      observer = new ResizeObserver((entries, observer) => resizeObserver.observerCallBack(entries, observer, invoker));
+    } else {
+      observer = new ResizeObserver((entries, observer) => invoker(entries, observer));
+    }
     resizeObserver.resizeObservers.set(key, observer)
   }
 
@@ -48,17 +54,14 @@ export class resizeObserver {
   }
 
   static dispose(key: string): void {
-    console.log("dispose", key);
     this.disconnect(key)
     this.resizeObservers.delete(key)
   }
 
   private static observerCallBack(entries, observer, invoker) {
-    console.log("observerCallBack start", entries)
     if (invoker) {
       const mappedEntries = new Array<ResizeObserverEntry>()
-      entries.forEach(entry => {
-        console.log("observerCallBack entry", entry)
+      entries.forEach(entry => {        
         if (entry) {
           const mEntry = new ResizeObserverEntry()
           if (entry.borderBoxSize) {
