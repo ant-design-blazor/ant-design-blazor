@@ -18,6 +18,7 @@ When there is a need for autocomplete functionality.
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | Backfill | backfill selected item the input when using keyboard | bool | false |
+| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | Options | Data source for autocomplete | AutocompleteDataSource | - |
 | Disabled | Set disabled | bool | - |
 | Placeholder | Placeholder text | string | - |

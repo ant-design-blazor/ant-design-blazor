@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.JsInterop.Modules.Components;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
@@ -9,14 +9,21 @@ namespace AntDesign.Internal
 {
     public sealed partial class Overlay : AntDomComponentBase
     {
-        [CascadingParameter(Name = "Trigger")]
-        public OverlayTrigger Trigger { get; set; }
+        [CascadingParameter(Name = "ArrowPointAtCenter")]
+        public bool ArrowPointAtCenter { get; set; }
 
+        /// <summary>
+        /// Used in nested overlays (for example menu -> submenu) when
+        /// trigger is another overlay.
+        /// </summary>
         [CascadingParameter(Name = "ParentTrigger")]
         public OverlayTrigger ParentTrigger { get; set; }
 
-        [Parameter]
-        public string OverlayChildPrefixCls { get; set; } = "";
+        /// <summary>
+        /// Component that will trigger the overlay to show.
+        /// </summary>
+        [CascadingParameter(Name = "Trigger")]
+        public OverlayTrigger Trigger { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -31,13 +38,14 @@ namespace AntDesign.Internal
         public EventCallback OnOverlayMouseUp { get; set; }
 
         [Parameter]
-        public Action OnShow { get; set; }
+        public EventCallback OnShow { get; set; }
 
         [Parameter]
-        public Action OnHide { get; set; }
+        public EventCallback OnHide { get; set; }
 
-        [CascadingParameter(Name = "ArrowPointAtCenter")]
-        public bool ArrowPointAtCenter { get; set; }
+        [Parameter]
+        public string OverlayChildPrefixCls { get; set; } = "";
+
 
         [Parameter]
         public int HideMillisecondsDelay { get; set; } = 100;
@@ -80,6 +88,7 @@ namespace AntDesign.Internal
         private bool _isWaitForOverlayFirstRender = false;
 
         private bool _preVisible = false;
+        private bool _isOverlayDuringShowing = false;
         private bool _isOverlayShow = false;
         private bool _isOverlayHiding = false;
         private bool _lastDisabledState = false;
@@ -87,14 +96,20 @@ namespace AntDesign.Internal
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
 
-        private string _overlayStyle = "";
+        //if this style needs to be changed, also change 
+        //the removal of that style in js interop overlay.ts class (in constructor)
+        private string _overlayStyle = "display: none;"; //initial value prevents from screen flickering when adding overlay to dom; it will be overwritten immediately 
         private string _overlayCls = "";
 
-        private const int ARROW_SIZE = 13;
-        private const int HORIZONTAL_ARROW_SHIFT = 13;
-        private const int VERTICAL_ARROW_SHIFT = 5;
+        private bool _shouldRender = true;
 
-        private int _overlayClientWidth = 0;
+        protected override bool ShouldRender()
+        {
+            if (_shouldRender)
+                return base.ShouldRender();
+            _shouldRender = true;
+            return false;
+        }
 
         protected override void OnInitialized()
         {
@@ -143,7 +158,7 @@ namespace AntDesign.Internal
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
             {
                 _isOverlayFirstRender = false;
-                await Show(_overlayLeft, _overlayTop);
+                //await Show(_overlayLeft, _overlayTop);
 
                 _isWaitForOverlayFirstRender = false;
                 _overlayLeft = null;
@@ -159,7 +174,7 @@ namespace AntDesign.Internal
                 _ = InvokeAsync(async () =>
                 {
                     await Task.Delay(100);
-                    await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
+                    await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, Ref.Id);
                 });
             }
             DomEventListener.Dispose();
@@ -172,24 +187,14 @@ namespace AntDesign.Internal
             {
                 return;
             }
-            await Task.Yield();
-            HtmlElement trigger;
-            if (Trigger.ChildContent is not null)
+            _isOverlayDuringShowing = true;
+
+            if (_isOverlayFirstRender)
             {
-                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
-                // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
-                // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
-                // This may be a bad solution, but for now I can only do it this way.
-                while (trigger.AbsoluteLeft <= 0 && trigger.ClientWidth <= 0)
-                {
-                    await Task.Delay(50);
-                    trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
-                }
+                Trigger.SetShouldRender(false);
+                await Task.Yield();
             }
-            else //(Trigger.Unbound != null)
-            {
-                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.Ref);
-            }
+            else
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
@@ -198,66 +203,51 @@ namespace AntDesign.Internal
             {
                 _isWaitForOverlayFirstRender = true;
 
-                StateHasChanged();
-                return;
+                await InvokeAsync(StateHasChanged);
             }
-
-            _isOverlayShow = true;
-            _isOverlayHiding = false;
 
             await UpdateParentOverlayState(true);
 
-            await AddOverlayToBody();
-
-            HtmlElement overlayElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
-            HtmlElement containerElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
-
-            int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
-            int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
-
-            int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
-
-            if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
-            {
-                var right = ChangeOverlayLeftToRight(left, overlayElement, containerElement);
-                _overlayStyle = $"z-index:{zIndex};left: unset;right: {right}px;top: {top}px;{GetTransformOrigin()}";
-            }
-            else
-            {
-                _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
-            }
+            await AddOverlayToBody(overlayLeft, overlayTop);
+            _isOverlayShow = true;
+            _isOverlayDuringShowing = false;
+            _isOverlayHiding = false;
 
             _overlayCls = Trigger.GetOverlayEnterClass();
-
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
-            OnShow?.Invoke();
+            if (OnShow.HasDelegate)
+                OnShow.InvokeAsync(null);
         }
 
         internal async Task Hide(bool force = false)
         {
+            if (_isOverlayDuringShowing)
+            {
+                //If Show() method is processing, wait up to 1000 ms
+                //for it to end processing
+                await WaitFor(() => _isOverlayShow);
+            }
             if (!_isOverlayShow)
             {
                 return;
             }
-
             await Task.Delay(HideMillisecondsDelay);
 
             if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
                 return;
             }
-
             _isOverlayFirstRender = true;
+
             _isWaitForOverlayFirstRender = false;
             _isOverlayHiding = true;
 
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
-
             await UpdateParentOverlayState(false);
 
             StateHasChanged();
@@ -271,7 +261,8 @@ namespace AntDesign.Internal
 
             StateHasChanged();
 
-            OnHide?.Invoke();
+            if (OnHide.HasDelegate)
+                OnHide.InvokeAsync(null);
         }
 
         internal void PreventHide(bool prevent)
@@ -308,275 +299,84 @@ namespace AntDesign.Internal
         /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+        private OverlayPosition _position;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
-        private async Task AddOverlayToBody()
+        private int _recurenceGuard = 0;
+        private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
             if (!_hasAddOverlayToBody)
             {
-                await JsInvokeAsync(JSInteropConstants.AddElementTo, Ref, Trigger.PopupContainerSelector);
+                bool triggerIsWrappedInDiv = Trigger.Unbound is null;
+                _recurenceGuard++;
 
-                _hasAddOverlayToBody = true;
-            }
-        }
-
-        private async Task<int> GetOverlayTopWithBoundaryAdjust(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
-        {
-            int top = GetOverlayTop(trigger, overlay, containerElement);
-
-            /*
-             * 边界检测和方向调整
-             * boundary detection and orientation adjustment
-             */
-            return await BoundaryAdjust(trigger, overlay, containerElement, top, "top");
-        }
-
-        private async Task<int> GetOverlayLeftWithBoundaryAdjust(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
-        {
-            int left = GetOverlayLeft(trigger, overlay, containerElement);
-
-            /*
-             * 边界检测和方向调整
-             * boundary detection and orientation adjustment
-             */
-            return await BoundaryAdjust(trigger, overlay, containerElement, left, "left");
-        }
-
-        private int GetOverlayTop(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
-        {
-            int top = 0;
-
-            int triggerTop = (int)(containerElement.ScrollTop + trigger.AbsoluteTop - containerElement.AbsoluteTop);
-            int triggerHeight = trigger.ClientHeight != 0 ? trigger.ClientHeight : trigger.OffsetHeight;
-
-            // contextMenu
-            if (_overlayTop != null)
-            {
-                triggerTop += (int)_overlayTop;
-                triggerHeight = 0;
-            }
-
-            if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.Right))
-            {
-                top = triggerTop + triggerHeight / 2 - overlay.ClientHeight / 2;
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.LeftTop, PlacementType.RightTop))
-            {
-                top = triggerTop;
-
-                if (ArrowPointAtCenter)
+                //In ServerSide it may happen that trigger element reference has not yet been retrieved.                    
+                if (!(await WaitFor(() => Trigger.Ref.Id is not null)))
                 {
-                    top += -VERTICAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerHeight / 2;
+                    //Place where Error Boundary could be utilized
+                    throw new ArgumentNullException("Trigger.Ref.Id cannot be null when attaching overlay to it.");
                 }
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.LeftBottom, PlacementType.RightBottom))
-            {
-                top = triggerTop - overlay.ClientHeight + triggerHeight;
-
-                if (ArrowPointAtCenter)
+                _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                    Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
+                    VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+                if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
-                    top += VERTICAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerHeight / 2;
+                    Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
+                    await Task.Delay(10);
+                    await AddOverlayToBody(overlayLeft, overlayTop);
                 }
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.BottomRight))
-            {
-                top = triggerTop + triggerHeight + VerticalOffset;
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
-            {
-                top = triggerTop - overlay.ClientHeight - VerticalOffset;
-            }
-            top -= containerElement.ClientTop;
-
-            return top;
-        }
-
-        private int GetOverlayLeft(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
-        {
-            int left = 0;
-
-            int triggerLeft = trigger.AbsoluteLeft - containerElement.AbsoluteLeft;
-            int triggerWidth = trigger.ClientWidth != 0 ? trigger.ClientWidth : trigger.OffsetWidth;
-
-            if (overlay.ClientWidth > 0)
-            {
-                _overlayClientWidth = overlay.ClientWidth;
-            }
-
-            // contextMenu
-            if (_overlayLeft != null)
-            {
-                triggerLeft += (int)_overlayLeft;
-                triggerWidth = 0;
-            }
-
-            if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.LeftTop, PlacementType.LeftBottom))
-            {
-                left = triggerLeft - _overlayClientWidth - HorizontalOffset;
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.Right, PlacementType.RightTop, PlacementType.RightBottom))
-            {
-                left = triggerLeft + triggerWidth + HorizontalOffset;
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.TopLeft))
-            {
-                left = triggerLeft;
-
-                if (ArrowPointAtCenter)
+                else
                 {
-                    left += -HORIZONTAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerWidth / 2;
+                    _hasAddOverlayToBody = true;
+                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
+                    if (_position.Placement != Trigger.Placement)
+                    {
+                        Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
+                    }
                 }
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
-            {
-                left = triggerLeft + triggerWidth / 2 - _overlayClientWidth / 2;
-            }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
-            {
-                left = triggerLeft + triggerWidth - _overlayClientWidth;
-
-                if (ArrowPointAtCenter)
-                {
-                    left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
-                }
-            }
-            left -= containerElement.ClientLeft;
-
-            return left;
-        }
-
-        /*
-         * 边界检测和方向调整
-         * boundary detection and orientation adjustment
-         */
-
-        private async Task<int> BoundaryAdjust(
-            HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement,
-            int curPos, string direction)
-        {
-            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.None)
-            {
-                return curPos;
-            }
-
-            int overlaySize = direction == "top" ? overlay.ClientHeight : overlay.ClientWidth;
-            int boundarySize = await GetWindowBoundarySize(direction, containerElement);
-
-            // 距离边界的长度或宽度/distance from top or left boundry
-            int distanceFromBoundry = await GetOverlayDistanceFromBoundary(direction, curPos);
-
-            if (Trigger.Trigger.Contains(TriggerType.ContextMenu))
-            {
-                if (overlaySize + curPos > boundarySize)
-                {
-                    curPos -= overlaySize;
-                }
-                else if (curPos < 0)
-                {
-                    curPos += overlaySize;
-                }
-
-                return curPos;
-            }
-
-            int overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
-
-            if ((overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
-                && distanceFromBoundry >= overlaySize) // check if still outof boundary after reverse placement
-            {
-                // 翻转位置/reverse placement
-                Trigger.ChangePlacementForShow(Trigger.Placement.GetReverseType());
-
-                int reversePos = direction switch
-                {
-                    "top" => GetOverlayTop(trigger, overlay, containerElement),
-                    _ => GetOverlayLeft(trigger, overlay, containerElement)
-                };
-
-                curPos = reversePos;
-            }
-
-            return curPos < 0 ? 0 : curPos;
-        }
-
-        private int GetOverlayPosWithSize(int overlayPos, int overlaySize)
-        {
-            PlacementDirection placementDirection = Trigger.Placement.GetDirection();
-
-            if (placementDirection.IsIn(PlacementDirection.Top, PlacementDirection.Left))
-            {
-                return overlayPos - overlaySize;
             }
             else
             {
-                return overlayPos + overlaySize;
+                await UpdatePosition(overlayLeft, overlayTop);
             }
+            _recurenceGuard = 0;
         }
 
-        private int GetOverlayBoundaryPos(int overlaySize, int boundarySize)
+        /// <summary>
+        /// Will probe a check predicate every given milliseconds until predicate is true or until
+        /// runs out of number of probings.
+        /// </summary>
+        /// <param name="check">A predicate that will be run every time after waitTimeInMilisecondsPerProbing will pass.</param>
+        /// <param name="probings">Maximum number of probings. After this number is reached, the method finishes.</param>
+        /// <param name="waitTimeInMilisecondsPerProbing">How long to wait between each probing.</param>
+        /// <returns>Task</returns>
+        private async Task<bool> WaitFor(Func<bool> check, int probings = 100, int waitTimeInMilisecondsPerProbing = 10)
         {
-            PlacementDirection placementDirection = Trigger.Placement.GetDirection();
-
-            if (placementDirection.IsIn(PlacementDirection.Top, PlacementDirection.Left))
+            if (!check())
             {
-                return 0;
-            }
-            else
-            {
-                return boundarySize - overlaySize;
-            }
-        }
-
-        private async Task<int> GetOverlayDistanceFromBoundary(string direction, int overlayPos)
-        {
-            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
-            {
-                return overlayPos;
-            }
-
-            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
-            int windowScrollX = (int)scrollInfo.GetProperty("x").GetDouble();
-            int windowScrollY = (int)scrollInfo.GetProperty("y").GetDouble();
-
-            return direction switch
-            {
-                "top" => overlayPos - windowScrollY,
-                _ => overlayPos - windowScrollX
-            };
-        }
-
-        private async Task<int> GetWindowBoundarySize(string direction, HtmlElement containerElement)
-        {
-            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
-            {
-                return direction switch
+                for (int i = 0; i < probings; i++)
                 {
-                    "top" => containerElement.ScrollHeight,
-                    _ => containerElement.ScrollWidth
-                };
+                    await Task.Delay(waitTimeInMilisecondsPerProbing);
+                    if (check())
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
-
-            Window windowElement = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow, Ref);
-            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
-            int windowScrollX = (int)scrollInfo.GetProperty("x").GetDouble();
-            int windowScrollY = (int)scrollInfo.GetProperty("y").GetDouble();
-
-            return direction switch
-            {
-                "top" => (int)windowElement.innerHeight + windowScrollY,
-                _ => (int)windowElement.innerWidth + windowScrollX
-            };
+            return true;
         }
 
         private string GetTransformOrigin()
         {
-            return $"transform-origin: {Trigger.Placement.TranformOrigin}";
+            return $"transform-origin: {Trigger.GetPlacementType().TranformOrigin}";
         }
 
         private bool IsContainTrigger(TriggerType triggerType)
         {
-            foreach (TriggerType trigger in Trigger.Trigger)
+            foreach (TriggerType trigger in Trigger.GetTriggerType())
             {
                 if (trigger == triggerType)
                 {
@@ -630,44 +430,25 @@ namespace AntDesign.Internal
             if (_hasAddOverlayToBody)
                 return "visibility: hidden;";
 
-
             return "display: inline-flex; visibility: hidden;";
         }
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
-            HtmlElement trigger;
-            if (Trigger.ChildContent != null)
+            bool triggerIsWrappedInDiv = Trigger.Unbound is null;
+
+            _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
+                Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
+                VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+            if (_position is not null)
             {
-                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                if (_position.Placement != Trigger.Placement)
+                {
+                    Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
+                }
+                _overlayStyle = _position.PositionCss + GetTransformOrigin();
             }
-            else //(Trigger.Unbound != null)
-            {
-                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.Ref);
-            }
-
-            _overlayLeft = overlayLeft;
-            _overlayTop = overlayTop;
-
-            HtmlElement overlayElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
-            HtmlElement containerElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
-
-            int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
-            int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
-
-            int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
-
-            if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
-            {
-                var right = ChangeOverlayLeftToRight(left, overlayElement, containerElement);
-                _overlayStyle = $"z-index:{zIndex};left: unset;right: {right}px;top: {top}px;{GetTransformOrigin()}";
-            }
-            else
-            {
-                _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
-            }
-
-            StateHasChanged();
         }
 
         private int ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
