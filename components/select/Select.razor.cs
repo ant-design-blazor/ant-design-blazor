@@ -746,21 +746,15 @@ namespace AntDesign
 
             if (DataSource == null && _datasource != null)
             {
-                if (!_isInitialized)
-                {
-                    _selectedValue = default;
-                }
-                else
-                {
-                    SelectOptionItems.Clear();
-                    SelectedOptionItems.Clear();
-                    Value = default;
+                SelectOptionItems.Clear();
+                SelectedOptionItems.Clear();
+                Value = default;
 
-                    _datasource = null;
-                    _dataSourceShallowCopy = null;
+                _datasource = null;
+                _dataSourceCopy = null;
+                _dataSourceShallowCopy = null;
 
-                    OnDataSourceChanged?.Invoke();
-                }
+                OnDataSourceChanged?.Invoke();
                 return;
             }
 
@@ -772,7 +766,8 @@ namespace AntDesign
                 Value = default;
 
                 _datasource = DataSource;
-                _dataSourceShallowCopy = DataSource.ToList();
+                _dataSourceShallowCopy = new List<TItem>();
+                _dataSourceCopy = new List<TItem>();
 
                 OnDataSourceChanged?.Invoke();
 
