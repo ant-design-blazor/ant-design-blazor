@@ -143,6 +143,7 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private bool _hasFirstLoad;
         private bool _waitingReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
@@ -354,18 +355,6 @@ namespace AntDesign
             FlushCache();
         }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            if (!firstRender)
-            {
-                this.FinishLoadPage();
-            }
-
-            _shouldRender = false;
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -378,7 +367,16 @@ namespace AntDesign
                 {
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
                 }
+
+                _hasFirstLoad = true;
             }
+
+            if (!firstRender)
+            {
+                this.FinishLoadPage();
+            }
+
+            _shouldRender = false;
         }
 
         protected override void OnParametersSet()
@@ -390,12 +388,19 @@ namespace AntDesign
                 _waitingReloadAndInvokeChange = false;
                 _waitingReload = false;
 
-                ReloadAndInvokeChange();
+                if (_hasFirstLoad)
+                {
+                    ReloadAndInvokeChange();
+                }
             }
             else if (_waitingReload)
             {
                 _waitingReload = false;
-                InternalReload();
+
+                if (_hasFirstLoad)
+                {
+                    InternalReload();
+                }
             }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
