@@ -15,11 +15,12 @@ namespace AntDesign.Select.Internal
 {
     public partial class SelectContent<TItemValue, TItem>: IDisposable
     {
-        [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
+        [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
+
         [Parameter]
         public string Prefix
         {
@@ -33,6 +34,19 @@ namespace AntDesign.Select.Internal
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
         [Parameter] public bool ShowPlaceholder { get; set; }
+        [Parameter]
+        public int MaxTagCount
+        {
+            get { return _maxTagCount; }
+            set 
+            { 
+                if (_maxTagCount != value)
+                {
+                    _maxTagCount = value;
+                    _calculatedMaxCount = _maxTagCount;
+                }
+            }
+        }
         [Parameter] public EventCallback<ChangeEventArgs> OnInput { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
@@ -96,7 +110,7 @@ namespace AntDesign.Select.Internal
                 {
                     DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect._dropDownRef);
                 }
                 if (ParentSelect.IsResponsive)
                 {
@@ -361,6 +375,7 @@ namespace AntDesign.Select.Internal
         /// Indicates that a page is being refreshed 
         /// </summary>
         private bool _isReloading;
+        private int _maxTagCount;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -376,6 +391,14 @@ namespace AntDesign.Select.Internal
         private async Task OnClearClickAsync(MouseEventArgs args)
         {
             await OnClearClick.InvokeAsync(args);
+        }
+
+        private async Task RemoveClicked(MouseEventArgs e, SelectOptionItem<TItemValue, TItem> selectedOption)
+        {
+            if (e.Button == 0)
+            {
+                await OnRemoveSelected.InvokeAsync(selectedOption);
+            }
         }
 
         //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved

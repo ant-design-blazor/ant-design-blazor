@@ -25,6 +25,12 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Set the color of the button.
+        /// </summary>
+        [Parameter]
+        public Color Color { get; set; } = Color.None;
+
+        /// <summary>
         /// Option to fit button width to its parent width
         /// </summary>
         [Parameter]
@@ -145,6 +151,7 @@ namespace AntDesign
         {
             base.OnInitialized();
             SetClassMap();
+            SetButtonColorStyle();
             UpdateIconDisplay(_loading);
         }
 
@@ -173,6 +180,14 @@ namespace AntDesign
 
                 await InvokeAsync(StateHasChanged);
             });
+        }
+
+        private void SetButtonColorStyle()
+        {
+            if (Color != Color.None)
+            {
+                Style += ColorHelper.GetBackgroundStyle(Color);
+            }
         }
     }
 }

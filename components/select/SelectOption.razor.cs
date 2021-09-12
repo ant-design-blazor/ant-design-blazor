@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Components;
 using AntDesign.Select.Internal;
 using System.Globalization;
 
-#pragma warning disable 1591 // Disable missing XML comment
-
 namespace AntDesign
 {
     public partial class SelectOption<TItemValue, TItem>
@@ -14,30 +12,13 @@ namespace AntDesign
         private const string ClassPrefix = "ant-select-item-option";
 
         # region Parameters
-        [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
-        [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
         [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
-
-        [Parameter] public TItemValue Value { get; set; }
-
-        /// <summary>
-        /// The parameter should only be used if the SelectOption was created directly.
-        /// </summary>
-        [Parameter]
-        public string Label
-        {
-            get => _label;
-            set
-            {
-                if (_label != value)
-                {
-                    _label = value;
-                    StateHasChanged();
-                }
-            }
-        }
+        [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
+        [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
+        [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
 
         /// <summary>
+        /// Disable this option
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
         [Parameter]
@@ -56,14 +37,35 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Label of Select after selecting this Option
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter]
+        public string Label
+        {
+            get => _label;
+            set
+            {
+                if (_label != value)
+                {
+                    _label = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Value of Select after selecting this Option
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter] public TItemValue Value { get; set; }
+
         #endregion
 
         # region Properties
         private string _label = string.Empty;
         private bool _disabled;
-
-
-        [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
         private bool _isSelected;
 
@@ -249,8 +251,9 @@ namespace AntDesign
         {
             if (SelectParent?.SelectOptions != null)
             {
-                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
-                var selectOptionItem = SelectParent.SelectOptionItems.FirstOrDefault(x => x.InternalId == InternalId);
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
+                var selectOptionItem = SelectParent.SelectOptionItems
+                    .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
                     SelectParent.SelectOptionItems.Remove(selectOptionItem);
             }

@@ -121,6 +121,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         /// <summary>
         /// tree childnodes
         /// Add values when the node is initialized
@@ -176,8 +179,6 @@ namespace AntDesign
             {
                 OnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
             }
-
-            UpdateBindData();
         }
 
         /// <summary>
@@ -189,7 +190,10 @@ namespace AntDesign
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
 
-            UpdateBindData();
+            if (OnUnSelect.HasDelegate)
+            {
+                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+            }
         }
 
         /// <summary>
@@ -257,7 +261,7 @@ namespace AntDesign
         /// <summary>
         /// Update binding data
         /// </summary>
-        private void UpdateBindData()
+        internal void UpdateBindData()
         {
             if (SelectedNodesDictionary.Count == 0)
             {
@@ -314,9 +318,9 @@ namespace AntDesign
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
 
         /// <summary>
-        /// Dechecked all selected items
+        /// Checks all nodes
         /// </summary>
-        public void CheckedAll()
+        public void CheckAll()
         {
             foreach (var item in ChildNodes)
             {
@@ -324,8 +328,10 @@ namespace AntDesign
             }
         }
 
-        // Decheck all of the checked nodes
-        public void DecheckedAll()
+        /// <summary>
+        /// Unchecks all nodes
+        /// </summary>
+        public void UncheckAll()
         {
             foreach (var item in ChildNodes)
             {
@@ -376,35 +382,48 @@ namespace AntDesign
             set
             {
                 _searchValue = value;
-                var allList = _allNodes.ToList();
-                List<TreeNode<TItem>> searchDatas = null, exceptList = null;
-                if (!String.IsNullOrEmpty(value))
-                    searchDatas = allList.Where(x => x.Title.Contains(value)).ToList();
-                if (searchDatas != null && searchDatas.Any())
-                    exceptList = allList.Except(searchDatas).ToList();
-                if (exceptList != null || searchDatas != null)
-                {
-                    exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
-                    searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
-                }
-                else
-                {
-                    allList.ForEach(m => { m.Matched = false; });
-                }
+                SearchNodes();
             }
         }
 
-        ///// <summary>
-        /////
-        ///// </summary>
-        //[Parameter]
-        //public EventCallback<TreeEventArgs<TItem>> OnSearchValueChanged { get; set; }
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         /// <summary>
         /// Search for matching text styles
         /// </summary>
         [Parameter]
         public string MatchedStyle { get; set; } = "";
+
+        [Parameter]
+        public string MatchedClass { get; set; }
+
+        private void SearchNodes()
+        {
+            var allList = _allNodes.ToList();
+            List<TreeNode<TItem>> searchDatas = null, exceptList = null;
+            if (SearchExpression != null)
+            {
+                searchDatas = allList.Where(x => SearchExpression(x)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(_searchValue))
+            {
+                searchDatas = allList.Where(x => x.Title.Contains(_searchValue)).ToList();
+            }
+
+            if (searchDatas != null && searchDatas.Any())
+                exceptList = allList.Except(searchDatas).ToList();
+
+            if (exceptList != null || searchDatas != null)
+            {
+                exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
+                searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
+            }
+            else
+            {
+                allList.ForEach(m => { m.Expand(false); m.Matched = false; });
+            }
+        }
 
         #endregion Search
 
@@ -489,6 +508,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnSelect { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeEventArgs<TItem>> OnUnSelect { get; set; }
 
         /// <summary>
         /// Click the expansion tree node icon to call back

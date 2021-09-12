@@ -1,12 +1,12 @@
 @using AntDesign.Internal
 @using AntDesign.Select.Internal
 @namespace AntDesign
-@inherits AntInputComponentBase<TItemValue>
+@inherits SelectBase<TItemValue, TItem>
 @typeparam TItemValue
 @typeparam TItem
 
-<CascadingValue Value="this" IsFixed="true">
-    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls">
+<CascadingValue Value="this" IsFixed>
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
         <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
             <OverlayTrigger @ref="@_dropDown"
                             Visible="Open"
@@ -123,6 +123,7 @@
                                                        TItem="TItem"
                                                        SearchValue="@_searchValue"
                                                        IsOverlayShow="@_dropDown.IsOverlayShow()"
+													   MaxTagCount="@_maxTagCountAsInt"
                                                        OnInput="@OnInputAsync"
                                                        OnKeyUp="@OnKeyUpAsync"
                                                        OnKeyDown="@OnKeyDownAsync"

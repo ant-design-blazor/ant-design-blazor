@@ -168,6 +168,9 @@ namespace AntDesign
         [Parameter]
         public bool ReadOnly { get; set; }
 
+        [Parameter]
+        public bool AutoComplete { get; set; } = true;
+
         /// <summary>
         /// The suffix icon for the Input.
         /// </summary>
@@ -617,6 +620,11 @@ namespace AntDesign
                 builder.AddAttribute(61, "value", CurrentValue);
                 builder.AddAttribute(62, "disabled", needsDisabled);
                 builder.AddAttribute(63, "readonly", ReadOnly);
+
+                if (!AutoComplete)
+                {
+                    builder.AddAttribute(64, "autocomplete", "off");
+                }
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)

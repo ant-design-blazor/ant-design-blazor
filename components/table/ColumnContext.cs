@@ -95,5 +95,14 @@ namespace AntDesign
 
             column.ColIndex = CurrentColIndex;
         }
+
+        internal void HeaderColumnInitialed(IColumn column)
+        {
+            if (column.ColIndex == Columns.Count - 1)
+            {
+                // Header columns have all been initialized, then we can invoke the first change.
+                _table.ReloadAndInvokeChange();
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@
     const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
 }
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
-    <DatePickerTemplate @attributes="GetAttritubes()"
+    <DatePickerTemplate @attributes="GetAttributes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
                         MaxCol="MAX_COL"
@@ -33,7 +33,7 @@
                         OnValueSelect="date => OnSelectYear(date)"
                         GetNextColValue="date => DateHelper.AddYearsSafely(date, 10)">
         <RenderPickerHeader>
-            <DatePickerHeader @attributes="GetAttritubes()"
+            <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
                               Picker="@Picker"
                               SuperChangeDateInterval="100"

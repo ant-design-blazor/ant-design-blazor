@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
@@ -8,6 +9,8 @@ namespace AntDesign
 {
     public partial class Drawer : AntDomComponentBase
     {
+        #region Parameters
+
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -30,9 +33,6 @@ namespace AntDesign
 
         [Parameter]
         public bool Mask { get; set; } = true;
-
-        [Parameter]
-        public bool NoAnimation { get; set; } = false;
 
         [Parameter]
         public bool Keyboard { get; set; } = true;
@@ -91,7 +91,7 @@ namespace AntDesign
             }
         }
 
-        private string InnerZIndexStyle => (_isOpen || _isClosing) ? _zIndexStyle : "z-index:-9999;";
+        private string InnerZIndexStyle => (_status.IsOpen() || _status == ComponentStatus.Closing) ? _zIndexStyle : "z-index:-9999;";
 
         [Parameter] public int OffsetX { get; set; } = 0;
 
@@ -105,11 +105,11 @@ namespace AntDesign
             {
                 if (this._isOpen && !value)
                 {
-                    _isClosing = true;
+                    _status = ComponentStatus.Closing;
                 }
-                else
+                else if (!this._isOpen && value)
                 {
-                    _isClosing = false;
+                    _status = ComponentStatus.Opening;
                 }
                 this._isOpen = value;
             }
@@ -118,25 +118,30 @@ namespace AntDesign
         [Parameter] public EventCallback OnClose { get; set; }
         [Parameter] public RenderFragment Handler { get; set; }
 
+        #endregion
+
         private OneOf<RenderFragment, string> _content;
 
         private string ContentString { get; set; }
 
         private RenderFragment ContentTemplate { get; set; }
 
-        private bool _isClosing = false;
+        private ComponentStatus _status;
+        private bool _hasInvokeClosed;
         private bool _isOpen = default;
-        private bool _isRenderedDrawerStyle = false;
 
         private string _originalPlacement;
 
         private bool PlacementChanging { get; set; } = false;
 
+        /// <summary>
+        /// 设置 Drawer 是否显示，以及显示时候的位置 Offset
+        /// </summary>
         private string OffsetTransform
         {
             get
             {
-                if (!this._isOpen || (OffsetX == 0 && OffsetY == 0))
+                if (_status.IsNotOpen() || (OffsetX == 0 && OffsetY == 0))
                 {
                     return null;
                 }
@@ -152,18 +157,20 @@ namespace AntDesign
             }
         }
 
-        private bool _isRenderAnimation = false;
         private const string Duration = "0.3s";
         private const string Ease = "cubic-bezier(0.78, 0.14, 0.15, 0.86)";
         private string _widthTransition = "";
         private readonly string _transformTransition = $"transform {Duration} {Ease} 0s";
         private string _heightTransition = "";
 
+        /// <summary>
+        /// 设置 Drawer 是否隐藏，以及隐藏时候的位置 Offset
+        /// </summary>
         private string Transform
         {
             get
             {
-                if (this._isOpen && this._isRenderAnimation)
+                if (_status.IsOpen())
                 {
                     return null;
                 }
@@ -193,7 +200,7 @@ namespace AntDesign
             {(Transform != null ? $"transform:{Transform};" : "")}
             {(PlacementChanging ? "transition:none;" : "")}";
 
-        private Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
+        private static Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
         private string _drawerStyle = "";
 
@@ -219,6 +226,7 @@ namespace AntDesign
         {
             this._originalPlacement = Placement;
 
+            // TODO: remove
             this.SetClass();
 
             base.OnInitialized();
@@ -244,38 +252,38 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
-            if (_isOpen && !NoAnimation)
+            switch (_status)
             {
-                if (!_isRenderAnimation)
-                {
-                    _isRenderAnimation = true;
-                    CalcDrawerStyle();
-                    await Task.Delay(10);
+                case ComponentStatus.Opening:
+                    {
+                        _status = ComponentStatus.Opened;
+                        _hasInvokeClosed = false;
+                        if (string.IsNullOrWhiteSpace(Style))
+                        {
+                            _ = JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        }
+                        else if (!_renderInCurrentContainerRegex.IsMatch(Style))
+                        {
+                            await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        }
 
-                    if (string.IsNullOrWhiteSpace(Style))
-                    {
-                        _ = JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        CalcDrawerStyle();
+                        StateHasChanged();
+                        await Task.Delay(3000);
+                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
+                        StateHasChanged();
+                        break;
                     }
-                    else if (!_renderInCurrentContainerRegex.IsMatch(Style))
+                case ComponentStatus.Closing:
                     {
-                        await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        _status = ComponentStatus.Closed;
+                        if (!_hasInvokeClosed)
+                        {
+                            await HandleClose(true);
+                        }
+                        await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+                        break;
                     }
-                    StateHasChanged();
-                }
-                if (!_isRenderedDrawerStyle)
-                {
-                    _isRenderedDrawerStyle = true;
-                    await Task.Delay(300);
-                    _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
-                    StateHasChanged();
-                }
-            }
-            else
-            {
-                if (_isClosing)
-                {
-                    await HandleClose(true);
-                }
             }
             await base.OnAfterRenderAsync(isFirst);
         }
@@ -286,24 +294,25 @@ namespace AntDesign
 
         private void TriggerPlacementChangeCycleOnce()
         {
-            if (!NoAnimation)
+            this.PlacementChanging = true;
+            InvokeStateHasChanged();
+            _timer = new Timer()
             {
-                this.PlacementChanging = true;
+                AutoReset = false,
+                Interval = 300,
+            };
+            _timer.Elapsed += (_, args) =>
+            {
+                this.PlacementChanging = false;
                 InvokeStateHasChanged();
-                _timer = new Timer()
-                {
-                    AutoReset = false,
-                    Interval = 300,
-                };
-                _timer.Elapsed += (_, args) =>
-                {
-                    this.PlacementChanging = false;
-                    InvokeStateHasChanged();
-                };
-                _timer.Start();
-            }
+            };
+            _timer.Start();
         }
 
+        /// <summary>
+        /// trigger when mask is clicked
+        /// </summary>
+        /// <returns></returns>
         private async Task MaskClick()
         {
             if (this.MaskClosable && this.Mask && this.OnClose.HasDelegate)
@@ -312,6 +321,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// trigger when Closer is clicked
+        /// </summary>
+        /// <returns></returns>
         private async Task CloseClick()
         {
             if (OnClose.HasDelegate)
@@ -322,16 +335,18 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// clean-up after close
+        /// </summary>
+        /// <param name="isChangeByParamater"></param>
+        /// <returns></returns>
         private async Task HandleClose(bool isChangeByParamater = false)
         {
-            _isRenderAnimation = false;
-            _isRenderedDrawerStyle = false;
+            _hasInvokeClosed = true;
             if (!isChangeByParamater)
             {
                 await OnClose.InvokeAsync(this);
-                await Task.Delay(10);
             }
-            await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
         }
 
         private void CalcAnimation()
@@ -339,9 +354,6 @@ namespace AntDesign
             switch (this.Placement)
             {
                 case "left":
-                    _widthTransition = $"width 0s {Ease} {Duration}";
-                    break;
-
                 case "right":
                     _widthTransition = $"width 0s {Ease} {Duration}";
                     break;
@@ -359,7 +371,7 @@ namespace AntDesign
         private void CalcDrawerStyle()
         {
             string style = null;
-            if (_isOpen && _isRenderAnimation)
+            if (_status == ComponentStatus.Opened)
             {
                 CalcAnimation();
                 if (string.IsNullOrWhiteSpace(_heightTransition))

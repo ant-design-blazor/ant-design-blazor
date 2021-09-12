@@ -15,7 +15,7 @@
 }
 
 <div class="@ClassMapper.Class" @ref="Ref">
-    <DatePickerTemplate @attributes="GetAttritubes()"
+    <DatePickerTemplate @attributes="GetAttributes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
                         MaxCol="MAX_COL"
@@ -27,7 +27,7 @@
                         OnValueSelect="date => OnSelectMonth(date)"
                         GetNextColValue="date => DateHelper.AddMonthsSafely(date, 1)">
         <RenderPickerHeader>
-            <DatePickerHeader @attributes="GetAttritubes()"
+            <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
                               ShowNextChange="@false"
                               ShowPreChange="@false"

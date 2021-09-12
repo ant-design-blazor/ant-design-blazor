@@ -13,7 +13,7 @@
 }
 
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
-    <DatePickerTemplate @attributes="GetAttritubes()"
+    <DatePickerTemplate @attributes="GetAttributes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
                         MaxCol="MAX_COL"
@@ -25,7 +25,7 @@
                         OnValueSelect="date => OnSelectQuarter(date)"
                         GetNextColValue="date => DateHelper.AddMonthsSafely(date, 3)">
         <RenderPickerHeader>
-            <DatePickerHeader @attributes="GetAttritubes()"
+            <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
                               ShowPreChange="@false"
                               ShowNextChange="@false"

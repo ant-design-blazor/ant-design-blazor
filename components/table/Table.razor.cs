@@ -43,7 +43,7 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
-        
+
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -119,8 +119,22 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        private bool _remoteDataSource;
+        private bool _hasRemoteDataSourceAttribute;
+
         [Parameter]
-        public bool RemoteDataSource { get; set; }
+        public bool RemoteDataSource
+        {
+            get => _remoteDataSource;
+            set
+            {
+                _remoteDataSource = value;
+                _hasRemoteDataSourceAttribute = true;
+            }
+        }
+
+        [Parameter]
+        public bool Responsive { get; set; } = true;
 
         private bool? _paginationDisabled;
 
@@ -256,11 +270,13 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
-        private ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+
+        private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -270,6 +286,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
@@ -293,7 +310,7 @@ namespace AntDesign
 
             FlushCache();
 
-            this.Reload();
+            this.InternalReload();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -347,21 +364,21 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
-            var queryModel = this.Reload();
+            var queryModel = this.InternalReload();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
             }
         }
 
-        private QueryModel<TItem> Reload()
+        private QueryModel<TItem> InternalReload()
         {
             var queryModel = BuildQueryModel();
 
-            if (RemoteDataSource)
+            if (ServerSide)
             {
                 _showItems = _dataSource;
-                _total = Total > _dataSourceCount ? Total : _dataSourceCount;
+                _total = Total;
             }
             else
             {
@@ -378,27 +395,28 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
-                    var newTotal = query.Count();                    
+                    _total = query.Count();
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    if (newTotal != _total)
+                    if (_total != Total)
                     {
-                        _total = newTotal;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
-                    if (_total != 0)
+                    _total = 0;
+                    if (_total != Total)
                     {
-                        _total = 0;
                         if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
                     }
                 }
+
+                _shouldRender = true;
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -406,7 +424,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-            _waitingReload = false;
             StateHasChanged();
 
             return queryModel;
@@ -430,6 +447,7 @@ namespace AntDesign
 
             _wrapperClassMapper
                 .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
@@ -454,8 +472,6 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
-
-            ReloadAndInvokeChange();
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -466,6 +482,8 @@ namespace AntDesign
             {
                 this.FinishLoadPage();
             }
+
+            _shouldRender = false;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -504,7 +522,7 @@ namespace AntDesign
             else if (_waitingReload)
             {
                 _waitingReload = false;
-                Reload();
+                InternalReload();
             }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)

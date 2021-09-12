@@ -52,7 +52,15 @@ namespace AntDesign
         private int? _decimalPlaces;
 
         [Parameter]
-        public TValue DefaultValue { get; set; }
+        public TValue DefaultValue
+        {
+            get => _defaultValue;
+            set
+            {
+                _defaultValue = value;
+                _hasDefaultValue = true;
+            }
+        }
 
         [Parameter]
         public TValue Max { get; set; }
@@ -67,7 +75,7 @@ namespace AntDesign
         public EventCallback<TValue> OnChange { get; set; }
 
         private readonly bool _isNullable;
-
+        private bool _hasDefaultValue;
 
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
@@ -150,6 +158,7 @@ namespace AntDesign
         private readonly int _interval = 200;
         private CancellationTokenSource _increaseTokenSource;
         private CancellationTokenSource _decreaseTokenSource;
+        private TValue _defaultValue;
 
         public InputNumber()
         {
@@ -227,7 +236,11 @@ namespace AntDesign
 
 
             SetClass();
-            CurrentValue = Value ?? DefaultValue;
+
+            if (_hasDefaultValue && EqualityComparer<TValue>.Default.Equals(Value, default))
+            {
+                CurrentValue = _defaultValue;
+            }
         }
 
         /// <summary>
@@ -241,7 +254,7 @@ namespace AntDesign
         {
             validationErrorMessage = null;
 
-            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))           
+            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
             {
                 result = Value;
                 return true;
@@ -400,12 +413,11 @@ namespace AntDesign
         private async Task OnBlurAsync()
         {
             _focused = false;
-            if (_inputString == null)
+            if (_inputString != null)
             {
-                await ChangeValueAsync(Value);
-                return;
+                await ConvertNumberAsync(_inputString);
+                _inputString = null;
             }
-            _inputString = null;
         }
 
         private async Task ConvertNumberAsync(string inputString)

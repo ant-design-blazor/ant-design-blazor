@@ -7,7 +7,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Internal
 {
-    public partial class UploadButton : AntComponentBase
+    public partial class UploadButton : AntDomComponentBase
     {
         [CascadingParameter]
         public Upload Upload { get; set; }
@@ -41,6 +41,9 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string Action { get; set; }
+        
+        [Parameter]
+        public string Method { get; set; }
 
         [Parameter]
         public bool Disabled
@@ -78,11 +81,20 @@ namespace AntDesign.Internal
         protected override void OnInitialized()
         {
             _currentInstance = DotNetObjectReference.Create(this);
+            var prefixCls = "ant-upload";
+
+            ClassMapper
+                .Add(prefixCls)
+                .Get(() => $"{prefixCls}-select-{ListType}")
+                .If($"{prefixCls}-drag", () => Upload?.Drag == true)
+                .If($"{prefixCls}-drag-hover", () => Upload?._dragHover == true)
+                .Add($"{prefixCls}-select")
+                .If($"{prefixCls}-rtl", () => RTL);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && !Disabled)
+            if (firstRender && !Disabled && Upload?.Drag == false)
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
             }
@@ -139,7 +151,7 @@ namespace AntDesign.Internal
                 await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", Method);
                 index++;
             }
 
