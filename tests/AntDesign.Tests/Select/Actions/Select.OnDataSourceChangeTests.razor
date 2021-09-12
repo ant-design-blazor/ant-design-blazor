@@ -221,6 +221,7 @@
                 >
             </AntDesign.Select>
         );
+        handlerCalled = false;
         //Act
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
