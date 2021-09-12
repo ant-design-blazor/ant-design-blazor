@@ -54,6 +54,7 @@ var validateMessages = new FormValidateErrorMessages {
 此外，[ConfigProvider](Demo TODO) 也提供了全局化配置方案，允许统一配置错误提示模板：
 
 ```csharp
+//in App.Razor
 var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is Required!",
   // ...
@@ -64,7 +65,16 @@ var formConfig = new FromConfig {
 }
 
 <ConfigProvider Form="formConfig">
-  <Form />
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
 </ConfigProvider>;
 ```
 
