@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace AntDesign.JsInterop
 {
     public class Window
     {
-        public decimal innerHeight { get; set; }
+        [JsonPropertyName("innerWidth")]
+        public decimal InnerWidth { get; set; }
 
-        public decimal innerWidth { get; set; }
+        [JsonPropertyName("innerHeight")]
+        public decimal InnerHeight { get; set; }
     }
 }
