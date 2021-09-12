@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -52,13 +53,13 @@ namespace AntDesign
         /// Used to set gutter during pre-rendering
         /// </summary>
         [Parameter]
-        public BreakpointType DefaultBreakpoint { get; set; } = BreakpointType.Xxl;
+        public BreakpointType? DefaultBreakpoint { get; set; } = BreakpointType.Xxl;
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
         private string _gutterStyle;
-        private BreakpointType _currentBreakPoint;
+        private BreakpointType? _currentBreakPoint;
 
         private IList<Col> _cols = new List<Col>();
 
@@ -89,7 +90,7 @@ namespace AntDesign
 
             if (DefaultBreakpoint != null)
             {
-                SetGutterStyle(DefaultBreakpoint.Name);
+                SetGutterStyle(DefaultBreakpoint);
             }
 
             await base.OnInitializedAsync();
@@ -101,7 +102,7 @@ namespace AntDesign
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
                 DomEventListener.AddShared<Window>("window", "resize", OnResize);
-                OptimizeSize(dimensions.innerWidth);
+                OptimizeSize(dimensions.InnerWidth);
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -110,7 +111,7 @@ namespace AntDesign
         internal void AddCol(Col col)
         {
             this._cols.Add(col);
-            var gutter = this.GetGutter((_currentBreakPoint ?? DefaultBreakpoint).Name);
+            var gutter = this.GetGutter(_currentBreakPoint ?? DefaultBreakpoint);
             col.RowGutterChanged(gutter);
         }
 
@@ -119,9 +120,9 @@ namespace AntDesign
             this._cols.Remove(col);
         }
 
-        private async void OnResize(Window window)
+        private void OnResize(Window window)
         {
-            OptimizeSize(window.innerWidth);
+            OptimizeSize(window.InnerWidth);
         }
 
         private void OptimizeSize(decimal windowWidth)
@@ -129,7 +130,7 @@ namespace AntDesign
             BreakpointType actualBreakpoint = _breakpoints[_breakpoints.Length - 1];
             for (int i = 0; i < _breakpoints.Length; i++)
             {
-                if (windowWidth <= _breakpoints[i].Width && (windowWidth >= (i > 0 ? _breakpoints[i - 1].Width : 0)))
+                if (windowWidth <= (int)_breakpoints[i] && (windowWidth >= (i > 0 ? (int)_breakpoints[i - 1] : 0)))
                 {
                     actualBreakpoint = _breakpoints[i];
                 }
@@ -137,7 +138,7 @@ namespace AntDesign
 
             this._currentBreakPoint = actualBreakpoint;
 
-            SetGutterStyle(actualBreakpoint.Name);
+            SetGutterStyle(actualBreakpoint);
 
             if (OnBreakpoint.HasDelegate)
             {
@@ -147,7 +148,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private void SetGutterStyle(string breakPoint)
+        private void SetGutterStyle(BreakpointType? breakPoint)
         {
             var gutter = this.GetGutter(breakPoint);
             _cols.ForEach(x => x.RowGutterChanged(gutter));
@@ -162,19 +163,21 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private (int horizontalGutter, int verticalGutter) GetGutter(string breakPoint)
+        private (int horizontalGutter, int verticalGutter) GetGutter(BreakpointType? breakPoint)
         {
             GutterType gutter = 0;
             if (this.Gutter.Value != null)
                 gutter = this.Gutter;
 
+            var breakPointName = Enum.GetName(typeof(BreakpointType), breakPoint);
+
             return gutter.Match(
                 num => (num, 0),
-                dic => breakPoint != null && dic.ContainsKey(breakPoint) ? (dic[breakPoint], 0) : (0, 0),
+                dic => breakPoint != null && dic.ContainsKey(breakPointName) ? (dic[breakPointName], 0) : (0, 0),
                 tuple => tuple,
-                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPoint) ? tupleDicInt.Item1[breakPoint] : 0, tupleDicInt.Item2),
-                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPoint) ? tupleIntDic.Item2[breakPoint] : 0),
-                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPoint) ? tupleDicDic.Item1[breakPoint] : 0, tupleDicDic.Item2.ContainsKey(breakPoint) ? tupleDicDic.Item2[breakPoint] : 0)
+                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPointName) ? tupleDicInt.Item1[breakPointName] : 0, tupleDicInt.Item2),
+                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPointName) ? tupleIntDic.Item2[breakPointName] : 0),
+                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPointName) ? tupleDicDic.Item1[breakPointName] : 0, tupleDicDic.Item2.ContainsKey(breakPointName) ? tupleDicDic.Item2[breakPointName] : 0)
             );
         }
 
