@@ -142,8 +142,8 @@ namespace AntDesign
                 containerRect = new DomRect()
                 {
                     Top = 0,
-                    Bottom = window.innerHeight,
-                    Height = window.innerHeight,
+                    Bottom = window.InnerHeight,
+                    Height = window.InnerHeight,
                 };
             }
             else
@@ -158,7 +158,7 @@ namespace AntDesign
             {
                 if (domRect.Bottom > bottomDist)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottomDist}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + $"bottom: { window.InnerHeight - bottomDist}px; position: fixed;";
                     Affixed = true;
                 }
                 else

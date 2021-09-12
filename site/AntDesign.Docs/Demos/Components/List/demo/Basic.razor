@@ -1,5 +1,5 @@
-﻿<AntList DataSource="@data" TItem="BasicItem" OnItemClick="ItemClick">
-    <ListItem>
+﻿<AntList DataSource="@data" TItem="BasicItem">
+    <ListItem OnClick="()=>ItemClick(context.Title)">
         <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
             <TitleTemplate>
                 <a href="https://ng.ant.design">@context.Title</a>
@@ -26,9 +26,9 @@
         new BasicItem { Title = "Ant Design Title 4"},
     };
 
-    public void ItemClick(BasicItem item)
+    public void ItemClick(string title)
     {
-        Console.WriteLine($"item was clicked: {item.Title}");
+        Console.WriteLine($"item was clicked: {title}");
     }
 }
 
