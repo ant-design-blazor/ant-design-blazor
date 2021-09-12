@@ -14,6 +14,32 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+### 0.9.4
+
+2021-09-12
+
+- Table
+  - 🐞 Fixed an issue that initialization is refreshed twice when PageSize is not equal to 10. [#1933](https://github.com/ant-design-blazor/ant-design-blazor/pull/1933) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Addd CellData for CellRender. [#1907](https://github.com/ant-design-blazor/ant-design-blazor/pull/1907) [@ElderJames](https://github.com/ElderJames)
+  - ⚡️ Put fixed column style into js. [#1897](https://github.com/ant-design-blazor/ant-design-blazor/pull/1897) [@ElderJames](https://github.com/ElderJames)
+  - 📖 add dynamic table demo. [#1908](https://github.com/ant-design-blazor/ant-design-blazor/pull/1908) [@ElderJames](https://github.com/ElderJames)
+
+- InputNumber
+  - 🆕 Add OnFocus event [#1931](https://github.com/ant-design-blazor/ant-design-blazor/pull/1931) [@Hona](https://github.com/Hona)
+  - 🐞 Fixed inputmode to support mobile numeric keypad. [#1923](https://github.com/ant-design-blazor/ant-design-blazor/pull/1923) [@CAPCHIK](https://github.com/CAPCHIK)
+
+- Select
+  - 🐞 Fixed the data source which has members of different types. [#1932](https://github.com/ant-design-blazor/ant-design-blazor/pull/1932) [@anranruye](https://github.com/anranruye)
+  - 🐞 Fixed the problem that the selected item will be reset when setting DataSource [#1906](https://github.com/ant-design-blazor/ant-design-blazor/pull/1906) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 Fixed Menu that the Title of MenuItem with RouterLink is not hidden when it is collapsed. [#1934](https://github.com/ant-design-blazor/ant-design-blazor/pull/1934) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay with a series of issues related to dropdown & popup。 [#1848](https://github.com/ant-design-blazor/ant-design-blazor/pull/1848) [@anddrzejb](https://github.com/anddrzejb)
+- 💄 Fixed  loading icon styles. [#1902](https://github.com/ant-design-blazor/ant-design-blazor/pull/1902) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🐞 Added parameter `Rows`. [#1920](https://github.com/ant-design-blazor/ant-design-blazor/pull/1920) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Add stop propogation. [#1917](https://github.com/ant-design-blazor/ant-design-blazor/pull/1917) [@Hona](https://github.com/Hona)
+- 🐞 Fixed Form  modifies the bound model to throw an exception in Rule validation mode. [#1901](https://github.com/ant-design-blazor/ant-design-blazor/pull/1901) [@lxyruanjian](https://github.com/lxyruanjian)
+- 🐞 Fixed List resposive style doesn't work. [#1937](https://github.com/ant-design-blazor/ant-design-blazor/pull/1937) [@ElderJames](https://github.com/ElderJames)
+- ⚡️ Fixed EventListener avoid memory leak issue. [#1857](https://github.com/ant-design-blazor/ant-design-blazor/pull/1857) [@tonyyip1969](https://github.com/tonyyip1969)
 
 ### 0.9.3
 
@@ -26,7 +52,7 @@ timeline: true
   - 📖 Add an example of nested table. [#1884](https://github.com/ant-design-blazor/ant-design-blazor/pull/1884) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed Time column built-in filter will ignore milliseconds when filtering.[#1864](https://github.com/ant-design-blazor/ant-design-blazor/pull/1864) [@iamSmallY](https://github.com/iamSmallY)
   - 🐞 Fixed the issue that operations such as page turning, sorting and filtering are not refreshed by using client mode. [#1858](https://github.com/ant-design-blazor/ant-design-blazor/pull/1858) [@ElderJames](https://github.com/ElderJames)
-  [#1875](https://github.com/ant-design/ant-design/pull/1875) [@nikolaykrondev](https://github.com/nikolaykrondev)
+  [#1875](https://github.com/ant-design-blazor/ant-design-blazor/pull/1875) [@nikolaykrondev](https://github.com/nikolaykrondev)
   - 🐞 Fixed the issue that OnChange is called multiple times after initialization. [#1855](https://github.com/ant-design-blazor/ant-design-blazor/pull/1855) [@ElderJames](https://github.com/ElderJames)
 
 - 🆕 Breadcrumb add Href and Overlay dropdown. [#1859](https://github.com/ant-design-blazor/ant-design-blazor/pull/1859) [@CAPCHIK](https://github.com/CAPCHIK)
