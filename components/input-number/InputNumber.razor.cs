@@ -74,6 +74,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
         private readonly bool _isNullable;
         private bool _hasDefaultValue;
 
@@ -407,10 +410,15 @@ namespace AntDesign
             _inputString = args.Value?.ToString();
         }
 
-        private void OnFocus()
+        private async Task OnFocusAsync(FocusEventArgs args)
         {
             _focused = true;
             CurrentValue = Value;
+
+            if (OnFocus.HasDelegate)
+            {
+                await OnFocus.InvokeAsync(args);
+            }
         }
 
         private async Task OnBlurAsync()
