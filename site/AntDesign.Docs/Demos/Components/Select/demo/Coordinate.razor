@@ -4,7 +4,7 @@
         LabelName="@nameof(Province.Name)"
         Style="width: 200px"
         Placeholder="Select a province"
-		DefaultActiveFirstItem
+        AllowClear
         OnSelectedItemChanged="OnSelectedItemChangedHandler">
 </Select>
 
@@ -13,8 +13,8 @@
         ValueName="@nameof(City.Id)"
         LabelName="@nameof(City.Name)"
         Style="width: 200px"
-		DefaultActiveFirstItem
-        Placeholder="Select a city">
+        Placeholder="Select a city"
+        AllowClear>
 </Select>
 <br /><br />
 <p>
@@ -45,27 +45,52 @@
 
     protected override void OnInitialized()
     {
-        _provinces = new List<Province>() {
-            new Province() { Id = 1, Name = "Zhejiang", Cities = new List<City>()
+        _provinces = new List<Province>()
+        {
+            new Province()
+            {
+                Id = 1,
+                Name = "Zhejiang",
+                Cities = new List<City>()
                 {
                     new City { Id = 100, Name = "Hangzhou" },
                     new City { Id = 101, Name = "Ningbo" },
                     new City { Id = 102, Name = "Wenzhou" }
                 }
             },
-            new Province() { Id = 2, Name = "Jiangsu", Cities = new List<City>()
+            new Province()
+            {
+                Id = 2,
+                Name = "Jiangsu",
+                Cities = new List<City>()
                 {
                     new City { Id = 200, Name = "Nanjing" },
                     new City { Id = 201, Name = "Suzhou" },
                     new City { Id = 202, Name = "Zhenjiang" }
                 }
+            },
+            new Province()
+            {
+                Id = 3,
+                Name = "Beijing"
+            },
+            new Province()
+            {
+                Id = 4,
+                Name = "Shanghai",
+                Cities = null
             }
         };
+        _selectedProvince = 1;
+        _selectedCity = 100;
     }
 
     private void OnSelectedItemChangedHandler(Province value)
     {
-        if (value != null)
-            _cities = value.Cities;
+        _cities = value?.Cities;
+        if (_cities?.Any(x => x.Id == _selectedCity) != true)
+        {
+            _selectedCity = _cities?.FirstOrDefault()?.Id;
+        }
     }
 }

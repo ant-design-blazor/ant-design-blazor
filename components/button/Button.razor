@@ -2,20 +2,31 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <button class="@ClassMapper.Class" style="@(this.Danger ? this._btnWave + Style:Style)" id="@Id" type="@HtmlType" @ref="@Ref"
+    <button class="@ClassMapper.Class" style="@(this.Danger ? this._btnWave + Style : Style)" id="@Id" type="@HtmlType" @ref="@Ref"
             @onclick="HandleOnClick" disabled="@Disabled"
             @onclick:stopPropagation="@OnClickStopPropagation"
             @onmouseup="OnMouseUp"
             ant-click-animating-without-extra-node="@(this._animating ? "true":"false")">
         @if (Loading)
         {
-            <Icon Type="loading"></Icon>
+            <span class="ant-btn-loading-icon">
+                <Icon Type="loading" />
+            </span>
         }
-        @if (!string.IsNullOrEmpty(Icon))
+        else if (!string.IsNullOrEmpty(Icon))
         {
-            <Icon Type="@Icon" Style="@IconStyle"></Icon>
+            <Icon Type="@Icon" />
         }
-
-        @ChildContent
+        @if (ChildContent != default)
+        {
+            @if (NoSpanWrap)
+            {
+                @ChildContent
+            }
+            else
+            {
+                <span>@ChildContent</span>
+            }
+        }
     </button>
 </CascadingValue>

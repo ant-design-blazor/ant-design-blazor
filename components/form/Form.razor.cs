@@ -284,6 +284,11 @@ namespace AntDesign
             _formItems.Add(formItem);
         }
 
+        void IForm.RemoveFormItem(IFormItem formItem)
+        {
+            _formItems.Remove(formItem);
+        }
+
         void IForm.AddControl(IControlValueAccessor valueAccessor)
         {
             this._controls.Add(valueAccessor);

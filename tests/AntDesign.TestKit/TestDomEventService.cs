@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using AntDesign.JsInterop;
 using Microsoft.JSInterop;
 
 namespace AntDesign.Tests
@@ -19,9 +19,9 @@ namespace AntDesign.Tests
 
         }
 
-        public override void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true, bool preventDefault = false)
+        public override IDomEventListener CreateDomEventListerner()
         {
-            return;
+            return new TestDomEventListerner();
         }
     }
 }

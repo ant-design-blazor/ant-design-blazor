@@ -1,0 +1,25 @@
+﻿@using System.ComponentModel
+@using AntDesign.TableModels
+
+<Table TItem="Dictionary<string, object>" DataSource="@data" Loading="data==null" ScrollX="1500" PageSize="5">
+	@if (data?.Any() == true)
+	{
+		@foreach (var key in data.FirstOrDefault()?.Keys.Take(10))
+		{
+			<Column TData="object" DataIndex=@($"['{key}']") Title="@key"></Column>
+		}
+	}
+</Table>
+
+@inject HttpClient httpClient;
+@code {
+
+	List<Dictionary<string, object>> data;
+
+	string githubUrl = "https://api.github.com/repos/ant-design-blazor/ant-design-blazor/contributors?per_page=200";
+
+	protected override async Task OnInitializedAsync()
+	{
+		data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
+	}
+}

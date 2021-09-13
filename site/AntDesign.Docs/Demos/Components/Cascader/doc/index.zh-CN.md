@@ -22,6 +22,7 @@ Cascader
 | 参数                 |  说明	                                          |  类型               |  默认值  |  
 | -------------------- | ---------------------------------------------------- | --------------------- | --------- |  
 | AllowClear           |  是否支持清除                                      |  bool               |  true	      |
+| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  当此项为 true 时，点选每级菜单选项值都会发生变化  |  bool               |  false	      |
 | Style                |  自定义类名                                        |  string             |  -	          |
 | DefaultValue         |  默认的选中项                                      |  string             |  -	          |

@@ -389,5 +389,11 @@ namespace AntDesign
 
             _drawerStyle = style;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _timer?.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }
