@@ -47,7 +47,7 @@ namespace AntDesign
         private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         private int _realColumn;
 
@@ -84,7 +84,6 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-
             await base.OnInitializedAsync();
         }
 
@@ -92,7 +91,7 @@ namespace AntDesign
         {
             if (firstRender && Column.IsT1)
             {
-                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
+                DomEventListener.AddShared<object>("window", "resize", OnResize);
             }
 
             base.OnAfterRender(firstRender);
@@ -100,9 +99,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            DomEventListener.Dispose();
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
 
         private async void OnResize(object o)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
@@ -22,82 +23,68 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
+
+        /// <summary>
         /// Toggle the border style.
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
 
 
+        bool _dataSourceHasChanged = false;
+        IEnumerable<TItem> _dataSourceCopy;
+        IEnumerable<TItem> _dataSourceShallowCopy;
+        //private bool? _isTItemPrimitive;
+        //private bool IsTItemPrimitive
+        //{
+        //    get
+        //    {
+        //        if (_isTItemPrimitive is null)
+        //        {
+        //            _isTItemPrimitive = IsSimpleType(typeof(TItem));
+        //        }
+        //        return _isTItemPrimitive!.Value;
+        //    }
+        //}
+
         /// <summary>
-        /// The datasource for this component.
+        /// MethodInfo will contain attached MemberwiseClone protected
+        /// method. Due to its protection level, it has to be accessed
+        /// using reflection. It will be used during generation of 
+        /// the DataSource shallow copy (which is a new list of DataSource
+        /// items with shallow copy of each item).
         /// </summary>
-        [Parameter]
-        public IEnumerable<TItem> DataSource
+        private MethodInfo _dataSourceItemShallowCopyMehtod;
+        private MethodInfo GetDataSourceItemCloneMethod()
         {
-            get => _datasource;
-            set
+            if (_dataSourceItemShallowCopyMehtod is null)
             {
-                if (value == null && _datasource == null)
+                _dataSourceItemShallowCopyMehtod = this.GetType().GetGenericArguments()[1]
+                    .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (DataSourceEqualityComparer is null)
                 {
-                    return;
-                }
-
-                if (value == null && _datasource != null)
-                {
-                    if (!_isInitialized)
-                    {
-                        _selectedValue = default;
-                    }
-                    else
-                    {
-                        SelectOptionItems.Clear();
-                        SelectedOptionItems.Clear();
-                        Value = default;
-
-                        _datasource = null;
-
-                        OnDataSourceChanged?.Invoke();
-                    }
-                    return;
-                }
-
-                if (value != null && !value.Any() && SelectOptionItems.Any())
-                {
-                    SelectOptionItems.Clear();
-                    SelectedOptionItems.Clear();
-
-                    Value = default;
-                    var sameObject = object.ReferenceEquals(_datasource, value);
-
-                    _datasource = value;
-
-                    if (!sameObject)
-                        OnDataSourceChanged?.Invoke();
-
-                    return;
-                }
-
-                if (value != null)
-                {
-                    bool hasChanged;
-
-                    if (_datasource == null)
-                    {
-                        hasChanged = true;
-                    }
-                    else
-                    {
-                        hasChanged = !value.SequenceEqual(_datasource);
-                    }
-
-                    if (hasChanged)
-                    {
-                        OnDataSourceChanged?.Invoke();
-
-                        _datasource = value;
-                    }
+                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
                 }
             }
+            return _dataSourceItemShallowCopyMehtod;
         }
+
+        /// <summary>
+        /// The datasource for this component.
+        /// </summary>        
+        [Parameter]
+        public IEnumerable<TItem> DataSource { get; set; }
+
+        /// <summary>
+        /// EqualityComparer that will be used during DataSource change 
+        /// detection. If no comparer set, default .Net is going to be
+        /// used.
+        /// </summary>
+        [Parameter]
+        public IEqualityComparer<TItem> DataSourceEqualityComparer { get; set; }
 
         /// <summary>
         /// Activates the first item that is not deactivated.
@@ -315,6 +302,7 @@ namespace AntDesign
                 if (_valueHasChanged)
                 {
                     _selectedValue = value;
+                    _valueHasChanged = _isInitialized;
                 }
             }
         }
@@ -339,13 +327,9 @@ namespace AntDesign
             }
         }
 
-
-
-
-
         #endregion Parameters
 
-        [Inject] private DomEventService DomEventService { get; set; }
+        [Inject] private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
 
@@ -359,12 +343,14 @@ namespace AntDesign
         }
 
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
+        private ElementReference _scrollableSelectDiv;
 
         private string _dropdownStyle = string.Empty;
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
         private IEnumerable<TItem> _datasource;
+        private bool _afterFirstRender;
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
@@ -376,7 +362,7 @@ namespace AntDesign
 
         private string _labelName;
 
-        private Func<TItem, string> _getLabel;
+        internal Func<TItem, string> _getLabel;
 
 
         private string _groupName = string.Empty;
@@ -389,7 +375,7 @@ namespace AntDesign
 
         private string _valueName;
 
-        private Func<TItem, TItemValue> _getValue;
+        internal Func<TItem, TItemValue> _getValue;
 
         private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
@@ -441,10 +427,15 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
+            EvaluateDataSourceChange();
             if (SelectOptions == null)
             {
-                CreateDeleteSelectOptions();
-                _optionsHasInitialized = true;
+                if (!_optionsHasInitialized || _dataSourceHasChanged)
+                {
+                    CreateDeleteSelectOptions();
+                    _optionsHasInitialized = true;
+                    _dataSourceHasChanged = false;
+                }
             }
 
             if (_valueHasChanged && _optionsHasInitialized)
@@ -456,8 +447,114 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
             }
-
             base.OnParametersSet();
+        }
+
+        private void EvaluateDataSourceChange()
+        {
+            if (DataSource == null && _datasource == null)
+            {
+                return;
+            }
+
+            if (DataSource == null && _datasource != null)
+            {
+                SelectOptionItems.Clear();
+                SelectedOptionItems.Clear();
+                Value = default;
+
+                _datasource = null;
+                _dataSourceCopy = null;
+                _dataSourceShallowCopy = null;
+
+                OnDataSourceChanged?.Invoke();
+                return;
+            }
+
+            if (DataSource != null && !DataSource.Any() && SelectOptionItems.Any())
+            {
+                SelectOptionItems.Clear();
+                SelectedOptionItems.Clear();
+
+                Value = default;
+
+                _datasource = DataSource;
+                _dataSourceShallowCopy = new List<TItem>();
+                _dataSourceCopy = new List<TItem>();
+
+                OnDataSourceChanged?.Invoke();
+
+                return;
+            }
+
+            if (DataSource != null)
+            {
+                if (_datasource == null)
+                {
+                    _dataSourceHasChanged = true;
+                }
+                else if (_isPrimitive)
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceCopy);
+                }
+                else if (_getValue is null)
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceCopy) ||
+                        !DataSource.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
+                }
+                else
+                {
+                    _dataSourceHasChanged = !DataSource.SequenceEqual(_dataSourceShallowCopy, DataSourceEqualityComparer);
+                }
+
+                if (_dataSourceHasChanged)
+                {
+                    OnDataSourceChanged?.Invoke();
+                    _datasource = DataSource;
+                    if (_isPrimitive)
+                    {
+                        _dataSourceCopy = _datasource.ToList();
+                    }
+                    else
+                    {
+                        if (_getValue is null)
+                        {
+                            _dataSourceCopy = _datasource.ToList();
+                        }
+                        var cloneMethod = GetDataSourceItemCloneMethod();
+                        _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Used only when ChildElement SelectOptions is used.
+        /// Will run this process if after initalization an item
+        /// is added that is also marked as selected.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task ProcessSelectedSelectOptions()
+        {
+            if (_isInitialized && _afterFirstRender)
+            {
+                if (Mode == "default")
+                {
+                    if (LastValueBeforeReset is not null)
+                    {
+                        OnValueChange(LastValueBeforeReset);
+                        LastValueBeforeReset = default;
+                    }
+                    else
+                    {
+                        OnValueChange(Value);
+                    }
+                }
+                else
+                {
+                    await OnValuesChangeAsync(Values);
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -471,7 +568,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
-                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -511,11 +608,12 @@ namespace AntDesign
             }
 
             await base.OnAfterRenderAsync(firstRender);
+            _afterFirstRender = true;
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -567,7 +665,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = _getValue == null ? THelper.ChangeType<TItemValue>(item) : _getValue(item);
+                TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -725,7 +823,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task ElementScrollIntoViewAsync(ElementReference element)
         {
-            await JsInvokeAsync(JSInteropConstants.ScrollTo, element);
+            await JsInvokeAsync(JSInteropConstants.ScrollTo, element, _scrollableSelectDiv);
         }
 
 
@@ -960,14 +1058,20 @@ namespace AntDesign
             return newItem;
         }
 
-
-
         protected virtual string GetLabel(TItem item)
         {
             return item.ToString();
         }
 
         #region Events
+        /// <summary>
+        /// When newly set Value is not found in SelectOptionItems, it is reset to
+        /// default. This property holds the value before reset. It may be needed 
+        /// to be reaplied (for example when new Value is set at the same time
+        /// as new SelectOption is added, but Value in the component is set 
+        /// before new SelectOptionItem has been created).        
+        /// </summary>
+        internal TItemValue LastValueBeforeReset { get; set; }
 
         /// <summary>
         /// The Method is called every time if the value of the @bind-Value was changed by the two-way binding.
@@ -987,6 +1091,11 @@ namespace AntDesign
 
             if (result == null)
             {
+                if (SelectOptions is not null)
+                {
+                    LastValueBeforeReset = value;
+                }
+
                 if (!AllowClear)
                     _ = TrySetDefaultValueAsync();
                 else
@@ -1399,9 +1508,6 @@ namespace AntDesign
                         currentSelected.IsActive = true;
                         ActiveOption = currentSelected;
 
-                        // ToDo: Sometime the element does not scroll, you have to call the function twice
-                        await ElementScrollIntoViewAsync(currentSelected.Ref);
-                        await Task.Delay(1);
                         await ElementScrollIntoViewAsync(currentSelected.Ref);
                     }
 
@@ -1504,9 +1610,6 @@ namespace AntDesign
                         currentSelected.IsActive = true;
                         ActiveOption = currentSelected;
 
-                        // ToDo: Sometime the element does not scroll, you have to call the function twice
-                        await ElementScrollIntoViewAsync(currentSelected.Ref);
-                        await Task.Delay(1);
                         await ElementScrollIntoViewAsync(currentSelected.Ref);
                     }
 
@@ -1703,9 +1806,6 @@ namespace AntDesign
 
                 currentSelected.IsActive = true;
                 ActiveOption = currentSelected;
-                // ToDo: Sometime the element does not scroll, you have to call the function twice
-                await ElementScrollIntoViewAsync(currentSelected.Ref);
-                await Task.Delay(1);
                 await ElementScrollIntoViewAsync(currentSelected.Ref);
             }
             else if (ActiveOption == null)//position on first element in the list

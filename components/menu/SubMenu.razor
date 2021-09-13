@@ -31,7 +31,7 @@ else
 {
     if (Placement == null)
     {
-        Placement = (RootMenu.Mode == MenuMode.Horizontal && Parent == null) ? PlacementType.BottomLeft : PlacementType.RightTop;
+        Placement = (RootMenu.Mode == MenuMode.Horizontal && Parent == null) ? AntDesign.Placement.BottomLeft : AntDesign.Placement.RightTop;
     }
 
     <CascadingValue Value="this" Name="SubMenu" IsFixed="@true">
@@ -41,11 +41,11 @@ else
                         ComplexAutoCloseAndVisible="true"
 						BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"
                         Disabled="Disabled"
-                        Placement="Placement"
+                        Placement="Placement.Value"
                         OnVisibleChange="OnOverlayVisibleChange"
                         OnOverlayHiding="OnOverlayHiding"
-                        Trigger="new[] { RootMenu?.TriggerSubMenuAction }"
-                        PlacementCls="@($"{prefixCls}-placement-{Placement.Name} {prefixCls}-popup")"
+                        Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? Trigger.Hover }"
+                        PlacementCls="@($"{prefixCls}-placement-{_placement.Name} {prefixCls}-popup")"
                         OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                         OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                         OverlayHiddenCls="@($"{RootMenu.PrefixCls}-hidden")">

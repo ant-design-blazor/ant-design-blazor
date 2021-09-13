@@ -22,7 +22,7 @@ namespace AntDesign
 
         [CascadingParameter] public Layout Parent { get; set; }
 
-        [Parameter] public BreakpointType Breakpoint { get; set; }
+        [Parameter] public BreakpointType? Breakpoint { get; set; }
 
         [Parameter] public SiderTheme Theme { get; set; } = SiderTheme.Dark;
 
@@ -50,7 +50,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
 
-        [Inject] public DomEventService DomEventService { get; set; }
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
         private int ComputedWidth => _isCollapsed ? CollapsedWidth : Width;
 
@@ -112,14 +113,14 @@ namespace AntDesign
             if (firstRender && Breakpoint != null)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
-                DomEventService.AddEventListener<Window>("window", "resize", OnResize, false);
-                OptimizeSize(dimensions.innerWidth);
+                DomEventListener.AddShared<Window>("window", "resize", OnResize);
+                OptimizeSize(dimensions.InnerWidth);
             }
         }
 
         private void OnResize(Window window)
         {
-            OptimizeSize(window.innerWidth);
+            OptimizeSize(window.InnerWidth);
         }
 
         public void ToggleCollapsed()
@@ -138,7 +139,7 @@ namespace AntDesign
             var originalCollapsed = _isCollapsed;
             var originlBrokenPoint = _brokenPoint;
 
-            if (windowWidth < Breakpoint?.Width)
+            if (windowWidth < (int)Breakpoint)
             {
                 _brokenPoint = true;
                 _isCollapsed = true;
@@ -171,9 +172,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            DomEventListener.Dispose();
             base.Dispose(disposing);
-
-            DomEventService.RemoveEventListerner<Window>("window", "resize", OnResize);
         }
     }
 }

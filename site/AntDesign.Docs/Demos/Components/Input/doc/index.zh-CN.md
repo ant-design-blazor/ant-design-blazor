@@ -21,6 +21,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | AddOnBefore | 带标签的 input，设置前置标签                               | RenderFragment        | -         |
 | AddOnAfter            | 带标签的 input，设置后置标签           | RenderFragment         |
 | AllowClear |可以点击清除图标删除内容                               | boolean        | false         |
+| AllowComplete | Controls the autocomplete attribute of the input HTML element.     | boolean        | true         |
 | AutoFocus            | Focus on input element.           | boolean         | false
 | Bordered | Whether has border style         | boolean         | true
 | CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
@@ -41,6 +42,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Prefix | 带有前缀图标的 input                               | RenderFragment        | -        |
 | ReadOnly | When present, it specifies that an input field is read-only. | boolean | false    | 0.9
 | Size |抽屉元素之间的子组件  `default`, `large`, `small`        | string        | -         |
+| StopPropagation Controls onclick & blur event propagation.    | boolean    | false      | 0.10.0
 | Style | 设置 `<input>` HTML 元素的 CSS 样式 | string | - |  |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
 | Type            |声明 input 类型，同原生 input 标签的 type 属性，见：MDN(请直接使用 Input.TextArea 代替 type="textarea")。         | string  | -         |
@@ -56,10 +58,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| AutoSize |  | boolean        | false         |
+| AutoSize | Will adjust (grow or shrink) the `TextArea` according to content. Can work in connection with `MaxRows` & `MinRows`. Sets `resize` attribute of the `textarea` HTML element to: `none`. | boolean        | false         |
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
-| MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = MinRows (will not shrink further).  | int        | 1         |
-| MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
+| MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = `MinRows` (will not shrink further). Using this property will autoset `AutoSize = true`.  | int        | 1         |
+| MaxRows | `TextArea` will allow growing, but it will stop when visible rows = `MaxRows` (will not grow further). Using this property will autoset `AutoSize = true`.  | int        | uint.MaxValue         |
+| Rows | Sets the height of the TextArea expressed in number of rows. | uint        | 3         |
 | ShowCount | Whether show text count. Requires `MaxLength` attribute to be present  | boolean | false         | 0.9
 | OnResize | Callback when the size changes                                | Action<OnResizeEventArgs>        | -         |
 

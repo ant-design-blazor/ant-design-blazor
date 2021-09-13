@@ -9,18 +9,20 @@
 }
 else
 {
-    <AntDesign.Col Flex="1" Style="@ColStyle">
-        <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
-            @itemChildren(this)
-        </div>
-    </AntDesign.Col>
+	<div style="width: @(AntList.ColumnWidth)%; max-width: @(AntList.ColumnWidth)%;">
+		<AntDesign.Col Flex="1" >
+		    <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+		        @itemChildren(this)
+		    </div>
+		</AntDesign.Col>
+	</div>
 }
 @code{
 
 
     RenderFragment<ListItem> itemChildren = content =>
     @<Template>
-        @if (content.ItemLayout == ListItemLayout.Vertical && content.Extra != null)
+        @if (content.IsVerticalAndExtra)
         {
             <div class="@content.PrefixName-main">
                 @content.ChildContent

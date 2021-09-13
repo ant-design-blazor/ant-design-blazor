@@ -74,7 +74,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] public DomEventService DomEventService { get; set; }
+        [Inject] public IDomEventListener DomEventListener { get; set; }
 
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
@@ -130,7 +130,7 @@ namespace AntDesign
             if (firstRender)
             {
                 Resize();
-                DomEventService.AddEventListener("window", "resize", Resize, false);
+                DomEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
         }
 
@@ -208,10 +208,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", Resize);
-
+            DomEventListener.Dispose();
             _slicks.Clear();
-
             base.Dispose(disposing);
         }
     }
