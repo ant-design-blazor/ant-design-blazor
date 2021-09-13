@@ -1,0 +1,128 @@
+﻿@inherits AntDesignTestBase
+@code {
+	[Fact]
+	public void Renders_basic_timeline()
+	{
+		var cut = Context.Render(
+			@<Timeline>
+			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
+			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			</Timeline>);		
+		cut.MarkupMatches(
+			@<ul class="ant-timeline" id:ignore >
+			  <li class="ant-timeline-item" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Create a services site 2015-09-01
+			    </div>
+			  </li>
+			  <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Solve initial network problems 2015-09-01
+			    </div>
+			  </li>
+			</ul>);
+	}
+
+	[Fact]
+	public void Renders_timeline_with_right_mode()
+	{
+		var cut = Context.Render(
+			@<Timeline Mode="@TimelineMode.Right">
+			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
+			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			</Timeline>);		
+		cut.MarkupMatches(
+			@<ul class="ant-timeline ant-timeline-right" id:ignore >
+			  <li class="ant-timeline-item ant-timeline-item-right" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Create a services site 2015-09-01
+			    </div>
+			  </li>
+			  <li class="ant-timeline-item ant-timeline-item-right ant-timeline-item-last" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Solve initial network problems 2015-09-01
+			    </div>
+			  </li>
+			</ul>);
+	}
+
+	
+	[Theory]
+	[InlineData(TimelineMode.Left,"","left","left")]
+	[InlineData(TimelineMode.Right,"ant-timeline-right","right","right")]
+	[InlineData(TimelineMode.Alternate,"ant-timeline-alternate","left","right")]
+	public void Renders_timeline_with_alternate_mode(TimelineMode mode, string timelineModeClass, string firstItemMode,string secondItemMode)
+	{
+		var cut = Context.Render(
+			@<Timeline Mode="@mode">
+			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
+			  <TimelineItem>Solve initial network problems 2015-09-01</TimelineItem>
+			</Timeline>);		
+		cut.MarkupMatches(
+			@<ul class="ant-timeline @timelineModeClass" id:ignore >
+			  <li class="ant-timeline-item ant-timeline-item-@firstItemMode" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Create a services site 2015-09-01
+			    </div>
+			  </li>
+			  <li class="ant-timeline-item ant-timeline-item-@secondItemMode ant-timeline-item-last" id:ignore >
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Solve initial network problems 2015-09-01
+			    </div>
+			  </li>
+			</ul>);
+	}
+
+	[Theory]
+	[InlineData(TimelineMode.Left,"left","left")]
+	[InlineData(TimelineMode.Right,"right","right")]
+	[InlineData(TimelineMode.Alternate,"left","right")]
+	public void Renders_timeline_with_label(TimelineMode mode,string firstItemMode,string secondItemMode)
+	{
+		var cut = Context.Render(
+			@<Timeline Mode="@mode">
+			  <TimelineItem Label="2015-09-01">Create a services site</TimelineItem>
+			  <TimelineItem Label="2015-09-02" Color="red" >Solve initial network problems</TimelineItem>
+			</Timeline>);
+
+		cut.MarkupMatches(
+			@<ul class="ant-timeline ant-timeline-label" id:ignore >
+			  <li class="ant-timeline-item ant-timeline-item-@firstItemMode" id:ignore >
+				<div class="ant-timeline-item-label">2015-09-01</div>
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Create a services site 
+			    </div>
+			  </li>
+			  <li class="ant-timeline-item ant-timeline-item-@secondItemMode ant-timeline-item-last" id:ignore >
+				<div class="ant-timeline-item-label">2015-09-02</div>
+			    <div class="ant-timeline-item-tail"></div>
+			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
+			    </div>
+			    <div class="ant-timeline-item-content">
+			      Solve initial network problems 
+			    </div>
+			  </li>
+			</ul> );
+	}
+}
