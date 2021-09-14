@@ -1,0 +1,59 @@
+﻿<div class="demo">
+    <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
+        <Popover Placement="@Placement.TopLeft" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>TL</Button>
+        </Popover>
+        <Popover Placement="@Placement.Top" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>Top</Button>
+        </Popover>
+        <Popover Placement="@Placement.TopRight" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>TR</Button>
+        </Popover>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); float: left;">
+        <Popover Placement="@Placement.LeftTop" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>LT</Button>
+        </Popover>
+        <Popover Placement="@Placement.Left" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>Left</Button>
+        </Popover>
+        <Popover Placement="@Placement.LeftBottom" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>LB</Button>
+        </Popover>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
+        <Popover Placement="@Placement.RightTop" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>RT</Button>
+        </Popover>
+        <Popover Placement="@Placement.Right" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>Right</Button>
+        </Popover>
+        <Popover Placement="@Placement.RightBottom" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>RB</Button>
+        </Popover>
+    </div>
+    <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
+        <Popover Placement="@Placement.BottomLeft" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>BL</Button>
+        </Popover>
+        <Popover Placement="@Placement.Bottom" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>Bottom</Button>
+        </Popover>
+        <Popover Placement="@Placement.BottomRight" TitleTemplate="@_text" ContentTemplate="@_content" Trigger="@(new[] {AntDesign.Trigger.Click})">
+            <Button>BR</Button>
+        </Popover>
+    </div>
+</div>
+
+@code
+{
+    private RenderFragment _text =@<span>Title</span>;
+        
+    const int ButtonWidth = 70;
+
+    private RenderFragment _content =
+        @<div>
+            <p>Content</p>
+            <p>Content</p>
+        </div>;
+}

@@ -21,6 +21,8 @@ namespace AntDesign.Internal
 
         internal void AddFormItem(IFormItem formItem);
 
+        internal void RemoveFormItem(IFormItem formItem);
+
         internal void AddControl(IControlValueAccessor valueAccessor);
 
         internal void RemoveControl(IControlValueAccessor valueAccessor);
