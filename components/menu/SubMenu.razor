@@ -27,13 +27,12 @@
         </ul>
     </li>
 }
-else
+else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizontal || Level == 0)
 {
     if (Placement == null)
     {
         Placement = (RootMenu.Mode == MenuMode.Horizontal && Parent == null) ? AntDesign.Placement.BottomLeft : AntDesign.Placement.RightTop;
     }
-
     <CascadingValue Value="this" Name="SubMenu" IsFixed="@true">
         <SubMenuTrigger @ref="_overlayTrigger"
                         TriggerClass="@ClassMapper.Class"
