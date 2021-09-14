@@ -338,7 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-package-lock.json
+
 /components/wwwroot/less
 /components/wwwroot/css
 /components/wwwroot/js/ant-design-blazor.js
