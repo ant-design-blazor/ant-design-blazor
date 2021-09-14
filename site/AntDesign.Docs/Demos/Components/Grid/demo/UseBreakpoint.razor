@@ -1,10 +1,10 @@
 ﻿<Row OnBreakpoint="HandleBreakpoint">
-    Current break point: @current?.Name
+    Current break point: 
     @foreach (var type in types)
     {
-        if (type.Width < current?.Width)
+        if ((int)type <= (int)current)
         {
-            <Tag PresetColor="@PresetColor.Blue">@type.Name</Tag>
+            <Tag PresetColor="@PresetColor.Blue">@type</Tag>
         }
     }
 </Row>

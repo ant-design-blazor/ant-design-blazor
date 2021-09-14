@@ -31,7 +31,8 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// enum for details.
         /// </summary>
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
@@ -90,12 +91,14 @@ namespace AntDesign.Internal
         /// <summary>
         /// Callback when mouse enters trigger boundaries.
         /// </summary>
-        [Parameter] public Action OnMouseEnter { get; set; }
+        [Parameter]
+        public EventCallback OnMouseEnter { get; set; }
 
         /// <summary>
         /// Callback when mouse leaves trigger boundaries.
         /// </summary>
-        [Parameter] public Action OnMouseLeave { get; set; }
+        [Parameter]
+        public EventCallback OnMouseLeave { get; set; }
 
         /// <summary>
         /// Callback when overlay is hiding.
@@ -158,18 +161,20 @@ namespace AntDesign.Internal
         private PlacementType _paramPlacement = PlacementType.BottomLeft;
 
         [Parameter]
-        public PlacementType Placement
+        public Placement Placement
         {
             get
             {
-                return RTL ? _placement.GetRTLPlacement() : _placement;
+                return (RTL ? _placement.GetRTLPlacement() : _placement).Placement;
             }
             set
             {
-                _placement = value;
-                _paramPlacement = value;
+                _placement = PlacementType.Create(value);
+                _paramPlacement = PlacementType.Create(value);
             }
         }
+
+        internal PlacementType GetPlacementType() => _placement;
 
         /// <summary>
         /// Override default placement class which is based on `Placement` parameter. 
@@ -189,7 +194,14 @@ namespace AntDesign.Internal
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
         [Parameter]
-        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
+        public Trigger[] Trigger //TODO: this should probably be a flag not an array
+        {
+            get { return _trigger.Select(t => t.Trigger).ToArray(); }
+            set
+            {
+                _trigger = value.Select(t => TriggerType.Create(t)).ToArray();
+            }
+        }
 
         [Parameter]
         public string TriggerCls { get; set; }
@@ -204,6 +216,8 @@ namespace AntDesign.Internal
             set => Ref = value;
         }
 
+        internal TriggerType[] GetTriggerType() => _trigger;
+
         /// <summary>
         /// ChildElement with ElementReference set to avoid wrapping div. 
         /// </summary>
@@ -217,21 +231,31 @@ namespace AntDesign.Internal
         public bool Visible { get; set; } = false;
 
         [Inject]
-        protected DomEventService DomEventService { get; set; }
+        protected IDomEventListener DomEventListener { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
+        private TriggerType[] _trigger = new TriggerType[] { TriggerType.Hover };
+        private bool _shouldRender = true;
+
+        internal void SetShouldRender(bool shouldRender) => _shouldRender = shouldRender;
+
+        protected override bool ShouldRender()
+        {
+            if (_shouldRender)
+                return base.ShouldRender();
+            _shouldRender = true;
+            return false;
+        }
 
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
-                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
-                DomEventService.AddEventListener("document", "scroll", OnWindowScroll, false);
+                DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
             }
 
             base.OnAfterRender(firstRender);
@@ -245,14 +269,13 @@ namespace AntDesign.Internal
                 {
                     Ref = RefBack.Current;
 
-                    DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
-                    DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
-                    DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
-                    DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
-                    DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                    DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
                 }
-
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
                 {
@@ -295,19 +318,8 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
-            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
+            DomEventListener.Dispose();
 
-            if (Unbound != null)
-            {
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
-            }
             base.Dispose(disposing);
         }
 
@@ -321,8 +333,13 @@ namespace AntDesign.Internal
 
                 await Show();
             }
+            else
+            {
+                _shouldRender = false;
+            }
 
-            OnMouseEnter?.Invoke();
+            if (OnMouseEnter.HasDelegate)
+                OnMouseEnter.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -335,8 +352,13 @@ namespace AntDesign.Internal
 
                 await Hide();
             }
+            else
+            {
+                _shouldRender = false;
+            }
 
-            OnMouseLeave?.Invoke();
+            if (OnMouseLeave.HasDelegate)
+                OnMouseLeave.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerFocusIn()
@@ -432,8 +454,8 @@ namespace AntDesign.Internal
             {
                 int offsetX = 10;
                 int offsetY = 10;
-#if NET5_0
-                // offsetX/offsetY were only supported in Net5
+#if NET5_0_OR_GREATER
+                // offsetX/offsetY were only supported in Net5 or grater
                 offsetX = (int)args.OffsetX;
                 offsetY = (int)args.OffsetY;
 #endif
@@ -462,24 +484,10 @@ namespace AntDesign.Internal
             }
         }
 
-        protected async void OnWindowResize(JsonElement element)
-        {
-            RestorePlacement();
-
-            if (IsOverlayShow())
-            {
-                await GetOverlayComponent().UpdatePosition();
-            }
-        }
-
-        protected void OnWindowScroll(JsonElement element)
-        {
-            RestorePlacement();
-        }
 
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
-            return Trigger.Contains(triggerType);
+            return _trigger.Contains(triggerType);
         }
 
         protected virtual async Task OverlayVisibleChange(bool visible)
@@ -505,18 +513,13 @@ namespace AntDesign.Internal
             _placement = placement;
         }
 
-        internal void RestorePlacement()
-        {
-            _placement = _paramPlacement;
-        }
-
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
             {
                 return PlacementCls;
             }
-            return $"{PrefixCls}-placement-{Placement.Name}";
+            return $"{PrefixCls}-placement-{_placement.Name}";
         }
 
         internal virtual string GetOverlayEnterClass()
@@ -525,7 +528,7 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"ant-slide-{Placement.SlideName}-enter ant-slide-{Placement.SlideName}-enter-active ant-slide-{Placement.SlideName}";
+            return $"ant-slide-{_placement.SlideName}-enter ant-slide-{_placement.SlideName}-enter-active ant-slide-{_placement.SlideName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -534,7 +537,7 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"ant-slide-{Placement.SlideName}-leave ant-slide-{Placement.SlideName}-leave-active ant-slide-{Placement.SlideName}";
+            return $"ant-slide-{_placement.SlideName}-leave ant-slide-{_placement.SlideName}-leave-active ant-slide-{_placement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()

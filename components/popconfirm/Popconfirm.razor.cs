@@ -54,13 +54,13 @@ namespace AntDesign
         public Popconfirm()
         {
             PrefixCls = "ant-popover";
-            Placement = PlacementType.Top;
-            Trigger = new[] { TriggerType.Click };
+            Placement = Placement.Top;
+            Trigger = new[] { AntDesign.Trigger.Click };
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (Trigger.Contains(TriggerType.Hover))
+            if (Trigger.Contains(AntDesign.Trigger.Hover))
             {
                 await Task.Delay((int)(MouseEnterDelay * 1000));
             }
@@ -70,7 +70,7 @@ namespace AntDesign
 
         internal override async Task Hide(bool force = false)
         {
-            if (Trigger.Contains(TriggerType.Hover))
+            if (Trigger.Contains(AntDesign.Trigger.Hover))
             {
                 await Task.Delay((int)(MouseLeaveDelay * 1000));
             }

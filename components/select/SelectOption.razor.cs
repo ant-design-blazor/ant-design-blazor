@@ -161,6 +161,7 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
+            bool isAlreadySelected = false;
             if (SelectParent.SelectOptions == null)
             {
                 // The SelectOptionItem was already created, now only the SelectOption has to be
@@ -176,8 +177,9 @@ namespace AntDesign
                 GroupName = Model.GroupName;
                 Value = Model.Value;
                 Model.ChildComponent = this;
+                isAlreadySelected = IsAlreadySelected(Model);
             }
-            else 
+            else
             {
                 // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
                 InternalId = Guid.NewGuid();
@@ -194,11 +196,27 @@ namespace AntDesign
                 };
 
                 SelectParent.SelectOptionItems.Add(newSelectOptionItem);
+                isAlreadySelected = IsAlreadySelected(newSelectOptionItem);
             }
 
             SetClassMap();
-
             await base.OnInitializedAsync();
+            if (isAlreadySelected)
+            {
+                await SelectParent.ProcessSelectedSelectOptions();
+            }
+        }
+
+        private bool IsAlreadySelected(SelectOptionItem<TItemValue, TItem> selectOption)
+        {
+            if (SelectParent.Mode == "default")
+            {
+                return selectOption.Value.Equals(SelectParent.Value) || selectOption.Value.Equals(SelectParent.LastValueBeforeReset);
+            }
+            else
+            {
+                return SelectParent.Values is null || SelectParent.Values.Contains(selectOption.Value);
+            }
         }
 
         protected void SetClassMap()

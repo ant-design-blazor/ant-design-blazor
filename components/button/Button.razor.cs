@@ -49,7 +49,7 @@ namespace AntDesign
         public bool Danger { get; set; }
 
         /// <summary>
-        ///  Whether the `Button` is disabled.
+        /// Whether the `Button` is disabled.
         /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
@@ -73,21 +73,10 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
-        ///  Show loading indicator. You have to write the loading logic on your own. 
+        /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
         [Parameter]
-        public bool Loading
-        {
-            get => _loading;
-            set
-            {
-                if (_loading != value)
-                {
-                    _loading = value;
-                    UpdateIconDisplay(_loading);
-                }
-            }
-        }
+        public bool Loading { get; set; }
 
         /// <summary>
         /// Callback when `Button` is clicked
@@ -114,19 +103,23 @@ namespace AntDesign
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
-        ///  Type of the button.
+        /// Type of the button.
         /// </summary>
         [Parameter]
         public string Type { get; set; } = ButtonType.Default;
 
+        /// <summary>
+        /// Do not wrap with &lt;span&gt;
+        /// </summary>
+        [Parameter]
+        public bool NoSpanWrap { get; set; }
+
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
-        protected string IconStyle { get; set; }
 
         private bool _animating = false;
 
         private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
-        private bool _loading = false;
 
         protected void SetClassMap()
         {
@@ -152,12 +145,6 @@ namespace AntDesign
             base.OnInitialized();
             SetClassMap();
             SetButtonColorStyle();
-            UpdateIconDisplay(_loading);
-        }
-
-        private void UpdateIconDisplay(bool loading)
-        {
-            IconStyle = $"display:{(loading ? "none" : "inline-block")}";
         }
 
         private async Task HandleOnClick(MouseEventArgs args)

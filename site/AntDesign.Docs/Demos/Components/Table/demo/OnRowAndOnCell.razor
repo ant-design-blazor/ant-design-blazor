@@ -47,11 +47,11 @@
         })
     };
 
-    Dictionary<string, object> OnCell(RowData rowData) => new()
+    Dictionary<string, object> OnCell(CellData cellData) => new()
     {
         ["onclick"] = ((Action)delegate
         {
-            Console.WriteLine($"cell { ((RowData<Data>)rowData).Data.Name} was clicked");
+            Console.WriteLine($"cell { ((RowData<Data>)cellData.RowData).Data.Name} was clicked");
         }),
     };
 

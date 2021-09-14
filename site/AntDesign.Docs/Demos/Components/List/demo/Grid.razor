@@ -1,4 +1,4 @@
-﻿<AntList Grid="gutter" DataSource="@Data">
+﻿<AntList Grid="grid" DataSource="@Data">
     <ListItem >
         <Card Bordered Title="@(context.Title)">
             <Body>
@@ -10,7 +10,7 @@
 
 @code{
 
-    public ListGridType gutter = new ListGridType { Gutter = 16, Column = 4 };
+    public ListGridType grid = new ListGridType { Gutter = 16, Column = 4 };
 
     public List<BasicItem> Data = new List<BasicItem>
     {

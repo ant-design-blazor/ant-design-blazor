@@ -5,20 +5,20 @@ export class eventHelper {
   static triggerEvent(element: HTMLInputElement, eventType: string, eventName: string) {
     //TODO: replace with event constructors https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
     //Not used 
-    var evt = document.createEvent(eventType);
+    const evt = document.createEvent(eventType);
     evt.initEvent(eventName);
     return element.dispatchEvent(evt);
   }
 
   static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any) {
-    let callback = args => {
+    const callback = args => {
       const obj = {};
       for (let k in args) {
         if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
           obj[k] = args[k];
         }
       }
-      let json = JSON.stringify(obj, (k, v) => {
+      const json = JSON.stringify(obj, (k, v) => {
         if (v instanceof Node) return 'Node';
         if (v instanceof Window) return 'Window';
         return v;
@@ -29,14 +29,14 @@ export class eventHelper {
       }
     };
 
-    if (element == 'window') {
-      if (eventName == 'resize') {
+    if (element === 'window') {
+      if (eventName === 'resize') {
         window.addEventListener(eventName, this.debounce(() => callback({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }), 200, false));
       } else {
         window.addEventListener(eventName, callback);
       }
     } else {
-      let dom = domInfoHelper.get(element);
+      const dom = domInfoHelper.get(element);
       if (dom) {
         (dom as HTMLElement).addEventListener(eventName, callback);
       }
@@ -44,7 +44,7 @@ export class eventHelper {
   }  
 
   static addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
-    var dom = domInfoHelper.get(element);
+    const dom = domInfoHelper.get(element);
 
     if (dom && dom.firstElementChild) {
       this.addDomEventListener(dom.firstElementChild, eventName, preventDefault, invoker);
@@ -53,7 +53,7 @@ export class eventHelper {
 
   static addPreventKeys(inputElement, keys: string[]) {
     if (inputElement) {
-      let dom = domInfoHelper.get(inputElement);
+      const dom = domInfoHelper.get(inputElement);
       keys = keys.map(function (x) { return x.toUpperCase(); })
       state.eventCallbackRegistry[inputElement.id + "keydown"] = (e) => this.preventKeys(e, keys);
       (dom as HTMLElement).addEventListener("keydown", state.eventCallbackRegistry[inputElement.id + "keydown"], false);
@@ -69,7 +69,7 @@ export class eventHelper {
 
   static removePreventKeys(inputElement) {
     if (inputElement) {
-      let dom = domInfoHelper.get(inputElement);
+      const dom = domInfoHelper.get(inputElement);
       if (dom) {
         (dom as HTMLElement).removeEventListener("keydown", state.eventCallbackRegistry[inputElement.id + "keydown"]);
         state.eventCallbackRegistry[inputElement.id + "keydown"] = null;

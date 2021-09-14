@@ -1,10 +1,10 @@
-﻿import { domInfoHelper, eventHelper } from '../dom/exports'
+﻿import { domInfoHelper } from '../dom/exports'
 import { state } from '../stateProvider';
 
 
 export class inputHelper {
 
-  private static getTextAreaInfo(element) {
+  static getTextAreaInfo(element) {
     var result = {};
     var dom = domInfoHelper.get(element);
     if (!dom) return null;
@@ -32,7 +32,7 @@ export class inputHelper {
     return result;
   }
 
-  static registerResizeTextArea(element, minRows, maxRows, objReference) {
+  static registerResizeTextArea(element: HTMLTextAreaElement, minRows: number, maxRows: number, objReference) {
     if (!objReference) {
       this.disposeResizeTextArea(element);
     }
@@ -44,22 +44,25 @@ export class inputHelper {
     }
   }
 
-  static disposeResizeTextArea(element) {
+  static disposeResizeTextArea(element: HTMLTextAreaElement) {
     element.removeEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
     state.objReferenceDict[element.id] = null;
     state.eventCallbackRegistry[element.id + "input"] = null;
   }
 
-  static resizeTextArea(element, minRows, maxRows) {
-    var dims = this.getTextAreaInfo(element);
-    var rowHeight = dims["lineHeight"];
-    var offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
-    var oldHeight = parseFloat(element.style.height);
-    element.style.height = 'auto';
-
+  static resizeTextArea(element: HTMLTextAreaElement, minRows: number, maxRows: number) {
+    let dims = this.getTextAreaInfo(element);
+    let rowHeight = dims["lineHeight"];
+    let offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
+    let oldHeight = parseFloat(element.style.height);
+    //use rows attribute to evaluate real scroll height
+    let oldRows = element.rows;
+    element.rows = minRows;
+    element.style.height = 'auto';    
+    
     var rows = Math.trunc(element.scrollHeight / rowHeight);
-    rows = Math.max(minRows, rows);
-
+    element.rows = oldRows;
+    rows = Math.max(minRows, rows);    
     var newHeight = 0;
     if (rows > maxRows) {
       rows = maxRows;
@@ -75,7 +78,7 @@ export class inputHelper {
     }
     if (oldHeight !== newHeight) {
       let textAreaObj = state.objReferenceDict[element.id];
-      textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
+      textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", element.scrollWidth, newHeight);
     }
   }
 
