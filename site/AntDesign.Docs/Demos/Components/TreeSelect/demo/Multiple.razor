@@ -1,0 +1,33 @@
+<TreeSelect TItem="string"
+			Style="width:100%;"
+			@bind-Value="value"
+			Placeholder="Please select"
+			AllowClear
+			Multiple
+			TreeDefaultExpandAll
+			OnChange="OnValuesChange">
+	<TreeNode TItem="string" Key="parent 1" title="parent 1">
+		<TreeNode TItem="string" Key="parent 1-0" title="parent 1-0">
+			<TreeNode TItem="string" Key="leaf1" title="my leaf" />
+			<TreeNode TItem="string" Key="leaf2" title="your leaf" />
+		</TreeNode>
+		<TreeNode TItem="string" Key="parent 1-1" title="parent 1-1">
+			<TreeNode TItem="string" Key="sss">
+				<TitleTemplate>
+					<b style=" color: #08c;">sss</b>
+				</TitleTemplate>
+			</TreeNode>
+		</TreeNode>
+	</TreeNode>
+</TreeSelect>
+
+@code {
+
+	private string value;
+
+	public void OnValuesChange(IEnumerable<string> args)
+	{
+		Console.WriteLine(string.Join(',', args));
+	}
+
+}

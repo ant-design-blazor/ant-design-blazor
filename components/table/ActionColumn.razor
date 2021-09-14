@@ -62,7 +62,7 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 		</td>
 	}
 
-	<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
+	<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@Context.HeaderColumns[ColIndex].Title">
 		@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 		{
 			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
