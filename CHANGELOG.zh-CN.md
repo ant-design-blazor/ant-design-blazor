@@ -15,6 +15,26 @@ timeline: true
 
 ---
 
+### 0.10.0
+
+2021-09-15
+
+- 🔥 增加 TreeSelect 组件。[#1773](https://github.com/ant-design-blazor/ant-design-blazor/pull/1773) [@gmij](https://github.com/gmij)
+
+- Tree
+  - 🆕 增加 Tree 的 ChildContent 模板，不需要 Nodes。[#1887](https://github.com/ant-design-blazor/ant-design-blazor/pull/1887) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 修改 Tree 的API名称：`CheckedAll` 改为 `CheckAll`,`DecheckedAll` 改为 `UncheckAll`。[#1792](https://github.com/ant-design-blazor/ant-design-blazor/pull/1792) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- Radio
+  - 🆕 增加 Radio 的 RadioGroup 枚举类型选项支持，可使用 `EnumRadioGroup`。[#1840](https://github.com/ant-design-blazor/ant-design-blazor/pull/1840) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 Radio 的 RadioGroup Options 属性。[#1839](https://github.com/ant-design-blazor/ant-design-blazor/pull/1839) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 Timeline 的 Label  属性。[#1941](https://github.com/ant-design-blazor/ant-design-blazor/pull/1941) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Component 组件，用于生成动态类型的组件。[#1703](https://github.com/ant-design-blazor/ant-design-blazor/pull/1703) [@anranruye](https://github.com/anranruye)
+- 🆕 增加 Image 的相册模式。[#1842](https://github.com/ant-design-blazor/ant-design-blazor/pull/1842) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Form FormItem 的 `Help`、`ValidateStatus` 和`HasFeedback` 属性，支持多种类型的表单信息。[#1807](https://github.com/ant-design-blazor/ant-design-blazor/pull/1807) [@JamesGit-hash](https://github.com/JamesGit-hash)
+- 🆕 增加 Table 的响应式模式，移动端屏幕下将变成卡片式列表。[#1802](https://github.com/ant-design-blazor/ant-design-blazor/pull/1802) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.9.4
 
 2021-09-12
