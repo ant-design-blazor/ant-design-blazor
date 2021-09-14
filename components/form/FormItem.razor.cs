@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -11,6 +12,7 @@ using AntDesign.Internal.Form.Validate;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using OneOf;
+using static AntDesign.IconType;
 
 namespace AntDesign
 {
@@ -107,15 +109,34 @@ namespace AntDesign
         [Parameter]
         public FormValidationRule[] Rules { get; set; }
 
+        [Parameter]
+        public bool HasFeedback { get; set; }
+
+        [Parameter]
+        public FormValidateStatus ValidateStatus { get; set; }
+
+        [Parameter]
+        public string Help { get; set; }
+
+        private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
+            {
+                { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
+                { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
+                { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
+                { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
+            };
+
+        private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
+
         private EditContext EditContext => Form?.EditContext;
+
+        private string[] _validationMessages = Array.Empty<string>();
 
         private bool _isValid = true;
 
         private string _labelCls = "";
 
         private IControlValueAccessor _control;
-
-        private RenderFragment _formValidationMessages;
 
         private PropertyReflector _propertyReflector;
 
@@ -140,6 +161,11 @@ namespace AntDesign
             SetRequiredCss();
 
             Form.AddFormItem(this);
+
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
         }
 
         protected void SetClass()
@@ -148,6 +174,10 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
+                .If($"{_prefixCls}-has-feedback", () => HasFeedback)
+                .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
             _labelClassMapper
@@ -257,7 +287,6 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-
             if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
                 _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
@@ -265,21 +294,19 @@ namespace AntDesign
 
             _validationStateChangedHandler = (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                this._isValid = !control.ValidationMessages.Any();
+                _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
+                this._isValid = !_validationMessages.Any();
+                control.ValidationMessages = _validationMessages;
+
+                if (!string.IsNullOrWhiteSpace(Help))
+                {
+                    _validationMessages = new[] { Help };
+                }
 
                 StateHasChanged();
             };
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
-
-            _formValidationMessages = builder =>
-            {
-                var i = 0;
-                builder.OpenComponent<FormValidationMessage<TValue>>(i++);
-                builder.AddAttribute(i++, "Control", control);
-                builder.CloseComponent();
-            };
 
             if (control.ValueExpression is not null)
                 _propertyReflector = PropertyReflector.Create(control.ValueExpression);
