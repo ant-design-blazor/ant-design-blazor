@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public class AutoCompleteSearch : Search, IAutoCompleteInput
+    public partial class AutoCompleteSearch : Search, IAutoCompleteInput
     {
         public AutoCompleteSearch()
         {

@@ -1,7 +1,7 @@
 ﻿
 namespace AntDesign
 {
-    public class TimePicker<TValue> : DatePicker<TValue>
+    public partial class TimePicker<TValue> : DatePicker<TValue>
     {
         public TimePicker()
         {

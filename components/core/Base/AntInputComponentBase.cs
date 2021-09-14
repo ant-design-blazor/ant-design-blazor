@@ -280,6 +280,7 @@ namespace AntDesign
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
+            ApplyCascadingAttributes(parameters);
             parameters.SetParameterProperties(this);
 
             if (EditContext == null)

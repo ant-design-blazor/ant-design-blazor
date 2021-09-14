@@ -1,7 +1,7 @@
 ﻿
 namespace AntDesign
 {
-    public class MonthPicker<TValue> : DatePicker<TValue>
+    public partial class MonthPicker<TValue> : DatePicker<TValue>
     {
         public MonthPicker()
         {
