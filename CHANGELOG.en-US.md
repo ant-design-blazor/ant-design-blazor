@@ -14,6 +14,28 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+### 0.10.0
+
+2021-09-15
+
+- 🔥 Add TreeSelect component. [#1773](https://github.com/ant-design-blazor/ant-design-blazor/pull/1773) [@gmij](https://github.com/gmij)
+
+- Tree
+  - 🆕 Add Tree ChildContent template. [#1887](https://github.com/ant-design-blazor/ant-design-blazor/pull/1887) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor Tree API name : `CheckedAll`-> `CheckAll`, `DecheckedAll`-> `UncheckAll`. [#1792](https://github.com/ant-design-blazor/ant-design-blazor/pull/1792) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- Radio
+  - 🆕 Add Radio support enum type for `RadioGroup`  options, use `EnumRadioGroup`. [#1840](https://github.com/ant-design-blazor/ant-design-blazor/pull/1840) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add Radio options property for `RadioGroup`. [#1839](https://github.com/ant-design-blazor/ant-design-blazor/pull/1839) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Image preview mode. [#1842](https://github.com/ant-design-blazor/ant-design-blazor/pull/1842) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Form FormItem parameter `Help`, `ValidateStatus` and `HasFeedback`. [#1807](https://github.com/ant-design-blazor/ant-design-blazor/pull/1807) [@JamesGit-hash](https://github.com/JamesGit-hash)
+- 🆕 Add Table responsive support. It will become a card list under the mobile screen. [#1802](https://github.com/ant-design-blazor/ant-design-blazor/pull/1802) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Timeline Label parameter. [#1941](https://github.com/ant-design-blazor/ant-design-blazor/pull/1941) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add `Component` component for generating dynamically typed components. [#1703](https://github.com/ant-design-blazor/ant-design-blazor/pull/1703) [@anranruye](https://github.com/anranruye)
+
+
 ### 0.9.4
 
 2021-09-12
