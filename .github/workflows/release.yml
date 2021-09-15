@@ -26,6 +26,16 @@ jobs:
         with:
           dotnet-version: 5.0.100
 
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
+
+      - name: Prepare AOT workload
+        run: |
+          dotnet workload install wasm-tools
+
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -55,7 +65,7 @@ jobs:
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 

@@ -75,7 +75,7 @@ jobs:
 
       - name: Prepare AOT workload
         run: |
-          dotnet workload install microsoft-net-sdk-blazorwebassembly-aot
+          dotnet workload install wasm-tools
 
       - name: Publish Docs 🎉
         run: |
