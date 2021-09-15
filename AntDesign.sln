@@ -43,11 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Components.Authen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntDesign.Tests.Authentication", "AntDesign.Tests.Authentication", "{606789E3-AFE9-4489-9963-2B06A701D6B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Tests.Authentication.Server", "tests\AntDesign.Tests.Authentication\Server\AntDesign.Tests.Authentication.Server.csproj", "{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Server", "tests\AntDesign.Tests.Authentication\Server\AntDesign.Tests.Authentication.Server.csproj", "{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Tests.Authentication.Client", "tests\AntDesign.Tests.Authentication\Client\AntDesign.Tests.Authentication.Client.csproj", "{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Client", "tests\AntDesign.Tests.Authentication\Client\AntDesign.Tests.Authentication.Client.csproj", "{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Tests.Authentication.Shared", "tests\AntDesign.Tests.Authentication\Shared\AntDesign.Tests.Authentication.Shared.csproj", "{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Shared", "tests\AntDesign.Tests.Authentication\Shared\AntDesign.Tests.Authentication.Shared.csproj", "{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

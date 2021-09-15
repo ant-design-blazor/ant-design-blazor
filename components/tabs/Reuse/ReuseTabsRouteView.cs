@@ -34,6 +34,7 @@ namespace AntDesign
         protected override void Render(RenderTreeBuilder builder)
         {
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
+            var ignore = RouteData.PageType.GetCustomAttribute<ReuseTabsPageIgnore>();
 
             var body = CreateBody(RouteData, Navmgr.Uri);
 
@@ -56,6 +57,7 @@ namespace AntDesign
 
             builder.CloseComponent();
 
+
             if (!_pageMap.ContainsKey(CurrentUrl))
             {
                 _pageMap[CurrentUrl] = new ReuseTabsPageItem
@@ -64,6 +66,8 @@ namespace AntDesign
                     Url = CurrentUrl,
                 };
             }
+
+
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)

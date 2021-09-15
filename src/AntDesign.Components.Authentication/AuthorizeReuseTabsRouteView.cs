@@ -17,6 +17,9 @@ namespace AntDesign.Components.Authentication
         [Parameter]
         public RenderFragment Authorizing { get; set; }
 
+        [Parameter]
+        public Type AuthenticationLayout { get; set; }
+
         private static readonly RenderFragment<AuthenticationState> _defaultNotAuthorizedContent
             = state => builder => builder.AddContent(0, "Not authorized");
 
@@ -59,17 +62,6 @@ namespace AntDesign.Components.Authentication
             }
         }
 
-        private void RenderAuthorizeRouteViewCore(RenderTreeBuilder builder)
-        {
-            builder.OpenComponent<AuthorizeRouteViewCore>(0);
-            builder.AddAttribute(1, nameof(AuthorizeRouteViewCore.RouteData), RouteData);
-            builder.AddAttribute(2, nameof(AuthorizeRouteViewCore.Authorized), _renderAuthorizedDelegate);
-            builder.AddAttribute(3, nameof(AuthorizeRouteViewCore.Authorizing), _renderAuthorizingDelegate);
-            builder.AddAttribute(4, nameof(AuthorizeRouteViewCore.NotAuthorized), _renderNotAuthorizedDelegate);
-            builder.AddAttribute(5, nameof(AuthorizeRouteViewCore.Resource), Resource);
-            builder.CloseComponent();
-        }
-
         private void RenderNotAuthorizedInDefaultLayout(RenderTreeBuilder builder, AuthenticationState authenticationState)
         {
             var content = NotAuthorized ?? _defaultNotAuthorizedContent;
@@ -82,10 +74,20 @@ namespace AntDesign.Components.Authentication
             RenderContentInDefaultLayout(builder, content);
         }
 
+        private void RenderAuthorizeRouteViewCore(RenderTreeBuilder builder)
+        {
+            builder.OpenComponent<AuthorizeRouteViewCore>(0);
+            builder.AddAttribute(1, nameof(AuthorizeRouteViewCore.RouteData), RouteData);
+            builder.AddAttribute(2, nameof(AuthorizeRouteViewCore.Authorized), _renderAuthorizedDelegate);
+            builder.AddAttribute(3, nameof(AuthorizeRouteViewCore.Authorizing), _renderAuthorizingDelegate);
+            builder.AddAttribute(4, nameof(AuthorizeRouteViewCore.NotAuthorized), _renderNotAuthorizedDelegate);
+            builder.AddAttribute(5, nameof(AuthorizeRouteViewCore.Resource), Resource);
+            builder.CloseComponent();
+        }
         private void RenderContentInDefaultLayout(RenderTreeBuilder builder, RenderFragment content)
         {
             builder.OpenComponent<LayoutView>(0);
-            builder.AddAttribute(1, nameof(LayoutView.Layout), DefaultLayout);
+            builder.AddAttribute(1, nameof(LayoutView.Layout), AuthenticationLayout);
             builder.AddAttribute(2, nameof(LayoutView.ChildContent), content);
             builder.CloseComponent();
         }
