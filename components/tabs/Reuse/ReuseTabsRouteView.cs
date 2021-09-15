@@ -34,7 +34,7 @@ namespace AntDesign
         protected override void Render(RenderTreeBuilder builder)
         {
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
-            var ignore = RouteData.PageType.GetCustomAttribute<ReuseTabsPageIgnore>();
+            //var ignore = RouteData.PageType.GetCustomAttribute<ReuseTabsPageIgnore>();
 
             var body = CreateBody(RouteData, Navmgr.Uri);
 
@@ -51,6 +51,7 @@ namespace AntDesign
                 builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
                 {
                     b.OpenComponent(20, layoutType);
+                    //b.AddAttribute(21, "Body", body);
                     b.CloseComponent();
                 }));
             }

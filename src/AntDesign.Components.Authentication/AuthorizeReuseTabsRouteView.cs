@@ -17,8 +17,6 @@ namespace AntDesign.Components.Authentication
         [Parameter]
         public RenderFragment Authorizing { get; set; }
 
-        [Parameter]
-        public Type AuthenticationLayout { get; set; }
 
         private static readonly RenderFragment<AuthenticationState> _defaultNotAuthorizedContent
             = state => builder => builder.AddContent(0, "Not authorized");
@@ -87,7 +85,8 @@ namespace AntDesign.Components.Authentication
         private void RenderContentInDefaultLayout(RenderTreeBuilder builder, RenderFragment content)
         {
             builder.OpenComponent<LayoutView>(0);
-            builder.AddAttribute(1, nameof(LayoutView.Layout), AuthenticationLayout);
+            //builder.AddAttribute(1, nameof(LayoutView.Layout), AuthenticationLayout);
+            builder.AddAttribute(1, nameof(LayoutView.Layout), DefaultLayout);
             builder.AddAttribute(2, nameof(LayoutView.ChildContent), content);
             builder.CloseComponent();
         }

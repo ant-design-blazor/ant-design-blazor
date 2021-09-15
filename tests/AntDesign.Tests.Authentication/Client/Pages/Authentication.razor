@@ -1,7 +1,10 @@
 ﻿@page "/authentication/{action}"
-@attribute [ReuseTabsPageIgnore]
+
+@attribute [ReuseTabsPageTitle("Authentication")]
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-<RemoteAuthenticatorView Action="@Action"/>
+<RemoteAuthenticatorView Action="@Action">
+
+</RemoteAuthenticatorView>
 
 @code{
     [Parameter] public string Action { get; set; }
