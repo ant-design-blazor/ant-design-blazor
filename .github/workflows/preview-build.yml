@@ -29,6 +29,10 @@ jobs:
         with:
           node-version: "10.x"
 
+      - name: Prepare AOT workload
+        run: |
+          dotnet workload install wasm-tools
+
       - name: build site
         id: site
         run: |
