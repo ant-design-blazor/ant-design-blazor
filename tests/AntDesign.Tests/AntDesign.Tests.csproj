@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <UseDataCollector>true</UseDataCollector>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
