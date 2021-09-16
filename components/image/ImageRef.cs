@@ -6,6 +6,8 @@ namespace AntDesign
 {
     public class ImageRef
     {
+        public event Action OnClosed;
+
         internal string ImageSrc => _showingImageSrc;
 
         internal int CurrentIndex => _currentIndex;
@@ -36,6 +38,7 @@ namespace AntDesign
 
         public void Close()
         {
+            OnClosed?.Invoke();
             _imageService.CloseImage(this);
         }
     }

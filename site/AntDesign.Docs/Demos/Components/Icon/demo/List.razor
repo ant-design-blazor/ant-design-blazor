@@ -1,6 +1,6 @@
 ﻿
 <div style="display: flex; justify-content: space-between;">
-    <RadioGroup @bind-Value="currentTheme" ButtonStyle="solid" Size="large" TValue="string" OnChange="OnThemeChanged">
+    <RadioGroup @bind-Value="currentTheme" ButtonStyle="@RadioButtonStyle.Solid" Size="large" TValue="string" OnChange="OnThemeChanged">
         <Radio RadioButton Value="@("outline")">
             <Icon Component="OutlineSvg" />@LanguageService.Resources["app.docs.components.icon.outlined"]
         </Radio>

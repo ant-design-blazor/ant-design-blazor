@@ -121,6 +121,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         /// <summary>
         /// tree childnodes
         /// Add values when the node is initialized
@@ -186,6 +189,11 @@ namespace AntDesign
         {
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
+
+            if (OnUnSelect.HasDelegate)
+            {
+                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+            }
         }
 
         /// <summary>
@@ -310,9 +318,9 @@ namespace AntDesign
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
 
         /// <summary>
-        /// Dechecked all selected items
+        /// Checks all nodes
         /// </summary>
-        public void CheckedAll()
+        public void CheckAll()
         {
             foreach (var item in ChildNodes)
             {
@@ -320,8 +328,10 @@ namespace AntDesign
             }
         }
 
-        // Decheck all of the checked nodes
-        public void DecheckedAll()
+        /// <summary>
+        /// Unchecks all nodes
+        /// </summary>
+        public void UncheckAll()
         {
             foreach (var item in ChildNodes)
             {
@@ -498,6 +508,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnSelect { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeEventArgs<TItem>> OnUnSelect { get; set; }
 
         /// <summary>
         /// Click the expansion tree node icon to call back
