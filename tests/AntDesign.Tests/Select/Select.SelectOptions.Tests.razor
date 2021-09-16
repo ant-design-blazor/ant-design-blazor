@@ -28,13 +28,16 @@
         new PersonClass(4, "Emily"),
     };
 
+    public Select_SelectOptions_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+    }
 
     [Fact]
     public void Default_add_new_item_and_set_it_as_value_in_single_render() //issue #1536
     {
         //Arrange
-        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());
 
         Person value = _persons[1];
         var cut = Render<AntDesign.Select<Person, Person>>(
@@ -70,8 +73,6 @@
     public void Multiple_add_new_item_and_set_it_as_value_in_single_render() //issue #1536 (multiple version)
     {
         //Arrange
-        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());
 
         IEnumerable<Person> values = new List<Person>() { _persons[1] };
         var cut = Render<AntDesign.Select<Person, Person>>(

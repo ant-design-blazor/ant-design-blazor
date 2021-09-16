@@ -79,14 +79,20 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
+
+        private string[] _openKeysCopy = Array.Empty<string>();
         [Parameter]
         public string[] OpenKeys
         {
             get => _openKeys ?? Array.Empty<string>();
             set
             {
-                _openKeys = value;
-                HandleOpenKeySet();
+                if (!_openKeysCopy.SequenceEqual(value))
+                {
+                    _openKeys = value;
+                    _openKeysCopy = value.ToArray();
+                    HandleOpenKeySet();
+                }
             }
         }
 
