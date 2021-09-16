@@ -34,15 +34,15 @@
 			.SetResult(new AntDesign.JsInterop.Window());
         Model _model = new() { Name = modelValue };
 		var cut = Render<AntDesign.Form<Model>>(
-			@<Form Model="@_model">       
-				<FormItem Label="Test">
-						<Select DataSource="@_persons"
+			@<AntDesign.Form Model="@_model">       
+				<AntDesign.FormItem Label="Test">
+						<AntDesign.Select DataSource="@_persons"
 				                LabelName="@nameof(Person.Name)"
 				                ValueName="@nameof(Person.Name)"
 								@bind-Value=@context.Name>
-						</Select>
-				</FormItem>
-			</Form>
+						</AntDesign.Select>
+				</AntDesign.FormItem>
+			</AntDesign.Form>
     );
         var select = cut.FindComponent<Select<string, Person>>();
         var lastValue = select.Instance.Value;

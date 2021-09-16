@@ -7,7 +7,7 @@
 	{
 		<Tooltip Title="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
 			<Unbound Context="tooltip">
-				<li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
+				<li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
 					@if (IconTemplate != null)
 					{
 						@IconTemplate
@@ -32,7 +32,7 @@
 	}
 	else
 	{
-		<li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key">
+		<li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key">
 			@if (Icon != null)
 			{
 				<Icon Type="@Icon" />
