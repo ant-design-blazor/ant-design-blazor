@@ -1,23 +1,26 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @inherits AntDesignTestBase
 @code {
-
+    public Select_Tags_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());         			
+		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
+		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
+		#if !NET6_0_OR_GREATER
+			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();;
+		#endif
+    }
 
     [Fact]
     public async Task Single_tag_creation() //issue #1645
     {
         //Arrange
-        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());         			
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());        		
 
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
-
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
-        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });        
 
         var cut = Render<AntDesign.Select<string, string>>(
         @<AntDesign.Select Mode="tags"
@@ -53,15 +56,7 @@
     public void Tag_MaxTagCount_sets_tags_in_proper_order() //issue #1746
     {
         //Arrange
-        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());         			
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());        
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
-		#if !NET6_0_OR_GREATER
-			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-		#endif
+
 		IEnumerable<string> values = new string[] { "1", "2", "3", "4", "5", "6" };
         var cut = Render<AntDesign.Select<string, string>>(
 			@<AntDesign.Select Mode="tags"        		
