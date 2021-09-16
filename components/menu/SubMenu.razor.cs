@@ -19,7 +19,7 @@ namespace AntDesign
         public Placement? Placement
         {
             get { return _placement?.Placement; }
-            set 
+            set
             {
                 if (value is null)
                 {
@@ -80,10 +80,17 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Get(() => $"{prefixCls}-{(Parent is null ? RootMenu?.InternalMode: MenuMode.Vertical)}")
+                    .Get(() => $"{prefixCls}-{(Parent is null ? RootMenu?.InternalMode : MenuMode.Vertical)}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
+                    .If($"{prefixCls}-open", () => {
+                        var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
+                        if (Key == "sub1")
+                        {
+                            Console.WriteLine(eval);
+                        }
+                        return eval;
+                        })
                     ;
 
             SubMenuMapper
