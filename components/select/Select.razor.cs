@@ -309,9 +309,7 @@ namespace AntDesign
 
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
-        /// </summary>        /// <summary>
-        /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
-        /// </summary>
+        /// </summary> 
         [Parameter]
         public TItemValue DefaultValue
         {
