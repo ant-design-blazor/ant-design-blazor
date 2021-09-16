@@ -26,16 +26,6 @@ jobs:
         with:
           dotnet-version: 5.0.100
 
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: "6.0.x"
-          include-prerelease: true
-
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
-
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -45,7 +35,6 @@ jobs:
         run: |
           VERSION=`git describe --tags`
           echo "Publishing Version: ${VERSION}"
-          echo "::set-output name=package_version::${VERSION}"
           npm install
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
@@ -58,39 +47,3 @@ jobs:
           name: package
           path: publish/
           retention-days: 5
-
-      - name: Publish Docs 🎉
-        run: |
-          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
-        env:
-          PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: cargo/wwwroot
-
-      - name: Deploy to Github.io 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.GH_PUSH_TOKEN }}
-          external_repository: ant-design-blazor/ant-design-blazor.github.io
-          publish_branch: master
-          publish_dir: ./cargo/wwwroot
-          cname: antblazor.com
-          keep_files: true
-          tag_name: ${{ steps.pack.outputs.package_version }}
-
-      - name: Sync to Gitee 💕
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
