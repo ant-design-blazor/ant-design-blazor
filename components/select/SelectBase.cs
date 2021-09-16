@@ -127,7 +127,6 @@ namespace AntDesign
         protected IEnumerable<TItemValue> _defaultValues;
         protected bool _defaultValuesHasItems;
         /// <summary>
-        /// 
         /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
         /// </summary>
         [Parameter]
