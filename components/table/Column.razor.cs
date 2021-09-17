@@ -41,6 +41,8 @@ namespace AntDesign
 
         private TData _field;
 
+        public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
+
         [Parameter]
         public string DataIndex { get; set; }
 
@@ -120,7 +122,7 @@ namespace AntDesign
 
         private Type _columnDataType;
 
-        public string? DisplayName { get; private set; }
+        public string DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -150,8 +152,6 @@ namespace AntDesign
         private bool _hasFilterSelected;
 
         private string[] _selectedFilterValues;
-
-        //private ElementReference _filterTriggerRef;
 
         protected override void OnInitialized()
         {

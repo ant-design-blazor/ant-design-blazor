@@ -45,4 +45,5 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 | Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
 | Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
 | Size | 设置按钮大小        | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
-| Type | 设置按钮类型        | ButtonType | `ButtonType.Default` | 
+| Type | 设置按钮类型        | ButtonType | `ButtonType.Default` |
+| NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |

@@ -16,7 +16,7 @@ namespace AntDesign
         public int Xxl { get; set; }
     }
 
-    public partial class AntList<TItem> : AntDomComponentBase
+    public partial class AntList<TItem> : AntDomComponentBase, IAntList
     {
         public string PrefixName { get; set; } = "ant-list";
 
@@ -40,8 +40,6 @@ namespace AntDesign
 
         [Parameter] public bool Split { get; set; } = true;
 
-        [Parameter] public EventCallback<TItem> OnItemClick { get; set; }
-
         [Parameter] public ListGridType Grid { get; set; }
 
         [Parameter] public PaginationOptions Pagination { get; set; }
@@ -56,49 +54,63 @@ namespace AntDesign
             }
         }
 
+        private string SizeCls => Size switch
+        {
+            "large" => "lg",
+            "small" => "sm",
+            _ => string.Empty
+        };
+
+        ListGridType IAntList.Grid => Grid;
+        ListItemLayout IAntList.ItemLayout => ItemLayout;
+        double IAntList.ColumnWidth => _columnWidth;
+
+        double _columnWidth;
+
         protected override void OnInitialized()
         {
             SetClassMap();
+
+            if (Grid?.Column > 0)
+            {
+                _columnWidth = 100d / Grid.Column;
+            }
 
             base.OnInitialized();
         }
 
         protected void SetClassMap()
         {
-            // large => lg
-            // small => sm
-            string sizeCls = string.Empty;
-            switch (Size)
-            {
-                case "large":
-                    sizeCls = "lg";
-                    break;
 
-                case "small":
-                    sizeCls = "sm";
-                    break;
-
-                default:
-                    break;
-            }
 
             ClassMapper.Clear()
                 .Add(PrefixName)
                 .If($"{PrefixName}-split", () => Split)
                 .If($"{PrefixName}-rtl", () => RTL)
                 .If($"{PrefixName}-bordered", () => Bordered)
-                .GetIf(() => $"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
+                .GetIf(() => $"{PrefixName}-{SizeCls}", () => !string.IsNullOrEmpty(SizeCls))
                 .If($"{PrefixName}-vertical", () => ItemLayout == ListItemLayout.Vertical)
                 .If($"{PrefixName}-loading", () => (Loading))
                 .If($"{PrefixName}-grid", () => Grid != null)
                 .If($"{PrefixName}-something-after-last-item", () => IsSomethingAfterLastItem);
         }
 
-        private void HandleItemClick(TItem item)
+        private void OnBreakpoint(BreakpointType breakPoint)
         {
-            if (OnItemClick.HasDelegate)
+            var column = breakPoint switch
             {
-                OnItemClick.InvokeAsync(item);
+                BreakpointType.Xs => Grid.Xs,
+                BreakpointType.Sm => Grid.Sm,
+                BreakpointType.Md => Grid.Md,
+                BreakpointType.Lg => Grid.Lg,
+                BreakpointType.Xl => Grid.Xl,
+                BreakpointType.Xxl => Grid.Xxl,
+                _ => 4,
+            };
+
+            if (column > 0)
+            {
+                _columnWidth = 100d / column;
             }
         }
     }

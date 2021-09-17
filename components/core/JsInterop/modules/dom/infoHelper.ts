@@ -47,7 +47,7 @@ export class infoHelper {
   }
 
   static getElementAbsolutePos(element: any): domTypes.position {
-    let res: domTypes.position = {
+    const res: domTypes.position = {
       x: 0,
       y: 0
     };
@@ -68,7 +68,7 @@ export class infoHelper {
   static getBoundingClientRect(element: any): domTypes.domRect {
     const domElement = this.get(element);
     if (domElement && domElement.getBoundingClientRect) {
-      let rect = domElement.getBoundingClientRect();
+      const rect = domElement.getBoundingClientRect();
       // Fixes #1468. This wrapping is necessary for old browsers. Remove this when one day we no longer support them.
       return {
         width: rect.width,
@@ -107,13 +107,43 @@ export class infoHelper {
   }
 
   static hasFocus(selector) {
-    let dom = this.get(selector);
+    const dom = this.get(selector);
     return (document.activeElement === dom);
   }
 
   static getInnerText(element) {
-    let dom = this.get(element);
+    const dom = this.get(element);
     if (dom) return dom.innerText;
     return null;
   }
+
+  static getMaxZIndex(): number {
+    return [...document.querySelectorAll("*")].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
+  }  
+
+  static isFixedPosition(element) {
+    let node = this.get(element);
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+        if (window.getComputedStyle(node).getPropertyValue('position').toLowerCase() === 'fixed')
+            { return true; }
+        node = node.parentNode;
+    }
+    return false;
+  }
+  
+  static findAncestorWithZIndex(element: HTMLElement): number {
+    let node = this.get(element);
+    let zIndexAsString: string;
+    let zIndex: number;
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+        zIndexAsString = window.getComputedStyle(node).zIndex;
+        zIndex = Number.parseInt(zIndexAsString);
+        if (!Number.isNaN(zIndex)) {
+           return zIndex;
+        }
+        node = node.parentNode;
+    }
+    return null;
+  }
+
 }

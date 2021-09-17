@@ -6,39 +6,41 @@ on: pull_request
 
 jobs:
 
-  # Prepare
-  setup:
-    name: prepare preview
+  build-site:
+    name: build preview
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@master
-      
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: "10.x"
 
-  build-site:
-    name: build preview
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: checkout
-        uses: actions/checkout@master
+      - name: Prepare AOT workload
+        run: |
+          dotnet workload install wasm-tools
 
-      - name:  build site
+      - name: build site
         id: site
         run: |
+          dotnet --list-sdks
           npm install
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o _site -p:EnableAOT=true
         env:
           PACKAGE_VERSION: ${{ github.event.number }}
 

@@ -16,7 +16,7 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         [Parameter]
-        public string ButtonStyle { get; set; } = "outline";
+        public RadioButtonStyle ButtonStyle { get; set; } = RadioButtonStyle.Outline;
 
         [Parameter]
         public string Name { get; set; }
@@ -35,6 +35,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        [Parameter]
+        public OneOf<string[], RadioOption<TValue>[]> Options { get; set; }
+
         private List<Radio<TValue>> _radioItems = new List<Radio<TValue>>();
 
         private TValue _defaultValue;
@@ -42,13 +45,19 @@ namespace AntDesign
         private bool _hasDefaultValue;
         private bool _defaultValueSetted;
 
+        private static readonly Dictionary<RadioButtonStyle, string> _buttonStyleDics = new()
+        {
+            [RadioButtonStyle.Outline] = "outline",
+            [RadioButtonStyle.Solid] = "solid",
+        };
+
         protected override void OnInitialized()
         {
             string prefixCls = "ant-radio-group";
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
-                .GetIf(() => $"{prefixCls}-{ButtonStyle}", () => ButtonStyle.IsIn("outline", "solid"))
+                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle]}", () => ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
