@@ -42,7 +42,6 @@ namespace AntDesign
 
         internal int[] GetSelectedCacheKeys();
 
-
         internal void HasFixLeft();
 
         internal void HasFixRight();
@@ -54,5 +53,7 @@ namespace AntDesign
         internal bool RowExpandable(RowData rowData);
 
         internal void AddSummaryRow(SummaryRow summaryRow);
+
+        internal void OnColumnInitialized();
     }
 }
