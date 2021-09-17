@@ -1,4 +1,6 @@
-﻿namespace AntDesign.Core.JsInterop.Modules.Components
+﻿using System.Globalization;
+
+namespace AntDesign.Core.JsInterop.Modules.Components
 {
     public class OverlayPosition
     {
@@ -22,7 +24,7 @@
             if (value is null)
                 return "unset;";
             else
-                return value.ToString() + "px;";
+                return string.Format(CultureInfo.InvariantCulture, "{0}px;", value);
         }
     }
 }
