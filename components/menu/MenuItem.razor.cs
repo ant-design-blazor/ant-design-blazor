@@ -48,7 +48,7 @@ namespace AntDesign
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
-        private string _key;
+        private string _key;        
 
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
@@ -58,7 +58,9 @@ namespace AntDesign
         {
             string prefixCls = $"{RootMenu.PrefixCls}-item";
 
-            ClassMapper.Add(prefixCls)
+            ClassMapper
+                .Clear()
+                .Add(prefixCls)
                 .If($"{prefixCls}-selected", () => IsSelected)
                 .If($"{prefixCls}-disabled", () => Disabled);
         }
@@ -79,7 +81,7 @@ namespace AntDesign
             RootMenu.MenuItems.Add(this);
 
             if (RootMenu.DefaultSelectedKeys.Contains(Key))
-                Select();
+                Select(false, true);
         }
 
         protected override void OnParametersSet()
@@ -138,12 +140,12 @@ namespace AntDesign
             }
         }
 
-        public void Select(bool skipParentSelection = false)
+        public void Select(bool skipParentSelection = false, bool isInitializing = false)
         {
             IsSelected = true;
             FirstRun = false;
             if (!skipParentSelection)
-                ParentMenu?.Select();
+                ParentMenu?.Select(isInitializing);
         }
 
         public void Deselect(bool sameParentAsSelected = false)

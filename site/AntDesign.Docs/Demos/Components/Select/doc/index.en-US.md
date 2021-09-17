@@ -22,6 +22,7 @@ Select component to select value from options.
 | AllowClear | Show clear button. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | Bordered | Toggle the border style. | bool | true |  |
+| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
 | DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |

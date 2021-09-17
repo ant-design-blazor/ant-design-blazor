@@ -15,6 +15,53 @@ timeline: true
 
 ---
 
+### 0.10.0
+
+2021-09-15
+
+- 🔥 增加 TreeSelect 组件。[#1773](https://github.com/ant-design-blazor/ant-design-blazor/pull/1773) [@gmij](https://github.com/gmij)
+
+- Tree
+  - 🆕 增加 Tree 的 ChildContent 模板，不需要 Nodes。[#1887](https://github.com/ant-design-blazor/ant-design-blazor/pull/1887) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 修改 Tree 的API名称：`CheckedAll` 改为 `CheckAll`,`DecheckedAll` 改为 `UncheckAll`。[#1792](https://github.com/ant-design-blazor/ant-design-blazor/pull/1792) [@lukblazewicz](https://github.com/lukblazewicz)
+
+- Radio
+  - 🆕 增加 Radio 的 RadioGroup 枚举类型选项支持，可使用 `EnumRadioGroup`。[#1840](https://github.com/ant-design-blazor/ant-design-blazor/pull/1840) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 Radio 的 RadioGroup Options 属性。[#1839](https://github.com/ant-design-blazor/ant-design-blazor/pull/1839) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 Timeline 的 Label  属性。[#1941](https://github.com/ant-design-blazor/ant-design-blazor/pull/1941) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Component 组件，用于生成动态类型的组件。[#1703](https://github.com/ant-design-blazor/ant-design-blazor/pull/1703) [@anranruye](https://github.com/anranruye)
+- 🆕 增加 Image 的相册模式。[#1842](https://github.com/ant-design-blazor/ant-design-blazor/pull/1842) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Form FormItem 的 `Help`、`ValidateStatus` 和`HasFeedback` 属性，支持多种类型的表单信息。[#1807](https://github.com/ant-design-blazor/ant-design-blazor/pull/1807) [@JamesGit-hash](https://github.com/JamesGit-hash)
+- 🆕 增加 Table 的响应式模式，移动端屏幕下将变成卡片式列表。[#1802](https://github.com/ant-design-blazor/ant-design-blazor/pull/1802) [@ElderJames](https://github.com/ElderJames)
+
+### 0.9.4
+
+2021-09-12
+
+- Table
+  - 🐞 修复 在 PageSize 不等于 10 时，初始化时会被刷新两次的问题。[#1933](https://github.com/ant-design-blazor/ant-design-blazor/pull/1933) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 传递 `CellData` 给 CellRender 模板，可访问当前单元格和行的一些信息。[#1907](https://github.com/ant-design-blazor/ant-design-blazor/pull/1907) [@ElderJames](https://github.com/ElderJames)
+  - ⚡️ 将固定列的样式处理放到 JS，以提升性能。[#1897](https://github.com/ant-design-blazor/ant-design-blazor/pull/1897) [@ElderJames](https://github.com/ElderJames)
+  - 📖 增加 动态表格 demo。[#1908](https://github.com/ant-design-blazor/ant-design-blazor/pull/1908) [@ElderJames](https://github.com/ElderJames)
+
+- InputNumber
+  - 🆕 增加 OnFocus 事件。[#1931](https://github.com/ant-design-blazor/ant-design-blazor/pull/1931) [@Hona](https://github.com/Hona)
+  - 🐞 修复 inputmode，支持手机数字键盘。[#1923](https://github.com/ant-design-blazor/ant-design-blazor/pull/1923) [@CAPCHIK](https://github.com/CAPCHIK)
+
+- Select
+  - 🐞 修复 对异构选项类型的支持。[#1932](https://github.com/ant-design-blazor/ant-design-blazor/pull/1932) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 设置 DataSource 时，选中项会被的重置问题。[#1906](https://github.com/ant-design-blazor/ant-design-blazor/pull/1906) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 修复 Overlay 与 dropdown、选项框、popup 有关的一系列问题。[#1848](https://github.com/ant-design-blazor/ant-design-blazor/pull/1848) [@anddrzejb](https://github.com/anddrzejb)
+- 💄 修复 Button 的 loading 样式。[#1902](https://github.com/ant-design-blazor/ant-design-blazor/pull/1902) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🐞 增加 TextArea 的 `Rows` 属性，支持固定的行数。[#1920](https://github.com/ant-design-blazor/ant-design-blazor/pull/1920) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 增加 Input 的 StopPropogation 属性，以减少事件触发，提升性能。[#1917](https://github.com/ant-design-blazor/ant-design-blazor/pull/1917) [@Hona](https://github.com/Hona)
+- 🐞 修复 Form 移除已释放的 FormItem 实例。[#1901](https://github.com/ant-design-blazor/ant-design-blazor/pull/1901) [@lxyruanjian](https://github.com/lxyruanjian)
+- ⚡️ 事件订阅器的内存泄漏问题。[#1857](https://github.com/ant-design-blazor/ant-design-blazor/pull/1857) [@tonyyip1969](https://github.com/tonyyip1969)
+- 🐞 修复 List 组件的响应式无效的问题。 [#1937](https://github.com/ant-design-blazor/ant-design-blazor/pull/1937) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 有 RouterLink 的 MenuItem 在收起时 Title 不隐藏的问题。[#1934](https://github.com/ant-design-blazor/ant-design-blazor/pull/1934) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.9.3
 
 2021-08-29
@@ -26,7 +73,7 @@ timeline: true
   - 📖 增加 表格嵌套的示例。[#1884](https://github.com/ant-design-blazor/ant-design-blazor/pull/1884) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 时间列内置筛选器在筛选时将忽略毫秒。[#1864](https://github.com/ant-design-blazor/ant-design-blazor/pull/1864) [@iamSmallY](https://github.com/iamSmallY)
   - 🐞 修复 使用客户端模式翻页、排序、筛选等操作不刷新的问题。[#1858](https://github.com/ant-design-blazor/ant-design-blazor/pull/1858) [@ElderJames](https://github.com/ElderJames)
-  [#1875](https://github.com/ant-design/ant-design/pull/1875) [@nikolaykrondev](https://github.com/nikolaykrondev)
+  [#1875](https://github.com/ant-design-blazor/ant-design-blazor/pull/1875) [@nikolaykrondev](https://github.com/nikolaykrondev)
   - 🐞 修复 初始化后 OnChange 调用多次的问题。[#1855](https://github.com/ant-design-blazor/ant-design-blazor/pull/1855) [@ElderJames](https://github.com/ElderJames)
 
 - 🆕 新增 Breadcrumb 的 Href 和 Overlay 下拉菜单。 [#1859](https://github.com/ant-design-blazor/ant-design-blazor/pull/1859) [@CAPCHIK](https://github.com/CAPCHIK)

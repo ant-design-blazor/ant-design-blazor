@@ -1,0 +1,77 @@
+﻿@namespace AntDesign
+@inherits SelectBase<string, TItem>
+@typeparam TItem
+
+@using AntDesign.Internal
+@using AntDesign.Select.Internal
+
+<CascadingValue Value="this" IsFixed>
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
+            <OverlayTrigger @ref="@_dropDown"
+                            Visible="Open"
+                            Disabled="Disabled"
+                            Trigger="new[] { Trigger.Click }"
+                            HiddenMode
+                            OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
+                            OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
+                            OnVisibleChange="@OnOverlayVisibleChangeAsync"
+                            PopupContainerSelector="@PopupContainerSelector"
+                            OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                            OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
+                <Overlay >
+                    <div style="@_dropdownStyle">
+                        <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
+                            <div>
+                                <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                    
+                                    <Tree TItem="TItem"
+                                          BlockNode @ref="_tree" Multiple="Multiple"
+                                          @attributes="TreeAttributes"
+                                          SelectedKeys="SelectedKeys"
+                                          OnClick="OnTreeNodeClick"
+                                          OnUnSelect="OnTreeNodeUnSelect">
+                                        <Nodes>
+                                            @if (IsInnerModel)
+                                            {
+                                                <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
+                                                    @ChildContent
+                                                </CascadingValue>
+                                            }
+                                        </Nodes>
+                                        
+                                    </Tree>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Overlay>
+                <Unbound>
+                    <CascadingValue Value="this" Name=@("ParentSelect") IsFixed>
+                        <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
+                            <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
+                                <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                                    <SelectContent Prefix="ant-select"
+                                                   RefBack="@context"
+                                                   TItemValue="string"
+                                                   TItem="TItem"
+                                                   SearchValue="@_searchValue"
+                                                   IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                   OnInput="@OnInputAsync"
+                                                   OnKeyUp="@OnKeyUpAsync"
+                                                   OnKeyDown="@OnKeyDownAsync"
+                                                   OnFocus="@OnInputFocusAsync"
+                                                   OnBlur="@OnInputBlurAsync"
+                                                   OnClearClick="@OnInputClearClickAsync"
+                                                   OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                   Placeholder="@Placeholder"
+                                                   ShowPlaceholder="@ShowPlaceholder" />
+                                </CascadingValue>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                </Unbound>
+            </OverlayTrigger>
+        </div>
+    </CascadingValue>
+</CascadingValue>

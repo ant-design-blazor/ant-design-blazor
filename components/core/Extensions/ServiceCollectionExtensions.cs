@@ -4,6 +4,7 @@ using AntDesign;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,6 +13,12 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesign(this IServiceCollection services)
         {
             services.TryAddScoped<DomEventService>();
+            services.TryAddTransient<IDomEventListener>((sp) =>
+            {
+                var domEventService = sp.GetRequiredService<DomEventService>();
+                return domEventService.CreateDomEventListerner();
+            });
+
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
                         s => HtmlEncoder.Default.Encode(s)))
             );

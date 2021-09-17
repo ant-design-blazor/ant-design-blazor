@@ -16,7 +16,21 @@ namespace AntDesign
         public SubMenu Parent { get; set; }
 
         [Parameter]
-        public PlacementType Placement { get; set; }
+        public Placement? Placement
+        {
+            get { return _placement?.Placement; }
+            set
+            {
+                if (value is null)
+                {
+                    _placement = null;
+                }
+                else
+                {
+                    _placement = PlacementType.Create(value.Value);
+                }
+            }
+        }
 
         [Parameter]
         public string Title { get; set; }
@@ -57,6 +71,7 @@ namespace AntDesign
         private OverlayTrigger _overlayTrigger;
 
         internal bool _overlayVisible;
+        private PlacementType? _placement;
 
         private void SetClass()
         {
@@ -65,10 +80,17 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Get(() => $"{prefixCls}-{RootMenu?.InternalMode}")
+                    .Get(() => $"{prefixCls}-{(Parent is null ? RootMenu?.InternalMode : MenuMode.Vertical)}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
+                    .If($"{prefixCls}-open", () => {
+                        var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
+                        if (Key == "sub1")
+                        {
+                            Console.WriteLine(eval);
+                        }
+                        return eval;
+                        })
                     ;
 
             SubMenuMapper
@@ -136,7 +158,16 @@ namespace AntDesign
             base.OnParametersSet();
 
             if (!RootMenu.InlineCollapsed && RootMenu.OpenKeys.Contains(Key))
-                IsOpen = true;
+            {
+                if (RootMenu.InitialMode != RootMenu.Mode)
+                {
+                    IsOpen = false;
+                }
+                else
+                {
+                    IsOpen = true;
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -180,10 +211,14 @@ namespace AntDesign
         {
         }
 
-        public void Select()
+        public void Select(bool isInitializing = false)
         {
             Parent?.Select();
             _isSelected = true;
+            if (isInitializing)
+            {
+                StateHasChanged();
+            }
         }
 
         public void Deselect()

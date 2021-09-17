@@ -132,8 +132,11 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public bool Responsive { get; set; } = true;
+
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -143,6 +146,7 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private bool _hasFirstLoad;
         private bool _waitingReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
@@ -150,7 +154,7 @@ namespace AntDesign
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
-        private ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
@@ -328,6 +332,7 @@ namespace AntDesign
 
             _wrapperClassMapper
                 .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
@@ -354,9 +359,21 @@ namespace AntDesign
             FlushCache();
         }
 
-        protected override void OnAfterRender(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            base.OnAfterRender(firstRender);
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+
+                if (ScrollY != null || ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                }
+
+                _hasFirstLoad = true;
+            }
 
             if (!firstRender)
             {
@@ -364,21 +381,6 @@ namespace AntDesign
             }
 
             _shouldRender = false;
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
-            if (firstRender)
-            {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading);
-
-                if (ScrollY != null || ScrollX != null)
-                {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
-                }
-            }
         }
 
         protected override void OnParametersSet()
@@ -390,12 +392,19 @@ namespace AntDesign
                 _waitingReloadAndInvokeChange = false;
                 _waitingReload = false;
 
-                ReloadAndInvokeChange();
+                if (_hasFirstLoad)
+                {
+                    ReloadAndInvokeChange();
+                }
             }
             else if (_waitingReload)
             {
                 _waitingReload = false;
-                InternalReload();
+
+                if (_hasFirstLoad)
+                {
+                    InternalReload();
+                }
             }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
@@ -427,7 +436,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -440,7 +449,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)

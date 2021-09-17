@@ -14,6 +14,9 @@ namespace AntDesign
         [Parameter]
         public string Color { get; set; } = "blue";
 
+        [Parameter]
+        public string Label { get; set; }
+
         [CascadingParameter]
         public Timeline ParentTimeline { get; set; }
 
@@ -67,6 +70,16 @@ namespace AntDesign
             _headClassMapper.Clear().Add(headPrefix)
                 .If($"{headPrefix}-{Color}", () => _defaultColors.Contains(Color))
                 .If($"{headPrefix}-custom", () => Dot != null);
+        }
+
+        internal void SetChildContent(RenderFragment childContent)
+        {
+            this.ChildContent = childContent;
+        }
+
+        internal void SetDot(RenderFragment dot)
+        {
+            this.Dot = dot;
         }
     }
 }
