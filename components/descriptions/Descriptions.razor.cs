@@ -51,24 +51,24 @@ namespace AntDesign
 
         private int _realColumn;
 
-        private readonly Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int>
+        private static Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int>
         {
-            { "xxl", 3 },
-            { "xl", 3},
-            { "lg", 3},
-            { "md", 3},
-            { "sm", 2},
-            { "xs", 1}
+            { "Xxl", 3 },
+            { "Xl", 3},
+            { "Lg", 3},
+            { "Md", 3},
+            { "Sm", 2},
+            { "Xs", 1}
         };
 
-        private static readonly List<(int PixelWidth, BreakpointEnum Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointEnum)>()
+        private static readonly List<(int PixelWidth, BreakpointType Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointType)>()
         {
-            (575,BreakpointEnum.xs),
-            (576,BreakpointEnum.sm),
-            (768,BreakpointEnum.md),
-            (992,BreakpointEnum.lg),
-            (1200,BreakpointEnum.xl),
-            (1600,BreakpointEnum.xxl)
+            (575,BreakpointType.Xs),
+            (576,BreakpointType.Sm),
+            (768,BreakpointType.Md),
+            (992,BreakpointType.Lg),
+            (1200,BreakpointType.Xl),
+            (1600,BreakpointType.Xxl)
         };
 
         private void SetClassMap()
@@ -176,7 +176,7 @@ namespace AntDesign
             {
                 HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
                 var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.ClientWidth);
-                var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
+                var bp = breakpointTuple == default ? BreakpointType.Xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
         }
