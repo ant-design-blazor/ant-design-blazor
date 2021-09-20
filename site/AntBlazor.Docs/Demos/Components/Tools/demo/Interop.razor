@@ -1,0 +1,38 @@
+﻿<div @ref="divRef">
+    我是Div
+</div>
+
+<Divider></Divider>
+<Button OnClick="OnGetDomInfo">OnGetDomInfo</Button>
+<br />
+<div style="word-break: break-all;">
+    Element:@(System.Text.Json.JsonSerializer.Serialize(element))
+</div>
+<br />
+
+<Button OnClick="OnGetWindow">OnGetWindow</Button>
+<br />
+<div style="word-break: break-all;">
+    Window:@(System.Text.Json.JsonSerializer.Serialize(window))
+</div>
+@code{
+    [Inject] public AntDesign.JsInterop.InteropService InteropService { get; set; }
+
+    ElementReference divRef;
+
+    AntDesign.JsInterop.Element element;
+
+    public async void OnGetDomInfo()
+    {
+        element = await InteropService.GetDomInfo(divRef);
+        StateHasChanged();
+    }
+
+    AntDesign.JsInterop.Window window;
+
+    public async void OnGetWindow()
+    {
+        window = await InteropService.GetWindow();
+        StateHasChanged();
+    }
+}
