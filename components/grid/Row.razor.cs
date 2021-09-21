@@ -57,6 +57,11 @@ namespace AntDesign
                     tupleIntDict => (tupleIntDict.Item1, new Dictionary<string, int>(tupleIntDict.Item2, StringComparer.OrdinalIgnoreCase)),
                     tupleDictDict => (new Dictionary<string, int>(tupleDictDict.Item1, StringComparer.OrdinalIgnoreCase), new Dictionary<string, int>(tupleDictDict.Item2, StringComparer.OrdinalIgnoreCase))
                     );
+
+                if (_currentBreakPoint != null)
+                {
+                    SetGutterStyle(_currentBreakPoint);
+                }
             }
         }
 
