@@ -12,14 +12,3 @@ title:
 ## en-US
 
 The simplest usage of both types of the `Tooltip`.
-
-```jsx
-import { Tooltip } from 'antd';
-
-ReactDOM.render(
-  <Tooltip title="prompt text">
-    <span>Tooltip (bound to div) will show on mouse enter.</span>
-  </Tooltip>,
-  mountNode,
-);
-```
