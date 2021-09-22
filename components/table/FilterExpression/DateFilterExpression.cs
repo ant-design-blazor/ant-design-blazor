@@ -52,10 +52,10 @@ namespace AntDesign.FilterExpression
                     case TableFilterCompareOperator.LessThanOrEquals:
                         return Expression.AndAlso(notNull, Expression.LessThanOrEqual(leftExpr, rightExpr));
                     case TableFilterCompareOperator.TheSameDateWith:
-￼                        return Expression.AndAlso(notNull,
-￼                            Expression.Equal(
-￼                                Expression.Property(leftExpr, "Date"),
-￼                                Expression.Property(rightExpr, "Date")));
+                        return Expression.AndAlso(notNull,
+                            Expression.Equal(
+                                Expression.Property(leftExpr, "Date"),
+                                Expression.Property(rightExpr, "Date")));
                 }
                 throw new InvalidOperationException();
             }
