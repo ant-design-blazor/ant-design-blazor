@@ -16,6 +16,7 @@ namespace AntDesign
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        private bool _preventRender = false;
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
@@ -213,6 +214,8 @@ namespace AntDesign
             FlushCache();
 
             this.InternalReload();
+
+            StateHasChanged();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -267,6 +270,7 @@ namespace AntDesign
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.InternalReload();
+            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -324,7 +328,7 @@ namespace AntDesign
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
 
-            StateHasChanged();
+            //StateHasChanged();
 
             return queryModel;
         }
@@ -398,7 +402,12 @@ namespace AntDesign
                 }
             }
 
-            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            if (_preventRender)
+            {
+                _shouldRender = false;
+                _preventRender = false;
+            }
+            else if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
                 this._shouldRender = this._parametersHashCode != hashCode;
