@@ -13,6 +13,9 @@ namespace AntDesign
 {
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        public bool Blocked { get; set; }
+
         [CascadingParameter(Name = "ItemType")]
         public Type ItemType { get; set; }
 
@@ -280,6 +283,12 @@ namespace AntDesign
                     new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
                     null;
             }
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
         }
 
         private string NumberFormatter(object value)
