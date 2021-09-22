@@ -28,7 +28,7 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _waitingReload = true;
+                _waitingDataSourceReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
@@ -146,8 +146,8 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
-        private bool _hasFirstLoad;
-        private bool _waitingReload;
+        private bool _hasInitialized;
+        private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
 
@@ -175,6 +175,11 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
+        /// <summary>
+        /// This method will be called when all columns have been set
+        /// </summary>
+        void ITable.OnColumnInitialized() => OnColumnInitialized();
+
         void ITable.OnExpandChange(int cacheKey)
         {
             if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
@@ -187,6 +192,18 @@ namespace AntDesign
         {
             _summaryRows ??= new List<SummaryRow>();
             _summaryRows.Add(summaryRow);
+        }
+
+
+        void OnColumnInitialized()
+        {
+            if (_hasInitialized)
+            {
+                return;
+            }
+
+            ReloadAndInvokeChange();
+            _hasInitialized = true;
         }
 
         public void ReloadData()
@@ -286,19 +303,16 @@ namespace AntDesign
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
+                }
+
+                if (_total != Total && TotalChanged.HasDelegate)
+                {
+                    TotalChanged.InvokeAsync(_total);
                 }
 
                 _shouldRender = true;
@@ -309,6 +323,7 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
+
             StateHasChanged();
 
             return queryModel;
@@ -359,29 +374,6 @@ namespace AntDesign
             FlushCache();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
-            if (firstRender)
-            {
-                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
-
-                if (ScrollY != null || ScrollX != null)
-                {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
-                }
-
-                _hasFirstLoad = true;
-            }
-
-            if (!firstRender)
-            {
-                this.FinishLoadPage();
-            }
-
-            _shouldRender = false;
-        }
 
         protected override void OnParametersSet()
         {
@@ -390,18 +382,17 @@ namespace AntDesign
             if (_waitingReloadAndInvokeChange)
             {
                 _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
 
-                if (_hasFirstLoad)
+                if (_hasInitialized)
                 {
+                    _waitingDataSourceReload = false;
                     ReloadAndInvokeChange();
                 }
             }
-            else if (_waitingReload)
+            else if (_waitingDataSourceReload)
             {
-                _waitingReload = false;
-
-                if (_hasFirstLoad)
+                _waitingDataSourceReload = false;
+                if (_hasInitialized)
                 {
                     InternalReload();
                 }
@@ -419,8 +410,48 @@ namespace AntDesign
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+
+                if (ScrollY != null || ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                }
+
+                // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
+                if (_hasInitialized && !_shouldRender)
+                {
+                    _shouldRender = true;
+                    StateHasChanged();
+                    return;
+                }
+
+                // To handle the case where a dynamic table does not render columns until the data is requested
+                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                {
+                    OnColumnInitialized();
+                    return;
+                }
+            }
+
+            if (!firstRender)
+            {
+                this.FinishLoadPage();
+            }
+
+            _shouldRender = false;
+        }
+
         protected override bool ShouldRender()
         {
+            // Do not render until initialisation is complete.
+            this._shouldRender = this._shouldRender && _hasInitialized;
+
             return this._shouldRender;
         }
 
