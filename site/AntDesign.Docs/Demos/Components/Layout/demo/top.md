@@ -19,50 +19,6 @@ Generally, the mainnav is placed at the top of the page, and includes the logo, 
 
 Top-bottom structure is conform with the top-bottom viewing habit, it's a classical navigation pattern of websites. This pattern demonstrates efficiency in the main workarea, while using some vertical space. And because the horizontal space of the navigation is limited, this pattern is not suitable for cases when the first level navigation contains many elements or links
 
-```jsx
-import { Layout, Menu, Breadcrumb } from 'antd';
-
-const { Header, Content, Footer } = Layout;
-
-ReactDOM.render(
-  <Layout className="layout">
-    <Header>
-      <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-        <Menu.Item key="1">nav 1</Menu.Item>
-        <Menu.Item key="2">nav 2</Menu.Item>
-        <Menu.Item key="3">nav 3</Menu.Item>
-      </Menu>
-    </Header>
-    <Content style={{ padding: '0 50px' }}>
-      <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>List</Breadcrumb.Item>
-        <Breadcrumb.Item>App</Breadcrumb.Item>
-      </Breadcrumb>
-      <div className="site-layout-content">Content</div>
-    </Content>
-    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-  </Layout>,
-  mountNode,
-);
-```
-
-```css
-.site-layout-content {
-  background: #fff;
-  padding: 24px;
-  min-height: 280px;
-}
-#components-layout-demo-top .logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
-  float: left;
-}
-```
-
 <style>
   [data-theme="dark"] .site-layout-content {
     background: #141414;
