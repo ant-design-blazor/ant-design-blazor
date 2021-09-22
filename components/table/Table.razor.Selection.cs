@@ -8,24 +8,29 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
+        private IEnumerable<TItem> _outerSelectedRows;
+
         [Parameter]
         public IEnumerable<TItem> SelectedRows
         {
             get => _selectedRows;
             set
             {
-                _dataSourceCache ??= new Dictionary<int, RowData<TItem>>();
-
+                _outerSelectedRows = value;
+                if (_dataSourceCache is null)
+                {
+                    _dataSourceCache = new Dictionary<int, RowData<TItem>>();
+                    _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
+                }
+                if (value == _selectedRows) return;
                 if (value != null && value.Any())
                 {
-                    _dataSourceCache.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
+                    _dataSourceCache.Values.ForEach(x => x.SetSelected(x.Data.IsIn(value)));
                 }
-                else if (_selectedRows != null)
+                else
                 {
-                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
+                    _dataSourceCache.Values.ForEach(x => x.SetSelected(false));
                 }
-
-                _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
             }
         }
 
@@ -37,9 +42,9 @@ namespace AntDesign
 
         private void RowDataSelectedChanged(RowData rowData, bool selected)
         {
-            _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
-            if (SelectedRowsChanged.HasDelegate)
+            if (SelectedRowsChanged.HasDelegate && _outerSelectedRows != _selectedRows)
             {
+                _preventRender = true;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }
         }
@@ -52,21 +57,26 @@ namespace AntDesign
 
         public void SetSelection(string[] keys)
         {
+            if (keys == null || !keys.Any())
+            {
+                _dataSourceCache.Values.ForEach(x => x.Selected = false);
+                if (_selection != null)
+                {
+                    _selection.StateHasChanged();
+                }
+                SelectionChanged();
+                return;
+            }
+
             if (_selection == null)
             {
-                if (keys == null || !keys.Any())
-                {
-                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
-                    StateHasChanged();
-                }
-                else
-                {
-                    throw new NotSupportedException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
-                }
+                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
             }
             else
             {
-                _selection.SetSelection(keys);
+                _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+                _selection.StateHasChanged();
+                SelectionChanged();
             }
         }
 
@@ -76,12 +86,8 @@ namespace AntDesign
         {
             if (SelectedRowsChanged.HasDelegate)
             {
-                _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
+                _preventRender = true;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
-            }
-            else
-            {
-                StateHasChanged();
             }
         }
     }

@@ -125,17 +125,17 @@
         @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
-        <thead class="ant-table-thead">
-            <tr @attributes="headerRowAttributes">
-                <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                    @table.ChildContent(_fieldModel)
-                </CascadingValue>
-                @if (table.ScrollY != null)
-                {
-                    <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
-                }
-            </tr>
-        </thead>
+         <thead class="ant-table-thead">
+             <CascadingValue Name="IsHeader" Value="true" IsFixed>
+                 <AntDesign.Internal.TableRow RowAttributes="headerRowAttributes" Table="table">
+                     @table.ChildContent(_fieldModel)
+                     @if (table.ScrollY != null)
+                     {
+                         <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+                     }
+                 </AntDesign.Internal.TableRow>
+             </CascadingValue>
+         </thead>
     </Template>;
 
 RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
@@ -200,14 +200,14 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
             }
 
-            <tr @attributes="rowAttributes"
-                data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData) @rowAttributes?.GetValueOrDefault("class")">
-                <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
-                    <CascadingValue Value="true" Name="IsBody" IsFixed>
+            <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
+                <CascadingValue Value="true" Name="IsBody" IsFixed>
+                    <AntDesign.Internal.TableRow RowAttributes="rowAttributes" Level="level" Table="table" RowIndex="rowIndex">
                         @table.ChildContent(data)
-                    </CascadingValue>
+                    </AntDesign.Internal.TableRow>
                 </CascadingValue>
-            </tr>
+            </CascadingValue>
+
             @if (hasChildren && currentRowData.Expanded)
             {
                 @table.body((table, table.TreeChildren(data), level + 1));
