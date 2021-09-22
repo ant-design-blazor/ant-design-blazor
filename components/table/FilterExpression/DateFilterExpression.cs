@@ -32,6 +32,13 @@ namespace AntDesign.FilterExpression
                 Expression isNull = Expression.Equal(leftExpr, Expression.Constant(null));
                 leftExpr = Expression.Property(leftExpr, "Value");
                 rightExpr = Expression.Property(rightExpr, "Value");
+                if (compareOperator == TableFilterCompareOperator.TheSameDateWith)
+                {
+                    return Expression.AndAlso(notNull,
+                        Expression.Equal(
+                            Expression.Property(leftExpr, "Date"),
+                            Expression.Property(rightExpr, "Date")));
+                }
                 leftExpr = RemoveMilliseconds(leftExpr);
 
                 switch (compareOperator)
@@ -48,11 +55,6 @@ namespace AntDesign.FilterExpression
                         return Expression.AndAlso(notNull, Expression.LessThan(leftExpr, rightExpr));
                     case TableFilterCompareOperator.LessThanOrEquals:
                         return Expression.AndAlso(notNull, Expression.LessThanOrEqual(leftExpr, rightExpr));
-                    case TableFilterCompareOperator.TheSameDateWith:
-                        return Expression.AndAlso(notNull,
-                            Expression.Equal(
-                                Expression.Property(leftExpr, "Date"),
-                                Expression.Property(rightExpr, "Date")));
                 }
                 throw new InvalidOperationException();
             }
