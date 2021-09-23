@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -105,7 +106,17 @@ namespace AntDesign
                 Parent.Complete(Pane);
             }
         }
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
 
+            Pane?.ClassMapper.Clear();
+            Pane?.ClassMapper
+                 .Add(PrefixCls)
+                 .If($"{PrefixCls}-active", () => Pane?.IsActive == true)
+                 .If($"{PrefixCls}-with-remove", () => Pane?.Closable == true)
+                 .If($"{PrefixCls}-disabled", () => Pane?.Disabled == true);
+        }
         private void SetTab()
         {
             _hasTab = true;
