@@ -1,54 +1,51 @@
-﻿@using System.Timers
-
-<div>
-    <Button Type="@ButtonType.Primary" Loading>
-        Loading
-    </Button>
+﻿<div>
+    <Button Type="@ButtonType.Primary" Loading>Loading</Button>
     <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" Loading>Loading</Button>
     <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
+    
     <br />
+    
     <Button Type="@ButtonType.Primary"
-            Loading="noIconLoading"
-            OnClick=EnterNoIconLoading>
+            Loading="_noIconLoading"
+            OnClick="EnterNoIconLoading">
         Click me!
     </Button>
     <Button Type="@ButtonType.Primary"
             Icon="@IconType.Outline.Poweroff"
-            Loading="withIconLoading"
+            Loading="_withIconLoading"
             OnClick="EnterWithIconLoading">
         Click me!
     </Button>
     <Button Type="@ButtonType.Primary"
             Icon="@IconType.Outline.Poweroff"
-            Loading="onlyIconLoading"
+            Loading="_onlyIconLoading"
             OnClick="EnterOnlyIconLoading" />
 </div>
 
 @code
 {
-    bool noIconLoading = false;
-    bool withIconLoading = false;
-    bool onlyIconLoading = false;
+    private bool _noIconLoading;
+    private bool _withIconLoading;
+    private bool _onlyIconLoading;
 
     private async Task EnterNoIconLoading()
     {
-        noIconLoading = true;
+        _noIconLoading = true;
         await Task.Delay(8000);
-        noIconLoading = false;
+        _noIconLoading = false;
     }
 
     private async Task EnterWithIconLoading()
     {
-        withIconLoading = true;
+        _withIconLoading = true;
         await Task.Delay(8000);
-        withIconLoading = false;
+        _withIconLoading = false;
     }
 
     private async Task EnterOnlyIconLoading()
     {
-        onlyIconLoading = true;
-
+        _onlyIconLoading = true;
         await Task.Delay(8000);
-        onlyIconLoading = false;
+        _onlyIconLoading = false;
     }
 }

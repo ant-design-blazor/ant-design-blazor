@@ -14,9 +14,26 @@ namespace AntDesign
                 return;
             }
 
-            foreach (T obj in items)
+            var source = items.ToList();
+
+            foreach (T obj in source)
             {
                 action(obj);
+            }
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T, int> action)
+        {
+            if (items == null)
+            {
+                return;
+            }
+
+            var source = items.ToArray();
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                action(source[i], i);
             }
         }
 

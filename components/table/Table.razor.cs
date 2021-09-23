@@ -16,6 +16,7 @@ namespace AntDesign
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        private bool _preventRender = false;
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
@@ -28,7 +29,7 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _waitingReload = true;
+                _waitingDataSourceReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
@@ -146,8 +147,8 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
-        private bool _hasFirstLoad;
-        private bool _waitingReload;
+        private bool _hasInitialized;
+        private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
 
@@ -175,6 +176,11 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
+        /// <summary>
+        /// This method will be called when all columns have been set
+        /// </summary>
+        void ITable.OnColumnInitialized() => OnColumnInitialized();
+
         void ITable.OnExpandChange(int cacheKey)
         {
             if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
@@ -189,6 +195,18 @@ namespace AntDesign
             _summaryRows.Add(summaryRow);
         }
 
+
+        void OnColumnInitialized()
+        {
+            if (_hasInitialized)
+            {
+                return;
+            }
+
+            ReloadAndInvokeChange();
+            _hasInitialized = true;
+        }
+
         public void ReloadData()
         {
             PageIndex = 1;
@@ -196,6 +214,8 @@ namespace AntDesign
             FlushCache();
 
             this.InternalReload();
+
+            StateHasChanged();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -250,6 +270,7 @@ namespace AntDesign
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.InternalReload();
+            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -286,19 +307,16 @@ namespace AntDesign
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
+                }
+
+                if (_total != Total && TotalChanged.HasDelegate)
+                {
+                    TotalChanged.InvokeAsync(_total);
                 }
 
                 _shouldRender = true;
@@ -309,7 +327,8 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-            StateHasChanged();
+
+            //StateHasChanged();
 
             return queryModel;
         }
@@ -359,6 +378,47 @@ namespace AntDesign
             FlushCache();
         }
 
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+
+                if (_hasInitialized)
+                {
+                    _waitingDataSourceReload = false;
+                    ReloadAndInvokeChange();
+                }
+            }
+            else if (_waitingDataSourceReload)
+            {
+                _waitingDataSourceReload = false;
+                if (_hasInitialized)
+                {
+                    InternalReload();
+                }
+            }
+
+            if (_preventRender)
+            {
+                _shouldRender = false;
+                _preventRender = false;
+            }
+            else if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            {
+                var hashCode = this.GetParametersHashCode();
+                this._shouldRender = this._parametersHashCode != hashCode;
+                this._parametersHashCode = hashCode;
+            }
+            else
+            {
+                this._shouldRender = true;
+            }
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -372,7 +432,20 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
                 }
 
-                _hasFirstLoad = true;
+                // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
+                if (_hasInitialized && !_shouldRender)
+                {
+                    _shouldRender = true;
+                    StateHasChanged();
+                    return;
+                }
+
+                // To handle the case where a dynamic table does not render columns until the data is requested
+                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                {
+                    OnColumnInitialized();
+                    return;
+                }
             }
 
             if (!firstRender)
@@ -383,44 +456,11 @@ namespace AntDesign
             _shouldRender = false;
         }
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                if (_hasFirstLoad)
-                {
-                    ReloadAndInvokeChange();
-                }
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-
-                if (_hasFirstLoad)
-                {
-                    InternalReload();
-                }
-            }
-
-            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
-            {
-                var hashCode = this.GetParametersHashCode();
-                this._shouldRender = this._parametersHashCode != hashCode;
-                this._parametersHashCode = hashCode;
-            }
-            else
-            {
-                this._shouldRender = true;
-            }
-        }
-
         protected override bool ShouldRender()
         {
+            // Do not render until initialisation is complete.
+            this._shouldRender = this._shouldRender && _hasInitialized;
+
             return this._shouldRender;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -14,21 +15,21 @@ namespace AntDesign
 
         [Parameter] public bool CheckStrictly { get; set; }
 
-        bool ISelectionColumn.Checked
-        {
-            get => _checked;
-            set => _checked = value;
-        }
+        [CascadingParameter(Name = "AntDesign.Selection.OnChange")]
+        internal EventCallback<bool> OnChange { get; set; }
+
+        [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
+        internal ITableRow TableRow { get; set; }
 
         private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && this.RowSelections.Where(x => !x.Disabled).Any(x => x.Checked)
-                                      && !this.RowSelections.Where(x => !x.Disabled).All(x => x.Checked);
+                                      && this.RowSelections.Where(x => !x.Disabled).Any(x => x.RowData.Selected)
+                                      && !this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
-        private int[] _selectedIndexes;
+        //private int[] _selectedIndexes;
 
         protected override void OnInitialized()
         {
@@ -42,11 +43,11 @@ namespace AntDesign
             if (IsHeader)
             {
                 Table.Selection = this;
-
                 Context.HeaderColumnInitialed(this);
             }
             else if (IsBody)
             {
+                TableRow.Selection = this;
                 Table?.Selection?.RowSelections.Add(this);
             }
         }
@@ -64,26 +65,6 @@ namespace AntDesign
             //}
         }
 
-        private void HandleCheckedChange(bool @checked)
-        {
-            if (this.IsHeader)
-            {
-                RowSelections.Where(x => !x.Disabled).ForEach(x => x.RowData.SetSelected(@checked));
-                InvokeSelectedRowsChange();
-            }
-            else if (IsBody)
-            {
-                RowData.SetSelected(@checked);
-
-                if (Type == "radio")
-                {
-                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.RowData.SetSelected(false));
-                }
-
-                Table?.Selection.InvokeSelectedRowsChange();
-            }
-        }
-
         bool ISelectionColumn.Check(bool @checked)
         {
             return this.Check(@checked);
@@ -94,7 +75,7 @@ namespace AntDesign
             if (this._checked != @checked)
             {
                 this._checked = @checked;
-                StateHasChanged();
+                //StateHasChanged();
 
                 return true;
             }
@@ -102,44 +83,11 @@ namespace AntDesign
             return false;
         }
 
-        public void InvokeSelectedRowsChange()
-        {
-            if (IsHeader)
-            {
-                Table.SelectionChanged();
-            }
-        }
-
-        public void ChangeSelection()
-        {
-            this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowData.Selected));
-            this.Table.Selection.StateHasChanged();
-        }
-
-        public void SetSelection(string[] keys)
-        {
-            if (keys == null || !keys.Any())
-            {
-                this.Table.Selection.RowSelections.ForEach(x => x.RowData.SetSelected(false));
-                this.Table.Selection.InvokeSelectedRowsChange();
-            }
-            else
-            {
-                this.Table.Selection.RowSelections.ForEach(x => x.RowData.SetSelected(x.Key.IsIn(keys)));
-                this.Table.Selection.InvokeSelectedRowsChange();
-            }
-        }
-
-        public void ChangeOnPaging()
-        {
-            this.ChangeSelection();
-        }
-
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader)
+            if (IsHeader && Type == "checkbox")
             {
-                _checked = this.RowSelections.Any() && this.RowSelections.Where(x => !x.Disabled).All(x => x.Checked);
+                _checked = this.RowSelections.Any() && this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
                 StateHasChanged();
             }
         }

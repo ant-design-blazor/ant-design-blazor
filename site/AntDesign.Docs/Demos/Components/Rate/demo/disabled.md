@@ -12,9 +12,3 @@ title:
 ## en-US
 
 Read only, can't use mouse to interact.
-
-```jsx
-import { Rate } from 'antd';
-
-ReactDOM.render(<Rate disabled defaultValue={2} />, mountNode);
-```

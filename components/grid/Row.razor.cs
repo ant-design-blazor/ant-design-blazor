@@ -44,7 +44,26 @@ namespace AntDesign
         public bool Wrap { get; set; } = true;
 
         [Parameter]
-        public GutterType Gutter { get; set; }
+        public GutterType Gutter
+        {
+            get => _gutter;
+            set
+            {
+                _gutter = value.Match<GutterType>(
+                    @int => @int,
+                    dict => new Dictionary<string, int>(dict, StringComparer.OrdinalIgnoreCase),
+                    tuple => tuple,
+                    tupleDictInt => (new Dictionary<string, int>(tupleDictInt.Item1, StringComparer.OrdinalIgnoreCase), tupleDictInt.Item2),
+                    tupleIntDict => (tupleIntDict.Item1, new Dictionary<string, int>(tupleIntDict.Item2, StringComparer.OrdinalIgnoreCase)),
+                    tupleDictDict => (new Dictionary<string, int>(tupleDictDict.Item1, StringComparer.OrdinalIgnoreCase), new Dictionary<string, int>(tupleDictDict.Item2, StringComparer.OrdinalIgnoreCase))
+                    );
+
+                if (_currentBreakPoint != null)
+                {
+                    SetGutterStyle(_currentBreakPoint);
+                }
+            }
+        }
 
         [Parameter]
         public EventCallback<BreakpointType> OnBreakpoint { get; set; }
@@ -60,6 +79,7 @@ namespace AntDesign
 
         private string _gutterStyle;
         private BreakpointType? _currentBreakPoint;
+        private GutterType _gutter;
 
         private IList<Col> _cols = new List<Col>();
 
@@ -165,15 +185,11 @@ namespace AntDesign
 
         private (int horizontalGutter, int verticalGutter) GetGutter(BreakpointType? breakPoint)
         {
-            GutterType gutter = 0;
-            if (this.Gutter.Value != null)
-                gutter = this.Gutter;
-
             var breakPointName = Enum.GetName(typeof(BreakpointType), breakPoint);
 
-            return gutter.Match(
+            return _gutter.Match(
                 num => (num, 0),
-                dic => breakPoint != null && dic.ContainsKey(breakPointName) ? (dic[breakPointName], 0) : (0, 0),
+                dic => dic.ContainsKey(breakPointName) ? (dic[breakPointName], 0) : (0, 0),
                 tuple => tuple,
                 tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPointName) ? tupleDicInt.Item1[breakPointName] : 0, tupleDicInt.Item2),
                 tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPointName) ? tupleIntDic.Item2[breakPointName] : 0),
@@ -186,15 +202,5 @@ namespace AntDesign
             DomEventListener.Dispose();
             base.Dispose(disposing);
         }
-    }
-
-    public enum BreakpointEnum
-    {
-        xxl,
-        xl,
-        lg,
-        md,
-        sm,
-        xs
     }
 }
