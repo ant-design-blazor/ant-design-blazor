@@ -41,13 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.Build", "sit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Components.Authentication", "src\AntDesign.Components.Authentication\AntDesign.Components.Authentication.csproj", "{88E00D83-912A-4AC4-9A6D-34F87DC3A675}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntDesign.Tests.Authentication", "AntDesign.Tests.Authentication", "{606789E3-AFE9-4489-9963-2B06A701D6B6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntDesign.TestApp", "AntDesign.TestApp", "{606789E3-AFE9-4489-9963-2B06A701D6B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Server", "tests\AntDesign.Tests.Authentication\Server\AntDesign.Tests.Authentication.Server.csproj", "{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TestApp.Server", "tests\AntDesign.TestApp\Server\AntDesign.TestApp.Server.csproj", "{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Client", "tests\AntDesign.Tests.Authentication\Client\AntDesign.Tests.Authentication.Client.csproj", "{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Authentication.Shared", "tests\AntDesign.Tests.Authentication\Shared\AntDesign.Tests.Authentication.Shared.csproj", "{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TestApp.Client", "tests\AntDesign.TestApp\Client\AntDesign.TestApp.Client.csproj", "{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,10 +105,6 @@ Global
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99AC4DA1-7ED7-482B-9418-5FB8EF16E178}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,7 +124,6 @@ Global
 		{606789E3-AFE9-4489-9963-2B06A701D6B6} = {DFD13180-D1BF-44DA-BEBE-4A54EFDEFFE2}
 		{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
-		{99AC4DA1-7ED7-482B-9418-5FB8EF16E178} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E124DDCB-1F8D-4F96-BF41-D87019D0A412}
