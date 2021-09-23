@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+
+<Layout Style="height: 100vh;">
+	<Sider  Collapsible Collapsed=@collapsed NoTrigger>
+		<div class="logo" />
+		<NavMenu />
+	</Sider>
+	<Layout>
+		<Header>
+			<LoginDisplay />
+			<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+		</Header>
+		<Content>
+			@Body
+			<div>
+				<ReuseTabs />
+			</div>
+		</Content>
+		<Footer>Footer</Footer>
+	</Layout>
+</Layout>
+
+@code
+{
+    bool collapsed;
+
+    void toggle()
+    {
+        collapsed = !collapsed;
+    }
+}
