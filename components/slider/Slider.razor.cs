@@ -738,7 +738,7 @@ namespace AntDesign
 
         private string SetMarkPosition(double key)
         {
-            return Formatter.ToPercentWithoutBlank(key / Max);
+            return Formatter.ToPercentWithoutBlank((key - Min) / MinMaxDelta);
         }
 
         private string IsActiveMark(double key)
