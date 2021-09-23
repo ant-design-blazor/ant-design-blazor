@@ -155,6 +155,7 @@ namespace AntDesign
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
+        private QueryModel _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -306,6 +307,8 @@ namespace AntDesign
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
+                    _currentQueryModel = queryModel;
+
                     _showItems = query;
                 }
                 else
@@ -327,8 +330,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-
-            //StateHasChanged();
 
             return queryModel;
         }
@@ -495,6 +496,27 @@ namespace AntDesign
         bool ITable.RowExpandable(RowData rowData)
         {
             return RowExpandable(rowData as RowData<TItem>);
+        }
+
+        IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
+        {
+            if (_currentQueryModel == null || ServerSide)
+            {
+                return children;
+            }
+
+            var query = children.AsQueryable();
+            foreach (var sort in _currentQueryModel.SortModel.OrderBy(x => x.Priority))
+            {
+                query = sort.SortList(query);
+            }
+
+            foreach (var filter in _currentQueryModel.FilterModel)
+            {
+                query = filter.FilterList(query);
+            }
+
+            return query;
         }
 
         /// <summary>
