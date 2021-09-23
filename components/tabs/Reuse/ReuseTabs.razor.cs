@@ -16,7 +16,7 @@ namespace AntDesign
         [CascadingParameter(Name = "RouteView")]
         public ReuseTabsRouteView RouteView { get; set; }
 
-        internal ReuseTabsPageItem[] Pages => RouteView.Pages;
+        internal ReuseTabsPageItem[] Pages => RouteView?.Pages;
 
         protected string CurrentUrl
         {

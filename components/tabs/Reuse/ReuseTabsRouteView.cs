@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace AntDesign
 {
@@ -25,7 +26,16 @@ namespace AntDesign
         {
             _pageMap.Remove(key);
         }
-
+        public void RemovePageWithRegex(string pattern)
+        {
+            foreach (var key in _pageMap.Keys)
+            {
+                if (Regex.IsMatch(key, pattern))
+                {
+                    _pageMap.Remove(key);
+                }
+            }
+        }
         public void ReplaceBody(string key, RenderFragment body)
         {
             _pageMap[key].Body = body;
@@ -50,12 +60,12 @@ namespace AntDesign
                 builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
                 {
                     b.OpenComponent(20, layoutType);
-                    b.AddAttribute(21, "Body", body);
                     b.CloseComponent();
                 }));
             }
 
             builder.CloseComponent();
+
 
             if (!_pageMap.ContainsKey(CurrentUrl))
             {
@@ -65,6 +75,8 @@ namespace AntDesign
                     Url = CurrentUrl,
                 };
             }
+
+
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)
