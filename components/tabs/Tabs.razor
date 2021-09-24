@@ -35,21 +35,21 @@
                             }
                     </ul>
                 </Overlay>
-                <ChildContent>
-                    <div class="@_operationClass" @onclick:preventDefault>
+                <Unbound>
+                    <div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
                         <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
                                 style="@_operationStyle" type="button">
                             <Icon Type="ellipsis" />
                         </button>
                     </div>
-                </ChildContent>
+                </Unbound>
             </Dropdown>
         </div>
         <!--Tab content-->
         @if (Card == null)
         {
             <div class="ant-tabs-content-holder ">
-                <div class="ant-tabs-content ant-tabs-content-@TabPosition">
+                <div class="ant-tabs-content ant-tabs-content-@(TabPosition.ToString().ToLowerInvariant())">
                     <CascadingValue Value="true" Name="IsPane" IsFixed="true">
                         @ChildContent
                     </CascadingValue>

@@ -12,7 +12,7 @@ namespace AntDesign
     public partial class Tabs : AntDomComponentBase
     {
         private const string PrefixCls = "ant-tabs";
-        private bool IsHorizontal { get => TabPosition == AntDesign.TabPosition.Top || TabPosition == AntDesign.TabPosition.Bottom; }
+        private bool IsHorizontal { get => TabPosition == TabPosition.Top || TabPosition == TabPosition.Bottom; }
 
         //private ClassMapper _barClassMapper = new ClassMapper();
         //private ClassMapper _prevClassMapper = new ClassMapper();
@@ -113,7 +113,7 @@ namespace AntDesign
         /// Preset tab bar size
         /// </summary>
         [Parameter]
-        public string Size { get; set; } = TabSize.Default;
+        public TabSize Size { get; set; } = TabSize.Default;
 
         /// <summary>
         /// Extra content in tab bar
@@ -137,13 +137,13 @@ namespace AntDesign
         /// Position of tabs
         /// </summary>
         [Parameter]
-        public string TabPosition { get; set; } = AntDesign.TabPosition.Top;
+        public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
         /// <summary>
         /// Basic style of tabs
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = TabType.Line;
+        public TabType Type { get; set; } = TabType.Line;
 
         /// <summary>
         /// Callback executed when active tab is changed
@@ -208,12 +208,13 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .GetIf(() => $"{PrefixCls}-{TabPosition}", () => TabPosition.IsIn(AntDesign.TabPosition.Top, AntDesign.TabPosition.Bottom, AntDesign.TabPosition.Left, AntDesign.TabPosition.Right))
-                .GetIf(() => $"{PrefixCls}-{Type}", () => Type.IsIn(TabType.Card, TabType.EditableCard, TabType.Line))
+                .Get(() => $"{PrefixCls}-{TabPosition.ToString().ToLowerInvariant()}")
+                .If($"{PrefixCls}-line", () => Type == TabType.Line)
+                .If($"{PrefixCls}-editable-card", () => Type == TabType.EditableCard)
+                .If($"{PrefixCls}-card", () => Type.IsIn(TabType.EditableCard, TabType.Card))
                 .If($"{PrefixCls}-large", () => Size == TabSize.Large || Card != null)
                 .If($"{PrefixCls}-head-tabs", () => Card != null)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
-                .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
@@ -227,7 +228,7 @@ namespace AntDesign
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            string type = parameters.GetValueOrDefault<string>(nameof(Type));
+            TabType type = parameters.GetValueOrDefault<TabType>(nameof(Type));
 
             // according to ant design documents,
             // Animated default to false when type="card"

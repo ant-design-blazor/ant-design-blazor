@@ -61,6 +61,7 @@ namespace AntDesign
         private bool _shouldRender;
         private bool _shouldTabRender;
         private bool _hasClosed;
+        private bool _hasRendered;
 
         protected override void OnInitialized()
         {

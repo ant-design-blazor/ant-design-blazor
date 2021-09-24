@@ -1,55 +1,20 @@
-﻿<Tabs DefaultActiveKey="1" @bind-ActiveKey="@nKey" OnChange="OnTabChange">
-    @foreach (var item in lstTabs)
-    {
-        <TabPane Key="@item.KeyName" Tab="@item.TabName">
-            @item.Content @nKey
-        </TabPane>
-    }
+﻿<Tabs @bind-ActiveKey="@activeKey" OnChange="OnTabChange">
+	  <TabPane Tab="Tab 1" Key="1">
+      Content of Tab Pane 1
+    </TabPane>
+    <TabPane Tab="Tab 2" Key="2">
+      Content of Tab Pane 2
+    </TabPane>
+    <TabPane Tab="Tab 3" Key="3">
+      Content of Tab Pane 3
+    </TabPane>
 </Tabs>
 
-<Button Type="primary" OnClick="OnClickPrev">Prev</Button>
-<Button Type="primary" OnClick="OnClickNext">Next</Button>
-
-
 @code{
-    string nKey { get; set; } = "1";
-
-    private class TabItem
-    {
-        public string KeyName;
-        public string TabName;
-        public string Content;
-    }
-
-    List<TabItem> lstTabs { get; set; } = new List<TabItem>();
-
-    protected override void OnInitialized()
-    {
-        lstTabs.Add(new TabItem { KeyName = "1", TabName = "Tab 1", Content = "Content of Tab Pane" });
-        lstTabs.Add(new TabItem { KeyName = "2", TabName = "Tab 2", Content = "Content of Tab Pane" });
-        lstTabs.Add(new TabItem { KeyName = "3", TabName = "Tab 3", Content = "Content of Tab Pane" });
-
-    }
-
-    void OnClickNext()
-    {
-        var n = Convert.ToInt32(nKey);
-        if (n >= lstTabs.Count) return;
-        n++;
-        nKey = n.ToString();
-    }
-
-    void OnClickPrev()
-    {
-        var n = Convert.ToInt32(nKey);
-        if (n <= 1) return;
-        n--;
-        nKey = n.ToString();
-    }
+    string activeKey { get; set; } = "1";
 
     void OnTabChange(string key)
     {
         Console.WriteLine($"tab change:{key}");
     }
-
 }

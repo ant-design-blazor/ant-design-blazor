@@ -51,7 +51,11 @@ else if (IsPane)
 		  role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
 		  aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
 		  style="@(_isActive ? "" : "display: none;")">
-        @ChildContent
+			  @if (_isActive || _hasRendered || ForceRender)
+			  {
+					  _hasRendered = true;
+			  		@ChildContent
+			  }
     </div>
     
 }
