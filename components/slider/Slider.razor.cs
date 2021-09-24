@@ -722,15 +722,17 @@ namespace AntDesign
 
         private void SetStyle()
         {
-            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank((RightValue - Min) / MinMaxDelta));
+            var rightHandPercentage = (RightValue - Min) / MinMaxDelta;
+            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(rightHandPercentage));
             if (Range)
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank((LeftValue - Min) / MinMaxDelta), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / MinMaxDelta));
-                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank((LeftValue - Min) / MinMaxDelta));
+                var leftHandPercentage = (LeftValue - Min) / MinMaxDelta;
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / MinMaxDelta));
+                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage));
             }
             else
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", Formatter.ToPercentWithoutBlank(RightValue / Max));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", Formatter.ToPercentWithoutBlank(rightHandPercentage));
             }
 
             StateHasChanged();
