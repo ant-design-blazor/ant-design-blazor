@@ -19,6 +19,7 @@ namespace AntDesign
         //private ClassMapper _nextClassMapper = new ClassMapper();
         //private ClassMapper _navClassMapper = new ClassMapper();
         private TabPane _activePane;
+        private TabPane _activeTab;
 
         private TabPane _renderedActivePane;
 
@@ -47,7 +48,8 @@ namespace AntDesign
         private bool _needRefresh;
         private bool _afterFirstRender;
 
-        internal List<TabPane> _panes = new List<TabPane>();
+        private List<TabPane> _panes = new List<TabPane>();
+        private List<TabPane> _tabs = new List<TabPane>();
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -75,15 +77,7 @@ namespace AntDesign
                 {
                     _activeKey = value;
 
-                    if (_panes.Count == 0)
-                        return;
-
-                    var tabPane = _panes.Find(p => p.Key == value);
-
-                    if (tabPane == null)
-                        return;
-
-                    ActivatePane(tabPane);
+                    ActivatePane(_activeKey);
                 }
             }
         }
@@ -250,77 +244,100 @@ namespace AntDesign
         /// <exception cref="ArgumentException">An AntTabPane with the same key already exists</exception>
         internal void AddTabPane(TabPane tabPane)
         {
-            if (string.IsNullOrEmpty(tabPane.Key))
+            if (tabPane.IsTab)
             {
-                throw new ArgumentNullException(nameof(tabPane), "Key is null");
+                _tabs.Add(tabPane);
+            }
+            else
+            {
+                _panes.Add(tabPane);
             }
 
-            if (_panes.Select(p => p.Key).Contains(tabPane.Key))
+            if (string.IsNullOrWhiteSpace(tabPane.Key))
             {
-                throw new ArgumentException("An AntTabPane with the same key already exists");
+                if (tabPane.IsTab)
+                {
+                    tabPane.SetKey($"ant-tabs-{_tabs.Count}");
+                }
+                else
+                {
+                    var key = _tabs[_panes.Count].Key;
+                    tabPane.SetKey(key);
+                }
             }
 
-            _panes.Add(tabPane);
-        }
-
-        internal void Complete(TabPane content)
-        {
-            var pane = _panes.FirstOrDefault(x => x.Key == content.Key);
-            if (pane != null && pane.IsComplete())
+            if (_tabs.Count == _panes.Count)
             {
-                if (_panes.Any(x => !x.IsComplete()))
-                {
-                    return;
-                }
-
-                if (!string.IsNullOrWhiteSpace(ActiveKey))
-                {
-                    var activedPane = _panes.Find(x => x.Key == ActiveKey);
-                    if (activedPane?.IsActive == false)
-                    {
-                        ActivatePane(activedPane);
-                    }
-                }
-                else if (!string.IsNullOrWhiteSpace(DefaultActiveKey))
-                {
-                    var defaultPane = _panes.FirstOrDefault(x => x.Key == DefaultActiveKey);
-                    if (defaultPane != null)
-                    {
-                        ActivatePane(defaultPane);
-                    }
-                }
-
-                if (_activePane == null || _panes.All(x => !x.IsActive))
-                {
-                    ActivatePane(_panes.FirstOrDefault());
-                }
-
-                if (AfterTabCreated.HasDelegate)
-                {
-                    AfterTabCreated.InvokeAsync(pane.Key);
-                }
+                this.Complete();
             }
         }
 
-        public async Task RemoveTabPane(TabPane pane)
+        internal void Complete()
         {
-            if (await OnEdit.Invoke(pane.Key, "remove"))
+            if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
-                var index = _panes.IndexOf(pane);
-                _panes.Remove(pane);
+                var activedPane = _panes.Find(x => x.Key == ActiveKey);
+                if (activedPane?.IsActive == false)
+                {
+                    ActivatePane(activedPane.Key);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(DefaultActiveKey))
+            {
+                var defaultPane = _panes.FirstOrDefault(x => x.Key == DefaultActiveKey);
+                if (defaultPane != null)
+                {
+                    ActivatePane(defaultPane.Key);
+                }
+            }
+
+            if (_activePane == null || _panes.All(x => !x.IsActive))
+            {
+                ActivatePane(_panes.FirstOrDefault()?.Key);
+            }
+
+            if (AfterTabCreated.HasDelegate)
+            {
+                AfterTabCreated.InvokeAsync(_activeKey);
+            }
+        }
+
+        public async Task RemoveTab(TabPane tab)
+        {
+            if (await OnEdit.Invoke(tab.Key, "remove"))
+            {
+                var tabKey = tab.Key;
+                var index = _tabs.IndexOf(tab);
+                var pane = _panes.Find(x => x.Key == tab.Key);
+
+                tab.Close();
+                pane.Close();
+
                 if (pane != null && pane.IsActive && _panes.Count > 0)
                 {
-                    ActivatePane(index > 1 ? _panes[index - 1] : _panes[0]);
+                    var p = index > 1 ? _panes[index - 1] : _panes[0];
+                    ActivatePane(p.Key);
                 }
-
-                _needRefresh = true;
 
                 if (OnClose.HasDelegate)
                 {
-                    await OnClose.InvokeAsync(pane.Key);
+                    await OnClose.InvokeAsync(tabKey);
                 }
 
+                _needRefresh = true;
                 StateHasChanged();
+            }
+        }
+
+        internal void RemovePane(TabPane pane)
+        {
+            if (pane.IsTab)
+            {
+                _tabs.Remove(pane);
+            }
+            else
+            {
+                _panes.Remove(pane);
             }
         }
 
@@ -334,43 +351,54 @@ namespace AntDesign
                 OnTabClick.InvokeAsync(tabPane.Key);
             }
 
-            ActivatePane(tabPane);
+            ActivatePane(tabPane.Key);
         }
 
-        private void ActivatePane(TabPane tabPane)
+        private void ActivatePane(string key)
         {
-            if (!tabPane.Disabled && _panes.Contains(tabPane))
+            if (_panes.Count == 0)
+                return;
+
+            var tab = _tabs.Find(p => p.Key == key);
+            var tabPane = _panes.Find(p => p.Key == key);
+
+            if (tab == null || tabPane == null)
+                return;
+
+            if (tabPane.Disabled)
             {
-                if (_activePane != null)
-                {
-                    _activePane.IsActive = false;
-                }
-                tabPane.IsActive = true;
-                _activePane = tabPane;
-                if (_activeKey != _activePane.Key)
-                {
-                    if (!string.IsNullOrEmpty(_activeKey))
-                    {
-                        if (ActiveKeyChanged.HasDelegate)
-                        {
-                            ActiveKeyChanged.InvokeAsync(_activePane.Key);
-                        }
-
-                        if (OnChange.HasDelegate)
-                        {
-                            OnChange.InvokeAsync(_activePane.Key);
-                        }
-                    }
-
-                    _activeKey = _activePane.Key;
-                }
-
-                _needRefresh = true;
-
-                Card?.SetBody(_activePane.ChildContent);
-
-                StateHasChanged();
+                return;
             }
+
+            _activePane?.SetActive(false);
+            _activeTab?.SetActive(false);
+
+            tab.SetActive(true);
+            tabPane.SetActive(true);
+
+            _activeTab = tab;
+            _activePane = tabPane;
+
+            if (_activeKey != _activePane.Key)
+            {
+                if (ActiveKeyChanged.HasDelegate)
+                {
+                    ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                }
+
+                if (OnChange.HasDelegate)
+                {
+                    OnChange.InvokeAsync(_activePane.Key);
+                }
+
+                _activeKey = _activePane.Key;
+            }
+
+            _needRefresh = true;
+
+            Card?.SetBody(_activePane.ChildContent);
+
+            StateHasChanged();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -478,7 +506,7 @@ namespace AntDesign
             // TODO: slide to activated tab
             // animate Active Ink
             // ink bar
-            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
+            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
             var navSection = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars);
 
             if (IsHorizontal)
@@ -537,29 +565,44 @@ namespace AntDesign
 
         #region DRAG & DROP
 
-        private TabPane _draggingPane;
+        private TabPane _draggingTab;
 
-        internal void HandleDragStart(DragEventArgs args, TabPane pane)
+        internal void HandleDragStart(DragEventArgs args, TabPane tab)
         {
             if (Draggable)
             {
                 args.DataTransfer.DropEffect = "move";
                 args.DataTransfer.EffectAllowed = "move";
-                _draggingPane = pane;
+                _draggingTab = tab;
             }
         }
 
-        internal void HandleDrop(TabPane pane)
+        internal void HandleDrop(TabPane tab)
         {
-            if (Draggable && _draggingPane != null)
+            if (Draggable && _draggingTab != null)
             {
-                int newIndex = _panes.IndexOf(pane);
-                _panes.Remove(_draggingPane);
-                _panes.Insert(newIndex, _draggingPane);
-                _draggingPane = null;
+                var oldIndex = _tabs.IndexOf(_draggingTab);
+                var newIndex = _tabs.IndexOf(tab);
+
+                if (oldIndex == newIndex)
+                {
+                    return;
+                }
+
+                tab.ExchangeWith(_draggingTab);
+
+                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+
+                for (var i = diffTabs.Count - 2; i >= 0; i--)
+                {
+                    diffTabs[i].ExchangeWith(diffTabs[i + 1]);
+                }
+
+                _draggingTab = null;
                 _needRefresh = true;
                 _renderedActivePane = null;
-                StateHasChanged();
+
+                ActivatePane(_activeKey);
             }
         }
 

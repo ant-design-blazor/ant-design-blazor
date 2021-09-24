@@ -2,21 +2,13 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <CascadingValue Value="true" Name="IsEmpty" IsFixed="true">
-        @ChildContent
-    </CascadingValue>
     <div class="@ClassMapper.Class" style="@Style" id="@Id">
         <!--Tab bar-->
         <div role="tablist" class="ant-tabs-nav">
             <div class="ant-tabs-nav-wrap @_tabsNavWarpPingClass" @ref="@_tabBars">
                 <div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
                     <CascadingValue Value="true" Name="IsTab" IsFixed="true">
-                        @foreach (var pane in _panes)
-                        {
-                            <CascadingValue Value="pane" Name="Pane" @key="pane.Key">
-                                @ChildContent
-                            </CascadingValue>
-                        }
+                         @ChildContent
                     </CascadingValue>
                     @if (Type == TabType.EditableCard && !HideAdd)
                     {
@@ -59,12 +51,7 @@
             <div class="ant-tabs-content-holder ">
                 <div class="ant-tabs-content ant-tabs-content-@TabPosition">
                     <CascadingValue Value="true" Name="IsPane" IsFixed="true">
-                        @foreach (var pane in _panes)
-                        {
-                            <CascadingValue Value="pane" Name="Pane">
-                                @ChildContent
-                            </CascadingValue>
-                        }
+                        @ChildContent
                     </CascadingValue>
                 </div>
             </div>
