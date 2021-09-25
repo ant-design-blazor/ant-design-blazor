@@ -36,7 +36,7 @@
         </div>
         @if (Parent.Type == TabType.EditableCard && Closable)
         {
-            <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation="true">
+            <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
                 <Icon Type="close" />
             </button>
         }
@@ -50,12 +50,11 @@ else if (IsPane)
 		  id="@($"rc-tabs-{Id}-panel-{Key}")"
 		  role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
 		  aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-		  style="@(_isActive ? "" : "display: none;")">
+		  style="@(_isActive || Parent.Animated ? "" : "display: none;")">
 			  @if (_isActive || _hasRendered || ForceRender)
 			  {
 					  _hasRendered = true;
 			  		@ChildContent
 			  }
     </div>
-    
 }

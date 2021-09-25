@@ -11,46 +11,6 @@ namespace AntDesign
 {
     public partial class Tabs : AntDomComponentBase
     {
-        private const string PrefixCls = "ant-tabs";
-        private bool IsHorizontal { get => TabPosition == TabPosition.Top || TabPosition == TabPosition.Bottom; }
-
-        //private ClassMapper _barClassMapper = new ClassMapper();
-        //private ClassMapper _prevClassMapper = new ClassMapper();
-        //private ClassMapper _nextClassMapper = new ClassMapper();
-        //private ClassMapper _navClassMapper = new ClassMapper();
-        private TabPane _activePane;
-        private TabPane _activeTab;
-
-        private TabPane _renderedActivePane;
-
-        private ElementReference _scrollTabBar;
-        private ElementReference _tabBars;
-
-        private string _inkStyle;
-
-        private string _navStyle;
-
-        private bool _wheelDisabled;
-
-        //private string _contentStyle;
-        //private bool? _prevIconEnabled;
-        //private bool? _nextIconEnabled;
-        private string _operationClass;
-
-        private string _tabsNavWarpPingClass;
-        private string _operationStyle;
-
-        private int _scrollOffset;
-        private int _listWidth;
-        private int _listHeight;
-        private int _navWidth;
-        private int _navHeight;
-        private bool _needRefresh;
-        private bool _afterFirstRender;
-
-        private List<TabPane> _panes = new List<TabPane>();
-        private List<TabPane> _tabs = new List<TabPane>();
-
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
@@ -59,7 +19,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private string _activeKey;
 
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
@@ -90,6 +49,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Animated { get; set; }
+
+        [Parameter]
+        public bool InkBarAnimated { get; set; } = true;
 
         /// <summary>
         /// Replace the TabBar
@@ -202,11 +164,64 @@ namespace AntDesign
 
         #endregion Parameters
 
+
+        private const string PrefixCls = "ant-tabs";
+        private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
+
+        //private ClassMapper _barClassMapper = new ClassMapper();
+        //private ClassMapper _prevClassMapper = new ClassMapper();
+        //private ClassMapper _nextClassMapper = new ClassMapper();
+        //private ClassMapper _navClassMapper = new ClassMapper();
+        private TabPane _activePane;
+        private TabPane _activeTab;
+
+        private string _activeKey;
+        private TabPane _renderedActivePane;
+
+        private ElementReference _scrollTabBar;
+        private ElementReference _tabBars;
+
+        private string _inkStyle;
+
+        private string _navStyle;
+
+        private bool _wheelDisabled;
+
+        //private string _contentStyle;
+        //private bool? _prevIconEnabled;
+        //private bool? _nextIconEnabled;
+        private string _operationClass;
+
+        private string _tabsNavWarpPingClass;
+        private string _operationStyle;
+
+        private int _scrollOffset;
+        private int _listWidth;
+        private int _listHeight;
+        private int _navWidth;
+        private int _navHeight;
+        private bool _needRefresh;
+        private bool _afterFirstRender;
+
+        private string _contentAnimatedStyle;
+
+        private readonly ClassMapper _inkClassMapper = new ClassMapper();
+        private readonly ClassMapper _contentClassMapper = new ClassMapper();
+
+        private List<TabPane> _panes = new List<TabPane>();
+        private List<TabPane> _tabs = new List<TabPane>();
+
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            ClassMapper.Clear()
+            if (Type == TabType.Card)
+            {
+                Animated = false;
+            }
+
+            ClassMapper
                 .Add(PrefixCls)
                 .Get(() => $"{PrefixCls}-{TabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-line", () => Type == TabType.Line)
@@ -217,6 +232,16 @@ namespace AntDesign
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-rtl", () => RTL);
+
+            _inkClassMapper
+                .Add($"{PrefixCls}-ink-bar")
+                .If($"{PrefixCls}-ink-bar-animated", () => InkBarAnimated);
+
+            _contentClassMapper
+                .Add($"{PrefixCls}-content")
+                .Get(() => $"{PrefixCls}-content-{TabPosition.ToString().ToLowerInvariant()}")
+                .If($"{PrefixCls}-content-animated", () => Animated);
+
         }
 
         protected override void OnParametersSet()
@@ -224,17 +249,6 @@ namespace AntDesign
             base.OnParametersSet();
             _needRefresh = true;
             _renderedActivePane = null;
-        }
-
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            TabType type = parameters.GetValueOrDefault<TabType>(nameof(Type));
-
-            // according to ant design documents,
-            // Animated default to false when type="card"
-            Animated = type != TabType.Card;
-
-            return base.SetParametersAsync(parameters);
         }
 
         /// <summary>
@@ -360,7 +374,8 @@ namespace AntDesign
             if (_panes.Count == 0)
                 return;
 
-            var tab = _tabs.Find(p => p.Key == key);
+            var tabIndex = _tabs.FindIndex(p => p.Key == key);
+            var tab = _tabs[tabIndex];
             var tabPane = _panes.Find(p => p.Key == key);
 
             if (tab == null || tabPane == null)
@@ -395,10 +410,11 @@ namespace AntDesign
                 _activeKey = _activePane.Key;
             }
 
-            _needRefresh = true;
+            _contentAnimatedStyle = Animated && tabIndex > 0 ? $"margin-left: -{tabIndex * 100}%" : "";
 
             Card?.SetBody(_activePane.ChildContent);
 
+            _needRefresh = true;
             StateHasChanged();
         }
 

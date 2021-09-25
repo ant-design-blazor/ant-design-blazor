@@ -16,7 +16,7 @@
                             <Icon Type="plus" />
                         </button>
                     }
-                    <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
+                    <div class="@_inkClassMapper.Class" style="@_inkStyle"></div>
                 </div>
             </div>
             @if (TabBarExtraContent != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
@@ -49,7 +49,7 @@
         @if (Card == null)
         {
             <div class="ant-tabs-content-holder ">
-                <div class="ant-tabs-content ant-tabs-content-@(TabPosition.ToString().ToLowerInvariant())">
+                <div class="@_contentClassMapper.Class" style="@_contentAnimatedStyle">
                     <CascadingValue Value="true" Name="IsPane" IsFixed="true">
                         @ChildContent
                     </CascadingValue>
