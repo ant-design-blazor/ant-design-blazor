@@ -165,6 +165,9 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
+        [Parameter]
+        public bool Centered { get; set; }
+
         [CascadingParameter]
         public Card Card { get; set; }
 
@@ -237,6 +240,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-head-tabs", () => Card != null)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
+                .If($"{PrefixCls}-centered", () => Centered)
                 .If($"{PrefixCls}-rtl", () => RTL);
 
             _inkClassMapper
