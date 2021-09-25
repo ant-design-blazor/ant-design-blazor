@@ -201,11 +201,9 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="table" Name="AntDesign.TableRow.Table">
-                        <CascadingValue Value="level" Name="AntDesign.TableRow.Level">
-                            <AntDesign.Internal.TableRow @key="currentRowData" TItem="TItem">
-                                @table.ChildContent(data)
-                            </AntDesign.Internal.TableRow>
-                        </CascadingValue>
+                        <AntDesign.Internal.TableRow @key="currentRowData" TItem="TItem">
+                            @table.ChildContent(data)
+                        </AntDesign.Internal.TableRow>
                     </CascadingValue>                        
                 </CascadingValue>
             </CascadingValue>
