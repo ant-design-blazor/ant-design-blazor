@@ -83,6 +83,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TabBarExtraContent { get; set; }
 
+        [Parameter]
+        public RenderFragment TabBarExtraContentLeft { get; set; }
+
+        [Parameter]
+        public RenderFragment TabBarExtraContentRight { get; set; }
+
         /// <summary>
         /// The gap between tabs
         /// </summary>
@@ -375,7 +381,7 @@ namespace AntDesign
                 return;
 
             var tabIndex = _tabs.FindIndex(p => p.Key == key);
-            var tab = _tabs[tabIndex];
+            var tab = _tabs.Find(p => p.Key == key);
             var tabPane = _panes.Find(p => p.Key == key);
 
             if (tab == null || tabPane == null)

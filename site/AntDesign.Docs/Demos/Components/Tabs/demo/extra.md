@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-可以在页签右边添加附加操作。
+可以在页签两边添加附加操作。
 
 ## en-US
 
-You can add extra actions to the right of Tabs.
+You can add extra actions to the right or left or even both side of Tabs.
