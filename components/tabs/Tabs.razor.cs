@@ -26,16 +26,12 @@ namespace AntDesign
         [Parameter]
         public string ActiveKey
         {
-            get
-            {
-                return _activeKey;
-            }
+            get => _activeKey;
             set
             {
                 if (_activeKey != value)
                 {
                     _activeKey = value;
-
                     ActivatePane(_activeKey);
                 }
             }
@@ -177,38 +173,27 @@ namespace AntDesign
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
 
-        //private ClassMapper _barClassMapper = new ClassMapper();
-        //private ClassMapper _prevClassMapper = new ClassMapper();
-        //private ClassMapper _nextClassMapper = new ClassMapper();
-        //private ClassMapper _navClassMapper = new ClassMapper();
         private TabPane _activePane;
         private TabPane _activeTab;
 
         private string _activeKey;
         private TabPane _renderedActivePane;
 
-        private ElementReference _scrollTabBar;
-        private ElementReference _tabBars;
+        private ElementReference _navListRef;
+        private ElementReference _navWarpRef;
 
         private string _inkStyle;
+        private string _navListStyle;
 
-        private string _navStyle;
+        private string _operationClass = "";
+        private string _operationStyle = "";
 
-        private bool _wheelDisabled;
+        private double _scrollOffset;
+        private int _scrollListWidth;
+        private int _scrollListHeight;
+        private int _wrapperWidth;
+        private int _wrapperHeight;
 
-        //private string _contentStyle;
-        //private bool? _prevIconEnabled;
-        //private bool? _nextIconEnabled;
-        private string _operationClass;
-
-        private string _tabsNavWarpPingClass;
-        private string _operationStyle;
-
-        private int _scrollOffset;
-        private int _listWidth;
-        private int _listHeight;
-        private int _navWidth;
-        private int _navHeight;
         private bool _needRefresh;
         private bool _afterFirstRender;
 
@@ -216,10 +201,14 @@ namespace AntDesign
 
         private readonly ClassMapper _inkClassMapper = new ClassMapper();
         private readonly ClassMapper _contentClassMapper = new ClassMapper();
+        private readonly ClassMapper _tabsNavWarpPingClassMapper = new ClassMapper();
 
         private List<TabPane> _panes = new List<TabPane>();
         private List<TabPane> _tabs = new List<TabPane>();
+        private List<TabPane> _invisibleTabs = new List<TabPane>();
 
+        private bool _navWrapPingLeft;
+        private bool _navWrapPingRight;
 
         protected override void OnInitialized()
         {
@@ -252,6 +241,10 @@ namespace AntDesign
                 .Get(() => $"{PrefixCls}-content-{TabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-content-animated", () => Animated);
 
+            _tabsNavWarpPingClassMapper
+                .Add("ant-tabs-nav-wrap")
+                .If("ant-tabs-nav-wrap-ping-left", () => _navWrapPingLeft)
+                .If("ant-tabs-nav-wrap-ping-right", () => _navWrapPingRight);
         }
 
         protected override void OnParametersSet()
@@ -366,17 +359,22 @@ namespace AntDesign
             }
         }
 
-        internal void HandleTabClick(TabPane tabPane)
+        internal async Task HandleTabClick(TabPane tabPane)
         {
             if (tabPane.IsActive)
                 return;
 
             if (OnTabClick.HasDelegate)
             {
-                OnTabClick.InvokeAsync(tabPane.Key);
+                await OnTabClick.InvokeAsync(tabPane.Key);
             }
 
             ActivatePane(tabPane.Key);
+
+            if (_afterFirstRender && _activePane != null)
+            {
+                await TryRenderInk();
+            }
         }
 
         private void ActivatePane(string key)
@@ -434,33 +432,34 @@ namespace AntDesign
             if (firstRender)
             {
                 _afterFirstRender = true;
+                await GetNavbarStyle();
             }
 
-            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _scrollTabBar);
-            _listWidth = element.ClientWidth;
-            _listHeight = element.ClientHeight;
-            var navSection = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars);
-            _navWidth = navSection.ClientWidth;
-            _navHeight = navSection.ClientHeight;
-
-            if (IsHorizontal && !_wheelDisabled)
-            {
-                DomEventListener.AddExclusive<string>(_scrollTabBar, "wheel", OnWheel, true);
-                _wheelDisabled = true;
-            }
-
-            if (!IsHorizontal && _wheelDisabled)
-            {
-                DomEventListener.RemoveExclusive(_scrollTabBar, "wheel");
-                _wheelDisabled = false;
-            }
-
-            if (_afterFirstRender && _activePane != null)
-            {
-                await TryRenderInk();
-                await TryRenderNavOperation();
-            }
             _needRefresh = false;
+        }
+
+        private async Task GetNavbarStyle()
+        {
+            await ResetSizes();
+
+            if (_scrollListWidth < _wrapperWidth)
+            {
+                _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+                _operationStyle = "visibility: hidden; order: 1;";
+                _navWrapPingRight = false;
+            }
+            else
+            {
+                _operationClass = "ant-tabs-nav-operations";
+                _operationStyle = string.Empty;
+
+                _navWrapPingRight = true;
+
+                if (IsHorizontal)
+                {
+                    DomEventListener.AddExclusive<string>(_navListRef, "wheel", OnWheel, true);
+                }
+            }
         }
 
         private void OnWheel(string json)
@@ -468,11 +467,11 @@ namespace AntDesign
             int maxOffset;
             if (IsHorizontal)
             {
-                maxOffset = _listWidth - _navWidth;
+                maxOffset = _scrollListWidth - _wrapperWidth;
             }
             else
             {
-                maxOffset = _listHeight - _navHeight;
+                maxOffset = _scrollListHeight - _wrapperHeight;
             }
 
             int delta = JsonDocument.Parse(json).RootElement.GetProperty("wheelDelta").GetInt32();
@@ -492,35 +491,30 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-                _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
             }
             else
             {
-                _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
             }
+
+            _navWrapPingLeft = _scrollOffset > 0;
+            _navWrapPingRight = Math.Abs(maxOffset - _scrollOffset) >= 1;
+
             StateHasChanged();
 
             _renderedActivePane = _activePane;
         }
 
-        private async Task TryRenderNavOperation()
+        private async Task ResetSizes()
         {
-            int navWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars)).ClientWidth;
-            int navTotalWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _scrollTabBar)).ClientWidth;
-            if (navTotalWidth < navWidth)
-            {
-                _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
-                _operationStyle = "visibility: hidden; order: 1;";
-                _tabsNavWarpPingClass = string.Empty;
-            }
-            else
-            {
-                _operationClass = "ant-tabs-nav-operations";
-                _tabsNavWarpPingClass = "ant-tabs-nav-wrap-ping-right";
-                _operationStyle = string.Empty;
-            }
+            var navList = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navListRef);
+            var navWarp = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navWarpRef);
 
-            StateHasChanged();
+            _scrollListWidth = navList.ClientWidth;
+            _scrollListHeight = navList.ClientHeight;
+            _wrapperWidth = navWarp.ClientWidth;
+            _wrapperHeight = navWarp.ClientHeight;
         }
 
         private async Task TryRenderInk()
@@ -534,29 +528,25 @@ namespace AntDesign
             // animate Active Ink
             // ink bar
             var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
-            var navSection = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars);
 
             if (IsHorizontal)
             {
-                //_inkStyle = "left: 0px; width: 0px;";
                 _inkStyle = $"left: {element.OffsetLeft}px; width: {element.ClientWidth}px";
-                if (element.OffsetLeft > _scrollOffset + navSection.ClientWidth
-                    || element.OffsetLeft < _scrollOffset)
+                if (element.OffsetLeft > _scrollOffset + _wrapperWidth || element.OffsetLeft < _scrollOffset)
                 {
                     // need to scroll tab bars
-                    _scrollOffset = element.OffsetLeft;
-                    _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                    _scrollOffset = element.OffsetLeft + element.ClientWidth - _wrapperWidth;
+                    _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
                 }
             }
             else
             {
                 _inkStyle = $"top: {element.OffsetTop}px; height: {element.ClientHeight}px;";
-                if (element.OffsetTop > _scrollOffset + navSection.ClientHeight
-                    || element.OffsetTop < _scrollOffset)
+                if (element.OffsetTop > _scrollOffset + _wrapperWidth || element.OffsetTop < _scrollOffset)
                 {
                     // need to scroll tab bars
-                    _scrollOffset = element.OffsetTop;
-                    _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                    _scrollOffset = element.OffsetTop + element.ClientHeight - _wrapperHeight;
+                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
                 }
             }
             StateHasChanged();
@@ -568,26 +558,31 @@ namespace AntDesign
             return _needRefresh || _renderedActivePane != _activePane;
         }
 
-        private IEnumerable<TabPane> GetInvisibleTabs()
+        private void OnVisibleChange(bool visible)
         {
-            double average;
+            if (!visible)
+            {
+                _invisibleTabs.Clear();
+                return;
+            }
+
             int invisibleHeadCount, visibleCount;
+            double tabSize;
 
             if (IsHorizontal)
             {
-                average = 1.0 * _listWidth / _panes.Count;
-                visibleCount = (int)(_navWidth / average);
+                tabSize = 1.0 * _scrollListWidth / _tabs.Count;
+                visibleCount = (int)(_wrapperWidth / tabSize);
             }
             else
             {
-                average = 1.0 * _listHeight / _panes.Count;
-                visibleCount = (int)(_navHeight / average);
+                tabSize = 1.0 * _scrollListHeight / _tabs.Count;
+                visibleCount = (int)(_wrapperHeight / tabSize);
             }
 
-            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / average);
-            IEnumerable<TabPane> invisibleTabs = _panes.Take(invisibleHeadCount).Concat(_panes.Skip(invisibleHeadCount + visibleCount));
+            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / tabSize);
 
-            return invisibleTabs;
+            _invisibleTabs = _tabs.Take(invisibleHeadCount).Concat(_tabs.Skip(invisibleHeadCount + visibleCount)).ToList();
         }
 
         #region DRAG & DROP

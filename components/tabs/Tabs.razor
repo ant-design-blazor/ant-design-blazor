@@ -13,8 +13,8 @@
 				</div>
 			}
 
-			<div class="ant-tabs-nav-wrap @_tabsNavWarpPingClass" @ref="@_tabBars">
-				<div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
+			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef">
+				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef">
 					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
 						@ChildContent
 					</CascadingValue>
@@ -35,10 +35,10 @@
 				</div>
 			}
 
-			<Dropdown>
+			<Dropdown OnVisibleChange="OnVisibleChange">
 				<Overlay>
 					<ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
-						@foreach (var pane in GetInvisibleTabs())
+						@foreach (var pane in _invisibleTabs)
 						{
 							<li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
 							@onclick="(e)=>HandleTabClick(pane)">@pane.Tab</li>
