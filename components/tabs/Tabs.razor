@@ -18,7 +18,7 @@
 					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
 						@ChildContent
 					</CascadingValue>
-					@if (Type == TabType.EditableCard && !HideAdd)
+					@if (HasAddButton)
 					{
 						<button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
 							<Icon Type="plus" />
