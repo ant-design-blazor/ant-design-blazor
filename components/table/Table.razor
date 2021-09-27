@@ -170,7 +170,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 <Empty Simple />
             </td>
         </tr>
-    }
+	}
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
         for (int i = 0; i < showItems.Count(); i++)
@@ -188,7 +188,8 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 table._dataSourceCache[cacheKey] = rowData;
             }
             var currentRowData = table._dataSourceCache[cacheKey];
-            var hasChildren = table.TreeChildren(data)?.Any() == true;
+			var childrenData = table.TreeChildren(data);
+			var hasChildren = childrenData?.Any() == true;
             currentRowData.CacheKey = cacheKey;
             currentRowData.Level = level;
             currentRowData.HasChildren = hasChildren;
@@ -210,7 +211,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
 
             @if (hasChildren && currentRowData.Expanded)
             {
-                @table.body((table, table.TreeChildren(data), level + 1));
+                @table.body((table, table.SortFilterChildren(childrenData), level + 1));
             }
             @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
             {
