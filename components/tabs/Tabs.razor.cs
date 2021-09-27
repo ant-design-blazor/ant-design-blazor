@@ -370,10 +370,6 @@ namespace AntDesign
 
             ActivatePane(tabPane.Key);
 
-            if (_afterFirstRender && _activePane != null)
-            {
-                await TryRenderInk();
-            }
         }
 
         private void ActivatePane(string key)
@@ -431,12 +427,13 @@ namespace AntDesign
             if (firstRender)
             {
                 _afterFirstRender = true;
+            }
+
+            if (_afterFirstRender)
+            {
                 await UpdateScrollListPosition();
                 await TryRenderInk();
             }
-
-            await UpdateScrollListPosition();
-            await TryRenderInk();
 
             _shouldRender = false;
         }
@@ -458,7 +455,6 @@ namespace AntDesign
             _wrapperWidth = navWarp.ClientWidth;
             _wrapperHeight = navWarp.ClientHeight;
         }
-
 
         private async Task UpdateScrollListPosition()
         {
@@ -532,9 +528,8 @@ namespace AntDesign
             _navWrapPingLeft = _scrollOffset > 0;
             _navWrapPingRight = Math.Abs(maxOffset - _scrollOffset) >= 1;
 
-            StateHasChanged();
-
             _renderedActivePane = _activePane;
+            StateHasChanged();
         }
 
         private async Task TryRenderInk()
@@ -549,23 +544,20 @@ namespace AntDesign
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {element.OffsetLeft}px; width: {element.ClientWidth}px";
-                if (element.OffsetLeft > _scrollOffset + _wrapperWidth || element.OffsetLeft < _scrollOffset)
-                {
-                    // need to scroll tab bars
-                    _scrollOffset = element.OffsetLeft + element.ClientWidth - _wrapperWidth;
-                    _scrollOffset = Math.Min(_scrollOffset, _scrollListWidth - _wrapperWidth);
-                    _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
-                }
+                // need to scroll tab bars
+                _scrollOffset = element.OffsetLeft + element.ClientWidth - _wrapperWidth;
+                _scrollOffset = Math.Min(_scrollOffset, _scrollListWidth - _wrapperWidth);
+                _scrollOffset = Math.Max(_scrollOffset, 0);
+
+                _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
             }
             else
             {
                 _inkStyle = $"top: {element.OffsetTop}px; height: {element.ClientHeight}px;";
-                if (element.OffsetTop > _scrollOffset + _wrapperWidth || element.OffsetTop < _scrollOffset)
-                {
-                    // need to scroll tab bars
-                    _scrollOffset = element.OffsetTop + element.ClientHeight - _wrapperHeight;
-                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
-                }
+
+                // need to scroll tab bars
+                _scrollOffset = element.OffsetTop + element.ClientHeight - _wrapperHeight;
+                _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
             }
 
             StateHasChanged();
