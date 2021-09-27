@@ -1,0 +1,21 @@
+﻿<div style="margin-bottom: 25px;">
+    <MultiRangeSlider VisibleMin="@_zoomFactor.visibleMin" VisibleMax="@_zoomFactor.visibleMax">
+        <RangeItem DefaultValue="(65, 90)"/>
+    </MultiRangeSlider>
+</div>    
+<div style="margin-bottom: 25px;">
+    <MultiRangeSlider VisibleMin="@_zoomFactor.visibleMin" VisibleMax="@_zoomFactor.visibleMax">
+        <RangeItem DefaultValue="(0, 40)"/>
+        <RangeItem DefaultValue="(45, 60)"/>
+        <RangeItem DefaultValue="(65, 100)"/>
+    </MultiRangeSlider>
+</div>
+<Row Align="middle">
+    <Col Style="margin-right: 10px;">Zoom:</Col>
+    <Col Flex=@("auto")><Slider TValue="(double, double)" @bind-Value="@_zoomFactor" /></Col>    
+</Row>
+@code
+{
+    (double visibleMin, double visibleMax) _zoomFactor = (20, 80);    
+
+}

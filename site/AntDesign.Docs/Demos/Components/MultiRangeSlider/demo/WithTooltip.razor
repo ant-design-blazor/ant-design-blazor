@@ -1,0 +1,14 @@
+﻿<div>
+    <MultiRangeSlider>
+        <RangeItem DefaultValue="(0, 40)" Description="range 1" TooltipPlacement="@Placement.Top" TooltipVisible="@_tooltipVisiblity"/>
+    </MultiRangeSlider>
+    <MultiRangeSlider AllowOverlapping TooltipPlacement="@Placement.Bottom" TooltipVisible="@_tooltipVisiblity">
+        <RangeItem DefaultValue="(35, 60)"/>
+    </MultiRangeSlider>    
+    Tooltip visibility: <Switch Size="small" @bind-Value="@_tooltipVisiblity" />
+</div>
+
+@code
+{
+    private bool _tooltipVisiblity = true;
+}

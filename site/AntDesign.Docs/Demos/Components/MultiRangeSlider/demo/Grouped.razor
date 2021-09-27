@@ -1,0 +1,31 @@
+﻿<MultiRangeGroup Marks="@_marks.ToArray()">
+    <MultiRangeSlider>
+        <RangeItem DefaultValue="(65, 90)"/>
+    </MultiRangeSlider>
+    <MultiRangeSlider>
+        <RangeItem DefaultValue="(0, 40)" Description="range 1"/>
+        <RangeItem DefaultValue="(45, 60)" Description="range 2"/>
+        <RangeItem DefaultValue="(65, 100)" Description="range 3"/>
+    </MultiRangeSlider>
+    <MultiRangeSlider AllowOverlapping>
+        <RangeItem DefaultValue="(0, 40)"/>
+        <RangeItem DefaultValue="(35, 60)"/>
+        <RangeItem DefaultValue="(65, 100)"/>
+    </MultiRangeSlider>
+</MultiRangeGroup>
+
+@code {
+    private List<RangeItemMark> _marks;
+
+    protected override void OnInitialized()
+    {
+        _marks = new() { new RangeItemMark(0, @<strong>Start</strong>, "color: green;") };
+        _marks.AddRange(Enumerable.Range(1, 4).Select(n => new RangeItemMark(n * 20, (n * 20).ToString() + "℃")).ToList());
+        _marks.Add(new RangeItemMark(100, (b) =>
+        {
+            b.OpenElement(0, "strong");
+            b.AddContent(1, "100℃");
+            b.CloseElement();
+            }, "color: #f50;"));
+    }
+}

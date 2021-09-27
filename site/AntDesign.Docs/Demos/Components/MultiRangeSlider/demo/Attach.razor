@@ -1,0 +1,80 @@
+﻿<div>
+    <MultiRangeSlider AllowOverlapping>
+        <RangeItem @ref="@_first" DefaultValue="(0, 40)"/>
+        <RangeItem @ref="@_second" DefaultValue="(35, 60)"/>
+        <RangeItem @ref="@_third" DefaultValue="(65, 85)"/>
+        <RangeItem @ref="@_fourth" DefaultValue="(85, 95)"/>
+    </MultiRangeSlider>    
+    <div>
+        <Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
+	        <SpaceItem>
+		        <Space Size=@(("8", "16")) Wrap>
+			        <SpaceItem>
+				        Allow detaching: <Switch Size="small" @bind-Value="@_allowDetach" />
+			        </SpaceItem>
+			        <SpaceItem>
+				        <Button OnClick="AttachFirstToSecond1" Disabled="@_disabledAll">First right & Second left</Button>
+			        </SpaceItem>
+			        <SpaceItem>
+				        <Button OnClick="AttachFirstToSecond2" Disabled="@_disabledAll">First right & Second right</Button>
+			        </SpaceItem>
+			        <SpaceItem>
+                        <ButtonGroup>
+                            <Button OnClick="AttachSecond" Disabled="@(!_disabledSingle)">Attach second right</Button>
+                            <Button OnClick="AttachThird" Disabled="@_disabledSingle">Attach third left</Button>
+                        </ButtonGroup>
+			        </SpaceItem>
+			        <SpaceItem>
+				        <Button OnClick="AttachThirdToFourth" Disabled="@_disabledAll">Attach third right & fourth left</Button>
+			        </SpaceItem>
+			        <SpaceItem>
+				        <Button OnClick="Detach" Disabled="@_disabledAll">Detach</Button>
+			        </SpaceItem>
+		        </Space>
+	        </SpaceItem>
+        </Space>
+    </div>
+
+</div>
+
+@code
+{
+    RangeItem _first;
+    RangeItem _second;
+    RangeItem _third;
+    RangeItem _fourth;
+    bool _allowDetach = true;
+    bool _disabledAll;
+    bool _disabledSingle = true;
+
+    void AttachFirstToSecond1() => _first.AttachEdges(RangeEdge.Last, _second, RangeEdge.First, _allowDetach);
+
+    void AttachFirstToSecond2() => _first.AttachEdges(RangeEdge.Last, _second, RangeEdge.Last, _allowDetach);
+
+    void AttachSecond()
+    {                
+        if (_second.AttachSingle(RangeEdge.Last, _allowDetach))
+        {
+            _disabledAll = true;
+            _disabledSingle = false;
+        }
+    }
+
+    void AttachThird()
+    {
+        _disabledAll = false;
+        _disabledSingle = true;
+        _third.AttachSingle(RangeEdge.First);
+    }
+
+    void AttachThirdToFourth() => _third.AttachOverlappingEdges(RangeEdge.Last, _allowDetach);
+
+    void Detach()
+    {
+        _first.DetachEdges();
+        _second.DetachEdges();
+        _third.DetachEdges();
+        _fourth.DetachEdges();
+    }
+
+}

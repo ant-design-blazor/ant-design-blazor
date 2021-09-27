@@ -1,0 +1,47 @@
+﻿<div style="@(_isVertical? "height: 450px;":"height: 350px;")">
+    <div style="@GetStyle()">
+        <MultiRangeSlider Min="0" Max="100" VisibleMin="0" VisibleMax="100" Vertical=@_isVertical>
+            <RangeItem DefaultValue="(10, 40)"/>
+            <RangeItem DefaultValue="(65, 90)"/>
+        </MultiRangeSlider>
+    </div>
+    <div style="@GetStyle()">
+        <MultiRangeSlider Min="0" Max="100" VisibleMin="0" VisibleMax="100" Vertical=@_isVertical>
+            <RangeItem DefaultValue="(10, 40)"/>
+            <RangeItem DefaultValue="(65, 90)"/>
+        </MultiRangeSlider>
+    </div>
+    <div style="@GetStyle()">
+        <MultiRangeSlider Min="0" Max="100" VisibleMin="0" VisibleMax="100" AllowOverlapping Vertical=@_isVertical Marks=@_marks>
+            <RangeItem DefaultValue="(10, 40)" Description="period 1"/>
+            <RangeItem DefaultValue="(65, 90)" Description="period 2"/>
+        </MultiRangeSlider>
+    </div>
+</div>
+Orientation: <Switch Size="small" @bind-Value=@_isVertical CheckedChildren="Vertical" UnCheckedChildren="Horizontal" />
+
+@code {
+    bool _isVertical = true;
+    string _verticalOversizedPaddingTop = "";
+    
+    RangeItemMark[] _marks =
+    {
+        new RangeItemMark(0, @<strong>Start</strong>, "color: green;"),
+        new RangeItemMark(15, "15"),
+        new RangeItemMark(75, "75"),
+        new RangeItemMark(100, (b)=>{
+            b.OpenElement(0,"strong");
+            b.AddContent(1,"100℃");
+            b.CloseElement();
+        }, "color: #f50;")
+    };
+
+    string GetStyle() 
+    {
+        if (_isVertical) 
+        {
+            return "margin-top: 70px;margin-left: 70px; height: 300px; display: inline-block;" ;
+        }
+        return "margin-top: 70px;margin-left: 70px;" ;
+    }
+}

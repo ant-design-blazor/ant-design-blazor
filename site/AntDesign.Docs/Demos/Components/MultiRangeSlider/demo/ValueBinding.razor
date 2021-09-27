@@ -1,0 +1,90 @@
+﻿<div>
+    <MultiRangeSlider>
+        @for(int i = 0; i < _values1.Count; i++)
+        {
+            int iterator = i;
+            <RangeItem Value="@_values1[i]" ValueChanged="(v) => ValueChanged(iterator, v)"/>
+        }
+    </MultiRangeSlider>    
+    <MultiRangeSlider>
+        @{
+            i = 0;
+        }
+        @foreach(var item in _values1)
+        {            
+            int iterator = i;
+            <RangeItem Value="@item" ValueChanged="(v) => ValueChanged(iterator, v)"/>
+            i++;
+        }
+    </MultiRangeSlider>    
+    <MultiRangeSlider>
+        <RangeItem @bind-Value="@_values1[0]"/>
+        <RangeItem @bind-Value="@_values1[1]"/>
+        <RangeItem @bind-Value="@_values1[2]"/>
+    </MultiRangeSlider>
+    <div>
+        @foreach(var item in _values1)
+        {
+            <Tag>@item.Item1 , @item.Item2</Tag>
+        }        
+        <Button Type="@ButtonType.Primary" OnClick="Reset1">Reset</Button>        
+    </div>
+</div>
+<Divider/>
+<div>
+    <MultiRangeSlider @bind-Value=@_values2 />    
+    <div>
+        @foreach(var item in _values2)
+        {
+            <Tag>@item.Item1 , @item.Item2</Tag>
+        }
+        <Button Type="@ButtonType.Primary" OnClick="Reset2">Reset</Button>
+    </div>
+</div>
+<Divider/>
+<div>
+    <MultiRangeSlider @bind-Data=@_data AllowOverlapping/>    
+    <div>
+        @foreach(var item in _data)
+        {
+            <Tag>@item.Value.Item1 , @item.Value.Item2</Tag>
+        }
+        <Button Type="@ButtonType.Primary" OnClick="Reset3">Reset</Button>
+    </div>
+</div>
+
+@code
+{
+    List<(double start, double end)> _values = new()
+    {
+        (0, 40),
+        (45, 60),
+        (65, 100)
+    };
+    List<(double start, double end)> _values1 = new();
+    IEnumerable<(double start, double end)> _values2 = Enumerable.Empty<(double, double)>();
+    IEnumerable<IRangeItemData> _data = new List<RangeItemData>
+    {
+        new RangeItemData((0, 40), description: "minimal"),
+        new RangeItemData((45, 60), description: "with icon", icon: "paper-clip"),
+        new RangeItemData((65, 100), description: "custom color", fontColor: Color.Gray7, color: Color.Orange2, focusBorderColor: Color.Orange6, focusColor: Color.Orange4)
+    };
+    int i;
+
+    protected override void OnInitialized()
+    {
+        Reset1();
+        Reset2();
+        Reset3();
+    }
+
+    void Reset1() => _values1 = _values.ToList();
+    void Reset2() => _values2 = _values.ToArray();
+    void Reset3() => _data.ForEach((d, i) => d.Value = _values[i]);
+
+    void ValueChanged(int index, (double, double) value) 
+    {
+        Console.WriteLine($"{value}, {index}");
+        _values1[index] = value;
+    }
+}

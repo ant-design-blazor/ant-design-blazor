@@ -1,0 +1,21 @@
+﻿<div>
+    <MultiRangeSlider Disabled="@_disabled">
+        <RangeItem DefaultValue="(0, 40)" Description="range 1"/>
+        <RangeItem DefaultValue="(45, 60)" Description="range 2"/>
+        <RangeItem DefaultValue="(65, 100)" Description="range 3"/>
+    </MultiRangeSlider>
+    <MultiRangeSlider Disabled="@_disabled" AllowOverlapping>
+        <RangeItem DefaultValue="(0, 40)"/>
+        <RangeItem DefaultValue="(35, 60)"/>
+        <RangeItem DefaultValue="(65, 100)"/>
+    </MultiRangeSlider>
+    <MultiRangeSlider Min="50" Max="95" Disabled="@_disabled">
+        <RangeItem DefaultValue="(65, 90)"/>
+    </MultiRangeSlider>
+    Disabled: <Switch Size="small" @bind-Value="@_disabled" />
+</div>
+
+@code
+{
+    private bool _disabled;
+}

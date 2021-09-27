@@ -1,0 +1,13 @@
+﻿<div>
+    <MultiRangeSlider AllowOverlapping="@_overlap">
+        <RangeItem DefaultValue="(0, 40)"/>
+        <RangeItem DefaultValue="(35, 60)"/>
+        <RangeItem DefaultValue="(65, 100)"/>
+    </MultiRangeSlider>
+    Allow Overlapping: <Switch Size="small" @bind-Value="@_overlap" />    
+</div>
+
+@code
+{
+    private bool _overlap = false;
+}

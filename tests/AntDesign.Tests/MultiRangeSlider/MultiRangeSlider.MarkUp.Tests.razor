@@ -1,0 +1,34 @@
+﻿@inherits AntDesignTestBase
+@code {
+    IEnumerable<(double start, double end)> _values = new List<(double start, double end)>()
+    {        
+        (45, 60)        
+    };
+
+    [Fact]
+    public void Single_range_item_markup_check() 
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values" />);
+        //Act
+        //Assert        
+        cut.MarkupMatches(@"
+            <div style=""display: inline;"" >
+              <div class=""ant-multi-range-slider"" style="""" id:ignore >
+                <div class=""ant-multi-range-slider-rail"" style="""" >
+                </div>
+                <div class=""ant-multi-range-slider-step"">
+                </div>
+                <div class=""ant-multi-range-slider-item"" id:ignore >
+                  <div class=""ant-multi-range-slider-track ant-multi-range-slider-track-1 "" style=""z-index: 1;left: 45.00%; width: 15.00%; right: auto;"" tabindex=""0"">
+                  </div>
+                  <div tablindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-1"" role=""slider"" aria-disabled=""False"" aria-valuenow=""45"" aria-valuemin=""0"" aria-valuemax=""100"" style=""left: 45.00%; right: auto; transform: translateX(-50%);z-index: 2;""></div>
+                  <div tablindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-2"" role=""slider"" aria-disabled=""False"" aria-valuenow=""60"" aria-valuemin=""0"" aria-valuemax=""100"" style=""left: 60.00%; right: auto; transform: translateX(-50%);z-index: 2;""></div>
+                </div>
+                <div class=""ant-multi-range-slider-mark"">
+                </div>
+              </div>
+            </div>
+        ");
+    }    
+}

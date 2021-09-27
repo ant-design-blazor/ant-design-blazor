@@ -1,0 +1,139 @@
+﻿<div>
+    <MultiRangeSlider AllowOverlapping
+        OnEdgeMoving=OnEdgeMoving 
+        OnEdgeMoved=OnEdgeMoved 
+        OnEdgeAttaching=OnEdgeAttaching 
+        OnEdgeAttached=OnEdgeAttached 
+        OnEdgeDetaching=OnEdgeDetaching
+        OnEdgeDetached=OnEdgeDetached
+        OnChange=OnChange
+        OnAfterChange=OnAfterChange>
+        <RangeItem DefaultValue="(0, 40)" OnChange=@(v => OnChangeIsolated(1, v)) OnAfterChange=@(v => OnAfterChangeIsolated(1, v))/>
+        <RangeItem DefaultValue="(45, 60)" OnChange=@(v => OnChangeIsolated(2, v)) OnAfterChange=@(v => OnAfterChangeIsolated(1, v))/>
+        <RangeItem DefaultValue="(65, 100)" OnChange=@(v => OnChangeIsolated(3, v)) OnAfterChange=@(v => OnAfterChangeIsolated(1, v))/>
+    </MultiRangeSlider>
+    <Space Direction=@DirectionVHType.Vertical>
+        <SpaceItem>
+            Allow attaching: <Switch Size="small" @bind-Value="@_allowAttaching" OnChange=Switch />
+        </SpaceItem>
+        <SpaceItem>
+            Detach when attachment canceled: <Switch Size="small" @bind-Value="@_detachExistingOnCancel" Disabled="@_detachingDisabled" />
+        </SpaceItem>
+        <SpaceItem>
+            Allow detaching: <Switch Size="small" @bind-Value="@_allowDetaching" />
+        </SpaceItem>
+        <SpaceItem>
+            Info: @_info
+        </SpaceItem>
+    </Space>
+</div>
+
+@code
+{
+    string _info = "";
+    bool _allowAttaching = true, _detachExistingOnCancel, _detachingDisabled = true, _allowDetaching = true;
+
+    void OnChangeIsolated(int no, (double, double) value)
+    {
+        Console.WriteLine($"Changing number {no}. to {value}");
+    }
+
+    void OnAfterChangeIsolated(int no, (double, double) value)
+    {
+        Console.WriteLine($"Finished changes to number {no}. to final value: {value}");
+    }
+
+    void OnChange((double, double) value)
+    {
+       Console.WriteLine($"Changes from parent: {value}");
+    }
+
+    void OnAfterChange((double, double) value)
+    {
+        Console.WriteLine($"Finished changes from parent to final value: {value}");
+    }
+
+    void Switch(bool value)
+    {
+        _detachingDisabled = value;
+        if (_detachingDisabled)
+        {
+            _detachExistingOnCancel = false;
+        }
+    }
+
+    bool OnEdgeMoving((RangeItem range, RangeEdge edge, double value) data)
+    {        
+        bool allow = data.value > 10;
+        if (!allow) {
+            _info = "Movement canceled because value has to be greater than 10.";
+            StateHasChanged();
+        }
+        return allow;
+    }
+
+    void OnEdgeMoved((RangeItem range, RangeEdge edge, double value) data)
+    {
+        _info = $"Moved {data.edge} to {data.value}";
+    }
+
+    (bool allowAttaching, bool detachExisting) OnEdgeAttaching((RangeItem left, RangeItem right) data)
+    {
+        if (!_allowAttaching)
+        {
+            _info = "Attaching has been canceled.";
+            if (_detachExistingOnCancel)
+            {
+                _info += " All attached has been detached.";
+            }
+            StateHasChanged();
+        }        
+        return (_allowAttaching, _detachExistingOnCancel);
+    }
+
+    void OnEdgeAttached((RangeItem left, RangeItem right) data)
+    {
+        if (data.left is null || data.right is null)
+        {
+            _info = $"Attached single edge with value = {data.left?.Value.Item2 ?? data.right!.Value.Item1}";
+        }
+        else
+        {
+            double first, second;
+            if (data.left.GetAttachedEdge() == RangeEdge.First)
+            {
+                first = data.left.Value.Item1;
+            }
+            else 
+            {
+                first = data.left.Value.Item2;
+            }
+            if (data.left.GetAttachedEdge() == RangeEdge.First)
+            {
+                second = data.right.Value.Item1;
+            }
+            else 
+            {
+                second = data.right.Value.Item2;
+            }
+
+            _info = $"Attached edges with values = {Math.Min(first, second)}, {Math.Max(first, second)}";
+        }
+    }
+
+    bool OnEdgeDetaching((RangeItem left, RangeItem right) data)
+    {
+        if (!_allowDetaching)
+        {
+            _info = $"Detaching canceled for item: {data.left.Value} & item: {data.right.Value}";
+            StateHasChanged();
+        }
+        return _allowDetaching;
+    }
+
+    void OnEdgeDetached((RangeItem left, RangeItem right) data)
+    {
+        _info = $"Detached item: {data.left.Value} & item: {data.right.Value}";
+        
+    }
+}

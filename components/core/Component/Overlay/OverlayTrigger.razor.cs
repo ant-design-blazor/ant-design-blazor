@@ -253,7 +253,11 @@ namespace AntDesign.Internal
 
         protected override void OnAfterRender(bool firstRender)
         {
-            if (firstRender)
+            //TODO: The event should not be registered for every overlay trigger. 
+            //It should only be registered when overlay is shown and removed when
+            //overlay is hidden. At the time of writing, corret approach had been
+            //only implemented for Tooltip.
+            if (firstRender && (!_overlay.OnHide.HasDelegate || !_overlay.OnShow.HasDelegate))
             {
                 DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
             }
@@ -500,12 +504,24 @@ namespace AntDesign.Internal
             await OnOverlayHiding.InvokeAsync(visible);
         }
 
+        bool _jsEventsSet;
+
         protected virtual void OnOverlayShow()
         {
+            if (!_jsEventsSet)
+            {
+                _jsEventsSet = true;
+                DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
+            }
         }
 
         protected virtual void OnOverlayHide()
         {
+            if (_jsEventsSet)
+            {
+                DomEventListener.RemoveShared<JsonElement>("document", "mouseup", OnMouseUp);
+                _jsEventsSet = false;
+            }
         }
 
         internal void ChangePlacementForShow(PlacementType placement)
@@ -596,6 +612,23 @@ namespace AntDesign.Internal
         /// Toggle overlay visibility.
         /// </summary>
         /// <param name="visible">boolean: visibility true/false</param>
-        public void SetVisible(bool visible) => Visible = visible;
+        public void SetVisible(bool visible, bool force = false)
+        {
+            if (Visible != visible || force)
+            {
+                Visible = visible;
+                if (force)
+                {
+                    if (visible)
+                    {
+                        InvokeAsync(async () => await _overlay.Show());
+                    }
+                    else
+                    {
+                        InvokeAsync(async () => await _overlay.Hide(force));
+                    }
+                }
+            }
+        }
     }
 }

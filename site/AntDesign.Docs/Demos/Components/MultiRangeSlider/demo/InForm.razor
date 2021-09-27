@@ -1,0 +1,44 @@
+﻿<Form @ref="form"
+      Model="@model"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="Ranges">
+        <MultiRangeSlider @bind-Value=@context.Ranges />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        @foreach(var item in model.Ranges)
+        {
+            <Tag>@item.start , @item.end</Tag>
+        }            
+        <Button Type="@ButtonType.Primary" OnClick="Reset">
+            Form Reset
+        </Button>
+    </FormItem>
+</Form>
+
+
+
+@code {
+    public class Model
+    {
+        public IEnumerable<(double start, double end)> Ranges { get; set; } = Enumerable.Empty<(double, double)>();
+    }
+
+    Model model = new Model
+    {
+        Ranges = new List<(double, double)>
+        {
+            (0, 40),
+            (45, 60),
+            (65, 100)
+        }
+    };
+
+    string _spaceItemStyle = "border: 1px solid #40a9ff;padding: 5px 5px;margin-top: 5px;";
+    private Form<Model> form;
+
+    private void Reset(MouseEventArgs args)
+    {
+        form.Reset();
+    }
+}

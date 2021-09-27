@@ -20,6 +20,21 @@ namespace AntDesign
             }
         }
 
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T, int> action)
+        {
+            if (items == null)
+            {
+                return;
+            }
+
+            var source = items.ToArray();
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                action(source[i], i);
+            }
+        }
+
         public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> func)
         {
             if (items == null)

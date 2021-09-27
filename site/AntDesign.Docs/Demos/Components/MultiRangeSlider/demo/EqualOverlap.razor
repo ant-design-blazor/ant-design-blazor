@@ -1,0 +1,37 @@
+﻿<div>
+    <Divider Text="option: EqualIsOverlap"/>
+    <MultiRangeSlider Max=15 EqualIsOverlap Marks="@_marks">
+        <RangeItem DefaultValue="(0, 4)"/>
+        <RangeItem DefaultValue="(8, 10)"/>
+        <RangeItem DefaultValue="(11, 15)"/>
+    </MultiRangeSlider>    
+    <Divider Text="option: EqualIsOverlap & ExpandStep"/>
+    <MultiRangeSlider Max=15 EqualIsOverlap Marks="@_marks" ExpandStep>
+        <RangeItem DefaultValue="(0, 4)"/>
+        <RangeItem DefaultValue="(8, 10)"/>
+        <RangeItem DefaultValue="(11, 15)"/>
+    </MultiRangeSlider>
+    <Divider Text="option: EqualIsOverlap & ExpandStep & AllowOverlapping"/>
+    <MultiRangeSlider Max=15 Marks="@_marks" AllowOverlapping EqualIsOverlap ExpandStep>
+        <RangeItem DefaultValue="(0, 4)"/>
+        <RangeItem DefaultValue="(8, 10)"/>
+        <RangeItem DefaultValue="(10, 15)"/>
+    </MultiRangeSlider>
+</div>
+
+@code
+{
+    private RangeItemMark[] _marks =
+        {
+            new RangeItemMark(0, @<strong>Start</strong>, "color: green;"),
+            new RangeItemMark(4, "4"),
+            new RangeItemMark(8, "8"),
+            new RangeItemMark(10, "10"),
+            new RangeItemMark(11, "11"),            
+            new RangeItemMark(15, (b)=>{
+                b.OpenElement(0,"strong");
+                b.AddContent(1,"Finish");
+                b.CloseElement();
+            }, "color: #f50;")
+    };
+}

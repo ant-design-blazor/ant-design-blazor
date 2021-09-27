@@ -118,6 +118,24 @@ export class manipulationHelper {
     }    
   }  
 
+  static scrollToPoint(selector: Element | string, x: number, y: number, isPercent: boolean = false) {
+    const element = domInfoHelper.get(selector);
+    if (element && element instanceof HTMLElement) {
+      let xAbsolute = x;
+      let yAbsolute = y;
+      if (isPercent) {
+        const elementInfo = domInfoHelper.getInfo(element);
+        if (x !== 0) {
+          xAbsolute = elementInfo.scrollWidth * x;
+        }
+        if (y !== 0) {
+          yAbsolute = elementInfo.scrollWidth * y;
+        }
+      }      
+      element.scrollTo(xAbsolute, yAbsolute);
+    }
+  }
+
   static slideTo(targetPageY) {
     const timer = setInterval(function () {
       const currentY = document.documentElement.scrollTop || document.body.scrollTop;

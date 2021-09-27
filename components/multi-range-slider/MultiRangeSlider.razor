@@ -1,0 +1,71 @@
+﻿@namespace AntDesign
+@inherits AntInputComponentBase<IEnumerable<(double, double)>>
+@using Microsoft.AspNetCore.Components.Web
+@using AntDesign.Core.Helpers
+<div style="@(_overflow+OverflowStyle)" @ref="_scrollableAreaRef">
+    <div class="@ClassMapper.Class" style="@(_trackSize + @Style)" id="@Id" @ref="Ref">
+        <div class="ant-multi-range-slider-rail" @ref=@_railRef style="@_railStyle">
+        </div>
+    
+        <div class="ant-multi-range-slider-step">
+            @if (
+                    (Marks is not null && Parent is null)
+                ||
+                    (Parent is not null && Parent.IsFirst(this))
+            )
+            {
+                @foreach (RangeItemMark mark in Marks)
+                {
+                    <span style="position: absolute;@($"{GetBasePosition()}: {SetMarkPosition(mark.Key)};" + Parent?.GetMarkSizeStyle() ?? "")">
+                        <span class="ant-multi-range-slider-dot-line-dot"></span>
+                    </span>
+                }
+            }
+        </div>
+
+        <CascadingValue Value="@this" Name="Range" IsFixed>
+            @if (ChildContent != null)
+            {        
+                @ChildContent
+            }
+            else if (Data is not null)
+            {
+                int i = 0;
+                foreach(var rangeItemData in Data)
+                {                    
+                    int iterator = i;                    
+                    string key = rangeItemData.GetHashCode().ToString();
+                    <RangeItem @key=@key Value="@rangeItemData.Value" ValueChanged="(v) => RangeItemDataChanged(rangeItemData, v)" Data="@rangeItemData"/>
+                    i++;
+                }
+            }
+            else 
+            {
+                int i = 0;
+                foreach(var rangeItemValue in Value)
+                {
+                    int iterator = i;
+                    string key = GetOrAddKey(iterator);
+                    <RangeItem @key=@key Value="@rangeItemValue" ValueChanged="(v) => RangeItemValueChanged(iterator, v)"/>
+                    i++;
+                }
+            }
+        </CascadingValue>
+        <div class="ant-multi-range-slider-mark">
+            @if (
+                    (Marks is not null && Parent is null)
+                ||
+                    (Parent is not null && Parent.IsLast(this))
+            )
+            {
+                @foreach (RangeItemMark mark in Marks)
+                {
+                    <span class="ant-multi-range-slider-mark-text ant-multi-range-slider-mark-text-active" 
+                          style=@($"{GetBasePosition()}: {SetMarkPosition(mark.Key)}; {(Vertical ? "margin-bottom: -50%;" : "transform: translateX(-50%);")}" + mark.Style)>
+                          @mark.Value
+                    </span>
+                }
+            }
+        </div>
+    </div>
+</div>

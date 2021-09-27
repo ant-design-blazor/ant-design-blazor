@@ -1,0 +1,70 @@
+@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@multi-range-slider-prefix-cls: ~'@{ant-prefix}-multi-range-slider';
+
+.@{multi-range-slider-prefix-cls} {
+  &-rtl {
+    direction: rtl;
+  }
+
+  &-mark {
+    .@{multi-range-slider-prefix-cls}-rtl & {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  &-dot {
+    .@{multi-range-slider-prefix-cls}-rtl & {
+      margin-right: -4px;
+      margin-left: 0;
+    }
+
+    &:first-child {
+      .@{multi-range-slider-prefix-cls}-rtl & {
+        margin-right: -4px;
+        margin-left: 0;
+      }
+    }
+
+    &:last-child {
+      .@{multi-range-slider-prefix-cls}-rtl & {
+        margin-right: -4px;
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.vertical() {
+  &-vertical {
+    .@{multi-range-slider-prefix-cls}-handle {
+      .@{multi-range-slider-prefix-cls}-rtl& {
+        margin-right: -5px;
+        margin-left: 0;
+      }
+    }
+
+    .@{multi-range-slider-prefix-cls}-mark {
+      .@{multi-range-slider-prefix-cls}-rtl& {
+        right: 12px;
+        left: auto;
+      }
+    }
+
+    .@{multi-range-slider-prefix-cls}-mark-text {
+      .@{multi-range-slider-prefix-cls}-rtl& {
+        right: 4px;
+        left: auto;
+      }
+    }
+
+    .@{multi-range-slider-prefix-cls}-dot {
+      .@{multi-range-slider-prefix-cls}-rtl& {
+        right: 2px;
+        left: auto;
+      }
+    }
+  }
+}

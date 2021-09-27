@@ -1,0 +1,13 @@
+﻿<div>
+    <MultiRangeSlider Reverse="@reversed">
+        <RangeItem DefaultValue="(0, 40)"/>
+        <RangeItem DefaultValue="(45, 60)"/>
+        <RangeItem DefaultValue="(65, 100)"/>
+    </MultiRangeSlider>
+    Reversed: <Switch Size="small" @bind-Value="@reversed"/>
+</div>
+
+@code
+{
+    private bool reversed = true;
+}

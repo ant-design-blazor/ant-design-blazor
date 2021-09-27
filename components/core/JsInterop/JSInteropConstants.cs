@@ -139,6 +139,7 @@ namespace AntDesign
             public static string Focus => $"{FUNC_PREFIX}focus";
             public static string Blur => $"{FUNC_PREFIX}blur";
             public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
+            public static string ScrollToPoint => $"{FUNC_PREFIX}scrollToPoint";
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";

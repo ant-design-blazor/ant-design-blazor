@@ -1,0 +1,140 @@
+﻿@namespace AntDesign
+@inherits AntInputComponentBase<(double, double)>
+@using Microsoft.AspNetCore.Components.Web
+<div class="@ClassMapper.Class" id="@Id" @ref="Ref">
+    <div class="ant-multi-range-slider-track ant-multi-range-slider-track-1 @_focusClass" style="z-index: 1;@(_trackCssPosition+_customTrackStyle+_focusStyle)" 
+        tabindex="0"
+        @onmousedown="OnRangeItemClick" 
+        @onmousedown:stopPropagation
+        @onkeydown="e => OnKeyDown(e, 0)"
+        @onkeydown:stopPropagation
+        @onkeydown:preventDefault
+        >
+        @if (!string.IsNullOrWhiteSpace(Description))
+        {
+            <div class="ant-multi-range-slider-track-description" style="@_customDescriptionStyle">
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <Icon Type="@Icon"></Icon>
+                }
+                @Description
+            </div>
+        }
+    </div>    
+    @if (HasTooltip)
+    {
+        if (Parent.Oversized)
+        {
+            <Tooltip Title="@Parent.TipFormatter(_firstValue)" Style="display: inline;" Visible="_tooltipFirstVisible" ArrowPointAtCenter="true" OverlayClassName="ant-multi-range-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipFirst" PopupContainerSelector=@("#" + Id)>
+                <Unbound>
+                    @edge(new EdgeTemplate(this, context, RangeEdge.First, _firstValue, 
+                        "ant-multi-range-slider-handle ant-multi-range-slider-handle-1"+_attachedFirstHandleClass,
+                        _firstHandleCssPosition+_firstFocusZIndex+_customEdgeBorderStyle, _firstHandleFill
+                    ))
+                </Unbound>
+            </Tooltip>
+            <Tooltip Title="@Parent.TipFormatter(_lastValue)" Style="display: inline;" Visible="_tooltipLastVisible" ArrowPointAtCenter="true" OverlayClassName="ant-multi-range-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipLast" PopupContainerSelector=@("#" + Id)>
+                <Unbound>
+                    @edge(new EdgeTemplate(this, context, RangeEdge.Last, _lastValue, 
+                        "ant-multi-range-slider-handle ant-multi-range-slider-handle-2"+_attachedLastHandleClass, 
+                        _lastHandleCssPosition+_lastFocusZIndex+_customEdgeBorderStyle, _lastHandleFill
+                    ))
+                </Unbound>
+            </Tooltip>          
+        }
+        else
+        {
+            <Tooltip Title="@Parent.TipFormatter(_firstValue)" Style="display: inline;" Visible="_tooltipFirstVisible" ArrowPointAtCenter="true" OverlayClassName="ant-multi-range-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipFirst">
+                <Unbound>
+                    @edge(new EdgeTemplate(this, context, RangeEdge.First, _firstValue, 
+                        "ant-multi-range-slider-handle ant-multi-range-slider-handle-1"+_attachedFirstHandleClass,
+                        _firstHandleCssPosition+_firstFocusZIndex+_customEdgeBorderStyle, _firstHandleFill
+                    ))
+                </Unbound>
+            </Tooltip>
+            <Tooltip Title="@Parent.TipFormatter(_lastValue)" Style="display: inline;" Visible="_tooltipLastVisible" ArrowPointAtCenter="true" OverlayClassName="ant-multi-range-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipLast">
+                <Unbound>
+                    @edge(new EdgeTemplate(this, context, RangeEdge.Last, _lastValue, 
+                        "ant-multi-range-slider-handle ant-multi-range-slider-handle-2"+_attachedLastHandleClass, 
+                        _lastHandleCssPosition+_lastFocusZIndex+_customEdgeBorderStyle, _lastHandleFill
+                    ))
+                </Unbound>
+            </Tooltip>            
+        }
+
+    }
+    else
+    {
+        @edge(new EdgeTemplate(this, new ForwardRef() { Current = _firstHandle}, RangeEdge.First, _firstValue, 
+            "ant-multi-range-slider-handle ant-multi-range-slider-handle-1"+_attachedFirstHandleClass,
+            _firstHandleCssPosition+_firstFocusZIndex+_customEdgeBorderStyle, _firstHandleFill
+        ))
+        @edge(new EdgeTemplate(this, new ForwardRef() { Current = _lastHandle}, RangeEdge.Last, _lastValue, 
+            "ant-multi-range-slider-handle ant-multi-range-slider-handle-2"+_attachedLastHandleClass,
+            _lastHandleCssPosition+_lastFocusZIndex+_customEdgeBorderStyle, _lastHandleFill
+        ))
+    }
+
+</div>
+
+@code {
+    static RenderFragment _locked = @<Icon Type="lock" Theme="outline"/>;
+    static RenderFragment _unlocked = @<Icon Type="unlock" Theme="outline"/>
+    ;
+
+    RenderFragment _lastHandleFill;
+    RenderFragment _firstHandleFill;
+
+    internal class EdgeTemplate
+    {
+        internal EdgeTemplate(RangeItem rangeItem, ForwardRef reference, RangeEdge edge, double value, 
+            string cssClass, string style, RenderFragment childContent)
+        {
+            RangeItem = rangeItem;
+            Ref = reference;
+            Edge = edge;
+            Value = value;
+            CssClass = cssClass;
+            Style = style;
+            ChildContent = childContent;
+        }
+
+        internal ForwardRef Ref { get; set; }
+        internal RangeItem RangeItem { get; set; }
+        internal RangeEdge Edge { get; set; }
+        internal double Value { get; set; }
+        internal string CssClass { get; set; }
+        internal string Style { get; set; }
+        internal RenderFragment ChildContent { get; set; }
+    }
+
+    internal RenderFragment<EdgeTemplate> edge => (data) => builder =>
+    {
+        builder.OpenElement(1, "div");
+        builder.AddAttribute(2, "tablindex", 0);
+        builder.AddAttribute(3, "class", data.CssClass);
+        builder.AddAttribute(4, "role", "slider");
+        builder.AddAttribute(5, "aria-disabled", data.RangeItem.Disabled.ToString());
+        builder.AddAttribute(6, "aria-valuenow", data.Value);
+        builder.AddAttribute(7, "aria-valuemin", data.RangeItem.Parent.Min);
+        builder.AddAttribute(8, "aria-valuemax", data.RangeItem.Parent.Max);
+        builder.AddAttribute(9, "style", data.Style);
+
+        builder.AddAttribute(10, "onmousedown", RangeItem.CallbackFactory.Create<MouseEventArgs>(this, (args) => OnMouseDownEdge(args, data.Edge)));
+        builder.AddEventStopPropagationAttribute(11, "onmousedown", true);
+
+        builder.AddAttribute(13, "onkeydown", RangeItem.CallbackFactory.Create<KeyboardEventArgs>(this, async (args) => await OnKeyDown(args, data.Edge)));
+        builder.AddEventPreventDefaultAttribute(14, "onkeydown", true);
+        builder.AddEventStopPropagationAttribute(15, "onkeydown", true);
+
+        builder.AddAttribute(16, "ondblclick", RangeItem.CallbackFactory.Create<MouseEventArgs>(this, args => OnDoubleClick(data.Edge)));
+
+        builder.AddAttribute(20, "onkeyup", RangeItem.CallbackFactory.Create(this, OnKeyUp));
+        builder.AddEventPreventDefaultAttribute(21, "onkeyup", true);
+        builder.AddEventStopPropagationAttribute(22, "onkeyup", true);
+
+        builder.AddContent(30, data.ChildContent);
+        builder.AddElementReferenceCapture(99, r => data.Ref.Current = r);
+        builder.CloseElement();
+    };
+}

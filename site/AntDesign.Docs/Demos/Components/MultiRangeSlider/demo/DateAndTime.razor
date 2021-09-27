@@ -1,0 +1,125 @@
+﻿@using OneOf
+<div>
+    <Divider Text="Date"/>
+    <MultiRangeSlider Min=@_minDateAsDouble Max=@_maxDateAsDouble TipFormatter="(d) => DateFormatter(d)" EqualIsOverlap ExpandStep>
+        <RangeItem @bind-Value=@Range1 Description="range 1"/>
+        <RangeItem @bind-Value=@_range2 Description="range 2"/>
+    </MultiRangeSlider>
+    <Divider Text="Time"/>
+    <MultiRangeSlider @bind-Data=@_timeData Min=@TimeData.MinTime.TotalMinutes Max=@TimeData.MaxTime.TotalMinutes TipFormatter="(d) => TimeFormatter(d)" EqualIsOverlap ExpandStep />
+</div>
+
+@code
+{
+    DateTime _minDate = DateTime.Parse("2020-06-01");
+    DateTime _maxDate = DateTime.Parse("2020-09-30");
+    DateTime _startDate1, _endDate1;
+    DateTime _startDate2, _endDate2;
+    double _minDateAsDouble = 0, _maxDateAsDouble;
+    (double, double) _range1;
+    public (double, double) Range1 
+    { 
+        get => _range1; 
+        set
+        {
+            _range1 = value;
+            _startDate1 = _minDate.AddDays(_range1.Item1);
+            _endDate1 = _minDate.AddDays(_range1.Item2);
+        }
+    }
+
+    (double, double) _range2;
+    public (double, double) Range2 
+    { 
+        get => _range2; 
+        set
+        {
+            _range2 = value;
+            _startDate2 = _minDate.AddDays(_range2.Item1);
+            _endDate2 = _minDate.AddDays(_range2.Item2);
+        }
+    }
+
+    public class TimeData : IRangeItemData
+    {
+        public static TimeSpan MinTime = TimeSpan.FromMinutes(6 * 60);
+        public static TimeSpan MaxTime = TimeSpan.FromMinutes(23 * 60 + 59);
+        private TimeSpan _startTime;
+        public TimeSpan StartTime 
+        {
+            get => _startTime;
+            set
+            {
+                _startTime = value;
+                _value.Item1 = _startTime.TotalMinutes;
+            }
+        }
+        private TimeSpan _endTime;
+        public TimeSpan EndTime 
+        {
+            get => _endTime;
+            set
+            {
+                _endTime = value;
+                _value.Item2 = _endTime.TotalMinutes;
+            }
+        }
+
+        (double first, double second) _value = (0,0);
+        public (double first, double second) Value 
+        { 
+            get => _value; 
+            set 
+            {
+                _value = value;
+                _startTime = MinTime + TimeSpan.FromMinutes(value.Item1);
+                _endTime = MinTime + TimeSpan.FromMinutes(value.Item2);
+            }
+        }
+        public string Description { get => (EndTime - StartTime).TotalMinutes.ToString(); set { } }
+        public string Icon { get; set; }
+        public OneOf<Color, string> FontColor { get; set; }
+        public OneOf<Color, string> Color { get; set; }
+        public OneOf<Color, string> FocusColor { get; set; }
+        public OneOf<Color, string> FocusBorderColor { get; set; }
+        public EventCallback<(double, double)> OnChange { get; set; }
+        public EventCallback<(double, double)> OnAfterChange { get; set; }
+    }
+
+    IEnumerable<IRangeItemData> _timeData = new List<TimeData>
+    {
+        new TimeData() { StartTime = TimeSpan.Parse("08:05"), EndTime = TimeSpan.Parse("09:00")},
+        new TimeData() { StartTime = TimeSpan.Parse("09:05"), EndTime = TimeSpan.Parse("09:59")},
+        new TimeData() { StartTime = TimeSpan.Parse("10:35"), EndTime = TimeSpan.Parse("13:47")},
+        new TimeData() { StartTime = TimeSpan.Parse("13:48"), EndTime = TimeSpan.Parse("14:00")},
+        new TimeData() { StartTime = TimeSpan.Parse("18:05"), EndTime = TimeSpan.Parse("18:30")},
+        new TimeData() { StartTime = TimeSpan.Parse("18:43"), EndTime = TimeSpan.Parse("22:01")}
+    };    
+
+    protected override void OnInitialized()
+    {
+        _maxDateAsDouble = DateAsDouble(_maxDate, _minDate);
+        _startDate1 = _minDate.AddDays(10);
+        _endDate1 = _minDate.AddDays(30);
+        _startDate2 = _minDate.AddDays(40);
+        _endDate2 = _minDate.AddDays(60);
+        _range1 = (DateAsDouble(_startDate1, _minDate), DateAsDouble(_endDate1, _minDate));
+        _range2 = (DateAsDouble(_startDate2, _minDate), DateAsDouble(_endDate2, _minDate));
+    }
+
+    static double DateAsDouble(DateTime date, DateTime start)
+    {            
+      var diff = date - start;
+      return (double)diff.TotalDays;
+    }
+
+    string DateFormatter(double currentEdgeValue)
+    {
+        return _minDate.AddDays(_minDateAsDouble + currentEdgeValue).ToShortDateString();
+    }
+
+    string TimeFormatter(double currentEdgeValue)
+    {
+        return TimeSpan.FromMinutes(currentEdgeValue).ToString("hh\\:mm");
+    }
+}

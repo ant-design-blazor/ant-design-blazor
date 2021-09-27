@@ -1,0 +1,174 @@
+﻿<Divider Text="Individual approach"/>
+<div>
+    <MultiRangeSlider>
+        @for(int i = 0; i < _values1.Count; i++)
+        {
+            int iterator = i;
+            <RangeItem @key=@_keys1[iterator] Value="@_values1[iterator]" ValueChanged="(v) => ValueChanged1(iterator, v)"/>
+        }
+    </MultiRangeSlider>        
+    <div style="height: 20px;">
+        @for(int i = 0; i < _values1.Count; i++)
+        {
+            int iterator = i;            
+            <Tag @key=@_keys1[iterator] Closable OnClosing=@((e) => Remove1(iterator))>@_values1[iterator].Item1 , @_values1[iterator].Item2</Tag>
+        }        
+    </div>
+    <Space Direction=@DirectionVHType.Horizontal Style="margin-top: 12px;">
+        <SpaceItem>
+            <InputGroup Compact>        
+                <AntDesign.InputNumber @bind-Value=@_newMin1 Style="width: 100px; textAlign: center" Min=0 Max=100/>        
+                <span style="margin: 4px 4px">~</span>
+                <AntDesign.InputNumber @bind-Value=@_newMax1 Style="width: 100px; textAlign: center" Min=0 Max=100/>
+            </InputGroup>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Type="@ButtonType.Primary" OnClick=Add1>Add</Button>
+        </SpaceItem>
+    </Space>
+</div>
+<Divider Text="Binding approach"/>
+<div>
+    <MultiRangeSlider @bind-Value=@_values2/>
+    <div style="height: 20px;">
+        @for(int i = 0; i < _values2.Count(); i++)
+        {
+            int iterator = i;                        
+            <Tag @key=@_keys2[iterator] Closable OnClosing=@((e) => Remove2(iterator))>@_values2.ElementAt(iterator).Item1 , @_values2.ElementAt(iterator).Item2</Tag>
+        }        
+    </div>
+    <Space Direction=@DirectionVHType.Horizontal Style="margin-top: 12px;">
+        <SpaceItem>
+            <InputGroup Compact>        
+                <AntDesign.InputNumber @bind-Value=@_newMin2 Style="width: 100px; textAlign: center" Min=0 Max=100/>        
+                <span style="margin: 4px 4px">~</span>
+                <AntDesign.InputNumber @bind-Value=@_newMax2 Style="width: 100px; textAlign: center" Min=0 Max=100/>
+            </InputGroup>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Type="@ButtonType.Primary" OnClick=Add2>Add</Button>
+        </SpaceItem>
+    </Space>
+</div>
+<Divider Text="Data approach"/>
+<div>
+    <MultiRangeSlider @bind-Data=@_data AllowOverlapping/>    
+    <div style="height: 20px;">
+        @for(int i = 0; i < _data.Count(); i++)
+        {
+            int iterator = i;                        
+            <Tag @key=@_keys3[iterator] Closable OnClosing=@((e) => Remove3(iterator))>@_data.ElementAt(iterator).Value.Item1 , @_data.ElementAt(iterator).Value.Item2</Tag>
+        }        
+    </div>
+    <Space Direction=@DirectionVHType.Horizontal Style="margin-top: 12px;">
+        <SpaceItem>
+            <InputGroup Compact>        
+                <AntDesign.InputNumber @bind-Value=@_newMin3 Style="width: 100px; textAlign: center" Min=0 Max=100/>        
+                <span style="margin: 4px 4px">~</span>
+                <AntDesign.InputNumber @bind-Value=@_newMax3 Style="width: 100px; textAlign: center" Min=0 Max=100/>
+            </InputGroup>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Type="@ButtonType.Primary" OnClick=Add3>Add</Button>
+        </SpaceItem>
+    </Space>
+</div>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        _values2 = _values1.ToList();
+        Enumerable.Range(0, _values1.Count).ForEach(i => _keys1.Add(Guid.NewGuid().ToString()));
+        Enumerable.Range(0, _values1.Count).ForEach(i => _keys2.Add(Guid.NewGuid().ToString()));
+        Enumerable.Range(0, _data.Count()).ForEach(i => _keys3.Add(Guid.NewGuid().ToString()));
+    }
+
+    /***** Individual approach  *****/
+
+    List<(double start, double end)> _values1 = new()
+    {
+        (0, 40),
+        (45, 60),
+        (65, 100)
+    };
+    List<string> _keys1 = new();
+    double? _newMin1, _newMax1;
+
+    void Add1()
+    {
+        if (_newMin1 is not null && _newMax1 is not null)
+        {
+            _keys1.Add(Guid.NewGuid().ToString());
+            _values1.Add((_newMin1!.Value, _newMax1!.Value));
+            _newMin1 = null;
+            _newMax1 = null;
+        }
+    }
+
+    void Remove1(int index)
+    {
+        _values1.RemoveAt(index);
+        _keys1.RemoveAt(index);
+    }
+
+    void ValueChanged1(int index, (double, double) value) 
+    {
+        _values1[index] = value;
+    }
+
+    /***** Binding approach  *****/
+
+    IEnumerable<(double start, double end)> _values2 = Enumerable.Empty<(double, double)>();
+    //_keys2 is not normally needed. In here it supports proper behavior of <Tag> components.
+    List<string> _keys2 = new();
+    double? _newMin2, _newMax2;
+
+    void Add2()
+    {
+        if (_newMin2 is not null && _newMax2 is not null)
+        {
+            _keys2.Add(Guid.NewGuid().ToString());
+            (_values2 as List<(double, double)>)!.Add((_newMin2!.Value, _newMax2!.Value));
+            _newMin2 = null;
+            _newMax2 = null;
+        }
+    }
+
+    void Remove2(int index)
+    {
+        _keys2.RemoveAt(index);
+        (_values2 as List<(double, double)>)!.RemoveAt(index);
+    }
+
+    /***** Data approach  *****/
+
+    //_keys2 is not normally needed. In here it supports proper behavior of <Tag> components.
+    List<string> _keys3 = new();
+    double? _newMin3, _newMax3;
+
+    void Add3()
+    {
+        if (_newMin3 is not null && _newMax3 is not null)
+        {
+            _keys3.Add(Guid.NewGuid().ToString());
+            (_data as List<RangeItemData>)!.Add(new RangeItemData((_newMin3.Value, _newMax3.Value)));
+            _newMin3 = null;
+            _newMax3 = null;
+        }
+    }
+
+    void Remove3(int index)
+    {
+        _keys3.RemoveAt(index);
+        (_data as List<RangeItemData>)!.RemoveAt(index);
+    }
+
+    IEnumerable<IRangeItemData> _data = new List<RangeItemData>
+    {
+        new RangeItemData((0, 40), description: "minimal"),
+        new RangeItemData((45, 60), description: "with icon", icon: "paper-clip"),
+        new RangeItemData((65, 100), description: "custom color", fontColor: Color.Gray7, color: Color.Orange2, focusBorderColor: Color.Orange6, focusColor: Color.Orange4)
+    };
+}

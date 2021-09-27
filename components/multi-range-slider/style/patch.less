@@ -1,0 +1,338 @@
+﻿@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+
+@multi-range-group-prefix-cls: ~'@{ant-prefix}-multi-range-group';
+@multi-range-slider-handle-lock-size: 20px;
+@multi-range-slider-margin: 10px 7px 10px;
+@multi-range-slider-prefix-cls: ~'@{ant-prefix}-multi-range-slider';
+@multi-range-slider-handle-margin-top: 3px;
+@multi-range-slider-handle-margin-left: 3px;
+@multi-range-slider-handle-lock-margin-top: 0px;
+@multi-range-slider-handle-lock-margin-left: 0px;
+
+.@{multi-range-group-prefix-cls} {
+    margin: 10px 10px 40px 10px;
+
+    .@{multi-range-slider-prefix-cls}-dot-line-dot {
+        position: inherit;
+        z-index: 2;
+        height: inherit;
+        width: inherit;
+    }
+
+    &&.@{multi-range-group-prefix-cls}-vertical {
+        display: flex;
+        margin-bottom: 10px;
+        margin-right: 40px;
+
+        .@{multi-range-slider-prefix-cls}-dot-line-dot {
+            width: inherit;
+        }
+    }
+}
+
+.@{multi-range-slider-prefix-cls} {
+    .reset-component();
+    position: relative;
+    height: 12px;
+    margin: @multi-range-slider-margin;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    .range-vertical();
+
+    &-with-marks, &-group-last-child {
+        margin-bottom: 38px; //without margin, the marks are obstructed by elements below the marks
+    }
+
+    &-group {
+        margin-bottom: inherit;
+    }
+
+    &-rail {
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        background-color: @slider-rail-background-color;
+        border-radius: @border-radius-base;
+        transition: background-color 0.3s;
+    }
+
+    &-track {
+        position: absolute;
+        height: 20px;
+        background-color: @slider-track-background-color;
+        border-radius: @border-radius-base;
+        transition: background-color 0.3s;
+        mix-blend-mode: multiply;
+        border: 1px solid transparent;
+
+        &-focus {
+            border: 1px solid @input-hover-border-color;
+            background-color: @slider-track-background-color-hover;
+        }
+
+        &-description {
+            box-sizing: border-box;
+            color: @text-color-secondary; //rgba(77, 67, 67, 0.85);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            padding: 0 7px;
+            font-variant: tabular-nums;
+            font-feature-settings: "tnum";
+            margin-right: 8px;
+            white-space: nowrap;
+            height: fill-available;
+            height: -moz-available;
+            height: -webkit-fill-available;
+            margin-top: -2px;
+        }
+    }
+
+    &-handle {
+        position: absolute;
+        width: @slider-handle-size;
+        height: @slider-handle-size;
+        margin-top: @multi-range-slider-handle-margin-top;
+        background-color: @slider-handle-background-color;
+        border: solid @slider-handle-border-width @slider-handle-color;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: border-color 0.3s, box-shadow 0.6s, transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), width 0.2s, height 0.2s;
+
+        &-dragging&-dragging&-dragging {
+            border-color: @slider-handle-color-focus;
+            box-shadow: 0 0 0 5px @slider-handle-color-focus-shadow;
+        }
+
+        &:focus {
+            border-color: @slider-handle-color-focus;
+            outline: none;
+            box-shadow: 0 0 0 5px @slider-handle-color-focus-shadow;
+        }
+
+        &.@{ant-prefix}-tooltip-open {
+            border-color: @slider-handle-color-tooltip-open;
+        }
+
+        &-lock {
+            width: @multi-range-slider-handle-lock-size;
+            height: @multi-range-slider-handle-lock-size;
+            margin-top: @multi-range-slider-handle-lock-margin-top;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(1.5);
+
+            &-open {
+                color: @error-color
+            }
+
+            &-closed {
+                color: @success-color
+            }
+        }
+    }
+
+    &:hover {
+        .@{multi-range-slider-prefix-cls}-rail {
+            background-color: @slider-rail-background-color-hover;
+        }
+
+        .@{multi-range-slider-prefix-cls}-track:hover {
+            background-color: @slider-track-background-color-hover;
+        }
+
+        .@{multi-range-slider-prefix-cls}-handle:not(.@{ant-prefix}-tooltip-open) {
+            border-color: @slider-handle-color-hover;
+        }
+    }
+
+    &-mark {
+        position: absolute;
+        top: 24px;
+        left: 0;
+        width: 100%;
+        font-size: @font-size-base;
+    }
+
+    &-mark-text {
+        position: absolute;
+        display: inline-block;
+        color: @text-color-secondary;
+        text-align: center;
+        word-break: keep-all;
+        cursor: pointer;
+        user-select: none;
+
+        &-active {
+            color: @text-color;
+        }
+    }
+
+    &-step {
+        position: absolute;
+        width: 100%;
+        height: 4px;
+        background: transparent;
+    }
+
+    &-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        margin-left: -4px;
+        background-color: @component-background;
+        border: 2px solid @slider-dot-border-color-active;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &-first {
+            top: -2px;
+        }
+
+        &-second {
+            top: 14px;
+        }
+
+        &:first-child {
+            margin-left: -4px;
+        }
+
+        &:last-child {
+            margin-left: -4px;
+        }
+        /*    &-active { //possibly include for non-overlapping; no point when multiple overlapping
+      border-color: @slider-dot-border-color-active;
+    }*/
+    }
+
+    &-dot-line-dot {
+        border: 1px solid @text-color-secondary; //@slider-dot-border-color-active;
+        margin-left: -1px;
+        display: inline-block;
+        height: 20px;
+        width: 1px;
+        opacity: 0.5;
+    }
+
+    &-disabled {
+        cursor: not-allowed;
+
+        .@{multi-range-slider-prefix-cls}-track {
+            background-color: @slider-disabled-color !important;
+        }
+
+        .@{multi-range-slider-prefix-cls}-handle,
+        .@{multi-range-slider-prefix-cls}-dot {
+            background-color: @component-background;
+            border-color: @slider-disabled-color !important;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .@{multi-range-slider-prefix-cls}-mark-text,
+        .@{multi-range-slider-prefix-cls}-dot {
+            cursor: not-allowed !important;
+        }
+    }
+}
+
+.range-vertical() {
+    &-vertical {
+        width: 25px;
+        height: 100%;
+        overflow-y: clip; //needs to be here, otherwise can create a scrollbar when multiple ranges are used; side-effect - hides marks labels (if exist)
+
+        &&.@{multi-range-slider-prefix-cls}-with-marks {
+            margin-bottom: unset;
+            margin-right: 48px; //needed, otherwise marks are hidden
+        }
+
+        &&.@{multi-range-slider-prefix-cls}-group {
+            margin-right: inherit;
+        }
+
+        &-oversized {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .@{multi-range-slider-prefix-cls}-rail {
+            width: 20px;
+            height: 100%;
+        }
+
+        .@{multi-range-slider-prefix-cls}-track {
+            width: 20px;
+
+            .@{multi-range-slider-prefix-cls}-track-description {
+                padding: 7px 0;
+                writing-mode: vertical-rl; //in firefox during testing this had to be turned off, resized and turned on again for proper working
+                text-orientation: mixed;
+                margin-top: 0px;
+            }
+        }
+
+        .@{multi-range-slider-prefix-cls}-handle {
+            margin-top: -6px; // we chould consider border width as well: (10 + 2 ) / 2
+            margin-left: @multi-range-slider-handle-margin-left;
+
+            &-lock {
+                margin-left: @multi-range-slider-handle-lock-margin-left;
+            }
+        }
+
+        .@{multi-range-slider-prefix-cls}-mark {
+            top: 0;
+            left: 24px;
+            width: 18px;
+            height: 100%;
+        }
+
+        .@{multi-range-slider-prefix-cls}-mark-text {
+            left: 4px;
+            white-space: nowrap;
+        }
+
+        .@{multi-range-slider-prefix-cls}-step {
+            width: 4px;
+            height: 100%;
+        }
+
+        .@{multi-range-slider-prefix-cls}-dot {
+            //top: 18px;
+            top: -4px;
+            margin-bottom: -4px;
+
+            &-first {
+                left: 2px;
+            }
+
+            &-second {
+                left: 18px;
+            }
+        }
+
+        .@{multi-range-slider-prefix-cls}-dot-line-dot {
+            margin-left: 1px;
+            position: absolute;
+            width: 19px;
+            height: 1px;
+            margin-top: -1px;
+        }
+    }
+
+    &-tooltip {
+        // https://github.com/ant-design/ant-design/issues/20014
+        .@{ant-prefix}-tooltip-inner {
+            min-width: unset;
+        }
+    }
+}
+
+@import './rtl';
