@@ -3,7 +3,6 @@
 @typeparam TItem
 
 <div class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
-
     @if (Header != null)
     {
         <div class="@PrefixName-header">
@@ -11,31 +10,27 @@
         </div>
     }
 
-    @if (DataSource != null && DataSource.Any())
+    @if (DataSource?.Any() == true)
     {
         <Spin Spinning="Loading">
             @if (Grid != null)
             {
-                <Row Gutter="Grid.Gutter">
-                    @foreach (var item in DataSource)
-                    { 
-                        <CascadingValue Value="ItemLayout">
-                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
-                                @ChildContent(item)
-                            </CascadingValue>
-                        </CascadingValue>
-                    }
-                </Row>
+				  <Row Gutter="Grid.Gutter" OnBreakpoint="OnBreakpoint">
+				      @foreach (var item in DataSource)
+				      { 
+				          <CascadingValue Value="this" IsFixed>
+				              @ChildContent(item)
+				          </CascadingValue>
+				      }
+				  </Row>
             }
             else
             {
                 <ul class="ant-list-items">
                     @foreach (var item in DataSource)
                     {
-                        <CascadingValue Value="ItemLayout">
-                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
-                                @ChildContent(item)
-                            </CascadingValue>
+                        <CascadingValue Value="this" IsFixed>
+							@ChildContent(item)
                         </CascadingValue>
                     }
                 </ul>

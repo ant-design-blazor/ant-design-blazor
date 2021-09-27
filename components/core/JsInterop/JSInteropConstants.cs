@@ -15,6 +15,8 @@ namespace AntDesign
         public static string GetScroll => DomInfoHelper.GetScroll;
         public static string HasFocus => DomInfoHelper.HasFocus;
         public static string GetInnerText => DomInfoHelper.GetInnerText;
+        public static string GetMaxZIndex => DomInfoHelper.GetMaxZIndex;
+
         #endregion
 
         #region styleManipulation
@@ -87,12 +89,12 @@ namespace AntDesign
         #region overlay
         public static string AddPreventEnterOnOverlayVisible => OverlayComponentHelper.AddPreventEnterOnOverlayVisible;
         public static string RemovePreventEnterOnOverlayVisible => OverlayComponentHelper.RemovePreventEnterOnOverlayVisible;
-        public static string GetMaxZIndex => OverlayComponentHelper.GetMaxZIndex;
+        //public static string AddOverlayToContainer => OverlayComponentHelper.AddOverlayToContainer;
         #endregion
 
         #region table
-        public static string BindTableHeaderAndBodyScroll => TableComponentHelper.BindTableHeaderAndBodyScroll;
-        public static string UnbindTableHeaderAndBodyScroll => TableComponentHelper.UnbindTableHeaderAndBodyScroll;
+        public static string BindTableScroll => TableComponentHelper.BindTableScroll;
+        public static string UnbindTableScroll => TableComponentHelper.UnbindTableScroll;
         #endregion
 
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
@@ -109,6 +111,7 @@ namespace AntDesign
             public static string GetScroll => $"{FUNC_PREFIX}getScroll";
             public static string HasFocus => $"{FUNC_PREFIX}hasFocus";
             public static string GetInnerText => $"{FUNC_PREFIX}getInnerText";
+            public static string GetMaxZIndex => $"{FUNC_PREFIX}getMaxZIndex";
         }
 
         public static class EventHelper
@@ -184,6 +187,7 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "inputHelper.";
             public static string RegisterResizeTextArea => $"{FUNC_PREFIX}registerResizeTextArea";
+            public static string GetTextAreaInfo => $"{FUNC_PREFIX}getTextAreaInfo";
             public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
             public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
         }
@@ -210,14 +214,16 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "overlayHelper.";
             public static string AddPreventEnterOnOverlayVisible => $"{FUNC_PREFIX}addPreventEnterOnOverlayVisible";
             public static string RemovePreventEnterOnOverlayVisible => $"{FUNC_PREFIX}removePreventEnterOnOverlayVisible";
-            public static string GetMaxZIndex => $"{FUNC_PREFIX}getMaxZIndex";
+            public static string AddOverlayToContainer => $"{FUNC_PREFIX}addOverlayToContainer";
+            public static string UpdateOverlayPosition => $"{FUNC_PREFIX}updateOverlayPosition";
+            public static string DeleteOverlayFromContainer => $"{FUNC_PREFIX}deleteOverlayFromContainer";
         }
 
         public static class TableComponentHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "tableHelper.";
-            public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
-            public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+            public static string BindTableScroll => $"{FUNC_PREFIX}bindTableScroll";
+            public static string UnbindTableScroll => $"{FUNC_PREFIX}unbindTableScroll";
         }
 
         public static class UploadComponentHelper
