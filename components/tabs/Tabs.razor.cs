@@ -168,8 +168,8 @@ namespace AntDesign
         private string _inkStyle;
         private string _navListStyle;
 
-        private string _operationClass = "";
-        private string _operationStyle = "";
+        private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+        private string _operationStyle = "visibility: hidden; order: 1;";
 
         private double _scrollOffset;
         private int _scrollListWidth;
