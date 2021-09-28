@@ -190,8 +190,8 @@ namespace AntDesign
         private List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
 
-        private bool _navWrapPingLeft;
-        private bool _navWrapPingRight;
+        private bool NavWrapPingLeft => _scrollOffset > 0;
+        private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
 
         private bool HasAddButton => Type == TabType.EditableCard && !HideAdd;
 
@@ -233,8 +233,8 @@ namespace AntDesign
 
             _tabsNavWarpPingClassMapper
                 .Add("ant-tabs-nav-wrap")
-                .If("ant-tabs-nav-wrap-ping-left", () => _navWrapPingLeft)
-                .If("ant-tabs-nav-wrap-ping-right", () => _navWrapPingRight);
+                .If("ant-tabs-nav-wrap-ping-left", () => NavWrapPingLeft)
+                .If("ant-tabs-nav-wrap-ping-right", () => NavWrapPingRight);
         }
 
         /// <summary>
@@ -451,7 +451,6 @@ namespace AntDesign
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
-                _navWrapPingRight = false;
 
                 DomEventListener.RemoveExclusive(_navListRef, "wheel");
             }
@@ -459,8 +458,6 @@ namespace AntDesign
             {
                 _operationClass = "ant-tabs-nav-operations";
                 _operationStyle = string.Empty;
-
-                _navWrapPingRight = true;
 
                 if (!_shownDropdown)
                 {
@@ -511,9 +508,6 @@ namespace AntDesign
                 _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
             }
 
-            _navWrapPingLeft = _scrollOffset > 0;
-            _navWrapPingRight = Math.Abs(maxOffset - _scrollOffset) >= 1;
-
             StateHasChanged();
             _renderedActivePane = _activePane;
         }
@@ -548,8 +542,6 @@ namespace AntDesign
                 }
 
                 _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
-
-                _navWrapPingLeft = _scrollOffset > 0;
             }
             else
             {
