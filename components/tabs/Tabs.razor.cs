@@ -175,6 +175,7 @@ namespace AntDesign
 
         private TabPane _activePane;
         private TabPane _activeTab;
+        private HtmlElement _activeTabElement;
 
         private string _activeKey;
         private TabPane _renderedActivePane;
@@ -214,6 +215,8 @@ namespace AntDesign
 
         private int _dropDownBtnWidth = 46;
         private int _addBtnWidth = 40;
+        private bool _shownDropdown;
+        private bool _needUpdateScrollListPosition;
 
         protected override void OnInitialized()
         {
@@ -277,8 +280,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    var key = _tabs[_panes.Count].Key;
-                    tabPane.SetKey(key);
+                    tabPane.SetKey(_tabs[_panes.Count - 1].Key);
                 }
             }
 
@@ -317,6 +319,7 @@ namespace AntDesign
                 AfterTabCreated.InvokeAsync(_activeKey);
             }
 
+            _needUpdateScrollListPosition = true;
         }
 
         public async Task RemoveTab(TabPane tab)
@@ -340,9 +343,6 @@ namespace AntDesign
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
-
-                _shouldRender = true;
-                StateHasChanged();
             }
         }
 
@@ -356,6 +356,8 @@ namespace AntDesign
             {
                 _panes.Remove(pane);
             }
+
+            _needUpdateScrollListPosition = true;
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -369,7 +371,6 @@ namespace AntDesign
             }
 
             ActivatePane(tabPane.Key);
-
         }
 
         private void ActivatePane(string key)
@@ -417,6 +418,8 @@ namespace AntDesign
 
             Card?.SetBody(_activePane.ChildContent);
 
+            _needUpdateScrollListPosition = true;
+
             _shouldRender = true;
             StateHasChanged();
         }
@@ -429,10 +432,12 @@ namespace AntDesign
                 _afterFirstRender = true;
             }
 
-            if (_afterFirstRender)
+            if (_afterFirstRender && _needUpdateScrollListPosition)
             {
-                await UpdateScrollListPosition();
-                await TryRenderInk();
+                _needUpdateScrollListPosition = false;
+                await ResetSizes();
+                UpdateScrollListPosition();
+                TryRenderInk();
             }
 
             _shouldRender = false;
@@ -442,7 +447,6 @@ namespace AntDesign
         {
             base.OnParametersSet();
             _shouldRender = true;
-            _renderedActivePane = null;
         }
 
         private async Task ResetSizes()
@@ -450,16 +454,16 @@ namespace AntDesign
             var navList = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navListRef);
             var navWarp = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navWarpRef);
 
+            _activeTabElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
+
             _scrollListWidth = navList.ClientWidth;
             _scrollListHeight = navList.ClientHeight;
             _wrapperWidth = navWarp.ClientWidth;
             _wrapperHeight = navWarp.ClientHeight;
         }
 
-        private async Task UpdateScrollListPosition()
+        private void UpdateScrollListPosition()
         {
-            await ResetSizes();
-
             // 46 is the size of dropdown button
             if (_scrollListWidth <= _wrapperWidth)
             {
@@ -475,11 +479,11 @@ namespace AntDesign
                 _operationStyle = string.Empty;
 
                 _navWrapPingRight = true;
-                _wrapperWidth -= _dropDownBtnWidth;
 
-                if (HasAddButton)
+                if (!_shownDropdown)
                 {
-                    _wrapperWidth -= _addBtnWidth;
+                    _wrapperWidth -= _dropDownBtnWidth;
+                    _shownDropdown = true;
                 }
 
                 if (IsHorizontal)
@@ -528,36 +532,54 @@ namespace AntDesign
             _navWrapPingLeft = _scrollOffset > 0;
             _navWrapPingRight = Math.Abs(maxOffset - _scrollOffset) >= 1;
 
-            _renderedActivePane = _activePane;
             StateHasChanged();
+            _renderedActivePane = _activePane;
         }
 
-        private async Task TryRenderInk()
+        private void TryRenderInk()
         {
             if (_renderedActivePane == _activePane)
             {
                 return;
             }
 
-            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
-
             if (IsHorizontal)
             {
-                _inkStyle = $"left: {element.OffsetLeft}px; width: {element.ClientWidth}px";
+                _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
+
+                var additionalWidth = HasAddButton ? _addBtnWidth : 0;
+
                 // need to scroll tab bars
-                _scrollOffset = element.OffsetLeft + element.ClientWidth - _wrapperWidth;
-                _scrollOffset = Math.Min(_scrollOffset, _scrollListWidth - _wrapperWidth);
-                _scrollOffset = Math.Max(_scrollOffset, 0);
+                if (_activeTabElement.OffsetLeft + _activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
+                    || _scrollListWidth - _scrollOffset < _wrapperWidth)
+                {
+                    // scroll　right
+                    _scrollOffset = _activeTabElement.OffsetLeft + _activeTabElement.ClientWidth - _wrapperWidth + additionalWidth;
+                    _scrollOffset = Math.Min(_scrollOffset, _scrollListWidth - _wrapperWidth);
+                    _scrollOffset = Math.Max(_scrollOffset, 0);
+                }
+                else if (_activeTabElement.OffsetLeft < _scrollOffset)
+                {
+                    // scroll　left
+                    _scrollOffset = _activeTabElement.OffsetLeft;
+                    _scrollOffset = Math.Max(_scrollOffset, 0);
+                }
 
                 _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+
+                _navWrapPingLeft = _scrollOffset > 0;
             }
             else
             {
-                _inkStyle = $"top: {element.OffsetTop}px; height: {element.ClientHeight}px;";
+                _inkStyle = $"top: {_activeTabElement.OffsetTop}px; height: {_activeTabElement.ClientHeight}px;";
 
-                // need to scroll tab bars
-                _scrollOffset = element.OffsetTop + element.ClientHeight - _wrapperHeight;
-                _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                if (_activeTabElement.OffsetTop > _scrollOffset + _activeTabElement.ClientHeight
+                  || _activeTabElement.OffsetTop < _scrollOffset)
+                {
+                    // need to scroll tab bars
+                    _scrollOffset = _activeTabElement.OffsetTop + _activeTabElement.ClientHeight - _wrapperHeight;
+                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                }
             }
 
             StateHasChanged();
