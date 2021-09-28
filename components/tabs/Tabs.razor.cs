@@ -135,28 +135,10 @@ namespace AntDesign
         public EventCallback<string> AfterTabCreated { get; set; }
 
         /// <summary>
-        /// Callback executed when next button is clicked
-        /// </summary>
-        [Parameter]
-        public EventCallback OnNextClick { get; set; }
-
-        /// <summary>
-        /// Callback executed when prev button is clicked
-        /// </summary>
-        [Parameter]
-        public EventCallback OnPrevClick { get; set; }
-
-        /// <summary>
         /// Callback executed when tab is clicked
         /// </summary>
         [Parameter]
         public EventCallback<string> OnTabClick { get; set; }
-
-        /// <summary>
-        /// Whether to turn on keyboard navigation
-        /// </summary>
-        [Parameter]
-        public bool Keyboard { get; set; } = true;
 
         [Parameter]
         public bool Draggable { get; set; }
