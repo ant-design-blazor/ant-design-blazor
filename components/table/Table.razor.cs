@@ -12,7 +12,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable, IPaginationHost
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -136,119 +136,11 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; } = true;
 
-        private bool? _paginationDisabled;
+        [Parameter]
+        public Dictionary<string, object> PaginationAttributes { get; set; }
 
         [Parameter]
-        public bool PaginationDisabled
-        {
-            get => _paginationDisabled ?? false;
-            set => _paginationDisabled = value;
-        }
-
-        private bool? _paginationHideOnSinglePage;
-
-        [Parameter]
-        public bool PaginationHideOnSinglePage
-        {
-            get => _paginationHideOnSinglePage ?? false;
-            set => _paginationHideOnSinglePage = value;
-        }
-
-        private bool? _paginationShowSizeChanger;
-
-        [Parameter]
-        public bool PaginationShowSizeChanger
-        {
-            get => _paginationShowSizeChanger ?? false;
-            set => _paginationShowSizeChanger = value;
-        }
-
-        [Parameter]
-        public int[] PaginationPageSizeOptions { get; set; }
-
-        private bool? _paginationShowQuickJumper;
-
-        [Parameter]
-        public bool PaginationShowQuickJumper
-        {
-            get => _paginationShowQuickJumper ?? false;
-            set => _paginationShowQuickJumper = value;
-        }
-
-        private bool? _paginationShowTitle;
-
-        [Parameter]
-        public bool PaginationShowTitle
-        {
-            get => _paginationShowTitle ?? true;
-            set => _paginationShowTitle = value;
-        }
-
-        [Parameter]
-        public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>? PaginationShowTotal { get; set; }
-
-        [Parameter]
-        public RenderFragment PaginationGoButton { get; set; }
-
-        [Parameter]
-        public string PaginationSize { get; set; }
-
-        private bool? _paginationResponsive;
-
-        [Parameter]
-        public bool PaginationResponsive
-        {
-            get => _paginationResponsive ?? true;
-            set => _paginationResponsive = value;
-        }
-
-        private bool? _paginationSimple;
-
-        [Parameter]
-        public bool PaginationSimple
-        {
-            get => _paginationSimple ?? false;
-            set => _paginationSimple = value;
-        }
-
-        [Parameter]
-        public RenderFragment<PaginationItemRenderContext> PaginationItemRender { get; set; }
-
-        private bool? _paginationShowLessItems;
-
-        [Parameter]
-        public bool PaginationShowLessItems
-        {
-            get => _paginationShowLessItems ?? false;
-            set => _paginationShowLessItems = value;
-        }
-
-        private bool? _paginationShowPrevNextJumpers;
-
-        [Parameter]
-        public bool PaginationShowPrevNextJumpers
-        {
-            get => _paginationShowPrevNextJumpers ?? true;
-            set => _paginationShowPrevNextJumpers = value;
-        }
-
-        [Parameter]
-        public string PaginationDirection { get; set; }
-
-        [Parameter]
-        public RenderFragment<PaginationItemRenderContext> PaginationPrevIcon { get; set; }
-
-        [Parameter]
-        public RenderFragment<PaginationItemRenderContext> PaginationNextIcon { get; set; }
-
-        [Parameter]
-        public RenderFragment<PaginationItemRenderContext> PaginationJumpPrevIcon { get; set; }
-
-        [Parameter]
-        public RenderFragment<PaginationItemRenderContext> PaginationJumpNextIcon { get; set; }
-
-        [Parameter]
-        public int? PaginationTotalBoundaryShowSizeChanger { get; set; }
+        public RenderFragment PaginationOptions { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }

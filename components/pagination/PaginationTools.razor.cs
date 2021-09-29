@@ -10,7 +10,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class PaginationOptions
+    public partial class PaginationTools
     {
         internal static readonly int[] DefaultPageSizeOptions = {10, 20, 50, 100};
 
@@ -43,7 +43,8 @@ namespace AntDesign
 
         private string _goInputText = string.Empty;
 
-        private PaginationLocale Locale = LocaleProvider.CurrentLocale.Pagination;
+        [Parameter]
+        public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
 
         private int GetValidValue()
         {

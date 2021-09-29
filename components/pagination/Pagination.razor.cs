@@ -87,7 +87,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public int[] PageSizeOptions { get; set; } = PaginationOptions.DefaultPageSizeOptions;
+        public int[] PageSizeOptions { get; set; } = PaginationTools.DefaultPageSizeOptions;
 
         [Parameter]
         public EventCallback<PaginationEventArgs> OnShowSizeChange { get; set; }

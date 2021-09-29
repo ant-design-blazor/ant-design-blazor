@@ -3,46 +3,22 @@
 @using AntDesign.TableModels
 @typeparam TItem
 
-@{ 
-    Dictionary<string, object> paginationAttributes = null;
-    if (!HidePagination)
-    {
-        paginationAttributes = new();
-        if (PaginationDirection != null) paginationAttributes.Add("Direction", PaginationDirection);
-        if (_paginationDisabled != null) paginationAttributes.Add("Disabled", _paginationDisabled.Value);
-        if (PaginationGoButton != null) paginationAttributes.Add("GoButton", PaginationGoButton);
-        if (_paginationHideOnSinglePage != null) paginationAttributes.Add("HideOnSinglePage", _paginationHideOnSinglePage.Value);
-        if (PaginationItemRender != null) paginationAttributes.Add("ItemRender", PaginationItemRender);
-        if (PaginationJumpNextIcon != null) paginationAttributes.Add("JumpNextIcon", PaginationJumpNextIcon);
-        if (PaginationJumpPrevIcon != null) paginationAttributes.Add("JumpPrevIcon", PaginationJumpPrevIcon);
-        if (PaginationNextIcon != null) paginationAttributes.Add("NextIcon", PaginationNextIcon);
-        if (PaginationPageSizeOptions != null) paginationAttributes.Add("PageSizeOptions", PaginationPageSizeOptions);
-        if (PaginationPrevIcon != null) paginationAttributes.Add("PrevIcon", PaginationPrevIcon);
-        if (_paginationResponsive != null) paginationAttributes.Add("Responsive", _paginationResponsive.Value);
-        if (_paginationShowLessItems != null) paginationAttributes.Add("ShowLessItems", _paginationShowLessItems.Value);
-        if (_paginationShowPrevNextJumpers != null) paginationAttributes.Add("ShowPrevNextJumpers", _paginationShowPrevNextJumpers.Value);
-        if (_paginationShowQuickJumper != null) paginationAttributes.Add("ShowQuickJumper", _paginationShowQuickJumper.Value);
-        if (_paginationShowSizeChanger != null) paginationAttributes.Add("ShowSizeChanger", _paginationShowSizeChanger.Value);
-        if (_paginationShowTitle != null) paginationAttributes.Add("ShowTitle", _paginationShowTitle.Value);
-        if (PaginationShowTotal != null) paginationAttributes.Add("ShowTotal", PaginationShowTotal);
-        if (_paginationSimple != null) paginationAttributes.Add("Simple", _paginationSimple);
-        if (PaginationSize != null) paginationAttributes.Add("Size", PaginationSize);
-        else paginationAttributes.Add("Size", Size == null ? AntDesign.PaginationSize.Default : AntDesign.PaginationSize.Small);
-        if (PaginationTotalBoundaryShowSizeChanger != null) paginationAttributes.Add("TotalBoundaryShowSizeChanger", PaginationTotalBoundaryShowSizeChanger);
-    }
-}
+<CascadingValue TValue="IPaginationHost" Value="this" Name="AntDesign.PaginationOptions.PaginationHost">
+    @PaginationOptions
+</CascadingValue>
+
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Class="@_paginationClass"
+                <Pagination @attributes="PaginationAttributes"
+                            Class="@($"{_paginationClass} {PaginationAttributes?.GetValueOrDefault("Class")}")"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
-                            OnChange="HandlePageChange"
-                            @attributes="paginationAttributes" />
+                            OnChange="HandlePageChange" />
             }
             else
             {
@@ -133,12 +109,20 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Class="@_paginationClass"
+                <Template>
+                    <Pagination @attributes="PaginationAttributes"
+                            Class="@($"{_paginationClass} {PaginationAttributes?.GetValueOrDefault("Class")}")"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
-                            OnChange="HandlePageChange"
-                            @attributes="paginationAttributes" />
+                            OnChange="HandlePageChange" />
+                </Template>
+                @*<Pagination @attributes="PaginationAttributes"
+                            Class="@_paginationClass"
+                            Total="_total"
+                            PageSize="PageSize"
+                            Current="PageIndex"
+                            OnChange="HandlePageChange" />*@
             }
             else
             {
