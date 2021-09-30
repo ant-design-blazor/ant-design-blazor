@@ -1,30 +1,17 @@
-﻿<Table DataSource="@data" Total="@total"
-       @bind-PageSize="pageSize" @bind-PageIndex="pageIndex">
+﻿<Table DataSource="@data" Total="@total" @bind-PageSize="pageSize" @bind-PageIndex="pageIndex">
     <ChildContent>
         <Column @bind-Field="@context.Name" Width="150" />
         <Column @bind-Field="@context.Age" Width="150" />
         <Column @bind-Field="@context.Address" />
     </ChildContent>
     <PaginationOptions>
-        <PaginationOptions Class="my-custom-pagination"
-                           PageSizeOptions="@(new int[] { 5, 10, 20, 30, 50 })"
-                           ShowSizeChanger
-                           ShowQuickJumper
-                           ShowTotal="@((Func<PaginationTotalContext, string>)(ctx => $"Total {ctx.Total} items"))">
-            <PrevIcon>
-                <Icon Type="caret-left" Style="@(context.Disabled ? disabledStyle : "")" Theme="outline" />
-            </PrevIcon>
-            <NextIcon>
-                <Icon Type="caret-right" Style="@(context.Disabled ? disabledStyle : "")" Theme="outline" />
-            </NextIcon>
-        </PaginationOptions>
+        <PaginationOptions Class="my-custom-pagination" PageSizeOptions="@(new int[] { 5, 10, 20 })"
+                           ShowSizeChanger ShowQuickJumper />
     </PaginationOptions>
 </Table>
 
 @code{
-    const string disabledStyle = "color: rgba(0,0,0,.25); border-color: #d9d9d9; cursor: not-allowed;";
-
-    private int total => data.Count();
+    private int total = 100;
     private int pageSize { get; set; } = 5;
     private int pageIndex { get; set; } = 1;
 
@@ -50,8 +37,8 @@
         margin: 15px 0;
     }
 
-        .my-custom-pagination .ant-pagination-item,
-        .my-custom-pagination .ant-pagination-item-link {
-            border-radius: 100%;
-        }
+    .my-custom-pagination .ant-pagination-item,
+    .my-custom-pagination .ant-pagination-item-link {
+        border-radius: 100%;
+    }
 </style>

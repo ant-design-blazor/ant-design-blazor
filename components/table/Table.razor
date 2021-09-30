@@ -3,9 +3,12 @@
 @using AntDesign.TableModels
 @typeparam TItem
 
-<CascadingValue TValue="IPaginationHost" Value="this" Name="AntDesign.PaginationOptions.PaginationHost">
-    @PaginationOptions
-</CascadingValue>
+@if (PaginationOptions != default)
+{
+    <CascadingValue TValue="IPaginationHost" Value="this" Name="AntDesign.PaginationOptions.PaginationHost">
+        @PaginationOptions
+    </CascadingValue>
+}
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
@@ -109,20 +112,12 @@
         {
             if (PaginationTemplate == null)
             {
-                <Template>
-                    <Pagination @attributes="PaginationAttributes"
+                <Pagination @attributes="PaginationAttributes"
                             Class="@($"{_paginationClass} {PaginationAttributes?.GetValueOrDefault("Class")}")"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
                             OnChange="HandlePageChange" />
-                </Template>
-                @*<Pagination @attributes="PaginationAttributes"
-                            Class="@_paginationClass"
-                            Total="_total"
-                            PageSize="PageSize"
-                            Current="PageIndex"
-                            OnChange="HandlePageChange" />*@
             }
             else
             {
