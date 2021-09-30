@@ -8,11 +8,10 @@ using AntDesign.Core.HashCodes;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable, IPaginationHost
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IPaginationHost, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();

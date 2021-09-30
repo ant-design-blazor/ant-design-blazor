@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-By using `PaginationOptions` you can config the pagination component, check [`Pagination`](/components/pagination/) to learn properties of `PaginationOptions`.
+By using `PaginationOptions` you can config the pagination component, check [`Pagination`](/components/pagination/) to learn more about properties of `PaginationOptions`.
