@@ -1,13 +1,13 @@
 ﻿<Table DataSource="@data" Total="@total" @bind-PageSize="pageSize" @bind-PageIndex="pageIndex">
+    <PaginationOptions>
+        <PaginationOptions Class="my-custom-pagination" PageSizeOptions="@(new int[] { 5, 10, 20 })"
+                           ShowSizeChanger ShowQuickJumper />
+    </PaginationOptions>
     <ChildContent>
         <Column @bind-Field="@context.Name" Width="150" />
         <Column @bind-Field="@context.Age" Width="150" />
         <Column @bind-Field="@context.Address" />
     </ChildContent>
-    <PaginationOptions>
-        <PaginationOptions Class="my-custom-pagination" PageSizeOptions="@(new int[] { 5, 10, 20 })"
-                           ShowSizeChanger ShowQuickJumper />
-    </PaginationOptions>
 </Table>
 
 @code{

@@ -4,9 +4,9 @@
 
 namespace AntDesign
 {
-    public class PaginationSize
+    public enum PaginationSize
     {
-        public const string Small = "small";
-        public const string Default = "default";
+        Default,
+        Small
     }
 }

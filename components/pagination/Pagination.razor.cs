@@ -105,7 +105,7 @@ namespace AntDesign
         public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>? ShowTotal { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = "default";
+        public PaginationSize Size { get; set; }
 
         [Parameter]
         public bool Responsive { get; set; } = true;
@@ -166,7 +166,7 @@ namespace AntDesign
 
         private int _currentInputValue;
 
-        private bool IsSmall => !Simple && Size == "small";
+        private bool IsSmall => !Simple && Size == PaginationSize.Small;
 
         private bool? _showSizeChanger;
 
@@ -208,7 +208,7 @@ namespace AntDesign
                .Add(PrefixCls)
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
-               .If("mini", () => !Simple && Size == "small")
+               .If("mini", () => !Simple && Size == PaginationSize.Small)
                .If($"{PrefixCls}-rtl", () => RTL);
 
             _prevClass

@@ -16,7 +16,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination @attributes="PaginationAttributes"
+                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                            @attributes="PaginationAttributes"
                             Class="@($"{_paginationClass} {PaginationAttributes?.GetValueOrDefault("Class")}")"
                             Total="_total"
                             PageSize="PageSize"
@@ -112,7 +113,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination @attributes="PaginationAttributes"
+                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                            @attributes="PaginationAttributes"
                             Class="@($"{_paginationClass} {PaginationAttributes?.GetValueOrDefault("Class")}")"
                             Total="_total"
                             PageSize="PageSize"
