@@ -14,23 +14,28 @@
         }
         <span class="@Prefix-selection-search" style="@_inputWidth">
             <input @ref="ParentSelect._inputRef"
-                    @oninput="OnInput"
-                    @onkeyup="OnKeyUp"
-                    @onkeydown="OnKeyDown"                                        
-                    @attributes=@AdditonalAttributes()
-                    @onkeypress="@OnKeyPressEventHandler"
-                    @onkeypress:preventDefault="@_suppressInput"
-                    @onkeypress:stopPropagation="true"
-                    @bind-value="@SearchValue"
-                    id="@ParentSelect.Id"
-                    role="combobox"
-                    class="@Prefix-selection-search-input"
-                    autocomplete="off"
-                    aria-owns="@(ParentSelect.Id)_list"
-                    aria-expanded="@IsOverlayShow"
-                    aria-autocomplete="list"
-                    aria-controls="@(ParentSelect.Id)_list"
-                    style="@_inputStyle"/>
+                   @oninput="OnInput"
+                   @onkeyup="OnKeyUp"
+                   @onkeydown="OnKeyDown"                                        
+                   @attributes=@AdditonalAttributes()
+                   @onkeypress="@OnKeyPressEventHandler"
+                   @onkeypress:preventDefault="@_suppressInput"
+                   @onkeypress:stopPropagation="true"
+                   @bind-value="@SearchValue"
+                   id="@ParentSelect.Id"
+                   type="search"
+                   readonly="@(!ParentSelect.EnableSearch)"
+                   unselectable="@(ParentSelect.EnableSearch ? false : "on")"
+                   role="combobox"
+                   class="@Prefix-selection-search-input"
+                   autocomplete="off"
+                   aria-owns="@(ParentSelect.Id)_list"
+                   aria-expanded="@IsOverlayShow"
+                   aria-autocomplete="list"
+                   aria-controls="@(ParentSelect.Id)_list"
+                   aria-haspopup="listbox"
+                   aria-activedescendant="@(ParentSelect.Id)_list_1"
+                   style="@_inputStyle"/>
         </span>
         @if (ShowPlaceholder)
         {

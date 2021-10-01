@@ -270,7 +270,7 @@ namespace AntDesign.Select.Internal
                 if (!_suppressInput)
                 {
                     _suppressInput = true;
-                    _inputStyle = "caret-color: transparent;";
+                    _inputStyle = "opacity: 0;";
                 }
             }
             else
