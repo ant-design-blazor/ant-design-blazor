@@ -29,15 +29,23 @@ namespace AntDesign
                 .Select(x => Regex.Match(x, @"^.*locales\.(.+)\.json"))
                 .Where(x => x.Success)
                 .ToDictionary(x => x.Groups[1].Value, x => x.Value);
+
             foreach (var resource in availableResources.ToArray())
             {
-                var cultureInfo = CultureInfo.GetCultureInfo(resource.Key);
-                var parentCultureName = cultureInfo.Parent?.Name;
-                if (parentCultureName != null && !availableResources.ContainsKey(parentCultureName))
+                var parentCulture = CultureInfo.GetCultureInfo(resource.Key).Parent;
+                var parentCultureName = parentCulture.Name;
+
+                while (parentCultureName != string.Empty)
                 {
-                    availableResources.Add(parentCultureName, resource.Value);
+                    if (!availableResources.ContainsKey(parentCultureName))
+                    {
+                        availableResources.Add(parentCultureName, resource.Value);
+                    }
+                    parentCulture = parentCulture.Parent;
+                    parentCultureName = parentCulture.Name;
                 }
             }
+
             return availableResources;
         }
 
@@ -55,14 +63,15 @@ namespace AntDesign
         {
             var cultureName = cultureInfo.Name;
             if (TryGetSpecifiedLocale(cultureName, out Locale locale)) return locale;
-            //fallback to parent CultureInfo if not found
-            cultureName = cultureInfo.Parent?.Name;
-            if (cultureName != null && TryGetSpecifiedLocale(cultureName, out locale)) return locale;
-            //fallback to default language if not found
+            // fallback to parent CultureInfo
+            var parentCulture = cultureInfo.Parent;
+            if (parentCulture.Name != string.Empty) return GetLocale(parentCulture);
+            // fallback to default language
             if (TryGetSpecifiedLocale(DefaultLanguage, out locale)) return locale;
-            //fallback to 'en-US' if not found
-            TryGetSpecifiedLocale("en-US", out locale);
-            return locale;
+            // fallback to 'en-US'
+            if (TryGetSpecifiedLocale("en-US", out locale)) return locale;
+            // fallback to a default instance
+            return new Locale();
         }
 
         public static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
