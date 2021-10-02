@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace AntDesign
         protected virtual bool EnableOnPressEnter => OnPressEnter.HasDelegate;
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        protected IDomEventListener DomEventListener { get; set; }
 
         /// <summary>
         /// The label text displayed before (on the left side of) the input field.
@@ -51,6 +50,13 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool AllowClear { get; set; }
+
+        /// <summary>
+        /// Controls the autocomplete attribute of the input HTML element.
+        /// Default = true
+        /// </summary>
+        [Parameter]
+        public bool AutoComplete { get; set; } = true;
 
         [Parameter]
         public bool AutoFocus
@@ -168,8 +174,11 @@ namespace AntDesign
         [Parameter]
         public bool ReadOnly { get; set; }
 
+        /// <summary>
+        /// Controls onclick & blur event propagation.
+        /// </summary>
         [Parameter]
-        public bool AutoComplete { get; set; } = true;
+        public bool StopPropagation { get; set; }
 
         /// <summary>
         /// The suffix icon for the Input.
@@ -451,9 +460,10 @@ namespace AntDesign
                     return;
                 }
 
-                _debounceTimer?.Dispose();
                 if (_debounceTimer != null)
                 {
+                    await _debounceTimer.DisposeAsync();
+                    
                     _debounceTimer = null;
                 }
             }
@@ -477,23 +487,21 @@ namespace AntDesign
 
             if (firstRender)
             {
-                DomEventService.AddEventListener(Ref, "compositionstart", OnCompositionStart);
-                DomEventService.AddEventListener(Ref, "compositionend", OnCompositionEnd);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionstart", OnCompositionStart);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionend", OnCompositionEnd);
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
                     await this.FocusAsync(Ref);
                 }
-                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
+
+                DomEventListener.AddExclusive<JsonElement>(Ref, "focus", OnFocusInternal);
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
-            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focus", OnFocusInternal);
-
+            DomEventListener.DisposeExclusive();
             _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
@@ -641,6 +649,13 @@ namespace AntDesign
                 //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
                 //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+
+                if (StopPropagation)
+                {
+                    builder.AddEventStopPropagationAttribute(78, "onchange", true);
+                    builder.AddEventStopPropagationAttribute(79, "onblur", true);
+                }
+
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 

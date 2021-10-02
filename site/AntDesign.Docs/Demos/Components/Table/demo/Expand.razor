@@ -1,17 +1,23 @@
 ﻿@using System.ComponentModel
+@using TableModels
 
 <Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
-    <RowTemplate>
-        <Column @bind-Field="@context.Name" />
-        <Column @bind-Field="@context.Age" />
-        <Column @bind-Field="@context.Address" />
-        <ActionColumn Title="Action">
-            <a>Delete</a>
-        </ActionColumn>
-    </RowTemplate>
-    <ExpandTemplate>
-        @context.Data.Description
-    </ExpandTemplate>
+	<RowTemplate>
+		<Column @bind-Field="@context.Name" />
+		<Column @bind-Field="@context.Age" />
+		<Column @bind-Field="@context.Address" />
+		<ActionColumn Title="Action" Width="200">
+			<CellRender Context="cellData">
+				<a @onclick="@(()=> {cellData.RowData.Expanded=!cellData.RowData.Expanded;} )">
+					@(cellData.RowData.Expanded?"Collapse":"Expand")
+				</a>
+				<a>Delete</a>
+			</CellRender>
+		</ActionColumn>
+	</RowTemplate>
+	<ExpandTemplate>
+		@context.Data.Description
+	</ExpandTemplate>
 </Table>
 
 @code {

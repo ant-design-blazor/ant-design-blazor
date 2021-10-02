@@ -74,6 +74,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
         private readonly bool _isNullable;
         private bool _hasDefaultValue;
 
@@ -115,40 +118,40 @@ namespace AntDesign
 
         private static readonly Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
         {
-            { typeof(sbyte),sbyte.MaxValue },
+            { typeof(sbyte), sbyte.MaxValue },
             { typeof(byte), byte.MaxValue },
 
-            { typeof(short),short.MaxValue },
-            { typeof(ushort),ushort.MaxValue },
+            { typeof(short), short.MaxValue },
+            { typeof(ushort), ushort.MaxValue },
 
-            { typeof(int),int.MaxValue },
-            { typeof(uint),uint.MaxValue },
+            { typeof(int), int.MaxValue },
+            { typeof(uint), uint.MaxValue },
 
-            { typeof(long),long.MaxValue },
-            { typeof(ulong),ulong.MaxValue },
+            { typeof(long), long.MaxValue },
+            { typeof(ulong), ulong.MaxValue },
 
-            { typeof(float),float.PositiveInfinity },
-            { typeof(double),double.PositiveInfinity },
-            { typeof(decimal),decimal.MaxValue },
+            { typeof(float), float.PositiveInfinity },
+            { typeof(double), double.PositiveInfinity },
+            { typeof(decimal), decimal.MaxValue },
         };
 
         private static readonly Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
         {
-            { typeof(sbyte),sbyte.MinValue },
+            { typeof(sbyte), sbyte.MinValue },
             { typeof(byte), byte.MinValue },
 
-            { typeof(short),short.MinValue },
-            { typeof(ushort),ushort.MinValue },
+            { typeof(short), short.MinValue },
+            { typeof(ushort), ushort.MinValue },
 
-            { typeof(int),int.MinValue },
-            { typeof(uint),uint.MinValue },
+            { typeof(int), int.MinValue },
+            { typeof(uint), uint.MinValue },
 
-            { typeof(long),long.MinValue },
-            { typeof(ulong),ulong.MinValue },
+            { typeof(long), long.MinValue },
+            { typeof(ulong), ulong.MinValue },
 
-            { typeof(float),float.NegativeInfinity},
-            { typeof(double),double.NegativeInfinity },
-            { typeof(decimal),decimal.MinValue },
+            { typeof(float), float.NegativeInfinity},
+            { typeof(double), double.NegativeInfinity },
+            { typeof(decimal), decimal.MinValue },
         };
 
         private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
@@ -159,6 +162,8 @@ namespace AntDesign
         private CancellationTokenSource _increaseTokenSource;
         private CancellationTokenSource _decreaseTokenSource;
         private TValue _defaultValue;
+
+        private string _inputNumberMode = "numeric";
 
         public InputNumber()
         {
@@ -203,6 +208,7 @@ namespace AntDesign
                 MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Round), new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
                 var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
                 _roundFunc = lambdaRound.Compile();
+                _inputNumberMode = "decimal";
             }
 
             if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)_defaultMaximum[underlyingType];
@@ -404,10 +410,15 @@ namespace AntDesign
             _inputString = args.Value?.ToString();
         }
 
-        private void OnFocus()
+        private async Task OnFocusAsync(FocusEventArgs args)
         {
             _focused = true;
             CurrentValue = Value;
+
+            if (OnFocus.HasDelegate)
+            {
+                await OnFocus.InvokeAsync(args);
+            }
         }
 
         private async Task OnBlurAsync()
