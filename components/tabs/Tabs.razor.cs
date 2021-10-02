@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -54,7 +50,7 @@ namespace AntDesign
         internal List<TabPane> _panes = new List<TabPane>();
 
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Parameters
 
@@ -394,13 +390,13 @@ namespace AntDesign
 
             if (IsHorizontal && !_wheelDisabled)
             {
-                DomEventService.AddEventListener<string>(_scrollTabBar, "wheel", OnWheel, true, true);
+                DomEventListener.AddExclusive<string>(_scrollTabBar, "wheel", OnWheel, true);
                 _wheelDisabled = true;
             }
 
             if (!IsHorizontal && _wheelDisabled)
             {
-                DomEventService.RemoveEventListerner<string>(_scrollTabBar, "wheel", OnWheel);
+                DomEventListener.RemoveExclusive(_scrollTabBar, "wheel");
                 _wheelDisabled = false;
             }
 
@@ -568,5 +564,11 @@ namespace AntDesign
         }
 
         #endregion DRAG & DROP
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener.DisposeExclusive();
+            base.Dispose(disposing);
+        }
     }
 }

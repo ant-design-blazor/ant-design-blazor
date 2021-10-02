@@ -23,7 +23,7 @@ namespace AntDesign
         public Tooltip()
         {
             PrefixCls = "ant-tooltip";
-            Placement = PlacementType.Top;
+            Placement = Placement.Top;
         }
 
         internal override string GetOverlayEnterClass()
@@ -38,7 +38,7 @@ namespace AntDesign
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (Trigger.Contains(TriggerType.Hover))
+            if (Trigger.Contains(AntDesign.Trigger.Hover))
             {
                 await Task.Delay((int)(MouseEnterDelay * 1000));
             }
@@ -48,7 +48,7 @@ namespace AntDesign
 
         internal override async Task Hide(bool force = false)
         {
-            if (Trigger.Contains(TriggerType.Hover))
+            if (Trigger.Contains(AntDesign.Trigger.Hover))
             {
                 await Task.Delay((int)(MouseLeaveDelay * 1000));
             }
@@ -56,7 +56,7 @@ namespace AntDesign
             await base.Hide(force);
         }
 
-        internal async Task ChildElementMoved() =>await GetOverlayComponent().UpdatePosition();
+        //internal async Task ChildElementMoved() =>await GetOverlayComponent().UpdatePosition();
 
     }
 }
