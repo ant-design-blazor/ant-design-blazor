@@ -1,7 +1,7 @@
 ﻿
 namespace AntDesign
 {
-    public partial class YearPicker<TValue> : DatePicker<TValue>
+    public class YearPicker<TValue> : DatePicker<TValue>
     {
         public YearPicker()
         {

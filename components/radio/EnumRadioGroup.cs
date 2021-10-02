@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public partial class EnumRadioGroup<TEnum> : RadioGroup<TEnum>
+    public class EnumRadioGroup<TEnum> : RadioGroup<TEnum>
     {
         public EnumRadioGroup()
         {

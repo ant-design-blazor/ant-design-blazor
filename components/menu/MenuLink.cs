@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
-    public partial class MenuLink : AntDomComponentBase
+    public class MenuLink : AntDomComponentBase
     {
         private const string DefaultActiveClass = "active";
         private bool _isActive;

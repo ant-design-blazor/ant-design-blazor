@@ -1,0 +1,51 @@
+﻿@namespace AntDesign
+@typeparam TargetType
+
+<CascadingValue ChildContent="ChildContent" Name="AntDesign.AntDomComponentBase.Resources" Value="_resources" />
+
+@code{
+    Dictionary<object, object> _resources;
+
+    Dictionary<object, object> _previousResources;
+
+    Dictionary<string, object> _previousAttributes;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> Attributes { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.AntDomComponentBase.Resources")]
+    public Dictionary<object, object> Resources { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        bool resourcesHasChanged = false;
+        bool attributesHasChanged = false;
+        if (_previousResources != Resources)
+        {
+            _previousResources = Resources;
+            resourcesHasChanged = true;
+        }
+        if (_previousAttributes != Attributes &&
+            (_previousAttributes == null || Attributes == null || !_previousAttributes.SequenceEqual(Attributes)))
+        {
+            _previousAttributes = Attributes;
+            attributesHasChanged = true;
+        }
+        if (resourcesHasChanged || attributesHasChanged)
+        {
+            Console.WriteLine("New _resources");
+            _resources = new();
+            if (Resources != null)
+            {
+                foreach (var item in Resources)
+                {
+                    _resources.Add(item.Key, item.Value);
+                }
+            }
+            _resources[typeof(TargetType)] = Attributes;
+        }
+    }
+}

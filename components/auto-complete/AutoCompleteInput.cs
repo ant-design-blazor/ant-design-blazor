@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class AutoCompleteInput<TValue> : Input<TValue>, IAutoCompleteInput
+    public class AutoCompleteInput<TValue> : Input<TValue>, IAutoCompleteInput
     {
         public AutoCompleteInput()
         {

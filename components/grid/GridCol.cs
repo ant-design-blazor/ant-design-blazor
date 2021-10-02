@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public partial class GridCol : Col
+    public class GridCol : Col
     {
     }
 }

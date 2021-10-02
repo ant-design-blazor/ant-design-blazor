@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
-    public partial class Title : TypographyBase
+    public class Title : TypographyBase
     {
         [Parameter]
         public int Level { get; set; } = 1;

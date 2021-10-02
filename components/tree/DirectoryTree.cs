@@ -8,7 +8,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public partial class DirectoryTree<TItem> : Tree<TItem>
+    public class DirectoryTree<TItem> : Tree<TItem>
     {
         public DirectoryTree()
         {

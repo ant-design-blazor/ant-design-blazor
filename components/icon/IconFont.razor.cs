@@ -2,7 +2,7 @@
 
 namespace AntDesign
 {
-    public partial class IconFont : Icon
+    public class IconFont : Icon
     {
         protected override Task SetupSvgImg()
         {

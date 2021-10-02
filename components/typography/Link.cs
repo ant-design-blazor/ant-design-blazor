@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
-    public partial class Link : TypographyBase
+    public class Link : TypographyBase
     {
         [Parameter]
         public bool Code { get; set; }

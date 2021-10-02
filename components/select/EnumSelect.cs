@@ -4,7 +4,7 @@
 
 namespace AntDesign
 {
-    public partial class EnumSelect<TEnum> : Select<TEnum, TEnum>
+    public class EnumSelect<TEnum> : Select<TEnum, TEnum>
     {
         public EnumSelect()
         {

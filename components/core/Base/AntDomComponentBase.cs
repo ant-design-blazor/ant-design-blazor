@@ -90,7 +90,8 @@ namespace AntDesign
         private string _class;
         private string _style;
 
-        public virtual Dictionary<string, object> CascadingAttributes { get; set; }
+        [CascadingParameter(Name = "AntDesign.AntDomComponentBase.Resources")]
+        public Dictionary<object, object> Resources { get; set; }
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -100,7 +101,10 @@ namespace AntDesign
 
         protected void ApplyCascadingAttributes(ParameterView parameters)
         {
-            if (parameters.TryGetValue("CascadingAttributes", out Dictionary<string, object> cascadingAttributes) && cascadingAttributes?.Any() == true)
+            if (parameters.TryGetValue("Resources", out Dictionary<object, object> resources) &&
+                resources.TryGetValue(this.GetType(), out var cascadingAttributesObj) &&
+                cascadingAttributesObj is Dictionary<string, object> cascadingAttributes &&
+                cascadingAttributes?.Any() == true)
             {
                 var parametersDictionary = parameters.ToDictionary();
                 var additionalParametersDictionary = new Dictionary<string, object>();
