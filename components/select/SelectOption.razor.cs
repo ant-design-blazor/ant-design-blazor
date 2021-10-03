@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using AntDesign.Select.Internal;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace AntDesign
 {
@@ -211,7 +212,8 @@ namespace AntDesign
         {
             if (SelectParent.Mode == "default")
             {
-                return selectOption.Value.Equals(SelectParent.Value) || selectOption.Value.Equals(SelectParent.LastValueBeforeReset);
+                return EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.Value) ||
+                    EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.LastValueBeforeReset);
             }
             else
             {
