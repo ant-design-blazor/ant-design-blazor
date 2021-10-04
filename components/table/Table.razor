@@ -170,9 +170,70 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 <Empty Simple />
             </td>
         </tr>
-	}
+    }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
+#if NET5_0_OR_GREATER
+        if (table.Virtualizing && table.ScrollY != null)
+        {
+            <Virtualize Items="Enumerable.Range(0, showItems.Count()).ToList()"
+                        ContainerSize="@((float)((CssSizeLength)table.ScrollY).Value)" SpacerElement="tr"
+                        ChildContent="table.row(table, showItems, level)" />
+        }
+        else
+        {
+            for (int i = 0; i < showItems.Count(); i++)
+            {
+                var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
+                var data = showItems.ElementAt(i);
+                var cacheKey = data.GetHashCode();
+                if (!table._dataSourceCache.ContainsKey(cacheKey) || table._dataSourceCache[cacheKey] == null)
+                {
+                    var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+                    {
+                        Expanded = table.DefaultExpandAllRows
+                    };
+                    rowData.SelectedChanged += table.RowDataSelectedChanged;
+                    table._dataSourceCache[cacheKey] = rowData;
+                }
+                var currentRowData = table._dataSourceCache[cacheKey];
+                var childrenData = table.TreeChildren(data);
+                var hasChildren = childrenData?.Any() == true;
+                currentRowData.CacheKey = cacheKey;
+                currentRowData.Level = level;
+                currentRowData.HasChildren = hasChildren;
+
+                var rowAttributes = table.OnRow?.Invoke(currentRowData);
+                if (table.OnRowClick.HasDelegate)
+                {
+                    rowAttributes ??= new Dictionary<string, object>();
+                    rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
+                }
+
+                <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
+                    <CascadingValue Value="true" Name="IsBody" IsFixed>
+                        <AntDesign.Internal.TableRow RowAttributes="rowAttributes" Level="level" Table="table" RowIndex="rowIndex">
+                            @table.ChildContent(data)
+                        </AntDesign.Internal.TableRow>
+                    </CascadingValue>
+                </CascadingValue>
+
+                @if (hasChildren && currentRowData.Expanded)
+                {
+                    @table.body((table, table.SortFilterChildren(childrenData), level + 1));
+                }
+                @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
+                {
+                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
+                        style="@(currentRowData.Expanded?"":"display: none;")">
+                        <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                            @table.ExpandTemplate(currentRowData)
+                        </td>
+                    </tr>
+                }
+            }
+        }
+#else
         for (int i = 0; i < showItems.Count(); i++)
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
@@ -188,8 +249,8 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 table._dataSourceCache[cacheKey] = rowData;
             }
             var currentRowData = table._dataSourceCache[cacheKey];
-			var childrenData = table.TreeChildren(data);
-			var hasChildren = childrenData?.Any() == true;
+            var childrenData = table.TreeChildren(data);
+            var hasChildren = childrenData?.Any() == true;
             currentRowData.CacheKey = cacheKey;
             currentRowData.Level = level;
             currentRowData.HasChildren = hasChildren;
@@ -223,8 +284,64 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 </tr>
             }
         }
+#endif
     }
 </Template>;
+
+#if NET5_0_OR_GREATER
+Func<Table<TItem>, IEnumerable<TItem>, int, RenderFragment<int>> row = (table, showItems, level) => i =>
+@<Template>
+    @{
+        var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
+        var data = showItems.ElementAt(i);
+        var cacheKey = data.GetHashCode();
+        if (!table._dataSourceCache.ContainsKey(cacheKey) || table._dataSourceCache[cacheKey] == null)
+        {
+            var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+            {
+                Expanded = table.DefaultExpandAllRows
+            };
+            rowData.SelectedChanged += table.RowDataSelectedChanged;
+            table._dataSourceCache[cacheKey] = rowData;
+        }
+        var currentRowData = table._dataSourceCache[cacheKey];
+        var childrenData = table.TreeChildren(data);
+        var hasChildren = childrenData?.Any() == true;
+        currentRowData.CacheKey = cacheKey;
+        currentRowData.Level = level;
+        currentRowData.HasChildren = hasChildren;
+
+        var rowAttributes = table.OnRow?.Invoke(currentRowData);
+        if (table.OnRowClick.HasDelegate)
+        {
+            rowAttributes ??= new Dictionary<string, object>();
+            rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
+        }
+
+        <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
+            <CascadingValue Value="true" Name="IsBody" IsFixed>
+                <AntDesign.Internal.TableRow RowAttributes="rowAttributes" Level="level" Table="table" RowIndex="rowIndex">
+                    @table.ChildContent(data)
+                </AntDesign.Internal.TableRow>
+            </CascadingValue>
+        </CascadingValue>
+
+        @if (hasChildren && currentRowData.Expanded)
+        {
+            @table.body((table, table.SortFilterChildren(childrenData), level + 1));
+        }
+        @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
+        {
+            <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
+                style="@(currentRowData.Expanded?"":"display: none;")">
+                <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                    @table.ExpandTemplate(currentRowData)
+                </td>
+            </tr>
+        }
+    }
+</Template>;
+#endif
 
 RenderFragment<Table<TItem>> tfoot = table =>@<Template>
     @if (table._summaryRows?.Any() == true)
