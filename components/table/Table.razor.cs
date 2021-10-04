@@ -137,7 +137,7 @@ namespace AntDesign
         public bool Responsive { get; set; } = true;
 
         [Parameter]
-        public bool Virtualizing { get; set; } = true;
+        public bool Virtualizing { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
