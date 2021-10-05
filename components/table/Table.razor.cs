@@ -16,6 +16,7 @@ namespace AntDesign
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        private bool _preventRender = false;
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
@@ -154,6 +155,7 @@ namespace AntDesign
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
+        private QueryModel _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -213,6 +215,8 @@ namespace AntDesign
             FlushCache();
 
             this.InternalReload();
+
+            StateHasChanged();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -267,6 +271,7 @@ namespace AntDesign
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.InternalReload();
+            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -302,6 +307,8 @@ namespace AntDesign
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
+                    _currentQueryModel = queryModel;
+
                     _showItems = query;
                 }
                 else
@@ -323,8 +330,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-
-            StateHasChanged();
 
             return queryModel;
         }
@@ -398,7 +403,12 @@ namespace AntDesign
                 }
             }
 
-            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            if (_preventRender)
+            {
+                _shouldRender = false;
+                _preventRender = false;
+            }
+            else if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
                 this._shouldRender = this._parametersHashCode != hashCode;
@@ -486,6 +496,27 @@ namespace AntDesign
         bool ITable.RowExpandable(RowData rowData)
         {
             return RowExpandable(rowData as RowData<TItem>);
+        }
+
+        IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
+        {
+            if (_currentQueryModel == null || ServerSide)
+            {
+                return children;
+            }
+
+            var query = children.AsQueryable();
+            foreach (var sort in _currentQueryModel.SortModel.OrderBy(x => x.Priority))
+            {
+                query = sort.SortList(query);
+            }
+
+            foreach (var filter in _currentQueryModel.FilterModel)
+            {
+                query = filter.FilterList(query);
+            }
+
+            return query;
         }
 
         /// <summary>
