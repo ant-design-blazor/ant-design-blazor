@@ -51,7 +51,7 @@ namespace AntDesign
                 }
                 if (_autoSize)
                 {
-                    _resizeStyle = "resize: none";
+                    _resizeStyle = "resize: none;";
                 }
                 else
                 {
@@ -251,12 +251,14 @@ namespace AntDesign
 
             if (rows > MaxRows)
             {
-                Style = $"height: {MaxRows * _rowHeight + _offsetHeight}px;{_resizeStyle};overflow-x: hidden";
+                var height = (MaxRows * _rowHeight + _offsetHeight).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                Style = $"height: {height}px;{_resizeStyle}overflow-x: hidden";
             }
             else
             {
                 string overflow = _autoSize ? "hidden" : "visible";
-                Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: {overflow};{_resizeStyle};overflow-x: hidden";
+                var height = (rows * _rowHeight + _offsetHeight).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                Style = $"height: {height}px;overflow-y: {overflow};{_resizeStyle}overflow-x: hidden";
             }
         }
 
