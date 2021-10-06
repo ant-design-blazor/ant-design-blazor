@@ -15,10 +15,10 @@
             { "value", CurrentValueAsString },
             { "placeholder", Placeholder },
             { "id", Id },
-            { "style", _innerStyle + Style },
+            //{ "style", Style },
             { "class", ClassMapper.Class },
             { "disabled", Disabled },
-			{ "readonly", ReadOnly },
+            { "readonly", ReadOnly },
          };
 
     if (Attributes != null)
@@ -34,8 +34,8 @@
 		{
 			<span class="@_warpperClassMapper.Class">
 				<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
-				@Suffix				
-			</span>		
+				@Suffix
+			</span>
 		}
 		else
 		{

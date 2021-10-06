@@ -40,6 +40,12 @@ export class inputHelper {
       state.objReferenceDict[element.id] = objReference;
       state.eventCallbackRegistry[element.id + "input"] = function () { inputHelper.resizeTextArea(element, minRows, maxRows); }
       element.addEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
+      const resizeObserver = new ResizeObserver(() => {
+        inputHelper.resizeTextArea(element, minRows, maxRows);
+      });
+      resizeObserver.observe(element);
+      inputHelper.resizeTextArea(element, minRows, maxRows);
+      element.style.resize = 'none';
       return this.getTextAreaInfo(element);
     }
   }
@@ -62,7 +68,7 @@ export class inputHelper {
     
     var rows = Math.trunc(element.scrollHeight / rowHeight);
     element.rows = oldRows;
-    rows = Math.max(minRows, rows);    
+    rows = Math.max(minRows, rows);
     var newHeight = 0;
     if (rows > maxRows) {
       rows = maxRows;
