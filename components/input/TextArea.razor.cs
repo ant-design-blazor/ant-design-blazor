@@ -212,6 +212,7 @@ namespace AntDesign
         private bool _isReloading;
         private bool _autoSize;
         private string _resizeStyle = "";
+        private string _innerStyle;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -252,13 +253,13 @@ namespace AntDesign
             if (rows > MaxRows)
             {
                 var height = (MaxRows * _rowHeight + _offsetHeight).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                Style = $"height: {height}px;{_resizeStyle}overflow-x: hidden";
+                _innerStyle = $"height: {height}px;{_resizeStyle}overflow-x: hidden;";
             }
             else
             {
                 string overflow = _autoSize ? "hidden" : "visible";
                 var height = (rows * _rowHeight + _offsetHeight).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                Style = $"height: {height}px;overflow-y: {overflow};{_resizeStyle}overflow-x: hidden";
+                _innerStyle = $"height: {height}px;overflow-y: {overflow};{_resizeStyle}overflow-x: hidden;";
             }
         }
 
