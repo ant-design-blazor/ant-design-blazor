@@ -186,6 +186,10 @@ namespace AntDesign
                 }
                 await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
             }
+            if (!string.IsNullOrWhiteSpace(Style))
+            {
+                await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ApplyStyle, Ref, Style);
+            }
         }
 
         /// <inheritdoc/>

@@ -191,6 +191,7 @@ namespace AntDesign
             public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
             public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
             public static string ResizeTextArea => $"{FUNC_PREFIX}resizeTextArea";
+            public static string ApplyStyle => $"{FUNC_PREFIX}applyStyle";
         }
 
         public static class MentionsComponentHelper

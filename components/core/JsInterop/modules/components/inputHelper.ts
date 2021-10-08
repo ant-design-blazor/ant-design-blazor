@@ -1,6 +1,6 @@
 ﻿import { domInfoHelper } from '../dom/exports'
 import { state } from '../stateProvider';
-
+import { resize } from '../../ObservableApi/observableApi';
 
 export class inputHelper {
 
@@ -40,10 +40,10 @@ export class inputHelper {
       state.objReferenceDict[element.id] = objReference;
       state.eventCallbackRegistry[element.id + "input"] = function () { inputHelper.resizeTextArea(element, minRows, maxRows); }
       element.addEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
-      const resizeObserver = new ResizeObserver(() => {
+      resize.create(element.id + "-resize", () => {
         inputHelper.resizeTextArea(element, minRows, maxRows);
-      });
-      resizeObserver.observe(element);
+      }, false);
+      resize.observe(element.id + "-resize", element);
       inputHelper.resizeTextArea(element, minRows, maxRows);
       element.style.resize = 'none';
       return this.getTextAreaInfo(element);
@@ -52,6 +52,7 @@ export class inputHelper {
 
   static disposeResizeTextArea(element: HTMLTextAreaElement) {
     element.removeEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
+    resize.unobserve(element.id + "-resize", element);
     state.objReferenceDict[element.id] = null;
     state.eventCallbackRegistry[element.id + "input"] = null;
   }
@@ -85,6 +86,16 @@ export class inputHelper {
     if (oldHeight !== newHeight) {
       let textAreaObj = state.objReferenceDict[element.id];
       textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", element.scrollWidth, newHeight);
+    }
+  }
+
+  static applyStyle(element: HTMLTextAreaElement, style: string) {
+    let cssAttributes = style.split(";");
+    for (let i = 0; i < cssAttributes.length; i++) {
+      let cssAttribute = cssAttributes[i];
+      if (!cssAttribute) continue;
+      let attribute = cssAttribute.split(":");
+      element.style.setProperty(attribute[0], attribute[1]);
     }
   }
 
