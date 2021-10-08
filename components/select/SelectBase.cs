@@ -260,10 +260,10 @@ namespace AntDesign
         internal bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
 
         /// <summary>
-        ///     Returns the value of EnableSearch parameter
+        ///     Returns whether the user can input a pattern to search matched items
         /// </summary>
         /// <returns>true if search is enabled</returns>
-        internal bool IsSearchEnabled => EnableSearch;
+        internal bool IsSearchEnabled => EnableSearch || SelectMode == SelectMode.Tags;
 
         /// <summary>
         ///     Sorted list of SelectOptionItems
@@ -680,7 +680,7 @@ namespace AntDesign
                     }
                 }
 
-                if (EnableSearch || SelectMode == SelectMode.Tags)
+                if (IsSearchEnabled)
                 {
                     await SetInputFocusAsync();
                 }
