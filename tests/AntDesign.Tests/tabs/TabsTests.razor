@@ -1,20 +1,57 @@
 ﻿@inherits AntDesignTestBase
 @code {
+	  public TabsTests()
+	  {
+	  		  JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+	  			  .SetResult(new HtmlElement());
+
+	  		  JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
+	  			JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true);	
+	  }
+
+	  [Fact]
+	  public void Render_tab_pane_without_forceRender()
+	  {
+		  var cut = Context.Render(
+          @<Tabs>
+              <TabPane Key="tab1" Tab="Tab 1">Tab Content 1</TabPane>
+						  <TabPane Key="tab2" Tab="Tab 2">Tab Content 2</TabPane>
+          </Tabs>);
+
+		  var paneElements = cut.FindAll(".ant-tabs-tabpane");
+		  paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
+		  paneElements[1].TextContent.Trim().Should().Be("");
+
+		  cut.FindAll("div.ant-tabs-tab")[1].Click();
+		  var paneElements2 = cut.FindAll(".ant-tabs-tabpane");
+		  paneElements2[0].TextContent.Trim().Should().Be("Tab Content 1");
+		  paneElements2[1].TextContent.Trim().Should().Be("Tab Content 2");
+	  }
+
+	  [Fact]
+	  public void Render_tab_pane_wit_forceRender()
+	  {
+		  var cut = Context.Render(
+          @<Tabs>
+              <TabPane Key="tab1" Tab="Tab 1" ForceRender>Tab Content 1</TabPane>
+						  <TabPane Key="tab2" Tab="Tab 2" ForceRender>Tab Content 2</TabPane>
+          </Tabs>);
+
+		  var paneElements = cut.FindAll(".ant-tabs-tabpane");
+		  paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
+		  paneElements[1].TextContent.Trim().Should().Be("Tab Content 2");
+	  }
+
     [Fact]
     public void Render_tab_pane_with_tabTemplate()
     {
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-			.SetResult(new HtmlElement());
-
-		JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
-
         var cut = Context.Render(
           @<Tabs>
               <TabPane Key="tab1">
                   <TabTemplate>Tab 1</TabTemplate>
               </TabPane>
           </Tabs>
-	);
+			  );
 
         var tabElement = cut.Find(".ant-tabs-tab-btn");
         tabElement.InnerHtml.Trim().Should().Be("Tab 1");
@@ -22,25 +59,20 @@
 
     [Fact]
     public void Bind_OnClose_event()
-	{
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-			.SetResult(new HtmlElement());
-	
-		JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
+	  {
+	      var closeTab = "";
+	      Action<string> OnClose = (string key) => closeTab = key;
 
-        var closeTab = "";
-        Action<string> OnClose = (string key) => closeTab = key;
+	      var cut = Context.Render(
+	        @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
+	            <TabPane Key="tab1" Tab="Tab 1">
+	            </TabPane>
+	        </Tabs>
+	      );
 
-        var cut = Context.Render(
-          @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
-              <TabPane Key="tab1" Tab="Tab 1">
-              </TabPane>
-          </Tabs>
-        );
+	      var removeElement = cut.Find(".ant-tabs-tab-remove");
+	      removeElement.Click();
 
-        var removeElement = cut.Find(".ant-tabs-tab-remove");
-        removeElement.Click();
-
-        closeTab.Should().Be("tab1");
+	      closeTab.Should().Be("tab1");
     }
 }
