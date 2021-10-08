@@ -1,53 +1,51 @@
-﻿@using System.Timers
-
-<div>
-    <Button Type="primary" Loading>
-        Loading
-    </Button>
-    <Button Type="primary" Size="small" Loading>
-        Loading
-    </Button>
+﻿<div>
+    <Button Type="@ButtonType.Primary" Loading>Loading</Button>
+    <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" Loading>Loading</Button>
+    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
+    
     <br />
-    <Button Type="primary" Loading="loading" OnClick=enterLoading>
+    
+    <Button Type="@ButtonType.Primary"
+            Loading="_noIconLoading"
+            OnClick="EnterNoIconLoading">
         Click me!
     </Button>
-    <Button
-        Type="primary"
-        Icon="poweroff"
-    Loading="iconLoading"
-    OnClick="enterIconLoading"
-    >
-    Click me!
+    <Button Type="@ButtonType.Primary"
+            Icon="@IconType.Outline.Poweroff"
+            Loading="_withIconLoading"
+            OnClick="EnterWithIconLoading">
+        Click me!
     </Button>
+    <Button Type="@ButtonType.Primary"
+            Icon="@IconType.Outline.Poweroff"
+            Loading="_onlyIconLoading"
+            OnClick="EnterOnlyIconLoading" />
 </div>
 
 @code
 {
-    bool loading = false;
-    bool iconLoading = false;
+    private bool _noIconLoading;
+    private bool _withIconLoading;
+    private bool _onlyIconLoading;
 
-    private void enterLoading()
+    private async Task EnterNoIconLoading()
     {
-        loading = true;
-        Task.Run(async () =>
-        {
-            await Task.Delay(8000);
-            loading = false;
-            await InvokeAsync(StateHasChanged);
-            Console.WriteLine("Timer2 ended" + DateTime.Now);
-        });
-
+        _noIconLoading = true;
+        await Task.Delay(8000);
+        _noIconLoading = false;
     }
 
-    private void enterIconLoading()
+    private async Task EnterWithIconLoading()
     {
-        iconLoading = true;
+        _withIconLoading = true;
+        await Task.Delay(8000);
+        _withIconLoading = false;
+    }
 
-        Task.Run(async () =>
-        {
-            await Task.Delay(8000);
-            iconLoading = false;
-            await InvokeAsync(StateHasChanged);
-        });
+    private async Task EnterOnlyIconLoading()
+    {
+        _onlyIconLoading = true;
+        await Task.Delay(8000);
+        _onlyIconLoading = false;
     }
 }

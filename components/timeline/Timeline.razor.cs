@@ -12,7 +12,7 @@ namespace AntDesign
         /// 'left' | 'alternate' | 'right'
         /// </summary>
         [Parameter]
-        public string Mode
+        public TimelineMode? Mode
         {
             get => _mode;
             set
@@ -51,19 +51,20 @@ namespace AntDesign
 
                     _pendingItem = _pending.Value == null ? null : new TimelineItem()
                     {
-                        Dot = PendingDot ?? _loadingDot,
                         Class = "ant-timeline-item-pending"
                     };
 
+                    _pendingItem?.SetDot(PendingDot ?? _loadingDot);
+
                     _pending.Switch(str =>
                     {
-                        _pendingItem.ChildContent = b =>
-                        {
-                            b.AddContent(0, str);
-                        };
+                        _pendingItem.SetChildContent(b =>
+                       {
+                           b.AddContent(0, str);
+                       });
                     }, rf =>
                     {
-                        _pendingItem.ChildContent = rf;
+                        _pendingItem.SetChildContent(rf);
                     });
 
                     _pendingItem?.SetClassMap();
@@ -91,11 +92,11 @@ namespace AntDesign
 
         protected IList<TimelineItem> _displayItems = new List<TimelineItem>();
 
-        private readonly bool _isPendingBoolean = false;
         private OneOf<string, RenderFragment> _pending;
         private bool _reverse;
         private bool _waitingItemUpdate = false;
-        private string _mode;
+        private TimelineMode? _mode;
+        private bool _hasLabel;
 
         protected override void OnInitialized()
         {
@@ -126,10 +127,11 @@ namespace AntDesign
             var prefix = "ant-timeline";
             ClassMapper.Clear()
                 .Add(prefix)
-                .If($"{prefix}-right", () => Mode == "right")
-                .If($"{prefix}-alternate", () => Mode == "alternate")
+                .If($"{prefix}-right", () => Mode == TimelineMode.Right && !_hasLabel)
+                .If($"{prefix}-alternate", () => Mode == TimelineMode.Alternate && !_hasLabel)
                 .If($"{prefix}-pending", () => Pending.Value != null)
                 .If($"{prefix}-reverse", () => Reverse)
+                .If($"{prefix}-label", () => _hasLabel)
                 .If($"{prefix}-rtl", () => RTL);
         }
 
@@ -143,6 +145,10 @@ namespace AntDesign
         {
             this._items.Add(item);
             _waitingItemUpdate = true;
+            if (!string.IsNullOrEmpty(item.Label))
+            {
+                _hasLabel = true;
+            }
         }
 
         protected IEnumerable<TimelineItem> UpdateChildren(IEnumerable<TimelineItem> items)
@@ -155,11 +161,13 @@ namespace AntDesign
             {
                 var item = items.ElementAt(i);
                 item.IsLast = i == length - 1;
-                item.Position =
-                    this.Mode == "left" || Mode == null ? null
-                    : this.Mode == "right" ? "right"
-                    : this.Mode == "alternate" && i % 2 == 0 ? "left"
-                    : "right";
+                item.Position = _mode switch
+                {
+                    TimelineMode.Left => "left",
+                    TimelineMode.Right => "right",
+                    TimelineMode.Alternate => i % 2 == 0 ? "left" : "right",
+                    _ => null,
+                };
 
                 item.SetClassMap();
 

@@ -1,0 +1,53 @@
+@using AntDesign.Docs.Demos.Components.TreeSelect.Demo
+
+<TreeSelect TItem="Data" 
+                  Style="width:100%;"
+                  DataSource="treeData"
+                  @bind-Value="@value"
+                  Placeholder="Please select"
+                  AllowClear
+                  TitleExpression="data => data.Title"
+                  KeyExpression="data => data.Value"
+                  ChildrenExpression="data => data.Children "
+				  IsLeafExpression="data => data.Children == null "
+                  TreeDefaultExpandAll>
+</TreeSelect>
+
+
+@code {
+    private string value;
+
+    Data[] treeData = new Data[]
+    {
+        new()
+        {
+            Title = "Node1",
+            Value = "0-0",
+            Children = new Data[]
+			{
+                new()
+                {
+                    Title = "Child Node1",
+                    Value = "0-0-1",
+                },
+                new()
+                {
+                    Title = "Child Node2",
+                    Value = "0-0-2",
+                }
+            }
+        },
+        new()
+        {
+            Title = "Node2",
+            Value = "0-1",
+        }
+    };
+
+    public class Data
+    {
+        public string Value { get; set; }
+        public string Title { get; set; }
+        public Data[] Children { get; set; }
+    }
+}

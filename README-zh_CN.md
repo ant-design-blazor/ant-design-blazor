@@ -79,6 +79,8 @@ WebAssembly 静态托管页面示例
 
 我们提供了 `dotnet new` 模板来创建一个开箱即用的 [Ant Design Pro](https://github.com/ant-design-blazor/ant-design-pro-blazor) 新项目：
 
+![Pro Template](https://user-images.githubusercontent.com/8186664/44953195-581e3d80-aec4-11e8-8dcb-54b9db38ec11.png)
+
 - 安装模板
 
   ```bash
@@ -97,6 +99,7 @@ WebAssembly 静态托管页面示例
 | ----------------- | ------------------------------------------------ | ------------------------------ | ------ |
 | `-f` \| `--full`  | 如果设置这个参数，会生成所有 Ant Design Pro 页面 | bool                           | false  |
 | `-ho` \| `--host` | 指定托管模型                                     | 'wasm' \| 'server' \| 'hosted' | 'wasm' |
+| `--styles`        | 指定样式构建类型                                 |  `css` \| `less`                | `css` |
 | `--no-restore`    | 如果设置这个参数，就不会自动恢复包引用           | bool                           | false  |
 
 ### 在已有项目中引入 Ant Design Blazor

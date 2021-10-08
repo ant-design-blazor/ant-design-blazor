@@ -15,8 +15,16 @@ namespace AntDesign
         {
             if (SelectParent._getLabel is null)
             {
+                if (SelectParent._getValue is null)
+                {
+                    return x.ToString().Equals(y.ToString());
+                }
                 return x.ToString().Equals(y.ToString())
                     && SelectParent._getValue(x).Equals(SelectParent._getValue(y));
+            }
+            if (SelectParent._getValue is null)
+            {
+                return SelectParent._getLabel(x).Equals(SelectParent._getLabel(y));
             }
             return SelectParent._getLabel(x).Equals(SelectParent._getLabel(y))
                 && SelectParent._getValue(x).Equals(SelectParent._getValue(y));

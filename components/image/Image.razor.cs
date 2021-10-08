@@ -27,6 +27,9 @@ namespace AntDesign
         public bool Preview { get; set; } = true;
 
         [Parameter]
+        public bool PreviewVisible { get; set; } = true;
+
+        [Parameter]
         public string Src
         {
             get => _src;
@@ -48,6 +51,9 @@ namespace AntDesign
 
         [Parameter]
         public string PreviewSrc { get; set; }
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
         public ImageLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Image;
@@ -108,14 +114,22 @@ namespace AntDesign
             _loaded = false;
         }
 
-        private void OnPreview()
+        private void OnPreview(MouseEventArgs e)
         {
-            var images = Group?.Images ?? new List<Image>() { this };
-            var index = images.IndexOf(this);
+            if (PreviewVisible)
+            {
+                var images = Group?.Images ?? new List<Image>() { this };
+                var index = images.IndexOf(this);
 
-            _imageRef = ImageService.OpenImages(images);
+                _imageRef = ImageService.OpenImages(images);
 
-            _imageRef.SwitchTo(index);
+                _imageRef.SwitchTo(index);
+            }
+
+            if (OnClick.HasDelegate)
+            {
+                OnClick.InvokeAsync(e);
+            }
         }
 
         protected override void Dispose(bool disposing)

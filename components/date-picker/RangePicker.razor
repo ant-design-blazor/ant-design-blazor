@@ -9,11 +9,12 @@
                     IsButton="@true"
                     Disabled="IsDisabled()"
                     PopupContainerSelector="@PopupContainerSelector"
+                    BoundaryAdjustMode="@BoundaryAdjustMode"
                     OnVisibleChange="OverlayVisibleChange"
                     OverlayClassName="ant-picker-dropdown-range"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
-                    Trigger="new TriggerType[] { TriggerType.Click }">
+                    Trigger="new[] { Trigger.Click }">
         <Overlay>
             <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
