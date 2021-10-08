@@ -1,26 +1,26 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@if (Pane?.Key != Key || IsEmpty)
+@if (_hasClosed)
 {
-    return;
+	return;
 }
 
 @if (IsTab)
 {
-    var ondragoverPreventDefault = IsActive;
-    var onclickStopPropagation = !IsActive;
+    var ondragoverPreventDefault = _isActive;
+    var onclickStopPropagation = !_isActive;
 
-    <div @key="Pane?.Key"
-     @ref="Pane.TabBar"
+    <div @key="Key"
+     @ref="_tabRef"
      @onclick:stopPropagation="@onclickStopPropagation"
-     @onclick="@(e => Parent.HandleTabClick(Pane))"
+     @onclick="@(e => Parent.HandleTabClick(this))"
      @ondragover:preventDefault="@ondragoverPreventDefault"
-     @ondragstart="@(e => Parent.HandleDragStart(e, Pane))"
-     @ondrop="@(_ => Parent.HandleDrop(Pane))"
+     @ondragstart="@(e => Parent.HandleDragStart(e, this))"
+     @ondrop="@(_ => Parent.HandleDrop(this))"
      aria-controls="@($"rc-tabs-{Id}-tab-{Key}")"
-     aria-selected="@(Pane?.IsActive)"
-     class="@Pane.ClassMapper.Class"
+     aria-selected="@(_isActive)"
+     class="@ClassMapper.Class"
      draggable="@Parent.Draggable.ToString()"
      id="@($"rc-tabs-{Id}-tab-{Key}")"
      ondragover="event.preventDefault();">
@@ -36,7 +36,7 @@
         </div>
         @if (Parent.Type == TabType.EditableCard && Closable)
         {
-            <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTabPane(Pane)" @onclick:stopPropagation="true">
+            <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
                 <Icon Type="close" />
             </button>
         }
@@ -44,19 +44,17 @@
 }
 else if (IsPane)
 {
-    if (Pane.IsActive || Pane.ForceRender || Pane.HasRendered)
-    {
-        Pane.HasRendered = true;
-
-        <div @key="Pane?.Key"
-     tabindex="@(IsActive ? "0" : "-1")"
-     class="ant-tabs-tabpane @(Pane.IsActive ? "ant-tabs-tabpane-active" : "")"
-     id="@($"rc-tabs-{Id}-panel-{Key}")"
-     role="tabpanel" aria-hidden="@(Pane.IsActive ? "false" : "true")"
-     aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-     style="@(Pane.IsActive ? "" : "display: none;")">
-
-            @ChildContent
-        </div>
-    }
+    <div @key="Key"
+		  tabindex="@(_isActive ? "0" : "-1")"
+		  class="ant-tabs-tabpane @(_isActive ? "ant-tabs-tabpane-active" : "")"
+		  id="@($"rc-tabs-{Id}-panel-{Key}")"
+		  role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
+		  aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
+		  style="@(_isActive || Parent.Animated ? "" : "display: none;")">
+			  @if (_isActive || _hasRendered || ForceRender)
+			  {
+					  _hasRendered = true;
+			  		@ChildContent
+			  }
+    </div>
 }
