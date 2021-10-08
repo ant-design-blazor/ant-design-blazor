@@ -2,72 +2,68 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <CascadingValue Value="true" Name="IsEmpty" IsFixed="true">
-        @ChildContent
-    </CascadingValue>
-    <div class="@ClassMapper.Class" style="@Style" id="@Id">
-        <!--Tab bar-->
-        <div role="tablist" class="ant-tabs-nav">
-            <div class="ant-tabs-nav-wrap @_tabsNavWarpPingClass" @ref="@_tabBars">
-                <div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
-                    <CascadingValue Value="true" Name="IsTab" IsFixed="true">
-                        @foreach (var pane in _panes)
-                        {
-                            <CascadingValue Value="pane" Name="Pane" @key="pane.Key">
-                                @ChildContent
-                            </CascadingValue>
-                        }
-                    </CascadingValue>
-                    @if (Type == TabType.EditableCard && !HideAdd)
-                    {
-                        <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
-                            <Icon Type="plus" />
-                        </button>
-                    }
-                    <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
-                </div>
-            </div>
-            @if (TabBarExtraContent != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
-            {
-                <div class="ant-tabs-extra-content">
-                    @(TabBarExtraContent?? Card?.Extra)
-                </div>
-            }
-            <Dropdown>
-                <Overlay>
-                    <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
-                        @foreach (var pane in GetInvisibleTabs())
-                        {
-                            <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
-                                @onclick="(e)=>HandleTabClick(pane)">@pane.Tab</li>
-                            }
-                    </ul>
-                </Overlay>
-                <ChildContent>
-                    <div class="@_operationClass" @onclick:preventDefault>
-                        <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
-                                style="@_operationStyle" type="button">
-                            <Icon Type="ellipsis" />
-                        </button>
-                    </div>
-                </ChildContent>
-            </Dropdown>
-        </div>
-        <!--Tab content-->
-        @if (Card == null)
-        {
-            <div class="ant-tabs-content-holder ">
-                <div class="ant-tabs-content ant-tabs-content-@TabPosition">
-                    <CascadingValue Value="true" Name="IsPane" IsFixed="true">
-                        @foreach (var pane in _panes)
-                        {
-                            <CascadingValue Value="pane" Name="Pane">
-                                @ChildContent
-                            </CascadingValue>
-                        }
-                    </CascadingValue>
-                </div>
-            </div>
-        }
-    </div>
+	<div class="@ClassMapper.Class" style="@Style" id="@Id">
+		<!--Tab bar-->
+		<div role="tablist" class="ant-tabs-nav">
+
+			@if (TabBarExtraContentLeft != null)
+			{
+				<div class="ant-tabs-extra-content">
+					  @TabBarExtraContentLeft
+				</div>
+			}
+
+			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef">
+				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef">
+					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
+						@ChildContent
+					</CascadingValue>
+					@if (HasAddButton)
+					{
+						<button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
+							<Icon Type="plus" />
+						</button>
+					}
+					<div class="@_inkClassMapper.Class" style="@_inkStyle"></div>
+				</div>
+			</div>
+			<Dropdown OnVisibleChange="OnVisibleChange">
+				<Overlay>
+					<ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
+						@foreach (var pane in _invisibleTabs)
+						{
+							<li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
+							@onclick="(e)=>HandleTabClick(pane)">@pane.Tab</li>
+						}
+					</ul>
+				</Overlay>
+				<Unbound>
+					<div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
+						<button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
+								style="@_operationStyle" type="button">
+							<Icon Type="ellipsis" />
+						</button>
+					</div>
+				</Unbound>
+			</Dropdown>
+
+	  		@if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
+			{
+				<div class="ant-tabs-extra-content">
+					@(TabBarExtraContent ?? TabBarExtraContentRight ?? Card?.Extra)
+				</div>
+			}
+		</div>
+		<!--Tab content-->
+		@if (Card == null)
+		{
+			<div class="ant-tabs-content-holder ">
+				<div class="@_contentClassMapper.Class" style="@_contentAnimatedStyle">
+					<CascadingValue Value="true" Name="IsPane" IsFixed="true">
+						@ChildContent
+					</CascadingValue>
+				</div>
+			</div>
+		}
+	</div>
 </CascadingValue>
