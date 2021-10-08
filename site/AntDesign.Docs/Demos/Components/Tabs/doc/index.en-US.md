@@ -22,13 +22,14 @@ Ant Design has 3 types of Tabs for different situations.
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| ActiveKey | Current TabPane's key | string | - |
-| Animated | Whether to change tabs with animation. Only works while `tabPosition="top"\|"bottom"` | boolean \| {inkBar:boolean, tabPane:boolean} | `true`, `false` when `type="card"` |
-| RenderTabBar | replace the TabBar | (props: DefaultTabBarProps, DefaultTabBar: React.ComponentClass) => React.ReactElement | - |
+| ActiveKey | Current TabPane's key£¬support two-way binding. | string | - |
+| Animated | Whether to change tabs with animation. Only works while `tabPosition="top"\|"bottom"` | boolean | `false` |
 | DefaultActiveKey | Initial active TabPane's key, if `activeKey` is not set. | string | - |
 | HideAdd | Hide plus icon or not. Only works while `type="editable-card"` | boolean | `false` |
 | Size | preset tab bar size | `large` \| `default` \| `small` | `default` |
 | TabBarExtraContent | Extra content in tab bar | RenderFargment | - |
+| TabBarExtraContentLeft | Extra content in the left of tab bar | RenderFargment | - |
+| TabBarExtraContentRight | Extra content in the right of tab bar | RenderFargment | - |
 | TabBarGutter | The gap between tabs | number | - |
 | TabBarStyle | Tab bar style object | object | - |
 | TabPosition | Position of tabs | `top` \| `right` \| `bottom` \| `left` | `top` |
@@ -39,8 +40,7 @@ Ant Design has 3 types of Tabs for different situations.
 | OnNextClick | Callback executed when next button is clicked | EventCallback | - |
 | OnPrevClick | Callback executed when prev button is clicked | EventCallback | - |
 | OnTabClick | Callback executed when tab is clicked | EventCallback(key: string, event: MouseEvent) | - |
-
-More option at [rc-tabs option](https://github.com/react-component/tabs#tabs)
+| Draggable | make tabs draggable. | bool | false |
 
 ### Tabs.TabPane
 
@@ -50,5 +50,3 @@ More option at [rc-tabs option](https://github.com/react-component/tabs#tabs)
 | Key | TabPane's key | string | - |
 | Tab | Show text in TabPane's head | string | - |
 | TabTemplate | Template of TabPane's head | RenderFargment | - |
-
-More option at [rc-tabs option](https://github.com/react-component/tabs#tabpane)

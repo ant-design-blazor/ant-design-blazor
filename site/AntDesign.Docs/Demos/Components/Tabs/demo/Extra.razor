@@ -1,16 +1,53 @@
 ﻿<Tabs>
-    <TabBarExtraContent>
-        <Button>Extra Action</Button>
-    </TabBarExtraContent>
-    <ChildContent>
-        <TabPane Key="1" Tab="Tab 1">
-            Content of Tab Pane 1
-        </TabPane>
-        <TabPane Key="2" Tab="Tab 2">
-            Content of Tab Pane 2
-        </TabPane>
-        <TabPane Key="3" Tab="Tab 3">
-            Content of Tab Pane 3
-        </TabPane>
-    </ChildContent>
+	<TabBarExtraContent>
+		<Button>Extra Action</Button>
+	</TabBarExtraContent>
+	<ChildContent>
+		<TabPane Key="1" Tab="Tab 1">
+			Content of Tab Pane 1
+		</TabPane>
+		<TabPane Key="2" Tab="Tab 2">
+			Content of Tab Pane 2
+		</TabPane>
+		<TabPane Key="3" Tab="Tab 3">
+			Content of Tab Pane 3
+		</TabPane>
+	</ChildContent>
 </Tabs>
+<br />
+<br />
+<br />
+<div>You can also specify its direction or both side</div>
+<Divider />
+<CheckboxGroup Options=@(new[]{"left","right"}) @bind-Value="position" />
+<br />
+<br />
+<Tabs TabBarExtraContentLeft="leftExtra" TabBarExtraContentRight="rightExtra" >
+	<TabPane Tab="Tab 1" Key="1">
+		Content of tab 1
+	</TabPane>
+	<TabPane Tab="Tab 2" Key="2">
+		Content of tab 2
+	</TabPane>
+	<TabPane Tab="Tab 3" Key="3">
+		Content of tab 3
+	</TabPane>
+</Tabs>
+
+@code {
+	string[] position =new[] { "left", "right" };
+
+	RenderFragment leftExtra => position.Contains("left")? @<Button class="tabs-extra-demo-button">Left Extra Action</Button> :null;
+	RenderFragment rightExtra => position.Contains("right")? @<Button>Right Extra Action</Button> :null;
+}
+
+<style>
+.tabs-extra-demo-button {
+  margin-right: 16px;
+}
+
+.ant-row-rtl .tabs-extra-demo-button {
+  margin-right: 0;
+  margin-left: 16px;
+}
+</style>
