@@ -90,10 +90,17 @@ namespace AntDesign
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             // Avoid changes in tab as we modify the properties used for display when drag and drop occurs
-            if (!IsTab)
+            if (IsTab && _hasRendered)
             {
-                await base.SetParametersAsync(parameters);
+                return;
             }
+
+            if (Tab != null || TabTemplate != null)
+            {
+                _hasRendered = true;
+            }
+
+            await base.SetParametersAsync(parameters);
         }
 
         private void SetClass()
@@ -139,7 +146,6 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            Console.WriteLine($"-->{IsTab}--->{_shouldTabRender}-->{_shouldRender}");
             if (IsTab)
             {
                 return _shouldTabRender;
