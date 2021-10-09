@@ -6,10 +6,8 @@
     {
         @foreach (var item in Pages)
         {
-            <span>@item.Title</span>
             <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable ForceRender>
                 <TabTemplate>
-                    <span>@(string.IsNullOrEmpty(item.Title))</span>
                     @item.Title
                 </TabTemplate>
                 <ChildContent>

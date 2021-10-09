@@ -66,7 +66,6 @@ namespace AntDesign
 
             builder.CloseComponent();
 
-
             if (!_pageMap.ContainsKey(CurrentUrl))
             {
                 _pageMap[CurrentUrl] = new ReuseTabsPageItem
@@ -75,8 +74,6 @@ namespace AntDesign
                     Url = CurrentUrl,
                 };
             }
-
-
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)

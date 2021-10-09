@@ -84,6 +84,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
             _shouldRender = true;
+            _shouldTabRender = true;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -138,6 +139,7 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
+            Console.WriteLine($"-->{IsTab}--->{_shouldTabRender}-->{_shouldRender}");
             if (IsTab)
             {
                 return _shouldTabRender;
