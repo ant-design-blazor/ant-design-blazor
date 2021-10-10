@@ -45,23 +45,6 @@ namespace AntDesign.Tests.Tabs
         }
 
         [Fact]
-        public void Should_only_render_the_active_pane_when_ForceRender_is_false()
-        {
-            var cut = CreateTabs(p =>
-            {
-                var tabPane1 = CreateTabPanel("1");
-                var tabPane2 = CreateTabPanel("2");
-
-                tabPane1(p);
-                tabPane2(p);
-            });
-
-            var renderedPanes = cut.FindAll(".ant-tabs-tabpane");
-
-            Assert.Equal(1, renderedPanes.Count);
-        }
-
-        [Fact]
         public void Should_render_the_all_panes_when_ForceRender_is_true()
         {
             var cut = CreateTabs(p =>
@@ -76,45 +59,6 @@ namespace AntDesign.Tests.Tabs
             var renderedPanes = cut.FindAll(".ant-tabs-tabpane");
 
             Assert.Equal(2, renderedPanes.Count);
-        }
-
-        [Fact]
-        public void Should_preserve_tab_panels_once_they_have_been_rendered()
-        {
-            var cut = CreateTabs(p =>
-            {
-                var tabPane1 = CreateTabPanel("1");
-                var tabPane2 = CreateTabPanel("2");
-
-                tabPane1(p);
-                tabPane2(p);
-            });
-
-            var renderedPanes = cut.FindAll(".ant-tabs-tabpane", true);
-            Assert.Equal(1, renderedPanes.Count);
-
-            cut.SetParametersAndRender(p => p.Add(x => x.ActiveKey, "1"));
-
-            Assert.Equal(2, renderedPanes.Count);
-        }
-
-        [Fact]
-        public void Clicking_on_an_inactive_tab_should_make_it_active()
-        {
-            var cut = CreateTabs(p =>
-            {
-                var tabPane1 = CreateTabPanel("1");
-                var tabPane2 = CreateTabPanel("2");
-
-                tabPane1(p);
-                tabPane2(p);
-            });
-
-            Assert.Equal("Content 2", cut.Find(".ant-tabs-tabpane").TextContent.Trim());
-
-            cut.Find("div.ant-tabs-tab").Click();
-
-            Assert.Equal("Content 1", cut.Find(".ant-tabs-tabpane").TextContent.Trim());
         }
     }
 }

@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-使用 `react-dnd` 实现标签可拖拽。
+使用 `Draggable` 属性实现标签可拖拽。
 
 ## en-US
 
-Use `react-dnd` to make tabs draggable.
+Use `Draggable` to make tabs draggable.
