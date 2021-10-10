@@ -6,12 +6,19 @@
 
 @if (IsBody)
 {
+    var rowAttributes = Table.OnRow?.Invoke(RowData);
+    if (Table.OnRowClick.HasDelegate)
+    {
+        rowAttributes ??= new Dictionary<string, object>();
+        rowAttributes.TryAdd("onclick", ((Action)delegate { Table.OnRowClick.InvokeAsync(RowData); }));
+    }
+
     <CascadingValue Value="_blockColumns" Name="AntDesign.Column.Blocked">
-        <tr @attributes="RowAttributes"
-            data-row-key="@(RowIndex-1)" class="ant-table-row ant-table-row-level-@Level @(RowData.Selected ? "ant-table-row-selected" : "") @Table.RowClassName(RowData) @RowAttributes?.GetValueOrDefault("class")">
+        <tr @attributes="rowAttributes"
+            data-row-key="@(RowData.RowIndex-1)" class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @Table.RowClassName(RowData) @rowAttributes?.GetValueOrDefault("class")">
             <CascadingValue Name="AntDesign.Selection.OnChange"
                             Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
-                <CascadingValue Value="this" TValue="ITableRow" Name="AntDesign.Selection.TableRow" IsFixed>          
+                <CascadingValue Value="this" TValue="ITableRow" Name="AntDesign.Selection.TableRow" IsFixed>
                     @ChildContent
                 </CascadingValue>
             </CascadingValue>
@@ -20,7 +27,9 @@
 }
 else if (IsHeader)
 {
-    <tr @attributes="RowAttributes">
+    var headerRowAttributes = Table.OnHeaderRow?.Invoke();
+
+    <tr @attributes="headerRowAttributes">
         <CascadingValue Name="AntDesign.Selection.OnChange"
                         Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
                 @ChildContent
@@ -33,17 +42,8 @@ else if (IsHeader)
 @code {
     bool _blockColumns = false;
 
-    [Parameter]
+    [CascadingParameter(Name = "AntDesign.TableRow.Table")]
     public Table<TItem> Table { get; set; }
-
-    [Parameter]
-    public Dictionary<string, object> RowAttributes { get; set; }
-
-    [Parameter]
-    public int RowIndex { get; set; }
-
-    [Parameter]
-    public int Level { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -78,7 +78,7 @@ else if (IsHeader)
                 ((ITable)Table).Selection.StateHasChanged();
             }
         }
-        ((ITable)Table).SelectionChanged();
+    ((ITable)Table).SelectionChanged();
     }
 
     private async void RowDataSelectedChanged(RowData rowData, bool selected)
