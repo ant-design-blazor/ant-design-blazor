@@ -127,13 +127,15 @@
         }
          <thead class="ant-table-thead">
              <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                 <AntDesign.Internal.TableRow RowAttributes="headerRowAttributes" Table="table">
-                     @table.ChildContent(_fieldModel)
-                     @if (table.ScrollY != null)
-                     {
-                         <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
-                     }
-                 </AntDesign.Internal.TableRow>
+                 <CascadingValue Value="table" Name="AntDesign.TableRow.Table">
+                     <AntDesign.Internal.TableRow TItem="TItem">
+                         @table.ChildContent(_fieldModel)
+                         @if (table.ScrollY != null)
+                         {
+                             <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+                         }
+                     </AntDesign.Internal.TableRow>
+                 </CascadingValue>
              </CascadingValue>
          </thead>
     </Template>;
@@ -170,7 +172,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 <Empty Simple />
             </td>
         </tr>
-	}
+    }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
         for (int i = 0; i < showItems.Count(); i++)
@@ -188,24 +190,21 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                 table._dataSourceCache[cacheKey] = rowData;
             }
             var currentRowData = table._dataSourceCache[cacheKey];
-			var childrenData = table.TreeChildren(data);
-			var hasChildren = childrenData?.Any() == true;
+            var childrenData = table.TreeChildren(data);
+            var hasChildren = childrenData?.Any() == true;
             currentRowData.CacheKey = cacheKey;
             currentRowData.Level = level;
             currentRowData.HasChildren = hasChildren;
-
-            var rowAttributes = table.OnRow?.Invoke(currentRowData);
-            if (table.OnRowClick.HasDelegate)
-            {
-                rowAttributes ??= new Dictionary<string, object>();
-                rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
-            }
+            currentRowData.RowIndex = rowIndex;
+            currentRowData.PageIndex = table.PageIndex;
 
             <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
-                    <AntDesign.Internal.TableRow RowAttributes="rowAttributes" Level="level" Table="table" RowIndex="rowIndex">
-                        @table.ChildContent(data)
-                    </AntDesign.Internal.TableRow>
+                    <CascadingValue Value="table" Name="AntDesign.TableRow.Table">
+                        <AntDesign.Internal.TableRow @key="currentRowData" TItem="TItem">
+                            @table.ChildContent(data)
+                        </AntDesign.Internal.TableRow>
+                    </CascadingValue>                        
                 </CascadingValue>
             </CascadingValue>
 
