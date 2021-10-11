@@ -52,6 +52,8 @@ namespace AntDesign
         public bool Closable { get; set; } = true;
         internal bool IsActive => _isActive;
 
+        private bool HasTabTitle => Tab != null || TabTemplate != null;
+
         internal ElementReference TabRef => _tabRef;
 
         private const string PrefixCls = "ant-tabs-tab";
@@ -76,6 +78,11 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
+            if (IsTab && HasTabTitle)
+            {
+                _hasRendered = true;
+            }
+
             _shouldRender = false;
             _shouldTabRender = false;
         }
@@ -84,15 +91,18 @@ namespace AntDesign
         {
             base.OnParametersSet();
             _shouldRender = true;
+            _shouldTabRender = true;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             // Avoid changes in tab as we modify the properties used for display when drag and drop occurs
-            if (!IsTab)
+            if (IsTab && _hasRendered)
             {
-                await base.SetParametersAsync(parameters);
+                return;
             }
+
+            await base.SetParametersAsync(parameters);
         }
 
         private void SetClass()
