@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace AntDesign
 {
@@ -19,11 +20,21 @@ namespace AntDesign
 
         private string CurrentUrl => Navmgr.Uri;
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.ToArray();
+        internal ReuseTabsPageItem[] Pages => _pageMap.Values.OrderBy(x => x.CreatedAt).ToArray();
 
         public void RemovePage(string key)
         {
             _pageMap.Remove(key);
+        }
+        public void RemovePageWithRegex(string pattern)
+        {
+            foreach (var key in _pageMap.Keys)
+            {
+                if (Regex.IsMatch(key, pattern))
+                {
+                    _pageMap.Remove(key);
+                }
+            }
         }
 
         public void ReplaceBody(string key, RenderFragment body)
@@ -50,7 +61,6 @@ namespace AntDesign
                 builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
                 {
                     b.OpenComponent(20, layoutType);
-                    b.AddAttribute(21, "Body", body);
                     b.CloseComponent();
                 }));
             }
@@ -63,6 +73,7 @@ namespace AntDesign
                 {
                     Body = body,
                     Url = CurrentUrl,
+                    CreatedAt = DateTime.Now,
                 };
             }
         }

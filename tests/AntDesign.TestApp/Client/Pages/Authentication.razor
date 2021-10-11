@@ -1,0 +1,25 @@
+﻿@page "/authentication/{action}"
+
+@attribute [ReuseTabsPageTitle("Authentication")]
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<RemoteAuthenticatorView Action="@Action" OnLogInSucceeded="OnLogInSucceed" OnLogOutSucceeded="OnLogOutSucceed" />
+
+@code{
+
+    [Parameter] public string Action { get; set; }
+
+    [CascadingParameter(Name = "RouteView")]
+    public ReuseTabsRouteView RouteView { get; set; }
+
+    private void OnLogInSucceed(RemoteAuthenticationState state)
+    {
+        this.RouteView?.RemovePageWithRegex("/authentication/");
+    }
+
+    private void OnLogOutSucceed(RemoteAuthenticationState state)
+    {
+        this.RouteView?.RemovePageWithRegex("/authentication/");
+        state.ReturnUrl = "/";
+    }
+}
