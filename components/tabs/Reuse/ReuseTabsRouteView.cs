@@ -20,7 +20,7 @@ namespace AntDesign
 
         private string CurrentUrl => Navmgr.Uri;
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.ToArray();
+        internal ReuseTabsPageItem[] Pages => _pageMap.Values.OrderBy(x => x.CreatedAt).ToArray();
 
         public void RemovePage(string key)
         {
@@ -36,6 +36,7 @@ namespace AntDesign
                 }
             }
         }
+
         public void ReplaceBody(string key, RenderFragment body)
         {
             _pageMap[key].Body = body;
@@ -72,6 +73,7 @@ namespace AntDesign
                 {
                     Body = body,
                     Url = CurrentUrl,
+                    CreatedAt = DateTime.Now,
                 };
             }
         }
