@@ -9,19 +9,24 @@ using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.JSInterop;
+using Moq;
 
 namespace AntDesign.Tests
 {
     public class TestDomEventService : AntDesign.JsInterop.DomEventService
     {
-        public TestDomEventService(IJSRuntime js) : base(js)
+        public Mock<IDomEventListener> MockedDomEventListener { get; set; }
+        public TestDomEventService(IJSRuntime js, Mock<IDomEventListener> mock = null) : base(js)
         {
-
+            if (mock is not null)
+            {
+                MockedDomEventListener = mock;
+            }
         }
 
         public override IDomEventListener CreateDomEventListerner()
         {
-            return new TestDomEventListerner();
+            return MockedDomEventListener?.Object ?? new TestDomEventListerner();
         }
     }
 }
