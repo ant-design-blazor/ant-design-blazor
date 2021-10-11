@@ -1,0 +1,23 @@
+﻿@page "/counter/{id}"
+@inherits ComponentBase
+@implements IReuseTabsPage
+
+<h1>Counter @Id</h1>
+
+<p>Current count: @currentCount</p>
+
+<Button Type="primary" @onclick="IncrementCount">Click me</Button>
+
+@code {
+
+	  [Parameter ] public string Id { get; set; }
+
+	  private int currentCount = 0;
+
+	  public RenderFragment GetPageTitle() =>@<span>@($"Counter {Id}")</span>;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
