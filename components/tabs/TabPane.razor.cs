@@ -52,6 +52,8 @@ namespace AntDesign
         public bool Closable { get; set; } = true;
         internal bool IsActive => _isActive;
 
+        private bool HasTabTitle => Tab != null || TabTemplate != null;
+
         internal ElementReference TabRef => _tabRef;
 
         private const string PrefixCls = "ant-tabs-tab";
@@ -76,6 +78,11 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
+            if (IsTab && HasTabTitle)
+            {
+                _hasRendered = true;
+            }
+
             _shouldRender = false;
             _shouldTabRender = false;
         }
@@ -93,11 +100,6 @@ namespace AntDesign
             if (IsTab && _hasRendered)
             {
                 return;
-            }
-
-            if (Tab != null || TabTemplate != null)
-            {
-                _hasRendered = true;
             }
 
             await base.SetParametersAsync(parameters);
