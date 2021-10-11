@@ -65,13 +65,30 @@ namespace AntDesign
             if (TryGetSpecifiedLocale(cultureName, out Locale locale)) return locale;
             // fallback to parent CultureInfo
             var parentCulture = cultureInfo.Parent;
-            if (parentCulture.Name != string.Empty) return GetLocale(parentCulture);
+            if (parentCulture.Name != string.Empty)
+            {
+                locale = GetLocale(parentCulture);
+                AddClonedLocale(cultureName, ref locale);
+                return locale;
+            }
             // fallback to default language
-            if (TryGetSpecifiedLocale(DefaultLanguage, out locale)) return locale;
+            if (TryGetSpecifiedLocale(DefaultLanguage, out locale))
+            {
+                AddClonedLocale(cultureName, ref locale);
+                return locale;
+            }
             // fallback to 'en-US'
-            if (TryGetSpecifiedLocale("en-US", out locale)) return locale;
-            // fallback to a default instance
-            return new Locale();
+            TryGetSpecifiedLocale("en-US", out locale);
+            AddClonedLocale(cultureName, ref locale);
+            return locale;
+        }
+
+        private static void AddClonedLocale(string cultureName, ref Locale locale)
+        {
+            locale = JsonSerializer.Deserialize<Locale>(
+                JsonSerializer.Serialize(locale, new JsonSerializerOptions { IgnoreReadOnlyProperties = true }));
+            locale.LocaleName = cultureName;
+            _localeCache.TryAdd(cultureName, locale);
         }
 
         public static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
@@ -91,7 +108,7 @@ namespace AntDesign
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
-                result.LocaleName = cultureName;
+                result.LocaleName = key;
                 return result;
             });
             return true;
