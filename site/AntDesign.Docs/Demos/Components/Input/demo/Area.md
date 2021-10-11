@@ -6,7 +6,7 @@ title:
 ---
 
 ## zh-CN
-设置 `AutoSize` 属性为 `true` 启用高度自动变化。当设置了 `MinRows` 或 `MaxRows` 时，会锁定开启 `AutoSize`。
+设置 `AutoSize` 属性为 `true` 启用高度自动变化。当设置了 `MinRows` 或 `MaxRows` 时，会强制开启 `AutoSize`。
 
 
 ## en-US
