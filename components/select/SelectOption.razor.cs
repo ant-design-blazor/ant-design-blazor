@@ -197,6 +197,7 @@ namespace AntDesign
                 };
 
                 SelectParent.SelectOptionItems.Add(newSelectOptionItem);
+                SelectParent.AddEqualityToNoValue(newSelectOptionItem);
                 isAlreadySelected = IsAlreadySelected(newSelectOptionItem);
             }
 
@@ -275,7 +276,10 @@ namespace AntDesign
                 var selectOptionItem = SelectParent.SelectOptionItems
                     .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
+                {
                     SelectParent.SelectOptionItems.Remove(selectOptionItem);
+                    SelectParent.RemoveEqualityToNoValue(selectOptionItem);
+                }
             }
 
             base.Dispose(disposing);
