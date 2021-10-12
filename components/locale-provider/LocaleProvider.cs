@@ -20,31 +20,83 @@ namespace AntDesign
         private static readonly ConcurrentDictionary<string, Locale> _localeCache = new ConcurrentDictionary<string, Locale>();
         private static Assembly _resourcesAssembly = typeof(LocaleProvider).Assembly;
 
-        private static readonly IDictionary<string, string> _availableResources = _resourcesAssembly
-               .GetManifestResourceNames()
-            .Select(x => Regex.Match(x, @"^.*locales\.(.+)\.json"))
-            .Where(x => x.Success)
-            .ToDictionary(x => x.Groups[1].Value, x => x.Value);
+        private static readonly IDictionary<string, string> _availableResources = GetAvailableResources();
+
+        private static IDictionary<string, string> GetAvailableResources()
+        {
+            var availableResources = _resourcesAssembly
+                .GetManifestResourceNames()
+                .Select(x => Regex.Match(x, @"^.*locales\.(.+)\.json"))
+                .Where(x => x.Success)
+                .ToDictionary(x => x.Groups[1].Value, x => x.Value);
+
+            foreach (var resource in availableResources.ToArray())
+            {
+                var parentCulture = CultureInfo.GetCultureInfo(resource.Key).Parent;
+                var parentCultureName = parentCulture.Name;
+
+                while (parentCultureName != string.Empty)
+                {
+                    if (!availableResources.ContainsKey(parentCultureName))
+                    {
+                        availableResources.Add(parentCultureName, resource.Value);
+                    }
+                    parentCulture = parentCulture.Parent;
+                    parentCultureName = parentCulture.Name;
+                }
+            }
+
+            return availableResources;
+        }
 
         public static Locale GetCurrentLocale()
         {
-            var currentCulture = CultureInfo.CurrentUICulture?.Name;
-            if (string.IsNullOrWhiteSpace(currentCulture) || !_availableResources.ContainsKey(currentCulture))
-            {
-                currentCulture = DefaultLanguage;
-            }
-
-            return GetLocale(currentCulture);
+            return GetLocale(CultureInfo.CurrentUICulture);
         }
 
         public static Locale GetLocale(string cultureName)
         {
-            return _localeCache.GetOrAdd(cultureName, key =>
+            return GetLocale(CultureInfo.GetCultureInfo(cultureName));
+        }
+
+        public static Locale GetLocale(CultureInfo cultureInfo)
+        {
+            var cultureName = cultureInfo.Name;
+            if (TryGetSpecifiedLocale(cultureName, out Locale locale)) return locale;
+            // fallback to parent CultureInfo
+            var parentCulture = cultureInfo.Parent;
+            if (parentCulture.Name != string.Empty)
             {
-                string fileName;
-                //fallback to default language if not found
-                if (!_availableResources.TryGetValue(key, out fileName))
-                    fileName = _availableResources[DefaultLanguage];
+                locale = GetLocale(parentCulture);
+                AddClonedLocale(cultureName, ref locale);
+                return locale;
+            }
+            // fallback to default language
+            if (TryGetSpecifiedLocale(DefaultLanguage, out locale))
+            {
+                AddClonedLocale(cultureName, ref locale);
+                return locale;
+            }
+            // fallback to 'en-US'
+            TryGetSpecifiedLocale("en-US", out locale);
+            AddClonedLocale(cultureName, ref locale);
+            return locale;
+        }
+
+        private static void AddClonedLocale(string cultureName, ref Locale locale)
+        {
+            locale = JsonSerializer.Deserialize<Locale>(
+                JsonSerializer.Serialize(locale, new JsonSerializerOptions { IgnoreReadOnlyProperties = true }));
+            locale.LocaleName = cultureName;
+            _localeCache.TryAdd(cultureName, locale);
+        }
+
+        public static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
+        {
+            if (!_availableResources.ContainsKey(cultureName)) return _localeCache.TryGetValue(cultureName, out locale);
+            locale = _localeCache.GetOrAdd(cultureName, key =>
+            {
+                string fileName = _availableResources[key];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
                 if (fileStream == null) return null;
                 using var streamReader = new StreamReader(fileStream);
@@ -56,9 +108,10 @@ namespace AntDesign
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
-                result.LocaleName = cultureName;
+                result.LocaleName = key;
                 return result;
             });
+            return true;
         }
 
         public static void SetLocale(string cultureName, Locale locale = null)
