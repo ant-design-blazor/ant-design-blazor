@@ -1066,9 +1066,13 @@ namespace AntDesign
         /// <returns>Whether detachment was successful. Returns true if no attachment existed.</returns>
         public bool DetachEdges()
         {
-            if (Parent.HasAttachedEdges)
+            if (Parent.HasAttachedEdges || AttachedItem is not null || HandleNoRequestingAttaching != default)
             {
-                ResetAttached();
+                ResetAttached(HandleNoRequestingAttaching != default);
+                if (AttachedItem is not null)
+                {
+                    DirectReset();
+                }
                 return true;
             }
             return false;
@@ -1314,6 +1318,7 @@ namespace AntDesign
                 AttachedItem.ChangeAttachedItem = () => this.LastValue = AttachedItem.FirstValue;
             }
             SetLockEdgeStyle(handle, true);
+            Parent.HasAttachedEdges = true;
             return true;
         }
 
@@ -1405,26 +1410,7 @@ namespace AntDesign
             }
             else
             {
-                if (AttachedItem is not null)
-                {
-                    AttachedItem.Slave = false;
-                }
-                ResetLockEdgeStyle(false);
-                Parent.ItemRequestingAttach = null;
-                Parent.ItemRespondingToAttach = null;
-
-                Master = false;
-                AttachedItem.Slave = false;
-                AttachedItem.HasAttachedEdge = false;
-                AttachedItem.AttachedItem = null;
-                AttachedItem.AttachedHandleNo = 0;
-                AttachedItem.ChangeAttachedItem = default;
-                AttachedItem.ResetLockEdgeStyle(false);
-
-                AttachedItem = default;
-                AttachedHandleNo = 0;
-
-                ChangeAttachedItem = default;
+                DirectReset();
             }
             SetFocus(_isFocused);
             HasAttachedEdgeWithGap = false;
@@ -1433,6 +1419,29 @@ namespace AntDesign
                 Parent.OnEdgeDetached.InvokeAsync((first, last));
             }
             return true;
+        }
+
+        private void DirectReset()
+        {
+            ResetLockEdgeStyle(false);
+            Parent.ItemRequestingAttach = null;
+            Parent.ItemRespondingToAttach = null;
+
+            Master = false;
+            if (AttachedItem is not null)
+            {
+                AttachedItem.Slave = false;
+                AttachedItem.HasAttachedEdge = false;
+                AttachedItem.AttachedItem = null;
+                AttachedItem.AttachedHandleNo = 0;
+                AttachedItem.ChangeAttachedItem = default;
+                AttachedItem.ResetLockEdgeStyle(false);
+
+                AttachedItem = default;
+            }
+            AttachedHandleNo = 0;
+
+            ChangeAttachedItem = default;
         }
 
         private static void ResetNotOverlapping(RangeItem item, string currentRangeId)

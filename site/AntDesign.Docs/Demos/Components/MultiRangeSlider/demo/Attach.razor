@@ -1,9 +1,9 @@
 ﻿<div>
     <MultiRangeSlider AllowOverlapping>
-        <RangeItem @ref="@_first" DefaultValue="(0, 40)"/>
-        <RangeItem @ref="@_second" DefaultValue="(35, 60)"/>
-        <RangeItem @ref="@_third" DefaultValue="(65, 85)"/>
-        <RangeItem @ref="@_fourth" DefaultValue="(85, 95)"/>
+        <RangeItem @ref="@_first" DefaultValue="(0, 40)" Description="first"/>
+        <RangeItem @ref="@_second" DefaultValue="(35, 60)" Description="second"/>
+        <RangeItem @ref="@_third" DefaultValue="(65, 85)" Description="third"/>
+        <RangeItem @ref="@_fourth" DefaultValue="(85, 95)" Description="fourth"/>
     </MultiRangeSlider>    
     <div>
         <Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
@@ -25,10 +25,10 @@
                         </ButtonGroup>
 			        </SpaceItem>
 			        <SpaceItem>
-				        <Button OnClick="AttachThirdToFourth" Disabled="@_disabledAll">Attach third right & fourth left</Button>
+				        <Button OnClick="AttachThirdToFourth" Disabled="@_disabledAll">Attach third right & fourth left (have to be in the same point)</Button>
 			        </SpaceItem>
 			        <SpaceItem>
-				        <Button OnClick="Detach" Disabled="@_disabledAll">Detach</Button>
+				        <Button OnClick="Detach">Detach</Button>
 			        </SpaceItem>
 		        </Space>
 	        </SpaceItem>
@@ -75,6 +75,7 @@
         _second.DetachEdges();
         _third.DetachEdges();
         _fourth.DetachEdges();
+        _disabledAll = false;
+        _disabledSingle = true;
     }
-
 }
