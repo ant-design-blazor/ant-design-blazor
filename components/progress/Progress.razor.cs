@@ -231,9 +231,8 @@ namespace AntDesign
             {
                 try
                 {
-                    style.Append(" background-image: linear-gradient(to right, ");
-                    style.AppendJoin(", ", StrokeColor.AsT1.Select(pair => $"{ToRGB(pair.Value)} {pair.Key}"));
-                    style.Append(')');
+                    var gradientPoints = string.Join(", ", StrokeColor.AsT1.Select(pair => $"{ToRGB(pair.Value)} {pair.Key}"));
+                    style.Append($" background-image: linear-gradient(to right, {gradientPoints})");
                 }
                 catch
                 {
