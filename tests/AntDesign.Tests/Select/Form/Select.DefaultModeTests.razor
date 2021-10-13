@@ -1,0 +1,57 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+
+	class Model
+    {        		
+		public string? Name { get; set; }
+    }    
+    IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };	
+
+#if NET6_0_OR_GREATER
+    //covers scenario from issue #1207
+    [Theory]
+    [InlineData("Jack", null)]
+    [InlineData("Jack", "")]
+    [InlineData("Jack", "null")]
+    [InlineData("Jack", "Emily")]
+	public void Model_value_change_reflected_in_select(string modelValue, string? newValue) 
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+        Model _model = new() { Name = modelValue };
+		var cut = Render<AntDesign.Form<Model>>(
+			@<AntDesign.Form Model="@_model">       
+				<AntDesign.FormItem Label="Test">
+						<AntDesign.Select DataSource="@_persons"
+				                LabelName="@nameof(Person.Name)"
+				                ValueName="@nameof(Person.Name)"
+								@bind-Value=@context.Name>
+						</AntDesign.Select>
+				</AntDesign.FormItem>
+			</AntDesign.Form>
+    );
+        var select = cut.FindComponent<Select<string, Person>>();
+        var lastValue = select.Instance.Value;
+        //Act		
+        _model.Name = newValue;
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Model, _model));
+        //Assert		
+        lastValue.Should().Be(modelValue);
+        select.Instance.Value.Should().Be(newValue);
+	}
+#endif
+}

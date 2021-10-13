@@ -79,6 +79,8 @@ Therefore, you can use the custom theme styles of Ant Design directly.
 
 We have provided the `dotnet new` template to create a [Boilerplate](https://github.com/ant-design-blazor/ant-design-pro-blazor) project out of the box：
 
+![Pro Template](https://user-images.githubusercontent.com/8186664/44953195-581e3d80-aec4-11e8-8dcb-54b9db38ec11.png)
+
 - Install the template
 
   ```bash
@@ -97,6 +99,7 @@ Options for the template：
 | ----------------- | ------------------------------------------------------------------ | ------------------------------ | ------- |
 | `-f` \| `--full`  | If specified, generates all pages of Ant Design Pro                | bool                           | false   |
 | `-ho` \| `--host` | Specify the hosting model                                          | 'wasm' \| 'server' \| 'hosted' | 'wasm'  |
+| `--styles`        | Whether use NodeJS and Less to compile your custom themes.         | `css` \| `less`                | `css`   |
 | `--no-restore`    | If specified, skips the automatic restore of the project on create | bool                           | false   |
 
 ### Import Ant Design Blazor into an existing project
@@ -165,6 +168,7 @@ Options for the template：
   $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
+  $ dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
   $ npm start
   ```
 

@@ -6,7 +6,8 @@
     <img alt="@Alt" class="ant-image-img" src="@Src" style="@Style"
          @onerror="HandleOnError"
          @onloadstart="HandleOnLoadStart"
-         @onload="HandleOnLoad" />
+         @onload="HandleOnLoad" 
+		 @onclick="OnClick"/>
 
     @if (!_loaded && Placeholder != null)
     {
@@ -17,7 +18,7 @@
 
     @if (_loaded && !_isError && Preview)
     {
-        <div class="ant-image-mask" @onclick="OnPreview">
+        <div class="ant-image-mask" @onclick="OnPreview" @onclick:stopPropagation>
             <div class="ant-image-mask-info">
                 <Icon Type="eye" /> @Locale.Preview
             </div>

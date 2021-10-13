@@ -38,7 +38,7 @@ namespace AntDesign
         public bool IsSummary { get; set; }
 
         [Parameter]
-        public string Title { get; set; }
+        public virtual string Title { get; set; }
 
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
@@ -69,6 +69,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Hidden { get; set; }
+
+        [Parameter]
+        public virtual RenderFragment<CellData> CellRender { get; set; }
 
         public int ColIndex { get; set; }
 

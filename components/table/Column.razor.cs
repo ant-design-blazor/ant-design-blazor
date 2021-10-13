@@ -13,6 +13,9 @@ namespace AntDesign
 {
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        public bool Blocked { get; set; }
+
         [CascadingParameter(Name = "ItemType")]
         public Type ItemType { get; set; }
 
@@ -22,8 +25,6 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
-        [Parameter]
-        public RenderFragment<TData> CellRender { get; set; }
 
         [Parameter]
         public TData Field
@@ -42,6 +43,8 @@ namespace AntDesign
         }
 
         private TData _field;
+
+        public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
 
         [Parameter]
         public string DataIndex { get; set; }
@@ -68,7 +71,7 @@ namespace AntDesign
         public SortDirection DefaultSortOrder { get; set; }
 
         [Parameter]
-        public Func<RowData, Dictionary<string, object>> OnCell { get; set; }
+        public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
 
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
@@ -122,7 +125,7 @@ namespace AntDesign
 
         private Type _columnDataType;
 
-        public string? DisplayName { get; private set; }
+        public string DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -152,8 +155,6 @@ namespace AntDesign
         private bool _hasFilterSelected;
 
         private string[] _selectedFilterValues;
-
-        //private ElementReference _filterTriggerRef;
 
         protected override void OnInitialized()
         {
@@ -282,6 +283,12 @@ namespace AntDesign
                     new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
                     null;
             }
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
         }
 
         private string NumberFormatter(object value)

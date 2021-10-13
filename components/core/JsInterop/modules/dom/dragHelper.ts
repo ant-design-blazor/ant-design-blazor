@@ -29,15 +29,15 @@ const defaultOptions = {
 
 class Dragger {
 
-    private _triggler: HTMLElement = null;
+    private _trigger: HTMLElement = null;
     private _container: HTMLElement = null;
     private _options: any = null;
     private _state: any = null;
     private _isFirst: boolean = true;
     private _style: string = null;
 
-    constructor(triggler: HTMLElement, container: HTMLElement, dragInViewport: boolean) {
-        this._triggler = triggler;
+    constructor(trigger: HTMLElement, container: HTMLElement, dragInViewport: boolean) {
+        this._trigger = trigger;
         this._container = container;
         this._options = Object.assign({}, defaultOptions, {
             inViewport: dragInViewport
@@ -73,6 +73,8 @@ class Dragger {
                 - this._container.offsetHeight - 1;
             state.domMaxX = document.documentElement.clientWidth
                 - this._container.offsetWidth - 1;
+            state.domMaxY = state.domMaxY < 0 ? 0 : state.domMaxY;
+            state.domMaxX = state.domMaxX < 0 ? 0 : state.domMaxX;
 
             this._container.style.left = left + 'px';
             this._container.style.top = top + 'px';
@@ -137,6 +139,8 @@ class Dragger {
             - this._container.offsetHeight - 1;
         state.domMaxX = document.documentElement.clientWidth
             - this._container.offsetWidth - 1;
+        state.domMaxY = state.domMaxY < 0 ? 0 : state.domMaxY;
+        state.domMaxX = state.domMaxX < 0 ? 0 : state.domMaxX;
         state.domStartY = parseInt(this._container.style.top);
         state.domStartX = parseInt(this._container.style.left);
         if (state.domStartY > state.domMaxY) {
@@ -150,10 +154,10 @@ class Dragger {
     }, 10).bind(this);
 
     bindDrag() {
-        const triggler = this._triggler;
+        const trigger = this._trigger;
         const options = this._options;
 
-        triggler.addEventListener("mousedown", this.onMousedown, false);
+        trigger.addEventListener("mousedown", this.onMousedown, false);
         window.addEventListener("mouseup", this.onMouseup, false);
         document.addEventListener("mousemove", this.onMousemove);
         if (options.inViewport) {
@@ -162,9 +166,9 @@ class Dragger {
     }
 
     unbindDrag() {
-        const triggler = this._triggler;
+        const trigger = this._trigger;
 
-        triggler.removeEventListener("mousedown", this.onMousedown, false);
+        trigger.removeEventListener("mousedown", this.onMousedown, false);
         window.removeEventListener("mouseup", this.onMouseup, false);
         document.removeEventListener("mousemove", this.onMousemove);
         if (this._options.inViewport) {
@@ -180,24 +184,24 @@ class Dragger {
     }
 }
 
-function enableDraggable(triggler: HTMLElement, container: HTMLElement, dragInViewport: boolean = true) {
-    let dragger = eventMap.get(triggler);
+function enableDraggable(trigger: HTMLElement, container: HTMLElement, dragInViewport: boolean = true) {
+    let dragger = eventMap.get(trigger);
     if (!dragger) {
-        dragger = new Dragger(triggler, container, dragInViewport);
-        eventMap.set(triggler, dragger);
+        dragger = new Dragger(trigger, container, dragInViewport);
+        eventMap.set(trigger, dragger);
     } 
     dragger.bindDrag();
 }
 
-function disableDraggable(triggler: HTMLElement) {
-    const dragger = eventMap.get(triggler);
+function disableDraggable(trigger: HTMLElement) {
+    const dragger = eventMap.get(trigger);
     if (dragger) {
         dragger.unbindDrag();
     }
 }
 
-function resetModalPosition(triggler: HTMLElement) {
-    const dragger = eventMap.get(triggler);
+function resetModalPosition(trigger: HTMLElement) {
+    const dragger = eventMap.get(trigger);
     if (dragger) {
         dragger.resetContainerStyle();
     }

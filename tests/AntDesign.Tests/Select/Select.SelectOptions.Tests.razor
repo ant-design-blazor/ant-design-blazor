@@ -1,0 +1,110 @@
+﻿@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+    class PersonClass 
+    {
+        public PersonClass(int id, string name) 
+        {
+            Id = id;
+            Name = name;
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    List<PersonClass> _personsClass = new List<PersonClass>
+    {
+        new PersonClass(1, "John"),
+        new PersonClass(2, "Lucy"),
+        new PersonClass(3, "Jack"),
+        new PersonClass(4, "Emily"),
+    };
+
+    public Select_SelectOptions_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+    }
+
+    [Fact]
+    public void Default_add_new_item_and_set_it_as_value_in_single_render() //issue #1536
+    {
+        //Arrange
+
+        Person value = _persons[1];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+			TItemValue="Person"
+			TItem="Person"
+            @bind-Value="@value">
+			<SelectOptions>						
+                @foreach (var item in _persons)
+                {
+                    <SelectOption @key="item"
+                                  TItemValue="Person"
+                                  TItem="Person"
+                                  Value=@item
+                                  Label=@item.Name />
+                }
+			</SelectOptions>
+		</AntDesign.Select>
+    );
+        //Act
+        value = new Person(5, "NewPerson");
+        _persons.Add(value);   
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(p => p.DataSource, _persons)
+            .Add(p => p.Value, value));
+        //Assert        
+        cut.Find("span.ant-select-selection-item").TextContent.Trim().Should().Be(value.Name);
+        cut.Instance.SelectOptionItems.Should().HaveCount(_persons.Count);
+        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(_persons.Count);
+    }
+
+    [Fact]
+    public void Multiple_add_new_item_and_set_it_as_value_in_single_render() //issue #1536 (multiple version)
+    {
+        //Arrange
+
+        IEnumerable<Person> values = new List<Person>() { _persons[1] };
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="multiple"
+			TItemValue="Person"
+			TItem="Person"
+            @bind-Values="@values">
+			<SelectOptions>						
+                @foreach (var item in _persons)
+                {
+                    <SelectOption @key="item"
+                                  TItemValue="Person"
+                                  TItem="Person"
+                                  Value=@item
+                                  Label=@item.Name />
+                }
+			</SelectOptions>
+		</AntDesign.Select>
+        );
+        //Act
+        var newPerson = new Person(5, "NewPerson");
+        _persons.Add(newPerson);   
+        values = new List<Person>() { _persons[1], newPerson};
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(p => p.DataSource, _persons)
+            .Add(p => p.Values, values));
+        //Assert        
+        var selectedItems = cut.FindAll("span.ant-select-selection-item-content");        
+        cut.Instance.SelectOptionItems.Should().HaveCount(_persons.Count);
+        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(_persons.Count);
+        selectedItems.Should().HaveCount(values.Count());
+        selectedItems.Select(x => x.TextContent).Should().ContainInOrder(new string[] { "Lucy", "NewPerson"});
+    }
+}
+}

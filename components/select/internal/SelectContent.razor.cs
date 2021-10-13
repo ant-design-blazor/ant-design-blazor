@@ -13,9 +13,9 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SelectContent<TItemValue, TItem>: IDisposable
+    public partial class SelectContent<TItemValue, TItem> : IDisposable
     {
-        [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
+        [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
@@ -57,7 +57,7 @@ namespace AntDesign.Select.Internal
         [Parameter] public string SearchValue { get; set; }
         [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
         [Inject] protected IJSRuntime Js { get; set; }
-        [Inject] private DomEventService DomEventService { get; set; }
+        [Inject] private IDomEventListener DomEventListener { get; set; }
         protected ElementReference Ref
         {
             get { return _ref; }
@@ -106,11 +106,11 @@ namespace AntDesign.Select.Internal
             SetSuppressInput();
             if (firstRender)
             {
-                if (ParentSelect.EnableSearch)
+                if (ParentSelect.IsSearchEnabled)
                 {
-                    DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                    DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect._dropDownRef);
                 }
                 if (ParentSelect.IsResponsive)
                 {
@@ -135,11 +135,11 @@ namespace AntDesign.Select.Internal
                         _suffixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _suffixRef);
                         _suffixElement.Width += 7;
                     }
-                    await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
+                    await DomEventListener.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal, true);
-                DomEventService.AddEventListener(ParentSelect._inputRef, "focus", OnFocusInternal, true);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
@@ -270,7 +270,7 @@ namespace AntDesign.Select.Internal
                 if (!_suppressInput)
                 {
                     _suppressInput = true;
-                    _inputStyle = "caret-color: transparent;";
+                    _inputStyle = "opacity: 0;";
                 }
             }
             else
@@ -306,16 +306,6 @@ namespace AntDesign.Select.Internal
                 return label.Length <= ParentSelect.MaxTagTextLength ? label : label.Substring(0, ParentSelect.MaxTagTextLength) + Ellipse;
             }
             return label;
-        }
-
-        protected void OnKeyPressEventHandler(KeyboardEventArgs _)
-        {
-            if (!ParentSelect.IsSearchEnabled)
-                SearchValue = string.Empty;
-            else if (ParentSelect.IsResponsive)
-            {
-
-            }
         }
 
         private Dictionary<string, object> AdditonalAttributes()
@@ -418,14 +408,12 @@ namespace AntDesign.Select.Internal
                 {
                     await Task.Delay(100);
                     if (ParentSelect.IsResponsive)
-                        await DomEventService.DisposeResizeObserver(_overflow);
+                        await DomEventListener.DisposeResizeObserver(_overflow);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
-            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
-            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
 
             if (IsDisposed) return;
 

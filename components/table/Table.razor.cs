@@ -16,6 +16,7 @@ namespace AntDesign
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        private bool _preventRender = false;
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
@@ -28,7 +29,7 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _waitingReload = true;
+                _waitingDataSourceReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
@@ -132,8 +133,11 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public bool Responsive { get; set; } = true;
+
         [Inject]
-        public DomEventService DomEventService { get; set; }
+        private IDomEventListener DomEventListener { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -143,20 +147,21 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
-        private bool _waitingReload;
+        private bool _hasInitialized;
+        private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
 
         private bool _hasFixLeft;
         private bool _hasFixRight;
-        private bool _pingRight;
-        private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
-        private ClassMapper _wrapperClassMapper = new ClassMapper();
+        private QueryModel _currentQueryModel;
+        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+        private ElementReference _tableRef;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -172,6 +177,11 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
+        /// <summary>
+        /// This method will be called when all columns have been set
+        /// </summary>
+        void ITable.OnColumnInitialized() => OnColumnInitialized();
+
         void ITable.OnExpandChange(int cacheKey)
         {
             if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
@@ -186,6 +196,18 @@ namespace AntDesign
             _summaryRows.Add(summaryRow);
         }
 
+
+        void OnColumnInitialized()
+        {
+            if (_hasInitialized)
+            {
+                return;
+            }
+
+            ReloadAndInvokeChange();
+            _hasInitialized = true;
+        }
+
         public void ReloadData()
         {
             PageIndex = 1;
@@ -193,6 +215,8 @@ namespace AntDesign
             FlushCache();
 
             this.InternalReload();
+
+            StateHasChanged();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -247,6 +271,7 @@ namespace AntDesign
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.InternalReload();
+            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -282,20 +307,19 @@ namespace AntDesign
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
+                    _currentQueryModel = queryModel;
+
                     _showItems = query;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
                 }
                 else
                 {
                     _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
-                    if (_total != Total)
-                    {
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
+                }
+
+                if (_total != Total && TotalChanged.HasDelegate)
+                {
+                    TotalChanged.InvokeAsync(_total);
                 }
 
                 _shouldRender = true;
@@ -306,7 +330,6 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-            StateHasChanged();
 
             return queryModel;
         }
@@ -322,13 +345,14 @@ namespace AntDesign
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
                 .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
                 .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
-                .If($"{prefixCls}-ping-left", () => _pingLeft)
-                .If($"{prefixCls}-ping-right", () => _pingRight)
+                //.If($"{prefixCls}-ping-left", () => _pingLeft)
+                //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             _wrapperClassMapper
                 .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
@@ -355,39 +379,6 @@ namespace AntDesign
             FlushCache();
         }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            if (!firstRender)
-            {
-                this.FinishLoadPage();
-            }
-
-            _shouldRender = false;
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
-            if (firstRender)
-            {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-                if (ScrollX != null)
-                {
-                    await SetScrollPositionClassName();
-
-                    DomEventService.AddEventListener("window", "resize", OnResize, false);
-                    DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
-                }
-
-                if (ScrollY != null && ScrollX != null)
-                {
-                    await JsInvokeAsync(JSInteropConstants.BindTableHeaderAndBodyScroll, _tableBodyRef, _tableHeaderRef);
-                }
-            }
-        }
 
         protected override void OnParametersSet()
         {
@@ -396,17 +387,28 @@ namespace AntDesign
             if (_waitingReloadAndInvokeChange)
             {
                 _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
 
-                ReloadAndInvokeChange();
+                if (_hasInitialized)
+                {
+                    _waitingDataSourceReload = false;
+                    ReloadAndInvokeChange();
+                }
             }
-            else if (_waitingReload)
+            else if (_waitingDataSourceReload)
             {
-                _waitingReload = false;
-                InternalReload();
+                _waitingDataSourceReload = false;
+                if (_hasInitialized)
+                {
+                    InternalReload();
+                }
             }
 
-            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            if (_preventRender)
+            {
+                _shouldRender = false;
+                _preventRender = false;
+            }
+            else if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
                 this._shouldRender = this._parametersHashCode != hashCode;
@@ -418,8 +420,48 @@ namespace AntDesign
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+
+                if (ScrollY != null || ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                }
+
+                // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
+                if (_hasInitialized && !_shouldRender)
+                {
+                    _shouldRender = true;
+                    StateHasChanged();
+                    return;
+                }
+
+                // To handle the case where a dynamic table does not render columns until the data is requested
+                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                {
+                    OnColumnInitialized();
+                    return;
+                }
+            }
+
+            if (!firstRender)
+            {
+                this.FinishLoadPage();
+            }
+
+            _shouldRender = false;
+        }
+
         protected override bool ShouldRender()
         {
+            // Do not render until initialisation is complete.
+            this._shouldRender = this._shouldRender && _hasInitialized;
+
             return this._shouldRender;
         }
 
@@ -433,61 +475,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
-
-        private async void OnScroll(JsonElement _) => await SetScrollPositionClassName();
-
-        private async Task SetScrollPositionClassName(bool clear = false)
-        {
-            if (_isReloading)
-                return;
-
-            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tableBodyRef);
-            var scrollWidth = element.ScrollWidth;
-            var scrollLeft = element.ScrollLeft;
-            var clientWidth = element.ClientWidth;
-
-            var beforePingLeft = _pingLeft;
-            var beforePingRight = _pingRight;
-
-            if ((scrollWidth == clientWidth && scrollWidth != 0) || clear)
-            {
-                _pingLeft = false;
-                _pingRight = false;
-            }
-            else if (scrollLeft == 0)
-            {
-                _pingLeft = false;
-                _pingRight = true;
-            }
-            // allow the gap between 1 px, it's magic ✨
-            else if (Math.Abs(scrollWidth - (scrollLeft + clientWidth)) < 1)
-            {
-                _pingRight = false;
-                _pingLeft = true;
-            }
-            else
-            {
-                _pingLeft = true;
-                _pingRight = true;
-            }
-
-            if (beforePingLeft != _pingLeft || beforePingRight != _pingRight)
-            {
-                _shouldRender = true;
-            }
-
-            if (!clear)
-            {
-                StateHasChanged();
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
-            DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
             base.Dispose(disposing);
         }
 
@@ -495,17 +485,38 @@ namespace AntDesign
         {
             if (!_isReloading)
             {
-                if (ScrollY != null && ScrollX != null)
+                if (ScrollY != null || ScrollX != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+                    await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            DomEventListener.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)
         {
             return RowExpandable(rowData as RowData<TItem>);
+        }
+
+        IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
+        {
+            if (_currentQueryModel == null || ServerSide)
+            {
+                return children;
+            }
+
+            var query = children.AsQueryable();
+            foreach (var sort in _currentQueryModel.SortModel.OrderBy(x => x.Priority))
+            {
+                query = sort.SortList(query);
+            }
+
+            foreach (var filter in _currentQueryModel.FilterModel)
+            {
+                query = filter.FilterList(query);
+            }
+
+            return query;
         }
 
         /// <summary>

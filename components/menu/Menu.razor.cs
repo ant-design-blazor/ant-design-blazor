@@ -20,6 +20,7 @@ namespace AntDesign
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
+        internal MenuMode? InitialMode { get; private set; }
         [Parameter]
         public MenuMode Mode
         {
@@ -78,14 +79,20 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
+
+        private string[] _openKeysCopy = Array.Empty<string>();
         [Parameter]
         public string[] OpenKeys
         {
             get => _openKeys ?? Array.Empty<string>();
             set
             {
-                _openKeys = value;
-                HandleOpenKeySet();
+                if (!_openKeysCopy.SequenceEqual(value))
+                {
+                    _openKeys = value;
+                    _openKeysCopy = value.ToArray();
+                    HandleOpenKeySet();
+                }
             }
         }
 
@@ -110,7 +117,7 @@ namespace AntDesign
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
         [Parameter]
-        public TriggerType TriggerSubMenuAction { get; set; } = TriggerType.Hover;
+        public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
         internal MenuMode InternalMode { get; private set; }
 
@@ -223,7 +230,7 @@ namespace AntDesign
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
-
+            InitialMode = Mode;
             Parent?.AddMenu(this);
 
             OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;

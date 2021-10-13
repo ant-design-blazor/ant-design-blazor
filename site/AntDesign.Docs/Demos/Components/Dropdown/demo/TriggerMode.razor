@@ -1,0 +1,26 @@
+﻿<Dropdown Trigger="@(new Trigger[] { Trigger.Click })">
+    <Overlay>
+        <Menu>
+            <MenuItem>
+                <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                    1st menu item
+                </a>
+            </MenuItem>
+            <MenuItem>
+                <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                    2nd menu item
+                </a>
+            </MenuItem>
+            <MenuItem>
+                <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+                    3rd menu item
+                </a>
+            </MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Click me <Icon Type="down" />
+        </a>
+    </ChildContent>
+</Dropdown>

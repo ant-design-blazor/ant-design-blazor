@@ -70,6 +70,12 @@ namespace AntDesign
         [Parameter]
         public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
+        /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
         [Parameter]
         public bool Bordered { get; set; } = true;
 
@@ -112,7 +118,7 @@ namespace AntDesign
                     LocaleProvider.CurrentLocale.LocaleName != value.Name
                     ))
                 {
-                    _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
+                    _locale = LocaleProvider.GetLocale(value).DatePicker;
                 }
                 base.CultureInfo = value;
             }

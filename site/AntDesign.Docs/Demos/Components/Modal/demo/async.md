@@ -12,21 +12,3 @@ title:
 ## en-US
 
 Asynchronously close a modal dialog when a the OK button is pressed. For example, you can use this pattern when you submit a form.
-
-```jsx
-import { Modal, Button } from 'antd';
-
-class App extends React.Component {
-
-
-  handleCancel = () => {
-    console.log('Clicked cancel button');
-    this.setState({
-      visible: false,
-    });
-  };
-
-}
-
-ReactDOM.render(<App />, mountNode);
-```

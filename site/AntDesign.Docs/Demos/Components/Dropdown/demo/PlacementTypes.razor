@@ -1,0 +1,69 @@
+﻿<Dropdown Placement="@Placement.BottomLeft">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>BottomLeft</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="@Placement.BottomCenter">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>BottomCenter</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="@Placement.BottomRight">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>BottomRight</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="@Placement.TopLeft">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>TopLeft</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="@Placement.TopCenter">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>TopCenter</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="@Placement.TopRight">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>TopRight</Button>
+    </ChildContent>
+</Dropdown>
+
+@code
+{
+    private RenderFragment _overlayMenu =@<Menu>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                1st menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                2nd menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+                3rd menu item
+            </a>
+        </MenuItem>
+    </Menu>;
+}

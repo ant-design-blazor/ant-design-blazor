@@ -1,0 +1,499 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public Menu_Inline_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+    }
+
+    private RenderFragment GetBasicInlineRender(bool expaned, string[]? defaultSelectedKeys = null, bool hasIcon = false)
+    {
+        RenderFragment sub1Title = hasIcon ?
+        @<span>
+            @if (hasIcon) 
+            {
+                <Icon Type="mail" Theme="outline"></Icon>
+            }
+            <span>Navigation One</span>
+        </span> 
+        :
+        @<span>Navigation One</span>
+        ;
+
+        string[] openKeys = expaned ? new[] { "sub1" } : Array.Empty<string>();        
+
+        return 
+        @<Menu Style="width: 256px;"
+            DefaultSelectedKeys=@(defaultSelectedKeys ?? Array.Empty<string>())
+            DefaultOpenKeys=@openKeys
+            Mode=@MenuMode.Inline>
+            <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+                <MenuItemGroup Title="Item 1">
+                    <MenuItem Key="1">Option 1</MenuItem>
+                    <MenuItem Key="2">Option 2</MenuItem>
+                </MenuItemGroup>
+                <MenuItemGroup Key="g2" Title="Item 2">
+                    <MenuItem Key="3">Option 3</MenuItem>
+                    <MenuItem Key="4">Option 4</MenuItem>
+                </MenuItemGroup>
+            </SubMenu>
+            <MenuItem Key="nav2">Navigation Two</MenuItem>
+        </Menu>
+    ;
+    }
+
+    [Fact]
+    public void Basic_inline_menu_renders_correctly()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(false, hasIcon: true));
+        //Act
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            <span role=""img"" class="" anticon anticon-mail"" id:ignore>
+                                <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor"" xmlns:ignore class=""icon"" viewBox=""0 0 1024 1024"">  
+                                    <path d=""M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 110.8V792H136V270.8l-27.6-21.5 39.3-50.5 42.8 33.3h643.1l42.8-33.3 39.3 50.5-27.7 21.5zM833.6 232L512 482 190.4 232l-42.8-33.3-39.3 50.5 27.6 21.5 341.6 265.6a55.99 55.99 0 0 0 68.7 0L888 270.8l27.6-21.5-39.3-50.5-42.7 33.2z""></path>
+                                </svg>
+                            </span>
+                            <span>
+                                Navigation One
+                            </span>
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline ant-menu-hidden"" role=""menu"">            
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_expanded_menu_renders_correctly()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(true));
+        //Act
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">                
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline"" role=""menu""  aria-expanded="""">            
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_menu_expanded_with_selected_nested_option_renders_correctly()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(true, new string[] { "1" }));
+        //Act
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline"" role=""menu""  aria-expanded="""">            
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item ant-menu-item-selected"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_menu_with_selected_nested_option_renders_correctly()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(false, new string[] { "1" }));
+        //Act
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline ant-menu-hidden"" role=""menu"">                                                              
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item ant-menu-item-selected"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_menu_with_selected_top_option_renders_correctly()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(false, new string[] { "nav2" }));
+        //Act
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline ant-menu-hidden"" role=""menu"">                                                              
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item ant-menu-item-selected"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_menu_onClick_opens_submenu()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(false));
+        //Act
+        cut.Find("li div").Click();
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline"" role=""menu"" aria-expanded="""">
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+
+    [Fact]
+    public void Basic_inline_menu_click_to_select_submenu_option()
+    {
+        //Arrange
+
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender(false));
+        //Act
+        cut.Find("li div").Click();
+        cut.Find("li ul li ul li").Click();
+        //Assert
+        cut.MarkupMatches(@"
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
+                <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
+                    <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
+                        <span>
+                            Navigation One
+                        </span>
+                        <i class=""ant-menu-submenu-arrow""></i>
+                    </div>
+                    <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-inline"" role=""menu"" aria-expanded="""">
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 1    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">
+                                <li class=""ant-menu-item ant-menu-item-selected"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 1	
+			                        </span>
+		                        </li>
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 2	
+			                        </span>
+		                        </li>    
+                            </ul>
+                        </li>
+                        <li class=""ant-menu-item-group"">
+                            <div class=""ant-menu-item-group-title"">
+                                Item 2    
+                            </div>
+                            <ul class=""ant-menu-item-group-list"">         
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 3	
+			                        </span>
+		                        </li>            
+                                <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:48px;"">
+			                        <span class=""ant-menu-title-content"">
+                                        Option 4	
+			                        </span>
+		                        </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>    		
+		        <li class=""ant-menu-item"" role=""menuitem"" style=""padding-left:24px;"">
+			        <span class=""ant-menu-title-content"">
+                        Navigation Two	
+			        </span>
+		        </li>
+            </ul>");             
+    }
+}

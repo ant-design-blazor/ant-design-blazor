@@ -14,23 +14,24 @@
         }
         <span class="@Prefix-selection-search" style="@_inputWidth">
             <input @ref="ParentSelect._inputRef"
-                    @oninput="OnInput"
-                    @onkeyup="OnKeyUp"
-                    @onkeydown="OnKeyDown"                                        
-                    @attributes=@AdditonalAttributes()
-                    @onkeypress="@OnKeyPressEventHandler"
-                    @onkeypress:preventDefault="@_suppressInput"
-                    @onkeypress:stopPropagation="true"
-                    @bind-value="@SearchValue"
-                    id="@ParentSelect.Id"
-                    role="combobox"
-                    class="@Prefix-selection-search-input"
-                    autocomplete="off"
-                    aria-owns="@(ParentSelect.Id)_list"
-                    aria-expanded="@IsOverlayShow"
-                    aria-autocomplete="list"
-                    aria-controls="@(ParentSelect.Id)_list"
-                    style="@_inputStyle"/>
+                   @oninput="OnInput"
+                   @onkeyup="OnKeyUp"
+                   @onkeydown="OnKeyDown"
+                   @attributes=@AdditonalAttributes()
+                   @bind-value="@SearchValue"
+                   id="@ParentSelect.Id"
+                   type="search"
+                   readonly="@(!ParentSelect.IsSearchEnabled)"
+                   unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
+                   role="combobox"
+                   class="@Prefix-selection-search-input"
+                   autocomplete="off"
+                   aria-owns="@(ParentSelect.Id)_list"
+                   aria-expanded="@IsOverlayShow"
+                   aria-autocomplete="list"
+                   aria-controls="@(ParentSelect.Id)_list"
+                   aria-haspopup="listbox"
+                   style="@_inputStyle"/>
         </span>
         @if (ShowPlaceholder)
         {
@@ -248,23 +249,24 @@ else //ParentSelect.SelectMode != SelectMode.Default
             <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:ParentSelect.SelectedOptionItems.Count)">
                 <div class="@Prefix-selection-search" style="@_inputWidth">
                     <input @ref="ParentSelect._inputRef"
-                            @oninput="OnInput"
-                            @onkeyup="OnKeyUp"
-                            @onkeydown="OnKeyDown"                                                        
-                            @attributes=@AdditonalAttributes()
-                            @onkeypress="@OnKeyPressEventHandler"
-                            @onkeypress:preventDefault="@_suppressInput"
-                            @onkeypress:stopPropagation="true"
-                            @bind-value="@SearchValue"
-                            id="@ParentSelect.Id"
-                            role="combobox"
-                            class="@Prefix-selection-search-input"
-                            autocomplete="off"
-                            aria-owns="@(ParentSelect.Id)_list"
-                            aria-expanded="@IsOverlayShow"
-                            aria-autocomplete="list"
-                            aria-controls="@(ParentSelect.Id)_list"
-                            style="@_inputStyle"/>        
+                           @oninput="OnInput"
+                           @onkeyup="OnKeyUp"
+                           @onkeydown="OnKeyDown"
+                           @attributes=@AdditonalAttributes()
+                           @bind-value="@SearchValue"
+                           id="@ParentSelect.Id"
+                           type="search"
+                           readonly="@(!ParentSelect.IsSearchEnabled)"
+                           unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
+                           role="combobox"
+                           class="@Prefix-selection-search-input"
+                           autocomplete="off"
+                           aria-owns="@(ParentSelect.Id)_list"
+                           aria-expanded="@IsOverlayShow"
+                           aria-autocomplete="list"
+                           aria-controls="@(ParentSelect.Id)_list"
+                           aria-haspopup="listbox"
+                           style="@_inputStyle"/>
                     <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
                 </div>
             </div>
