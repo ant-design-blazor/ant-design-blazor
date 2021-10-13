@@ -1,0 +1,77 @@
+﻿@inherits AntDesignTestBase
+@code {
+    record BasicItem(string title);
+    List<BasicItem> _data = new List<BasicItem>
+    {
+        new BasicItem("Title 1"),
+        new BasicItem("Title 2"),
+        new BasicItem("Title 3"),
+        new BasicItem("Title 4"),        
+    };
+
+#if NET6_0_OR_GREATER
+    [Fact]
+    public void Render_basic_list()
+    {
+        //Arrange
+        var cut = Render<AntList<BasicItem>>(
+            @<AntList DataSource="@_data">
+                <Header>Header</Header>
+                <ChildContent>
+                    <ListItem>@context.title</ListItem>
+                </ChildContent>
+                <Footer>Footer</Footer>
+            </AntList>);
+        //Act
+        //Assert
+        cut.MarkupMatches(
+            @"<div class=""ant-list ant-list-split ant-list-something-after-last-item"" id:ignore>
+                <div class=""ant-list-header"">Header</div>
+                    <div class=""ant-spin-nested-loading"">
+                        <div> 
+                            <div class=""ant-spin-container "">                    
+                            <ul class=""ant-list-items"">                        
+					            <li class=""ant-list-item"" id:ignore>Title 1</li>
+					            <li class=""ant-list-item"" id:ignore>Title 2</li>
+					            <li class=""ant-list-item"" id:ignore>Title 3</li>
+					            <li class=""ant-list-item"" id:ignore>Title 4</li>                        
+                            </ul>        
+                        </div>        
+                    </div>
+                </div>
+                <div class=""ant-list-footer"">
+                    Footer
+                </div>
+            </div>");
+    }
+#endif
+
+#if NET6_0_OR_GREATER
+    [Fact]
+    public void Grid_is_reacting_to_change()
+    {
+        //Arrange
+        JSInterop.Setup<Window>(JSInteropConstants.GetWindow, _ => true)
+            .SetResult(new AntDesign.JsInterop.Window());   
+        ListGridType grid = new ListGridType { Gutter = 16, Column = 4 };
+
+        var cut = Render<AntList<BasicItem>>(
+            @<AntList Grid="@grid" DataSource="@_data">
+                <Header>Header</Header>
+                <ChildContent>
+                    <ListItem>@context.title</ListItem>
+                </ChildContent>
+                <Footer>Footer</Footer>
+            </AntList>);
+        //Act
+        var row = cut.FindComponent<AntDesign.Row>();
+        string rowBeforeChange = row.Find("div:not([class])").GetAttribute("style");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Grid, new ListGridType { Gutter = 8, Column = 2 }));
+        //Assert
+        string rowAfterChange = row.Find("div:not([class])").GetAttribute("style");
+        rowBeforeChange.Should().NotBe(rowAfterChange);
+        rowAfterChange.ShouldBe("width: 50%; max-width: 50%;");
+    }
+#endif
+}
