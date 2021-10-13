@@ -13,9 +13,17 @@
     "next_3": "Následující 3 strany"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Vybrat datum",
+      "yearPlaceholder": "Vybrat rok",
+      "quarterPlaceholder": "Vybrat čtvrtletí",
+      "monthPlaceholder": "Vybrat měsíc",
+      "weekPlaceholder": "Vybrat týden",
       "rangePlaceholder": [ "Od", "Do" ],
+      "rangeYearPlaceholder": [ "Počáteční rok", "Koncový rok" ],
+      "rangeMonthPlaceholder": [ "Počáteční měsíc", "Koncový měsíc" ],
+      "rangeWeekPlaceholder": [ "Počáteční týden", "Koncový týden" ],
       "locale": "cs_CZ",
       "today": "Dnes",
       "now": "Nyní",
@@ -26,6 +34,7 @@
       "year": "Rok",
       "timeSelect": "Vybrat čas",
       "dateSelect": "Vybrat datum",
+      "weekSelect": "Vybrat týden",
       "monthSelect": "Vyberte měsíc",
       "yearSelect": "Vyberte rok",
       "decadeSelect": "Vyberte dekádu",
@@ -41,15 +50,42 @@
       "previousDecade": "Předchozí dekáda",
       "nextDecade": "Následující dekáda",
       "previousCentury": "Předchozí století",
-      "nextCentury": "Následující století"
+      "nextCentury": "Následující století",
+      "startDate": "Počáteční datum",
+      "startWeek": "Počáteční týden",
+      "startMonth": "Počáteční měsíc",
+      "startYear": "Počáteční rok",
+      "startQuarter": "Počáteční čtvrtletí",
+      "endDate": "Koncové datum",
+      "endWeek": "Koncový týden",
+      "endMonth": "Koncový měsíc",
+      "endYear": "Koncový rok",
+      "endQuarter": "Koncové čtvrtletí",
+      "quarterSelect": "Vybrat čtvrtletí",
+      "week": "Týden",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Ne", "Po", "Út", "St", "Čt", "Pá", "So" ]
     },
-    "timePickerLocale": { "placeholder": "Vybrat čas" }
+    "timePickerLocale": {
+      "placeholder": "Vybrat čas",
+      "rangePlaceholder": [ "Počáteční čas", "Koncový čas" ]
+    }
   },
-  "TimePicker": { "placeholder": "Vybrat čas" },
+  "TimePicker": {
+    "placeholder": "Vybrat čas",
+    "rangePlaceholder": [ "Počáteční čas", "Koncový čas" ]
+  },
   "Calendar": {
     "lang": {
       "placeholder": "Vybrat datum",
+      "yearPlaceholder": "Vybrat rok",
+      "quarterPlaceholder": "Vybrat čtvrtletí",
+      "monthPlaceholder": "Vybrat měsíc",
+      "weekPlaceholder": "Vybrat týden",
       "rangePlaceholder": [ "Od", "Do" ],
+      "rangeYearPlaceholder": [ "Počáteční rok", "Koncový rok" ],
+      "rangeMonthPlaceholder": [ "Počáteční měsíc", "Koncový měsíc" ],
+      "rangeWeekPlaceholder": [ "Počáteční týden", "Koncový týden" ],
       "locale": "cs_CZ",
       "today": "Dnes",
       "now": "Nyní",
@@ -77,12 +113,43 @@
       "previousCentury": "Předchozí století",
       "nextCentury": "Následující století"
     },
-    "timePickerLocale": { "placeholder": "Vybrat čas" }
+    "timePickerLocale": {
+      "placeholder": "Vybrat čas",
+      "rangePlaceholder": [ "Počáteční čas", "Koncový čas" ]
+    }
   },
   "Table": {
     "filterTitle": "Filtr",
     "filterConfirm": "Potvrdit",
-    "filterReset": "Obnovit"
+    "filterReset": "Zrušit filtr",
+    "selectAll": "Vybrat aktuální stránku",
+    "selectInvert": "Obrátit výběr",
+    "selectionAll": "Vybrat všechna data",
+    "sortTitle": "Seřadit",
+    "expand": "Rozbalit řádek",
+    "collapse": "Sbalit řádek",
+    "triggerDesc": "Kliknutím seřadíte sestupně",
+    "triggerAsc": "Kliknutím seřadíte vzstupně",
+    "cancelSort": "Kliknutím zrušíte řazení",
+    "filterOptions": {
+      "true": "Ano",
+      "false": "Ne",
+      "and": "A",
+      "or": "Nebo",
+      "equals": "Rovná se",
+      "notEquals": "Nerovná se",
+      "contains": "Obsahuje",
+      "notContains": "Neobsahuje",
+      "startsWith": "Začíná",
+      "endsWith": "Končí",
+      "greaterThan": "Větší než",
+      "lessThan": "Menší než",
+      "greaterThanOrEquals": "Větší nebo rovno",
+      "lessThanOrEquals": "Menší nebo rovno",
+      "isNull": "Je null",
+      "isNotNull": "Není null",
+      "theSameDateWith": "Stejné datum jako"
+    }
   },
   "Modal": {
     "okText": "Ok",
@@ -93,7 +160,7 @@
     "cancelText": "Storno",
     "yesText": "Ano",
     "noText": "Ne",
-    "retryText": "Ústup",
+    "retryText": "Zkusit znovu",
     "abortText": "Zrušit",
     "ignoreText": "Ignorovat"
   },
@@ -102,6 +169,7 @@
     "cancelText": "Storno"
   },
   "Transfer": {
+    "titles": [ "", "" ],
     "searchPlaceholder": "Vyhledávání",
     "itemUnit": "položka",
     "itemsUnit": "položek"
@@ -113,5 +181,63 @@
     "previewFile": "Zobrazit soubor",
     "downloadFile": "Stáhnout soubor"
   },
-  "Empty": { "description": "Žádná data" }
+  "Empty": { "description": "Žádná data" },
+  "Icon": { "icon": "ikona" },
+  "Text": {
+    "edit": "Upravit",
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno",
+    "expand": "Rozbalit"
+  },
+  "PageHeader": { "back": "Zpět" },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Chybně vyplněné pole ${label}",
+      "required": "Prosím zadejte ${label}",
+      "enum": "${label} musí být jeden z [${enum}]",
+      "whitespace": "${label} nesmí být prázdný znak",
+      "date": {
+        "format": "${label} formát data není validní",
+        "parse": "${label} nezle převést na datum",
+        "invalid": "${label} není validní datum"
+      },
+      "types": {
+        "string": "${label} není validní ${type}",
+        "method": "${label} není validní ${type}",
+        "array": "${label} není validní ${type}",
+        "object": "${label} není validní ${type}",
+        "number": "${label} není validní ${type}",
+        "date": "${label} není validní ${type}",
+        "boolean": "${label} není validní ${type}",
+        "integer": "${label} není validní ${type}",
+        "float": "${label} není validní ${type}",
+        "regexp": "${label} není validní ${type}",
+        "email": "${label} není validní ${type}",
+        "url": "${label} není validní ${type}",
+        "hex": "${label} není validní ${type}"
+      },
+      "string": {
+        "len": "${label} musí mít ${len} znaků",
+        "min": "${label} musí mít nejméně ${min} znaků",
+        "max": "${label} musí mít nejvíce ${max} znaků",
+        "range": "${label} musí mít ${min}-${max} znaků"
+      },
+      "number": {
+        "len": "${label} musí být rovno ${len}",
+        "min": "${label} minimální hodnota je ${min}",
+        "max": "${label} maximální hodnota je ${max}",
+        "range": "${label} musí být v intervalu ${min}-${max}"
+      },
+      "array": {
+        "len": "Musí být ${len} ${label}",
+        "min": "Minimálně ${min} ${label}",
+        "max": "Maximálně ${max} ${label}",
+        "range": "Množství ${label} musí být mezi ${min}-${max}"
+      },
+      "pattern": { "mismatch": "${label} se neshoduje se vzorem ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Náhled"
+  }
 }
