@@ -33,6 +33,8 @@ timeline: true
   - 🐞 fix(module: table): tree data sort & filter. [#1966](https://github.com/ant-design-blazor/ant-design-blazor/pull/1966) [@ElderJames](https://github.com/ElderJames)
   - 🐞 fix(module: table): incorrectly render on first loading. [#1957](https://github.com/ant-design-blazor/ant-design-blazor/pull/1957) [@ElderJames](https://github.com/ElderJames)
   - 🐞 fix(module: table): label display incorrectly in responsive mode. [#1952](https://github.com/ant-design-blazor/ant-design-blazor/pull/1952) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 fix(module: table): fix nullable built-in DateTime filter [#1964](https://github.com/ant-design-blazor/ant-design-blazor/pull/1964) [@anranruye](https://github.com/anranruye)
+  - 🐞 fix(module: table): Change the implement of RemoveMilliseconds. [#1895](https://github.com/ant-design-blazor/ant-design-blazor/pull/1895)  [@iamSmallY](https://github.com/iamSmallY)
 
 - Menu
   - 🐞 fixes IconTemplate when InlineCollapse is used. [#2006](https://github.com/ant-design-blazor/ant-design-blazor/pull/2006) [@knight1219](https://github.com/knight1219)
@@ -44,6 +46,10 @@ timeline: true
 - 📖 Cleanup button docs. [#1953](https://github.com/ant-design-blazor/ant-design-blazor/pull/1953) [@Hona](https://github.com/Hona)
 - 🐞 fix: cannot drag when Modal excessive height. [#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
 - 🐞 fix custom language resource; improve fallback strategy. [#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
+- 🐞 fix(module: list): dynamic response to changes in Grid parameter [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anranruye](https://github.com/anranruye)
+- 🐞 fix(module: progress): use invariant culture for style strings [#2017](https://github.com/ant-design-blazor/ant-design-blazor/pull/2017) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🌐 i18n: czech localization update [#2019](https://github.com/ant-design-blazor/ant-design-blazor/pull/2019) [@Martin Pučálka](https://github.com/Martin-Pucalka)
+
 
 ### 0.10.0
 

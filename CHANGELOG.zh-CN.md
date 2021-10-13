@@ -33,6 +33,8 @@ timeline: true
   - 🐞 修复 树形结构子级数据的排序和筛选[#1966](https://github.com/ant-design-blazor/ant-design-blazor/pull/1966) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复首次加载的问题[#1957](https://github.com/ant-design-blazor/ant-design-blazor/pull/1957) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复在小屏模式下标签不显示的问题[#1952](https://github.com/ant-design-blazor/ant-design-blazor/pull/1952) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 绑定了可空的 DateTime 属性时，内置 DateTime 类型筛选器的异常。 [#1964](https://github.com/ant-design-blazor/ant-design-blazor/pull/1964) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 `RemoveMilliseconds` 方法的实现在 EFCore Pomelo Povider 不被支持的问题。 [#1895](https://github.com/ant-design-blazor/ant-design-blazor/pull/1895)  [@iamSmallY](https://github.com/iamSmallY)
 
 - Menu
   - 🐞 修复 Menu 收起时IconTemplate的样式问题[#2006](https://github.com/ant-design-blazor/ant-design-blazor/pull/2006) [@knight1219](https://github.com/knight1219)
@@ -44,6 +46,11 @@ timeline: true
 - 📖 整理按钮组件的文档[#1953](https://github.com/ant-design-blazor/ant-design-blazor/pull/1953) [@Hona](https://github.com/Hona)
 - 🐞 修复当 Modal 过高时无法拖动的问题。[#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
 - 🐞 修复自定义语言的问题，改进回退策略。[#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 List 使其动态响应 `Grid` 属性的变化。 [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 progress 忽略本地化差异对 Style 字符串的影响。 [#2017](https://github.com/ant-design-blazor/ant-design-blazor/pull/2017) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🌐 i18n: 更新捷克语。[#2019](https://github.com/ant-design-blazor/ant-design-blazor/pull/2019) [@Martin Pučálka](https://github.com/Martin-Pucalka)
+
+
 
 ### 0.10.0
 
