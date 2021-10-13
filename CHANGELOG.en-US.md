@@ -15,6 +15,36 @@ timeline: true
 
 ---
 
+### 0.10.1
+
+2021-10-13
+
+- Tabs
+  - 🆕 Add `AuthorizeReuseTabsRouteView` component for enable authorize of `ReuseTabs` . [#1910](https://github.com/ant-design-blazor/ant-design-blazor/pull/1910) [@Guyiming](https://github.com/Guyiming)
+  - 🛠 refactor(module: tabs): improve rendering. [#1970](https://github.com/ant-design-blazor/ant-design-blazor/pull/1970) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 fix(module:select): arrow down click does not auto close. [#1977](https://github.com/ant-design-blazor/ant-design-blazor/pull/1977) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 fix null value option. [#1996](https://github.com/ant-design-blazor/ant-design-blazor/pull/1996) [@anranruye](https://github.com/anranruye)
+  - 🐞 fix: non-searchable `Select` brings up keyboard on mobile devices. [#1992](https://github.com/ant-design-blazor/ant-design-blazor/pull/1992) [@anranruye](https://github.com/anranruye)
+
+- Table
+  - 🐞 Fix when change page index, backgroud of the selection box is updated before the table row; Fix when change page index, the selected rows still exist. [#1973](https://github.com/ant-design-blazor/ant-design-blazor/pull/1973) [@anranruye](https://github.com/anranruye)
+  - 🐞 fix(module: table): tree data sort & filter. [#1966](https://github.com/ant-design-blazor/ant-design-blazor/pull/1966) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 fix(module: table): incorrectly render on first loading. [#1957](https://github.com/ant-design-blazor/ant-design-blazor/pull/1957) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 fix(module: table): label display incorrectly in responsive mode. [#1952](https://github.com/ant-design-blazor/ant-design-blazor/pull/1952) [@ElderJames](https://github.com/ElderJames)
+
+- Menu
+  - 🐞 fixes IconTemplate when InlineCollapse is used. [#2006](https://github.com/ant-design-blazor/ant-design-blazor/pull/2006) [@knight1219](https://github.com/knight1219)
+  - 🐞 fix(module:menu): Overlay bug fix & menu renering optimization. [#1949](https://github.com/ant-design-blazor/ant-design-blazor/pull/1949) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 Slider Positioning Using Min/Max. [#1940](https://github.com/ant-design-blazor/ant-design-blazor/pull/1940) [@rabberbock](https://github.com/rabberbock)
+- 🐞 Fixed grid issue with gutter match due to breakpoint enum name case. [#1963](https://github.com/ant-design-blazor/ant-design-blazor/pull/1963) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fix positioning overlay items when locale has ',' as decimal separator. [#1956](https://github.com/ant-design-blazor/ant-design-blazor/pull/1956) [@bezysoftware](https://github.com/bezysoftware)
+- 📖 Cleanup button docs. [#1953](https://github.com/ant-design-blazor/ant-design-blazor/pull/1953) [@Hona](https://github.com/Hona)
+- 🐞 fix: cannot drag when Modal excessive height. [#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
+- 🐞 fix custom language resource; improve fallback strategy. [#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
+
 ### 0.10.0
 
 2021-09-15
