@@ -3,10 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 
 namespace AntDesign.FilterExpression
 {
@@ -89,9 +87,11 @@ namespace AntDesign.FilterExpression
 
         private static Expression RemoveMilliseconds(Expression dateTimeExpression)
         {
-            return Expression.Subtract(dateTimeExpression,
-                Expression.Call(typeof(TimeSpan).GetMethod("FromMilliseconds")!,
-                    Expression.Convert(Expression.Property(dateTimeExpression, "Millisecond"), typeof(double))));
+            return Expression.Call(dateTimeExpression, typeof(DateTime).GetMethod("AddMilliseconds")!,
+                Expression.Convert(
+                    Expression.Subtract(Expression.Constant(0),
+                        Expression.MakeMemberAccess(dateTimeExpression,
+                            typeof(DateTime).GetMember("Millisecond").First())), typeof(double)));
         }
     }
 }
