@@ -20,7 +20,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| AllowClear | 支持清除 | bool | false |  |
+| AllowClear | 支持清除. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
 | Bordered | 是否有边框 | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
@@ -79,6 +79,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
 | ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
 | ValueName | The name of the property to be used for the value. | string | - |  |
+| ValueOnClear | When Clear button is pressed, Value will be set to whatever is set in ValueOnClear. | TItemValue | - | 0.11 |
 
 ### SelectOption props
 
