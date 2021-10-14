@@ -1,22 +1,558 @@
-﻿@inherits AntDesignTestBase
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
 @code {
-    IEnumerable<(double start, double end)> _values = new List<(double start, double end)>()
+    IEnumerable<(double start, double end)> _valuesWithNoOverlap = new List<(double start, double end)>()
     {        
         (0, 10),
         (20, 30),
         (60, 90),
         (90, 100),
     };
+
+    IEnumerable<(double start, double end)> _valuesWithOverlapOnEdges = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (10, 20),
+        (20, 30),
+        (30, 40),
+        (40, 50),
+        (50, 60),
+        (60, 90),
+        (90, 100),
+    };
+
     
     [Fact]
     public void KeyDown_should_move_edge() {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[2].Instance.Value;
        //Act       
         rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
-        //Act
+        //Assert
         rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));        
+    }
+
+    [Fact]
+    public void Move_attached_overlapping_edges_with_keys()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        //Act
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        //Assert
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 1, originalValue1.Item2));        
+    }
+
+    [Theory]
+    [InlineData(false, "ArrowLeft", RangeEdge.First, -1, 0)]
+    [InlineData(false, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(false, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(false, "ArrowRight", RangeEdge.Last, 0, 1)]
+    [InlineData(false, "ArrowUp", RangeEdge.First, 0, 0)]
+    [InlineData(false, "ArrowDown", RangeEdge.First, 0, 0)]
+    [InlineData(false, "ArrowUp", RangeEdge.Last, 0, 0)]
+    [InlineData(false, "ArrowDown", RangeEdge.Last, 0, 0)]
+    [InlineData(true, "ArrowDown", RangeEdge.First, -1, 0)]
+    [InlineData(true, "ArrowUp", RangeEdge.First, 1, 0)]
+    [InlineData(true, "ArrowDown", RangeEdge.Last, 0, -1)]
+    [InlineData(true, "ArrowUp", RangeEdge.Last, 0, 1)]
+    [InlineData(true, "ArrowRight", RangeEdge.First, 0, 0)]
+    [InlineData(true, "ArrowLeft", RangeEdge.First, 0, 0)]
+    [InlineData(true, "ArrowRight", RangeEdge.Last, 0, 0)]
+    [InlineData(true, "ArrowLeft", RangeEdge.Last, 0, 0)]
+
+    public void Move_edge_with_keys(bool vertical, string key, RangeEdge edge, 
+        double firstValueModifier, double secondValueModifier)
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" 
+            Vertical="@vertical"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[1].Instance.Value;
+        //Act
+        rangeItems[1].Find($"div.ant-multi-range-slider-handle-{(int)edge}").KeyDown(key);
+        //Assert
+        cut.WaitForAssertion(() => 
+            rangeItems[1].Instance.Value.Should()
+                .Be((originalValue.Item1 + firstValueModifier, originalValue.Item2 + secondValueModifier)));
+    }
+
+    [Fact]
+    public async Task Move_last_edge_before_first_edge()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" />
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();        
+        //Act
+        rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft"); //equal
+        rangeItems[1].Instance.Value.Should().Be((20, 20));
+        rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft"); //switch
+        rangeItems[1].Instance.Value.Should().Be((19, 20));
+        await cut.InvokeAsync(() => rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft")); //equal again
+        //Assert
+        rangeItems[1].Instance.Value.Should().Be((19, 19));
+    }
+
+    [Fact]
+    public async Task Do_not_move_edge_with_keys_when_edge_would_go_below_min()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" />);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[0].Instance.Value;  
+        //Act
+        rangeItems[0].Find($"div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        //Assert
+        await Task.Delay(1);        
+        rangeItems[0].Instance.Value.Should().Be((originalValue.Item1, originalValue.Item2));
+    }
+
+    [Fact]
+    public async Task Do_not_move_edge_with_keys_when_edge_would_go_above_max()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" />
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[3].Instance.Value;  
+        //Act
+        rangeItems[3].Find($"div.ant-multi-range-slider-handle-2").KeyDown("ArrowRight");
+        //Assert
+        await Task.Delay(1);                
+        rangeItems[3].Instance.Value.Should().Be((originalValue.Item1, originalValue.Item2));
+    }
+
+    [Fact]
+    public async Task Do_not_move_edge_with_keys_when_overlap_forbidden_and_edge_touching_another_edge()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" />);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[2].Instance.Value;  //(60, 90), touching on 90 to (90, 100)
+        //Act
+        rangeItems[2].Find($"div.ant-multi-range-slider-handle-2").KeyDown("ArrowRight");
+        //Assert
+        await Task.Delay(1);        
+        rangeItems[2].Instance.Value.Should().Be((originalValue.Item1, originalValue.Item2));
+    }
+
+    [Theory]
+    [InlineData(0, "ArrowLeft", RangeEdge.First, 0, 0)]
+    [InlineData(0, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(0, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(0, "ArrowRight", RangeEdge.Last, 0, 1)]
+    [InlineData(1, "ArrowLeft", RangeEdge.First, -1, 0)]
+    [InlineData(1, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(1, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(1, "ArrowRight", RangeEdge.Last, 0, 1)]
+    [InlineData(7, "ArrowLeft", RangeEdge.First, -1, 0)]
+    [InlineData(7, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(7, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(7, "ArrowRight", RangeEdge.Last, 0, 0)]
+    public void Move_edge_with_keys_when_overlap_allowed_and_edge_touching_another_edge(int rangeIndex,
+        string key, RangeEdge edge, double firstValueModifier, double secondValueModifier)
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithOverlapOnEdges" 
+            AllowOverlapping/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[rangeIndex].Instance.Value;
+        //Act
+        rangeItems[rangeIndex].Find($"div.ant-multi-range-slider-handle-{(int)edge}").KeyDown(key);
+        //Assert
+        rangeItems[rangeIndex].Instance.Value.Should().
+            Be((originalValue.Item1 + firstValueModifier, originalValue.Item2+ secondValueModifier));
+    }
+
+    [Fact]
+    public void Move_attached_non_overlapping_edges_with_keys()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        //Act
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        //Act
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 1, originalValue1.Item2));        
+    }
+
+    [Fact]
+    public void Move_attached_not_neigoring_ranges()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"
+            AllowOverlapping
+        />
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[2].Instance.Value;
+        var originalValue1 = rangeItems[4].Instance.Value;
+        //Act
+        cut.InvokeAsync(() => rangeItems[2].Instance.AttachEdges(RangeEdge.Last, rangeItems[4].Instance, RangeEdge.Last));
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-2").KeyDown("ArrowLeft");
+        //Assert
+        cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
+        cut.WaitForAssertion(() => rangeItems[4].Instance.Value.Should().Be((originalValue1.Item1, originalValue1.Item2 - 1))); 
+    }
+
+    [Fact]
+    public void Forbid_further_movement_if_reached_to_attached_range_other_edge_when_not_AllowOverlap_and_attach_with_gap()
+    {
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        //Act
+        cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); //should not allow
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); //should not allow
+        //Assert
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 1, originalValue1.Item2));
+    }
+
+    [Fact]
+    public void Move_by_pushing_if_reached_to_attached_range_other_edgewhen_AllowOverlap_and_attach_with_gap()
+    {
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" AllowOverlapping/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        //Act
+        cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); 
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); 
+        //Assert
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1 - 2, originalValue0.Item2 - 3)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 3, originalValue1.Item2));        
+    }
+    
+    [Fact]
+    public void Move_other_single_when_2_attached_exist()
+    {
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" AllowOverlapping/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        var originalValue2 = rangeItems[3].Instance.Value;
+        //Act
+        cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
+        rangeItems[3].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");        
+        //Assert
+        rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2));        
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1, originalValue1.Item2));        
+        rangeItems[3].Instance.Value.Should().Be((originalValue2.Item1 - 1, originalValue2.Item2));
+    }
+
+
+    [Fact]
+    public void Move_other_single_when_halfattached_exist()
+    {
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" AllowOverlapping/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        var originalValue2 = rangeItems[3].Instance.Value;
+        //Act
+        rangeItems[1].Instance.AttachSingle(RangeEdge.Last);
+        rangeItems[3].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");        
+        //Assert        
+        rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2));        
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1, originalValue1.Item2));        
+        rangeItems[3].Instance.Value.Should().Be((originalValue2.Item1 - 1, originalValue2.Item2));
+    }
+
+    [Fact]
+    public async Task Move_range_to_Min()
+    {        
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[0] = (1, 10);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" AllowOverlapping HasTooltip="false"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>().First();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((0, 9)));
+        track.KeyDown("ArrowLeft");
+        rangeItem.Instance.Value.Should().Be((0, 9));
+    }
+
+    [Fact]
+    public async Task Move_range_to_Max()
+    {        
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[3] = (90, 99);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" AllowOverlapping HasTooltip="false"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>().Last();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowRight");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((91, 100)));
+        track.KeyDown("ArrowRight");
+        rangeItem.Instance.Value.Should().Be((91, 100));
+    }
+
+    [Fact]
+    public async Task Forbid_move_range_to_overlap_when_not_AllowOverlapping()
+    {        
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithOverlapOnEdges" HasTooltip="false"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3];
+        var originalValue = rangeItem.Instance.Value;
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowRight");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be(originalValue));
+        track.KeyDown("ArrowRight");
+        rangeItem.Instance.Value.Should().Be(originalValue);
+    }
+
+    [Theory]
+    [InlineData(false, "ArrowLeft", -1)]
+    [InlineData(false, "ArrowRight", 1)]
+    [InlineData(false, "ArrowUp", 0)]
+    [InlineData(false, "ArrowDown", 0)]
+    [InlineData(true, "ArrowLeft", 0)]
+    [InlineData(true, "ArrowRight", 0)]
+    [InlineData(true, "ArrowUp", 1)]
+    [InlineData(true, "ArrowDown", -1)]
+    public async Task Allow_move_range_to_overlap_when_AllowOverlapping(bool vertical, string key, double modifier)
+    {        
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithOverlapOnEdges" AllowOverlapping 
+            HasTooltip="false" Vertical="@vertical"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3];
+        var originalValue = rangeItem.Instance.Value;
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown(key);
+        //Assert        
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + modifier, originalValue.Item2 + modifier)));
+        track.KeyDown(key);
+        rangeItem.Instance.Value.Should().Be((originalValue.Item1 + 2 * modifier, originalValue.Item2 + 2 * modifier));
+    }
+    
+    [Fact]
+    public async Task Move_range_when_overlapping_edges_attached()
+    {        
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" HasTooltip="false"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.Last);
+        var originalValue2 = rangeItems[2].Instance.Value;
+        var originalValue3 = rangeItems[3].Instance.Value;
+        var track = rangeItems[2].Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowRight");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((originalValue2.Item1 + 1, originalValue2.Item2 + 1)));        
+        rangeItems[3].Instance.Value.Should().Be((originalValue3.Item1 + 1, originalValue3.Item2));
+    }
+  
+    //move range border when overlapping attached
+    [Fact]
+    public async Task Move_range_when_overlapping_edges_attached_up_to_attached_opposite_edge()
+    {        
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+ 
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        values[2] = (21, 40);
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" HasTooltip="false"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
+        var track = rangeItems[2].Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((20, 39)));        
+        rangeItems[1].Instance.Value.Should().Be((20, 20));
+        await cut.InvokeAsync(() => track.KeyDown("ArrowLeft"));
+        rangeItems[2].Instance.Value.Should().Be((20, 39));
+        rangeItems[1].Instance.Value.Should().Be((20, 20));
+    }
+
+    [Fact]
+    public async Task Move_range_when_attached_with_gap()
+    {        
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+            
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" HasTooltip="false"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        await cut.InvokeAsync(() => rangeItems[2].Instance.AttachEdges(RangeEdge.First, rangeItems[1].Instance, RangeEdge.Last));
+        var originalValue1 = rangeItems[1].Instance.Value;
+        var originalValue2 = rangeItems[2].Instance.Value;
+        var track = rangeItems[1].Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowRight");
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue1.Item1 + 1, originalValue1.Item2 + 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue2.Item1 + 1, originalValue2.Item2));
     }
 }
