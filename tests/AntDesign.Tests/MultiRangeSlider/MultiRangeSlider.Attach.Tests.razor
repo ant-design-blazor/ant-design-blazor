@@ -1,0 +1,267 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+@code {
+    IEnumerable<(double start, double end)> _values = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (10, 20),
+        (20, 30),
+        (30, 40),
+        (40, 50),
+        (50, 60),
+        (60, 90),
+        (90, 100),
+    };
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public void Attach_overlapping_edges_with_doubleClick_on_first_edge(int reqestingRangeItemIndex)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Find("div.ant-multi-range-slider-handle-1").DoubleClick();        
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItem.Instance.HasAttachedEdgeWithGap.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]    
+    public void Attach_overlapping_edges_with_doubleClick_on_last_edge(int reqestingRangeItemIndex)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Find("div.ant-multi-range-slider-handle-2").DoubleClick();        
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItem.Instance.HasAttachedEdgeWithGap.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public void Attach_overlapping_edges_with_code_on_first_edge(int reqestingRangeItemIndex)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Instance.AttachOverlappingEdges(RangeEdge.First);
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItem.Instance.HasAttachedEdgeWithGap.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void Attach_overlapping_edges_with_code_on_last_edge(int reqestingRangeItemIndex)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Instance.AttachOverlappingEdges(RangeEdge.Last);
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItem.Instance.HasAttachedEdgeWithGap.Should().BeFalse();
+    }
+
+
+    [Theory]
+    [InlineData(0, RangeEdge.First)]
+    [InlineData(7, RangeEdge.Last)]
+    public void Do_not_attach_overlapping_edges_with_doubleClick_when_not_allowed(int reqestingRangeItemIndex, RangeEdge edge)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Find($"div.ant-multi-range-slider-handle-{(int)edge}").DoubleClick();        
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeFalse();        
+    }
+
+    [Theory]
+    [InlineData(0, RangeEdge.First)]
+    [InlineData(7, RangeEdge.Last)]
+    public void Do_not_attach_overlapping_edges_with_code_when_not_allowed(int reqestingRangeItemIndex, RangeEdge edge)
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()
+            .Where(c => c.Instance.Value.Equals(_values.ToList()[reqestingRangeItemIndex]))
+            .FirstOrDefault();
+        //Act
+        rangeItem.Instance.AttachOverlappingEdges(edge);
+        //Assert
+        rangeItem.Instance.HasAttachedEdge.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_doubleClick_on_first_edge()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Find("div.ant-multi-range-slider-handle-1").DoubleClick();
+        rangeItems[1].Find("div.ant-multi-range-slider-handle-1").DoubleClick();
+        //Assert
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();        
+    }
+
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_code_on_first_edge()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[1].Instance.DetachEdges();
+        //Assert
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();        
+    }
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_doubleClick_on_alternate_edge()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Find("div.ant-multi-range-slider-handle-1").DoubleClick();
+        rangeItems[0].Find("div.ant-multi-range-slider-handle-2").DoubleClick();
+        //Assert
+        rangeItems[0].Instance.HasAttachedEdge.Should().BeFalse();
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_code_on_alternate_edge()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[0].Instance.DetachEdges();
+        //Assert
+        rangeItems[0].Instance.HasAttachedEdge.Should().BeFalse();        
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();        
+    }
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_doubleClick_on_unrelated_range()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Find("div.ant-multi-range-slider-handle-1").DoubleClick();
+        rangeItems[5].Find("div.ant-multi-range-slider-handle-2").DoubleClick();
+        //Assert
+        rangeItems[0].Instance.HasAttachedEdge.Should().BeFalse();
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();
+        rangeItems[5].Instance.HasAttachedEdge.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Deattach_overlapping_edges_with_code_on_unrelated_range()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Instance.AttachOverlappingEdges(RangeEdge.First);
+        cut.InvokeAsync(() => rangeItems[5].Instance.AttachOverlappingEdges(RangeEdge.First, true));
+        //Assert
+        rangeItems[0].Instance.HasAttachedEdge.Should().BeFalse();        
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeFalse();
+        rangeItems[5].Instance.HasAttachedEdge.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Do_not_deattach_overlapping_edges_with_code_on_unrelated_range()
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        rangeItems[1].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[5].Instance.AttachOverlappingEdges(RangeEdge.First, false);
+        //Assert
+        rangeItems[0].Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItems[1].Instance.HasAttachedEdge.Should().BeTrue();
+        rangeItems[5].Instance.HasAttachedEdge.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Move_attached_overlapping_edges_with_keys()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());        
+
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue0 = rangeItems[1].Instance.Value;
+        var originalValue1 = rangeItems[2].Instance.Value;
+        //Act
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        //Act
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 1, originalValue1.Item2));
+        
+    }
+}

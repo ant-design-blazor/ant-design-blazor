@@ -1,0 +1,22 @@
+﻿@inherits AntDesignTestBase
+@code {
+    IEnumerable<(double start, double end)> _values = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (20, 30),
+        (60, 90),
+        (90, 100),
+    };
+    
+    [Fact]
+    public void KeyDown_should_move_edge() {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values"/>);
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[2].Instance.Value;
+       //Act       
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
+        //Act
+        rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));        
+    }
+}
