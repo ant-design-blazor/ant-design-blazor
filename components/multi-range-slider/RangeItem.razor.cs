@@ -764,13 +764,13 @@ namespace AntDesign
                 _valueCache = _value;
                 if (Parent.Step is not null)
                 {
-                    if (handle == default)
+                    if (handle == default) //moving range
                     {
                         double newFirst = FirstValue + (Parent.Step.Value * modifier);
                         double newLast = LastValue + (Parent.Step.Value * modifier);
                         await KeyMoveByValues(newFirst, newLast);
                     }
-                    else
+                    else //moving one of the edges
                     {
                         double oldValue = handle == RangeEdge.First ? FirstValue : LastValue;
                         await KeyMoveByValue(handle, oldValue + (Parent.Step.Value * modifier));
@@ -859,6 +859,10 @@ namespace AntDesign
                 {
                     LastValue = value;
                     await _toolTipLast.Show();
+                }
+                if (AttachedHandleNo == handle)
+                {
+                    ChangeAttachedItem?.Invoke();
                 }
             }
         }

@@ -111,7 +111,7 @@
     internal RenderFragment<EdgeTemplate> edge => (data) => builder =>
     {
         builder.OpenElement(1, "div");
-        builder.AddAttribute(2, "tablindex", 0);
+        builder.AddAttribute(2, "tabindex", 0);
         builder.AddAttribute(3, "class", data.CssClass);
         builder.AddAttribute(4, "role", "slider");
         builder.AddAttribute(5, "aria-disabled", data.RangeItem.Disabled.ToString());
