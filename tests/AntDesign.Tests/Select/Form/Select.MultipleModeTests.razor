@@ -38,7 +38,7 @@
 		cut.InvokeAsync(() =>  cut.Instance.Validate());
 		var validationError = cut.Find("div.ant-form-item-explain-error");
 		//Assert		
-		validationError.Text().Should().Be("At least 1 is required");
+		validationError.Text().Trim().Should().Be("At least 1 is required");
 	}
 
     [Fact]

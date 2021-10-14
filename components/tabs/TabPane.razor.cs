@@ -3,43 +3,23 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public partial class TabPane : AntDomComponentBase
     {
-        private const string PrefixCls = "ant-tabs-tab";
-
-        internal bool IsActive
-        {
-            get => _isActive;
-            set
-            {
-                if (_isActive != value)
-                {
-                    _isActive = value;
-                }
-            }
-        }
-
-        internal bool HasRendered { get; set; }
-        internal ElementReference TabBar { get; set; }
-
-        [CascadingParameter(Name = "IsEmpty")]
-        private bool IsEmpty { get; set; }
-
         [CascadingParameter(Name = "IsTab")]
-        private bool IsTab { get; set; }
+        internal bool IsTab { get; set; }
 
         [CascadingParameter(Name = "IsPane")]
-        private bool IsPane { get; set; }
+        internal bool IsPane { get; set; }
 
         [CascadingParameter]
         private Tabs Parent { get; set; }
-
-        [CascadingParameter(Name = "Pane")]
-        private TabPane Pane { get; set; }
 
         /// <summary>
         /// Forced render of content in tabs, not lazy render after clicking on tabs
@@ -70,78 +50,141 @@ namespace AntDesign
 
         [Parameter]
         public bool Closable { get; set; } = true;
+        internal bool IsActive => _isActive;
 
-        private bool _hasTab;
-        private bool _hasContent;
+        private bool HasTabTitle => Tab != null || TabTemplate != null;
+
+        internal ElementReference TabRef => _tabRef;
+
+        private const string PrefixCls = "ant-tabs-tab";
+
+        private ElementReference _tabRef;
         private bool _isActive;
+        private bool _shouldRender;
+        private bool _shouldTabRender;
+        private bool _hasClosed;
+        private bool _hasRendered;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (IsEmpty)
-            {
-                Parent?.AddTabPane(this);
-            }
+            this.SetClass();
 
-            if (IsTab && !Pane._hasTab)
-            {
-                Pane.SetTab();
-
-                Pane.ClassMapper
-                 .Add(PrefixCls)
-                 .If($"{PrefixCls}-active", () => Pane?.IsActive == true)
-                 .If($"{PrefixCls}-with-remove", () => Pane?.Closable == true)
-                 .If($"{PrefixCls}-disabled", () => Pane?.Disabled == true);
-
-                if (Parent?.Card != null)
-                {
-                    Parent.Complete(Pane);
-                }
-            }
-
-            if (IsPane && !Pane._hasContent)
-            {
-                Pane.SetContent();
-                Parent.Complete(Pane);
-            }
+            Parent?.AddTabPane(this);
         }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+
+            if (IsTab && HasTabTitle)
+            {
+                _hasRendered = true;
+            }
+
+            _shouldRender = false;
+            _shouldTabRender = false;
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
-            Pane?.ClassMapper.Clear();
-            Pane?.ClassMapper
-                 .Add(PrefixCls)
-                 .If($"{PrefixCls}-active", () => Pane?.IsActive == true)
-                 .If($"{PrefixCls}-with-remove", () => Pane?.Closable == true)
-                 .If($"{PrefixCls}-disabled", () => Pane?.Disabled == true);
+            _shouldRender = true;
+            _shouldTabRender = true;
         }
-        private void SetTab()
+
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            _hasTab = true;
+            // Avoid changes in tab as we modify the properties used for display when drag and drop occurs
+            if (IsTab && _hasRendered)
+            {
+                return;
+            }
+
+            await base.SetParametersAsync(parameters);
         }
 
-        private void SetContent()
+        private void SetClass()
         {
-            _hasContent = true;
+            ClassMapper
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-active", () => _isActive)
+                .If($"{PrefixCls}-with-remove", () => Closable)
+                .If($"{PrefixCls}-disabled", () => Disabled);
         }
 
-        internal bool IsComplete() => _hasTab && (Parent?.Card != null || _hasContent);
+        internal void SetKey(string key)
+        {
+            Key = key;
+        }
 
-        protected override bool ShouldRender() => Pane?.Key == Key;
+        internal void SetActive(bool isActive)
+        {
+            if (_isActive != isActive)
+            {
+                _isActive = isActive;
+                _shouldTabRender = true;
+                StateHasChanged();
+            }
+        }
+
+        internal void Close()
+        {
+            _hasClosed = true;
+
+            _shouldTabRender = true;
+            _shouldRender = true;
+
+            Dispose();
+        }
 
         protected override void Dispose(bool disposing)
         {
-            if (IsEmpty)
-            {
-                Parent?._panes.Remove(this);
-            }
-            else
-            {
-                Pane = null;
-            }
+            Parent?.RemovePane(this);
+
             base.Dispose(disposing);
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (IsTab)
+            {
+                return _shouldTabRender;
+            }
+
+            return _shouldRender;
+        }
+
+        internal void ExchangeWith(TabPane other)
+        {
+            var temp = other.Clone();
+            other.SetPane(this);
+            this.SetPane(temp);
+        }
+
+        private TabPane Clone()
+        {
+            return new TabPane
+            {
+                Key = Key,
+                Tab = this.Tab,
+                TabTemplate = this.TabTemplate,
+                Disabled = this.Disabled,
+                Closable = this.Closable,
+            };
+        }
+
+        private void SetPane(TabPane tabPane)
+        {
+            Key = tabPane.Key;
+            Tab = tabPane.Tab;
+            TabTemplate = tabPane.TabTemplate;
+            Disabled = tabPane.Disabled;
+            Closable = tabPane.Closable;
+
+            _shouldTabRender = true;
+            StateHasChanged();
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class TabPosition
+    public enum TabPosition
     {
-        public const string Top = "top";
-        public const string Right = "right";
-        public const string Bottom = "bottom";
-        public const string Left = "left";
+        Top = 0,
+        Right = 1,
+        Bottom = 2,
+        Left = 3
     }
 }

@@ -106,7 +106,7 @@ namespace AntDesign.Select.Internal
             SetSuppressInput();
             if (firstRender)
             {
-                if (ParentSelect.EnableSearch)
+                if (ParentSelect.IsSearchEnabled)
                 {
                     DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
                     await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
@@ -270,7 +270,7 @@ namespace AntDesign.Select.Internal
                 if (!_suppressInput)
                 {
                     _suppressInput = true;
-                    _inputStyle = "caret-color: transparent;";
+                    _inputStyle = "opacity: 0;";
                 }
             }
             else
@@ -306,16 +306,6 @@ namespace AntDesign.Select.Internal
                 return label.Length <= ParentSelect.MaxTagTextLength ? label : label.Substring(0, ParentSelect.MaxTagTextLength) + Ellipse;
             }
             return label;
-        }
-
-        protected void OnKeyPressEventHandler(KeyboardEventArgs _)
-        {
-            if (!ParentSelect.IsSearchEnabled)
-                SearchValue = string.Empty;
-            else if (ParentSelect.IsResponsive)
-            {
-
-            }
         }
 
         private Dictionary<string, object> AdditonalAttributes()
