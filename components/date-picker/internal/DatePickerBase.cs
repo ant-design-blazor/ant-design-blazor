@@ -118,7 +118,7 @@ namespace AntDesign
                     LocaleProvider.CurrentLocale.LocaleName != value.Name
                     ))
                 {
-                    _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
+                    _locale = LocaleProvider.GetLocale(value).DatePicker;
                 }
                 base.CultureInfo = value;
             }

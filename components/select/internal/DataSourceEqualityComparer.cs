@@ -17,17 +17,17 @@ namespace AntDesign
             {
                 if (SelectParent._getValue is null)
                 {
-                    return x.ToString().Equals(y.ToString());
+                    return x.ToString() == y.ToString();
                 }
-                return x.ToString().Equals(y.ToString())
-                    && SelectParent._getValue(x).Equals(SelectParent._getValue(y));
+                return x.ToString() == y.ToString()
+                    && EqualityComparer<TItemValue>.Default.Equals(SelectParent._getValue(x), SelectParent._getValue(y));
             }
             if (SelectParent._getValue is null)
             {
-                return SelectParent._getLabel(x).Equals(SelectParent._getLabel(y));
+                return SelectParent._getLabel(x) == SelectParent._getLabel(y);
             }
-            return SelectParent._getLabel(x).Equals(SelectParent._getLabel(y))
-                && SelectParent._getValue(x).Equals(SelectParent._getValue(y));
+            return SelectParent._getLabel(x) == SelectParent._getLabel(y)
+                && EqualityComparer<TItemValue>.Default.Equals(SelectParent._getValue(x), SelectParent._getValue(y));
         }
 
         public int GetHashCode(TItem obj)
