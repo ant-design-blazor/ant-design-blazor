@@ -423,7 +423,7 @@ namespace AntDesign
             }
         }
 
-        private void ChangeFirstValue(double value, double previousValue)
+        private void ChangeFirstValue(double value, double valueBeforeClamping)
         {
             if (_isInitialized && Parent.OnEdgeMoving is not null &&
                 !Parent.OnEdgeMoving.Invoke((range: this, edge: RangeEdge.First, value: value)))
@@ -432,7 +432,7 @@ namespace AntDesign
             }
             _firstValue = value;
 
-            if (previousValue != CurrentValue.Item1)
+            if (valueBeforeClamping != CurrentValue.Item1)
             {
                 CurrentValue = (_firstValue, LastValue);
                 RaiseOnChangeCallback();
@@ -488,7 +488,7 @@ namespace AntDesign
             }
         }
 
-        private void ChangeLastValue(double value, double previousValue)
+        private void ChangeLastValue(double value, double valueBeforeClamping)
         {
             if (_isInitialized && Parent.OnEdgeMoving is not null &&
                 !Parent.OnEdgeMoving.Invoke((range: this, edge: RangeEdge.Last, value: value)))
@@ -497,7 +497,7 @@ namespace AntDesign
             }
             _lastValue = value;
 
-            if (previousValue != CurrentValue.Item2)
+            if (valueBeforeClamping != CurrentValue.Item2)
             {
                 CurrentValue = (FirstValue, _lastValue);
                 RaiseOnChangeCallback();
@@ -827,11 +827,18 @@ namespace AntDesign
 
             if (firstCandidate == newFirst && lastCandidate == newLast)
             {
-                ChangeFirstValue(firstCandidate, FirstValue);
-                ChangeLastValue(lastCandidate, LastValue);
-                var tooltipFirst = _toolTipFirst.Show();
-                var tooltipLast = _toolTipLast.Show();
-                await Task.WhenAll(tooltipFirst, tooltipLast);
+                ChangeFirstValue(firstCandidate, newFirst);
+                ChangeLastValue(lastCandidate, newLast);
+                if (_toolTipFirst is not null)
+                {
+                    var tooltipFirst = _toolTipFirst.Show();
+                    var tooltipLast = _toolTipLast.Show();
+                    await Task.WhenAll(tooltipFirst, tooltipLast);
+                }
+                if (AttachedHandleNo != default)
+                {
+                    ChangeAttachedItem?.Invoke();
+                }
             }
         }
 
@@ -934,7 +941,6 @@ namespace AntDesign
 
         private void OnDoubleClick(RangeEdge handle)
         {
-            //TODO: bUnit: attach overlapping edge when opposite overlapping edge already attached
             if (!HasAttachedEdge || AttachedHandleNo == GetOppositeEdge(handle))
             {
                 RangeItem overlappingEdgeCandidate = handle == RangeEdge.First ? Parent.GetPrevNeighbour(Id) : Parent.GetNextNeighbour(Id);
