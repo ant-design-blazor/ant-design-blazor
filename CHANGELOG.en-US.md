@@ -45,7 +45,7 @@ timeline: true
 - 🐞 Fixed positioning overlay items when locale has ',' as decimal separator. [#1956](https://github.com/ant-design-blazor/ant-design-blazor/pull/1956) [@bezysoftware](https://github.com/bezysoftware)
 - 🐞 Fixed cannot drag when Modal excessive height. [#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
 - 🐞 Fixed LocaleProvider: custom language resource; improve fallback strategy. [#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
-- 🐞 Fixed List: dynamic response to changes in Grid parameter [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anranruye](https://github.com/anranruye)
+- 🐞 Fixed List: dynamic response to changes in Grid parameter [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anddrzejb](https://github.com/anddrzejb)
 - 🐞 Fixed Progress: use invariant culture for style strings [#2017](https://github.com/ant-design-blazor/ant-design-blazor/pull/2017) [@CAPCHIK](https://github.com/CAPCHIK)
 - 🌐 i18n: czech localization update [#2019](https://github.com/ant-design-blazor/ant-design-blazor/pull/2019) [@Martin Pučálka](https://github.com/Martin-Pucalka)
 
