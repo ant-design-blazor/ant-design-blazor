@@ -31,4 +31,85 @@
             </div>
         ");
     }    
+
+    [Fact]
+    public void Single_range_item_markup_vertical_check() 
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values" Vertical/>);
+        //Act
+        //Assert        
+        cut.MarkupMatches(@"
+            <div style=""display: inline;"" >
+              <div class=""ant-multi-range-slider ant-multi-range-slider-vertical"" style="""" id:ignore >
+                <div class=""ant-multi-range-slider-rail"" style=""height: calc(100% - 28px);top: 14px;"" >
+                </div>
+                <div class=""ant-multi-range-slider-step"">
+                </div>
+                <div class=""ant-multi-range-slider-item ant-multi-range-slider-vertical"" id:ignore >
+                  <div class=""ant-multi-range-slider-track ant-multi-range-slider-track-1 "" style=""z-index: 1;top: auto; height: calc((60.00% - (0.19999999999999996 * 14px)) - (45.00% - (-0.09999999999999998 * 14px))); bottom: calc(45.00% - (-0.09999999999999998 * 14px));"" tabindex=""0""        >
+                  </div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-1"" role=""slider"" aria-disabled=""False"" aria-valuenow=""45"" aria-valuemin=""0"" aria-valuemax=""100"" style=""top: auto; bottom: calc(45.00% - (-0.09999999999999998 * 14px)); transform: translateY(50%);z-index: 2;""          ></div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-2"" role=""slider"" aria-disabled=""False"" aria-valuenow=""60"" aria-valuemin=""0"" aria-valuemax=""100"" style=""top: auto; bottom: calc(60.00% - (0.19999999999999996 * 14px)); transform: translateY(50%);z-index: 2;""          ></div>
+                </div>
+                <div class=""ant-multi-range-slider-mark"">
+                </div>
+              </div>
+            </div>
+        ");
+    }   
+
+    [Fact]
+    public void Single_range_item_markup_check_reverse() 
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values" Reverse/>);
+        //Act
+        //Assert        
+        cut.MarkupMatches(@"
+            <div style=""display: inline;"" >
+              <div class=""ant-multi-range-slider"" style="""" id:ignore >
+                <div class=""ant-multi-range-slider-rail"" style="""" >
+                </div>
+                <div class=""ant-multi-range-slider-step"">
+                </div>
+                <div class=""ant-multi-range-slider-item"" id:ignore >
+                  <div class=""ant-multi-range-slider-track ant-multi-range-slider-track-1 "" style=""z-index: 1;right: 45.00%; width: 15.00%; left: auto;"" tabindex=""0""        >
+                  </div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-1"" role=""slider"" aria-disabled=""False"" aria-valuenow=""45"" aria-valuemin=""0"" aria-valuemax=""100"" style=""right: 45.00%; left: auto; transform: translateX(50%);z-index: 2;""          ></div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-2"" role=""slider"" aria-disabled=""False"" aria-valuenow=""60"" aria-valuemin=""0"" aria-valuemax=""100"" style=""right: 60.00%; left: auto; transform: translateX(50%);z-index: 2;""          ></div>
+                </div>
+                <div class=""ant-multi-range-slider-mark"">
+                </div>
+              </div>
+            </div>
+        ");
+    }   
+
+    [Fact]
+    public void Single_range_item_markup_check_vertical_reverse() 
+    {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_values" Vertical Reverse/>);
+        //Act
+        //Assert        
+        cut.MarkupMatches(@"
+            <div style=""display: inline;"" >
+              <div class=""ant-multi-range-slider ant-multi-range-slider-vertical"" style="""" id:ignore >
+                <div class=""ant-multi-range-slider-rail"" style=""height: calc(100% - 28px);top: 14px;"" >
+                </div>
+                <div class=""ant-multi-range-slider-step"">
+                </div>
+                <div class=""ant-multi-range-slider-item ant-multi-range-slider-vertical"" id:ignore >
+                  <div class=""ant-multi-range-slider-track ant-multi-range-slider-track-1 "" style=""z-index: 1;bottom: auto; height: calc((60.00% - (0.19999999999999996 * 14px)) - (45.00% - (-0.09999999999999998 * 14px))); top: calc(45.00% - (-0.09999999999999998 * 14px));"" tabindex=""0""        >
+                  </div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-1"" role=""slider"" aria-disabled=""False"" aria-valuenow=""45"" aria-valuemin=""0"" aria-valuemax=""100"" style=""bottom: auto; top: calc(45.00% - (-0.09999999999999998 * 14px));z-index: 2;""          ></div>
+                  <div tabindex=""0"" class=""ant-multi-range-slider-handle ant-multi-range-slider-handle-2"" role=""slider"" aria-disabled=""False"" aria-valuenow=""60"" aria-valuemin=""0"" aria-valuemax=""100"" style=""bottom: auto; top: calc(60.00% - (0.19999999999999996 * 14px));z-index: 2;""          ></div>
+                </div>
+                <div class=""ant-multi-range-slider-mark"">
+                </div>
+              </div>
+            </div>
+        ");
+    }   
 }

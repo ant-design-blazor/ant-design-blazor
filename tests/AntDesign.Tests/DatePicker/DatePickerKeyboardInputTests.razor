@@ -46,7 +46,7 @@
 		//Assert
 		cut.Instance.Value.Should().Be(defaultValue);
 		value.Should().Be(defaultValue);
-		input.GetAttribute("value").Should().Be(defaultValueAsString);
+		DateTime.Parse(input.GetAttribute("value")).Should().Be(DateTime.Parse(defaultValueAsString));
 	}
 
 	[Fact]

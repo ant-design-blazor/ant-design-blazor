@@ -21,11 +21,26 @@
         (90, 100),
     };
 
+    public MultiRangeSlider_Moving_Tests()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+    }
+
     
     [Fact]
     public void KeyDown_should_move_edge() {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[2].Instance.Value;
        //Act       
@@ -38,9 +53,6 @@
     public void Move_attached_overlapping_edges_with_keys()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
@@ -54,33 +66,46 @@
     }
 
     [Theory]
-    [InlineData(false, "ArrowLeft", RangeEdge.First, -1, 0)]
-    [InlineData(false, "ArrowRight", RangeEdge.First, 1, 0)]
-    [InlineData(false, "ArrowLeft", RangeEdge.Last, 0, -1)]
-    [InlineData(false, "ArrowRight", RangeEdge.Last, 0, 1)]
-    [InlineData(false, "ArrowUp", RangeEdge.First, 0, 0)]
-    [InlineData(false, "ArrowDown", RangeEdge.First, 0, 0)]
-    [InlineData(false, "ArrowUp", RangeEdge.Last, 0, 0)]
-    [InlineData(false, "ArrowDown", RangeEdge.Last, 0, 0)]
-    [InlineData(true, "ArrowDown", RangeEdge.First, -1, 0)]
-    [InlineData(true, "ArrowUp", RangeEdge.First, 1, 0)]
-    [InlineData(true, "ArrowDown", RangeEdge.Last, 0, -1)]
-    [InlineData(true, "ArrowUp", RangeEdge.Last, 0, 1)]
-    [InlineData(true, "ArrowRight", RangeEdge.First, 0, 0)]
-    [InlineData(true, "ArrowLeft", RangeEdge.First, 0, 0)]
-    [InlineData(true, "ArrowRight", RangeEdge.Last, 0, 0)]
-    [InlineData(true, "ArrowLeft", RangeEdge.Last, 0, 0)]
-
-    public void Move_edge_with_keys(bool vertical, string key, RangeEdge edge, 
+    [InlineData(false, false, "ArrowLeft", RangeEdge.First, -1, 0)]
+    [InlineData(false, false, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(false, false, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(false, false, "ArrowRight", RangeEdge.Last, 0, 1)]
+    [InlineData(false, false, "ArrowUp", RangeEdge.First, 0, 0)]
+    [InlineData(false, false, "ArrowDown", RangeEdge.First, 0, 0)]
+    [InlineData(false, false, "ArrowUp", RangeEdge.Last, 0, 0)]
+    [InlineData(false, false, "ArrowDown", RangeEdge.Last, 0, 0)]
+    [InlineData(false, true, "ArrowDown", RangeEdge.First, -1, 0)]
+    [InlineData(false, true, "ArrowUp", RangeEdge.First, 1, 0)]
+    [InlineData(false, true, "ArrowDown", RangeEdge.Last, 0, -1)]
+    [InlineData(false, true, "ArrowUp", RangeEdge.Last, 0, 1)]
+    [InlineData(false, true, "ArrowRight", RangeEdge.First, 0, 0)]
+    [InlineData(false, true, "ArrowLeft", RangeEdge.First, 0, 0)]
+    [InlineData(false, true, "ArrowRight", RangeEdge.Last, 0, 0)]
+    [InlineData(false, true, "ArrowLeft", RangeEdge.Last, 0, 0)]
+    [InlineData(true, false, "ArrowLeft", RangeEdge.First, -1, 0)]
+    [InlineData(true, false, "ArrowRight", RangeEdge.First, 1, 0)]
+    [InlineData(true, false, "ArrowLeft", RangeEdge.Last, 0, -1)]
+    [InlineData(true, false, "ArrowRight", RangeEdge.Last, 0, 1)]
+    [InlineData(true, false, "ArrowUp", RangeEdge.First, 0, 0)]
+    [InlineData(true, false, "ArrowDown", RangeEdge.First, 0, 0)]
+    [InlineData(true, false, "ArrowUp", RangeEdge.Last, 0, 0)]
+    [InlineData(true, false, "ArrowDown", RangeEdge.Last, 0, 0)]
+    [InlineData(true, true, "ArrowDown", RangeEdge.First, -1, 0)]
+    [InlineData(true, true, "ArrowUp", RangeEdge.First, 1, 0)]
+    [InlineData(true, true, "ArrowDown", RangeEdge.Last, 0, -1)]
+    [InlineData(true, true, "ArrowUp", RangeEdge.Last, 0, 1)]
+    [InlineData(true, true, "ArrowRight", RangeEdge.First, 0, 0)]
+    [InlineData(true, true, "ArrowLeft", RangeEdge.First, 0, 0)]
+    [InlineData(true, true, "ArrowRight", RangeEdge.Last, 0, 0)]
+    [InlineData(true, true, "ArrowLeft", RangeEdge.Last, 0, 0)]     
+    public void Move_edge_with_keys(bool reverse, bool vertical, string key, RangeEdge edge, 
         double firstValueModifier, double secondValueModifier)
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" 
-            Vertical="@vertical"/>);
+            Vertical="@vertical"
+            Reverse="@reverse"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[1].Instance.Value;
         //Act
@@ -95,10 +120,6 @@
     public async Task Move_last_edge_before_first_edge()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
 
@@ -120,9 +141,6 @@
     public async Task Do_not_move_edge_with_keys_when_edge_would_go_below_min()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(
     @<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" />);
@@ -139,9 +157,6 @@
     public async Task Do_not_move_edge_with_keys_when_edge_would_go_above_max()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" />
     );
@@ -158,9 +173,6 @@
     public async Task Do_not_move_edge_with_keys_when_overlap_forbidden_and_edge_touching_another_edge()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(
     @<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" />);
@@ -190,9 +202,6 @@
         string key, RangeEdge edge, double firstValueModifier, double secondValueModifier)
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithOverlapOnEdges" 
             AllowOverlapping/>);
@@ -209,9 +218,6 @@
     public void Move_attached_non_overlapping_edges_with_keys()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -229,9 +235,6 @@
     public void Move_attached_not_neigoring_ranges()
     {
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"
             AllowOverlapping
         />
@@ -253,11 +256,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(
     @<AntDesign.MultiRangeSlider Value="@values"/>
     );
@@ -280,11 +278,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -306,9 +299,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -331,9 +321,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());        
-
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping/>
     );
@@ -356,13 +343,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[0] = (1, 10);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping HasTooltip="false"/>
     );
@@ -384,13 +364,6 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[3] = (90, 99);
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping HasTooltip="false"/>
     );
@@ -410,13 +383,6 @@
     public async Task Forbid_move_range_to_overlap_when_not_AllowOverlapping()
     {        
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithOverlapOnEdges" HasTooltip="false"/>
     );
@@ -434,27 +400,29 @@
     }
 
     [Theory]
-    [InlineData(false, "ArrowLeft", -1)]
-    [InlineData(false, "ArrowRight", 1)]
-    [InlineData(false, "ArrowUp", 0)]
-    [InlineData(false, "ArrowDown", 0)]
-    [InlineData(true, "ArrowLeft", 0)]
-    [InlineData(true, "ArrowRight", 0)]
-    [InlineData(true, "ArrowUp", 1)]
-    [InlineData(true, "ArrowDown", -1)]
-    public async Task Allow_move_range_to_overlap_when_AllowOverlapping(bool vertical, string key, double modifier)
+    [InlineData(false, false, "ArrowLeft", -1)]
+    [InlineData(false, false, "ArrowRight", 1)]
+    [InlineData(false, false, "ArrowUp", 0)]
+    [InlineData(false, false, "ArrowDown", 0)]
+    [InlineData(false, true, "ArrowLeft", 0)]
+    [InlineData(false, true, "ArrowRight", 0)]
+    [InlineData(false, true, "ArrowUp", 1)]
+    [InlineData(false, true, "ArrowDown", -1)]
+    [InlineData(true, false, "ArrowLeft", -1)]
+    [InlineData(true, false, "ArrowRight", 1)]
+    [InlineData(true, false, "ArrowUp", 0)]
+    [InlineData(true, false, "ArrowDown", 0)]
+    [InlineData(true, true, "ArrowLeft", 0)]
+    [InlineData(true, true, "ArrowRight", 0)]
+    [InlineData(true, true, "ArrowUp", 1)]
+    [InlineData(true, true, "ArrowDown", -1)]
+    public async Task Allow_move_range_to_overlap_when_AllowOverlapping(bool reverse, 
+        bool vertical, string key, double modifier)
     {        
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithOverlapOnEdges" AllowOverlapping 
-            HasTooltip="false" Vertical="@vertical"/>
+            HasTooltip="false" Vertical="@vertical" Reverse="@reverse"/>
     );
         var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3];
         var originalValue = rangeItem.Instance.Value;
@@ -473,13 +441,6 @@
     public async Task Move_range_when_overlapping_edges_attached()
     {        
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" HasTooltip="false"/>
     );
@@ -502,13 +463,6 @@
     public async Task Move_range_when_overlapping_edges_attached_up_to_attached_opposite_edge()
     {        
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
- 
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
         values[2] = (21, 40);
@@ -534,13 +488,6 @@
     public async Task Move_range_when_attached_with_gap()
     {        
         //Arrange
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition());
-        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
-            .SetResult("");
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement());
-            
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithNoOverlap" HasTooltip="false"/>
     );

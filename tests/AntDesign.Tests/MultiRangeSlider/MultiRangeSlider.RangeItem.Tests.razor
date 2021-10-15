@@ -25,22 +25,30 @@
     }
 
     [Theory]
-    [InlineData(false, "ArrowLeft", true)]
-    [InlineData(false, "ArrowRight", true)]
-    [InlineData(false, "ArrowUp", false)]
-    [InlineData(false, "ArrowDown", false)]
-    [InlineData(true, "ArrowLeft", false)]
-    [InlineData(true, "ArrowRight", false)]
-    [InlineData(true, "ArrowUp", true)]
-    [InlineData(true, "ArrowDown", true)]
-    public void OnChange_is_called_when_edge_is_moved(bool vertical, string key, bool expectedOnChange)
+    [InlineData(false, false, "ArrowLeft", true)]
+    [InlineData(false, false, "ArrowRight", true)]
+    [InlineData(false, false, "ArrowUp", false)]
+    [InlineData(false, false, "ArrowDown", false)]
+    [InlineData(false, true, "ArrowLeft", false)]
+    [InlineData(false, true, "ArrowRight", false)]
+    [InlineData(false, true, "ArrowUp", true)]
+    [InlineData(false, true, "ArrowDown", true)]
+    [InlineData(true, false, "ArrowLeft", true)]
+    [InlineData(true, false, "ArrowRight", true)]
+    [InlineData(true, false, "ArrowUp", false)]
+    [InlineData(true, false, "ArrowDown", false)]
+    [InlineData(true, true, "ArrowLeft", false)]
+    [InlineData(true, true, "ArrowRight", false)]
+    [InlineData(true, true, "ArrowUp", true)]
+    [InlineData(true, true, "ArrowDown", true)]
+    public void OnChange_is_called_when_edge_is_moved(bool reverse, bool vertical, string key, bool expectedOnChange)
     {
         //Arrange
         (double, double) value = (10d, 20d);
         bool isOnChangeExecuted = false;
         Action<(double, double)> onChange = v => isOnChangeExecuted = true; 
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider Vertical=@vertical>
+    @<AntDesign.MultiRangeSlider Vertical=@vertical Reverse=@reverse>
                 <AntDesign.RangeItem Value=@value OnChange=@onChange />
     </AntDesign.MultiRangeSlider>
     );
@@ -52,22 +60,30 @@
     }
 
     [Theory]
-    [InlineData(false, "ArrowLeft", 1)]
-    [InlineData(false, "ArrowRight", 1)]
-    [InlineData(false, "ArrowUp", 0)]
-    [InlineData(false, "ArrowDown", 0)]
-    [InlineData(true, "ArrowLeft", 0)]
-    [InlineData(true, "ArrowRight", 0)]
-    [InlineData(true, "ArrowUp", 1)]
-    [InlineData(true, "ArrowDown", 1)]
-    public void OnAfterChange_is_called_when_edge_is_moved(bool vertical, string key, int expectedOnChange)
+    [InlineData(false, false, "ArrowLeft", 1)]
+    [InlineData(false, false, "ArrowRight", 1)]
+    [InlineData(false, false, "ArrowUp", 0)]
+    [InlineData(false, false, "ArrowDown", 0)]
+    [InlineData(false, true, "ArrowLeft", 0)]
+    [InlineData(false, true, "ArrowRight", 0)]
+    [InlineData(false, true, "ArrowUp", 1)]
+    [InlineData(false, true, "ArrowDown", 1)]
+    [InlineData(true, false, "ArrowLeft", 1)]
+    [InlineData(true, false, "ArrowRight", 1)]
+    [InlineData(true, false, "ArrowUp", 0)]
+    [InlineData(true, false, "ArrowDown", 0)]
+    [InlineData(true, true, "ArrowLeft", 0)]
+    [InlineData(true, true, "ArrowRight", 0)]
+    [InlineData(true, true, "ArrowUp", 1)]
+    [InlineData(true, true, "ArrowDown", 1)]
+    public void OnAfterChange_is_called_when_edge_is_moved(bool reverse, bool vertical, string key, int expectedOnChange)
     {
         //Arrange
         (double, double) value = (10d, 20d);
         int onAfterChangeCallCount = 0;
         Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++; 
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider Vertical=@vertical>
+    @<AntDesign.MultiRangeSlider Vertical=@vertical Reverse=@reverse>
                 <AntDesign.RangeItem Value=@value OnAfterChange=@onAfterChange />
     </AntDesign.MultiRangeSlider>
     );
