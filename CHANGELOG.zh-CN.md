@@ -46,7 +46,7 @@ timeline: true
 - 📖 整理按钮组件的文档[#1953](https://github.com/ant-design-blazor/ant-design-blazor/pull/1953) [@Hona](https://github.com/Hona)
 - 🐞 修复当 Modal 过高时无法拖动的问题。[#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
 - 🐞 修复自定义语言的问题，改进回退策略。[#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
-- 🐞 修复 List 使其动态响应 `Grid` 属性的变化。 [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 List 使其动态响应 `Grid` 属性的变化。 [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anddrzejb](https://github.com/anddrzejb)
 - 🐞 修复 progress 忽略本地化差异对 Style 字符串的影响。 [#2017](https://github.com/ant-design-blazor/ant-design-blazor/pull/2017) [@CAPCHIK](https://github.com/CAPCHIK)
 - 🌐 i18n: 更新捷克语。[#2019](https://github.com/ant-design-blazor/ant-design-blazor/pull/2019) [@Martin Pučálka](https://github.com/Martin-Pucalka)
 
