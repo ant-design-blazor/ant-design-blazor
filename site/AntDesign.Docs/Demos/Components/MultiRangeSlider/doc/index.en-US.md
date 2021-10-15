@@ -59,7 +59,7 @@ A component allowing control over multiple ranges. Each range has a starting and
 | VisibleMin | Used in connection with `VisibleMax`. If grater than `Min`, the slider is rendered with an overflow (oversized/zoomed). If lesser than `Min`, will be set to `Min`. | double | Min | 0.11
 | VisibleMax | Used in connection with `VisibleMin`. If lesser than `Max`, the slider is rendered with an overflow (oversized/zoomed). If grater than `Max`, will be set to `Max`. | double | Max | 0.11
 
-### MultiRangeSlider
+### RangeItem
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ A component allowing control over multiple ranges. Each range has a starting and
 | TooltipPlacement | Set `Tooltip` display position. Ref [`Tooltip`](/components/tooltip). | PlacementType | `PlacementType.Top` for horizontal slider & `PlacementType.Right` for vertical slider| 0.11
 | TooltipVisible | If `true`, `Tooltip` will show always, or it will not show anyway, even if dragging or hovering. | boolean        | false        | 0.11
 
-## Common Methods
+#### RangeItem Common Methods
 
 | Property | Description | Parameters | Version |
 | --- | --- | --- | --- |
