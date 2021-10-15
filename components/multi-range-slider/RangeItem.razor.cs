@@ -286,7 +286,7 @@ namespace AntDesign
             get => _focusColor;
             set
             {
-                if (!_focusColor.Equals(value))
+                if (!_focusColor.Equals(value) || string.IsNullOrEmpty(_focusColorAsString))
                 {
                     _customStyleChange = true;
                     _focusColorAsString = GetColorStyle(value, "background-color");
@@ -437,6 +437,10 @@ namespace AntDesign
                 CurrentValue = (_firstValue, LastValue);
                 RaiseOnChangeCallback();
             }
+            if (_isDataSet)
+            {
+                Data.Value = CurrentValue;
+            }
             if (_isInitialized && Parent.OnEdgeMoved.HasDelegate)
             {
                 Parent.OnEdgeMoved.InvokeAsync((range: this, edge: RangeEdge.First, value: value));
@@ -456,9 +460,9 @@ namespace AntDesign
                 {
                     Parent.OnChange.InvokeAsync(CurrentValue);
                 }
-                if (_isDataSet && Data.OnChange.HasDelegate)
+                if (_isDataSet && Data.OnChange is not null)
                 {
-                    Data.OnChange.InvokeAsync(CurrentValue);
+                    Data.OnChange.Invoke(CurrentValue);
                 }
             }
         }
@@ -501,6 +505,10 @@ namespace AntDesign
             {
                 CurrentValue = (FirstValue, _lastValue);
                 RaiseOnChangeCallback();
+            }
+            if (_isDataSet)
+            {
+                Data.Value = CurrentValue;
             }
             if (_isInitialized && Parent.OnEdgeMoved.HasDelegate)
             {
@@ -595,8 +603,9 @@ namespace AntDesign
                     Data = parameters.GetValueOrDefault<IRangeItemData>(nameof(Data), default);
                     _isDataSet = true;
                     ApplyData(true);
+                    Value = Data.Value;
                 }
-                if (!dict.ContainsKey(nameof(Value)))
+                else if (!dict.ContainsKey(nameof(Value)))
                 {
                     (double, double) defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), (0d, 0d));
                     FirstValue = defaultValue.Item1;
@@ -659,19 +668,19 @@ namespace AntDesign
             {
                 Icon = Data.Icon;
             }
-            if (force || Data.FontColor.Equals(FontColor))
+            if (force || !Data.FontColor.Equals(FontColor))
             {
                 FontColor = Data.FontColor;
             }
-            if (force || Data.FocusColor.Equals(FocusColor))
+            if (force || !Data.FocusColor.Equals(FocusColor))
             {
                 FocusColor = Data.FocusColor;
             }
-            if (force || Data.FocusBorderColor.Equals(FocusBorderColor))
+            if (force || !Data.FocusBorderColor.Equals(FocusBorderColor))
             {
                 FocusBorderColor = Data.FocusBorderColor;
             }
-            if (force || Data.Color.Equals(Color))
+            if (force || !Data.Color.Equals(Color))
             {
                 Color = Data.Color;
             }
@@ -702,11 +711,16 @@ namespace AntDesign
                 if (!string.IsNullOrWhiteSpace(FocusColor.Value.ToString()) || !string.IsNullOrWhiteSpace(FocusBorderColor.Value.ToString()))
                 {
                     _customFocusStyle = _focusBorderColorAsString + _focusColorAsString;
+                    if (_isFocused)
+                    {
+                        _focusStyle = _customFocusStyle;
+                    }
                 }
                 else
                 {
                     _customFocusStyle = "";
                 }
+                _customStyleChange = false;
             }
         }
 
@@ -728,7 +742,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.Dispose();
-            Parent.RemoveRangeItem(this);
+            Parent?.RemoveRangeItem(this);
             base.Dispose(disposing);
         }
 
@@ -799,7 +813,7 @@ namespace AntDesign
 
         private Task OnKeyUp(KeyboardEventArgs e)
         {
-            if (OnAfterChange.HasDelegate || Parent.OnAfterChange.HasDelegate || (_isDataSet && Data.OnAfterChange.HasDelegate))
+            if (OnAfterChange.HasDelegate || Parent.OnAfterChange.HasDelegate || (_isDataSet && Data.OnAfterChange is not null))
             {
                 if (e == null) throw new ArgumentNullException(nameof(e));
                 var key = e.Key.ToUpperInvariant();
@@ -1473,7 +1487,7 @@ namespace AntDesign
 
         private async Task OnRangeItemClick(MouseEventArgs args)
         {
-            _mouseDownOnTrack = !Disabled && !Parent.Disabled;
+            _mouseDownOnTrack = !(Disabled || Parent.Disabled);
             if (!_mouseDownOnTrack)
             {
                 return;
@@ -1518,7 +1532,7 @@ namespace AntDesign
 
         private async Task OnMouseDownEdge(MouseEventArgs args, RangeEdge edge)
         {
-            _mouseDown = !Disabled && !Parent.Disabled;
+            _mouseDown = !(Disabled || Parent.Disabled);
             if (!_mouseDown)
             {
                 return;
@@ -1686,9 +1700,9 @@ namespace AntDesign
                 {
                     Parent.OnAfterChange.InvokeAsync(CurrentValue);
                 }
-                if (_isDataSet && Data.OnAfterChange.HasDelegate)
+                if (_isDataSet && Data.OnAfterChange is not null)
                 {
-                    Data.OnAfterChange.InvokeAsync(CurrentValue);
+                    Data.OnAfterChange.Invoke(CurrentValue);
                 }
             }
             return Task.CompletedTask;

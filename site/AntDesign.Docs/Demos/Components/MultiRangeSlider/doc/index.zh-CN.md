@@ -72,11 +72,10 @@ A component allowing control over multiple ranges. Each range has a starting and
 | FocusBorderColor | Color of the range item's border when focused.  | OneOf<AntDesign.Color, string> | - | 0.11
 | FocusColor | Color of the range item when focused.  | OneOf<AntDesign.Color, string> | - | 0.11
 | FontColor | Color of the text visible on the range.  | OneOf<AntDesign.Color, string> | - | 0.11
-| Color | Color of the text visible on the range.  | OneOf<AntDesign.Color, string> | - | 0.11
 | Icon | Icon visible on the range.  | string | - | 0.11
 | HasTooltip | Will not render `Tooltip` if set to `false`. | bool | true | 0.11
 | OnAfterChange | Called when changes are done (`onmouseup` and `onkeyup`). | EventCallback<(double, double)> | - | 0.11
-| OnChange | Called when the user changes one of the values. | EventCallback<(double, double)> | - | 0.11
+| OnChange | Called when the user changes one of the values. When dragging range, it will be called 2 times - 1 for each edge. | EventCallback<(double, double)> | - | 0.11
 | TooltipPlacement | Set `Tooltip` display position. Ref [`Tooltip`](/components/tooltip). | PlacementType | `PlacementType.Top` for horizontal slider & `PlacementType.Right` for vertical slider| 0.11
 | TooltipVisible | If `true`, `Tooltip` will show always, or it will not show anyway, even if dragging or hovering. | boolean        | false        | 0.11
 

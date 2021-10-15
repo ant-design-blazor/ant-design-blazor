@@ -82,8 +82,8 @@
         public OneOf<Color, string> Color { get; set; }
         public OneOf<Color, string> FocusColor { get; set; }
         public OneOf<Color, string> FocusBorderColor { get; set; }
-        public EventCallback<(double, double)> OnChange { get; set; }
-        public EventCallback<(double, double)> OnAfterChange { get; set; }
+        public Action<(double, double)> OnChange { get; set; }
+        public Action<(double, double)> OnAfterChange { get; set; }
     }
 
     IEnumerable<IRangeItemData> _timeData = new List<TimeData>

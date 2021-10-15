@@ -1,0 +1,483 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using FluentAssertions.Execution
+@inherits AntDesignTestBase
+@code {
+    IEnumerable<(double start, double end)> _values = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (15, 20),
+        (30, 40),        
+        (50, 55),
+        (60, 70),
+        (90, 100),
+    };
+
+    public MultiRangeSlider_RangeItem_Tests()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());        
+    }
+
+    [Theory]
+    [InlineData(false, "ArrowLeft", true)]
+    [InlineData(false, "ArrowRight", true)]
+    [InlineData(false, "ArrowUp", false)]
+    [InlineData(false, "ArrowDown", false)]
+    [InlineData(true, "ArrowLeft", false)]
+    [InlineData(true, "ArrowRight", false)]
+    [InlineData(true, "ArrowUp", true)]
+    [InlineData(true, "ArrowDown", true)]
+    public void OnChange_is_called_when_edge_is_moved(bool vertical, string key, bool expectedOnChange)
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        bool isOnChangeExecuted = false;
+        Action<(double, double)> onChange = v => isOnChangeExecuted = true; 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Vertical=@vertical>
+                <AntDesign.RangeItem Value=@value OnChange=@onChange />
+    </AntDesign.MultiRangeSlider>
+    );
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        //Act
+        rangeItem.Find("div.ant-multi-range-slider-handle-1").KeyDown(key);
+        //Assert
+        isOnChangeExecuted.Should().Be(expectedOnChange);
+    }
+
+    [Theory]
+    [InlineData(false, "ArrowLeft", 1)]
+    [InlineData(false, "ArrowRight", 1)]
+    [InlineData(false, "ArrowUp", 0)]
+    [InlineData(false, "ArrowDown", 0)]
+    [InlineData(true, "ArrowLeft", 0)]
+    [InlineData(true, "ArrowRight", 0)]
+    [InlineData(true, "ArrowUp", 1)]
+    [InlineData(true, "ArrowDown", 1)]
+    public void OnAfterChange_is_called_when_edge_is_moved(bool vertical, string key, int expectedOnChange)
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        int onAfterChangeCallCount = 0;
+        Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++; 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Vertical=@vertical>
+                <AntDesign.RangeItem Value=@value OnAfterChange=@onAfterChange />
+    </AntDesign.MultiRangeSlider>
+    );
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var handle = rangeItem.Find("div.ant-multi-range-slider-handle-1");
+        //Act
+        handle.KeyDown(key);
+        handle.KeyDown(key);
+        handle.KeyUp(key);
+
+        //Assert
+        onAfterChangeCallCount.Should().Be(expectedOnChange);
+    }
+
+
+    [Fact]
+    public async Task OnChange_is_called_when_range_is_moved()
+    {
+        //Arrange
+
+        (double, double) value = (10d, 20d);
+        bool isOnChangeExecuted = false;
+        Action<(double, double)> onChange = v => isOnChangeExecuted = true; 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider>
+                <AntDesign.RangeItem Value=@value OnChange=@onChange />
+    </AntDesign.MultiRangeSlider>
+    );
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+
+        //Assert
+        cut.WaitForAssertion(() => isOnChangeExecuted.Should().BeTrue());
+    }
+
+    [Fact]
+    public async Task OnAfterChange_is_called_when_range_is_moved()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        int onAfterChangeCallCount = 0;
+        Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++; 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider>
+                <AntDesign.RangeItem Value=@value OnAfterChange=@onAfterChange />
+    </AntDesign.MultiRangeSlider>
+    );
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+        track.KeyDown("ArrowLeft");
+        track.KeyUp("ArrowLeft");
+
+        //Assert
+        cut.WaitForAssertion(() => onAfterChangeCallCount.Should().Be(1));
+    }
+
+    [Fact]
+    public void Should_render_with_selected_color_when_Color_set()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" Color="@AntDesign.Color.Orange2"  />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var style = rangeItem.Find("div.ant-multi-range-slider-track").GetAttribute("style");
+        //Act
+        //Assert
+        style.Should().Contain($"background-color: {ColorHelper.GetColor(AntDesign.Color.Orange2)}");
+    }
+
+    [Fact]
+    public void Should_react_to_Color_change()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" Color="@AntDesign.Color.Orange2"  />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var styleBeforeChange = track.GetAttribute("style");
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.Color, AntDesign.Color.Red4));
+        var styleAfterChange = track.GetAttribute("style");
+        //Assert
+        styleBeforeChange.Should().Contain($"background-color: {ColorHelper.GetColor(AntDesign.Color.Orange2)}");
+        styleAfterChange.Should().Contain($"background-color: {ColorHelper.GetColor(AntDesign.Color.Red4)}");
+    }
+
+    [Fact]
+    public void Should_set_and_react_to_Description_change()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" Description="test 1"  />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var description = rangeItem.Find("div.ant-multi-range-slider-track-description");        
+        var descriptionBeforeChange = description.TextContent.Trim();
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.Description, "changed"));
+        var descriptionAfterChange = description.TextContent.Trim();
+        
+        //Assert
+        descriptionBeforeChange.Should().Be("test 1");
+        descriptionAfterChange.Should().Be("changed");
+    }
+
+    [Fact]
+    public void Should_set_and_react_to_FocusBorderColor_change()
+    {
+        //Arrange
+
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" FocusBorderColor="@AntDesign.Color.Orange2"  />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        track.MouseDown(); //focus         
+        var styleBeforeChange = track.GetAttribute("style");
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.FocusBorderColor, AntDesign.Color.Red4));
+        //Assert
+        styleBeforeChange.Should().Contain($"border-color: {ColorHelper.GetColor(AntDesign.Color.Orange2)}");        
+        track.GetAttribute("style").Should().Contain($"border-color: {ColorHelper.GetColor(AntDesign.Color.Red4)}");
+    }
+
+    [Fact]
+    public void Should_set_and_react_to_FocusColor_change()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" FocusColor="@AntDesign.Color.Orange2"  />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        track.MouseDown(); //focus         
+        var styleBeforeChange = track.GetAttribute("style");
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.FocusColor, AntDesign.Color.Red4));
+        //Assert
+        styleBeforeChange.Should().Contain($"background-color: {ColorHelper.GetColor(AntDesign.Color.Orange2)}");        
+        track.GetAttribute("style").Should().Contain($"background-color: {ColorHelper.GetColor(AntDesign.Color.Red4)}");
+    }
+
+    [Fact]
+    public void Should_set_and_react_to_FontColor_change()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" Description="test" FontColor="@AntDesign.Color.Orange2"/>
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var description = rangeItem.Find("div.ant-multi-range-slider-track-description");        
+        var styleBeforeChange = description.GetAttribute("style");
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.FontColor, AntDesign.Color.Red4));
+        //Assert
+        styleBeforeChange.Should().Contain($"color: {ColorHelper.GetColor(AntDesign.Color.Orange2)}");        
+        description.GetAttribute("style").Should().Contain($"color: {ColorHelper.GetColor(AntDesign.Color.Red4)}");
+    }
+
+    [Fact]
+    public void Should_set_and_react_to_Icon_change()
+    {
+        //Arrange
+        (double, double) value = (10d, 20d);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                        <AntDesign.RangeItem DefaultValue="@value" Icon="paper-clip"/>
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var iconBeforeChange = rangeItem.Find("span.anticon").ClassList;
+        //Act
+        rangeItem.SetParametersAndRender(parameters => parameters.Add(p => p.Icon, "question"));
+        var iconAfterChange = rangeItem.Find("span.anticon").ClassList;
+        //Assert
+        iconBeforeChange.Should().Contain("anticon-paper-clip");
+        iconAfterChange.Should().Contain("anticon-question");
+    }
+
+    [Fact]
+    public void Set_Disabled_only_on_single_RangeItem()
+    {
+        //Arrange        
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                <AntDesign.RangeItem DefaultValue="(10, 20)" Disabled/>
+                <AntDesign.RangeItem DefaultValue="(40, 50)" />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        //Act
+        //Assert
+        rangeItems[0].Find("div.ant-multi-range-slider-item").ClassList.Should().Contain("ant-multi-range-slider-disabled");
+        rangeItems[1].Find("div.ant-multi-range-slider-item").ClassList.Should().NotContain("ant-multi-range-slider-disabled");
+    }
+
+    [Fact]
+    public void Switch_focus()
+    {
+        //Arrange        
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                <AntDesign.RangeItem DefaultValue="(10, 20)" />
+                <AntDesign.RangeItem DefaultValue="(40, 50)" />
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var track0 = rangeItems[0].Find("div.ant-multi-range-slider-track");
+        var track1 = rangeItems[1].Find("div.ant-multi-range-slider-track");
+        //Act
+        track0.MouseDown(); //focus                 
+        //Assert
+        track0.ClassList.Should().Contain("ant-multi-range-slider-track-focus");
+        track1.ClassList.Should().NotContain("ant-multi-range-slider-track-focus");
+        //Act
+        track1.MouseDown(); //focus
+        //cut.Render();
+        //Assert
+        cut.WaitForAssertion(() => track1.ClassList.Should().Contain("ant-multi-range-slider-track-focus"));
+        track0.ClassList.Should().NotContain("ant-multi-range-slider-track-focus");
+    }
+
+    [Fact]
+    public void Forbid_focus_when_parent_disabled()
+    {
+        //Arrange        
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider Disabled>
+                <AntDesign.RangeItem DefaultValue="(10, 20)" />                
+        </AntDesign.MultiRangeSlider>);        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");        
+        //Act
+        track.MouseDown(); //focus                 
+        //Assert
+        track.ClassList.Should().NotContain("ant-multi-range-slider-track-focus");
+    }
+
+    [Fact]
+    public void Forbid_focus_when_disabled()
+    {
+        //Arrange        
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider>
+                <AntDesign.RangeItem DefaultValue="(10, 20)" Disabled/>
+        </AntDesign.MultiRangeSlider>);        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");        
+        //Act
+        track.MouseDown(); //focus                 
+        //Assert
+        track.ClassList.Should().NotContain("ant-multi-range-slider-track-focus");
+    }
+
+
+    [Fact]
+    public async Task Set_Data_should_style_RangeItem_using_Color_enum()
+    {
+        //Arrange
+        Color font = Color.Blue1;
+        Color focusColor = Color.Red1;
+        Color focusBorderColor = Color.Purple1;
+        Color color = Color.Orange1;
+        int onChangeCallCount = 0, onAfterChangeCallCount = 0;
+        string description = "test", icon = "paper-clip";
+        Action<(double, double)> onChange = v => onChangeCallCount++;
+        Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++;
+
+        var data = new RangeItemData((10, 40), description, icon, font, color, focusColor, focusBorderColor);
+        data.OnAfterChange = onAfterChange;
+        data.OnChange = onChange;
+
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider HasTooltip="false">
+                        <AntDesign.RangeItem Data="@data"/>
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var descriptionElement = rangeItem.Find("div.ant-multi-range-slider-track-description");        
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var trackStyle = track.GetAttribute("style");
+        var iconElement = rangeItem.Find("span.anticon");
+        //Assert
+        using (new AssertionScope("before focus"))
+        {
+            descriptionElement.TextContent.Trim().Should().Be(description);
+            descriptionElement.GetAttribute("style").Should().Contain($"color: {ColorHelper.GetColor(font)}");
+            iconElement.ClassList.Should().Contain("anticon-" + icon);
+            trackStyle.Should().Contain($"background-color: {ColorHelper.GetColor(color)}");
+        }
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());        
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+        track.KeyDown("ArrowLeft");
+        track.KeyUp("ArrowLeft");
+
+        //Assert
+        trackStyle = track.GetAttribute("style"); //get focused track style
+        using (new AssertionScope("after focus"))
+        {
+            cut.WaitForAssertion(() => data.Value.Should().Be((8, 38)));
+            rangeItem.Instance.Value.Should().Be((8, 38));
+            onAfterChangeCallCount.Should().Be(1);
+            onChangeCallCount.Should().Be(4);
+            descriptionElement.TextContent.Trim().Should().Be(description);
+            descriptionElement.GetAttribute("style").Should().Contain($"color: {ColorHelper.GetColor(font)}");
+            iconElement.ClassList.Should().Contain("anticon-" + icon);
+            trackStyle.Should()
+                .Contain($"border-color: {ColorHelper.GetColor(focusBorderColor)}")
+                .And
+                .Contain($"background-color: {ColorHelper.GetColor(focusColor)}");
+        }
+    }
+
+    [Fact]
+    public async Task Set_Data_should_style_RangeItem_using_strings_for_color()
+    {
+        //Arrange
+        string font = "blue";
+        string focusColor = "red";
+        string focusBorderColor = "purple";
+        string color = "orange";
+        int onChangeCallCount = 0, onAfterChangeCallCount = 0;
+        string description = "test", icon = "paper-clip";
+        Action<(double, double)> onChange = v => onChangeCallCount++;
+        Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++;
+
+        var data = new RangeItemData((10, 40), description, icon, font, color, focusColor, focusBorderColor);
+        data.OnAfterChange = onAfterChange;
+        data.OnChange = onChange;
+
+        var cut = Render<AntDesign.MultiRangeSlider>(
+            @<AntDesign.MultiRangeSlider HasTooltip="false">
+                        <AntDesign.RangeItem Data="@data"/>
+    </AntDesign.MultiRangeSlider>
+    );        
+        var rangeItem = cut.FindComponent<AntDesign.RangeItem>();
+        var descriptionElement = rangeItem.Find("div.ant-multi-range-slider-track-description");        
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var trackStyle = track.GetAttribute("style");
+        var iconElement = rangeItem.Find("span.anticon");
+        //Assert
+        using (new AssertionScope("before focus"))
+        {
+            descriptionElement.TextContent.Trim().Should().Be(description);
+            descriptionElement.GetAttribute("style").Should().Contain($"color: {font}");
+            iconElement.ClassList.Should().Contain("anticon-" + icon);
+            trackStyle.Should().Contain($"background-color: {color}");
+        }
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown());        
+        await Task.Delay(10);
+        track.KeyDown("ArrowLeft");
+        track.KeyDown("ArrowLeft");
+        track.KeyUp("ArrowLeft");
+
+        //Assert
+        trackStyle = track.GetAttribute("style"); //get focused track style
+        using (new AssertionScope("after focus"))
+        {
+            cut.WaitForAssertion(() => data.Value.Should().Be((8, 38)));
+            rangeItem.Instance.Value.Should().Be((8, 38));
+            onAfterChangeCallCount.Should().Be(1);
+            onChangeCallCount.Should().Be(4);
+            descriptionElement.TextContent.Trim().Should().Be(description);
+            descriptionElement.GetAttribute("style").Should().Contain($"color: {font}");
+            iconElement.ClassList.Should().Contain("anticon-" + icon);
+            trackStyle.Should()
+                .Contain($"border-color: {focusBorderColor}")
+                .And
+                .Contain($"background-color: {focusColor}");
+        }
+    }
+
+    [Fact]
+    public void Should_not_allow_to_use_standalone()
+    {
+        //Arrange
+        //Act
+        //Assert
+        FluentActions.Invoking(() => Render<AntDesign.RangeItem>(@<AntDesign.RangeItem DefaultValue="(10, 20)" />))
+            .Should().Throw<ArgumentNullException>();
+    }
+}

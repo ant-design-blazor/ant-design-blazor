@@ -255,6 +255,8 @@
         values[1] = (20, 21);
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition());        
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition());        
 
         var cut = Render<AntDesign.MultiRangeSlider>(
     @<AntDesign.MultiRangeSlider Value="@values"/>

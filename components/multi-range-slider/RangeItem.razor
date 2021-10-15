@@ -9,15 +9,18 @@
         @onkeydown="e => OnKeyDown(e, 0)"
         @onkeydown:stopPropagation
         @onkeydown:preventDefault
+        @onkeyup="OnKeyUp"
+        @onkeyup:stopPropagation
+        @onkeyup:preventDefault
         >
-        @if (!string.IsNullOrWhiteSpace(Description))
+        @if (!string.IsNullOrWhiteSpace(Description) || !string.IsNullOrWhiteSpace(Icon))
         {
             <div class="ant-multi-range-slider-track-description" style="@_customDescriptionStyle">
                 @if (!string.IsNullOrEmpty(Icon))
                 {
                     <Icon Type="@Icon"></Icon>
                 }
-                @Description
+                @(Description??"")
             </div>
         }
     </div>    
