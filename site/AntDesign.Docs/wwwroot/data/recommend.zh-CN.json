@@ -1,4 +1,10 @@
-﻿[
+﻿[  {
+    "title": "跟Luke一起体验强大的企业级UI框架 - Ant Design Blazor",
+    "description": "在这次演讲中，Luke展示了流行的开源组件库是如何工作的，并进行了有见地的比较和演示。AntBlazor 得到了 .NET 基金会的完全支持，并拥有令人印象深刻的追捧。最重要的是，它有很棒的文档和代码示例，可以让你很快上手并运行起来",
+    "img": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F146529479%2F55525066651%2F1%2Foriginal.20210903-062701?w=800&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=01e8a457183827b661d145dbaded77a8",
+    "href": "https://www.bilibili.com/video/BV1gU4y1F7WA/",
+    "popularize": false
+  },
   {
     "title": "Ant Design Blazor 路由复用多标签页介绍",
     "description": "Blazor 社区中对多标签页的呼声有一年多了，这几天终于结合 Blazor 内置路由组件实现了基于 Tabs 组件的 ReuseTabs 组件，国内外的社区都一片欢腾，也是颇有成就感的。",
@@ -11,13 +17,6 @@
     "description": "从去年 9 月份开始，Ant Design Blazor 团队携手微软 MVP 张善友，在 Reactor 上海举办了一系列的 Blazor 入门教程，一共 7 期，带领大家掌握 Blazor！。主讲人是张善友和 Ant Design Blazor 贡献者陈超超，主持人是董斌。",
     "img": "/docs/assets/news/attack-blazor.jpg",
     "href": "https://space.bilibili.com/483888821/channel/detail?cid=151273",
-    "popularize": false
-  },
-  {
-    "title": "如何用 Blazor 实现 Ant Design 组件库？",
-    "description": "Ant Design Blazor 是 Ant Design 的 Blazor 实现，希望有一天能在丰富 Blazor 生态的同时，还能成为被 Ant Design 生态认可的框架实现，能成为他们 Design 梦的一个延续。",
-    "img": "https://picb.zhimg.com/v2-320009747fc474ccd71dbd87e5767b64_1440w.jpg?source=172ae18b",
-    "href": "https://zhuanlan.zhihu.com/p/115046252",
     "popularize": false
   }
 ]
