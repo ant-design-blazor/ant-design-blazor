@@ -15,6 +15,43 @@ timeline: true
 
 ---
 
+### 0.10.1
+
+2021-10-13
+
+- Tabs
+  - 🆕 增加 AuthorizeReuseTabsRouteView 组件，用于多标签页的验证[#1910](https://github.com/ant-design-blazor/ant-design-blazor/pull/1910) [@Guyiming](https://github.com/Guyiming)
+  - 🛠 改进性能，修复了一些问题[#1970](https://github.com/ant-design-blazor/ant-design-blazor/pull/1970) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 修复 点击箭头自动关闭的问题[#1977](https://github.com/ant-design-blazor/ant-design-blazor/pull/1977) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复 当存在值为null的选项时导致的问题[#1996](https://github.com/ant-design-blazor/ant-design-blazor/pull/1996) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 不可搜索的Select在移动设备激活键盘的问题。[#1992](https://github.com/ant-design-blazor/ant-design-blazor/pull/1992) [@anranruye](https://github.com/anranruye)
+
+- Table
+  - 🐞 修复 Selection 的性能问题和翻页时的状态问题[#1973](https://github.com/ant-design-blazor/ant-design-blazor/pull/1973) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 树形结构子级数据的排序和筛选[#1966](https://github.com/ant-design-blazor/ant-design-blazor/pull/1966) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复首次加载的问题[#1957](https://github.com/ant-design-blazor/ant-design-blazor/pull/1957) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复在小屏模式下标签不显示的问题[#1952](https://github.com/ant-design-blazor/ant-design-blazor/pull/1952) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 绑定了可空的 DateTime 属性时，内置 DateTime 类型筛选器的异常。 [#1964](https://github.com/ant-design-blazor/ant-design-blazor/pull/1964) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 `RemoveMilliseconds` 方法的实现在 EFCore Pomelo Povider 不被支持的问题。 [#1895](https://github.com/ant-design-blazor/ant-design-blazor/pull/1895)  [@iamSmallY](https://github.com/iamSmallY)
+
+- Menu
+  - 🐞 修复 Menu 收起时IconTemplate的样式问题[#2006](https://github.com/ant-design-blazor/ant-design-blazor/pull/2006) [@knight1219](https://github.com/knight1219)
+  - 🐞 修复 弹出层的一些问题，并优化性能。[#1949](https://github.com/ant-design-blazor/ant-design-blazor/pull/1949) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 修复使用了Min或Max时的问题[#1940](https://github.com/ant-design-blazor/ant-design-blazor/pull/1940) [@rabberbock](https://github.com/rabberbock)
+- 🐞 修复 Grid 由于breakpoint枚举命名大小写导致breakpoint匹配的问题。[#1963](https://github.com/ant-design-blazor/ant-design-blazor/pull/1963) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ToString 的本地化问题[#1956](https://github.com/ant-design-blazor/ant-design-blazor/pull/1956) [@bezysoftware](https://github.com/bezysoftware)
+- 📖 整理按钮组件的文档[#1953](https://github.com/ant-design-blazor/ant-design-blazor/pull/1953) [@Hona](https://github.com/Hona)
+- 🐞 修复当 Modal 过高时无法拖动的问题。[#1951](https://github.com/ant-design-blazor/ant-design-blazor/pull/1951) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复自定义语言的问题，改进回退策略。[#1988](https://github.com/ant-design-blazor/ant-design-blazor/pull/1988) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 List 使其动态响应 `Grid` 属性的变化。 [#2014](https://github.com/ant-design-blazor/ant-design-blazor/pull/2014) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 progress 忽略本地化差异对 Style 字符串的影响。 [#2017](https://github.com/ant-design-blazor/ant-design-blazor/pull/2017) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🌐 i18n: 更新捷克语。[#2019](https://github.com/ant-design-blazor/ant-design-blazor/pull/2019) [@Martin Pučálka](https://github.com/Martin-Pucalka)
+
+
+
 ### 0.10.0
 
 2021-09-15
