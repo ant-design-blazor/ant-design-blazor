@@ -318,6 +318,7 @@ namespace AntDesign.Internal
                     //Place where Error Boundary could be utilized
                     throw new ArgumentNullException("Trigger.Ref.Id cannot be null when attaching overlay to it.");
                 }
+
                 if (!(await AsyncHelper.WaitFor(() => Ref.Id is not null)))
                 {
                     Debug.WriteLine("Overlay.Ref.Id is null. Adding overlay stopped.");

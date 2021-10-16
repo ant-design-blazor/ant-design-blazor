@@ -1,7 +1,12 @@
-﻿namespace AntDesign
+﻿using Microsoft.AspNetCore.Components;
+
+namespace AntDesign
 {
     public partial class ActionColumn : ColumnBase
     {
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        public bool Blocked { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -9,6 +14,12 @@
             {
                 Context.HeaderColumnInitialed(this);
             }
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
         }
     }
 }

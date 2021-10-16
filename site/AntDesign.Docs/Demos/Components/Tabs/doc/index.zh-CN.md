@@ -25,13 +25,14 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| ActiveKey | 当前激活 tab 面板的 key | string | 无 |
-| Animated | 是否使用动画切换 Tabs，在 `tabPosition=top|bottom` 时有效 | boolean \| {inkBar:boolean, tabPane:boolean} | true, 当 type="card" 时为 false |
-| RenderTabBar | 替换 TabBar，用于二次封装标签头 | (props: DefaultTabBarProps, DefaultTabBar: React.ComponentClass) => React.ReactElement | 无 |
+| ActiveKey | 当前激活 tab 面板的 key，可双向绑定 | string | 无 |
+| Animated | 是否使用动画切换 Tabs，在 `tabPosition=top|bottom` 时有效 | bool | false |
 | DefaultActiveKey | 初始化选中面板的 key，如果没有设置 activeKey | string | 第一个面板 |
 | HideAdd | 是否隐藏加号图标，在 `type="editable-card"` 时有效 | boolean | false |
 | Size | 大小，提供 `large` `default` 和 `small` 三种大小 | string | 'default' |
 | TabBarExtraContent | tab bar 上额外的元素 | RenderFargment | 无 |
+| TabBarExtraContentLeft |  tab bar 上额外的元素(左边) | RenderFargment | - |
+| TabBarExtraContentRight | tab bar 上额外的元素(右边) | RenderFargment | - |
 | TabBarGutter | tabs 之间的间隙 | number | 无 |
 | TabBarStyle | tab bar 的样式对象 | object | - |
 | TabPosition | 页签位置，可选值有 `top` `right` `bottom` `left` | string | 'top' |
@@ -42,6 +43,7 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | OnNextClick | next 按钮被点击的回调 | Function | 无 |
 | OnPrevClick | prev 按钮被点击的回调 | Function | 无 |
 | OnTabClick | tab 被点击的回调 | Function | 无 |
+| Draggable | 使标签可拖拽调整顺序 | bool | false |
 
 ### Tabs.TabPane
 

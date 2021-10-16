@@ -435,6 +435,7 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnTriggerClick()
         {
+            _mouseInTrigger = true;
             if (IsContainTrigger(TriggerType.Click))
             {
                 if (_overlay.IsPopup())
@@ -450,6 +451,7 @@ namespace AntDesign.Internal
             {
                 await Hide();
             }
+            _mouseInTrigger = false;
         }
 
         protected virtual async Task OnTriggerContextmenu(MouseEventArgs args)

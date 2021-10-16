@@ -309,9 +309,7 @@ namespace AntDesign
 
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
-        /// </summary>        /// <summary>
-        /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
-        /// </summary>
+        /// </summary> 
         [Parameter]
         public TItemValue DefaultValue
         {
@@ -756,7 +754,7 @@ namespace AntDesign
                 .If($"{ClassPrefix}-lg", () => Size == AntSizeLDSType.Large)
                 .If($"{ClassPrefix}-borderless", () => !Bordered)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
-                .If($"{ClassPrefix}-show-search", () => EnableSearch || SelectMode == SelectMode.Tags)
+                .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
@@ -1717,7 +1715,7 @@ namespace AntDesign
             }
 
             if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) &&
-                (EnableSearch || SelectMode == SelectMode.Tags || AllowClear))
+                (IsSearchEnabled || AllowClear))
             {
                 if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
                     await OnRemoveSelectedAsync(SelectedOptionItems.Last());

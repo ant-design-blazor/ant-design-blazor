@@ -66,17 +66,28 @@ namespace AntDesign
         double IAntList.ColumnWidth => _columnWidth;
 
         double _columnWidth;
+        int _columns = 0;
+        bool _isInitialized = false;
 
         protected override void OnInitialized()
         {
             SetClassMap();
-
-            if (Grid?.Column > 0)
+            _columns = Grid?.Column ?? 0;
+            if (_columns > 0)
             {
                 _columnWidth = 100d / Grid.Column;
             }
-
             base.OnInitialized();
+            _isInitialized = true;
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            if (_isInitialized && _columns != (Grid?.Column ?? 0))
+            {
+                _columnWidth = 100d / Grid.Column;
+            }
         }
 
         protected void SetClassMap()

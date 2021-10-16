@@ -12,9 +12,3 @@ title:
 ## en-US
 
 The simplest usage.
-
-```jsx
-import { Rate } from 'antd';
-
-ReactDOM.render(<Rate />, mountNode);
-```

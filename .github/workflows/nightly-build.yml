@@ -87,6 +87,7 @@ jobs:
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
+          dotnet pack src/AntDesign.Components.Authentication/AntDesign.Components.Authentication.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
           next_version: ${{ steps.get_next_version.outputs.next_version }}
      

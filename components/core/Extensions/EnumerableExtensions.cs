@@ -14,7 +14,9 @@ namespace AntDesign
                 return;
             }
 
-            foreach (T obj in items)
+            var source = items.ToList();
+
+            foreach (T obj in source)
             {
                 action(obj);
             }

@@ -13,7 +13,7 @@ export class overlayHelper {
   ): overlayPosition {      
     const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
     const containerElement = domInfoHelper.get(containerSelector) as HTMLElement;
-    const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;
+    const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;    
 
     if (!domManipulationHelper.addElementTo(overlaySelector, containerElement)) {
       console.log("Failed to add overlay. Details:", {
@@ -29,13 +29,13 @@ export class overlayHelper {
       overlayPresets = { x: overlayLeft, y: overlayTop };
     }
 
-    let overlayConstraints: overlayConstraints = {
+    const overlayConstraints: overlayConstraints = {
       verticalOffset: verticalOffset,
       horizontalOffset: horizontalOffset,
       arrowPointAtCenter: arrowPointAtCenter
     };
 
-    let overlay = new Overlay(blazorId, overlayElement, containerElement, triggerElement, placement, triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, overlayConstraints);   
+    const overlay = new Overlay(blazorId, overlayElement, containerElement, triggerElement, placement, triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, overlayConstraints);   
     //register object in store, so it can be retrieved during update/dispose
     this.overlayRegistry[blazorId] = overlay;
     
@@ -74,7 +74,7 @@ export class overlayHelper {
 
   static addPreventEnterOnOverlayVisible(element, overlayElement) {
     if (element && overlayElement) {
-      let dom: HTMLElement = domInfoHelper.get(element);
+      const dom: HTMLElement = domInfoHelper.get(element);
       if (dom) {
         state.eventCallbackRegistry[element.id + "keydown:Enter"] = (e) => eventHelper.preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
         dom.addEventListener("keydown", state.eventCallbackRegistry[element.id + "keydown:Enter"], false);
@@ -84,7 +84,7 @@ export class overlayHelper {
 
   static removePreventEnterOnOverlayVisible(element) {
     if (element) {
-      let dom: HTMLElement = domInfoHelper.get(element);
+      const dom: HTMLElement = domInfoHelper.get(element);
       if (dom) {
         dom.removeEventListener("keydown", state.eventCallbackRegistry[element.id + "keydown:Enter"]);
         state.eventCallbackRegistry[element.id + "keydown:Enter"] = null; 
