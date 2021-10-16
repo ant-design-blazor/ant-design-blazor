@@ -36,7 +36,7 @@ namespace AntDesign
         /// Gets or sets a value representing the URL matching behavior.
         /// </summary>
         [Parameter]
-        public NavLinkMatch Match { get; set; }
+        public NavLinkMatch Match { get; set; } = NavLinkMatch.All;
 
         [CascadingParameter]
         public MenuItem MenuItem { get; set; }
@@ -69,7 +69,7 @@ namespace AntDesign
             }
 
             // Update computed state
-            _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;                        
+            _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;
 
             if (MenuItem.FirstRun)
             {
