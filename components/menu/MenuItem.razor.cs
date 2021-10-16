@@ -35,7 +35,7 @@ namespace AntDesign
         public string RouterLink { get; set; }
 
         [Parameter]
-        public NavLinkMatch RouterMatch { get; set; }
+        public NavLinkMatch RouterMatch { get; set; } = NavLinkMatch.All;
 
         [Parameter]
         public string Title { get; set; }
@@ -48,7 +48,7 @@ namespace AntDesign
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
-        private string _key;        
+        private string _key;
 
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
