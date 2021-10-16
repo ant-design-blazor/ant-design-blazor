@@ -257,7 +257,7 @@ namespace AntDesign.Internal
             //It should only be registered when overlay is shown and removed when
             //overlay is hidden. At the time of writing, corret approach had been
             //only implemented for Tooltip.
-            if (firstRender && (!_overlay.OnHide.HasDelegate || !_overlay.OnShow.HasDelegate))
+            if (firstRender && this is not Tooltip)
             {
                 DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
             }
