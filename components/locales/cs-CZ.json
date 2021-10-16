@@ -129,7 +129,7 @@
     "expand": "Rozbalit řádek",
     "collapse": "Sbalit řádek",
     "triggerDesc": "Kliknutím seřadíte sestupně",
-    "triggerAsc": "Kliknutím seřadíte vzstupně",
+    "triggerAsc": "Kliknutím seřadíte vzestupně",
     "cancelSort": "Kliknutím zrušíte řazení",
     "filterOptions": {
       "true": "Ano",
@@ -198,7 +198,7 @@
       "whitespace": "${label} nesmí být prázdný znak",
       "date": {
         "format": "${label} formát data není validní",
-        "parse": "${label} nezle převést na datum",
+        "parse": "${label} nelze převést na datum",
         "invalid": "${label} není validní datum"
       },
       "types": {
