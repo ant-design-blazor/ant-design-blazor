@@ -21,7 +21,7 @@
         (90, 100),
     };
 
-    public MultiRangeSlider_Moving_Tests()
+    public MultiRangeSlider_Moving_Keyboard_Tests()
     {
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition());
@@ -32,7 +32,9 @@
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
             .SetResult(new HtmlElement());
 
+#if !NET6_0_OR_GREATER
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+#endif
     }
 
     

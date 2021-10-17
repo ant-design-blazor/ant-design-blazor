@@ -1,0 +1,62 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using System.Text.Json
+@inherits AntDesignTestBase
+@code {
+    IEnumerable<(double start, double end)> _valuesWithNoOverlap = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (20, 30),
+        (60, 90),
+        (90, 100),
+    };
+
+    IEnumerable<(double start, double end)> _valuesWithOverlapOnEdges = new List<(double start, double end)>()
+    {        
+        (0, 10),
+        (10, 20),
+        (20, 30),
+        (30, 40),
+        (40, 50),
+        (50, 60),
+        (60, 90),
+        (90, 100),
+    };
+
+    Action<JsonElement>? onMouseUpCallback = default;
+    Action<JsonElement>? onMouseMoveCallback = default;
+    
+
+    public MultiRangeSlider_Moving_Mouse_Tests()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true)
+            .SetResult("");
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+#if !NET6_0_OR_GREATER
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+#endif
+        var mock = base.MockedDomEventListener;        
+        mock.Setup(s => s.AddShared<JsonElement>("window", "mouseup", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
+            .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
+                {                
+                    if (callback.Target is AntDesign.Internal.OverlayTrigger)
+                    {
+                        onMouseUpCallback = callback;                
+                    }
+                });
+
+        mock.Setup(s => s.AddShared<JsonElement>("window", "mousemove", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
+            .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
+                {                
+                    if (callback.Target is AntDesign.Internal.OverlayTrigger)
+                    {
+                        onMouseMoveCallback = callback;                
+                    }
+                });
+
+    }
+}
