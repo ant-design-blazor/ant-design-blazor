@@ -431,6 +431,9 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnTriggerClick()
         {
+            //_mouseInTrigger might have been set by a different event,
+            //so track that to know if should be reset at the end of this method
+            bool resetMouseInTrigger = !_mouseInTrigger;
             _mouseInTrigger = true;
             if (IsContainTrigger(TriggerType.Click))
             {
@@ -447,7 +450,10 @@ namespace AntDesign.Internal
             {
                 await Hide();
             }
-            _mouseInTrigger = false;
+            if (resetMouseInTrigger)
+            {
+                _mouseInTrigger = false;
+            }
         }
 
         protected virtual async Task OnTriggerContextmenu(MouseEventArgs args)
