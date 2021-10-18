@@ -1,5 +1,6 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @using System.Text.Json
+@using Xunit.Abstractions
 @inherits AntDesignTestBase
 @code {
     IEnumerable<(double start, double end)> _valuesWithNoOverlap = new List<(double start, double end)>()
@@ -63,7 +64,7 @@
     public async Task MouseMove_should_move_edge() {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-        @<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>
+        @<AntDesign.MultiRangeSlider HasTooltip="false" Value="@_valuesWithNoOverlap"/>
         );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[2].Instance.Value;
@@ -71,10 +72,7 @@
         _sliderDimensions.ClientWidth = 100; //slider length       
         //Act       
         rangeItems[2].Find("div.ant-multi-range-slider-handle-1").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));        
@@ -84,7 +82,7 @@
     public async Task MouseMove_should_not_move_edge_after_MouseUp() {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>
+    @<AntDesign.MultiRangeSlider HasTooltip="false" Value="@_valuesWithNoOverlap"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[2].Instance.Value;
@@ -92,10 +90,7 @@
         _sliderDimensions.ClientWidth = 100; //slider length       
                                              //Act       
         rangeItems[2].Find("div.ant-multi-range-slider-handle-1").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));
@@ -111,7 +106,7 @@
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
+    @<AntDesign.MultiRangeSlider HasTooltip="false" Value="@_valuesWithOverlapOnEdges"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
         var originalValue1 = rangeItems[2].Instance.Value;
@@ -120,10 +115,7 @@
         //Act
         rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
         rangeItems[2].Find("div.ant-multi-range-slider-handle-1").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
@@ -170,7 +162,7 @@
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider 
+    @<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@_valuesWithNoOverlap" 
             Vertical="@vertical"
             Reverse="@reverse"/>
@@ -200,7 +192,7 @@
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
 
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@values" />
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();        
@@ -210,12 +202,7 @@
         //Act
         var edge = rangeItems[1].Find($"div.ant-multi-range-slider-handle-2");
         edge.MouseDown(); 
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
-
-        //edge.KeyDown("arrowleft"); //equal
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement); //equal
         rangeItems[1].Instance.Value.Should().Be((20, 20));
         jsonElement = JsonDocument.Parse($"{{\"clientX\":{originalValue.Item2 - 2},\"clientY\":0, \"pageX\":{originalValue.Item2 - 2}, \"pageY\":0}}").RootElement;
@@ -232,7 +219,7 @@
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider 
+    @<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@_valuesWithNoOverlap" />);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[0].Instance.Value;          
@@ -240,10 +227,7 @@
         _sliderDimensions.ClientWidth = 100; //slider length       
         //Act
         rangeItems[0].Find("div.ant-multi-range-slider-handle-1").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         await Task.Delay(1);        
@@ -254,7 +238,7 @@
     public async Task Do_not_move_edge_when_edge_would_go_above_max()
     {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@_valuesWithNoOverlap" />
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -263,10 +247,7 @@
         _sliderDimensions.ClientWidth = 100; //slider length       
         //Act
         rangeItems[3].Find("div.ant-multi-range-slider-handle-2").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //Assert
         await Task.Delay(1);                
         rangeItems[3].Instance.Value.Should().Be((originalValue.Item1, originalValue.Item2));
@@ -277,7 +258,7 @@
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider 
+    @<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@_valuesWithNoOverlap" />);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue = rangeItems[2].Instance.Value;  //(60, 90), touching on 90 to (90, 100)
@@ -285,10 +266,7 @@
         _sliderDimensions.ClientWidth = 100; //slider length       
         //Act
         rangeItems[2].Find("div.ant-multi-range-slider-handle-2").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //Assert
         await Task.Delay(1);        
         rangeItems[2].Instance.Value.Should().Be((originalValue.Item1, originalValue.Item2));
@@ -311,7 +289,7 @@
         double cursorPosition, RangeEdge edge, double firstValueModifier, double secondValueModifier)
     {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@_valuesWithOverlapOnEdges" 
             AllowOverlapping/>
     );
@@ -324,7 +302,7 @@
         if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
         {
             onMouseMoveCallback.Should().NotBeNull();
-        }
+        }        
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         rangeItems[rangeIndex].Instance.Value.Should().
@@ -335,7 +313,7 @@
     public async Task Move_attached_non_overlapping_edges()
     {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" Value="@_valuesWithOverlapOnEdges"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
@@ -345,10 +323,7 @@
         //Act
         rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);        
         rangeItems[2].Find($"div.ant-multi-range-slider-handle-1").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Act
         cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
@@ -359,7 +334,7 @@
     public async Task Move_attached_not_neigboring_ranges()
     {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" Value="@_valuesWithOverlapOnEdges"
             AllowOverlapping
         />
     );
@@ -371,10 +346,7 @@
         //Act
         await cut.InvokeAsync(() => rangeItems[2].Instance.AttachEdges(RangeEdge.Last, rangeItems[4].Instance, RangeEdge.Last));        
         rangeItems[2].Find($"div.ant-multi-range-slider-handle-2").MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
@@ -388,7 +360,7 @@
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider Value="@values"/>
+    @<AntDesign.MultiRangeSlider HasTooltip="false" Value="@values"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
@@ -399,10 +371,7 @@
         await cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
         var edge = rangeItems[2].Find("div.ant-multi-range-slider-handle-1");
         edge.MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         onMouseMoveCallback!.Invoke(jsonElement); //should not allow
         onMouseMoveCallback!.Invoke(jsonElement); //should not allow
@@ -418,21 +387,19 @@
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
         var cut = Render<AntDesign.MultiRangeSlider>(
-    @<AntDesign.MultiRangeSlider 
-            Value="@values" AllowOverlapping/>);
+    @<AntDesign.MultiRangeSlider HasTooltip="false" 
+            Value="@values" AllowOverlapping/>
+    );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
         var originalValue1 = rangeItems[2].Instance.Value;
         var jsonElement = JsonDocument.Parse($"{{\"clientX\":{originalValue1.Item1},\"clientY\":0, \"pageX\":{originalValue1.Item1 - 1}, \"pageY\":0}}").RootElement;
         _sliderDimensions.ClientWidth = 100; //slider length       
-        //Act
+                                             //Act
         await cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
         var edge = rangeItems[2].Find("div.ant-multi-range-slider-handle-1");
         edge.MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         jsonElement = JsonDocument.Parse($"{{\"clientX\":{originalValue1.Item1 - 1},\"clientY\":0, \"pageX\":{originalValue1.Item1 - 2}, \"pageY\":0}}").RootElement;
         onMouseMoveCallback!.Invoke(jsonElement); //should not allow
@@ -449,7 +416,8 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@values" AllowOverlapping/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -462,10 +430,7 @@
         await cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
         var edge = rangeItems[3].Find("div.ant-multi-range-slider-handle-1");        
         edge.MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert
         rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2));        
@@ -479,7 +444,7 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider HasTooltip="false" 
             Value="@values" AllowOverlapping/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -492,10 +457,7 @@
         rangeItems[1].Instance.AttachSingle(RangeEdge.Last);
         var edge = rangeItems[3].Find("div.ant-multi-range-slider-handle-1");        
         edge.MouseDown();
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         onMouseMoveCallback!.Invoke(jsonElement);
         //Assert        
         rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2));        
@@ -524,10 +486,7 @@
 
         //Act & Assert
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((0, 9)));
@@ -557,10 +516,7 @@
 #endif
         //Act & Assert
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((91, 100)));
@@ -589,10 +545,7 @@
 #endif
         //Act & Assert
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((59, 89)));
@@ -623,10 +576,7 @@
 #endif
         //Act        
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));        
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be(originalValue));
@@ -650,7 +600,7 @@
         bool vertical, double cursorPosition, double modifier)
     {        
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider
             Value="@_valuesWithOverlapOnEdges" AllowOverlapping 
             HasTooltip="false" Vertical="@vertical"/>
     );
@@ -667,10 +617,7 @@
 #endif
         //Act        
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         //first move
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + modifier, originalValue.Item2 + modifier)));
@@ -692,7 +639,7 @@
     public async Task Move_range_when_overlapping_edges_attached()
     {        
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider
             Value="@_valuesWithNoOverlap" HasTooltip="false"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -709,10 +656,7 @@
 #endif
         //Act        
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         //Assert        
@@ -727,7 +671,7 @@
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
         values[2] = (21, 40);
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider
             Value="@values" HasTooltip="false"/>
         );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -742,10 +686,7 @@
 #endif
         //Act        
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         //first move
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         //Assert        
@@ -763,7 +704,7 @@
     public async Task Move_range_when_attached_with_gap()
     {        
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider
             Value="@_valuesWithNoOverlap" HasTooltip="false"/>
     );
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
@@ -780,10 +721,7 @@
 #endif
         //Act        
         await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
-        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
-        {
-            onMouseMoveCallback.Should().NotBeNull();
-        }
+        cut.WaitForState(() => onMouseMoveCallback is not null);
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
         //Assert        
         cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue1.Item1 + 1, originalValue1.Item2 + 1)));
