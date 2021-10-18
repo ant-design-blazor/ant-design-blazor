@@ -392,7 +392,7 @@
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@_valuesWithOverlapOnEdges" HasTooltip="false"/>
     );
-        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3];
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3]; //(30, 40)
         var originalValue = rangeItem.Instance.Value;
         var track = rangeItem.Find("div.ant-multi-range-slider-track");
         //Act        

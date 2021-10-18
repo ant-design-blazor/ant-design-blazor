@@ -81,10 +81,37 @@
     }
 
     [Fact]
+    public async Task MouseMove_should_not_move_edge_after_MouseUp() {
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_valuesWithNoOverlap"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        var originalValue = rangeItems[2].Instance.Value;
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":{originalValue.Item1 - 1}, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length       
+                                             //Act       
+        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").MouseDown();
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        onMouseMoveCallback!.Invoke(jsonElement);
+        //Assert
+        rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":0, \"pageY\":0}}").RootElement;
+        onMouseUpCallback!.Invoke(jsonElement);
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":{originalValue.Item1 - 2}, \"pageY\":0}}").RootElement;
+        onMouseMoveCallback!.Invoke(jsonElement);
+        rangeItems[2].Instance.Value.Should().Be((originalValue.Item1 - 1, originalValue.Item2));
+    }
+
+    [Fact]
     public async Task Move_attached_overlapping_edges()
     {
         //Arrange
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
         var originalValue1 = rangeItems[2].Instance.Value;
@@ -540,8 +567,226 @@
         //second move
         jsonElement = JsonDocument.Parse($"{{\"clientX\":1,\"clientY\":0, \"pageX\":97, \"pageY\":0}}").RootElement;
         await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));        
-        
-        track.KeyDown("ArrowRight");
+                
         rangeItem.Instance.Value.Should().Be((91, 100));
+    }
+
+    [Fact]
+    public async Task MouseMove_should_not_move_range_afer_MouseUp()
+    {        
+        //Arrange        
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" AllowOverlapping HasTooltip="false"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[2];
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":74, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+#if NET_6_0_OR_GRATER
+        var mouseEventArgs = new MouseEventArgs() { PageX = 75; };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 75 }; 
+#endif
+        //Act & Assert
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        //first move
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((59, 89)));
+                
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":0, \"pageY\":0}}").RootElement;
+        await cut.InvokeAsync(() => onMouseUpCallback!.Invoke(jsonElement));
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":73, \"pageY\":0}}").RootElement;
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));                        
+        rangeItem.Instance.Value.Should().Be((59, 89));
+    }
+
+    [Fact]
+    public async Task Forbid_move_range_to_overlap_when_not_AllowOverlapping()
+    {        
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithOverlapOnEdges" HasTooltip="false"/>
+        );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3]; //(30, 40)
+        var originalValue = rangeItem.Instance.Value;
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":30,\"clientY\":0, \"pageX\":35, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+#if NET_6_0_OR_GRATER
+        var mouseEventArgs = new MouseEventArgs() { PageX = 36; };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 36 }; 
+#endif
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        //first move
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));        
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be(originalValue));
+        //second move
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":30,\"clientY\":0, \"pageX\":36, \"pageY\":0}}").RootElement;
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));        
+        
+        rangeItem.Instance.Value.Should().Be(originalValue);
+    }
+
+    [Theory]
+    [InlineData(false, 34, -1)]
+    [InlineData(false, 36, 1)]
+    [InlineData(false, 34.8, 0)]
+    [InlineData(false, 35.45, 0)]
+    [InlineData(true, 100-34, -1)]
+    [InlineData(true, 100-36, 1)]
+    [InlineData(true, 100-34.8, 0)]
+    [InlineData(true, 100-35.45, 0)]
+    public async Task Allow_move_range_to_overlap_when_AllowOverlapping( 
+        bool vertical, double cursorPosition, double modifier)
+    {        
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithOverlapOnEdges" AllowOverlapping 
+            HasTooltip="false" Vertical="@vertical"/>
+    );
+        var rangeItem = cut.FindComponents<AntDesign.RangeItem>()[3]; //(30, 40)
+        var originalValue = rangeItem.Instance.Value;
+        var track = rangeItem.Find("div.ant-multi-range-slider-track");
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":{cursorPosition}, \"pageY\":{cursorPosition}}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+        _sliderDimensions.ClientHeight = 100; 
+#if NET_6_0_OR_GRATER
+    var mouseEventArgs = new MouseEventArgs() { PageX = 35, PageY = 100-35 };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 35, ClientY = 100-35 }; 
+#endif
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        //first move
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + modifier, originalValue.Item2 + modifier)));
+        if (vertical)            
+        {
+            jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":{cursorPosition - modifier}, \"pageY\":{cursorPosition - modifier}}}").RootElement;
+        }
+        else
+        {
+            jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":{cursorPosition + modifier}, \"pageY\":{cursorPosition + modifier}}}").RootElement;
+        }
+
+        //second move
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + 2 * modifier, originalValue.Item2 + 2 * modifier)));
+    }
+
+    [Fact]
+    public async Task Move_range_when_overlapping_edges_attached()
+    {        
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" HasTooltip="false"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.Last);
+        var originalValue2 = rangeItems[2].Instance.Value;
+        var originalValue3 = rangeItems[3].Instance.Value;
+        var track = rangeItems[2].Find("div.ant-multi-range-slider-track"); // (60, 90)
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":76, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+#if NET_6_0_OR_GRATER
+        var mouseEventArgs = new MouseEventArgs() { PageX = 75; };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 75 }; 
+#endif
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        //first move
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((originalValue2.Item1 + 1, originalValue2.Item2 + 1)));        
+        rangeItems[3].Instance.Value.Should().Be((originalValue3.Item1 + 1, originalValue3.Item2));
+    }
+
+    [Fact]
+    public async Task Move_range_when_overlapping_edges_attached_up_to_attached_opposite_edge()
+    {        
+        //Arrange
+        var values = _valuesWithNoOverlap.ToList();
+        values[1] = (20, 21);
+        values[2] = (21, 40);
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@values" HasTooltip="false"/>
+        );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        rangeItems[2].Instance.AttachOverlappingEdges(RangeEdge.First);
+        var track = rangeItems[2].Find("div.ant-multi-range-slider-track");
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":74, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+#if NET_6_0_OR_GRATER
+        var mouseEventArgs = new MouseEventArgs() { PageX = 75; };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 75 }; 
+#endif
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        //first move
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[2].Instance.Value.Should().Be((20, 39)));        
+        rangeItems[1].Instance.Value.Should().Be((20, 20));
+        //second move
+        jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":73, \"pageY\":0}}").RootElement;
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        //Assert
+        rangeItems[2].Instance.Value.Should().Be((20, 39));
+        rangeItems[1].Instance.Value.Should().Be((20, 20));
+    }
+
+    [Fact]
+    public async Task Move_range_when_attached_with_gap()
+    {        
+        //Arrange
+        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+            Value="@_valuesWithNoOverlap" HasTooltip="false"/>
+    );
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
+        await cut.InvokeAsync(() => rangeItems[2].Instance.AttachEdges(RangeEdge.First, rangeItems[1].Instance, RangeEdge.Last));
+        var originalValue1 = rangeItems[1].Instance.Value;
+        var originalValue2 = rangeItems[2].Instance.Value;
+        var track = rangeItems[1].Find("div.ant-multi-range-slider-track"); //(20, 30)
+        var jsonElement = JsonDocument.Parse($"{{\"clientX\":0,\"clientY\":0, \"pageX\":26, \"pageY\":0}}").RootElement;
+        _sliderDimensions.ClientWidth = 100; //slider length      
+#if NET_6_0_OR_GRATER
+        var mouseEventArgs = new MouseEventArgs() { PageX = 25; };
+#else
+        var mouseEventArgs = new MouseEventArgs() { ClientX = 25 }; 
+#endif
+        //Act        
+        await cut.InvokeAsync(() => track.MouseDown(mouseEventArgs));
+        if (!(await AsyncHelper.WaitFor(() => onMouseMoveCallback is not null)))
+        {
+            onMouseMoveCallback.Should().NotBeNull();
+        }
+        await cut.InvokeAsync(() => onMouseMoveCallback!.Invoke(jsonElement));
+        //Assert        
+        cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue1.Item1 + 1, originalValue1.Item2 + 1)));
+        rangeItems[2].Instance.Value.Should().Be((originalValue2.Item1 + 1, originalValue2.Item2));
     }
 }
