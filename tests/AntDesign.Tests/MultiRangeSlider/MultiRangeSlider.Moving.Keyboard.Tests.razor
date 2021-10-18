@@ -52,7 +52,7 @@
     }
 
     [Fact]
-    public void Move_attached_overlapping_edges_with_keys()
+    public void Move_attached_overlapping_edges()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>);
@@ -100,7 +100,7 @@
     [InlineData(true, true, "ArrowLeft", RangeEdge.First, 0, 0)]
     [InlineData(true, true, "ArrowRight", RangeEdge.Last, 0, 0)]
     [InlineData(true, true, "ArrowLeft", RangeEdge.Last, 0, 0)]     
-    public void Move_edge_with_keys(bool reverse, bool vertical, string key, RangeEdge edge, 
+    public void Move_edge(bool reverse, bool vertical, string key, RangeEdge edge, 
         double firstValueModifier, double secondValueModifier)
     {
         //Arrange
@@ -128,19 +128,20 @@
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
             Value="@values" />
     );
-        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();        
+        var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         //Act
-        rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft"); //equal
+        var edge = rangeItems[1].Find($"div.ant-multi-range-slider-handle-2");
+        edge.KeyDown("arrowleft"); //equal
         rangeItems[1].Instance.Value.Should().Be((20, 20));
-        rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft"); //switch
+        edge.KeyDown("arrowleft"); //switch
         rangeItems[1].Instance.Value.Should().Be((19, 20));
-        await cut.InvokeAsync(() => rangeItems[1].Find($"div.ant-multi-range-slider-handle-2").KeyDown("arrowleft")); //equal again
+        await cut.InvokeAsync(() => edge.KeyDown("arrowleft")); //equal again
         //Assert
         rangeItems[1].Instance.Value.Should().Be((19, 19));
     }
 
     [Fact]
-    public async Task Do_not_move_edge_with_keys_when_edge_would_go_below_min()
+    public async Task Do_not_move_edge_when_edge_would_go_below_min()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
@@ -156,7 +157,7 @@
     }
 
     [Fact]
-    public async Task Do_not_move_edge_with_keys_when_edge_would_go_above_max()
+    public async Task Do_not_move_edge_when_edge_would_go_above_max()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
@@ -172,7 +173,7 @@
     }
 
     [Fact]
-    public async Task Do_not_move_edge_with_keys_when_overlap_forbidden_and_edge_touching_another_edge()
+    public async Task Do_not_move_edge_when_overlap_forbidden_and_edge_touching_another_edge()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(
@@ -200,7 +201,7 @@
     [InlineData(7, "ArrowLeft", RangeEdge.Last, 0, -1)]
     [InlineData(7, "ArrowRight", RangeEdge.First, 1, 0)]
     [InlineData(7, "ArrowRight", RangeEdge.Last, 0, 0)]
-    public void Move_edge_with_keys_when_overlap_allowed_and_edge_touching_another_edge(int rangeIndex,
+    public void Move_edge_when_overlap_allowed_and_edge_touching_another_edge(int rangeIndex,
         string key, RangeEdge edge, double firstValueModifier, double secondValueModifier)
     {
         //Arrange
@@ -217,7 +218,7 @@
     }
 
     [Fact]
-    public void Move_attached_non_overlapping_edges_with_keys()
+    public void Move_attached_non_overlapping_edges()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"/>
@@ -234,7 +235,7 @@
     }
 
     [Fact]
-    public void Move_attached_not_neigoring_ranges()
+    public void Move_attached_not_neigboring_ranges()
     {
         //Arrange
         var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider Value="@_valuesWithOverlapOnEdges"
@@ -266,9 +267,10 @@
         var originalValue1 = rangeItems[2].Instance.Value;
         //Act
         cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); //should not allow
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); //should not allow
+        var edge = rangeItems[2].Find("div.ant-multi-range-slider-handle-1");
+        edge.KeyDown("ArrowLeft");
+        edge.KeyDown("ArrowLeft"); //should not allow
+        edge.KeyDown("ArrowLeft"); //should not allow
         //Assert
         cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1, originalValue0.Item2 - 1)));
         rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 1, originalValue1.Item2));
@@ -280,16 +282,18 @@
         //Arrange
         var values = _valuesWithNoOverlap.ToList();
         values[1] = (20, 21);
-        var cut = Render<AntDesign.MultiRangeSlider>(@<AntDesign.MultiRangeSlider 
+        var cut = Render<AntDesign.MultiRangeSlider>(
+    @<AntDesign.MultiRangeSlider 
             Value="@values" AllowOverlapping/>);
         var rangeItems = cut.FindComponents<AntDesign.RangeItem>();
         var originalValue0 = rangeItems[1].Instance.Value;
         var originalValue1 = rangeItems[2].Instance.Value;
         //Act
         cut.InvokeAsync(() => rangeItems[1].Instance.AttachEdges(RangeEdge.Last, rangeItems[2].Instance, RangeEdge.First));
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft");
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); 
-        rangeItems[2].Find("div.ant-multi-range-slider-handle-1").KeyDown("ArrowLeft"); 
+        var edge = rangeItems[2].Find("div.ant-multi-range-slider-handle-1");
+        edge.KeyDown("ArrowLeft");
+        edge.KeyDown("ArrowLeft"); //should not allow
+        edge.KeyDown("ArrowLeft"); //should not allow
         //Assert
         cut.WaitForAssertion(() => rangeItems[1].Instance.Value.Should().Be((originalValue0.Item1 - 2, originalValue0.Item2 - 3)));
         rangeItems[2].Instance.Value.Should().Be((originalValue1.Item1 - 3, originalValue1.Item2));        
@@ -436,7 +440,7 @@
         //Assert        
         cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + modifier, originalValue.Item2 + modifier)));
         track.KeyDown(key);
-        rangeItem.Instance.Value.Should().Be((originalValue.Item1 + 2 * modifier, originalValue.Item2 + 2 * modifier));
+        cut.WaitForAssertion(() => rangeItem.Instance.Value.Should().Be((originalValue.Item1 + 2 * modifier, originalValue.Item2 + 2 * modifier)));
     }
     
     [Fact]
