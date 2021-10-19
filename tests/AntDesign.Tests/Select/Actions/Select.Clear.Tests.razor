@@ -9,11 +9,16 @@
         new(4, "Emily"),
     };
 
-    [Fact]
-    public void DefaultSelectWithoutAllowClear()
+    public Select_Clear_Tests()
     {
         JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new DomRect());
+        JSInterop.SetupVoid(JSInteropConstants.DomMainpulationHelper.ScrollTo, _ => true);
+    }
+
+    [Fact]
+    public void DefaultSelectWithoutAllowClear()
+    {        
         var cut = Render<Select<int, Person>>(
             @<AntDesign.Select DataSource="@_persons"
                                LabelName="@nameof(Person.Name)"
@@ -25,9 +30,7 @@
 
     [Fact]
     public void DefaultSelectWithAllowClear()
-    {
-        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new DomRect());
+    {        
         int? value = 1;
         var cut = Render<Select<int?, Person>>(
             @<AntDesign.Select
@@ -36,7 +39,8 @@
                  LabelName="@nameof(Person.Name)"
                  @bind-Value="@value"
                  AllowClear/>
-            );
+    );
+        cut.WaitForState(() => cut.Find("span.ant-select-clear") is not null);
         var clear = cut.Find("span.ant-select-clear");
         clear.Click();
         value.Should().Be(default(int?));
@@ -47,8 +51,6 @@
     [Fact]
     public void MultipleSelectWithoutAllowClear()
     {
-        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new DomRect());
         IEnumerable<string> values = new List<string>();
         var cut = Render<Select<string, string>>(
             @<Select
@@ -69,8 +71,6 @@
     [Fact]
     public void MultipleSelectWithAllowClearAndEmptyValues()
     {
-        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new DomRect());
         IEnumerable<string> values = new List<string>();
         var cut = Render<Select<string, string>>(
             @<Select
@@ -92,8 +92,6 @@
     [Fact]
     public void MultipleSelectWithAllowClearAndNotEmptyValues()
     {
-        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new DomRect());
         IEnumerable<string> values = new List<string>{ "Lucy" };
         var cut = Render<Select<string, string>>(
             @<Select

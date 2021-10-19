@@ -36,7 +36,7 @@ jobs:
 
       - name: Test 📝
         run: |
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage"
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -v n
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
           find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
