@@ -153,6 +153,7 @@ namespace AntDesign
             public static string RemoveClsFromFirstChild => $"{FUNC_PREFIX}removeClsFromFirstChild";
             public static string MatchMedia => $"{FUNC_PREFIX}matchMedia";
             public static string GetStyle => $"{FUNC_PREFIX}getStyle";
+            public static string SetStyle => $"{FUNC_PREFIX}css";
         }
 
         public static class ObserverConstants
@@ -191,7 +192,6 @@ namespace AntDesign
             public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
             public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
             public static string ResizeTextArea => $"{FUNC_PREFIX}resizeTextArea";
-            public static string ApplyStyle => $"{FUNC_PREFIX}applyStyle";
         }
 
         public static class MentionsComponentHelper

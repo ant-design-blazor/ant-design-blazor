@@ -89,16 +89,6 @@ export class inputHelper {
     }
   }
 
-  static applyStyle(element: HTMLTextAreaElement, style: string) {
-    let cssAttributes = style.split(";");
-    for (let i = 0; i < cssAttributes.length; i++) {
-      let cssAttribute = cssAttributes[i];
-      if (!cssAttribute) continue;
-      let attribute = cssAttribute.split(":");
-      element.style.setProperty(attribute[0], attribute[1]);
-    }
-  }
-
   static setSelectionStart(element, position: number) {
     if (position >= 0) {
       let dom: HTMLInputElement = domInfoHelper.get(element);

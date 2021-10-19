@@ -5,7 +5,7 @@
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
         {
-            { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
+            { "onchange", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnChangeAsync(e)) },
             { "onblur", CallbackFactory.Create(this, OnBlurAsync) },
             { "oninput", CallbackFactory.Create(this, OnInputAsync) },
             { "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync) },

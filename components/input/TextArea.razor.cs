@@ -146,7 +146,7 @@ namespace AntDesign
             }
         }
 
-        public uint InnerMinRows => _hasMinSet ? MinRows : Rows;
+        private uint InnerMinRows => _hasMinSet ? MinRows : Rows;
 
         private bool _showCount;
 
@@ -188,7 +188,7 @@ namespace AntDesign
             }
             if (!string.IsNullOrWhiteSpace(Style))
             {
-                await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ApplyStyle, Ref, Style);
+                await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
             }
         }
 
