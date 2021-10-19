@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -69,6 +70,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Hidden { get; set; }
+
+        [Parameter]
+        public ColumnAlign Align { get; set; } = ColumnAlign.Left;
 
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
@@ -148,9 +152,23 @@ namespace AntDesign
 
         private string CalcFixedStyle()
         {
+            CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
+            if (Align != ColumnAlign.Left)
+            {
+                string alignStyle = Align switch
+                {
+                    ColumnAlign.Left => "text-align: left",
+                    ColumnAlign.Center => "text-align: center",
+                    ColumnAlign.Right => "text-align: right",
+                    _ => throw new InvalidEnumArgumentException("Invalid ColumnAlign")
+                };
+
+                cssStyleBuilder.AddStyle(alignStyle);
+            }
+
             if (Fixed == null || Context == null)
             {
-                return "";
+                return cssStyleBuilder.Build();
             }
 
             var fixedWidths = Array.Empty<string>();
@@ -175,7 +193,10 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            return $"position: sticky; {Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")};";
+            cssStyleBuilder.AddStyle("position: sticky");
+            cssStyleBuilder.AddStyle($"{Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")}");
+
+            return cssStyleBuilder.Build();
         }
 
         protected void ToggleTreeNode()
