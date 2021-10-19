@@ -7,9 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
-using AntDesign.Internal;
 using AntDesign.JsInterop;
-using AntDesign.Select;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -1810,7 +1808,9 @@ namespace AntDesign
             {
                 var selectionCandidate = SelectOptionItems.FirstOrDefault();
                 if (selectionCandidate != null)
+                {
                     ActiveOption = selectionCandidate;
+                }
             }
         }
 

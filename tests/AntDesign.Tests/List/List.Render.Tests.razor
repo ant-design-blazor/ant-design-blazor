@@ -71,7 +71,7 @@
         //Assert
         string rowAfterChange = row.Find("div:not([class])").GetAttribute("style");
         rowBeforeChange.Should().NotBe(rowAfterChange);
-        rowAfterChange.ShouldBe("width: 50%; max-width: 50%;");
+        rowAfterChange.Should().Be("width: 50%; max-width: 50%;");
     }
 #endif
 }
