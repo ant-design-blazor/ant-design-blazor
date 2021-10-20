@@ -1,21 +1,25 @@
 ﻿@using System.ComponentModel
 
+<p>Column alignment: @columnAlign</p>
+<EnumRadioGroup TEnum="ColumnAlign" @bind-Value="@columnAlign" />
+
 <Table TItem="Data" DataSource="@data">
-    <Column @bind-Field="@context.Name" Align="ColumnAlign.Right" />
-    <Column @bind-Field="@context.Age" Align="ColumnAlign.Left" Sortable />
-    <Column @bind-Field="@context.Address"> @*By default, ColumnAlign is Left (if Align property isn't defined)*@
+    @*By default, ColumnAlign is Left (if Align property isn't defined)*@
+    <Column @bind-Field="@context.Name" Align="@columnAlign" />
+    <Column @bind-Field="@context.Age" Align="@columnAlign" Sortable />
+    <Column @bind-Field="@context.Address" Align="@columnAlign">
         <TitleTemplate>
             <span> <Icon Type="environment" /> Address </span>
         </TitleTemplate>
     </Column>
-    <Column @bind-Field="@context.Tags" Align="ColumnAlign.Center">
+    <Column @bind-Field="@context.Tags" Align="columnAlign">
         @foreach (var tag in context.Tags)
         {
             string color = tag.Length > 5 ? "geekblue" : "green";
             <Tag Color="@color">@tag</Tag>
         }
     </Column>
-    <ActionColumn Title="Action" Align="ColumnAlign.Center">
+    <ActionColumn Title="Action" Align="columnAlign">
         <Space Size=@("middle")>
             <SpaceItem>
                 <a>Invite @context.Name</a>
@@ -29,6 +33,8 @@
 
 
 @code{
+    ColumnAlign columnAlign = ColumnAlign.Left;
+
     readonly Data[] data = new Data[]
     {
         new()
@@ -55,7 +61,7 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-    };
+        };
 
     public class Data
     {

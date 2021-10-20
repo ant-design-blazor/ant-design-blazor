@@ -16,6 +16,11 @@ namespace AntDesign
             _styles.Add(style.Trim().TrimEnd(';'));
         }
 
+        public void AddStyle(string styleName, string styleValue)
+        {
+            _styles.Add($"{styleName}: {styleValue}");
+        }
+
         public string Build()
         {
             StringBuilder totalStyle = new StringBuilder();

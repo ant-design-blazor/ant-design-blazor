@@ -72,7 +72,17 @@ namespace AntDesign
         public bool Hidden { get; set; }
 
         [Parameter]
-        public ColumnAlign Align { get; set; } = ColumnAlign.Left;
+        public ColumnAlign Align
+        {
+            get => _align;
+            set
+            {
+                _align = value;
+                FixedStyle = CalcFixedStyle();
+            }
+        }
+
+        private ColumnAlign _align = ColumnAlign.Left;
 
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
@@ -81,9 +91,7 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
-        private string _fixedStyle;
-
-        protected string FixedStyle => _fixedStyle;
+        protected string FixedStyle { get; private set; }
 
         private void SetClass()
         {
@@ -135,7 +143,7 @@ namespace AntDesign
 
             if (IsHeader || IsBody || IsSummary)
             {
-                _fixedStyle = CalcFixedStyle();
+                FixedStyle = CalcFixedStyle();
             }
 
             SetClass();
@@ -143,10 +151,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (Context != null)
-            {
-                Context.Columns.Remove(this);
-            }
+            Context?.Columns.Remove(this);
             base.Dispose(disposing);
         }
 
@@ -155,15 +160,15 @@ namespace AntDesign
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
             {
-                string alignStyle = Align switch
+                string alignment = Align switch
                 {
-                    ColumnAlign.Left => "text-align: left",
-                    ColumnAlign.Center => "text-align: center",
-                    ColumnAlign.Right => "text-align: right",
-                    _ => throw new InvalidEnumArgumentException("Invalid ColumnAlign")
+                    ColumnAlign.Center => "center",
+                    ColumnAlign.Right => "right",
+                    _ => ""
                 };
 
-                cssStyleBuilder.AddStyle(alignStyle);
+                if (!string.IsNullOrEmpty(alignment))
+                    cssStyleBuilder.AddStyle("text-align", alignment);
             }
 
             if (Fixed == null || Context == null)
@@ -193,8 +198,8 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            cssStyleBuilder.AddStyle("position: sticky");
-            cssStyleBuilder.AddStyle($"{Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")}");
+            cssStyleBuilder.AddStyle("position", "sticky");
+            cssStyleBuilder.AddStyle(Fixed, $"{(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")}");
 
             return cssStyleBuilder.Build();
         }
