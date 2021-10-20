@@ -193,9 +193,11 @@ namespace AntDesign
                 if (_isInputing)
                 {
                     _isInputing = false;
-                    return;
                 }
-                await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                else
+                {
+                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                }
             }
             if (_styleHasChanged)
             {
