@@ -27,15 +27,15 @@
                                 {
                                     <!-- Horizontal & NOT Bordered -->
                                     <td class="ant-descriptions-item" colspan="@item.realSpan" @ref="@item.item.Ref">
+                                       <div class="ant-descriptions-item-container">
                                         <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-
                                             @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
                                         </span>
                                         <span class="ant-descriptions-item-content">
                                             @item.item.ChildContent
                                         </span>
+                                        </div>
                                     </td>
-
                                 }
                                 else
                                 {
