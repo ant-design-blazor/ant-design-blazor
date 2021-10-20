@@ -6,12 +6,12 @@
         new Dictionary<string, object>()
         {
             { "onchange", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnChangeAsync(e)) },
-            { "onblur", CallbackFactory.Create(this, OnBlurAsync) },
-            { "oninput", CallbackFactory.Create(this, OnInputAsync) },
-            { "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync) },
-            { "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync) },
-            { "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync) },
-            { "onfocus", CallbackFactory.Create(this, OnFocusAsync) },
+            { "onblur", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnBlurAsync(e)) },
+            { "oninput", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnInputAsync(e)) },
+            { "onkeypress", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnKeyPressAsync(e)) },
+            { "onkeyup", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnKeyUpAsync(e)) },
+            { "onkeydown", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnkeyDownAsync(e)) },
+            { "onfocus", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnFocusAsync(e)) },
             { "value", CurrentValueAsString },
             { "placeholder", Placeholder },
             { "id", Id },

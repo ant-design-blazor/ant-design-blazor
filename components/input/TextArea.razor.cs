@@ -162,6 +162,17 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-rtl", () => RTL);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (_oldStyle != Style)
+            {
+                _styleHasChanged = true;
+                _oldStyle = Style;
+            }
+        }
+
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
@@ -186,9 +197,13 @@ namespace AntDesign
                 }
                 await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
             }
-            if (!string.IsNullOrWhiteSpace(Style))
+            if (_styleHasChanged)
             {
-                await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                _styleHasChanged = false;
+                if (!string.IsNullOrWhiteSpace(Style))
+                {
+                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                }
             }
         }
 
@@ -238,6 +253,8 @@ namespace AntDesign
         private bool _autoSize;
         private bool _valueHasChanged;
         private bool _isInputing;
+        private string _oldStyle;
+        private bool _styleHasChanged;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
