@@ -97,7 +97,7 @@
 			);
 		var inputElement = cut.Find("[type=checkbox]");			
 		//Assert		
-		Assert.Equal(expectedValue, inputElement.GetAttribute("value").Trim());
+		Assert.Equal(expectedValue, inputElement.GetAttribute("value")!.Trim());
 	}
 
 	[Fact]	

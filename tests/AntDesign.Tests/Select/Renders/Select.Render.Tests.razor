@@ -37,7 +37,9 @@
     public async Task Render_select_dropdown_on_arrow_click()
     {
 		#if !NET6_0_OR_GREATER
-			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();;
+#pragma warning disable CS0618 // Type or member is obsolete
+            JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
 		#endif
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });        
