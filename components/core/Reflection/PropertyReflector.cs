@@ -9,8 +9,6 @@ namespace AntDesign.Core.Reflection
 {
     internal struct PropertyReflector
     {
-        public PropertyInfo PropertyInfo { get; }
-
         public RequiredAttribute RequiredAttribute { get; set; }
 
         public string DisplayName { get; set; }
@@ -19,12 +17,11 @@ namespace AntDesign.Core.Reflection
 
         private PropertyReflector(PropertyInfo propertyInfo)
         {
-            this.PropertyInfo = propertyInfo;
-            this.RequiredAttribute = propertyInfo.GetCustomAttribute<RequiredAttribute>(true);
-            this.DisplayName = propertyInfo.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
-                propertyInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name;
+            this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
+            this.DisplayName = propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
+                propertyInfo?.GetCustomAttribute<DisplayAttribute>(true)?.Name;
 
-            this.PropertyName = PropertyInfo.Name;
+            this.PropertyName = propertyInfo?.Name;
         }
 
         public static PropertyReflector Create<TField>(Expression<Func<TField>> accessor)
@@ -49,7 +46,6 @@ namespace AntDesign.Core.Reflection
             }
 
             var property = memberExpression.Member as PropertyInfo;
-
             return new PropertyReflector(property);
         }
     }
