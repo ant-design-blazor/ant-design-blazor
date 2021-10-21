@@ -42,7 +42,7 @@ namespace AntDesign
         {
             string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico" };
             Ext = FileName.Substring(FileName.LastIndexOf('.'));
-            return imageTypes.Contains(Ext);
+            return imageTypes.Contains(Ext.ToLower());
         }
     }
 }
