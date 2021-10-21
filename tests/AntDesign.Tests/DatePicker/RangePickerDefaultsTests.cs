@@ -36,7 +36,7 @@ namespace AntDesign.Tests.DatePicker
             Assert.Equal(FetchExpectedNullable(value, defaultValue, defaultPickerValue, expectedSecondSource, 1), pickerValues[1]);
         }
 
-        private static DateTime? FetchExpectedNullable(DateTime?[] value, DateTime?[] defaultValue, 
+        private static DateTime? FetchExpectedNullable(DateTime?[] value, DateTime?[] defaultValue,
             DateTime?[] defaultPickerValue, ExpectedSource expectedFirstSource, int index
             )
         {
