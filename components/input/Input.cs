@@ -175,7 +175,7 @@ namespace AntDesign
         public bool ReadOnly { get; set; }
 
         /// <summary>
-        /// Controls onclick & blur event propagation.
+        /// Controls onclick and blur event propagation.
         /// </summary>
         [Parameter]
         public bool StopPropagation { get; set; }
@@ -194,10 +194,11 @@ namespace AntDesign
         public string Type { get; set; } = "text";
 
         /// <summary>
-        /// Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` 
-        /// or has paramter set `AllowClear` or for components: `Password` & `Search`. In 
-        /// these cases, html `<span>` elements is used to wrap the html `<input>` element. 
-        /// `WrapperStyle` is used on the `<span>` element.
+        /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix 
+        /// or has paramter set <seealso cref="AllowClear"/> or for components: <see cref="InputPassword"/>
+        /// and <see cref="Search"/>. In these cases, html span elements is used 
+        /// to wrap the html input element. 
+        /// <seealso cref="WrapperStyle"/> is used on the span element.
         /// </summary>
         [Parameter]
         public string WrapperStyle { get; set; }

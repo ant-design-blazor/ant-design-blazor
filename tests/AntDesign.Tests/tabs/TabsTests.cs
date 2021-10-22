@@ -32,7 +32,7 @@ namespace AntDesign.Tests.Tabs
             return cut;
         }
 
-        private static RenderFragment CreateTabPanel(string key, Action<ComponentParameterCollectionBuilder<TabPane>> configure = null)
+        private static RenderFragment CreateTabPanel(string key, Action<ComponentParameterCollectionBuilder<TabPane>>? configure = null)
         {
             var tabPane1Builder = new ComponentParameterCollectionBuilder<TabPane>()
                 .Add(x => x.Key, key)

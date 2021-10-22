@@ -14,8 +14,8 @@ namespace AntDesign.Select.Internal
         //public ForwardRef SelectedTagRefBack { get; set; } = new ForwardRef();
 
         /// <summary>
-        /// ElementRef that will be used by <see cref="SelectContent.razor"/> only
-        /// for selected Mode=Multiple & MaxTagCount=Responsive
+        /// ElementRef that will be used by <see cref="SelectContent{TItemValue, TItem}"/> only
+        /// for selected Mode=Multiple and MaxTagCount=Responsive
         /// </summary>
         public ElementReference SelectedTagRef { get; set; }
 
