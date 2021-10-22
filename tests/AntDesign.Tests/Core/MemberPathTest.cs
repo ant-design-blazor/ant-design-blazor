@@ -15,15 +15,15 @@ namespace AntDesign.Tests.Core
         {
             public int A1 { get; set; }
 
-            public string A2 { get; set; }
+            public string A2 { get; set; } = default!;
 
-            public CB A3 { get; set; }
+            public CB A3 { get; set; } = default!;
 
             public SA A4 { get; set; }
 
             public SA? A5 { get; set; }
 
-            public List<SA?[]> A6 { get; set; }
+            public List<SA?[]> A6 { get; set; } = default!;
         }
 
         public class CB
@@ -88,8 +88,8 @@ namespace AntDesign.Tests.Core
             var listFunc = listFuncExp.Compile();
             var arr = arrayFunc.Invoke(cr);
             var lst = listFunc.Invoke(cl);
-            Assert.Equal(arr, cr[1].A6[2][1].Value.A5.Value.B1);
-            Assert.Equal(lst, cl[1].A6[2][1].Value.A5.Value.B1);
+            Assert.Equal(arr, cr[1].A6[2][1]!.Value.A5!.Value.B1);
+            Assert.Equal(lst, cl[1].A6[2][1]!.Value.A5!.Value.B1);
 
             {
                 var dict = new Dictionary<string, Dictionary<int, string>>();
@@ -114,7 +114,7 @@ namespace AntDesign.Tests.Core
             }
             {
                 var dict = new Dictionary<string, Dictionary<string, string>>();
-                dict["A"] = new Dictionary<string, string>() {{"A1", null},};
+                dict["A"] = new Dictionary<string, string>() { { "A1", null! }, };
 
                 var exp = PathHelper.GetLambdaDefault<Dictionary<string, Dictionary<string, string>>, string>("['A']['B1']").Compile();
                 var result = exp.Invoke(dict);
@@ -139,12 +139,12 @@ namespace AntDesign.Tests.Core
             typeof(CA).TestDefaultValue("A4.A5.B2", 521);
 
             typeof(SA).TestDefaultValue("A2", "t232");
-            typeof(SA).TestDefaultValue("A3", new CB() {B1 = 6666});
+            typeof(SA).TestDefaultValue("A3", new CB() { B1 = 6666 });
             typeof(SA).TestDefaultValue("A3.B1", 5678);
 
             typeof(SA).TestDefaultValue("A4.B1", "BBBB1");
             typeof(SA).TestDefaultValue("A5", (SB?)null);
-            typeof(SA).TestDefaultValue("A5", new SB() {B1 = "A5555", B2 = 5555});
+            typeof(SA).TestDefaultValue("A5", new SB() { B1 = "A5555", B2 = 5555 });
             typeof(SA).TestDefaultValue("A5.B1", "A5B1...");
             typeof(SA).TestDefaultValue("A5.B2", 1110);
 
@@ -152,7 +152,7 @@ namespace AntDesign.Tests.Core
             typeof(SA?).TestDefaultValue("A2", "?A1");
             typeof(SA?).TestDefaultValue("A3", (CB?)null);
             typeof(SA?).TestDefaultValue("A3.B1", -123123);
-            typeof(SA?).TestDefaultValue("A4", new SB() {B1 = "SA?.A4", B2 = -1});
+            typeof(SA?).TestDefaultValue("A4", new SB() { B1 = "SA?.A4", B2 = -1 });
             typeof(SA?).TestDefaultValue("A4.B1", "A4.B1111");
             typeof(SA?).TestDefaultValue("A4.B2", (int?)null);
             typeof(SA?).TestDefaultValue("A5", (SB?)null);
@@ -239,7 +239,7 @@ namespace AntDesign.Tests.Core
         {
             var func = PathHelper.GetDelegateDefault(propertyPath, type);
             var obj = Activator.CreateInstance(type);
-            TValue res = (TValue)(func.Invoke(obj) ?? value);
+            TValue res = (TValue)(func.Invoke(obj) ?? value!);
             Assert.Equal(value, res);
         }
     }

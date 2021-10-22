@@ -210,11 +210,11 @@ namespace AntDesign
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
 
         /// <summary>
-        /// Called when the datasource changes. From null to IEnumerable<TItem>, from IEnumerable<TItem> to IEnumerable<TItem> or from IEnumerable<TItem> to null.
+        /// Called when the datasource changes. From null to <see cref="IEnumerable{TItem}"/>, 
+        /// from <see cref="IEnumerable{TItem}"/> to <see cref="IEnumerable{TItem}"/> 
+        /// or from <see cref="IEnumerable{TItem}"/> to null.
+        /// It does not trigger if a value inside the <see cref="IEnumerable{TItem}"/> changes.
         /// </summary>
-        /// <remarks>
-        /// It does not trigger if a value inside the IEnumerable&lt;TItem&gt; changes.
-        /// </remarks>
         [Parameter] public Action OnDataSourceChanged { get; set; }
 
         /// <summary>
