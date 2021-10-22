@@ -26,9 +26,17 @@ namespace AntDesign
         Middle,
         Bottom
     }
+
     public enum AntLabelAlignType
     {
         Left,
+        Right
+    }
+
+    public enum ColumnAlign
+    {
+        Left,
+        Center,
         Right
     }
 }
