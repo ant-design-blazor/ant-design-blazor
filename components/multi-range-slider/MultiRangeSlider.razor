@@ -61,7 +61,7 @@
                 @foreach (RangeItemMark mark in Marks)
                 {
                     <span class="ant-multi-range-slider-mark-text ant-multi-range-slider-mark-text-active" 
-                          style=@($"{GetBasePosition()}: {SetMarkPosition(mark.Key)}; {(Vertical ? "margin-bottom: -50%;" : "transform: translateX(-50%);")}" + mark.Style)>
+                          style=@($"{GetBasePosition()}: {SetMarkPosition(mark.Key)}; {(Vertical ? "margin-bottom: -50%;" : "transform: translateX(-50%);")}" + mark?.Style)>
                           @mark.Value
                     </span>
                 }

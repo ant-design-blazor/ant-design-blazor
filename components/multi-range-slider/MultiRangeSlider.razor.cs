@@ -1,4 +1,8 @@
-﻿using AntDesign.Core.Helpers;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using AntDesign.Core.Helpers;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Globalization;
@@ -210,7 +214,7 @@ namespace AntDesign
 
         /// <summary>
         /// Used to style overflowing container. Avoid using unless in oversized 
-        /// mode (when `VisibleMin` > `Min` and/or `VisibleMax` < 'Max' ).
+        /// mode (when `VisibleMin` &gt; `Min` and/or `VisibleMax` &lt; 'Max' ).
         /// </summary>
         [Parameter]
         public string OverflowStyle { get; set; } = "";
@@ -863,7 +867,7 @@ namespace AntDesign
             if (!_isAtfterFirstRender || _items.Count == 0)
             {
                 return;
-            }            
+            }
             _items.Sort((s1, s2) =>
                 {
                     var firstItemCompare = s1.Value.Item1.CompareTo(s2.Value.Item1);
