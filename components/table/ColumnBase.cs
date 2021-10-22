@@ -78,7 +78,7 @@ namespace AntDesign
             set
             {
                 _align = value;
-                FixedStyle = CalcFixedStyle();
+                _fixedStyle = CalcFixedStyle();
             }
         }
 
@@ -91,7 +91,9 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
-        protected string FixedStyle { get; private set; }
+        private string _fixedStyle;
+
+        protected string FixedStyle => _fixedStyle;
 
         private void SetClass()
         {
@@ -143,7 +145,7 @@ namespace AntDesign
 
             if (IsHeader || IsBody || IsSummary)
             {
-                FixedStyle = CalcFixedStyle();
+                _fixedStyle = CalcFixedStyle();
             }
 
             SetClass();
