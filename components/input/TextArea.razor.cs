@@ -31,7 +31,7 @@ namespace AntDesign
 
         /// <summary>
         /// Will adjust (grow or shrink) the `TextArea` according to content. 
-        /// Can work in connection with `MaxRows` & `MinRows`.
+        /// Can work in connection with `MaxRows` and `MinRows`.
         /// Sets resize attribute of the textarea HTML element to: none.
         /// </summary>
         [Parameter]

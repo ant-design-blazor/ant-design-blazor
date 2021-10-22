@@ -70,7 +70,7 @@ namespace AntDesign.Internal
         /// By default Overlay does not render its content if Overlay hasn't been
         /// activated (shown at least once). Setting HiddenMode = true will 
         /// go through rendering process.
-        /// Use case: Select component, when using <SimpleOption> or <SelectOption>
+        /// Use case: Select component, when using <see cref="SimpleSelectOption"/> or <see cref="SelectOption{TItemValue, TItem}"/>
         /// needs HiddenMode = true, so the select options are initialized and 
         /// potential defaults can be rendered properly.
         /// </summary>

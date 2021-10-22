@@ -1,18 +1,19 @@
 ﻿@inherits AntDesignTestBase
 @code {
 
-	class Model
-	{
-		public string Name { get; set; }
-	}
-	Model _model = new();
-	AntDesign.Form<Model> _form;
+    class Model
+    {
+        public string Name { get; set; } = "";
+    }
 
 #if NET6_0
 	[Fact]
 	public void Form_Model_is_updated()
 	{
 		//Arrange
+	    Model _model = new();
+	    AntDesign.Form<Model>? _form;
+
 		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
 			.SetResult(new AntDesign.JsInterop.Window());
 		
