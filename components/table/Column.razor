@@ -122,7 +122,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
 	RenderFragment SortHeader =>
 	@<Template>
-		<span>
+		<span class="ant-table-column-title">
 			@if (TitleTemplate != null)
 				{
 					@TitleTemplate
@@ -131,7 +131,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 				{
 					@Title
 				}
-			</span>
+		</span>
 			@{
 				bool hasDescendingSorter = SortDirection.Descending.IsIn(SortDirections);
 				bool hasAscendingSorter = SortDirection.Ascending.IsIn(SortDirections);
