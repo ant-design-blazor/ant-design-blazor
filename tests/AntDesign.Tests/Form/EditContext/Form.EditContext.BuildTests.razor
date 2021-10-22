@@ -1,12 +1,12 @@
 ﻿@inherits AntDesignTestBase
 @code {
 
-	class Model
-	{
-		public string Name { get; set; }
-	}
+    class Model
+    {
+        public string Name { get; set; } = "";
+    }
 	Model _model = new();
-	AntDesign.Form<Model> _form;
+	AntDesign.Form<Model>? _form;
 
 #if NET6_0
 	[Fact]

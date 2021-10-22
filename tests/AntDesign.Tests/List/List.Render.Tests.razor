@@ -65,13 +65,13 @@
             </AntList>);
         //Act
         var row = cut.FindComponent<AntDesign.Row>();
-        string rowBeforeChange = row.Find("div:not([class])").GetAttribute("style");
+        string rowBeforeChange = row.Find("div:not([class])").GetAttribute("style")!;
 
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.Grid, new ListGridType { Gutter = 8, Column = 2 }));
         //Assert
-        string rowAfterChange = row.Find("div:not([class])").GetAttribute("style");
+        string rowAfterChange = row.Find("div:not([class])").GetAttribute("style")!;
         rowBeforeChange.Should().NotBe(rowAfterChange);
-        rowAfterChange.ShouldBe("width: 50%; max-width: 50%;");
+        rowAfterChange.Should().Be("width: 50%; max-width: 50%;");
     }
 #endif
 }

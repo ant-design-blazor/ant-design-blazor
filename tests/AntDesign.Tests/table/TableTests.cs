@@ -11,13 +11,13 @@ namespace AntDesign.Tests.Table
         private class Person
         {
             public int Id { get; set; }
-            public string Name { get; set; }
-            public string Surname { get; set; }
+            public string Name { get; set; } = default!;
+            public string Surname { get; set; } = default!;
         }
 
         private IRenderedComponent<Table<Person>> CreatePersonsTable(
             IReadOnlyList<Person> persons,
-            Action<ComponentParameterCollectionBuilder<Table<Person>>> callback = null,
+            Action<ComponentParameterCollectionBuilder<Table<Person>>>? callback = null,
             bool enableSelection = false)
         {
             return Context.RenderComponent<Table<Person>>(x =>
