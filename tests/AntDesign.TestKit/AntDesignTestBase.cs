@@ -26,7 +26,7 @@ namespace AntDesign.Tests
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Context?.Dispose();
         }

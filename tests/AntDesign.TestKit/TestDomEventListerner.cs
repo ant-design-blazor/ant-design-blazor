@@ -26,17 +26,7 @@ namespace AntDesign.Tests
             return;
         }
 
-        public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
-        {
-            return;
-        }
-
         public void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
-        {
-            return;
-        }
-
-        public async ValueTask DisconnectResizeObserver(ElementReference dom)
         {
             return;
         }
@@ -51,11 +41,6 @@ namespace AntDesign.Tests
             return;
         }
 
-        public async ValueTask DisposeResizeObserver(ElementReference dom)
-        {
-            return;
-        }
-
         public void DisposeShared()
         {
             return;
@@ -66,14 +51,51 @@ namespace AntDesign.Tests
             return;
         }
 
-        public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
-        {
-            return;
-        }
-
         public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
         {
             return;
         }
+
+#if NET5_0_OR_GREATER
+        public ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask DisconnectResizeObserver(ElementReference dom)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask DisposeResizeObserver(ElementReference dom)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            return ValueTask.CompletedTask;
+        }
+#else
+        public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            await Task.CompletedTask;
+        }
+
+        public async ValueTask DisconnectResizeObserver(ElementReference dom)
+        {
+            await Task.CompletedTask;
+        }
+
+        public async ValueTask DisposeResizeObserver(ElementReference dom)
+        {
+            await Task.CompletedTask;
+        }
+
+        public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            await Task.CompletedTask;
+        }
+#endif
     }
 }
