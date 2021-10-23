@@ -61,8 +61,11 @@
 				</AntDesign.FormItem>
 			</AntDesign.Form>
         );
+
+        var button = cut.FindComponent<AntDesign.Button>();
         cut.Instance.Size.Should().Be("small");
         cut.Instance.Size.Should().Be(cut.Instance.Size);
+        button.Instance.FormSize.Should().Be("small");
     }
 
     [Fact]
