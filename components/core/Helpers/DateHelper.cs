@@ -39,7 +39,7 @@ namespace AntDesign
                 && _calendar.GetDayOfYear(date.Value) == _calendar.GetDayOfYear(compareDate.Value);
         }
 
-        public static bool IsSameWeak(DateTime? date, DateTime? compareDate, DayOfWeek firstDayOfWeek)
+        public static bool IsSameWeek(DateTime? date, DateTime? compareDate, DayOfWeek firstDayOfWeek)
         {
             if (date is null || compareDate is null)
                 return false;
