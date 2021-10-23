@@ -235,6 +235,16 @@ namespace AntDesign
                 .Add("ant-tabs-nav-wrap")
                 .If("ant-tabs-nav-wrap-ping-left", () => NavWrapPingLeft)
                 .If("ant-tabs-nav-wrap-ping-right", () => NavWrapPingRight);
+
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            if (Card is not null)
+            {
+                this.Complete();
+            }
+            return base.OnFirstAfterRenderAsync();
         }
 
         /// <summary>
@@ -248,6 +258,10 @@ namespace AntDesign
             if (tabPane.IsTab)
             {
                 _tabs.Add(tabPane);
+                if (Card is not null)
+                {
+                    _panes.Add(tabPane);
+                }
             }
             else
             {
@@ -266,7 +280,7 @@ namespace AntDesign
                 }
             }
 
-            if (_tabs.Count == _panes.Count)
+            if (_tabs.Count == _panes.Count && Card is null)
             {
                 this.Complete();
             }
@@ -499,17 +513,29 @@ namespace AntDesign
 
             _renderedActivePane = null;
 
-            if (IsHorizontal)
-            {
-                _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
-            }
-            else
-            {
-                _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
-            }
+            SetNavListStyle();
 
             StateHasChanged();
             _renderedActivePane = _activePane;
+        }
+
+        private void SetNavListStyle()
+        {
+            if (_scrollOffset == 0)
+            {
+                _navListStyle = "";
+            }
+            else
+            {
+                if (IsHorizontal)
+                {
+                    _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                }
+                else
+                {
+                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                }
+            }
         }
 
         private void TryRenderInk()
@@ -541,7 +567,7 @@ namespace AntDesign
                     _scrollOffset = Math.Max(_scrollOffset, 0);
                 }
 
-                _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                SetNavListStyle();
             }
             else
             {
@@ -552,7 +578,7 @@ namespace AntDesign
                 {
                     // need to scroll tab bars
                     _scrollOffset = _activeTabElement.OffsetTop + _activeTabElement.ClientHeight - _wrapperHeight;
-                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                    SetNavListStyle();
                 }
             }
 
