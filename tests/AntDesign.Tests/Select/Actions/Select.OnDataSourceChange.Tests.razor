@@ -204,7 +204,7 @@
     }
 
     [Fact]
-    public async Task Do_not_react_when_DataSource_not_changed()
+    public void Do_not_react_when_DataSource_not_changed()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
