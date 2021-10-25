@@ -599,6 +599,15 @@ namespace AntDesign
                     builder.CloseElement();
                 }
 
+                if (LabelTemplate != null)
+                {
+                    builder.AddContent(34, LabelTemplate);
+                }
+                else if (Label != null)
+                {
+                    builder.AddContent(34, Label);
+                }
+
                 // input
                 builder.OpenElement(41, "input");
                 builder.AddAttribute(42, "class", ClassMapper.Class);

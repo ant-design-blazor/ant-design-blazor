@@ -115,6 +115,18 @@ namespace AntDesign
         internal FieldIdentifier FieldIdentifier { get; set; }
 
         /// <summary>
+        /// Set label text for the input field.
+        /// </summary>
+        [Parameter]
+        public string Label { get; set; }
+
+        /// <summary>
+        ///  Set label template for the input field.
+        /// </summary>
+        [Parameter]
+        public RenderFragment LabelTemplate { get; set; }
+
+        /// <summary>
         /// Gets or sets the current value of the input.
         /// </summary>
         protected TValue CurrentValue
