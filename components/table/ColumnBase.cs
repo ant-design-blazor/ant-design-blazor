@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -71,6 +72,19 @@ namespace AntDesign
         public bool Hidden { get; set; }
 
         [Parameter]
+        public ColumnAlign Align
+        {
+            get => _align;
+            set
+            {
+                _align = value;
+                _fixedStyle = CalcFixedStyle();
+            }
+        }
+
+        private ColumnAlign _align = ColumnAlign.Left;
+
+        [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
         public int ColIndex { get; set; }
@@ -139,18 +153,29 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (Context != null)
-            {
-                Context.Columns.Remove(this);
-            }
+            Context?.Columns.Remove(this);
             base.Dispose(disposing);
         }
 
         private string CalcFixedStyle()
         {
+            CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
+            if (Align != ColumnAlign.Left)
+            {
+                string alignment = Align switch
+                {
+                    ColumnAlign.Center => "center",
+                    ColumnAlign.Right => "right",
+                    _ => ""
+                };
+
+                if (!string.IsNullOrEmpty(alignment))
+                    cssStyleBuilder.AddStyle("text-align", alignment);
+            }
+
             if (Fixed == null || Context == null)
             {
-                return "";
+                return cssStyleBuilder.Build();
             }
 
             var fixedWidths = Array.Empty<string>();
@@ -175,7 +200,10 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            return $"position: sticky; {Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")};";
+            cssStyleBuilder.AddStyle("position", "sticky");
+            cssStyleBuilder.AddStyle(Fixed, $"{(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")}");
+
+            return cssStyleBuilder.Build();
         }
 
         protected void ToggleTreeNode()

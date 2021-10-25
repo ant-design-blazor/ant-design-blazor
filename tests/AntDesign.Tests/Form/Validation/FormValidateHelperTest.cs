@@ -183,7 +183,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { "", "should be required", "should be required" },
             new object[] { "", "should not be null", "should not be null" },
             new object[] { "", "{0} should not be null", "displayName should not be null" },
-            new object[] { "", null, string.Format(new FormValidateErrorMessages().Required, _displayName) },
+            new object[] { "", null!, string.Format(new FormValidateErrorMessages().Required, _displayName) },
         };
 
         [Fact]
@@ -402,7 +402,7 @@ namespace AntDesign.Tests.Form.Validation
 
         public static List<object[]> RuleValidate_ValidateMessages_Values => new()
         {
-            new object[] { new FormValidationRule { Required = true }, null, string.Format($"{_defValidateMsgs.Required}{_customSuffix}", _displayName) },
+            new object[] { new FormValidationRule { Required = true }, null!, string.Format($"{_defValidateMsgs.Required}{_customSuffix}", _displayName) },
             new object[] {
                 new FormValidationRule { Type= FormFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
@@ -493,7 +493,7 @@ class CustomValidationAttribute : ValidationAttribute
         return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Max);
     }
 
-    public override bool IsValid(object value)
+    public override bool IsValid(object? value)
     {
         if (value == null)
         {
