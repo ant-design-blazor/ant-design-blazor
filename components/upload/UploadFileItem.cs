@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json;
 
 namespace AntDesign
@@ -42,7 +43,7 @@ namespace AntDesign
         {
             string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico" };
             Ext = FileName.Substring(FileName.LastIndexOf('.'));
-            return imageTypes.Contains(Ext);
+            return imageTypes.Any(imageType => imageType.Equals(Ext, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
