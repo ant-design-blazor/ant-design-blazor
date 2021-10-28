@@ -548,7 +548,14 @@ namespace AntDesign
         {
             if (TypeDefaultExistsAsSelectOption)
             {
-                TypeDefaultExistsAsSelectOption = IsOptionEqualToNoValue(option);
+                if (IsOptionEqualToNoValue(option))
+                {
+                    TypeDefaultExistsAsSelectOption = false;
+                } // Same as TypeDefaultExistsAsSelectOption = !IsOptionEqualToNoValue(option); since TypeDefaultExistsAsSelectOption is already true
+                if (!TypeDefaultExistsAsSelectOption)
+                {
+                    _selectOptionEqualToTypeDefault = null;
+                }
             }
         }
 
