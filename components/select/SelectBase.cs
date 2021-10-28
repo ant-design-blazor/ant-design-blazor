@@ -644,7 +644,8 @@ namespace AntDesign
                     // Embed the label into the value and return the result as json string.
                     var valueLabel = new ValueLabel<TItemValue>
                     {
-                        Value = selectOptionItem.Value, Label = selectOptionItem.Label
+                        Value = selectOptionItem.Value,
+                        Label = selectOptionItem.Label
                     };
 
                     var json = JsonSerializer.Serialize(valueLabel);

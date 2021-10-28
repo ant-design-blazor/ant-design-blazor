@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -352,8 +355,7 @@ namespace AntDesign
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isValueEnum;
-        private bool _isToken;        
-        private SelectOptionItem<TItemValue, TItem> _activeOption;
+        private bool _isToken;
         private bool _defaultActiveFirstOption;
 
         private string _labelName;
@@ -373,9 +375,7 @@ namespace AntDesign
 
         internal Func<TItem, TItemValue> _getValue;
 
-        private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
-        private Expression<Func<TItemValue>> _valueExpression;
 
         #endregion Properties
 
