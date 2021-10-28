@@ -202,7 +202,7 @@ namespace AntDesign
             if (_styleHasChanged)
             {
                 _styleHasChanged = false;
-                if (!string.IsNullOrWhiteSpace(Style))
+                if (AutoSize && !string.IsNullOrWhiteSpace(Style))
                 {
                     await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
                 }
@@ -257,6 +257,7 @@ namespace AntDesign
         private bool _isInputing;
         private string _oldStyle;
         private bool _styleHasChanged;
+        private string _heightStyle;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -278,6 +279,18 @@ namespace AntDesign
             {
                 await JsInvokeAsync<TextAreaInfo>(
                     JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, Ref, InnerMinRows, MaxRows, _reference);
+            }
+            else
+            {
+                var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
+                    JSInteropConstants.InputComponentHelper.GetTextAreaInfo, Ref);
+
+                var rowHeight = textAreaInfo.LineHeight;
+                var offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
+                    + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
+
+                _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
+                StateHasChanged();
             }
         }
 
