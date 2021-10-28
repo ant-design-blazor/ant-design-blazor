@@ -22,13 +22,11 @@ namespace AntDesign
         [CascadingParameter] public CheckboxGroup CheckboxGroup { get; set; }
 
         internal bool IsFromOptions { get; set; }
-        private bool _isInitalized;
         protected override void OnInitialized()
         {
             base.OnInitialized();
             SetClass();
             CheckboxGroup?.AddItem(this);
-            _isInitalized = true;
         }
 
         protected override void Dispose(bool disposing)
