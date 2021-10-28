@@ -1,0 +1,17 @@
+﻿@inherits AntDesignTestBase
+@code {
+    [Theory]
+    [InlineData("small", "-sm")]
+    [InlineData("large", "-lg")]
+    public void Size_is_applied(string size, string expectedCssClass)
+    {
+        var cut = Render<ButtonGroup>(@<ButtonGroup Size="@size">
+            <Button>Test</Button>
+    </ButtonGroup>
+    );
+        string classsAttribute = cut.Find("div").GetAttribute("class")!;
+        classsAttribute.Should().Contain(expectedCssClass);
+        cut.Instance.Size.Should().Be(size);
+    }
+
+}

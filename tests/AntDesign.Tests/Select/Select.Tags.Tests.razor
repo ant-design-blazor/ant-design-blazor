@@ -10,7 +10,9 @@
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
 		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
 		#if !NET6_0_OR_GREATER
-			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();;
+#pragma warning disable CS0618 // Type or member is obsolete
+            JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult(); ;
+#pragma warning restore CS0618 // Type or member is obsolete
 		#endif
     }
 
