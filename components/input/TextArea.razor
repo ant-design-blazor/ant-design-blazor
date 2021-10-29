@@ -5,6 +5,13 @@
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
         {
+            //{ "onchange", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnChangeAsync(e)) },
+            //{ "onblur", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnBlurAsync(e)) },
+            //{ "oninput", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnInputAsync(e)) },
+            //{ "onkeypress", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnKeyPressAsync(e)) },
+            //{ "onkeyup", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnKeyUpAsync(e)) },
+            //{ "onkeydown", EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(e => OnkeyDownAsync(e)) },
+            //{ "onfocus", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnFocusAsync(e)) },
             { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
             { "onblur", CallbackFactory.Create(this, OnBlurAsync) },
             { "oninput", CallbackFactory.Create(this, OnInputAsync) },
@@ -15,11 +22,16 @@
             { "value", CurrentValueAsString },
             { "placeholder", Placeholder },
             { "id", Id },
-            { "style", Style },
+            //{ "style", Style },
             { "class", ClassMapper.Class },
             { "disabled", Disabled },
-			{ "readonly", ReadOnly },            
+            { "readonly", ReadOnly },
          };
+
+    if (AutoSize == false)
+    {
+        attributes.Add("style", _heightStyle + Style);
+    }
 
     if (Attributes != null)
     {
@@ -34,8 +46,8 @@
 		{
 			<span class="@_warpperClassMapper.Class">
 				<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
-				@Suffix				
-			</span>		
+				@Suffix
+			</span>
 		}
 		else
 		{
