@@ -19,7 +19,7 @@ Select component to select value from options.
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| AllowClear | Show clear button. | bool | false |  |
+| AllowClear | Show clear button. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | Bordered | Toggle the border style. | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
@@ -78,6 +78,7 @@ Select component to select value from options.
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
 | ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
 | ValueName | The name of the property to be used for the value. | string | - |  |
+| ValueOnClear | When Clear button is pressed, Value will be set to whatever is set in ValueOnClear. | TItemValue | - | 0.11 |
 
 ### SelectOption props
 

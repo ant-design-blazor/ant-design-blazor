@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,9 +10,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
-using AntDesign.Internal;
 using AntDesign.JsInterop;
-using AntDesign.Select;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -355,7 +356,6 @@ namespace AntDesign
         private bool _waittingStateChange;
         private bool _isValueEnum;
         private bool _isToken;
-        private SelectOptionItem<TItemValue, TItem> _activeOption;
         private bool _defaultActiveFirstOption;
 
         private string _labelName;
@@ -375,9 +375,7 @@ namespace AntDesign
 
         internal Func<TItem, TItemValue> _getValue;
 
-        private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
-        private Expression<Func<TItemValue>> _valueExpression;
 
         #endregion Properties
 
@@ -464,6 +462,7 @@ namespace AntDesign
                 _datasource = null;
                 _dataSourceCopy = null;
                 _dataSourceShallowCopy = null;
+                TypeDefaultExistsAsSelectOption = false;
 
                 OnDataSourceChanged?.Invoke();
                 return;
@@ -479,6 +478,7 @@ namespace AntDesign
                 _datasource = DataSource;
                 _dataSourceShallowCopy = new List<TItem>();
                 _dataSourceCopy = new List<TItem>();
+                TypeDefaultExistsAsSelectOption = false;
 
                 OnDataSourceChanged?.Invoke();
 
@@ -564,21 +564,20 @@ namespace AntDesign
 
             if (firstRender)
             {
+                _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
+
                 await SetInitialValuesAsync();
 
                 DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
-
-                _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
-                _defaultActiveFirstOptionApplied = !_defaultActiveFirstOption;
+                _defaultActiveFirstOptionApplied = !(_defaultActiveFirstOption && SelectedOptionItems.Count == 0);
             }
-
             if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
             {
                 if (SelectMode == SelectMode.Default)
                 {
-                    if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
+                    bool hasOptions = SelectOptionItems.Any();
+                    if (!HasValue && hasOptions && (_defaultValueIsNotNull || DefaultActiveFirstOption))
                     {
                         await TrySetDefaultValueAsync();
                     }
@@ -644,6 +643,8 @@ namespace AntDesign
                         if (exists is null)
                         {
                             SelectOptionItems.Remove(selectOption);
+                            RemoveEqualityToNoValue(selectOption);
+
                             if (selectOption.IsSelected)
                                 SelectedOptionItems.Remove(selectOption);
                         }
@@ -713,6 +714,7 @@ namespace AntDesign
                     };
 
                     SelectOptionItems.Add(newItem);
+                    AddEqualityToNoValue(newItem);
                     if (isSelected)
                     {
                         processedSelectedCount--;
@@ -856,10 +858,14 @@ namespace AntDesign
                         SelectedOptionItems.Add(firstEnabled);
                     }
                     else
+                    {
                         SelectedOptionItems[0] = firstEnabled;
+                    }
 
                     if (SelectMode == SelectMode.Default)
                     {
+                        Value = firstEnabled.Value;
+                        firstEnabled.IsSelected = true;
                         await ValueChanged.InvokeAsync(firstEnabled.Value);
 
                         if (!ValueChanged.HasDelegate)
@@ -987,7 +993,7 @@ namespace AntDesign
             SelectedOptionItems.Clear();
             if (SelectMode == SelectMode.Default)
             {
-                if (_selectedValue != null)
+                if (_selectedValue != null || TypeDefaultExistsAsSelectOption)
                 {
                     var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _selectedValue));
 
@@ -1079,7 +1085,7 @@ namespace AntDesign
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
-            if (!_isValueEnum && EqualityComparer<TItemValue>.Default.Equals(value, default))
+            if (!_isValueEnum && !TypeDefaultExistsAsSelectOption && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
                 _ = InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
@@ -1095,7 +1101,9 @@ namespace AntDesign
                 }
 
                 if (!AllowClear)
+                {
                     _ = TrySetDefaultValueAsync();
+                }
                 else
                 {
                     //Reset value if not found - needed if value changed
@@ -1130,6 +1138,12 @@ namespace AntDesign
         /// <param name="value">The value of the selected option item.</param>
         private void EvaluateValueChangedOutsideComponent(SelectOptionItem<TItemValue, TItem> optionItem, TItemValue value)
         {
+            //cover special case scenario when SelectItem with Value == default(TItemValue) is requested
+            if (TypeDefaultExistsAsSelectOption && ActiveOption != null && EqualityComparer<TItemValue>.Default.Equals(value, default))
+            {
+                return; //already selected, no need to evaluate further
+            }
+
             if (ActiveOption != null && !ActiveOption.Value.Equals(value))
             {
                 ActiveOption.IsSelected = false;

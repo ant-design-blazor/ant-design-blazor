@@ -24,7 +24,8 @@ namespace AntDesign
     public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>
     {
         protected const string DefaultWidth = "width: 100%;";
-
+        protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
+        private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
         protected OverlayTrigger _dropDown;
 
@@ -58,7 +59,9 @@ namespace AntDesign
 
         protected Action<TItem, TItemValue> _setValue;
         /// <summary>
-        /// Show clear button.
+        /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default 
+        /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>, 
+        /// unless used with <see cref="ValueOnClear"/>.
         /// </summary>
         [Parameter] public bool AllowClear { get; set; }
         /// <summary>
@@ -371,6 +374,23 @@ namespace AntDesign
             }
         }
 
+        private bool _hasValueOnClear;
+        private TItemValue _valueOnClear;
+        /// <summary>
+        /// When Clear button is pressed, Value will be set to
+        /// whatever is set in ValueOnClear
+        /// </summary>
+        [Parameter]
+        public TItemValue ValueOnClear
+        {
+            get => _valueOnClear;
+            set
+            {
+                _hasValueOnClear = true;
+                _valueOnClear = value;
+            }
+        }
+
         /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
@@ -452,6 +472,7 @@ namespace AntDesign
                         result.IsSelected = true;
                         AddedTags.Add(result);
                         SelectOptionItems.Add(result);
+                        AddEqualityToNoValue(result);
                         SelectedOptionItems.Add(result);
                     }
                     else if (result != null && !result.IsSelected && !result.IsDisabled)
@@ -470,6 +491,7 @@ namespace AntDesign
                 {
                     item.Value.IsSelected = false;
                     SelectedOptionItems.Remove(item.Value);
+                    RemoveEqualityToNoValue(item.Value);
                     if (item.Value.IsAddedTag)
                     {
                         SelectOptionItems.Remove(item.Value);
@@ -517,6 +539,36 @@ namespace AntDesign
                 IsSelected = false,
                 IsAddedTag = true
             };
+        }
+
+        protected bool IsOptionEqualToNoValue(SelectOptionItem<TItemValue, TItem> option)
+            => EqualityComparer<TItemValue>.Default.Equals(option.Value, default);
+
+        internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
+        {
+            if (TypeDefaultExistsAsSelectOption)
+            {
+                if (IsOptionEqualToNoValue(option))
+                {
+                    TypeDefaultExistsAsSelectOption = false;
+                } // Same as TypeDefaultExistsAsSelectOption = !IsOptionEqualToNoValue(option); since TypeDefaultExistsAsSelectOption is already true
+                if (!TypeDefaultExistsAsSelectOption)
+                {
+                    _selectOptionEqualToTypeDefault = null;
+                }
+            }
+        }
+
+        internal void AddEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
+        {
+            if (!TypeDefaultExistsAsSelectOption)
+            {
+                TypeDefaultExistsAsSelectOption = IsOptionEqualToNoValue(option);
+                if (TypeDefaultExistsAsSelectOption)
+                {
+                    _selectOptionEqualToTypeDefault = option;
+                }
+            }
         }
 
         internal bool IsDropdownShown()
@@ -592,7 +644,8 @@ namespace AntDesign
                     // Embed the label into the value and return the result as json string.
                     var valueLabel = new ValueLabel<TItemValue>
                     {
-                        Value = selectOptionItem.Value, Label = selectOptionItem.Label
+                        Value = selectOptionItem.Value,
+                        Label = selectOptionItem.Label
                     };
 
                     var json = JsonSerializer.Serialize(valueLabel);
@@ -602,6 +655,10 @@ namespace AntDesign
                 else
                 {
                     OnSelectedItemChanged?.Invoke(selectOptionItem.Item);
+                }
+                if (TypeDefaultExistsAsSelectOption && IsOptionEqualToNoValue(selectOptionItem))
+                {
+                    StateHasChanged();
                 }
             }
         }
@@ -629,7 +686,6 @@ namespace AntDesign
                 {
                     SelectedOptionItems.Add(selectOption);
                 }
-
                 selectOption.IsSelected = true;
                 await ValueChanged.InvokeAsync(selectOption.Value);
                 InvokeOnSelectedItemChanged(selectOption);
@@ -769,8 +825,20 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputClearClickAsync(MouseEventArgs _)
         {
-            List<SelectOptionItem<TItemValue, TItem>> tagItems = new();
+            if (SelectMode == SelectMode.Default)
+            {
+                await ClearDefaultMode();
+            }
+            else
+            {
+                await ClearMultipleMode();
+            }
+            OnClearSelected?.Invoke();
+        }
 
+        private async Task ClearMultipleMode()
+        {
+            List<SelectOptionItem<TItemValue, TItem>> tagItems = new();
             SelectOptionItems.Where(c => c.IsSelected)
                 .ForEach(i =>
                 {
@@ -790,21 +858,69 @@ namespace AntDesign
                 }
             }
 
+            await ClearSelectedAsync();
+
             AddedTags.Clear();
             ActiveOption = SelectOptionItems.FirstOrDefault();
             CustomTagSelectOptionItem = null;
             SelectedOptionItems.Clear();
 
-            await ClearSelectedAsync();
+            await Task.Delay(1); // Todo - Workaround because UI does not refresh
+            await UpdateOverlayPositionAsync();
+            StateHasChanged(); // Todo - Workaround because UI does not refresh
+        }
 
-            if (SelectMode != SelectMode.Default)
+        private async Task ClearDefaultMode()
+        {
+            if (EqualityComparer<TItemValue>.Default.Equals(Value, _hasValueOnClear ? _valueOnClear : default))
             {
-                await Task.Delay(1); // Todo - Workaround because UI does not refresh
-                await UpdateOverlayPositionAsync();
-                StateHasChanged(); // Todo - Workaround because UI does not refresh
+                return; //nothing to do, already cleared; mostly to avoid redoing OnInputClearClickAsync when issued from OnParameterSet() => OnValueChange() => OnInputClearClickAsync()
             }
+            if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
+            {
+                SelectedOptionItems[0].IsSelected = false;
+                SelectedOptionItems[0].IsHidden = false;
 
-            OnClearSelected?.Invoke();
+                ActiveOption = SelectOptionItems.FirstOrDefault();
+                SelectedOptionItems.Clear();
+                Value = default;
+                await ClearSelectedAsync();
+            }
+            else if (_hasValueOnClear)
+            {
+                var selectOption = SelectOptionItems.Where(o => EqualityComparer<TItemValue>.Default.Equals(o.Value, _valueOnClear)).FirstOrDefault();
+                if (selectOption != null)
+                {
+                    Value = selectOption.Value;
+                    await SetValueAsync(selectOption);
+                }
+                else
+                {
+                    SelectedOptionItems[0].IsSelected = false;
+                    SelectedOptionItems[0].IsHidden = false;
+
+                    ActiveOption = SelectOptionItems.FirstOrDefault();
+                    SelectedOptionItems.Clear();
+                    Value = _valueOnClear;
+                    await ValueChanged.InvokeAsync(_valueOnClear);
+                }
+            }
+            else
+            {
+                if (SelectedOptionItems[0].InternalId != _selectOptionEqualToTypeDefault.InternalId)
+                {
+                    SelectedOptionItems[0].IsSelected = false;
+                    SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
+                    SelectedOptionItems[0].IsSelected = true;
+                    Value = _selectOptionEqualToTypeDefault.Value;
+                    await ValueChanged.InvokeAsync(_valueOnClear);
+                }
+                else
+                {
+                    return; //ValueOnClear already selected, no need to do anything;
+                }
+            }
+            ActiveOption = _selectOptionEqualToTypeDefault;
         }
 
         /// <summary>
