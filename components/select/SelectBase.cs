@@ -710,7 +710,10 @@ namespace AntDesign
                     {
                         CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
-                        SelectOptionItems.Add(selectOption);
+                        if (!SelectOptionItems.Any(x => x.Value.Equals(selectOption.Value)))
+                        {
+                            SelectOptionItems.Add(selectOption);
+                        }
                     }
                 }
                 else

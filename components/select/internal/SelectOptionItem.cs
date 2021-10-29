@@ -14,7 +14,7 @@ namespace AntDesign.Select.Internal
     /// <typeparam name="TItem"></typeparam>
     public class SelectOptionItem<TItemValue, TItem>
     {
-        public ElementReference Ref { get => ChildComponent.Ref; }
+        public ElementReference Ref { get => ChildComponent?.Ref ?? default; }
         //public ForwardRef SelectedTagRefBack { get; set; } = new ForwardRef();
 
         /// <summary>

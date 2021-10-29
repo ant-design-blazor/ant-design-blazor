@@ -5,24 +5,24 @@
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new AntDesign.JsInterop.DomRect());         			
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
             .SetResult(new HtmlElement());
+
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
 		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
-		#if !NET6_0_OR_GREATER
+#if !NET6_0_OR_GREATER
 #pragma warning disable CS0618 // Type or member is obsolete
             JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult(); ;
 #pragma warning restore CS0618 // Type or member is obsolete
-		#endif
+#endif
     }
 
     [Fact]
     public async Task Single_tag_creation() //issue #1645
     {
         //Arrange
-
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });        
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });               
 
         var cut = Render<AntDesign.Select<string, string>>(
         @<AntDesign.Select Mode="tags"
@@ -32,26 +32,25 @@
 			<SelectOptions>						
 				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
 			</SelectOptions>
-		</AntDesign.Select>
-    );
-		//Act
-        var input = cut.Find("input.ant-select-selection-search-input");
-		input.Input("A");
-		await Task.Delay(100);
-		input.KeyUp("ENTER");
-		await Task.Delay(1);
-		input.Input("B");
-		await Task.Delay(1);
-		input.KeyUp("ENTER");
-		await Task.Delay(1);
-		input.Input("C");
-		await Task.Delay(1);
-		input.KeyUp("ENTER");
-		await Task.Delay(1);
-		var addedTags = cut.FindAll("span.ant-select-selection-item-content")
-			.Where(d => d.TextContent.Trim() == "B");
-		//Assert
-		addedTags.Should().HaveCount(1);
+        </AntDesign.Select>
+        );        
+
+        var input = cut.Find("input.ant-select-selection-search-input");        
+        //Act
+        await cut.InvokeAsync(() => input.Input("A"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null));
+        input.KeyUp("ENTER");
+        input.Input("B");
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "B"));
+        input.KeyUp("ENTER");
+        input.Input("C");		
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "C"));
+        input.KeyUp("ENTER");        
+        //Assert
+        var addedTags = cut.FindAll("span.ant-select-selection-item-content")
+            .Where(d => d.TextContent.Trim() == "B");
+        addedTags.Should().HaveCount(1);
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(3));        
     }
 
     [Fact]
