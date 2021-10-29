@@ -3,6 +3,7 @@
 @using System.Text.Json
 @inherits AntDesignTestBase
 @code {
+    public record PersonNullable(string? Id, string Name);
     enum City
     {
         [Display(Name = "Shanghai City")]
@@ -22,9 +23,7 @@
     {
          //Arrange
             
-        var cut = Render<EnumSelect<City>>(
-    @<EnumSelect TEnum="City"></EnumSelect>
-    );
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect>);
         var options = cut.FindAll(".ant-select-item-option-content");
 
         Assert.Equal(3, options.Count);
@@ -87,5 +86,37 @@
         //Assert
         var dropdown = cut.Find("div.ant-select-dropdown");
         dropdown.ClassList.Should().NotContain("ant-select-dropdown-hidden");
+    }
+
+    [Fact]
+    public void AllowClear_button_not_rendered_for_no_data()
+    {
+        var dataSource = new List<PersonNullable>()
+        {
+            new PersonNullable("2", "Test 2"),
+            new PersonNullable("3", "Test 3"),
+            new PersonNullable("4", "Test 4")
+        };
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                TItem="PersonNullable"
+                TItemValue="string?"
+                Value="null"
+                AllowClear>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        //Assert
+        cut.Invoking(c => c.Find("span.ant-select-clear"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+       
     }
 }

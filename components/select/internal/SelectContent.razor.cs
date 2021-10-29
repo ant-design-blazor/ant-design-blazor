@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
@@ -26,7 +30,8 @@ namespace AntDesign.Select.Internal
         public string Prefix
         {
             get { return _prefix; }
-            set {
+            set
+            {
                 _prefix = value;
                 if (_isInitialized)
                     SetInputWidth();
@@ -39,8 +44,8 @@ namespace AntDesign.Select.Internal
         public int MaxTagCount
         {
             get { return _maxTagCount; }
-            set 
-            { 
+            set
+            {
                 if (_maxTagCount != value)
                 {
                     _maxTagCount = value;
@@ -285,7 +290,7 @@ namespace AntDesign.Select.Internal
                     if (ParentSelect.IsResponsive && _lastInputWidth != SearchValue.Length)
                     {
                         _lastInputWidth = SearchValue.Length;
-                        InvokeAsync(async() => await CalculateResponsiveTags());
+                        InvokeAsync(async () => await CalculateResponsiveTags());
                     }
                 }
                 else

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -197,6 +201,7 @@ namespace AntDesign
                 };
 
                 SelectParent.SelectOptionItems.Add(newSelectOptionItem);
+                SelectParent.AddEqualityToNoValue(newSelectOptionItem);
                 isAlreadySelected = IsAlreadySelected(newSelectOptionItem);
             }
 
@@ -275,7 +280,10 @@ namespace AntDesign
                 var selectOptionItem = SelectParent.SelectOptionItems
                     .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
+                {
                     SelectParent.SelectOptionItems.Remove(selectOptionItem);
+                    SelectParent.RemoveEqualityToNoValue(selectOptionItem);
+                }
             }
 
             base.Dispose(disposing);
