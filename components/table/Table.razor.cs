@@ -214,9 +214,7 @@ namespace AntDesign
 
             FlushCache();
 
-            this.InternalReload();
-
-            StateHasChanged();
+            this.ReloadAndInvokeChange();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
@@ -281,6 +279,7 @@ namespace AntDesign
         private QueryModel<TItem> InternalReload()
         {
             var queryModel = BuildQueryModel();
+            _currentQueryModel = queryModel;
 
             if (ServerSide)
             {
@@ -291,25 +290,10 @@ namespace AntDesign
             {
                 if (_dataSource != null)
                 {
-                    var query = _dataSource.AsQueryable();
-                    foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
-                    {
-                        query = sort.SortList(query);
-                    }
-
-                    foreach (var filter in queryModel.FilterModel)
-                    {
-                        query = filter.FilterList(query);
-                    }
+                    var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-
-                    query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-                    queryModel.SetQueryableLambda(query);
-
-                    _currentQueryModel = queryModel;
-
-                    _showItems = query;
+                    _showItems = queryModel.CurrentPagedRecords(query);
                 }
                 else
                 {
