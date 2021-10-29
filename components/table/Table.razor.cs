@@ -214,9 +214,7 @@ namespace AntDesign
 
             FlushCache();
 
-            this.InternalReload();
-
-            StateHasChanged();
+            this.ReloadAndInvokeChange();
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel();
