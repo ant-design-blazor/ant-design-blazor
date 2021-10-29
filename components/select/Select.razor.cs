@@ -1818,13 +1818,22 @@ namespace AntDesign
 
                 currentSelected.IsActive = true;
                 ActiveOption = currentSelected;
+
+                //it can happen that Ref.Id is null when for example DataSource
+                //is set in first OnAfterRender() after initialization
+                if (currentSelected.Ref.Id is null)
+                {
+                    await InvokeAsync(StateHasChanged);
+                }
                 await ElementScrollIntoViewAsync(currentSelected.Ref);
             }
             else if (ActiveOption == null)//position on first element in the list
             {
                 var selectionCandidate = SelectOptionItems.FirstOrDefault();
                 if (selectionCandidate != null)
+                {
                     ActiveOption = selectionCandidate;
+                }
             }
         }
 
