@@ -1,6 +1,6 @@
 ﻿import { domInfoHelper } from '../dom/exports'
 import { state } from '../stateProvider';
-
+import { resize } from '../../ObservableApi/observableApi';
 
 export class inputHelper {
 
@@ -40,12 +40,19 @@ export class inputHelper {
       state.objReferenceDict[element.id] = objReference;
       state.eventCallbackRegistry[element.id + "input"] = function () { inputHelper.resizeTextArea(element, minRows, maxRows); }
       element.addEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
+      resize.create(element.id + "-resize", () => {
+        inputHelper.resizeTextArea(element, minRows, maxRows);
+      }, false);
+      resize.observe(element.id + "-resize", element);
+      inputHelper.resizeTextArea(element, minRows, maxRows);
+      element.style.resize = 'none';
       return this.getTextAreaInfo(element);
     }
   }
 
   static disposeResizeTextArea(element: HTMLTextAreaElement) {
     element.removeEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
+    resize.unobserve(element.id + "-resize", element);
     state.objReferenceDict[element.id] = null;
     state.eventCallbackRegistry[element.id + "input"] = null;
   }
@@ -62,7 +69,7 @@ export class inputHelper {
     
     var rows = Math.trunc(element.scrollHeight / rowHeight);
     element.rows = oldRows;
-    rows = Math.max(minRows, rows);    
+    rows = Math.max(minRows, rows);
     var newHeight = 0;
     if (rows > maxRows) {
       rows = maxRows;
