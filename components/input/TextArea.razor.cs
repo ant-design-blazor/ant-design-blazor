@@ -13,16 +13,6 @@ namespace AntDesign
 
         protected override string InputType => "textarea";
 
-        /// <summary>
-        /// scrollHeight of 1 row
-        /// </summary>
-        private double _rowHeight;
-
-        /// <summary>
-        /// total height = row * <see cref="_rowHeight" /> + <see cref="_offsetHeight" />
-        /// </summary>
-        private double _offsetHeight;
-
         private uint _minRows = DEFAULT_MIN_ROWS;
         private uint _maxRows = uint.MaxValue;
         private bool _hasMinOrMaxSet;
@@ -48,14 +38,6 @@ namespace AntDesign
                 else
                 {
                     _autoSize = value;
-                }
-                if (_autoSize)
-                {
-                    _resizeStyle = "resize: none";
-                }
-                else
-                {
-                    _resizeStyle = "";
                 }
             }
         }
@@ -149,6 +131,23 @@ namespace AntDesign
             set => _showCount = value;
         }
 
+        /// <inheritdoc/>
+        [Parameter]
+        public override string Value
+        {
+            get => base.Value;
+            set
+            {
+                if (base.Value != value)
+                {
+                    _valueHasChanged = true;
+                }
+                base.Value = value;
+            }
+        }
+
+        private uint InnerMinRows => _hasMinSet ? MinRows : Rows;
+
         private bool _showCount;
 
         private ClassMapper _warpperClassMapper = new ClassMapper();
@@ -163,6 +162,17 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-rtl", () => RTL);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (_oldStyle != Style)
+            {
+                _styleHasChanged = true;
+                _oldStyle = Style;
+            }
+        }
+
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
@@ -171,7 +181,39 @@ namespace AntDesign
             {
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
-            await CalculateRowHeightAsync();
+            await RegisterResizeEvents();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (AutoSize && _valueHasChanged)
+            {
+                _valueHasChanged = false;
+                if (_isInputing)
+                {
+                    _isInputing = false;
+                }
+                else
+                {
+                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                }
+            }
+            if (_styleHasChanged)
+            {
+                _styleHasChanged = false;
+                if (AutoSize && !string.IsNullOrWhiteSpace(Style))
+                {
+                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnInputAsync(ChangeEventArgs args)
+        {
+            _isInputing = true;
+            base.OnInputAsync(args);
         }
 
         protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
@@ -211,7 +253,11 @@ namespace AntDesign
         /// </summary>
         private bool _isReloading;
         private bool _autoSize;
-        private string _resizeStyle = "";
+        private bool _valueHasChanged;
+        private bool _isInputing;
+        private string _oldStyle;
+        private bool _styleHasChanged;
+        private string _heightStyle;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -222,41 +268,29 @@ namespace AntDesign
                 OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
         }
 
-        private async Task CalculateRowHeightAsync()
+        private async Task RegisterResizeEvents()
         {
             if (_reference == null)
             {
                 _reference = DotNetObjectReference.Create<TextArea>(this);
             }
 
-            uint rows = Rows;
-            if (_hasMinSet)
-                rows = MinRows;
-
-            TextAreaInfo textAreaInfo;
             if (AutoSize)
             {
-                textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
-                    JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, Ref, rows, MaxRows, _reference);
+                await JsInvokeAsync<TextAreaInfo>(
+                    JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, Ref, InnerMinRows, MaxRows, _reference);
             }
             else
             {
-                textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
+                var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
                     JSInteropConstants.InputComponentHelper.GetTextAreaInfo, Ref);
-            }
 
-            _rowHeight = textAreaInfo.LineHeight;
-            _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
-                + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
+                var rowHeight = textAreaInfo.LineHeight;
+                var offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
+                    + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
-            if (rows > MaxRows)
-            {
-                Style = $"height: {MaxRows * _rowHeight + _offsetHeight}px;{_resizeStyle};overflow-x: hidden";
-            }
-            else
-            {
-                string overflow = _autoSize ? "hidden" : "visible";
-                Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: {overflow};{_resizeStyle};overflow-x: hidden";
+                _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
+                StateHasChanged();
             }
         }
 

@@ -75,7 +75,7 @@ namespace AntDesign
                 {
                     _style += ";";
                 }
-                this.StateHasChanged();
+                //this.StateHasChanged();
             }
         }
 

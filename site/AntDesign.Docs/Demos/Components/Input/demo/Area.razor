@@ -1,17 +1,49 @@
 ﻿@using AntDesign;
 
 <div>
-    <TextArea Placeholder="Autosize height based on content lines" AutoSize="true" OnResize="OnResize"/>
+    <TextArea Placeholder="Autosize height based on content lines" AutoSize="true" OnResize="OnResize" />
     <br />
     <br />
-    <TextArea Placeholder="Autosize height with minimum and maximum number of lines" MinRows="2" MaxRows="6" OnResize="OnResize"/>
+    <TextArea Placeholder="Autosize height with minimum and maximum number of lines" MinRows="2" MaxRows="6" OnResize="OnResize" />
     <br />
     <br />
-    <TextArea Placeholder="Controlled autosize" MinRows="3" MaxRows="5" OnResize="OnResize" @bind-Value="@txtValue"/>
+    <TextArea Placeholder="Controlled autosize" MinRows="3" MaxRows="5" OnResize="OnResize" @bind-Value="@txtValue" />
+    <br />
+    <br />
+    <TextArea AutoSize OnResize="OnResize" @bind-Value="@initValue" />
+    <br />
+    <br />
+    <TextArea Placeholder="Change the text by code" AutoSize OnResize="OnResize" @bind-Value="@txtValue2" />
+    <br />
+    <Button OnClick="@(()=>txtValue2 += "\nNew row")">Append Text</Button>
+    <br />
+    <br />
+    <TextArea AutoSize OnResize="OnResize" @bind-Value="@initValue2" Style="@($"width:{width}px")" />
+    <br />
+    <Button OnClick="@(()=>width += 100)">Add width by 100px</Button>
+    <Button OnClick="@(()=>width -= 100)">Reduce width by 100px</Button>
 </div>
 
 @code{
     string txtValue { get; set; }
+
+    string initValue = @"This TextArea has an initial value
+This TextArea has an initial value
+This TextArea has an initial value
+This TextArea has an initial value
+This TextArea has an initial value
+This TextArea has an initial value";
+
+    string txtValue2 = "";
+
+    string initValue2 = @"Height will auto change when width changes. Height will auto change when width changes.
+Height will auto change when width changes. Height will auto change when width changes.
+Height will auto change when width changes. Height will auto change when width changes.
+Height will auto change when width changes. Height will auto change when width changes.
+Height will auto change when width changes. Height will auto change when width changes.
+Height will auto change when width changes. Height will auto change when width changes.";
+
+    int width = 300;
 
     private void OnResize(OnResizeEventArgs args)
     {

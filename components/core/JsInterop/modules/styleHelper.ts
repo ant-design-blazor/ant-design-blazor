@@ -51,11 +51,22 @@ export class styleHelper {
   //Referenced in Caret, class Mirror
   static css(element: HTMLElement, name: string | object, value: string | null = null) {
     if (typeof name === 'string') {
-      element.style[name] = value;
+      if (value === null) {
+        let style = name;
+        let cssAttributes = style.split(";");
+        for (let i = 0; i < cssAttributes.length; i++) {
+          let cssAttribute = cssAttributes[i];
+          if (!cssAttribute) continue;
+          let attribute = cssAttribute.split(":");
+          element.style.setProperty(attribute[0], attribute[1]);
+        }
+        return;
+      }
+      element.style.setProperty(name, value);
     } else {
       for (let key in name) {
         if (name.hasOwnProperty(key)) {
-          element.style[key] = name[key];
+          element.style.setProperty(key, name[key]);
         }
       }
     }
