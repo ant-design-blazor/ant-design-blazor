@@ -10,6 +10,8 @@ namespace AntDesign.TableModels
 
         public int PageSize { get; }
 
+        public int OffsetRecords => (PageIndex - 1) * PageSize;
+
         public IList<ITableSortModel> SortModel { get; private set; }
 
         public IList<ITableFilterModel> FilterModel { get; private set; }
@@ -31,9 +33,6 @@ namespace AntDesign.TableModels
 
     public class QueryModel<TItem> : QueryModel
     {
-        [JsonIgnore]
-        public IQueryable<TItem> QueryableLambda { get; private set; }
-
         internal QueryModel(int pageIndex, int pageSize) : base(pageIndex, pageSize)
         {
         }
@@ -48,9 +47,21 @@ namespace AntDesign.TableModels
             FilterModel.Add(model);
         }
 
-        internal void SetQueryableLambda(IQueryable<TItem> query)
+        public IQueryable<TItem> ExecuteQuery(IQueryable<TItem> query)
         {
-            this.QueryableLambda = query;
+            foreach (var sort in SortModel.OrderBy(x => x.Priority))
+            {
+                query = sort.SortList(query);
+            }
+
+            foreach (var filter in FilterModel)
+            {
+                query = filter.FilterList(query);
+            }
+
+            return query;
         }
+
+        public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
     }
 }
