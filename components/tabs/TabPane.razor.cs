@@ -46,6 +46,9 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<TabPane> TabContextMenu { get; set; }
+
+        [Parameter]
         public bool Disabled { get; set; }
 
         [Parameter]
