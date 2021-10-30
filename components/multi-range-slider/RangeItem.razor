@@ -6,6 +6,8 @@
         tabindex="0"
         @onmousedown="OnRangeItemClick" 
         @onmousedown:stopPropagation
+        @onmouseup="OnRangeItemMouseUp"
+        @onmouseup:stopPropagation
         @onkeydown="e => OnKeyDown(e, 0)"
         @onkeydown:stopPropagation
         @onkeydown:preventDefault

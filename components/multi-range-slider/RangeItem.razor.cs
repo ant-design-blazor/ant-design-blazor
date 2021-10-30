@@ -1474,6 +1474,24 @@ namespace AntDesign
             }
         }
 
+        private async Task OnRangeItemMouseUp(MouseEventArgs args)
+        {
+            if (_mouseDownOnTrack && !_jsEventsSet)
+            {
+                await Task.Yield();
+                _mouseDownOnTrack = false;
+                IsRangeDragged = false;
+                _trackedClientHeight = double.MinValue;
+                _trackedClientWidth = double.MinValue;
+                if (HasAttachedEdgeWithGap)
+                {
+                    GapDistance = CalculateGapDistance();
+                    AttachedItem.GapDistance = GapDistance;
+                }
+                RemoveJsEvents();
+            }
+        }
+
         private async Task OnRangeItemClick(MouseEventArgs args)
         {
             if (args.Button != 0)
