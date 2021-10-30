@@ -13,6 +13,5 @@ namespace AntDesign
         public string Title { get; set; }
         public bool Ignore { get; set; }
         public bool Closable { get; set; } = true;
-        public string Icon { get; set; }
     }
 }
