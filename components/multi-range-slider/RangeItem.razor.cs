@@ -672,21 +672,21 @@ namespace AntDesign
             {
                 Icon = Data.Icon;
             }
-            if (force || !Data.FontColor.Equals(FontColor))
+            if (Data.FontColor is not null && (force || !Data.FontColor.Equals(FontColor)))
             {
-                FontColor = Data.FontColor;
+                FontColor = Data.FontColor.Value;
             }
-            if (force || !Data.FocusColor.Equals(FocusColor))
+            if (Data.FocusColor is not null && (force || !Data.FocusColor.Equals(FocusColor)))
             {
-                FocusColor = Data.FocusColor;
+                FocusColor = Data.FocusColor.Value;
             }
-            if (force || !Data.FocusBorderColor.Equals(FocusBorderColor))
+            if (Data.FocusBorderColor is not null && (force || !Data.FocusBorderColor.Equals(FocusBorderColor)))
             {
-                FocusBorderColor = Data.FocusBorderColor;
+                FocusBorderColor = Data.FocusBorderColor.Value;
             }
-            if (force || !Data.Color.Equals(Color))
+            if (Data.Color is not null && (force || !Data.Color.Equals(Color)))
             {
-                Color = Data.Color;
+                Color = Data.Color.Value;
             }
         }
 
@@ -1476,6 +1476,10 @@ namespace AntDesign
 
         private async Task OnRangeItemClick(MouseEventArgs args)
         {
+            if (args.Button != 0)
+            {
+                return;
+            }
             _mouseDownOnTrack = !(Disabled || Parent.Disabled);
             if (!_mouseDownOnTrack)
             {

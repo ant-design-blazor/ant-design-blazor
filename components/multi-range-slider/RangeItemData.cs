@@ -74,10 +74,10 @@ namespace AntDesign
         public (double first, double second) Value { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
-        public OneOf<Color, string> FontColor { get; set; }
-        public OneOf<Color, string> Color { get; set; }
-        public OneOf<Color, string> FocusColor { get; set; }
-        public OneOf<Color, string> FocusBorderColor { get; set; }
+        public OneOf<Color, string>? FontColor { get; set; }
+        public OneOf<Color, string>? Color { get; set; }
+        public OneOf<Color, string>? FocusColor { get; set; }
+        public OneOf<Color, string>? FocusBorderColor { get; set; }
         public Action<(double, double)> OnChange { get; set; }
         public Action<(double, double)> OnAfterChange { get; set; }
     }
