@@ -92,17 +92,15 @@ namespace AntDesign
 
                 builder.AddComponentReferenceCapture(2, @ref =>
                 {
-                    _pageMap[url] = GetPageInfo(routeData.PageType, url, @ref);
+                    GetPageInfo(_pageMap[url], routeData.PageType, url, @ref);
                 });
 
                 builder.CloseComponent();
             };
         }
 
-        private ReuseTabsPageItem GetPageInfo(Type pageType, string url, object page)
+        private void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
         {
-            ReuseTabsPageItem pageItem = new() { Url = url, CreatedAt = DateTime.Now };
-
             if (page is IReuseTabsPage resuse)
             {
                 pageItem.Title ??= resuse.GetPageTitle();
@@ -123,8 +121,6 @@ namespace AntDesign
             }
 
             pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
-
-            return pageItem;
         }
     }
 }
