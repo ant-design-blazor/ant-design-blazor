@@ -236,6 +236,16 @@ namespace AntDesign
             this.ReloadAndInvokeChange();
         }
 
+        public void ReloadData(int? pageIndex, int? pageSize = null)
+        {
+            ChangePageIndex(pageIndex ?? 1);
+            ChangePageSize(pageSize ?? PageSize);
+
+            FlushCache();
+
+            this.ReloadAndInvokeChange();
+        }
+
         public QueryModel GetQueryModel() => BuildQueryModel();
 
         private QueryModel<TItem> BuildQueryModel()

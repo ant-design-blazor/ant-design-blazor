@@ -7,6 +7,8 @@ namespace AntDesign
     {
         void ReloadData();
 
+        void ReloadData(int? pageIndex, int? pageSize = null);
+
         QueryModel GetQueryModel();
 
         void SetSelection(string[] keys);
