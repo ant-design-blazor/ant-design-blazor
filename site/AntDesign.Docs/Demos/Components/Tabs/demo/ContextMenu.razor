@@ -1,0 +1,35 @@
+﻿<Tabs Type="@TabType.EditableCard" HideAdd>
+    @foreach (var pane in panes)
+    {
+        <TabPane @key="@pane.Key" Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
+            <ChildContent>
+                @pane.Content
+            </ChildContent>
+            <TabContextMenu>
+                <Menu>
+                    <MenuItem OnClick="@(()=>Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
+                </Menu>
+            </TabContextMenu>
+        </TabPane>
+    }
+</Tabs>
+
+@code {
+
+    record Pane(string Title, string Content, string Key, bool Closable = true);
+
+    List<Pane> panes = new List<Pane>()
+    {
+        new("Tab 1", "Content of Tab Pane 1","1"),
+        new("Tab 2", "Content of Tab Pane 2","2"),
+        new("Tab 3", "Content of Tab Pane 3","3", false),
+        new("Tab 4", "Content of Tab Pane 4","4"),
+        new("Tab 5", "Content of Tab Pane 5","5"),
+    };
+
+    void Close(Pane pane)
+    {
+        panes.Remove(pane);
+        StateHasChanged();
+    }
+}

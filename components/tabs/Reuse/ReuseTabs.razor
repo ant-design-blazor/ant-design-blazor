@@ -8,7 +8,6 @@
 else
 {
     <Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@CurrentUrl" OnClose="RemovePage" Draggable="Draggable" Size="Size">
-
         @foreach (var item in Pages)
         {
             <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>

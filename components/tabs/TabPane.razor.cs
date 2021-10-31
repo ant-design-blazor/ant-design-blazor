@@ -46,7 +46,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TabPane> TabContextMenu { get; set; }
+        public RenderFragment TabContextMenu { get; set; }
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -128,7 +128,7 @@ namespace AntDesign
             {
                 _isActive = isActive;
                 _shouldTabRender = true;
-                StateHasChanged();
+                InvokeAsync(StateHasChanged);
             }
         }
 
