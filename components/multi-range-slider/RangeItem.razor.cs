@@ -22,10 +22,12 @@ namespace AntDesign
         private HtmlElement _sliderDom;
         private ElementReference _firstHandle;
         private ElementReference _lastHandle;
+        private ElementReference _trackRef;
         private string _firstHandleCssPosition = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _lastHandleCssPosition = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _trackCssPosition = "left: 0%; width: 0%; right: auto;";
         private bool _isFocused;
+        private bool _focusedChanged;
         private string _focusClass = "";
         private string _firstFocusZIndex = "z-index: 2;";
         private string _lastFocusZIndex = "z-index: 2;";
@@ -300,6 +302,24 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When set to true, the range item will receive focus.
+        /// When multiple <see cref="RangeItem"/> have this property 
+        /// set, then last one prevails. 
+        /// </summary>
+        [Parameter]
+        public bool Focused
+        {
+            get => _focused;
+            set
+            {
+                if (_focused != value)
+                {
+                    _focused = value;
+                    _focusedChanged = true;
+                }
+            }
+        }
+        /// <summary>
         /// Color of the text visible on the range.
         /// </summary>
         [Parameter]
@@ -341,10 +361,22 @@ namespace AntDesign
         public EventCallback<(double, double)> OnAfterChange { get; set; }
 
         /// <summary>
+        /// Called when range item looses focus.
+        /// </summary>
+        [Parameter]
+        public EventCallback<(double, double)> OnBlur { get; set; }
+
+        /// <summary>
         /// Called when the user changes one of the values.
         /// </summary>
         [Parameter]
         public EventCallback<(double, double)> OnChange { get; set; }
+
+        /// <summary>
+        /// Called when range item receives focus.
+        /// </summary>
+        [Parameter]
+        public EventCallback<(double, double)> OnFocus { get; set; }
 
         /// <summary>
         /// Set `Tooltip` display position.
@@ -658,6 +690,20 @@ namespace AntDesign
             SetCustomStyle();
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            if (_focusedChanged)
+            {
+                _focusedChanged = false;
+                Parent.SetRangeItemFocus(this, _focused);
+                if (_focused)
+                {
+                    SetFocus(_focused);
+                }
+            }
+            await base.OnParametersSetAsync();
+        }
+
         private void ApplyData(bool force = false)
         {
             if (!_isDataSet)
@@ -672,6 +718,12 @@ namespace AntDesign
             {
                 Icon = Data.Icon;
             }
+
+            if (force || Data.HasFocus != Focused)
+            {
+                Focused = Data.HasFocus;
+            }
+
             if (Data.FontColor is not null && (force || !Data.FontColor.Equals(FontColor)))
             {
                 FontColor = Data.FontColor.Value;
@@ -694,7 +746,7 @@ namespace AntDesign
         {
             if (_customStyleChange)
             {
-                if (string.IsNullOrWhiteSpace(FontColor.Value.ToString()))
+                if (string.IsNullOrWhiteSpace(FontColor.Value?.ToString()))
                 {
                     _customDescriptionStyle = "";
                 }
@@ -702,7 +754,7 @@ namespace AntDesign
                 {
                     _customDescriptionStyle = _fontColorAsString;
                 }
-                if (string.IsNullOrWhiteSpace(Color.Value.ToString()))
+                if (string.IsNullOrWhiteSpace(Color.Value?.ToString()))
                 {
                     _customTrackStyle = "";
                     _customEdgeBorderStyle = "";
@@ -712,7 +764,7 @@ namespace AntDesign
                     _customTrackStyle = _colorAsString;
                     _customEdgeBorderStyle = GetColorStyle(_color, "border-color");
                 }
-                if (!string.IsNullOrWhiteSpace(FocusColor.Value.ToString()) || !string.IsNullOrWhiteSpace(FocusBorderColor.Value.ToString()))
+                if (!string.IsNullOrWhiteSpace(FocusColor.Value?.ToString()) || !string.IsNullOrWhiteSpace(FocusBorderColor.Value?.ToString()))
                 {
                     _customFocusStyle = _focusBorderColorAsString + _focusColorAsString;
                     if (_isFocused)
@@ -922,6 +974,14 @@ namespace AntDesign
                 {
                     _lastFocusZIndex = "z-index: 3;";
                 }
+                if (OnFocus.HasDelegate)
+                {
+                    OnFocus.InvokeAsync(CurrentValue);
+                }
+                if (Parent.OnFocus.HasDelegate)
+                {
+                    Parent.OnFocus.InvokeAsync(CurrentValue);
+                }
             }
             else
             {
@@ -934,6 +994,14 @@ namespace AntDesign
                 if (!(HasAttachedEdge && AttachedHandleNo == RangeEdge.Last))
                 {
                     _lastFocusZIndex = "z-index: 2;";
+                }
+                if (OnBlur.HasDelegate)
+                {
+                    OnBlur.InvokeAsync(CurrentValue);
+                }
+                if (Parent.OnBlur.HasDelegate)
+                {
+                    Parent.OnBlur.InvokeAsync(CurrentValue);
                 }
             }
             if (!isFocused)
@@ -1678,6 +1746,8 @@ namespace AntDesign
         }
 
         private bool _jsEventsSet;
+        private bool _focused;
+
         private async Task AddJsEvents()
         {
             await Task.Yield();

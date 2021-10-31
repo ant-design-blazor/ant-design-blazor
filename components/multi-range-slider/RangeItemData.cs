@@ -24,7 +24,8 @@ namespace AntDesign
         public RangeItemData(
             (double first, double second) value,
             string description = "",
-            string icon = "") : this(value, description)
+            string icon = ""
+            ) : this(value, description)
         {
             Icon = icon;
         }
@@ -33,7 +34,17 @@ namespace AntDesign
             (double first, double second) value,
             string description = "",
             string icon = "",
-            OneOf<Color, string>? fontColor = null) : this(value, description, icon)
+            bool hasFocus = false) : this(value, description, icon)
+        {
+            HasFocus = hasFocus;
+        }
+
+        public RangeItemData(
+            (double first, double second) value,
+            string description = "",
+            string icon = "",
+            bool hasFocus = false,
+            OneOf<Color, string>? fontColor = null) : this(value, description, icon, hasFocus)
         {
             FontColor = fontColor ?? default;
         }
@@ -42,8 +53,9 @@ namespace AntDesign
             (double first, double second) value,
             string description = "",
             string icon = "",
+            bool hasFocus = false,
             OneOf<Color, string>? fontColor = null,
-            OneOf<Color, string>? color = null) : this(value, description, icon, fontColor)
+            OneOf<Color, string>? color = null) : this(value, description, icon, hasFocus, fontColor)
         {
             Color = color ?? default;
         }
@@ -52,9 +64,10 @@ namespace AntDesign
             (double first, double second) value,
             string description = "",
             string icon = "",
+            bool hasFocus = false,
             OneOf<Color, string>? fontColor = null,
             OneOf<Color, string>? color = null,
-            OneOf<Color, string>? focusColor = null) : this(value, description, icon, fontColor, color)
+            OneOf<Color, string>? focusColor = null) : this(value, description, icon, hasFocus, fontColor, color)
         {
             FocusColor = focusColor ?? default;
         }
@@ -63,10 +76,11 @@ namespace AntDesign
             (double first, double second) value,
             string description = "",
             string icon = "",
+            bool hasFocus = false,
             OneOf<Color, string>? fontColor = null,
             OneOf<Color, string>? color = null,
             OneOf<Color, string>? focusColor = null,
-            OneOf<Color, string>? focusBorderColor = null) : this(value, description, icon, fontColor, color, focusColor)
+            OneOf<Color, string>? focusBorderColor = null) : this(value, description, icon, hasFocus, fontColor, color, focusColor)
         {
             FocusBorderColor = focusBorderColor ?? default;
         }
@@ -80,5 +94,6 @@ namespace AntDesign
         public OneOf<Color, string>? FocusBorderColor { get; set; }
         public Action<(double, double)> OnChange { get; set; }
         public Action<(double, double)> OnAfterChange { get; set; }
+        public bool HasFocus { get; set; }
     }
 }

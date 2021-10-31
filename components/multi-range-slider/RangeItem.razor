@@ -4,6 +4,7 @@
 <div class="@ClassMapper.Class" id="@Id" @ref="Ref">
     <div class="ant-multi-range-slider-track ant-multi-range-slider-track-1 @_focusClass" style="z-index: 1;@(_trackCssPosition+_customTrackStyle+_focusStyle)" 
         tabindex="0"
+        @ref=@_trackRef
         @onmousedown="OnRangeItemClick" 
         @onmousedown:stopPropagation
         @onmouseup="OnRangeItemMouseUp"
@@ -134,7 +135,7 @@
 
         builder.AddAttribute(16, "ondblclick", RangeItem.CallbackFactory.Create<MouseEventArgs>(this, args => OnDoubleClick(data.Edge)));
 
-        builder.AddAttribute(20, "onkeyup", RangeItem.CallbackFactory.Create(this, OnKeyUp));
+        builder.AddAttribute(20, "onkeyup", RangeItem.CallbackFactory.Create<KeyboardEventArgs>(this, args => OnKeyUp(args)));
         builder.AddEventPreventDefaultAttribute(21, "onkeyup", true);
         builder.AddEventStopPropagationAttribute(22, "onkeyup", true);
 

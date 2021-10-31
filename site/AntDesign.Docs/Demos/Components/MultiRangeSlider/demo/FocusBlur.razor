@@ -1,0 +1,42 @@
+﻿<MultiRangeSlider Focused="(45, 60)" @ref=@_slider>
+    <RangeItem DefaultValue="(0, 40)" Description="range 1" 
+                Color=@_focusedColor1 OnFocus=@(() => FocusSet(1)) OnBlur=@(() => FocusRemove(1))/>
+    <RangeItem DefaultValue="(45, 60)" Description="range 2" 
+                Color=@_focusedColor2 OnFocus=@(() => FocusSet(2)) OnBlur=@(() => FocusRemove(2))/>
+    <RangeItem DefaultValue="(65, 100)" Description="range 3" 
+                Color=@_focusedColor3 OnFocus=@(() => FocusSet(3)) OnBlur=@(() => FocusRemove(3))/>
+</MultiRangeSlider>
+<Button OnClick=Blur>Blur</Button>
+@code
+{
+    MultiRangeSlider _slider;
+
+    const string FocusColor = "Red";
+    string? _focusedColor1 = null;
+    string? _focusedColor2 = null;
+    string? _focusedColor3 = null;
+
+    void FocusSet(int rangeItem)
+    {
+        _ = rangeItem switch
+        {
+            1 => _focusedColor1 = FocusColor,
+            2 => _focusedColor2 = FocusColor,
+            3 => _focusedColor3 = FocusColor,
+            _ => throw new MissingFieldException("Wrong range item")
+        };
+    }
+
+    void FocusRemove(int rangeItem)
+    {
+        _ = rangeItem switch
+        {
+            1 => _focusedColor1 = null,
+            2 => _focusedColor2 = null,
+            3 => _focusedColor3 = null,
+            _ => throw new MissingFieldException("Wrong range item")
+        };
+    }
+
+    void Blur() => _slider.Blur();
+}

@@ -128,6 +128,16 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// <see cref="RangeItem"/> that will receive focus. If multiple
+        /// <see cref="RangeItem"/> have the same value (overlapping), then 
+        /// first matching will receive focus. Use this parameter only during
+        /// initialization. Otherwise use <see cref="MultiRangeSlider.Focus((double, double))"/>
+        /// method.
+        /// </summary>
+        [Parameter]
+        public (double, double)? Focused { get; set; }
+
+        /// <summary>
         /// Will not render Tooltip if set to false
         /// </summary>
         [Parameter]
@@ -171,6 +181,12 @@ namespace AntDesign
         public EventCallback<(double, double)> OnAfterChange { get; set; }
 
         /// <summary>
+        /// Called when range item looses focus.
+        /// </summary>
+        [Parameter]
+        public EventCallback<(double, double)> OnBlur { get; set; }
+
+        /// <summary>
         /// Called before edge is attached. If returns 'false', attaching is stopped.
         /// </summary>
         [Parameter]
@@ -207,13 +223,19 @@ namespace AntDesign
         public EventCallback<(RangeItem range, RangeEdge edge, double value)> OnEdgeMoved { get; set; }
 
         /// <summary>
+        /// Called when range item receives focus.
+        /// </summary>
+        [Parameter]
+        public EventCallback<(double, double)> OnFocus { get; set; }
+
+        /// <summary>
         /// Called when the user changes one of the values.
         /// </summary>
         [Parameter]
         public EventCallback<(double, double)> OnChange { get; set; }
 
         /// <summary>
-        /// Used to style overflowing container. Avoid using unless in oversized 
+        /// Used to style overflowing container. Avoid using unless in over-sized 
         /// mode (when `VisibleMin` &gt; `Min` and/or `VisibleMax` &lt; 'Max' ).
         /// </summary>
         [Parameter]
@@ -648,9 +670,9 @@ namespace AntDesign
             }
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnFirstAfterRenderAsync()
         {
-            if (firstRender && Oversized)
+            if (Oversized)
             {
                 double x = 0, y = 0;
                 if (Vertical)
@@ -663,7 +685,7 @@ namespace AntDesign
                 }
                 await JsInvokeAsync(JSInteropConstants.DomMainpulationHelper.ScrollToPoint, _scrollableAreaRef, x, y, true);
             }
-            await base.OnAfterRenderAsync(firstRender);
+            await base.OnFirstAfterRenderAsync();
         }
 
         protected override void Dispose(bool disposing)
@@ -680,6 +702,11 @@ namespace AntDesign
                 _keys.Add(Guid.NewGuid().ToString());
             }
             SortRangeItems();
+            if (Focused is not null && item.Value.Equals(Focused))
+            {
+                SetRangeItemFocus(item, true);
+                item.SetFocus(true);
+            }
         }
 
         internal void RemoveRangeItem(RangeItem item)
@@ -980,7 +1007,6 @@ namespace AntDesign
             }
             else
             {
-                //DebugHelper.WriteLine($" {_sizeType}: {(Max - Min) / (VisibleMax - VisibleMin) * 100}%;");
                 return $"{_sizeType}: {(Max - Min) / (VisibleMax - VisibleMin) * 100}%;";
             }
         }
@@ -989,7 +1015,7 @@ namespace AntDesign
         {
             if (_focusedItem is not null)
             {
-                if (_focusedItem.Id == item.Id)
+                if (isFocused && _focusedItem.Id == item.Id)
                 {
                     return;
                 }
@@ -1084,6 +1110,28 @@ namespace AntDesign
 
         private string GetBasePosition() => Vertical ? "bottom" : "left";
 
+        /// <summary>
+        /// Will set focus to <see cref="RangeItem"/>. If multiple <see cref="RangeItem"/>
+        /// have the same values set as passed, then first matching will receive focus.
+        /// If another <see cref="RangeItem"/> is currently focused, it will loose its focus.
+        /// </summary>
+        /// <param name="value">Value of the <see cref="RangeItem"/></param>
+        public void Focus((double, double) value)
+        {
+            var rangeItem = _items.Where(r => r.Value.Equals(value)).FirstOrDefault();
+            if (rangeItem is not null)
+            {
+                rangeItem.SetFocus(true);
+            }
+        }
+
+        /// <summary>
+        /// Removes focus. 
+        /// </summary>
+        public void Blur()
+        {
+            SetRangeItemFocus(_focusedItem, false);
+        }
 
     }
 }

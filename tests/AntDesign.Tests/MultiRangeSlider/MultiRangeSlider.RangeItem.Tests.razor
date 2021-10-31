@@ -380,7 +380,7 @@
         Action<(double, double)> onChange = v => onChangeCallCount++;
         Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++;
 
-        var data = new RangeItemData((10, 40), description, icon, font, color, focusColor, focusBorderColor);
+        var data = new RangeItemData((10, 40), description, icon, false, font, color, focusColor, focusBorderColor);
         data.OnAfterChange = onAfterChange;
         data.OnChange = onChange;
 
@@ -440,7 +440,7 @@
         Action<(double, double)> onChange = v => onChangeCallCount++;
         Action<(double, double)> onAfterChange = v => onAfterChangeCallCount++;
 
-        var data = new RangeItemData((10, 40), description, icon, font, color, focusColor, focusBorderColor);
+        var data = new RangeItemData((10, 40), description, icon, false, font, color, focusColor, focusBorderColor);
         data.OnAfterChange = onAfterChange;
         data.OnChange = onChange;
 
