@@ -172,5 +172,39 @@ namespace AntDesign
                 PageIndexChanged.InvokeAsync(_pageIndex);
             }
         }
+
+        private void ChangePageSize(int pageSize)
+        {
+            pageSize = Math.Max(1, pageSize);
+
+            if (_pageSize == pageSize)
+            {
+                return;
+            }
+
+            _pageSize = pageSize;
+
+            if (PageSizeChanged.HasDelegate)
+            {
+                PageSizeChanged.InvokeAsync(_pageSize);
+            }
+        }
+
+        private void ChangePageIndex(int pageIndex)
+        {
+            pageIndex = Math.Max(1, pageIndex);
+
+            if (_pageIndex == pageIndex)
+            {
+                return;
+            }
+
+            _pageIndex = pageIndex;
+
+            if (PageIndexChanged.HasDelegate)
+            {
+                PageIndexChanged.InvokeAsync(_pageIndex);
+            }
+        }
     }
 }
