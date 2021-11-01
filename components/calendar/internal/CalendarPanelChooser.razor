@@ -8,6 +8,8 @@
     Action<string, int> ChangePickerType = (type, index) => { Calendar.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => Calendar.Value;
     Func<int, DateTime?> GetIndexValue = (index) => Calendar.Value;
+    Func<DateTime, DateTime, RenderFragment> DateFullCellRender =
+        Calendar.DateFullCellRender != null ? (date, _) => Calendar.DateFullCellRender(date) : null;
 
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
@@ -23,7 +25,7 @@
             { "GetIndexPickerValue", GetIndexPickerValue },
             { "GetIndexValue", GetIndexValue },
             { "DisabledDate", Calendar.DisabledDate },
-            { "DateRender", Calendar.DateFullCellRender },
+            { "DateRender", DateFullCellRender },
             { "MonthCellRender", Calendar.MonthFullCellRender },
             { "CalendarDateRender", Calendar.DateCellRender },
             { "CalendarMonthCellRender", Calendar.MonthCellRender },
