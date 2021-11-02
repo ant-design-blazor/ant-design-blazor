@@ -1,0 +1,101 @@
+﻿@namespace AntDesign
+
+<div class="bcd-form-container">
+    <div>
+        @if (_forms != null)
+        {
+            var dict = new Dictionary<MinPosition, int>()
+            {
+                {MinPosition.LeftBottom, 0},
+                {MinPosition.RightBottom, 0},
+            };
+
+
+            @foreach (var form in _forms)
+            {
+                string minCls = "";
+                if (form.IsMin())
+                {
+                    minCls = $"{form.MinPosition.ToCls()}-{dict[form.MinPosition]}";
+                    dict[form.MinPosition] += 1;
+                }
+
+                <div id="@form.Name" @key="@form.Name" class="bcd-form-root @form.GetFormState()" style="@form.GetStyle()">
+                    @if (form.ShowMask)
+                    {
+                        <div class="bcd-form-mask @(form.IsNormal() ? "":"bcd-form-mask-hidden") " style=" @form.MaskStyle "
+                             @onclick="@(async () => { if(form.MaskClosable) {await CloseFormAsync(form);} })"></div>
+                    }
+                    <div class="bcd-form @minCls" style=" @form.GetFormStyle() ">
+                        <div class="bcd-form-content">
+                            @if (form.EnableHeader)
+                            {
+                                <div class="bcd-form-header">
+                                    <div class="bcd-form-title @form.GetHeaderCls()">@form.Title</div>
+                                    <div class="bcd-form-header-tools">
+                                        @if (form.MinimizeBox || form.MaximizeBox)
+                                        {
+                                            <button class="bcd-form-min-btn" disabled="@(!form.MinimizeBox)"
+                                                    @onclick="@(() => { form.Min(); })"
+                                                    @onclick:stopPropagation="true">
+                                                <span class="bcd-form-header-tool bcd-form-icon-min">
+                                                    <svg t="1610693610934"
+                                                         focusable="false" width="1em" height="1em" fill="currentColor" aria-hidden="true"
+                                                         class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4799">
+                                                        <path d="M91.428571 457.142857h841.142858v109.714286h-841.142858z" p-id="4800"></path>
+                                                    </svg>
+                                                </span>
+                                            </button>
+
+                                            <button class="bcd-form-max-btn" disabled="@(!form.MaximizeBox)"
+                                                    @onclick="@(() => { form.TriggerMaxBox(); })"
+                                                    @onclick:stopPropagation="true">
+                                                @if (form.IsMax() || form.IsMin())
+                                                {
+                                                    <span class="bcd-form-header-tool bcd-form-icon-restore">
+                                                        <svg t="1616138501089"
+                                                             focusable="false" width="1em" height="1em" fill="currentColor" aria-hidden="true"
+                                                             class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="951">
+                                                            <path d="M838.79182667 757.09387079h-81.69795588v163.39591336h-653.58365494v-653.58365494h163.39591336v-163.39591336h653.58365494v653.58365494h-81.69795748z m-653.58365334-408.48978413v490.18774001h490.18774001v-490.18774001h-490.18774001z m653.58365334-163.39591333h-490.18774001v81.69795588h408.48978413v408.48978413h81.69795588v-490.18774001z" p-id="952"></path>
+                                                        </svg>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="bcd-form-header-tool bcd-form-icon-max">
+                                                        <svg t="1610693558361"
+                                                             focusable="false" width="1em" height="1em" fill="currentColor" aria-hidden="true"
+                                                             class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4667">
+                                                            <path d="M930.909091 32.581818 93.090909 32.581818c-23.272727 0-46.545455 18.618182-46.545455 46.545455l0 837.818182c0 23.272727 18.618182 46.545455 46.545455 46.545455l837.818182 0c23.272727 0 46.545455-18.618182 46.545455-46.545455l0-837.818182C977.454545 51.2 958.836364 32.581818 930.909091 32.581818zM884.363636 870.4 139.636364 870.4l0-744.727273 744.727273 0L884.363636 870.4z" p-id="4668"></path>
+                                                        </svg>
+                                                    </span>
+                                                }
+
+                                            </button>
+                                        }
+
+                                        <button class="bcd-form-close-btn"
+                                                @onclick="@(EventUtil.AsNonRenderingEventHandler(async () => { await CloseFormAsync(form); }))"
+                                                @onclick:stopPropagation="true">
+                                            <span class="bcd-form-header-tool bcd-form-icon-close">
+                                                <svg t="1610695030046"
+                                                     focusable="false" width="1em" height="1em" fill="currentColor" aria-hidden="true"
+                                                     class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9043">
+                                                    <path d="M521.694 449.297L111.41 39.014a51.2 51.2 0 1 0-72.43 72.363l410.282 410.317L38.98 932.01a51.2 51.2 0 1 0 72.397 72.396l410.317-410.282 410.317 410.282a51.2 51.2 0 1 0 72.396-72.362L594.125 521.694l410.282-410.283a51.2 51.2 0 1 0-72.396-72.397L521.728 449.297z" p-id="9044"></path>
+                                                </svg>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="bcd-form-body" style="@form.BodyStyle">
+                                @_form2Compontents[form]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

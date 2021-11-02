@@ -97,6 +97,18 @@ namespace AntDesign
         public static string UnbindTableScroll => TableComponentHelper.UnbindTableScroll;
         #endregion
 
+        #region BcdForm
+
+        //public static string EnableDraggable = $"{FUNC_PREFIX}enableDraggable";
+        //public static string DisableDraggable = $"{FUNC_PREFIX}disableDraggable";
+        public static string ResetDraggableElePosition = $"{FUNC_PREFIX}resetDraggableElePosition";
+
+        public static string MinResetStyle = $"{FUNC_PREFIX}minResetStyle";
+        public static string MaxResetStyle = $"{FUNC_PREFIX}maxResetStyle";
+        public static string NormalResetStyle = $"{FUNC_PREFIX}normalResetStyle";
+
+        #endregion
+
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
         public static string Log => $"{FUNC_PREFIX}log";
 
