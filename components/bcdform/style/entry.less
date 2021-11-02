@@ -1,0 +1,411 @@
+﻿.draggable {
+    cursor: move
+}
+
+.bcd-form-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none
+}
+
+.bcd-form-container > div {
+    position: relative;
+    pointer-events: none;
+    width: 100%;
+    height: 100%
+}
+
+.bcd-form-container > div .bcd-form-root {
+    position: absolute;
+    width: 100%
+}
+
+.bcd-form-container > div .bcd-form-root .bcd-form-mask {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
+    background-color: rgba(0,0,0,.45);
+    pointer-events: all
+}
+
+.bcd-form-container > div .bcd-form-root .bcd-form-mask.bcd-form-mask-hidden {
+    display: none
+}
+
+.bcd-form {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0,0,0,.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum';
+    pointer-events: none;
+    position: relative;
+    top: 100px;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    margin: 0 auto;
+    z-index: 20210307
+}
+
+.bcd-form .bcd-form-content {
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px 0 rgba(0,0,0,.08),0 9px 28px 8px rgba(0,0,0,.05);
+    pointer-events: auto
+}
+
+.bcd-form .bcd-form-content .bcd-form-header {
+    color: rgba(0,0,0,.85);
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 2px 2px 0 0;
+    display: flex
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-title {
+    padding: 12px 12px;
+    flex-grow: 1;
+    margin: 0;
+    color: rgba(0,0,0,.85);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Microsoft YaHei',Helvetica,SimHei,sans-serif
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools {
+    padding: 12px 12px;
+    padding-left: 4px;
+    display: flex;
+    flex-grow: 0
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools > button {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    width: 36px;
+    margin-top: -12px;
+    margin-bottom: -12px;
+    padding: 0;
+    z-index: 10;
+    color: rgba(0,0,0,.45);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    background: 0 0;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: color .3s
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools > button:disabled {
+    cursor: default;
+    color: #ccc
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools > button:enabled:focus, .bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools > button:enabled:hover {
+    color: rgba(0,0,0,.75);
+    text-decoration: none
+}
+
+.bcd-form .bcd-form-content .bcd-form-header .bcd-form-header-tools > button > span {
+    width: 100%
+}
+
+.bcd-form .bcd-form-content .bcd-form-body {
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.5715;
+    word-wrap: break-word;
+    overflow: auto
+}
+
+.bcd-form .bcd-form-open {
+    overflow: hidden
+}
+
+.bcd-form-centered {
+    text-align: center
+}
+
+.bcd-form-centered::before {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    content: ''
+}
+
+.bcd-form-centered .bcd-form {
+    top: 0;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    flex: 1
+}
+
+@media (max-width:767px) {
+    .bcd-form {
+        max-width: calc(100vw - 16px);
+        margin: 8px auto
+    }
+
+    .bcd-form-centered .bcd-form {
+        text-align: right
+    }
+}
+
+.bcd-form-min {
+    position: absolute
+}
+
+.bcd-form-min .bcd-form-min-btn {
+    pointer-events: none
+}
+
+.bcd-form-min .bcd-form {
+    width: 200px !important;
+    top: calc(100vh - 50px);
+    display: inline-block
+}
+
+.bcd-form-min .bcd-form .bcd-form-content {
+    box-shadow: none;
+    border: 1px solid #efefef;
+    border-radius: 2px 2px
+}
+
+.bcd-form-min .bcd-form .bcd-form-content .bcd-form-body {
+    display: none
+}
+
+.bcd-form-min.min-lb .min-lb-0 {
+    left: 0
+}
+
+.bcd-form-min.min-lb .min-lb-1 {
+    left: 200px
+}
+
+.bcd-form-min.min-lb .min-lb-2 {
+    left: 400px
+}
+
+.bcd-form-min.min-lb .min-lb-3 {
+    left: 600px
+}
+
+.bcd-form-min.min-lb .min-lb-4 {
+    left: 800px
+}
+
+.bcd-form-min.min-lb .min-lb-5 {
+    left: 1000px
+}
+
+.bcd-form-min.min-lb .min-lb-6 {
+    left: 1200px
+}
+
+.bcd-form-min.min-lb .min-lb-7 {
+    left: 1400px
+}
+
+.bcd-form-min.min-lb .min-lb-8 {
+    left: 1600px
+}
+
+.bcd-form-min.min-lb .min-lb-9 {
+    left: 1800px
+}
+
+.bcd-form-min.min-lb .min-lb-10 {
+    left: 2000px
+}
+
+.bcd-form-min.min-lb .min-lb-11 {
+    left: 2200px
+}
+
+.bcd-form-min.min-lb .min-lb-12 {
+    left: 2400px
+}
+
+.bcd-form-min.min-lb .min-lb-13 {
+    left: 2600px
+}
+
+.bcd-form-min.min-lb .min-lb-14 {
+    left: 2800px
+}
+
+.bcd-form-min.min-lb .min-lb-15 {
+    left: 3000px
+}
+
+.bcd-form-min.min-lb .min-lb-16 {
+    left: 3200px
+}
+
+.bcd-form-min.min-lb .min-lb-17 {
+    left: 3400px
+}
+
+.bcd-form-min.min-lb .min-lb-18 {
+    left: 3600px
+}
+
+.bcd-form-min.min-lb .min-lb-19 {
+    left: 3800px
+}
+
+.bcd-form-min.min-rb .min-rb-0 {
+    position: absolute;
+    right: 0
+}
+
+.bcd-form-min.min-rb .min-rb-1 {
+    position: absolute;
+    right: 200px
+}
+
+.bcd-form-min.min-rb .min-rb-2 {
+    position: absolute;
+    right: 400px
+}
+
+.bcd-form-min.min-rb .min-rb-3 {
+    position: absolute;
+    right: 600px
+}
+
+.bcd-form-min.min-rb .min-rb-4 {
+    position: absolute;
+    right: 800px
+}
+
+.bcd-form-min.min-rb .min-rb-5 {
+    position: absolute;
+    right: 1000px
+}
+
+.bcd-form-min.min-rb .min-rb-6 {
+    position: absolute;
+    right: 1200px
+}
+
+.bcd-form-min.min-rb .min-rb-7 {
+    position: absolute;
+    right: 1400px
+}
+
+.bcd-form-min.min-rb .min-rb-8 {
+    position: absolute;
+    right: 1600px
+}
+
+.bcd-form-min.min-rb .min-rb-9 {
+    position: absolute;
+    right: 1800px
+}
+
+.bcd-form-min.min-rb .min-rb-10 {
+    position: absolute;
+    right: 2000px
+}
+
+.bcd-form-min.min-rb .min-rb-11 {
+    position: absolute;
+    right: 2200px
+}
+
+.bcd-form-min.min-rb .min-rb-12 {
+    position: absolute;
+    right: 2400px
+}
+
+.bcd-form-min.min-rb .min-rb-13 {
+    position: absolute;
+    right: 2600px
+}
+
+.bcd-form-min.min-rb .min-rb-14 {
+    position: absolute;
+    right: 2800px
+}
+
+.bcd-form-min.min-rb .min-rb-15 {
+    position: absolute;
+    right: 3000px
+}
+
+.bcd-form-min.min-rb .min-rb-16 {
+    position: absolute;
+    right: 3200px
+}
+
+.bcd-form-min.min-rb .min-rb-17 {
+    position: absolute;
+    right: 3400px
+}
+
+.bcd-form-min.min-rb .min-rb-18 {
+    position: absolute;
+    right: 3600px
+}
+
+.bcd-form-min.min-rb .min-rb-19 {
+    position: absolute;
+    right: 3800px
+}
+
+.bcd-form-max {
+    position: absolute;
+    width: 100vw
+}
+
+.bcd-form-max .bcd-form {
+    width: 100vw !important;
+    max-width: 100vw;
+    top: 0;
+    left: 0
+}
+
+.bcd-form-max .bcd-form .bcd-form-content {
+    box-shadow: none
+}
+
+.bcd-form-max .bcd-form .bcd-form-content .bcd-form-header.draggable {
+    cursor: default;
+    pointer-events: none
+}
+
+.bcd-form-max .bcd-form .bcd-form-content .bcd-form-header-tools {
+    pointer-events: all
+}
+
+.bcd-form-max .bcd-form .bcd-form-content .bcd-form-body {
+    height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px) !important
+}

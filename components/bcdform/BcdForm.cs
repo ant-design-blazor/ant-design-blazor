@@ -247,7 +247,10 @@ namespace AntDesign
 
         #endregion
 
-        protected abstract void InitComponent();
+        protected virtual void InitComponent()
+        {
+
+        }
 
         internal string GetHeaderCls()
         {
