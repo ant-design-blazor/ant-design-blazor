@@ -8,8 +8,17 @@
 <div @ref="@Ref" class="@ClassMapper.Class" style="@Style" id="@Id">
     @if (Title != null || TitleTemplate != null)
     {
-        <div class="ant-descriptions-title">
-            @if (TitleTemplate != null)@TitleTemplate else @Title
+        <div class="ant-descriptions-header">
+            <div class="ant-descriptions-title">
+                @if (TitleTemplate != null)
+                {
+                    @TitleTemplate
+                }
+                else
+                {
+                    @Title
+                }
+            </div>
         </div>
     }
     <div class="ant-descriptions-view">
@@ -22,18 +31,24 @@
                         <tr class="ant-descriptions-row">
                             @foreach (var item in row)
                             {
-
                                 if (Bordered == false)
                                 {
                                     <!-- Horizontal & NOT Bordered -->
                                     <td class="ant-descriptions-item" colspan="@item.realSpan" @ref="@item.item.Ref">
-                                       <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-                                            @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
-                                        </span>
-                                        <span class="ant-descriptions-item-content">
-                                            @item.item.ChildContent
-                                        </span>
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
+                                                @if (item.item.TitleTemplate != null)
+                                                {
+                                                    @item.item.TitleTemplate
+                                                }
+                                                else
+                                                {
+                                                    @item.item.Title
+                                                }
+                                            </span>
+                                            <span class="ant-descriptions-item-content">
+                                                @item.item.ChildContent
+                                            </span>
                                         </div>
                                     </td>
                                 }
@@ -41,7 +56,14 @@
                                 {
                                     <!-- Horizontal & Bordered -->
                                     <td class="ant-descriptions-item-label">
-                                        @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
+                                        @if (item.item.TitleTemplate != null)
+                                        {
+                                            @item.item.TitleTemplate
+                                        }
+                                        else
+                                        {
+                                            @item.item.Title
+                                        }
                                     </td>
                                     <td class="ant-descriptions-item-content" colspan="@(item.realSpan * 2 - 1)">
                                         @item.item.ChildContent
@@ -63,7 +85,14 @@
                                 {
                                     <td class="ant-descriptions-item" colspan="@item.realSpan">
                                         <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-                                            @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
+                                            @if (item.item.TitleTemplate != null)
+                                            {
+                                                @item.item.TitleTemplate
+                                            }
+                                            else
+                                            {
+                                                @item.item.Title
+                                            }
                                         </span>
                                     </td>
                                 }
@@ -89,7 +118,14 @@
                                 @foreach (var item in row)
                                 {
                                     <td class="ant-descriptions-item-label" colspan="@item.realSpan">
-                                        @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
+                                        @if (item.item.TitleTemplate != null)
+                                        {
+                                            @item.item.TitleTemplate
+                                        }
+                                        else
+                                        {
+                                            @item.item.Title
+                                        }
                                     </td>
                                 }
                             </tr>
