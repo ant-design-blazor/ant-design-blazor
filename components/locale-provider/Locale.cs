@@ -46,5 +46,7 @@ namespace AntDesign.Locales
         public FormLocale Form { get; set; } = new();
 
         public ImageLocale Image { get; set; } = new();
+
+        public ReuseTabsLocale ReuseTabs { get; set; } = new();
     }
 }
