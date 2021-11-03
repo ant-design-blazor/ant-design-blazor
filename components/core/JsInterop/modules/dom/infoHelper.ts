@@ -146,4 +146,16 @@ export class infoHelper {
     return null;
   }
 
+  static attr(selector: string | Element, key: string, value: string | null = null): string | null  {
+    let dom = infoHelper.get(selector);
+    if (dom) {
+      if (value) {
+        dom.setAttribute(key, value);
+        return value;
+      } else {
+        return dom.getAttribute(key);
+      }
+    }
+    return null;
+  }
 }

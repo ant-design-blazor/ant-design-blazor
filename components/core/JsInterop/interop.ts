@@ -10,7 +10,8 @@ export {
   modalHelper,
   overlayHelper,
   tableHelper,
-  uploadHelper
+  uploadHelper,
+  bcdFormHelper,
 } from './modules/components/export'
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
 

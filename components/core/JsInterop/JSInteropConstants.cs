@@ -101,11 +101,11 @@ namespace AntDesign
 
         //public static string EnableDraggable = $"{FUNC_PREFIX}enableDraggable";
         //public static string DisableDraggable = $"{FUNC_PREFIX}disableDraggable";
-        public static string ResetDraggableElePosition = $"{FUNC_PREFIX}resetDraggableElePosition";
+        public static string ResetDraggableElePosition => BcdFormComponentHelper.ResetDraggableElePosition;
 
-        public static string MinResetStyle = $"{FUNC_PREFIX}minResetStyle";
-        public static string MaxResetStyle = $"{FUNC_PREFIX}maxResetStyle";
-        public static string NormalResetStyle = $"{FUNC_PREFIX}normalResetStyle";
+        public static string MinResetStyle => BcdFormComponentHelper.MinResetStyle;
+        public static string MaxResetStyle => BcdFormComponentHelper.MaxResetStyle;
+        public static string NormalResetStyle => BcdFormComponentHelper.NormalResetStyle;
 
         #endregion
 
@@ -222,6 +222,17 @@ namespace AntDesign
             public static string DisableDraggable => $"{FUNC_PREFIX}disableDraggable";
             public static string ResetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
         }
+
+        public static class BcdFormComponentHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "bcdFormHelper.";
+            public static string ResetDraggableElePosition => $"{FUNC_PREFIX}resetDraggableElePosition";
+
+            public static string MinResetStyle => $"{FUNC_PREFIX}minResetStyle";
+            public static string MaxResetStyle => $"{FUNC_PREFIX}maxResetStyle";
+            public static string NormalResetStyle => $"{FUNC_PREFIX}normalResetStyle";
+        }
+
 
         public static class OverlayComponentHelper
         {
