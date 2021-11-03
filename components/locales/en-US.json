@@ -241,5 +241,11 @@
   },
   "Image": {
     "preview": "Preview"
+  },
+  "ReuseTabs": {
+    "Close": "Close",
+    "CloseAllTabs": "Close All Tabs",
+    "CloseAllButThis": "Close All But This",
+    "PinTab": "Pin Tab"
   }
 }

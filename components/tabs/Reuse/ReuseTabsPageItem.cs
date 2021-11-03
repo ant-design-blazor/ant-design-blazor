@@ -12,5 +12,9 @@ namespace AntDesign
         public RenderFragment Title { get; set; }
 
         public RenderFragment Body { get; set; }
+
+        public bool Ignore { get; set; }
+
+        public bool Closable { get; set; } = true;
     }
 }

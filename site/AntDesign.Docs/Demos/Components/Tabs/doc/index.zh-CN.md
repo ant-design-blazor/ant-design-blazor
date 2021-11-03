@@ -53,3 +53,4 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | Key         | 对应 activeKey            | string            | 无     |
 | Tab         | 选项卡头显示文字          | string | 无     |
 | TabTemplate | 选项卡头显示文字模板       | RenderFargment | 无     |
+| TabContextMenu | Template for customer context menu | RenderFargment | 无 |

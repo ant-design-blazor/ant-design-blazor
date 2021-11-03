@@ -186,8 +186,8 @@ namespace AntDesign
         private readonly ClassMapper _contentClassMapper = new ClassMapper();
         private readonly ClassMapper _tabsNavWarpPingClassMapper = new ClassMapper();
 
-        private List<TabPane> _panes = new List<TabPane>();
-        private List<TabPane> _tabs = new List<TabPane>();
+        private readonly List<TabPane> _panes = new List<TabPane>();
+        private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
 
         private bool NavWrapPingLeft => _scrollOffset > 0;
@@ -195,8 +195,8 @@ namespace AntDesign
 
         private bool HasAddButton => Type == TabType.EditableCard && !HideAdd;
 
-        private int _dropDownBtnWidth = 46;
-        private int _addBtnWidth = 40;
+        private readonly int _dropDownBtnWidth = 46;
+        private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
 
@@ -329,11 +329,6 @@ namespace AntDesign
                 tab.Close();
                 pane.Close();
 
-                if (pane != null && pane.IsActive && _panes.Count > 0)
-                {
-                    var p = index > 1 ? _panes[index - 1] : _panes[0];
-                    ActivatePane(p.Key);
-                }
 
                 if (OnClose.HasDelegate)
                 {
@@ -342,15 +337,23 @@ namespace AntDesign
             }
         }
 
-        internal void RemovePane(TabPane pane)
+        internal void RemovePane(TabPane tab)
         {
-            if (pane.IsTab)
+            if (tab.IsTab)
             {
-                _tabs.Remove(pane);
+                var index = _tabs.IndexOf(tab);
+
+                _tabs.Remove(tab);
+
+                if (tab.IsActive && _tabs.Count > 0)
+                {
+                    var p = index > 1 ? _tabs[index - 1] : _tabs[0];
+                    ActivatePane(p.Key);
+                }
             }
             else
             {
-                _panes.Remove(pane);
+                _panes.Remove(tab);
             }
 
             _needUpdateScrollListPosition = true;
