@@ -265,7 +265,9 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                if (Unbound != null)
+                var isUnbound = Unbound != null || (ChildContent == null && Ref.Id != null);
+
+                if (isUnbound)
                 {
                     Ref = RefBack.Current;
 
@@ -279,7 +281,7 @@ namespace AntDesign.Internal
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
                 {
-                    if (Unbound != null)
+                    if (isUnbound)
                     {
                         await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, Ref, TriggerCls);
                     }
