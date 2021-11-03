@@ -40,7 +40,7 @@ Ant Design has 3 types of Tabs for different situations.
 | OnNextClick | Callback executed when next button is clicked | EventCallback | - |
 | OnPrevClick | Callback executed when prev button is clicked | EventCallback | - |
 | OnTabClick | Callback executed when tab is clicked | EventCallback(key: string, event: MouseEvent) | - |
-| Draggable | make tabs draggable. | bool | false |
+| Draggable | make tabs draggable. | bool | false | 
 
 ### Tabs.TabPane
 
@@ -50,3 +50,4 @@ Ant Design has 3 types of Tabs for different situations.
 | Key | TabPane's key | string | - |
 | Tab | Show text in TabPane's head | string | - |
 | TabTemplate | Template of TabPane's head | RenderFargment | - |
+| TabContextMenu | Template for customer context menu | RenderFargment<TabPane> | - |
