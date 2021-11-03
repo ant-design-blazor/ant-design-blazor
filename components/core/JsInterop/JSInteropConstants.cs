@@ -99,10 +99,6 @@ namespace AntDesign
 
         #region BcdForm
 
-        //public static string EnableDraggable = $"{FUNC_PREFIX}enableDraggable";
-        //public static string DisableDraggable = $"{FUNC_PREFIX}disableDraggable";
-        public static string ResetDraggableElePosition => BcdFormComponentHelper.ResetDraggableElePosition;
-
         public static string MinResetStyle => BcdFormComponentHelper.MinResetStyle;
         public static string MaxResetStyle => BcdFormComponentHelper.MaxResetStyle;
         public static string NormalResetStyle => BcdFormComponentHelper.NormalResetStyle;

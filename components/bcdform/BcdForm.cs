@@ -209,7 +209,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Drag is only allowed in the viewport, if <paramref name="Draggable"/> is true.
+        /// Drag is only allowed in the viewport, if Draggable is true.
         /// </summary>
         public bool DragInViewport
         {

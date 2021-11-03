@@ -2,7 +2,7 @@
 category: Components
 type: Feedback
 title: BcdForm
-cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
+subtitle： Experimental
 ---
 
 To trigger an operation.

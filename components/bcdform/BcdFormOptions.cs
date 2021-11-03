@@ -44,7 +44,7 @@ namespace AntDesign
         /// <summary>
         /// Allow Mask to be displayed. Default is false
         /// </summary>
-        public bool ShowMask { get; set; }
+        public bool ShowMask { get; set; } = true;
 
         /// <summary>
         /// Whether to close the form when the mask is clicked, if ShowMask is true.
@@ -52,7 +52,7 @@ namespace AntDesign
         public bool MaskClosable { get; set; } = true;
 
         /// <summary>
-        /// the style of Mask, if <paramref name="ShowMask"/> is true.
+        /// the style of Mask, if ShowMask is true.
         /// </summary>
         public string MaskStyle { get; set; }
 
@@ -74,10 +74,10 @@ namespace AntDesign
         /// <summary>
         /// Allow drag
         /// </summary>
-        public bool Draggable { get; set; }
+        public bool Draggable { get; set; } = true;
 
         /// <summary>
-        /// Drag is only allowed in the viewport, if <paramref name="Draggable"/> is true.
+        /// Drag is only allowed in the viewport, if Draggable is true.
         /// </summary>
         public bool DragInViewport { get; set; } = true;
 
