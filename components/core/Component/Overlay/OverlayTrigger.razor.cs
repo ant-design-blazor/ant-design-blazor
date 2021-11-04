@@ -510,7 +510,7 @@ namespace AntDesign.Internal
 
         protected virtual void OnOverlayShow()
         {
-            if (!_jsEventsSet)
+            if (!_jsEventsSet && this is Tooltip)
             {
                 _jsEventsSet = true;
                 DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
