@@ -15,6 +15,35 @@ timeline: true
 
 ---
 
+### 0.10.2
+
+2021-11-5
+
+- Descriptions
+  - 💄 修复 Descriptions 头部样式[#2078](https://github.com/ant-design-blazor/ant-design-blazor/pull/2078) [@ElderJames](https://github.com/ElderJames)
+  - 💄 描述组件  水平模式 列表项 补充 ‘ant-descriptions-item-container’ 样式。[#2024](https://github.com/ant-design-blazor/ant-design-blazor/pull/2024) [@weidyg](https://github.com/weidyg)
+
+- Tabs
+  - 🆕 增加 ReuseTabs 的右键菜单和页面设置。[#2075](https://github.com/ant-design-blazor/ant-design-blazor/pull/2075) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Card 中的Tabs显示问题。[#2053](https://github.com/ant-design-blazor/ant-design-blazor/pull/2053) [@anddrzejb](https://github.com/anddrzejb)
+
+- Table
+  - 🆕 支持调用ReloadData时指定页码和行数。[#2072](https://github.com/ant-design-blazor/ant-design-blazor/pull/2072) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 为 Column 增加 Align 属性。[#2045](https://github.com/ant-design-blazor/ant-design-blazor/pull/2045) [@Qyperion](https://github.com/Qyperion)
+  - 🐞 修复  `ReloadData()` 不能触发   `OnChange`  的问题。[#2071](https://github.com/ant-design-blazor/ant-design-blazor/pull/2071) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 @bind-Field 为null 时的异常[#2025](https://github.com/ant-design-blazor/ant-design-blazor/pull/2025) [@Guyiming](https://github.com/Guyiming)
+
+- Select
+  - 🐞 修复 Select 有分组时刷新数据源的异常。[#2048](https://github.com/ant-design-blazor/ant-design-blazor/pull/2048) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 增加 ValueOnClear 属性，指定点击清除按钮时绑定的值[#2023](https://github.com/ant-design-blazor/ant-design-blazor/pull/2023) [@anddrzejb](https://github.com/anddrzejb)
+  
+- 🐞 修复 Calendar 在使用`DateFullCellRender` 时抛出异常[#2068](https://github.com/ant-design-blazor/ant-design-blazor/pull/2068) [@szymski](https://github.com/szymski)
+- 💄 修复 Area 设置 AutoSize 时的问题。[#2001](https://github.com/ant-design-blazor/ant-design-blazor/pull/2001) [@anranruye](https://github.com/anranruye)
+- 🐞 修复 Upload 因大小写导致的 IsPicture  判断异常[#2049](https://github.com/ant-design-blazor/ant-design-blazor/pull/2049) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 Overlay 组件的异常[#2036](https://github.com/ant-design-blazor/ant-design-blazor/pull/2036) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 RouterMatch默认值改为All[d8352b8](https://github.com/ant-design-blazor/ant-design-blazor/commit/d8352b8) [@James Yeung](https://github.com/James Yeung)
+- 🌐 i18n: 捷克语言更新。[#2030](https://github.com/ant-design-blazor/ant-design-blazor/pull/2030) [@Martin-Pucalka](https://github.com/Martin-Pucalka)
+
 ### 0.10.1
 
 2021-10-13

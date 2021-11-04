@@ -15,6 +15,35 @@ timeline: true
 
 ---
 
+### 0.10.2
+
+2021-11-5
+
+- Descriptions
+  - 💄 fixed descriptions: header styles. [#2078](https://github.com/ant-design-blazor/ant-design-blazor/pull/2078) [@ElderJames](https://github.com/ElderJames)
+  - 💄 The list item describing the horizontal mode of the component is supplemented with the 'ant descriptions item container' style. [#2024](https://github.com/ant-design-blazor/ant-design-blazor/pull/2024) [@weidyg](https://github.com/weidyg)
+
+- Tabs
+  - 🆕 Add context menu and page config for reusetabs. [#2075](https://github.com/ant-design-blazor/ant-design-blazor/pull/2075) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed tabs broken in a card. [#2053](https://github.com/ant-design-blazor/ant-design-blazor/pull/2053) [@anddrzejb](https://github.com/anddrzejb)
+
+- Table
+  - 🆕 Support reload data with specific page index and size. [#2072](https://github.com/ant-design-blazor/ant-design-blazor/pull/2072) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add Align property for column. [#2045](https://github.com/ant-design-blazor/ant-design-blazor/pull/2045) [@Qyperion](https://github.com/Qyperion)
+  - 🐞 Fixed `ReloadData()` can't invoke `OnChange`. [#2071](https://github.com/ant-design-blazor/ant-design-blazor/pull/2071) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed handle null value of propertyInfo. [#2025](https://github.com/ant-design-blazor/ant-design-blazor/pull/2025) [@Guyiming](https://github.com/Guyiming)
+
+- Select
+  - 🐞 Fixed Select with group refresh on datasource change. [#2048](https://github.com/ant-design-blazor/ant-design-blazor/pull/2048) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 Add `ValueOnClear` to stored `Value` that will be used when clear button is pressed. [#2023](https://github.com/ant-design-blazor/ant-design-blazor/pull/2023) [@anddrzejb](https://github.com/anddrzejb)
+
+- 💄 Fixed Area style issue for auto-size. [#2001](https://github.com/ant-design-blazor/ant-design-blazor/pull/2001) [@anranruye](https://github.com/anranruye)
+- 🐞 Fixed Calendar `DateFullCellRender` throwing an exception. [#2068](https://github.com/ant-design-blazor/ant-design-blazor/pull/2068) [@szymski](https://github.com/szymski)
+- 🐞 Fixed Upload IsPicture issue. [#2049](https://github.com/ant-design-blazor/ant-design-blazor/pull/2049) [@berkerdong](https://github.com/berkerdong)
+- 🐞 Fixed Overlay premature reset of _mouseInTrigger. [#2036](https://github.com/ant-design-blazor/ant-design-blazor/pull/2036) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Fixed Menu make router match defaualt to all. [d8352b8](https://github.com/ant-design-blazor/ant-design-blazor/commit/d8352b8) [@James Yeung](https://github.com/James Yeung)
+- 🌐 i18n: czech localization update. [#2030](https://github.com/ant-design-blazor/ant-design-blazor/pull/2030) [@Martin-Pucalka](https://github.com/Martin-Pucalka)
+
 ### 0.10.1
 
 2021-10-13
