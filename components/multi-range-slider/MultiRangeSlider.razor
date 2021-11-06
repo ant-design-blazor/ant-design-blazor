@@ -8,10 +8,8 @@
         </div>
     
         <div class="ant-multi-range-slider-step">
-            @if (
-                    (Marks is not null && Parent is null)
-                ||
-                    (Parent is not null && Parent.IsFirst(this))
+            @if (Marks is not null && 
+                ((Parent is null) || (Parent is not null && Parent.IsFirst(this)))
             )
             {
                 @foreach (RangeItemMark mark in Marks)

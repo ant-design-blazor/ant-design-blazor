@@ -77,6 +77,8 @@ namespace AntDesign
         private double _distanceToLastHandle;
         private string _attachedFirstHandleClass = "";
         private string _attachedLastHandleClass = "";
+        private bool _firstEdgeExceedingTrack;
+        private bool _lastEdgeExceedingTrack;
         /// <summary>
         /// Used to evaluate if OnAfterChange needs to be called
         /// </summary>
@@ -443,7 +445,7 @@ namespace AntDesign
                 double candidate = value;
                 if (_isInitialized)
                 {
-                    if (!Slave)
+                    if (!Slave && !_firstEdgeExceedingTrack)
                     {
                         candidate = Clamp(value, Parent.GetFirstEdgeBoundary(Id, RangeEdge.First, AttachedHandleNo), Parent.GetLastEdgeBoundary(Id, RangeEdge.First, AttachedHandleNo));
                     }
@@ -512,7 +514,7 @@ namespace AntDesign
                 double candidate = value;
                 if (_isInitialized)
                 {
-                    if (!Slave)
+                    if (!Slave && !_lastEdgeExceedingTrack)
                     {
                         candidate = Clamp(value, Parent.GetFirstEdgeBoundary(Id, RangeEdge.Last, AttachedHandleNo), Parent.GetLastEdgeBoundary(Id, RangeEdge.Last, AttachedHandleNo));
                     }
@@ -1566,7 +1568,7 @@ namespace AntDesign
             {
                 return;
             }
-            _mouseDownOnTrack = !(Disabled || Parent.Disabled);
+            _mouseDownOnTrack = !(Disabled || Parent.Disabled) && (!_firstEdgeExceedingTrack && !_lastEdgeExceedingTrack);
             if (!_mouseDownOnTrack)
             {
                 return;
@@ -1580,14 +1582,20 @@ namespace AntDesign
             _initialLastValue = _lastValue;
             _trackedClientX = args.ClientX;
             _trackedClientY = args.ClientY;
-            if (_toolTipLast != null)
+
+            Task tooltipFirst = Task.CompletedTask;
+            Task tooltipLast = Task.CompletedTask;
+            if (_toolTipFirst is not null)
+            {
+                _tooltipFirstVisible = true;
+                tooltipFirst = _toolTipFirst.Show();
+            }
+            if (_toolTipLast is not null)
             {
                 _tooltipLastVisible = true;
-                _tooltipFirstVisible = true;
-                var tooltipFirst = _toolTipFirst.Show();
-                var tooltipLast = _toolTipLast.Show();
-                await Task.WhenAll(tooltipFirst, tooltipLast);
+                tooltipLast = _toolTipLast.Show();
             }
+            await Task.WhenAll(tooltipFirst, tooltipLast);
 
             //evaluate clicked position in respect to each edge
             await AddJsEvents();
@@ -1726,18 +1734,20 @@ namespace AntDesign
                 RaiseOnAfterChangeCallback(() => _valueCache != _value);
 #pragma warning restore CS4014 // Does not return anything, fire & forget
             }
+            if (_toolTipFirst != null)
+            {
+                if (_tooltipFirstVisible != TooltipVisible)
+                {
+                    _tooltipFirstVisible = TooltipVisible;
+                    _toolTipFirst.SetVisible(TooltipVisible);
+                }
+            }
             if (_toolTipLast != null)
             {
                 if (_tooltipLastVisible != TooltipVisible)
                 {
                     _tooltipLastVisible = TooltipVisible;
                     _toolTipLast.SetVisible(TooltipVisible);
-                }
-
-                if (_tooltipFirstVisible != TooltipVisible)
-                {
-                    _tooltipFirstVisible = TooltipVisible;
-                    _toolTipFirst.SetVisible(TooltipVisible);
                 }
             }
 
@@ -1828,7 +1838,7 @@ namespace AntDesign
             }
             else
             {
-                //evaluate if both lastV & firstV are within acceptable values
+                //evaluate if both lastV & firstV are within acceptable values                
                 double lastCandidate = Clamp(lastV, Parent.GetFirstEdgeBoundary(Id, RangeEdge.Last, AttachedHandleNo), Parent.GetLastEdgeBoundary(Id, RangeEdge.Last, AttachedHandleNo));
                 double firstCandidate = Clamp(firstV, Parent.GetFirstEdgeBoundary(Id, RangeEdge.First, AttachedHandleNo), Parent.GetLastEdgeBoundary(Id, RangeEdge.First, AttachedHandleNo));
                 if (firstCandidate != FirstValue && lastCandidate != LastValue)
@@ -2002,8 +2012,13 @@ namespace AntDesign
 
         internal void SetPositions()
         {
-            var firstHandPercentage = (FirstValue - Min) / Parent.MinMaxDelta;
-            var lastHandPercentage = (LastValue - Min) / Parent.MinMaxDelta;
+            _firstEdgeExceedingTrack = _value.Item1 < Min || _value.Item1 > Max;
+            _lastEdgeExceedingTrack = _value.Item2 < Min || _value.Item2 > Max;
+            double firstValue = _firstEdgeExceedingTrack ? Min : FirstValue;
+            double lastValue = _lastEdgeExceedingTrack ? Max : LastValue;
+            double firstHandPercentage = (firstValue - Min) / Parent.MinMaxDelta;
+            double lastHandPercentage = (lastValue - Min) / Parent.MinMaxDelta;
+
             string firstHandStyle;
             string lastHandStyle;
             string trackStart;
@@ -2033,7 +2048,7 @@ namespace AntDesign
                 lastHandStyle = Formatter.ToPercentWithoutBlank(lastHandPercentage);
                 firstHandStyle = Formatter.ToPercentWithoutBlank(firstHandPercentage);
                 trackStart = Formatter.ToPercentWithoutBlank(firstHandPercentage - trackStartAdjust);
-                trackSize = Formatter.ToPercentWithoutBlank(((LastValue - FirstValue) / Parent.MinMaxDelta) + trackSizeAdjust);
+                trackSize = Formatter.ToPercentWithoutBlank(((lastValue - firstValue) / Parent.MinMaxDelta) + trackSizeAdjust);
             }
             _lastHandleCssPosition = string.Format(CultureInfo.CurrentCulture, LastHandleStyleFormat, lastHandStyle);
             _trackCssPosition = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, trackStart, trackSize);
