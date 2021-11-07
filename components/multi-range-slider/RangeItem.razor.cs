@@ -948,7 +948,6 @@ namespace AntDesign
 
                 if (_tooltipShowOnAfterRender)
                 {
-                    DebugHelper.WriteLine("showing tooltips");
                     _tooltipShowOnAfterRender = false;
                     await _toolTipLast.Show();
                     await _toolTipFirst.Show();
