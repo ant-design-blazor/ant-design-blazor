@@ -1,0 +1,24 @@
+﻿@namespace AntDesign.Docs.Demos.Components.BcdForm
+@inherits BcdForm
+
+<h3>FullComponent</h3>
+
+<div>
+    <Button OnClick="EventUtil.AsNonRenderingEventHandler(Close)">Close</Button>
+</div>
+
+@code{
+
+    protected override void InitComponent()
+    {
+        ShowMask = true;
+        MinimizeBox = true;
+        MaximizeBox = true;
+        Draggable = true;
+    }
+
+    private async void Close()
+    {
+        await base.CloseAsync();
+    }
+}

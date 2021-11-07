@@ -1,12 +1,13 @@
 ﻿@using AntDesign.Docs.Demos.Components.BcdForm
 
-<Button OnClick="Show">Open</Button>
+ <Button OnClick="Show">Open</Button>
+
 
 @code
 {
     public async Task Show()
     {
-        BasicComponent component = new BasicComponent();
+        var component = new FullComponent();
         await component.ShowAsync();
     }
 }

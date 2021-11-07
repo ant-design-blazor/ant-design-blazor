@@ -99,6 +99,10 @@ namespace AntDesign
             get => Options.Name;
             set
             {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = "Bcd-" + Guid.NewGuid();
+                }
                 Options.Name = value;
                 ShouldReRender = true;
             }
@@ -310,6 +314,7 @@ namespace AntDesign
                     await BcdFormContainer.BcdFormContainerInstance.AppendFormAsync(this);
                 }
                 await InvokeStateHasChangedAsync();
+                await JsRuntime.InvokeVoidAsync(JSInteropConstants.OnShow, $"#{Name}");
             }
         }
 
@@ -404,71 +409,85 @@ namespace AntDesign
         /// <summary>
         /// Minimize form
         /// </summary>
-        public void Min()
+        public async Task OnMinBoxClick()
         {
-            if (!IsMin())
-            {
-                FormState = FormState.Min;
-                BcdFormContainer.MinFormCount += 1;
-            }
+            await ChangeFormStateAsync(FormState.Min);
         }
 
         /// <summary>
         /// Maximize form
         /// </summary>
-        public void Max()
+        public async Task OnMaxBoxClick()
         {
-            if (!IsMax())
-            {
-                if (IsMin())
-                {
-                    BcdFormContainer.MinFormCount -= 1;
-                }
-
-                FormState = FormState.Max;
-            }
+            await ChangeFormStateAsync(FormState.Max);
         }
 
-        /// <summary>
-        /// Restore form
-        /// </summary>
-        public void Restore()
+
+        private static readonly Func<BcdForm, Task>[][] _stateChangeFunc = new Func<BcdForm, Task>[][]
         {
-            if (!IsNormal())
+            // normal to others
+            new Func<BcdForm,Task>[]
             {
-                if (IsMin())
+                (form) => Task.CompletedTask,
+                (form) =>
                 {
+                    form.FormState = FormState.Min;
+                    BcdFormContainer.MinFormCount += 1;
+                    return Task.CompletedTask;
+                },
+                async (form) =>
+                {
+                    form.FormState = FormState.Max;
+                    await form.JsRuntime.InvokeVoidAsync(JSInteropConstants.DisableBodyScroll);
+                }
+            },
+            // min to others
+            new Func<BcdForm,Task>[]
+            {
+                (form) => Task.CompletedTask,
+                (form) => Task.CompletedTask,
+                async (form) =>
+                {
+                    // restore
                     BcdFormContainer.MinFormCount -= 1;
+                    if (form.LastState.IsNormal())
+                    {
+                        form.FormState = FormState.Normal;
+                    }
+                    else if (form.LastState.IsMax())
+                    {
+                        form.FormState = FormState.Max;
+                        await form.JsRuntime.InvokeVoidAsync(JSInteropConstants.DisableBodyScroll);
+                    }
+                    else
+                    {
+                        BcdFormContainer.MinFormCount += 1;
+                    }
                 }
+            },
+            // max to others
+            new Func<BcdForm,Task>[]
+            {
+                (form) => Task.CompletedTask,
+                async (form) =>
+                {
+                    form.FormState = FormState.Min;
+                    BcdFormContainer.MinFormCount += 1;
+                    await form.JsRuntime.InvokeVoidAsync(JSInteropConstants.EnableBodyScroll);
+                },
+                // max -> max == normal
+                async (form) =>
+                {
+                    form.FormState = FormState.Normal;
+                    await form.JsRuntime.InvokeVoidAsync(JSInteropConstants.EnableBodyScroll);
+                }
+            },
+        };
 
-                FormState = FormState.Normal;
-            }
-        }
-
-        /// <summary>
-        /// Trigger Max or Restore
-        /// </summary>
-        internal void TriggerMaxBox()
+        private async Task ChangeFormStateAsync(FormState state)
         {
-            if (IsMax())
-            {
-                Restore();
-            }
-            else if (IsMin())
-            {
-                if (LastState.IsNormal())
-                {
-                    Restore();
-                }
-                else
-                {
-                    Max();
-                }
-            }
-            else
-            {
-                Max();
-            }
+            Func<BcdForm, Task> func = _stateChangeFunc[(int)FormState][(int)state];
+            await func(this);
         }
 
         /// <summary>
@@ -627,6 +646,7 @@ namespace AntDesign
             }
             else if (IsMax())
             {
+                await Task.Delay(50);
                 var lastNormal = await JsInvokeAsync<string>(JSInteropConstants.MaxResetStyle, $"#{Name}", LastState.IsNormal());
                 if (LastState.IsNormal())
                 {
@@ -634,6 +654,10 @@ namespace AntDesign
                 }
             }
 
+            if (Visible)
+            {
+                await JsInvokeAsync<string>(JSInteropConstants.CalcBcdFormRootOffset, $"#{Name}");
+            }
 
             // ReSharper disable once MethodHasAsyncOverload
             AfterBcdRender(_firstRender);

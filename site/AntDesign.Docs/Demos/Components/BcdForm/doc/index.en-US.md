@@ -2,7 +2,7 @@
 category: Components
 type: Feedback
 title: BcdForm
-subtitle： Experimental
+subtitle: Experimental
 ---
 
 To trigger an operation.

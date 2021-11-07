@@ -64,17 +64,17 @@ namespace AntDesign
         /// <summary>
         /// Allow minimization
         /// </summary>
-        public bool MinimizeBox { get; set; } = true;
+        public bool MinimizeBox { get; set; } = false;
 
         /// <summary>
         /// Allow maximum
         /// </summary>
-        public bool MaximizeBox { get; set; } = true;
+        public bool MaximizeBox { get; set; } = false;
 
         /// <summary>
         /// Allow drag
         /// </summary>
-        public bool Draggable { get; set; } = true;
+        public bool Draggable { get; set; } = false;
 
         /// <summary>
         /// Drag is only allowed in the viewport, if Draggable is true.

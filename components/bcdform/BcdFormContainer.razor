@@ -36,7 +36,7 @@
                                         @if (form.MinimizeBox || form.MaximizeBox)
                                         {
                                             <button class="bcd-form-min-btn" disabled="@(!form.MinimizeBox)"
-                                                    @onclick="@(() => { form.Min(); })"
+                                                    @onclick="@(async () => { await form.OnMinBoxClick(); })"
                                                     @onclick:stopPropagation="true">
                                                 <span class="bcd-form-header-tool bcd-form-icon-min">
                                                     <svg t="1610693610934"
@@ -48,7 +48,7 @@
                                             </button>
 
                                             <button class="bcd-form-max-btn" disabled="@(!form.MaximizeBox)"
-                                                    @onclick="@(() => { form.TriggerMaxBox(); })"
+                                                    @onclick="@(async () => { await form.OnMaxBoxClick(); })"
                                                     @onclick:stopPropagation="true">
                                                 @if (form.IsMax() || form.IsMin())
                                                 {

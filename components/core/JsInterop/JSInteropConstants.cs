@@ -99,9 +99,10 @@ namespace AntDesign
 
         #region BcdForm
 
+        public static string OnShow => BcdFormComponentHelper.OnShow;
         public static string MinResetStyle => BcdFormComponentHelper.MinResetStyle;
         public static string MaxResetStyle => BcdFormComponentHelper.MaxResetStyle;
-        public static string NormalResetStyle => BcdFormComponentHelper.NormalResetStyle;
+        public static string CalcBcdFormRootOffset => BcdFormComponentHelper.CalcBcdFormRootOffset;
 
         #endregion
 
@@ -224,9 +225,10 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "bcdFormHelper.";
             public static string ResetDraggableElePosition => $"{FUNC_PREFIX}resetDraggableElePosition";
 
+            public static string OnShow => $"{FUNC_PREFIX}onShow";
             public static string MinResetStyle => $"{FUNC_PREFIX}minResetStyle";
             public static string MaxResetStyle => $"{FUNC_PREFIX}maxResetStyle";
-            public static string NormalResetStyle => $"{FUNC_PREFIX}normalResetStyle";
+            public static string CalcBcdFormRootOffset => $"{FUNC_PREFIX}calcBcdFormRootOffset";
         }
 
 

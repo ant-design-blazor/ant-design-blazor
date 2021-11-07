@@ -87,7 +87,6 @@ namespace AntDesign
             }
         }
 
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             foreach (var form in _forms)
