@@ -155,6 +155,14 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When range item receives focus, the tooltips will not
+        /// close. Setting has not effect when <see cref="MultiRangeSlider.HasTooltip"/>
+        /// or <see cref="RangeItem.HasTooltip"/> is set to false.
+        /// </summary>
+        [Parameter]
+        public bool KeepTooltipOpenOnFocus { get; set; }
+
+        /// <summary>
         /// Tick mark of the `MultiRangeSlider`, type of key must 
         /// be number, and must in closed interval [min, max], 
         /// each mark can declare its own style.

@@ -52,6 +52,7 @@ namespace AntDesign
         private bool _tooltipVisibleSet;
         private bool _tooltipLastVisible;
         private bool _tooltipFirstVisible;
+        private bool _tooltipShowOnAfterRender;
         private bool _tooltipPlacementSet;
         private OneOf<Color, string> _fontColor;
         private string _fontColorAsString = "";
@@ -935,13 +936,22 @@ namespace AntDesign
         {
             if (!firstRender)
             {
-                if (_toolTipLast != null && Parent.HasTooltip)
+                if ((_toolTipLast != null && Parent.HasTooltip) || (_isFocused && Parent.KeepTooltipOpenOnFocus))
                 {
                     _lastHandle = _toolTipLast.Ref;
-                    if (_toolTipFirst != null)
-                    {
-                        _firstHandle = _toolTipFirst.Ref;
-                    }
+                }
+
+                if ((_toolTipFirst != null && Parent.HasTooltip) || (_isFocused && Parent.KeepTooltipOpenOnFocus))
+                {
+                    _firstHandle = _toolTipFirst.Ref;
+                }
+
+                if (_tooltipShowOnAfterRender)
+                {
+                    DebugHelper.WriteLine("showing tooltips");
+                    _tooltipShowOnAfterRender = false;
+                    await _toolTipLast.Show();
+                    await _toolTipFirst.Show();
                 }
             }
             await base.OnAfterRenderAsync(firstRender);
@@ -976,6 +986,30 @@ namespace AntDesign
                 {
                     _lastFocusZIndex = "z-index: 3;";
                 }
+
+                if (Parent.KeepTooltipOpenOnFocus)
+                {
+                    if (_toolTipFirst?.Ref.Id is null)
+                    {
+                        _tooltipShowOnAfterRender = true;
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        InvokeAsync(async () => await _toolTipFirst.Show());
+                    }
+                    if (_toolTipLast?.Ref.Id is null)
+                    {
+                        _tooltipShowOnAfterRender = true;
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        InvokeAsync(async () => await _toolTipLast.Show());
+                    }
+                }
+
+
                 if (OnFocus.HasDelegate)
                 {
                     OnFocus.InvokeAsync(CurrentValue);
@@ -989,6 +1023,18 @@ namespace AntDesign
             {
                 _focusClass = "";
                 _focusStyle = "";
+                if (Parent.KeepTooltipOpenOnFocus)
+                {
+                    if (_toolTipFirst is not null)
+                    {
+                        HideFirstEdgeTooltip();
+                    }
+                    if (_toolTipLast is not null)
+                    {
+                        HideLastEdgeTooltip();
+                    }
+                }
+
                 if (!(HasAttachedEdge && AttachedHandleNo == RangeEdge.First))
                 {
                     _firstFocusZIndex = "z-index: 2;";
@@ -1734,25 +1780,35 @@ namespace AntDesign
                 RaiseOnAfterChangeCallback(() => _valueCache != _value);
 #pragma warning restore CS4014 // Does not return anything, fire & forget
             }
-            if (_toolTipFirst != null)
+            if (_toolTipFirst != null && (_isFocused && !Parent.KeepTooltipOpenOnFocus))
             {
-                if (_tooltipFirstVisible != TooltipVisible)
-                {
-                    _tooltipFirstVisible = TooltipVisible;
-                    _toolTipFirst.SetVisible(TooltipVisible);
-                }
+                HideFirstEdgeTooltip();
             }
-            if (_toolTipLast != null)
+            if (_toolTipLast != null && (_isFocused && !Parent.KeepTooltipOpenOnFocus))
             {
-                if (_tooltipLastVisible != TooltipVisible)
-                {
-                    _tooltipLastVisible = TooltipVisible;
-                    _toolTipLast.SetVisible(TooltipVisible);
-                }
+                HideLastEdgeTooltip();
             }
 
             _initialFirstValue = _firstValue;
             _initialLastValue = _lastValue;
+        }
+
+        private void HideLastEdgeTooltip()
+        {
+            if (_tooltipLastVisible != TooltipVisible)
+            {
+                _tooltipLastVisible = TooltipVisible;
+                _toolTipLast.SetVisible(TooltipVisible);
+            }
+        }
+
+        private void HideFirstEdgeTooltip()
+        {
+            if (_tooltipFirstVisible != TooltipVisible)
+            {
+                _tooltipFirstVisible = TooltipVisible;
+                _toolTipFirst.SetVisible(TooltipVisible);
+            }
         }
 
         private bool _jsEventsSet;

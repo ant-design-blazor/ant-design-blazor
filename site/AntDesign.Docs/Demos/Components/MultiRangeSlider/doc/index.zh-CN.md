@@ -39,6 +39,7 @@ A component allowing control over multiple ranges. Each range has a starting and
 | ExpandStep | Whether to expand visually each step. | bool | false | 0.11
 | Focused | `RangeItem` that will receive focus. If multiple `RangeItem`s have the same value (overlapping), then fisrt matching will receive focus. Use this parameter only during initialization. Otherwise use `MultiRangeSlider.Focus((double, double))` method.  | (double, double)? | - | 0.11
 | HasTooltip | Will not render `Tooltip` if set to `false`. | bool | true | 0.11
+| KeepTooltipOpenOnFocus | When range item receives focus, the `tooltip`s will not close. Setting has not effect when `HasTooltip` or `RangeItem.HasTooltip` is set to false. | bool | false | 0.11
 | Marks | Tick mark of the `MultiRangeSlider`, type of key must be number, and must in closed interval [min, max], each mark can declare its own style. | RangeItemMark[] | - | 0.11
 | Max | The maximum value the range slider | double | 0 | 0.11
 | Min | The minimum value the range slider | double | 100 | 0.11
