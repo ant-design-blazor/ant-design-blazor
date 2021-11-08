@@ -1,0 +1,53 @@
+<Tree @ref="tree" OnContextMenu="OnContextMenu" DataSource="@_trees" TitleExpression="x => x.DataItem" OnSelect="TreeNodeSelect" TItem="string">
+
+</Tree>
+<Menu Style="@menuStyle">
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+            1st menu item
+        </a>
+    </MenuItem>
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+            2nd menu item
+        </a>
+    </MenuItem>
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+            3rd menu item
+        </a>
+    </MenuItem>
+</Menu>
+
+@code {
+    Tree<string> tree = null;
+    string menuStyle = "display:none;";
+    List<string> _trees = new List<string>();
+    protected override void OnInitialized()
+    {
+        _trees.Add("test");
+    }
+
+    void CreateNode(MouseEventArgs args)
+    {
+        if (tree.SelectedNode != null)
+        {
+            Console.WriteLine($"CreateNode {tree.SelectedNode.DataItem}");
+        }
+        else
+        {
+            Console.WriteLine($"CreateNode Root");
+        }
+        menuStyle = "display:none;";
+    }
+
+    void TreeNodeSelect(TreeEventArgs<string> args)
+    {
+
+    }
+
+    void OnContextMenu(TreeEventArgs<string> args)
+    {
+        menuStyle = string.Format("position:fixed; left:{0}px; top:{1}px; width:200px; z-index:999", args.OriginalEvent.ClientX, args.OriginalEvent.ClientY);
+    }
+}
