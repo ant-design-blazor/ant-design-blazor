@@ -1,5 +1,8 @@
-<Tree @ref="tree" OnContextMenu="OnContextMenu" DataSource="@_trees" TitleExpression="x => x.DataItem" OnSelect="TreeNodeSelect" TItem="string">
-
+<Tree @ref="tree" OnContextMenu="OnContextMenu" TItem="string" ShowLine="true">
+    <TreeNode Title="Node1 (选中后点鼠标右键)" TItem="string" Expanded="true">
+        <TreeNode Title="Node1.1 (选中后点鼠标右键)" TItem="string"></TreeNode>
+    </TreeNode>
+    <TreeNode Title="Node2 (选中后点鼠标右键)" TItem="string"></TreeNode>
 </Tree>
 <Menu Style="@menuStyle">
     <MenuItem OnClick="Click">
@@ -8,12 +11,12 @@
 </Menu>
 
 @code {
-    Tree<string> tree = null;
-    string menuStyle = "display:none;";
-    List<string> _trees = new List<string>();
-    protected override void OnInitialized()
+        Tree<string> tree = null;
+        string menuStyle = "display:none;";
+        List<string> _trees = new List<string>();
+protected override void OnInitialized()
     {
-        _trees.Add("选中后点鼠标右键");
+         
     }
 
     void CreateNode(MouseEventArgs args)
@@ -27,11 +30,6 @@
             Console.WriteLine($"CreateNode Root");
         }
         menuStyle = "display:none;";
-    }
-
-    void TreeNodeSelect(TreeEventArgs<string> args)
-    {
-
     }
 
     void Click()
