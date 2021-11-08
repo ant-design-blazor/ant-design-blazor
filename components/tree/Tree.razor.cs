@@ -7,8 +7,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using AntDesign.JsInterop;
 
 namespace AntDesign
 {
@@ -592,6 +594,34 @@ namespace AntDesign
         {
             SetClassMapper();
             base.OnInitialized();
+        }
+
+        [Inject]
+        protected IDomEventListener DomEventListener { get; set; }
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (OnContextMenu.HasDelegate)
+                {
+                    Ref = RefBack.Current;
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", ContextMenuHandler, true);
+                }
+            }
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener.DisposeExclusive();
+            base.Dispose(disposing);
+        }
+
+        protected async void ContextMenuHandler(JsonElement jsonElement)
+        {
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            await OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(this, SelectedNode, eventArgs));
         }
 
         /// <summary>
