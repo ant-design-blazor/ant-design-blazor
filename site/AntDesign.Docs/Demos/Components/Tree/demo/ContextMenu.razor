@@ -2,20 +2,8 @@
 
 </Tree>
 <Menu Style="@menuStyle">
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-        </a>
-    </MenuItem>
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-        </a>
-    </MenuItem>
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-        </a>
+    <MenuItem OnClick="Click">
+        点我消失
     </MenuItem>
 </Menu>
 
@@ -25,7 +13,7 @@
     List<string> _trees = new List<string>();
     protected override void OnInitialized()
     {
-        _trees.Add("test");
+        _trees.Add("选中后点鼠标右键");
     }
 
     void CreateNode(MouseEventArgs args)
@@ -44,6 +32,11 @@
     void TreeNodeSelect(TreeEventArgs<string> args)
     {
 
+    }
+
+    void Click()
+    {
+        menuStyle = "display:none;";
     }
 
     void OnContextMenu(TreeEventArgs<string> args)
