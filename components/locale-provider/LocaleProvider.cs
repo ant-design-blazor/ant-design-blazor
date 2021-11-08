@@ -59,9 +59,27 @@ namespace AntDesign
             var parentCultureName = GetParentCultureName(cultureName);
             if (parentCultureName != string.Empty)
             {
-                locale = GetLocale(parentCultureName);
-                AddClonedLocale(cultureName, ref locale);
-                return locale;
+                if (TryGetSpecifiedLocale(parentCultureName, out locale))
+                {
+                    AddClonedLocale(cultureName, ref locale);
+                    return locale;
+                }
+                if (cultureName.Count(c => c == '-') == 2)
+                {
+                    var lang = cultureName[..cultureName.IndexOf('-')];
+                    var region = cultureName[cultureName.LastIndexOf('-')..];
+                    if (TryGetSpecifiedLocale(lang + region, out locale))
+                    {
+                        AddClonedLocale(cultureName, ref locale);
+                        return locale;
+                    }
+                }
+                parentCultureName = GetParentCultureName(parentCultureName);
+                if (parentCultureName != string.Empty && TryGetSpecifiedLocale(parentCultureName, out locale))
+                {
+                    AddClonedLocale(cultureName, ref locale);
+                    return locale;
+                }
             }
             // fallback to default language
             if (TryGetSpecifiedLocale(DefaultLanguage, out locale))
