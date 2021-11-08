@@ -45,6 +45,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             OnVisibleChange="OnOverlayVisibleChange"
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
+                            OverlayClassName="@PopupClassName"
                             PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme} {prefixCls}-placement-{_placement.Name}")"
                             OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                             OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
