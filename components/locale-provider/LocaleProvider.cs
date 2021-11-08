@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,17 +33,14 @@ namespace AntDesign
 
             foreach (var resource in availableResources.ToArray())
             {
-                var parentCulture = CultureInfo.GetCultureInfo(resource.Key).Parent;
-                var parentCultureName = parentCulture.Name;
-
+                var parentCultureName = GetParentCultureName(resource.Key);
                 while (parentCultureName != string.Empty)
                 {
                     if (!availableResources.ContainsKey(parentCultureName))
                     {
                         availableResources.Add(parentCultureName, resource.Value);
                     }
-                    parentCulture = parentCulture.Parent;
-                    parentCultureName = parentCulture.Name;
+                    parentCultureName = GetParentCultureName(parentCultureName);
                 }
             }
 
@@ -56,18 +54,12 @@ namespace AntDesign
 
         public static Locale GetLocale(string cultureName)
         {
-            return GetLocale(CultureInfo.GetCultureInfo(cultureName));
-        }
-
-        public static Locale GetLocale(CultureInfo cultureInfo)
-        {
-            var cultureName = cultureInfo.Name;
             if (TryGetSpecifiedLocale(cultureName, out Locale locale)) return locale;
             // fallback to parent CultureInfo
-            var parentCulture = cultureInfo.Parent;
-            if (parentCulture.Name != string.Empty)
+            var parentCultureName = GetParentCultureName(cultureName);
+            if (parentCultureName != string.Empty)
             {
-                locale = GetLocale(parentCulture);
+                locale = GetLocale(parentCultureName);
                 AddClonedLocale(cultureName, ref locale);
                 return locale;
             }
@@ -81,6 +73,11 @@ namespace AntDesign
             TryGetSpecifiedLocale("en-US", out locale);
             AddClonedLocale(cultureName, ref locale);
             return locale;
+        }
+
+        public static Locale GetLocale(CultureInfo cultureInfo)
+        {
+            return GetLocale(cultureInfo.Name);
         }
 
         private static void AddClonedLocale(string cultureName, ref Locale locale)
@@ -126,6 +123,20 @@ namespace AntDesign
             if (locale != null)
             {
                 _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
+            }
+        }
+
+        private static string GetParentCultureName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return "";
+            try
+            {
+                return CultureInfo.GetCultureInfo(name).Parent.Name;
+            }
+            catch (Exception)
+            {
+                if (name.Contains("-")) return name[0..name.LastIndexOf("-")];
+                else return "";
             }
         }
     }
