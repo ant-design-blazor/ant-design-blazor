@@ -8,7 +8,7 @@
 
 <div align="center">
 
-A set of enterprise-class UI components based on Ant Design and Blazor.
+A rich set of enterprise-class UI components based on Ant Design and Blazor.
 
 ![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
@@ -110,19 +110,19 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services in `Program.cs` (WebAssembly)
+- Register the services in `Program.cs` (client-side WebAssembly Blazor)
 
   ```csharp
   builder.Services.AddAntDesign();
   ```
 
-  or `Startup.cs` (Server)
+  or `Startup.cs` (server-side Blazor)
 
   ```csharp
   services.AddAntDesign();
   ```
 
-- Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.cshtml` (Server)
+- Link the static files in `wwwroot/index.html` (client-side WebAssembly Blazor) or `Pages/_Host.cshtml` (server-side Blazor)
 
   ```html
   <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
@@ -152,10 +152,10 @@ Options for the template：
   <AntContainer />   <-- add this component ✨
   ```
 
-- Finally, it can be referenced in the `.razor' component!
+- Finally, it can be referenced in the `.razor` component!
 
   ```razor
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="@ButtonType.Primary">Hello World!</Button>
   ```
 
 ## ⌨️ Local Development
