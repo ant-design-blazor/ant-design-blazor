@@ -54,7 +54,6 @@ namespace AntDesign
                 if (value?.Any() != true)
                 {
                     _nodelist = null;
-                    return;
                 }
                 if (_nodelist == null) _nodelist = new List<CascaderNode>();
                 else if (_nodelist.Count != 0) _nodelist.Clear();
@@ -64,7 +63,7 @@ namespace AntDesign
             }
         }
 
-        private List<CascaderNode> _nodelist;
+        private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _renderNodes = new List<CascaderNode>();
