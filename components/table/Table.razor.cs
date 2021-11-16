@@ -390,6 +390,10 @@ namespace AntDesign
             if (_outerSelectedRows != null)
             {
                 _selectedRows = _dataSource.Intersect(_outerSelectedRows).ToList();
+                if (_selectedRows.Count != _outerSelectedRows.Count())
+                {
+                    SelectedRowsChanged.InvokeAsync(_selectedRows);
+                }
             }
             else
             {
