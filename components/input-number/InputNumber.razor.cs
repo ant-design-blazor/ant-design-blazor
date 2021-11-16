@@ -77,6 +77,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        [Parameter]
+        public bool UpdateOnInput { get; set; }
+
         private readonly bool _isNullable;
         private bool _hasDefaultValue;
 
@@ -405,9 +408,14 @@ namespace AntDesign
             await FocusAsync(Ref);
         }
 
-        private void OnInput(ChangeEventArgs args)
+        private async Task OnInput(ChangeEventArgs args)
         {
             _inputString = args.Value?.ToString();
+            if (UpdateOnInput && _inputString != null)
+            {
+                await ConvertNumberAsync(_inputString);
+                _inputString = null;
+            }
         }
 
         private async Task OnFocusAsync(FocusEventArgs args)

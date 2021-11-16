@@ -1,0 +1,8 @@
+<div>
+    <AntDesign.InputNumber @bind-Value="myValue" Min="1" Max="1000" DefaultValue="3" UpdateOnInput="true"></AntDesign.InputNumber>
+	<div>Number is: @myValue</div>
+</div>
+
+@code{
+    private double myValue { get; set; }
+}
