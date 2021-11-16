@@ -7,18 +7,18 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        private IDictionary<int, RowData<TItem>> _dataSourceCache;
+        private IDictionary<int, RowData<TItem>> _dataSourceCache = new Dictionary<int, RowData<TItem>>();
 
         private void FlushCache()
         {
-            if (_dataSourceCache == null)
-            {
-                _dataSourceCache = new Dictionary<int, RowData<TItem>>();
-            }
-            else
-            {
+            //if (_dataSourceCache == null)
+            //{
+            //    _dataSourceCache = new Dictionary<int, RowData<TItem>>();
+            //}
+            //else
+            //{
                 _dataSourceCache.Clear();
-            }
+            //}
         }
 
         int[] ITable.GetSelectedCacheKeys()
@@ -32,17 +32,17 @@ namespace AntDesign
                 return;
 
             // Clear cached items that are not on current page
-            var currentPageCacheKeys = _selection.RowSelections.Select(x => x.RowData.CacheKey).ToHashSet();
-            var deletedCaches = _dataSourceCache.Where(x => !currentPageCacheKeys.Contains(x.Key)).ToList();
-            var needInvokeChange = deletedCaches.Any(x => x.Value.Selected);
-            deletedCaches.ForEach(x => _dataSourceCache.Remove(x));
+            //var currentPageCacheKeys = _selection.RowSelections.Select(x => x.RowData.CacheKey).ToHashSet();
+            //var deletedCaches = _dataSourceCache.Where(x => !currentPageCacheKeys.Contains(x.Key)).ToList();
+            //var needInvokeChange = deletedCaches.Any(x => x.Value.Selected);
+            //deletedCaches.ForEach(x => _dataSourceCache.Remove(x));
 
-            _selection?.StateHasChanged();
+            //_selection?.StateHasChanged();
 
-            if (needInvokeChange)
-            {
-                SelectionChanged();
-            }
+            //if (needInvokeChange)
+            //{
+            //    SelectionChanged();
+            //}
         }
     }
 }

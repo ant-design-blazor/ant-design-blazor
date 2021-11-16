@@ -17,20 +17,7 @@ namespace AntDesign
             set
             {
                 _outerSelectedRows = value;
-                if (_dataSourceCache is null)
-                {
-                    _dataSourceCache = new Dictionary<int, RowData<TItem>>();
-                    _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
-                }
-                if (value == _selectedRows) return;
-                if (value != null && value.Any())
-                {
-                    _dataSourceCache.Values.ForEach(x => x.SetSelected(x.Data.IsIn(value)));
-                }
-                else
-                {
-                    _dataSourceCache.Values.ForEach(x => x.SetSelected(false));
-                }
+                //_selectedRows = _dataSource.Intersect(value).ToList();
             }
         }
 
@@ -38,14 +25,22 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private IEnumerable<TItem> _selectedRows;
+        private List<TItem> _selectedRows = new();
+        private bool _preventRowDataTriggerSelectedRowsChanged;
 
         private void RowDataSelectedChanged(RowData rowData, bool selected)
         {
-            if (SelectedRowsChanged.HasDelegate && _outerSelectedRows != _selectedRows)
+            if (selected)
             {
-                _preventRender = true;
-                SelectedRowsChanged.InvokeAsync(_selectedRows);
+                _selectedRows.Add((rowData as RowData<TItem>).Data);
+            }
+            else
+            {
+                _selectedRows.Remove((rowData as RowData<TItem>).Data);
+            }
+            if (!_preventRowDataTriggerSelectedRowsChanged)
+            {
+                SelectionChanged();
             }
         }
 
@@ -55,16 +50,41 @@ namespace AntDesign
             set => _selection = value;
         }
 
+        bool ITable.AllSelected => _selectedRows.Count == DataSource.Count();
+
+        bool ITable.AnySelected => _selectedRows.Count > 0;
+
+        public void SelectAll()
+        {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _selection.RowSelections.ForEach(x => x.RowData.Selected = true);
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            _selectedRows = _dataSource.ToList();
+            if (_selection != null)
+            {
+                _selection.StateHasChanged();
+            }
+            SelectionChanged();
+        }
+
+        public void UnselectAll()
+        {
+            _selectedRows.Clear();
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _selection.RowSelections.ForEach(x => x.RowData.Selected = false);
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            if (_selection != null)
+            {
+                _selection.StateHasChanged();
+            }
+            SelectionChanged();
+        }
+
         public void SetSelection(string[] keys)
         {
             if (keys == null || !keys.Any())
             {
-                _dataSourceCache.Values.ForEach(x => x.Selected = false);
-                if (_selection != null)
-                {
-                    _selection.StateHasChanged();
-                }
-                SelectionChanged();
+                UnselectAll();
                 return;
             }
 
@@ -72,12 +92,13 @@ namespace AntDesign
             {
                 throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
             }
-            else
-            {
-                _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
-                _selection.StateHasChanged();
-                SelectionChanged();
-            }
+
+            _selectedRows.Clear();
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            _selection.StateHasChanged();
+            SelectionChanged();
         }
 
         void ITable.SelectionChanged() => SelectionChanged();

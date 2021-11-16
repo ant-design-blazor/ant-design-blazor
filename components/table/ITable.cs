@@ -10,6 +10,10 @@ namespace AntDesign
 
         void SetSelection(string[] keys);
 
+        void SelectAll();
+
+        void UnselectAll();
+
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }
@@ -31,6 +35,10 @@ namespace AntDesign
         internal bool HasExpandTemplate { get; }
 
         internal SortDirection[] SortDirections { get; }
+
+        internal bool AllSelected { get; }
+
+        internal bool AnySelected { get; }
 
         internal void SelectionChanged();
 

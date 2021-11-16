@@ -21,11 +21,11 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
         internal ITableRow TableRow { get; set; }
 
-        private bool _checked;
+        //private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && this.RowSelections.Where(x => !x.Disabled).Any(x => x.RowData.Selected)
-                                      && !this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
+                                      && !Table.AllSelected
+                                      && Table.AnySelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
@@ -65,29 +65,10 @@ namespace AntDesign
             //}
         }
 
-        bool ISelectionColumn.Check(bool @checked)
-        {
-            return this.Check(@checked);
-        }
-
-        private bool Check(bool @checked)
-        {
-            if (this._checked != @checked)
-            {
-                this._checked = @checked;
-                //StateHasChanged();
-
-                return true;
-            }
-
-            return false;
-        }
-
         void ISelectionColumn.StateHasChanged()
         {
             if (IsHeader && Type == "checkbox")
             {
-                _checked = this.RowSelections.Any() && this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
                 StateHasChanged();
             }
         }

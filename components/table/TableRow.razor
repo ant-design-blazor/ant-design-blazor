@@ -6,16 +6,9 @@
 
 @if (IsBody)
 {
-    var rowAttributes = Table.OnRow?.Invoke(RowData);
-    if (Table.OnRowClick.HasDelegate)
-    {
-        rowAttributes ??= new Dictionary<string, object>();
-        rowAttributes.TryAdd("onclick", ((Action)delegate { Table.OnRowClick.InvokeAsync(RowData); }));
-    }
-
     <CascadingValue Value="_blockColumns" Name="AntDesign.Column.Blocked">
-        <tr @attributes="rowAttributes"
-            data-row-key="@(RowData.RowIndex-1)" class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @Table.RowClassName(RowData) @rowAttributes?.GetValueOrDefault("class")">
+        <tr @attributes="RowAttributes"
+            data-row-key="@(RowData.RowIndex-1)" class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
             <CascadingValue Name="AntDesign.Selection.OnChange"
                             Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
                 <CascadingValue Value="this" TValue="ITableRow" Name="AntDesign.Selection.TableRow" IsFixed>
@@ -27,9 +20,7 @@
 }
 else if (IsHeader)
 {
-    var headerRowAttributes = Table.OnHeaderRow?.Invoke();
-
-    <tr @attributes="headerRowAttributes">
+    <tr @attributes="RowAttributes">
         <CascadingValue Name="AntDesign.Selection.OnChange"
                         Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
                 @ChildContent
@@ -43,7 +34,7 @@ else if (IsHeader)
     bool _blockColumns = false;
 
     [CascadingParameter(Name = "AntDesign.TableRow.Table")]
-    public Table<TItem> Table { get; set; }
+    public ITable Table { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -57,28 +48,39 @@ else if (IsHeader)
     [CascadingParameter(Name = "RowData")]
     public RowData<TItem> RowData { get; set; }
 
+    [CascadingParameter(Name = "AntDesign.TableRow.RowAttributes")]
+    public Dictionary<string, object> RowAttributes { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.RowClassName")]
+    public string RowClassName { get; set; }
+
     public Selection Selection { get; set; }
 
     private void OnSelectionChange(bool selected)
     {
         if (IsHeader)
         {
-            ((ITable)Table).Selection.RowSelections.Where(x => !x.Disabled).ForEach(x => x.RowData.Selected = selected);
-            ((ITable)Table).Selection.Check(selected);
-        }
-        else if (IsBody)
-        {
-            RowData.SetSelected(selected);
-            if (Selection.Type == "radio")
+            if (selected)
             {
-                ((ITable)Table).Selection.RowSelections.Where(x => x != this.Selection).ForEach(x => x.RowData.Selected = false);
+                Table.SelectAll();
             }
             else
             {
-                ((ITable)Table).Selection.StateHasChanged();
+                Table.UnselectAll();
             }
         }
-    ((ITable)Table).SelectionChanged();
+        else if (IsBody)
+        {
+            if (Selection.Type == "radio")
+            {
+                Table.SetSelection(new[] { Selection.Key });
+            }
+            else
+            {
+                RowData.Selected = selected;
+                Table.Selection.StateHasChanged();
+            }
+        }
     }
 
     private async void RowDataSelectedChanged(RowData rowData, bool selected)

@@ -387,6 +387,15 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            if (_outerSelectedRows != null)
+            {
+                _selectedRows = _dataSource.Intersect(_outerSelectedRows).ToList();
+            }
+            else
+            {
+                _selectedRows?.Clear();
+            }
+
             if (_waitingReloadAndInvokeChange)
             {
                 _waitingReloadAndInvokeChange = false;
@@ -481,6 +490,10 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.Dispose();
+            foreach (var rowData in _dataSourceCache.Values)
+            {
+                rowData.SelectedChanged -= this.RowDataSelectedChanged;
+            }
             base.Dispose(disposing);
         }
 
