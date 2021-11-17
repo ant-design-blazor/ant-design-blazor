@@ -40,6 +40,30 @@ export class manipulationHelper {
       }
     }
   }
+  
+  static copyElement(element) {
+    if (!this.copyElementAsRichText(element)) {
+      this.copy(element.innerText);
+    }
+  }
+
+  private static copyElementAsRichText(element) {
+    var selection = document.getSelection();
+    if (selection.rangeCount > 0) {
+      selection.removeAllRanges();
+    }
+    var range = document.createRange();
+    range.selectNode(element);
+    selection.addRange(range);
+    try {
+      var successful = document.execCommand('copy');
+      selection.removeAllRanges();
+      return successful;
+    } catch (err) {
+      selection.removeAllRanges();
+      return false;
+    }
+  }
 
   static copy(text) {
     if (!navigator.clipboard) {
