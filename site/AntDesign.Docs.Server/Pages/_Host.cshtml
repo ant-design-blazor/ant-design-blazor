@@ -19,7 +19,11 @@
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-
+    <script type="text/javascript">
+        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+            document.write('<script src="_framework/blazor.polyfill.min.js"><\/script>');
+        }
+    </script>
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
