@@ -129,12 +129,19 @@ namespace AntDesign
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
-        private void InputOnToggle()
+        private async void InputOnToggle()
         {
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
             if (!_dropdownOpened)
             {
+                var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
+                _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+                if (!_nodelist.Any())
+                {
+                    _menuStyle += "height:auto;";
+                }
+
                 _dropdownOpened = true;
             }
         }
