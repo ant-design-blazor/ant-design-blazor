@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
   </ItemGroup>
 
   <ItemGroup>

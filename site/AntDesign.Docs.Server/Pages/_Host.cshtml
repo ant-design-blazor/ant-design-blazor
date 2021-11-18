@@ -14,16 +14,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
     
     <link href="_content/AntDesign.Docs/css/docs.default.css" rel="stylesheet">
+    <style>
+        svg {
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-    <script type="text/javascript">
-        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-            document.write('<script src="_framework/blazor.polyfill.min.js"><\/script>');
-        }
-    </script>
+
+    <script src="_framework/blazor.polyfill.min.js"></script>
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
@@ -41,5 +43,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
 </body>
 </html>
