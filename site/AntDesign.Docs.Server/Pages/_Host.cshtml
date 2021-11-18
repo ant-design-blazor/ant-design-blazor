@@ -24,8 +24,14 @@
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-
-    <script src="_framework/blazor.polyfill.min.js"></script>
+    @{
+#if NET5_0_OR_GREATER
+        var polyfillPath = "_framework/blazor.polyfill.min.js";
+#else
+        var polyfillPath = "https://cdn.jsdelivr.net/gh/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
+#endif
+    }
+    <script src="@polyfillPath"></script>
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
