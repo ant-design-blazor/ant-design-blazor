@@ -8,6 +8,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />   
   </ItemGroup>
 
+  <ItemGroup Condition="$(TargetFramework) == 'net6'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0-preview.*" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\AntDesign.Docs.Wasm\AntDesign.Docs.Wasm.csproj" />
   </ItemGroup>

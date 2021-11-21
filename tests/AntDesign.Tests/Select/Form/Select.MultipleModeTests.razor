@@ -12,7 +12,7 @@
 #if NET6_0_OR_GREATER
     [Fact]
 	public void Select_Validation_Shown() 
-    {
+    {		
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new AntDesign.JsInterop.DomRect());        
@@ -72,5 +72,4 @@
 		cut.Invoking(c => cut.Find("div.ant-form-item-explain-error"))
 			.Should().Throw<ElementNotFoundException>();
 	}
-#endif
 }
