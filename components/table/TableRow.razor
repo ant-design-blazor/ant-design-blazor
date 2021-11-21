@@ -45,8 +45,20 @@ else if (IsHeader)
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
 
-    [CascadingParameter(Name = "RowData")]
+    //[CascadingParameter(Name = "RowData")]
     public RowData<TItem> RowData { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.RowIndexOfCurrentPage")]
+    public int RowIndexOfCurrentPage { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.Data")]
+    public TItem Data { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.Selected")]
+    public bool Selected { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.Expanded")]
+    public bool Expanded { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowAttributes")]
     public Dictionary<string, object> RowAttributes { get; set; }
@@ -96,6 +108,12 @@ else if (IsHeader)
             RowData.SelectedChanged += RowDataSelectedChanged;
         }
         base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+
+        base.OnParametersSet();
     }
 
     protected override void Dispose(bool disposing)

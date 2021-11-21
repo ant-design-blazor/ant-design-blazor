@@ -328,6 +328,21 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            if (_outerSelectedRows != null)
+            {
+                _selectedRows = GetAllDataItems(_showItems).Intersect(_outerSelectedRows).ToHashSet();
+                if (_selectedRows.Count != _outerSelectedRows.Count())
+                {
+                    SelectedRowsChanged.InvokeAsync(_selectedRows);
+                }
+            }
+            else
+            {
+                _selectedRows?.Clear();
+            }
+
+            _expandedRows = _showItems.Intersect(_expandedRows).ToHashSet();
+
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
@@ -382,23 +397,57 @@ namespace AntDesign
             FlushCache();
         }
 
+        private IEnumerable<TItem> GetAllDataItems(IEnumerable<TItem> dataItems)
+        {
+            if (dataItems?.Any() != true) return Array.Empty<TItem>();
+            if (TreeChildren == null) return dataItems;
+            return GetAllDataItemsWithParent(dataItems.Select(x => new DataItemWithParent<TItem>
+            {
+                Data = x,
+                Parent = null
+            })).Select(x => x.Data).ToHashSet();
+
+            IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
+            {
+                if (dataItems?.Any() != true) return Array.Empty<DataItemWithParent<TItem>>();
+                if (TreeChildren == null) return dataItems;
+                return dataItems.Union(
+                    dataItems.SelectMany(
+                        x1 =>
+                        {
+                            var ancestors = x1.GetAllAncestors().Select(x2 => x2.Data).ToHashSet();
+                            return GetAllDataItemsWithParent(TreeChildren(x1.Data).Select(x2 => new DataItemWithParent<TItem>
+                            {
+                                Data = x2,
+                                Parent = x1
+                            }).Where(x2 => !ancestors.Contains(x2.Data) && x2.Data?.Equals(x1.Data) == false));
+                        })
+                    ).ToHashSet();
+            }
+        }
+
+        class DataItemWithParent<T>
+        {
+            public T Data { get; set; }
+
+            public DataItemWithParent<T> Parent { get; set; }
+
+            public IEnumerable<DataItemWithParent<T>> GetAllAncestors()
+            {
+                var result = new HashSet<DataItemWithParent<T>>();
+                var parent = Parent;
+                while (parent != null)
+                {
+                    result.Add(parent);
+                    parent = parent.Parent;
+                }
+                return result;
+            }
+        }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
-            if (_outerSelectedRows != null)
-            {
-                _selectedRows = _dataSource.Intersect(_outerSelectedRows).ToList();
-                if (_selectedRows.Count != _outerSelectedRows.Count())
-                {
-                    SelectedRowsChanged.InvokeAsync(_selectedRows);
-                }
-            }
-            else
-            {
-                _selectedRows?.Clear();
-            }
 
             if (_waitingReloadAndInvokeChange)
             {

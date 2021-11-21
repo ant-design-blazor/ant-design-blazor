@@ -25,7 +25,7 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private List<TItem> _selectedRows = new();
+        private HashSet<TItem> _selectedRows = new();
         private bool _preventRowDataTriggerSelectedRowsChanged;
 
         private void RowDataSelectedChanged(RowData rowData, bool selected)
