@@ -32,7 +32,7 @@ namespace AntDesign
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
-                string svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
+                string svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? $"style=\"pointer-events: none;\"" : $"style=\"pointer-events: none;transform: rotate({rotate}deg);\"")}";
                 if (!string.IsNullOrEmpty(svgClass))
                 {
                     svgStyle += $" class=\"{svgClass}\"";
