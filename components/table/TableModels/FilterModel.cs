@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.FilterExpression;
+using Newtonsoft.Json;
 
 namespace AntDesign.TableModels
 {
@@ -26,6 +27,14 @@ namespace AntDesign.TableModels
         private LambdaExpression _getFieldExpression;
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
+
+        [JsonConstructor]
+        public FilterModel(string fieldName, List<string> selectedValues, List<TableFilter> filters)
+        {
+            this.FieldName = fieldName;
+            this.SelectedValues = selectedValues;
+            this.Filters = filters;
+        }
 
         public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {

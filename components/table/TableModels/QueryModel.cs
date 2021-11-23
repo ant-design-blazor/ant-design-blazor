@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace AntDesign.TableModels
 {
@@ -29,11 +29,25 @@ namespace AntDesign.TableModels
             this.SortModel = new List<ITableSortModel>();
             this.FilterModel = new List<ITableFilterModel>();
         }
+
+        [JsonConstructor]
+        public QueryModel(int pageIndex, int pageSize, List<ITableSortModel> sortModel, List<ITableFilterModel> filterModel)
+        {
+            this.PageIndex = pageIndex;
+            this.PageSize = pageSize;
+            this.SortModel = sortModel;
+            this.FilterModel = filterModel;
+        }
     }
 
     public class QueryModel<TItem> : QueryModel
     {
         internal QueryModel(int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        {
+        }
+
+        [JsonConstructor]
+        public QueryModel(int pageIndex, int pageSize, List<ITableSortModel> sortModel, List<ITableFilterModel> filterModel) : base(pageIndex, pageSize, sortModel, filterModel)
         {
         }
 

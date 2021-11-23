@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.Internal;
+using Newtonsoft.Json;
 
 namespace AntDesign.TableModels
 {
@@ -31,6 +32,14 @@ namespace AntDesign.TableModels
             this.FieldName = fieldName;
             this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
+        }
+
+        [JsonConstructor]
+        public SortModel(int priority, string fieldName, string sort)
+        {
+            this.Priority = priority;
+            this.FieldName = fieldName;
+            _sortDirection = SortDirection.Parse(sort);
         }
 
         void ITableSortModel.SetSortDirection(SortDirection sortDirection)

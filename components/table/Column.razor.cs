@@ -446,5 +446,26 @@ namespace AntDesign
         {
             _filters = new List<TableFilter>() { GetNewFilter() };
         }
+
+        void IFieldColumn.ClearFilters() => ResetFilters();
+
+        void IFieldColumn.SetFilterModel(FilterModel<string> filterModel)
+        {
+            FilterModel = filterModel;
+            if (_columnFilterType == TableFilterType.List)
+                _filters.Where(filter => FilterModel.Filters.Select(f => f.Text)
+                                                            .ToList()
+                                                            .Contains(filter.Text))
+                        .ForEach(filter => filter.Selected = true);
+            else
+                _filters = FilterModel.Filters;
+            _hasFilterSelected = true;
+        }
+
+        void IFieldColumn.SetSortModel(SortModel<string> sortModel)
+        {
+            SortModel = sortModel;
+            this.SetSorter(SortDirection.Parse(sortModel.Sort));
+        }
     }
 }

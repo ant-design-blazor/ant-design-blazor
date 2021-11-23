@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace AntDesign
 {
@@ -25,10 +26,33 @@ namespace AntDesign
         {
             this.Selected = selected;
         }
+
+        public TableFilter()
+        {
+        }
+
+        [JsonConstructor]
+        public TableFilter(string text, object value, bool selected, TableFilterCompareOperator filterCompareOperator, TableFilterCondition filterCondition)
+        {
+            this.Text = text;
+            this.Value = value;
+            this.Selected = selected;
+            this.FilterCompareOperator = filterCompareOperator;
+            this.FilterCondition = filterCondition;
+        }
     }
 
     public class TableFilter<TValue> : TableFilter
     {
+        public TableFilter()
+        {
+        }
+
+        [JsonConstructor]
+        public TableFilter(string text, object value, bool selected, TableFilterCompareOperator filterCompareOperator, TableFilterCondition filterCondition) : base(text, value, selected, filterCompareOperator, filterCondition)
+        {
+        }
+
         new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
 

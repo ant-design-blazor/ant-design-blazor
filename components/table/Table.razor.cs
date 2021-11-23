@@ -246,6 +246,51 @@ namespace AntDesign
             this.ReloadAndInvokeChange();
         }
 
+        public void ReloadData(QueryModel queryModel)
+        {
+            ChangePageIndex(queryModel.PageIndex);
+            ChangePageSize(queryModel.PageSize);
+
+            FlushCache();
+            foreach (var column in queryModel.SortModel)
+            {
+                List<IFieldColumn> fieldColumns = ColumnContext.HeaderColumns.Cast<IFieldColumn>().ToList();
+                IFieldColumn fieldColumn = fieldColumns.Where(x => x.FieldName.Equals(column.FieldName)).First();
+
+                if (queryModel.FilterModel.Any(x => x.FieldName.Equals(fieldColumn.FieldName)))
+                {
+                    var filter = queryModel.FilterModel.Where(x => x.FieldName.Equals(fieldColumn.FieldName)).First();
+                    fieldColumn.SetFilterModel((FilterModel<string>)filter);
+                }
+                fieldColumn.SetSortModel((SortModel<string>)column);
+            }
+            this.ReloadAndInvokeChange((QueryModel<TItem>)queryModel);
+        }
+
+        public void ResetData()
+        {
+            ChangePageIndex(PageIndex);
+            ChangePageSize(PageSize);
+
+            FlushCache();
+
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col is IFieldColumn fieldColumn)
+                {
+                    if (fieldColumn.SortModel != null)
+                    {
+                        fieldColumn.ClearSorter();
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        fieldColumn.ClearFilters();
+                    }
+                }
+            }
+        }
+
         public QueryModel GetQueryModel() => BuildQueryModel();
 
         private QueryModel<TItem> BuildQueryModel()
@@ -297,7 +342,7 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
-            var queryModel = this.InternalReload();
+            var queryModel = this.InternalReload(BuildQueryModel());
             StateHasChanged();
             if (OnChange.HasDelegate)
             {
@@ -305,9 +350,18 @@ namespace AntDesign
             }
         }
 
-        private QueryModel<TItem> InternalReload()
+        private void ReloadAndInvokeChange(QueryModel<TItem> newQueryModel)
         {
-            var queryModel = BuildQueryModel();
+            var queryModel = this.InternalReload(newQueryModel);
+            StateHasChanged();
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(queryModel);
+            }
+        }
+
+        private QueryModel<TItem> InternalReload(QueryModel<TItem> queryModel)
+        {
             _currentQueryModel = queryModel;
 
             if (ServerSide)
@@ -487,7 +541,7 @@ namespace AntDesign
                 _waitingDataSourceReload = false;
                 if (_hasInitialized)
                 {
-                    InternalReload();
+                    InternalReload(BuildQueryModel());
                 }
             }
 
