@@ -306,6 +306,7 @@ namespace AntDesign
         public bool CheckStrictly { get; set; }
 
         private string[] _checkedKeys = Array.Empty<string>();
+
         /// <summary>
         /// Checked  keys
         /// </summary>
