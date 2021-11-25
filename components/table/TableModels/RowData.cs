@@ -8,11 +8,17 @@ namespace AntDesign.TableModels
     {
         public TItem Data { get; set; }
 
+        internal RowData<TItem> Parent { get; set; }
+
         public RowData(int rowIndex, int pageIndex, TItem data)
         {
             this.RowIndex = rowIndex;
             this.PageIndex = pageIndex;
             this.Data = data;
+        }
+
+        public RowData()
+        {
         }
     }
 

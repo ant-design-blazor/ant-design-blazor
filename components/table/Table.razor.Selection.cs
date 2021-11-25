@@ -50,7 +50,7 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selectedRows.Count == DataSource.Count();
+        bool ITable.AllSelected => _selectedRows.Count == GetAllDataItems(_showItems).Count();
 
         bool ITable.AnySelected => _selectedRows.Count > 0;
 
@@ -59,7 +59,7 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = true;
             _selection.RowSelections.ForEach(x => x.RowData.Selected = true);
             _preventRowDataTriggerSelectedRowsChanged = false;
-            _selectedRows = _dataSource.ToList();
+            _selectedRows = GetAllDataItems(_showItems).ToHashSet();
             if (_selection != null)
             {
                 _selection.StateHasChanged();

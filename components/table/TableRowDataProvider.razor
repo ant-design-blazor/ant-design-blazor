@@ -1,0 +1,74 @@
+﻿@namespace AntDesign
+@typeparam TItem
+@using AntDesign.TableModels
+
+<CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent"></CascadingValue>
+
+@code {
+    [CascadingParameter(Name = "RowData")]
+    public RowData<TItem> ParentRowData { get; set; }
+
+    [Parameter]
+    public ITable Table { get; set; }
+
+    [Parameter]
+    public int RowIndex { get; set; }
+
+    [Parameter]
+    public int PageIndex { get; set; }
+
+    [Parameter]
+    public bool Selected { get; set; }
+
+    [Parameter]
+    public bool Expanded { get; set; }
+
+    [Parameter]
+    public int Level { get; set; }
+
+    [Parameter]
+    public bool HasChildren { get; set; }
+
+    [Parameter]
+    public TItem Data { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Action<RowData, bool> RowDataSelectedChanged { get; set; }
+
+    private RowData<TItem> _rowData;
+
+    protected override void OnInitialized()
+    {
+        _rowData = new RowData<TItem>();
+        _rowData.Data = Data;
+        _rowData.SelectedChanged += OnRowDataSelectedChanged;
+        _rowData.Level = Level;
+        if (ParentRowData != null)
+        {
+            _rowData.Parent = ParentRowData;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        _rowData.HasChildren = HasChildren;
+        _rowData.Expanded = Expanded;
+        _rowData.PageIndex = PageIndex;
+        _rowData.RowIndex = RowIndex;
+        _rowData.Selected = Selected;
+    }
+
+    private void OnRowDataSelectedChanged(RowData rowData, bool selected)
+    {
+        RowDataSelectedChanged?.Invoke(rowData, selected);
+        InvokeAsync(StateHasChanged);
+    }
+
+    //void IDisposable.Dispose()
+    //{
+    //    _rowData.SelectedChanged -= RowDataSelectedChanged;
+    //}
+}

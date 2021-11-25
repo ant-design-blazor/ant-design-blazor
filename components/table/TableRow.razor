@@ -1,4 +1,4 @@
-﻿@namespace AntDesign.Internal
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @implements ITableRow
 @typeparam TItem
@@ -45,7 +45,7 @@ else if (IsHeader)
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
 
-    //[CascadingParameter(Name = "RowData")]
+    [CascadingParameter(Name = "RowData")]
     public RowData<TItem> RowData { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowIndexOfCurrentPage")]
@@ -108,12 +108,6 @@ else if (IsHeader)
             RowData.SelectedChanged += RowDataSelectedChanged;
         }
         base.OnInitialized();
-    }
-
-    protected override void OnParametersSet()
-    {
-
-        base.OnParametersSet();
     }
 
     protected override void Dispose(bool disposing)
