@@ -94,28 +94,4 @@ else if (IsHeader)
             }
         }
     }
-
-    private async void RowDataSelectedChanged(RowData rowData, bool selected)
-    {
-        _blockColumns = true;
-        await InvokeAsync(StateHasChanged);
-    }
-
-    protected override void OnInitialized()
-    {
-        if (RowData != null)
-        {
-            RowData.SelectedChanged += RowDataSelectedChanged;
-        }
-        base.OnInitialized();
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (RowData != null)
-        {
-            RowData.SelectedChanged -= RowDataSelectedChanged;
-        }
-        base.Dispose(disposing);
-    }
 }

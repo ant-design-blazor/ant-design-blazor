@@ -410,13 +410,13 @@ namespace AntDesign
             IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
             {
                 if (dataItems?.Any() != true) return Array.Empty<DataItemWithParent<TItem>>();
-                if (TreeChildren == null) return dataItems;
+                if (TreeChildren == null) return dataItems ?? Array.Empty<DataItemWithParent<TItem>>();
                 return dataItems.Union(
                     dataItems.SelectMany(
                         x1 =>
                         {
                             var ancestors = x1.GetAllAncestors().Select(x2 => x2.Data).ToHashSet();
-                            return GetAllDataItemsWithParent(TreeChildren(x1.Data).Select(x2 => new DataItemWithParent<TItem>
+                            return GetAllDataItemsWithParent(TreeChildren(x1.Data)?.Select(x2 => new DataItemWithParent<TItem>
                             {
                                 Data = x2,
                                 Parent = x1

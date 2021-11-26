@@ -1,8 +1,9 @@
 ﻿@namespace AntDesign
 @typeparam TItem
+@implements IDisposable
 @using AntDesign.TableModels
 
-<CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent"></CascadingValue>
+<CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent(_rowData)" />
 
 @code {
     [CascadingParameter(Name = "RowData")]
@@ -33,7 +34,7 @@
     public TItem Data { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment<RowData<TItem>> ChildContent { get; set; }
 
     [Parameter]
     public Action<RowData, bool> RowDataSelectedChanged { get; set; }
@@ -46,6 +47,7 @@
         _rowData.Data = Data;
         _rowData.SelectedChanged += OnRowDataSelectedChanged;
         _rowData.Level = Level;
+        _rowData.Expanded = Expanded;
         if (ParentRowData != null)
         {
             _rowData.Parent = ParentRowData;
@@ -55,7 +57,7 @@
     protected override void OnParametersSet()
     {
         _rowData.HasChildren = HasChildren;
-        _rowData.Expanded = Expanded;
+        //_rowData.Expanded = Expanded;
         _rowData.PageIndex = PageIndex;
         _rowData.RowIndex = RowIndex;
         _rowData.Selected = Selected;
@@ -67,8 +69,8 @@
         InvokeAsync(StateHasChanged);
     }
 
-    //void IDisposable.Dispose()
-    //{
-    //    _rowData.SelectedChanged -= RowDataSelectedChanged;
-    //}
+    void IDisposable.Dispose()
+    {
+        _rowData.SelectedChanged -= RowDataSelectedChanged;
+    }
 }
