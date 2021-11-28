@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, ITable<TItem>, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -179,6 +179,10 @@ namespace AntDesign
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
+
+        ICollection<RowData<TItem>> _rowDatas = new List<RowData<TItem>>();
+
+        ICollection<RowData<TItem>> ITable<TItem>.RowDatas => _rowDatas;
 
         /// <summary>
         /// This method will be called when all columns have been set

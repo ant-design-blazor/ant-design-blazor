@@ -6,6 +6,5 @@ namespace AntDesign
 {
     internal interface ITableRow
     {
-        public Selection Selection { get; set; }
     }
 }

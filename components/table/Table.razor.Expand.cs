@@ -18,11 +18,11 @@ namespace AntDesign
         {
             if (expanded)
             {
-                _selectedRows.Add((rowData as RowData<TItem>).Data);
+                _expandedRows.Add((rowData as RowData<TItem>).Data);
             }
             else
             {
-                _selectedRows.Remove((rowData as RowData<TItem>).Data);
+                _expandedRows.Remove((rowData as RowData<TItem>).Data);
             }
         }
     }

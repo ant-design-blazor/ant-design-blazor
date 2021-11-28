@@ -8,23 +8,16 @@
 {
     <CascadingValue Value="_blockColumns" Name="AntDesign.Column.Blocked">
         <tr @attributes="RowAttributes"
-            data-row-key="@(RowData.RowIndex-1)" class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
-            <CascadingValue Name="AntDesign.Selection.OnChange"
-                            Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
-                <CascadingValue Value="this" TValue="ITableRow" Name="AntDesign.Selection.TableRow" IsFixed>
-                    @ChildContent
-                </CascadingValue>
-            </CascadingValue>
+            data-row-key="@(RowData.RowIndex-1)" 
+            class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
+            @ChildContent
         </tr>
     </CascadingValue>
 }
 else if (IsHeader)
 {
     <tr @attributes="RowAttributes">
-        <CascadingValue Name="AntDesign.Selection.OnChange"
-                        Value="EventCallback.Factory.Create<bool>(this, OnSelectionChange)">
-                @ChildContent
-        </CascadingValue>
+        @ChildContent
     </tr>
 }
 
@@ -65,33 +58,4 @@ else if (IsHeader)
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowClassName")]
     public string RowClassName { get; set; }
-
-    public Selection Selection { get; set; }
-
-    private void OnSelectionChange(bool selected)
-    {
-        if (IsHeader)
-        {
-            if (selected)
-            {
-                Table.SelectAll();
-            }
-            else
-            {
-                Table.UnselectAll();
-            }
-        }
-        else if (IsBody)
-        {
-            if (Selection.Type == "radio")
-            {
-                Table.SetSelection(new[] { Selection.Key });
-            }
-            else
-            {
-                RowData.Selected = selected;
-                Table.Selection.StateHasChanged();
-            }
-        }
-    }
 }

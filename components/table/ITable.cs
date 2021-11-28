@@ -1,4 +1,5 @@
-﻿using AntDesign.TableModels;
+﻿using System.Collections.Generic;
+using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -63,5 +64,10 @@ namespace AntDesign
         internal void AddSummaryRow(SummaryRow summaryRow);
 
         internal void OnColumnInitialized();
+    }
+
+    public interface ITable<TItem> : ITable
+    {
+        internal ICollection<RowData<TItem>> RowDatas { get; }
     }
 }

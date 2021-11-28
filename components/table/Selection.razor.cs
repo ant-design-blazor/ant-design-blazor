@@ -15,9 +15,6 @@ namespace AntDesign
 
         [Parameter] public bool CheckStrictly { get; set; }
 
-        [CascadingParameter(Name = "AntDesign.Selection.OnChange")]
-        internal EventCallback<bool> OnChange { get; set; }
-
         [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
         internal ITableRow TableRow { get; set; }
 
@@ -30,6 +27,33 @@ namespace AntDesign
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
         //private int[] _selectedIndexes;
+
+        private void OnCkeckedChange(bool selected)
+        {
+            if (IsHeader)
+            {
+                if (selected)
+                {
+                    Table.SelectAll();
+                }
+                else
+                {
+                    Table.UnselectAll();
+                }
+            }
+            else if (IsBody)
+            {
+                if (Type == "radio")
+                {
+                    Table.SetSelection(new[] { Key });
+                }
+                else
+                {
+                    RowData.Selected = selected;
+                    Table.Selection.StateHasChanged();
+                }
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -47,7 +71,6 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                TableRow.Selection = this;
                 Table?.Selection?.RowSelections.Add(this);
             }
         }

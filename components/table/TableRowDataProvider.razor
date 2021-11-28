@@ -3,14 +3,14 @@
 @implements IDisposable
 @using AntDesign.TableModels
 
-<CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent(_rowData)" />
+<CascadingValue Value="_rowData" Name="RowData" IsFixed ChildContent="ChildContent(_rowData)" />
 
 @code {
     [CascadingParameter(Name = "RowData")]
     public RowData<TItem> ParentRowData { get; set; }
 
     [Parameter]
-    public ITable Table { get; set; }
+    public ITable<TItem> Table { get; set; }
 
     [Parameter]
     public int RowIndex { get; set; }
@@ -37,7 +37,7 @@
     public RenderFragment<RowData<TItem>> ChildContent { get; set; }
 
     [Parameter]
-    public Action<RowData, bool> RowDataSelectedChanged { get; set; }
+    public Action<RowData<TItem>, bool> RowDataSelectedChanged { get; set; }
 
     private RowData<TItem> _rowData;
 
@@ -52,6 +52,7 @@
         {
             _rowData.Parent = ParentRowData;
         }
+        Table.RowDatas.Add(_rowData);
     }
 
     protected override void OnParametersSet()
@@ -60,17 +61,18 @@
         //_rowData.Expanded = Expanded;
         _rowData.PageIndex = PageIndex;
         _rowData.RowIndex = RowIndex;
-        _rowData.Selected = Selected;
+        _rowData.SetSelected(Selected);
     }
 
     private void OnRowDataSelectedChanged(RowData rowData, bool selected)
     {
-        RowDataSelectedChanged?.Invoke(rowData, selected);
+        RowDataSelectedChanged?.Invoke(rowData as RowData<TItem>, selected);
         InvokeAsync(StateHasChanged);
     }
 
     void IDisposable.Dispose()
     {
-        _rowData.SelectedChanged -= RowDataSelectedChanged;
+        _rowData.SelectedChanged -= OnRowDataSelectedChanged;
+        Table.RowDatas.Remove(_rowData);
     }
 }
