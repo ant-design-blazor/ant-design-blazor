@@ -318,12 +318,6 @@ namespace AntDesign
                 }
 
                 CascadedEditContext = Form?.EditContext;
-                if (ValuesExpression == null)
-                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
-                else
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
-
                 CascadedEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
             else if (Form?.EditContext != CascadedEditContext)
@@ -335,8 +329,17 @@ namespace AntDesign
                 //transfer is done in Form.BuildEditContext() method. State is lost
                 //though.
                 CascadedEditContext = Form?.EditContext;
-                
             }
+
+            if(FieldIdentifier.Model == null || string.IsNullOrEmpty(FieldIdentifier.FieldName))
+            {
+                if (ValuesExpression == null)
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                else
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+            }
+
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.
             return base.SetParametersAsync(ParameterView.Empty);
