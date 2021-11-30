@@ -65,13 +65,13 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllDataItems(_showItems).Count();
+        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllItemsByTopLevelItems(_showItems).Count();
 
         bool ITable.AnySelected => _selectedRows.Count > 0;
 
         public void SelectAll()
         {
-            _selectedRows = GetAllDataItems(_showItems).ToHashSet();
+            _selectedRows = GetAllItemsByTopLevelItems(_showItems).ToHashSet();
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
             foreach (var rowData in _rowDatas)

@@ -21,16 +21,6 @@ namespace AntDesign.TableModels
         {
         }
 
-        public RowData<TItem> GetTopAncestor()
-        {
-            var parent = Parent;
-            while (parent != null)
-            {
-                parent = parent.Parent;
-            }
-            return parent;
-        }
-
         public RowData<TItem>[] GetAllAncestors()
         {
             List<RowData<TItem>> ancestors = new();

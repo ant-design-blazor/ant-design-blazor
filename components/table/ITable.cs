@@ -43,13 +43,13 @@ namespace AntDesign
 
         internal void SelectionChanged();
 
-        internal void OnExpandChange(int cacheKey);
+        internal void OnExpandChange(RowData rowData);
 
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
 
-        internal int[] GetSelectedCacheKeys();
+        //internal int[] GetSelectedCacheKeys();
 
         internal void HasFixLeft();
 

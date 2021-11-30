@@ -51,6 +51,9 @@ namespace AntDesign
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
         [Parameter]
+        public Func<RowData<TItem>, bool> RowSelectable { get; set; } = _ => true;
+
+        [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         [Parameter]
@@ -136,6 +139,9 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; } = true;
 
+        /// <summary>
+        /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
+        /// </summary>
         [Parameter]
         public bool Virtualizing { get; set; }
 
@@ -189,11 +195,11 @@ namespace AntDesign
         /// </summary>
         void ITable.OnColumnInitialized() => OnColumnInitialized();
 
-        void ITable.OnExpandChange(int cacheKey)
+        void ITable.OnExpandChange(RowData rowData)
         {
-            if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
+            if (OnExpand.HasDelegate)
             {
-                OnExpand.InvokeAsync(currentRowData);
+                OnExpand.InvokeAsync(rowData as RowData<TItem>);
             }
         }
 
@@ -219,7 +225,7 @@ namespace AntDesign
         {
             PageIndex = 1;
 
-            FlushCache();
+            //FlushCache();
 
             this.InternalReload();
 
@@ -334,7 +340,7 @@ namespace AntDesign
 
             if (_outerSelectedRows != null)
             {
-                _selectedRows = GetAllDataItems(_showItems).Intersect(_outerSelectedRows).ToHashSet();
+                _selectedRows = GetAllItemsByTopLevelItems(_showItems).Intersect(_outerSelectedRows).ToHashSet();
                 if (_selectedRows.Count != _outerSelectedRows.Count())
                 {
                     SelectedRowsChanged.InvokeAsync(_selectedRows);
@@ -401,18 +407,19 @@ namespace AntDesign
 
             InitializePagination();
 
-            FlushCache();
+            //FlushCache();
         }
 
-        private IEnumerable<TItem> GetAllDataItems(IEnumerable<TItem> dataItems)
+        private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
         {
-            if (dataItems?.Any() != true) return Array.Empty<TItem>();
-            if (TreeChildren == null) return dataItems;
-            return GetAllDataItemsWithParent(dataItems.Select(x => new DataItemWithParent<TItem>
+            if (items?.Any() != true) return Array.Empty<TItem>();
+            if (TreeChildren == null) return items;
+            var result = GetAllDataItemsWithParent(items.Select(x => new DataItemWithParent<TItem>
             {
                 Data = x,
                 Parent = null
-            })).Select(x => x.Data).ToHashSet();
+            })).Select(x => x.Data);
+            if (onlySelectable) result = result.Where(x => RowSelectable(x));
 
             IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
             {

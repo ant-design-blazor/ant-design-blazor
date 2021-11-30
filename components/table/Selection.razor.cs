@@ -15,9 +15,6 @@ namespace AntDesign
 
         [Parameter] public bool CheckStrictly { get; set; }
 
-        [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
-        internal ITableRow TableRow { get; set; }
-
         //private bool _checked;
 
         private bool Indeterminate => IsHeader
