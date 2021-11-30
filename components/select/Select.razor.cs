@@ -63,7 +63,7 @@ namespace AntDesign
         {
             if (_dataSourceItemShallowCopyMehtod is null)
             {
-                _dataSourceItemShallowCopyMehtod = this.GetType().GetGenericArguments()[1]
+                _dataSourceItemShallowCopyMehtod = typeof(TItem)
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (DataSourceEqualityComparer is null)
                 {
