@@ -345,7 +345,10 @@ namespace AntDesign
                 _selectedRows?.Clear();
             }
 
-            _expandedRows = _showItems.Intersect(_expandedRows).ToHashSet();
+            foreach (var item in _expandedRows.Keys.Except(_showItems).ToArray())
+            {
+                _expandedRows.Remove(item);
+            }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
@@ -547,10 +550,10 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.Dispose();
-            foreach (var rowData in _dataSourceCache.Values)
-            {
-                rowData.SelectedChanged -= this.RowDataSelectedChanged;
-            }
+            //foreach (var rowData in _dataSourceCache.Values)
+            //{
+            //    rowData.SelectedChanged -= this.RowDataSelectedChanged;
+            //}
             base.Dispose(disposing);
         }
 

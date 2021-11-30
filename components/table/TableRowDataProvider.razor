@@ -3,7 +3,7 @@
 @implements IDisposable
 @using AntDesign.TableModels
 
-<CascadingValue Value="_rowData" Name="RowData" IsFixed ChildContent="ChildContent(_rowData)" />
+<CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent(_rowData)" />
 
 @code {
     [CascadingParameter(Name = "RowData")]
@@ -39,6 +39,9 @@
     [Parameter]
     public Action<RowData<TItem>, bool> RowDataSelectedChanged { get; set; }
 
+    [Parameter]
+    public Action<RowData<TItem>, bool> RowDataExpandedChanged { get; set; }
+
     private RowData<TItem> _rowData;
 
     protected override void OnInitialized()
@@ -46,8 +49,9 @@
         _rowData = new RowData<TItem>();
         _rowData.Data = Data;
         _rowData.SelectedChanged += OnRowDataSelectedChanged;
+        _rowData.ExpandedChanged += OnRowDataExpandedChanged;
         _rowData.Level = Level;
-        _rowData.Expanded = Expanded;
+        //_rowData.Expanded = Expanded;
         if (ParentRowData != null)
         {
             _rowData.Parent = ParentRowData;
@@ -58,10 +62,10 @@
     protected override void OnParametersSet()
     {
         _rowData.HasChildren = HasChildren;
-        //_rowData.Expanded = Expanded;
         _rowData.PageIndex = PageIndex;
         _rowData.RowIndex = RowIndex;
         _rowData.SetSelected(Selected);
+        _rowData.SetExpanded(Expanded);
     }
 
     private void OnRowDataSelectedChanged(RowData rowData, bool selected)
@@ -70,9 +74,16 @@
         InvokeAsync(StateHasChanged);
     }
 
+    private void OnRowDataExpandedChanged(RowData rowData, bool selected)
+    {
+        RowDataExpandedChanged?.Invoke(rowData as RowData<TItem>, selected);
+        InvokeAsync(StateHasChanged);
+    }
+
     void IDisposable.Dispose()
     {
         _rowData.SelectedChanged -= OnRowDataSelectedChanged;
+        _rowData.ExpandedChanged -= OnRowDataExpandedChanged;
         Table.RowDatas.Remove(_rowData);
     }
 }

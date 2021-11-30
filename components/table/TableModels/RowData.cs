@@ -20,11 +20,36 @@ namespace AntDesign.TableModels
         public RowData()
         {
         }
+
+        public RowData<TItem> GetTopAncestor()
+        {
+            var parent = Parent;
+            while (parent != null)
+            {
+                parent = parent.Parent;
+            }
+            return parent;
+        }
+
+        public RowData<TItem>[] GetAllAncestors()
+        {
+            List<RowData<TItem>> ancestors = new();
+            var parent = Parent;
+            while (parent != null)
+            {
+                ancestors.Add(parent);
+                parent = parent.Parent;
+            }
+            ancestors.Reverse();
+            return ancestors.ToArray();
+        }
     }
 
     public class RowData
     {
         private bool _selected;
+
+        private bool _expanded;
 
         public int RowIndex { get; set; }
 
@@ -43,7 +68,18 @@ namespace AntDesign.TableModels
             }
         }
 
-        public bool Expanded { get; set; }
+        public bool Expanded
+        {
+            get => _expanded;
+            set
+            {
+                if (_expanded != value)
+                {
+                    _expanded = value;
+                    ExpandedChanged?.Invoke(this, _expanded);
+                }
+            }
+        }
 
         public int Level { get; set; }
 
@@ -53,9 +89,16 @@ namespace AntDesign.TableModels
 
         public event Action<RowData, bool> SelectedChanged;
 
+        public event Action<RowData, bool> ExpandedChanged;
+
         internal void SetSelected(bool selected)
         {
             _selected = selected;
+        }
+
+        internal void SetExpanded(bool expanded)
+        {
+            _expanded = expanded;
         }
     }
 }

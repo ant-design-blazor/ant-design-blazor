@@ -52,7 +52,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            @body((this, _showItems, 0, _expandedRows))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -70,7 +70,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            @body((this, _showItems, 0, _expandedRows))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -83,7 +83,7 @@
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
-                                            @body((this, _showItems, 0))
+                                            @body((this, _showItems, 0, _expandedRows))
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -129,13 +129,13 @@
             <CascadingValue Name="IsHeader" Value="true" IsFixed>
                 <CascadingValue Value="table" TValue="ITable" Name="AntDesign.TableRow.Table">
                     <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
-                        <AntDesign.TableRow TItem="TItem">
+                        <TableRow TItem="TItem">
                             @table.ChildContent(_fieldModel)
                             @if (table.ScrollY != null)
                             {
                                 <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
                             }
-                        </AntDesign.TableRow>
+                        </TableRow>
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
@@ -159,12 +159,13 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
     </colgroup>
 </Template>;
 
-RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> body = context =>
+RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level, ExpandedRowsDictionary expandedRows)> body = context =>
 @<Template>
     @{
         var table = context.table;
         var showItems = context.showItems;
         var level = context.level;
+        var expandedRows = context.expandedRows;
     }
 
     @if (table._total <= 0)
@@ -181,21 +182,21 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
         if (table.Virtualizing && table.ScrollY != null)
         {
             <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
-                                                                           ChildContent="table.rowDataProvider(table, level)" />
+                                                                           ChildContent="table.rowDataProvider(table, level, expandedRows)" />
         }
         else
         {
 #endif
             { @*Build will fail without this block*@ }
         <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
-                     ChildContent="table.rowDataProvider(table, level)" />
+                     ChildContent="table.rowDataProvider(table, level, expandedRows)" />
 #if NET5_0_OR_GREATER
         }
 #endif
     }
 </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, RenderFragment<RowData<TItem>>> bodyRow = (table, childrenData) => rowdata =>
+Func<Table<TItem>, IEnumerable<TItem>, ExpandedRowsDictionary, RenderFragment<RowData<TItem>>> bodyRow = (table, childrenData, expandedRows) => rowdata =>
 @<Template>
     @{
         var rowAttributes = table.OnRow?.Invoke(rowdata);
@@ -220,7 +221,7 @@ Func<Table<TItem>, IEnumerable<TItem>, RenderFragment<RowData<TItem>>> bodyRow =
 
         @if (rowdata.HasChildren && rowdata.Expanded)
         {
-            @table.body((table, table.SortFilterChildren(childrenData), rowdata.Level + 1));
+            @table.body((table, table.SortFilterChildren(childrenData), rowdata.Level + 1, expandedRows));
         }
         @if (!rowdata.HasChildren && table.ExpandTemplate != null && table.RowExpandable(rowdata) && rowdata.Expanded)
         {
@@ -234,19 +235,23 @@ Func<Table<TItem>, IEnumerable<TItem>, RenderFragment<RowData<TItem>>> bodyRow =
     }
 </Template>;
 
-Func<Table<TItem>, int, RenderFragment<(TItem data, int index)>> rowDataProvider = (table, level) => tuple =>
+Func<Table<TItem>, int, ExpandedRowsDictionary, RenderFragment<(TItem data, int index)>> rowDataProvider = (table, level, expandedRows) => tuple =>
 @<Template @key="tuple">
     @{
-        var rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
+        int rowIndex;
+        if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
+        else rowIndex = tuple.index + 1;
         var data = tuple.data;
         bool selected = table.SelectedRows.Contains(data);
-        bool expanded = table.DefaultExpandAllRows;
+        bool expanded = expandedRows?.ContainsKey(data) == true ? expandedRows[data].expanded : table.DefaultExpandAllRows;
+        var expandedChildren = expandedRows?.ContainsKey(data) == true ? expandedRows[data].children : null;
         var childrenData = table.TreeChildren(data);
         var hasChildren = childrenData?.Any() == true;
         <TableRowDataProvider @key="data" Data="data" Expanded="expanded" Selected="selected" HasChildren="hasChildren"
                               Level="level" PageIndex="table.PageIndex" RowIndex="rowIndex"
-                              RowDataSelectedChanged="table.RowDataSelectedChanged" Table="table"
-                              ChildContent="table.bodyRow(table, childrenData)">
+                              RowDataSelectedChanged="table.RowDataSelectedChanged"
+                              RowDataExpandedChanged="table.RowDataExpandedChanged" Table="table"
+                              ChildContent="table.bodyRow(table, childrenData, expandedChildren)">
         </TableRowDataProvider>
     }
 </Template>;
