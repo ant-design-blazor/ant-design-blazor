@@ -305,11 +305,27 @@ namespace AntDesign
         [Parameter]
         public bool CheckStrictly { get; set; }
 
+        private string[] _checkedKeys = Array.Empty<string>();
+
         /// <summary>
         /// Checked  keys
         /// </summary>
         [Parameter]
-        public string[] CheckedKeys { get; set; } = Array.Empty<string>();
+        public string[] CheckedKeys
+        {
+            get => _checkedKeys;
+            set
+            {
+                if (!value.SequenceEqual(_checkedKeys))
+                {
+                    foreach (var item in ChildNodes)
+                    {
+                        item.SetChecked(value.Contains(item.Key));
+                    }
+                    _checkedKeys = value;
+                }
+            }
+        }
 
         /// <summary>
         ///  @bind-CheckedKeys
@@ -360,8 +376,8 @@ namespace AntDesign
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
-            CheckedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
-            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(CheckedKeys);
+            _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
+            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
