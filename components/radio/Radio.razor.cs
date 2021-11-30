@@ -93,10 +93,9 @@ namespace AntDesign
                 .If($"{prefixCls}-button-inner", () => RadioButton);
         }
 
-        internal void SetName(string name)
-        {
-            _name = name;
-        }
+        internal void SetName(string name) => _name = name;
+
+        internal void SetDisabledValue(bool value) => Disabled = value;
 
         protected override void OnInitialized()
         {
@@ -108,11 +107,6 @@ namespace AntDesign
             }
 
             RadioGroup?.AddRadio(this);
-
-            if (RadioGroup?.Disabled == true)
-            {
-                Disabled = true;
-            }
 
             if (_hasDefaultChecked && !_defaultCheckedSetted)
             {

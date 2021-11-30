@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -13,7 +12,18 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled != value)
+                {
+                    _disabled = value;
+                    OnDisabledValueChanged?.Invoke(_disabled);
+                }
+            }
+        }
 
         [Parameter]
         public RadioButtonStyle ButtonStyle { get; set; } = RadioButtonStyle.Outline;
@@ -38,12 +48,15 @@ namespace AntDesign
         [Parameter]
         public OneOf<string[], RadioOption<TValue>[]> Options { get; set; }
 
-        private List<Radio<TValue>> _radioItems = new List<Radio<TValue>>();
+        private bool _disabled;
+        private Action<bool> OnDisabledValueChanged { get; set; }
 
         private TValue _defaultValue;
 
         private bool _hasDefaultValue;
         private bool _defaultValueSetted;
+
+        private readonly List<Radio<TValue>> _radioItems = new();
 
         private static readonly Dictionary<RadioButtonStyle, string> _buttonStyleDics = new()
         {
@@ -77,6 +90,8 @@ namespace AntDesign
                 radio.SetName(Name);
             }
             _radioItems.Add(radio);
+            radio.SetDisabledValue(_disabled);
+            OnDisabledValueChanged += radio.SetDisabledValue;
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
                 await radio.Select();
@@ -87,6 +102,7 @@ namespace AntDesign
         internal void RemoveRadio(Radio<TValue> radio)
         {
             _radioItems.Remove(radio);
+            OnDisabledValueChanged -= radio.SetDisabledValue;
         }
 
         protected override async Task OnParametersSetAsync()
