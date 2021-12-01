@@ -208,13 +208,11 @@ Func<Table<TItem>, IEnumerable<TItem>, ExpandedRowsDictionary, RenderFragment<Ro
 
         var rowClassName = table.RowClassName(rowdata);
         <CascadingValue Value="true" Name="IsBody" IsFixed>
-            <CascadingValue Value="table" TValue="ITable" Name="AntDesign.TableRow.Table">
-                <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
-                    <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                        <AntDesign.TableRow @key="rowdata.Data" TItem="TItem">
-                            @table.ChildContent(rowdata.Data)
-                        </AntDesign.TableRow>
-                    </CascadingValue>
+            <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
+                    <TableRow @key="rowdata.Data" TItem="TItem">
+                        @table.ChildContent(rowdata.Data)
+                    </TableRow>
                 </CascadingValue>
             </CascadingValue>
         </CascadingValue>

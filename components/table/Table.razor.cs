@@ -51,7 +51,7 @@ namespace AntDesign
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
         [Parameter]
-        public Func<RowData<TItem>, bool> RowSelectable { get; set; } = _ => true;
+        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
 
         [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
@@ -340,7 +340,7 @@ namespace AntDesign
 
             if (_outerSelectedRows != null)
             {
-                _selectedRows = GetAllItemsByTopLevelItems(_showItems).Intersect(_outerSelectedRows).ToHashSet();
+                _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
                 if (_selectedRows.Count != _outerSelectedRows.Count())
                 {
                     SelectedRowsChanged.InvokeAsync(_selectedRows);
@@ -420,6 +420,7 @@ namespace AntDesign
                 Parent = null
             })).Select(x => x.Data);
             if (onlySelectable) result = result.Where(x => RowSelectable(x));
+            return result.ToHashSet();
 
             IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
             {
@@ -436,7 +437,7 @@ namespace AntDesign
                                 Parent = x1
                             }).Where(x2 => !ancestors.Contains(x2.Data) && x2.Data?.Equals(x1.Data) == false));
                         })
-                    ).ToHashSet();
+                    ).ToList();
             }
         }
 

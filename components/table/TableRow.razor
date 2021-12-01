@@ -26,9 +26,6 @@ else if (IsHeader)
 @code {
     bool _blockColumns = false;
 
-    [CascadingParameter(Name = "AntDesign.TableRow.Table")]
-    public ITable Table { get; set; }
-
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 

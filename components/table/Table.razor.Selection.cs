@@ -32,6 +32,11 @@ namespace AntDesign
 
         private void RowDataSelectedChanged(RowData<TItem> rowData, bool selected)
         {
+            if (!RowSelectable(rowData.Data))
+            {
+                rowData.SetSelected(!selected);
+                return;
+            }
             if (_preventRowDataSelectedChangedCallback) return;
             if (selected)
             {
@@ -65,13 +70,13 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllItemsByTopLevelItems(_showItems).Count();
+        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllItemsByTopLevelItems(_showItems, true).Count();
 
         bool ITable.AnySelected => _selectedRows.Count > 0;
 
         public void SelectAll()
         {
-            _selectedRows = GetAllItemsByTopLevelItems(_showItems).ToHashSet();
+            _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
             foreach (var rowData in _rowDatas)
@@ -118,7 +123,6 @@ namespace AntDesign
                 throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
             }
 
-            _selectedRows.Clear();
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
             _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
