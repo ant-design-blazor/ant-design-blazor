@@ -1,4 +1,4 @@
-﻿<Table DataSource="data" ScrollY="240px" PageSize="10000" TreeChildren="x => x.Children" Virtualizing="true">
+﻿<Table DataSource="data" ScrollY="240px" PageSize="10000" Virtualizing="true">
     <Selection />
     <Column @bind-Field="@context.Name" Width="400" />
     <Column @bind-Field="@context.Age" Width="150" />
@@ -13,33 +13,13 @@
         public int Age { get; set; }
 
         public string Address { get; set; }
-
-        public List<Column> Children { get; set; }
     }
 
     Column[] data = Enumerable.Range(0, 100000).Select(i => new Column()
     {
         Name = $"Edward King {i}",
         Age = 32,
-        Address = $"Edward King {i}",
-        Children = new ()
-        {
-            new Column()
-            {
-                Name = $"Edward King {i} - 1",
-                Age = 32,
-                Address = $"Edward King {i} - 1",
-                Children = new()
-                {
-                    new Column()
-                    {
-                        Name = $"Edward King {i} - 1 - 1",
-                        Age = 32,
-                        Address = $"Edward King {i} - 1 - 1"
-                    }
-                }
-            }
-        }
+        Address = $"Edward King {i}"
     }).ToArray();
 
 }
