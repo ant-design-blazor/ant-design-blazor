@@ -73,9 +73,9 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private void OnRowDataExpandedChanged(RowData rowData, bool selected)
+    private void OnRowDataExpandedChanged(RowData rowData, bool expanded)
     {
-        RowDataExpandedChanged?.Invoke(rowData as RowData<TItem>, selected);
+        RowDataExpandedChanged?.Invoke(rowData as RowData<TItem>, expanded);
         InvokeAsync(StateHasChanged);
     }
 

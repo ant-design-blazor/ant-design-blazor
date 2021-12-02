@@ -241,8 +241,12 @@ Func<Table<TItem>, int, ExpandedRowsDictionary, RenderFragment<(TItem data, int 
         else rowIndex = tuple.index + 1;
         var data = tuple.data;
         bool selected = table.SelectedRows.Contains(data);
-        bool expanded = expandedRows?.ContainsKey(data) == true ? expandedRows[data].expanded : table.DefaultExpandAllRows;
-        var expandedChildren = expandedRows?.ContainsKey(data) == true ? expandedRows[data].children : null;
+        if (!expandedRows.ContainsKey(data))
+        {
+            expandedRows.Add(data, (table.DefaultExpandAllRows, new()));
+        }
+        bool expanded = expandedRows[data].expanded;
+        var expandedChildren = expandedRows[data].children;
         var childrenData = table.TreeChildren(data);
         var hasChildren = childrenData?.Any() == true;
         <TableRowDataProvider @key="data" Data="data" Expanded="expanded" Selected="selected" HasChildren="hasChildren"

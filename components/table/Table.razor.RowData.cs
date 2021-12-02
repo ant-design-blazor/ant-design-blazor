@@ -37,7 +37,7 @@ namespace AntDesign
             //var needInvokeChange = deletedCaches.Any(x => x.Value.Selected);
             //deletedCaches.ForEach(x => _dataSourceCache.Remove(x));
 
-            //_selection?.StateHasChanged();
+            _selection?.StateHasChanged();
 
             //if (needInvokeChange)
             //{
