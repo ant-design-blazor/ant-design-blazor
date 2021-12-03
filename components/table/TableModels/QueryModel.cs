@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AntDesign.TableModels
 {
@@ -30,14 +30,16 @@ namespace AntDesign.TableModels
             this.FilterModel = new List<ITableFilterModel>();
         }
 
+#if NET5_0_OR_GREATER
         [JsonConstructor]
-        public QueryModel(int pageIndex, int pageSize, List<ITableSortModel> sortModel, List<ITableFilterModel> filterModel)
+        public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
         {
             this.PageIndex = pageIndex;
             this.PageSize = pageSize;
             this.SortModel = sortModel;
             this.FilterModel = filterModel;
         }
+#endif
     }
 
     public class QueryModel<TItem> : QueryModel
@@ -46,10 +48,12 @@ namespace AntDesign.TableModels
         {
         }
 
+#if NET5_0_OR_GREATER
         [JsonConstructor]
-        public QueryModel(int pageIndex, int pageSize, List<ITableSortModel> sortModel, List<ITableFilterModel> filterModel) : base(pageIndex, pageSize, sortModel, filterModel)
+        public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel) : base(pageIndex, pageSize, sortModel, filterModel)
         {
         }
+#endif
 
         internal void AddSortModel(ITableSortModel model)
         {

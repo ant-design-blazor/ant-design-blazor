@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using AntDesign.FilterExpression;
-using Newtonsoft.Json;
 
 namespace AntDesign.TableModels
 {
@@ -28,14 +28,15 @@ namespace AntDesign.TableModels
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
+#if NET5_0_OR_GREATER
         [JsonConstructor]
-        public FilterModel(string fieldName, List<string> selectedValues, List<TableFilter> filters)
+        public FilterModel(string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters)
         {
             this.FieldName = fieldName;
             this.SelectedValues = selectedValues;
             this.Filters = filters;
         }
-
+#endif
         public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {
             this._getFieldExpression = getFieldExpression;

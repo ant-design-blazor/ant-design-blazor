@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using AntDesign.Internal;
-using Newtonsoft.Json;
 
 namespace AntDesign.TableModels
 {
@@ -33,7 +33,7 @@ namespace AntDesign.TableModels
             this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
         }
-
+#if NET5_0_OR_GREATER
         [JsonConstructor]
         public SortModel(int priority, string fieldName, string sort)
         {
@@ -41,7 +41,7 @@ namespace AntDesign.TableModels
             this.FieldName = fieldName;
             _sortDirection = SortDirection.Parse(sort);
         }
-
+#endif
         void ITableSortModel.SetSortDirection(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;

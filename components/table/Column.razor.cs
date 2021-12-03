@@ -460,12 +460,14 @@ namespace AntDesign
             else
                 _filters = FilterModel.Filters;
             _hasFilterSelected = true;
+            StateHasChanged();
         }
 
         void IFieldColumn.SetSortModel(SortModel<string> sortModel)
         {
             SortModel = sortModel;
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
+            StateHasChanged();
         }
     }
 }
