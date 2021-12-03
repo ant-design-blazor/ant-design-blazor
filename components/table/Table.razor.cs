@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable, ITable<TItem>, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -186,10 +186,6 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
-        ICollection<RowData<TItem>> _rowDatas = new List<RowData<TItem>>();
-
-        ICollection<RowData<TItem>> ITable<TItem>.RowDatas => _rowDatas;
-
         /// <summary>
         /// This method will be called when all columns have been set
         /// </summary>
@@ -225,7 +221,7 @@ namespace AntDesign
         {
             PageIndex = 1;
 
-            //FlushCache();
+            FlushCache();
 
             this.InternalReload();
 
@@ -351,11 +347,6 @@ namespace AntDesign
                 _selectedRows?.Clear();
             }
 
-            foreach (var item in _expandedRows.Keys.Except(_showItems).ToArray())
-            {
-                _expandedRows.Remove(item);
-            }
-
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
@@ -407,7 +398,7 @@ namespace AntDesign
 
             InitializePagination();
 
-            //FlushCache();
+            FlushCache();
         }
 
         private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)

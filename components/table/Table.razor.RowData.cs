@@ -7,19 +7,21 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        //private IDictionary<int, RowData<TItem>> _dataSourceCache = new Dictionary<int, RowData<TItem>>();
+        private IDictionary<TItem, RowData<TItem>> _dataSourceCache;
+        private Dictionary<TItem, List<RowData<TItem>>> _allRowDataCache = new();
 
-        //private void FlushCache()
-        //{
-        //    if (_dataSourceCache == null)
-        //    {
-        //        _dataSourceCache = new Dictionary<int, RowData<TItem>>();
-        //    }
-        //    else
-        //    {
-        //        _dataSourceCache.Clear();
-        //    }
-        //}
+        private void FlushCache()
+        {
+            if (_dataSourceCache == null)
+            {
+                _dataSourceCache = new Dictionary<TItem, RowData<TItem>>();
+            }
+            else
+            {
+                _dataSourceCache.Clear();
+            }
+            _allRowDataCache.Clear();
+        }
 
         //int[] ITable.GetSelectedCacheKeys()
         //{

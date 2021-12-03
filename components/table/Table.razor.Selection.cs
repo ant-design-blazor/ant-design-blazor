@@ -49,10 +49,7 @@ namespace AntDesign
             if (!_preventChangeRowDataWithSameData)
             {
                 _preventRowDataSelectedChangedCallback = true;
-                foreach (var rowDataWithSameData in
-                    _rowDatas.Where(
-                        x => x != rowData &&
-                        EqualityComparer<TItem>.Default.Equals(x.Data, rowData.Data)))
+                foreach (var rowDataWithSameData in _allRowDataCache[rowData.Data])
                 {
                     rowDataWithSameData.Selected = selected;
                 }
@@ -79,9 +76,12 @@ namespace AntDesign
             _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
-            foreach (var rowData in _rowDatas)
+            foreach (var rowDataList in _allRowDataCache.Values)
             {
-                rowData.Selected = true;
+                foreach (var rowData in rowDataList)
+                {
+                    rowData.Selected = true;
+                }
             }
             _preventRowDataTriggerSelectedRowsChanged = false;
             _preventChangeRowDataWithSameData = false;
@@ -97,9 +97,12 @@ namespace AntDesign
             _selectedRows.Clear();
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
-            foreach (var rowData in _rowDatas)
+            foreach (var rowDataList in _allRowDataCache.Values)
             {
-                rowData.Selected = false;
+                foreach (var rowData in rowDataList)
+                {
+                    rowData.Selected = false;
+                }
             }
             _preventRowDataTriggerSelectedRowsChanged = false;
             _preventChangeRowDataWithSameData = false;

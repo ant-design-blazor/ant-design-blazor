@@ -1,0 +1,51 @@
+﻿@namespace AntDesign.Internal
+@typeparam TItem
+@implements IDisposable
+@using AntDesign.TableModels
+
+<CascadingValue Value="RowData" Name="RowData" ChildContent="ChildContent" />
+
+@code {
+    //[CascadingParameter(Name = "RowData")]
+    //public RowData<TItem> ParentRowData { get; set; }
+
+    [Parameter]
+    public RowData<TItem> RowData { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Action<RowData<TItem>, bool> RowDataSelectedChanged { get; set; }
+
+    [Parameter]
+    public Action<RowData<TItem>, bool> RowDataExpandedChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        RowData.SelectedChanged += OnRowDataSelectedChanged;
+        RowData.ExpandedChanged += OnRowDataExpandedChanged;
+    }
+
+    protected override void OnParametersSet()
+    {
+    }
+
+    private void OnRowDataSelectedChanged(RowData rowData, bool selected)
+    {
+        RowDataSelectedChanged?.Invoke(rowData as RowData<TItem>, selected);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnRowDataExpandedChanged(RowData rowData, bool expanded)
+    {
+        RowDataExpandedChanged?.Invoke(rowData as RowData<TItem>, expanded);
+        InvokeAsync(StateHasChanged);
+    }
+
+    void IDisposable.Dispose()
+    {
+        RowData.SelectedChanged -= OnRowDataSelectedChanged;
+        RowData.ExpandedChanged -= OnRowDataExpandedChanged;
+    }
+}

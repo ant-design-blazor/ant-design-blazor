@@ -10,6 +10,8 @@ namespace AntDesign.TableModels
 
         internal RowData<TItem> Parent { get; set; }
 
+        internal IDictionary<TItem, RowData<TItem>> Children { get; set; } = new Dictionary<TItem, RowData<TItem>>();
+
         public RowData(int rowIndex, int pageIndex, TItem data)
         {
             this.RowIndex = rowIndex;

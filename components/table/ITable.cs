@@ -65,9 +65,4 @@ namespace AntDesign
 
         internal void OnColumnInitialized();
     }
-
-    public interface ITable<TItem> : ITable
-    {
-        internal ICollection<RowData<TItem>> RowDatas { get; }
-    }
 }
