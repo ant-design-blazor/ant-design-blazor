@@ -8,32 +8,13 @@ namespace AntDesign.TableModels
     {
         public TItem Data { get; set; }
 
-        internal RowData<TItem> Parent { get; set; }
-
-        internal IDictionary<TItem, RowData<TItem>> Children { get; set; } = new Dictionary<TItem, RowData<TItem>>();
+        internal Dictionary<TItem, RowData<TItem>> Children { get; set; } = new();
 
         public RowData(int rowIndex, int pageIndex, TItem data)
         {
             this.RowIndex = rowIndex;
             this.PageIndex = pageIndex;
             this.Data = data;
-        }
-
-        public RowData()
-        {
-        }
-
-        public RowData<TItem>[] GetAllAncestors()
-        {
-            List<RowData<TItem>> ancestors = new();
-            var parent = Parent;
-            while (parent != null)
-            {
-                ancestors.Add(parent);
-                parent = parent.Parent;
-            }
-            ancestors.Reverse();
-            return ancestors.ToArray();
         }
     }
 

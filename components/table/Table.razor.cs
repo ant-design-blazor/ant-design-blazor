@@ -334,17 +334,26 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
-            if (_outerSelectedRows != null)
+            if (!_preventRender)
             {
-                _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
-                if (_selectedRows.Count != _outerSelectedRows.Count())
+                if (_outerSelectedRows != null)
                 {
-                    SelectedRowsChanged.InvokeAsync(_selectedRows);
+                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
+                    if (_selectedRows.Count != _outerSelectedRows.Count())
+                    {
+                        SelectedRowsChanged.InvokeAsync(_selectedRows);
+                    }
                 }
-            }
-            else
-            {
-                _selectedRows?.Clear();
+                else
+                {
+                    _selectedRows?.Clear();
+                }
+
+                foreach (var item in _dataSourceCache.Keys.Except(_showItems).ToArray())
+                {
+                    _dataSourceCache.Remove(item);
+                }
+                _allRowDataCache.Clear();
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
@@ -549,10 +558,6 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.Dispose();
-            //foreach (var rowData in _dataSourceCache.Values)
-            //{
-            //    rowData.SelectedChanged -= this.RowDataSelectedChanged;
-            //}
             base.Dispose(disposing);
         }
 

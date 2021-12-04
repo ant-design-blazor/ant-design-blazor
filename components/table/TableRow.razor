@@ -1,18 +1,15 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@implements ITableRow
 @typeparam TItem
 @using AntDesign.TableModels
 
 @if (IsBody)
 {
-    <CascadingValue Value="_blockColumns" Name="AntDesign.Column.Blocked">
-        <tr @attributes="RowAttributes"
-            data-row-key="@(RowData.RowIndex-1)" 
-            class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
-            @ChildContent
-        </tr>
-    </CascadingValue>
+    <tr @attributes="RowAttributes"
+        data-row-key="@(RowData.RowIndex-1)" 
+        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
+        @ChildContent
+    </tr>
 }
 else if (IsHeader)
 {
@@ -21,11 +18,7 @@ else if (IsHeader)
     </tr>
 }
 
-@{ _blockColumns = false; }
-
 @code {
-    bool _blockColumns = false;
-
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
@@ -37,12 +30,6 @@ else if (IsHeader)
 
     [CascadingParameter(Name = "RowData")]
     public RowData<TItem> RowData { get; set; }
-
-    [CascadingParameter(Name = "AntDesign.TableRow.RowIndexOfCurrentPage")]
-    public int RowIndexOfCurrentPage { get; set; }
-
-    [CascadingParameter(Name = "AntDesign.TableRow.Data")]
-    public TItem Data { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowAttributes")]
     public Dictionary<string, object> RowAttributes { get; set; }

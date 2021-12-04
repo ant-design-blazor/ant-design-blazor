@@ -49,8 +49,6 @@ namespace AntDesign
 
         internal void ReloadAndInvokeChange();
 
-        //internal int[] GetSelectedCacheKeys();
-
         internal void HasFixLeft();
 
         internal void HasFixRight();

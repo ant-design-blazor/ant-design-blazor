@@ -1,7 +1,7 @@
 ---
 order: 32
 title:
-  en-US: Virtualizing
+  en-US: Virtualization
   zh-CN: 虚拟化
 ---
 

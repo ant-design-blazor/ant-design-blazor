@@ -160,7 +160,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
     </colgroup>
 </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment> body = 
+Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
 @<Template>
     @if (table._total <= 0)
@@ -207,13 +207,16 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                 Expanded = table.DefaultExpandAllRows
             };
             rowDataCache[data] = rowData;
-            if (!table._allRowDataCache.ContainsKey(data))
-            {
-                table._allRowDataCache.Add(data, new());
-            }
-            table._allRowDataCache[data].Add(rowData);
         }
         var currentRowData = rowDataCache[data];
+        if (!table._allRowDataCache.ContainsKey(data))
+        {
+            table._allRowDataCache.Add(data, new());
+        }
+        if (!table._allRowDataCache[data].Contains(currentRowData))
+        {
+            table._allRowDataCache[data].Add(currentRowData);
+        }
         var childrenData = table.TreeChildren(data);
         var hasChildren = childrenData?.Any() == true;
         var childrenRowDataCache = currentRowData.Children;
@@ -223,9 +226,7 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
         currentRowData.PageIndex = table.PageIndex;
         currentRowData.SetSelected(selected);
 
-        <TableRowWrapper RowData="currentRowData"
-                          RowDataSelectedChanged="table.RowDataSelectedChanged"
-                          RowDataExpandedChanged="table.RowDataExpandedChanged">
+        <TableRowWrapper RowData="currentRowData" RowDataSelectedChanged="table.RowDataSelectedChanged">
             @{
                 var rowAttributes = table.OnRow?.Invoke(currentRowData);
                 if (table.OnRowClick.HasDelegate)

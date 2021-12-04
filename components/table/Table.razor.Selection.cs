@@ -17,7 +17,6 @@ namespace AntDesign
             set
             {
                 _outerSelectedRows = value;
-                //_selectedRows = _dataSource.Intersect(value).ToList();
             }
         }
 
@@ -32,12 +31,12 @@ namespace AntDesign
 
         private void RowDataSelectedChanged(RowData<TItem> rowData, bool selected)
         {
+            if (_preventRowDataSelectedChangedCallback) return;
             if (!RowSelectable(rowData.Data))
             {
                 rowData.SetSelected(!selected);
                 return;
             }
-            if (_preventRowDataSelectedChangedCallback) return;
             if (selected)
             {
                 _selectedRows.Add(rowData.Data);
@@ -49,9 +48,12 @@ namespace AntDesign
             if (!_preventChangeRowDataWithSameData)
             {
                 _preventRowDataSelectedChangedCallback = true;
-                foreach (var rowDataWithSameData in _allRowDataCache[rowData.Data])
+                if (_allRowDataCache.ContainsKey(rowData.Data))
                 {
-                    rowDataWithSameData.Selected = selected;
+                    foreach (var rowDataWithSameData in _allRowDataCache[rowData.Data])
+                    {
+                        rowDataWithSameData.Selected = selected;
+                    }
                 }
                 _preventRowDataSelectedChangedCallback = false;
             }
