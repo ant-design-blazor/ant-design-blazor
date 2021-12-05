@@ -8,7 +8,7 @@ namespace AntDesign.Docs.Desktop.Photino
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient(sp => new HttpClient()
+            services.AddTransient(sp => new HttpClient(new HttpHandler())
             {
                 DefaultRequestHeaders =
                 {
