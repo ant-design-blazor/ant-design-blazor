@@ -8,6 +8,7 @@ using System.Reflection;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
 
 namespace AntDesign
 {
@@ -451,7 +452,13 @@ namespace AntDesign
 
         void IFieldColumn.SetFilterModel(FilterModel<string> filterModel)
         {
+            foreach (var filter in filterModel.Filters)
+            {
+                filter.Value = GetObjectFromJsonElement((JsonElement)filter.Value);
+            }
+
             FilterModel = filterModel;
+
             if (_columnFilterType == TableFilterType.List)
                 _filters.Where(filter => FilterModel.Filters.Select(f => f.Text)
                                                             .ToList()
@@ -459,8 +466,41 @@ namespace AntDesign
                         .ForEach(filter => filter.Selected = true);
             else
                 _filters = FilterModel.Filters;
+
             _hasFilterSelected = true;
             StateHasChanged();
+        }
+
+        /// <summary>
+        /// System.Text.Json deserialize 'object' type into 'JsonElement', so value inside filter is needed to convert to object
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private object GetObjectFromJsonElement(JsonElement value)
+        {
+            object result = null;
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.Null:
+                    result = null;
+                    break;
+                case JsonValueKind.Number:
+                    result = value.GetDouble();
+                    break;
+                case JsonValueKind.False:
+                    result = false;
+                    break;
+                case JsonValueKind.True:
+                    result = true;
+                    break;
+                case JsonValueKind.Undefined:
+                    result = null;
+                    break;
+                case JsonValueKind.String:
+                    result = value.GetString();
+                    break;
+            }
+            return result;
         }
 
         void IFieldColumn.SetSortModel(SortModel<string> sortModel)
