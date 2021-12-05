@@ -15,9 +15,24 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 - 需要对输入的数据类型进行校验时。
 
 ## API
-(Help Wanted)
-
-
+### From
+| 名称 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| Layout | 表单布局 | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
+| LabelCol | label 标签布局，同 \<Col\> 组件，设置 span offset 值 | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) | - |
+| LabelColSpan | 等同于LabelCol.Span | int | - |
+| LabelColOffset | 等同于LabelCol.Offset | int | - |
+| WrapperCol | 需要为输入控件设置布局样式时，使用该属性，用法同 labelCol | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) | - |
+| WrapperColSpan | 等同于WrapperCol.Span | int | - |
+| WrapperColOffset | 等同于WrapperCol.Offset | int | - |
+| Size | 设置字段组件的尺寸（仅限 antd 组件）|  small \| middle \| large | middle |
+| Name | 表单名称，会作为表单字段 id 前缀使用 | string | - |
+| Model | 操作的泛型对象 | T | - |
+| Loading | 表单是否处于加载中 | bool | false |
+| OnFinish | 提交事件 | EventCallback<EditContext> | - |
+| OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback<EditContext> | - |
+| ValidateOnChange | 是否在更改时校验 | bool | false |
+### FromItem
 ### Rules
 Rules 支持接收 FormValidationRule[] 进行配置
 
