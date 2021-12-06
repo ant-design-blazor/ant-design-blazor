@@ -94,7 +94,7 @@ var validateMessages = new FormValidateErrorMessages {
   // ...
 };
 
-var formConfig = new FromConfig {
+var formConfig = new FormConfig {
     ValidateMessages = validateMessages
 }
 
