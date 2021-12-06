@@ -28,174 +28,171 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\contributions.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\contributions.json">
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\contributions.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\contributions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\country-economy.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\country-economy.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\country-economy.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\country-economy.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\emissions.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\emissions.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\emissions.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\emissions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\fireworks-sales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\fireworks-sales.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\fireworks-sales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\fireworks-sales.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\GDP.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\GDP.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\GDP.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\GDP.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\IMDB.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\IMDB.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\IMDB.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\IMDB.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\income.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\income.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\income.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\income.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\jobpaying.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\jobpaying.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\jobpaying.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\jobpaying.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\oil.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\oil.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\oil.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\oil.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\sales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\sales.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\sales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\sales.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\smoking-rate.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\smoking-rate.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\smoking-rate.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\smoking-rate.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\chartsdata\subsales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\subsales.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\chartsdata\subsales.json" Link="wwwroot\_content\AntDesign.Docs\chartsdata\subsales.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\css\docs.aliyun.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.aliyun.css">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\css\docs.aliyun.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.aliyun.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\css\docs.compact.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.compact.css">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\css\docs.compact.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.compact.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\css\docs.dark.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.dark.css">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\css\docs.dark.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.dark.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\css\docs.default.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.default.css">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\css\docs.default.css" Link="wwwroot\_content\AntDesign.Docs\css\docs.default.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\data\more-list.en-US.json" Link="wwwroot\_content\AntDesign.Docs\data\more-list.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\data\more-list.en-US.json" Link="wwwroot\_content\AntDesign.Docs\data\more-list.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\data\more-list.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\data\more-list.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\data\more-list.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\data\more-list.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\data\products.json" Link="wwwroot\_content\AntDesign.Docs\data\products.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\data\products.json" Link="wwwroot\_content\AntDesign.Docs\data\products.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\data\recommend.en-US.json" Link="wwwroot\_content\AntDesign.Docs\data\recommend.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\data\recommend.en-US.json" Link="wwwroot\_content\AntDesign.Docs\data\recommend.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\data\recommend.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\data\recommend.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\data\recommend.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\data\recommend.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\assets\dingtalk.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\dingtalk.jpg">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\assets\dingtalk.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\dingtalk.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\assets\news\attack-blazor.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\attack-blazor.jpg">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\assets\news\attack-blazor.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\attack-blazor.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\assets\news\blazor-07.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\blazor-07.jpg">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\assets\news\blazor-07.jpg" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\blazor-07.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\assets\news\reuse-tabs-demo.gif" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\reuse-tabs-demo.gif">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\assets\news\reuse-tabs-demo.gif" Link="wwwroot\_content\AntDesign.Docs\docs\assets\news\reuse-tabs-demo.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\CHANGELOG.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\CHANGELOG.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\CHANGELOG.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\CHANGELOG.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\CHANGELOG.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\CHANGELOG.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\CHANGELOG.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\CHANGELOG.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\contributing.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\contributing.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\contributing.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\contributing.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\contributing.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\contributing.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\contributing.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\contributing.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\faq.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\faq.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\faq.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\faq.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\faq.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\faq.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\faq.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\faq.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\getting-started.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\getting-started.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\getting-started.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\getting-started.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\getting-started.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\getting-started.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\getting-started.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\getting-started.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\i18n.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\i18n.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\i18n.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\i18n.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\i18n.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\i18n.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\i18n.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\i18n.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\introduce.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\introduce.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\introduce.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\introduce.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\introduce.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\introduce.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\introduce.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\introduce.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\member-path-helper.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\member-path-helper.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\member-path-helper.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\member-path-helper.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\member-path-helper.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\member-path-helper.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\member-path-helper.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\member-path-helper.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\nightly-build.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\nightly-build.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\nightly-build.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\nightly-build.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\nightly-build.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\nightly-build.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\nightly-build.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\nightly-build.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\path-based-property-access.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\path-based-property-access.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\path-based-property-access.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\path-based-property-access.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\path-based-property-access.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\path-based-property-access.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\path-based-property-access.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\path-based-property-access.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\test-kit.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\test-kit.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\test-kit.en-US.json" Link="wwwroot\_content\AntDesign.Docs\docs\test-kit.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\docs\test-kit.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\test-kit.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\docs\test-kit.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\docs\test-kit.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\home_bg.png" Link="wwwroot\_content\AntDesign.Docs\home_bg.png">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\home_bg.png" Link="wwwroot\_content\AntDesign.Docs\home_bg.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\components.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\components.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\components.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\components.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\components.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\components.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\components.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\components.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\demos.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\demos.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\demos.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\demos.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\demos.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\demos.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\demos.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\demos.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\demoTypes.json" Link="wwwroot\_content\AntDesign.Docs\meta\demoTypes.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\demoTypes.json" Link="wwwroot\_content\AntDesign.Docs\meta\demoTypes.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\docs.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\docs.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\docs.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\docs.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\docs.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\docs.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\docs.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\docs.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\menu.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\menu.en-US.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\menu.en-US.json" Link="wwwroot\_content\AntDesign.Docs\meta\menu.en-US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AntDesign.Docs\wwwroot\meta\menu.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\menu.zh-CN.json">
+    </None>
+    <None Include="..\AntDesign.Docs\wwwroot\meta\menu.zh-CN.json" Link="wwwroot\_content\AntDesign.Docs\meta\menu.zh-CN.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
+    </None>
     <None Include="..\..\components\wwwroot\js\ant-design-blazor.js" Link="wwwroot\_content\AntDesign\js\ant-design-blazor.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
