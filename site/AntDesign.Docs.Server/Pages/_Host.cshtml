@@ -19,7 +19,23 @@
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-
+    @{
+#if NET5_0_OR_GREATER
+        var polyfillPath = "_framework/blazor.polyfill.min.js";
+#else
+        var polyfillPath = "https://cdn.jsdelivr.net/gh/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
+#endif
+#if NET6_0
+        var isNET6 = true;
+#else
+        var isNET6 = false;
+#endif
+        if (isNET6)
+        {
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
+        }
+    }
+    <script src="@polyfillPath"></script>    
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
@@ -37,5 +53,9 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    @if (!isNET6)
+    {
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
+    }
 </body>
 </html>
