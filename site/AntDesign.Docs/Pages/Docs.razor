@@ -5,7 +5,7 @@
         @if (_file != null)
         {
             var title = $"{_file.Title} - Ant Design of Blazor";
-            <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@title" />
+            <PageTitle>@title</PageTitle>
             <h1>
                 @_file.Title
                 <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
