@@ -1,5 +1,11 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 using Photino.Blazor;
 
 namespace AntDesign.Docs.Desktop.Photino
@@ -22,6 +28,13 @@ namespace AntDesign.Docs.Desktop.Photino
 
         public void Configure(DesktopApplicationBuilder app)
         {
+            var jsRuntime = app.Services.GetService<IJSRuntime>() as JSRuntime;
+            var jsonOptionsOfJSRuntime = (JsonSerializerOptions)typeof(JSRuntime).GetProperty(
+                "JsonSerializerOptions",
+                BindingFlags.NonPublic | BindingFlags.Instance).GetValue(jsRuntime);
+            var converter = new ElementReferenceJsonConverter(
+                new WebElementReferenceContext(jsRuntime));
+            jsonOptionsOfJSRuntime.Converters.Add(converter);
             app.AddComponent<App>("app");
         }
     }
