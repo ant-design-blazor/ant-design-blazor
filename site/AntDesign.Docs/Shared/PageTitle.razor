@@ -1,0 +1,18 @@
+﻿@inject IJSRuntime JS
+
+<title @ref="_titleRef">@ChildContent</title>
+
+@code {
+    private ElementReference _titleRef;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync(JSInteropConstants.AddElementTo, _titleRef, "head", true);
+        }
+    }
+}

@@ -12,11 +12,12 @@ export class manipulationHelper {
     document.body.removeChild(element);
   }
 
-  static addElementTo(addElement, elementSelector): boolean {
+  static addElementTo(addElement, elementSelector, prepend = false): boolean {
     let parent = domInfoHelper.get(elementSelector);
     if (parent && addElement) {
       if (parent instanceof Node && addElement instanceof Node) {
-        parent.appendChild(addElement);
+        if (prepend) parent.insertBefore(addElement, parent.firstChild);
+        else parent.appendChild(addElement);
         return true;
       } else {
         console.log("does not implement node", parent, addElement);
