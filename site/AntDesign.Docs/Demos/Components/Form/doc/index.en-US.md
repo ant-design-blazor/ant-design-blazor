@@ -87,8 +87,8 @@ var validateMessages = new FormValidateErrorMessages {
 ```
 
 Besides, [ConfigProvider](Demo TODO) also provides a global configuration scheme that allows for uniform configuration error notification templates:
-
 ```csharp
+//in App.Razor
 var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is Required!",
   // ...
@@ -99,7 +99,16 @@ var formConfig = new FormConfig {
 }
 
 <ConfigProvider Form="formConfig">
-  <Form />
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
 </ConfigProvider>;
 ```
 
