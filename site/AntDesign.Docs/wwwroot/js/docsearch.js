@@ -1,6 +1,6 @@
 window.AntDesign.DocSearch = {
     instance: {},
-    init: locale => {
+    init: function (locale) {
         if (!docsearch) {
             return;
         }
@@ -10,9 +10,9 @@ window.AntDesign.DocSearch = {
             indexName: 'ant-design-blazor-docs',
             appId: 'C9UTAZSOWW',
             inputSelector: '#search-box input',
-            algoliaOptions: { facetFilters: [`tags:${lang}`] },
-            transformData(hits) {
-                hits.forEach(hit => {
+            algoliaOptions: { facetFilters: ['tags:' + lang] },
+            transformData: function (hits) {
+                hits.forEach(function(hit) {
                     hit.url = hit.url.replace('antblazor.com', window.location.host);
                     hit.url = hit.url.replace('https:', window.location.protocol);
                 });
@@ -21,11 +21,11 @@ window.AntDesign.DocSearch = {
             debug: false
         });
     },
-    localeChange: locale => {
+    localeChange: function (locale) {
         if (!docsearch || !window.AntDesign.DocSearch.instance) {
             return;
         }
         const lang = locale === 'zh-CN' ? 'cn' : 'en';
-        window.AntDesign.DocSearch.instance.algoliaOptions.facetFilters = [`tags:${lang}`]
+        window.AntDesign.DocSearch.instance.algoliaOptions.facetFilters = ['tags:' + lang]
     }
 };

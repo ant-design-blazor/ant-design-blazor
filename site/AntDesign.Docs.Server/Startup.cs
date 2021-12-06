@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+#if NET5_0_OR_GREATER
+using Blazor.Polyfill.Server;
+#endif
 
 namespace AntDesign.Docs.Server
 {
@@ -32,6 +35,9 @@ namespace AntDesign.Docs.Server
             });
 
             services.AddAntDesignDocs();
+#if NET5_0_OR_GREATER
+            services.AddBlazorPolyfill();
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +55,9 @@ namespace AntDesign.Docs.Server
             }
 
             app.UseHttpsRedirection();
+#if NET5_0_OR_GREATER
+            app.UseBlazorPolyfill();
+#endif
             app.UseStaticFiles();
 
             app.UseRouting();
