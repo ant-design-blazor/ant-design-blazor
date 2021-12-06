@@ -29,8 +29,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | Name | 表单名称，会作为表单字段 id 前缀使用 | string | - |
 | Model | 操作的泛型对象 | T | - |
 | Loading | 表单是否处于加载中 | bool | false |
-| OnFinish | 提交事件 | EventCallback<EditContext> | - |
-| OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback<EditContext> | - |
+| OnFinish | 提交事件 | EventCallback\<EditContext\> | - |
+| OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
 | ValidateOnChange | 是否在更改时校验 | bool | false |
 ### FromItem
 | 名称 | 说明 | 类型 | 默认值 |
