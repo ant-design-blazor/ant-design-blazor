@@ -14,14 +14,14 @@ namespace AntDesign.Docs.Desktop.Photino
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient(sp => new HttpClient(new HttpHandler())
+            services.AddScoped<HttpHandler>();
+            services.AddHttpClient("Default", client =>
             {
-                DefaultRequestHeaders =
-                {
-                    // Use to call the github API on server side
-                    {"User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36 Edg/81.0.416.68"}
-                }
-            });
+                client.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36 Edg/81.0.416.68");
+            }).AddHttpMessageHandler<HttpHandler>();
+            services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Default"));
 
             services.AddAntDesignDocs();
         }
