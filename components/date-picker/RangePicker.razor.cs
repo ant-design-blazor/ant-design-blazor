@@ -149,11 +149,11 @@ namespace AntDesign
                 array.SetValue(changeValue, index);
 
                 ChangePickerValue(changeValue, index);
-
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
+                OnValueNotifiedChange(FieldIdentifier);
+                //if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                //{
+                //    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                //}
 
                 StateHasChanged();
             }
@@ -454,11 +454,11 @@ namespace AntDesign
                     DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
                 });
             }
-
-            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-            {
-                EditContext?.NotifyFieldChanged(FieldIdentifier);
-            }
+            OnValueNotifiedChange(FieldIdentifier);
+            //if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            //{
+            //    EditContext?.NotifyFieldChanged(FieldIdentifier);
+            //}
         }
 
         public override void ClearValue(int index = -1, bool closeDropdown = true)
