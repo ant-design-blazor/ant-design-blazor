@@ -107,7 +107,10 @@ namespace AntDesign
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
         /// </summary>
-        protected EditContext EditContext { get; set; }
+        //[CascadingParameter]
+        //protected EditContext EditContext { get; set; }
+        [CascadingParameter] 
+        private EditContext? CascadedEditContext { get; set; }
 
         /// <summary>
         /// Gets the <see cref="FieldIdentifier"/> for the bound value.
@@ -129,10 +132,11 @@ namespace AntDesign
 
                     ValueChanged.InvokeAsync(value);
 
-                    if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                    {
-                        EditContext?.NotifyFieldChanged(FieldIdentifier);
-                    }
+                    OnValueNotifiedChange(FieldIdentifier);
+                    //if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                    //{
+                    //    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                    //}
                 }
             }
         }
@@ -166,28 +170,33 @@ namespace AntDesign
                 {
                     parsingFailed = true;
 
-                    if (EditContext != null)
+                    if (CascadedEditContext != null)
                     {
                         if (_parsingValidationMessages == null)
                         {
-                            _parsingValidationMessages = new ValidationMessageStore(EditContext);
+                            _parsingValidationMessages = new ValidationMessageStore(CascadedEditContext);
                         }
 
                         _parsingValidationMessages.Add(FieldIdentifier, validationErrorMessage);
 
                         // Since we're not writing to CurrentValue, we'll need to notify about modification from here
-                        EditContext.NotifyFieldChanged(FieldIdentifier);
+                        CascadedEditContext.NotifyFieldChanged(FieldIdentifier);
                     }
                 }
 
                 // We can skip the validation notification if we were previously valid and still are
-                if ((parsingFailed || _previousParsingAttemptFailed) && EditContext != null)
+                if ((parsingFailed || _previousParsingAttemptFailed) && CascadedEditContext != null)
                 {
-                    EditContext.NotifyValidationStateChanged();
+                    CascadedEditContext.NotifyValidationStateChanged();
                     _previousParsingAttemptFailed = parsingFailed;
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets the current validation state value of the input.
+        /// </summary>
+        public bool IsValid { get; set; }
 
         private TValue _firstValue;
         protected bool _isNotifyFieldChanged = true;
@@ -199,7 +208,10 @@ namespace AntDesign
         /// </summary>
         protected AntInputComponentBase()
         {
-            _validationStateChangedHandler = (sender, eventArgs) => StateHasChanged();
+            _validationStateChangedHandler = (sender, eventArgs) =>
+            {
+                StateHasChanged();
+            };
         }
 
         /// <summary>
@@ -266,6 +278,14 @@ namespace AntDesign
         {
         }
 
+        protected void OnValueNotifiedChange(FieldIdentifier fieldIdentifier)
+        {
+            if (_isNotifyFieldChanged || (Form?.ValidateOnChange == true))
+            {
+                CascadedEditContext?.NotifyFieldChanged(fieldIdentifier);
+            }
+        }
+
         protected override void OnInitialized()
         {
             _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
@@ -282,7 +302,7 @@ namespace AntDesign
         {
             parameters.SetParameterProperties(this);
 
-            if (EditContext == null)
+            if (CascadedEditContext == null)
             {
                 // This is the first run
                 // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
@@ -297,16 +317,10 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                EditContext = Form?.EditContext;
-                if (ValuesExpression == null)
-                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
-                else
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
-
-                EditContext.OnValidationStateChanged += _validationStateChangedHandler;
+                CascadedEditContext = Form?.EditContext;
+                CascadedEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
-            else if (Form?.EditContext != EditContext)
+            else if (Form?.EditContext != CascadedEditContext)
             {
                 // Not the first run
 
@@ -314,8 +328,18 @@ namespace AntDesign
                 //already have all events transferred from original EditContext. The
                 //transfer is done in Form.BuildEditContext() method. State is lost
                 //though.
-                EditContext = Form?.EditContext;
+                CascadedEditContext = Form?.EditContext;
             }
+
+            if(FieldIdentifier.Model == null || string.IsNullOrEmpty(FieldIdentifier.FieldName))
+            {
+                if (ValuesExpression == null)
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                else
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+            }
+
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.
             return base.SetParametersAsync(ParameterView.Empty);
@@ -323,9 +347,9 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (EditContext != null)
+            if (CascadedEditContext != null)
             {
-                EditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+                CascadedEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
             }
 
             Form?.RemoveControl(this);
