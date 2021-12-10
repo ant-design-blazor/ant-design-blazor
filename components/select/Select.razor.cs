@@ -438,10 +438,11 @@ namespace AntDesign
             {
                 _valueHasChanged = false;
                 OnValueChange(_selectedValue);
-                if (Form?.ValidateOnChange == true)
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
+                //if (Form?.ValidateOnChange == true)
+                //{
+                //    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                //}
+                OnValueNotifiedChange(FieldIdentifier);
             }
             base.OnParametersSet();
         }
