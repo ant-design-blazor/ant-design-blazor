@@ -1,15 +1,20 @@
 ﻿import { manipulationHelper } from "../../../../../components/core/JsInterop/modules/dom/manipulationHelper";
 import { expect } from "chai";
+import { JSDOM } from 'jsdom';
+import { Guid } from "../../domInit";
+
 
 describe("domManipulationHelper", () => {
   it("body should add a new child dom to body and then remove it from body", () => {
     //act
     const ele = document.createElement("div");
-    const id = "id-r-" + 1e4 + Math.random() * 9e4;
+    const id = Guid.randomId();
     ele.setAttribute("id", id);
     manipulationHelper.addElementToBody(ele);
+    console.log("document.body.lastChild", document.body.lastChild)
+    
     //assert
-    expect(document.body.lastChild as HTMLElement).to.equal(ele);
+    expect(document.body.lastChild).to.equal(ele);
 
     manipulationHelper.delElementFromBody(ele);
     //assert
@@ -17,18 +22,18 @@ describe("domManipulationHelper", () => {
   });
 
   it("body should add a new child dom to a container dom and then remove it from the container dom", () => {
-    const container = document.createElement("div");
-    const containerId = "id-container-r-" + 1e4 + Math.random() * 9e4;
+    const container: HTMLDivElement = document.createElement("div");
+    const containerId = Guid.randomId("container");
     container.setAttribute("id", containerId);
     manipulationHelper.addElementToBody(container);
 
     const ele = document.createElement("div");
-    const id = "id-r-" + 1e4 + Math.random() * 9e4;
+    const id = Guid.randomId();
     ele.setAttribute("id", id);
     manipulationHelper.addElementTo(ele, container);
 
     //assert
-    expect(container.querySelector("#" + id)).to.not.equal(null);
+    expect(container.lastChild).to.equal(ele);
 
     manipulationHelper.delElementFrom(ele, container);
     //assert
@@ -38,12 +43,12 @@ describe("domManipulationHelper", () => {
 
   it("body should add a new child dom to a container dom as prepend insert", () => {
     const container = document.createElement("div");
-    const containerId = "id-container-r-" + 1e4 + Math.random() * 9e4;
+    const containerId = Guid.randomId("container");
     container.setAttribute("id", containerId);
     manipulationHelper.addElementToBody(container);
 
     const ele = document.createElement("div");
-    const id = "id-r-" + 1e4 + Math.random() * 9e4;
+    const id = Guid.randomId();
     ele.setAttribute("id", id);
     manipulationHelper.addElementTo(ele, container, true);
 
@@ -53,7 +58,7 @@ describe("domManipulationHelper", () => {
 
   it("a attribute must be set to a dom", () => {
     const attributes = {
-      class:"cls-r-" + 1e4 + Math.random() * 9e4
+      class:"cls-r-" + Guid.randomId()
     }
     manipulationHelper.setDomAttribute(document.body, attributes);
     
