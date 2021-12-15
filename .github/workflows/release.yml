@@ -26,6 +26,11 @@ jobs:
         with:
           dotnet-version: 5.0.100
 
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.101
+
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -40,7 +45,7 @@ jobs:
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet pack src/AntDesign.Components.Authentication/AntDesign.Components.Authentication.csproj /p:PackageVersion=$VERSION -c Release -o publish
-          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+          dotnet nuget push 'publish/*.nupkg' -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
