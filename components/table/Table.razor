@@ -204,7 +204,7 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
         {
             var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
             {
-                Expanded = table.DefaultExpandAllRows
+                Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
             };
             rowDataCache[data] = rowData;
         }

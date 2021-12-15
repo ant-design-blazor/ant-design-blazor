@@ -47,6 +47,14 @@ namespace AntDesign
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
+        /// <summary>
+        /// The max expand level when use DefaultExpandAllRows.
+        /// This attribute is used to avoid endless loop when the tree records have circular reference.
+        /// The default value is 4.
+        /// </summary>
+        [Parameter]
+        public int DefaultExpandMaxLevel { get; set; } = 4;
+
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
@@ -349,11 +357,15 @@ namespace AntDesign
                     _selectedRows?.Clear();
                 }
 
-                foreach (var item in _dataSourceCache.Keys.Except(_showItems).ToArray())
+                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
+                if (removedCacheItems.Length > 0)
                 {
-                    _dataSourceCache.Remove(item);
+                    foreach (var item in removedCacheItems)
+                    {
+                        _dataSourceCache.Remove(item);
+                    }
+                    _allRowDataCache.Clear();
                 }
-                _allRowDataCache.Clear();
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);

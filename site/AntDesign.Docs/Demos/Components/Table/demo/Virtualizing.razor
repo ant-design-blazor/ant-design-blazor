@@ -1,4 +1,10 @@
-﻿<Table DataSource="data" ScrollY="500px" PageSize="10000" Virtualizing="true">
+﻿<Space>
+    <SpaceItem>
+        <Button OnClick="LoadData">Load data</Button>
+    </SpaceItem>
+</Space>
+
+<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" Virtualizing>
     <Selection />
     <Column @bind-Field="@context.Name" Width="400" />
     <Column @bind-Field="@context.Age" Width="150" />
@@ -6,7 +12,7 @@
 </Table>
 
 @code {
-    class Column
+    class Data
     {
         public string Name { get; set; }
 
@@ -15,11 +21,17 @@
         public string Address { get; set; }
     }
 
-    Column[] data = Enumerable.Range(0, 10000).Select(i => new Column()
-    {
-        Name = $"Edward King {i}",
-        Age = 32,
-        Address = $"Edward King {i}"
-    }).ToArray();
+    Data[] data = Array.Empty<Data>();
 
+    int pageSize = 10000;
+
+    void LoadData()
+    {
+        data = Enumerable.Range(0, 10000).Select(i => new Data()
+        {
+            Name = $"Edward King {i}",
+            Age = 32,
+            Address = $"Edward King {i}'s address"
+        }).ToArray();
+    }
 }
