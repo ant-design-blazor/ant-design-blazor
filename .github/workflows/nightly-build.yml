@@ -1,4 +1,4 @@
-﻿name: Publish Docs
+﻿name: Nightly Build
 
 env:
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
@@ -10,7 +10,7 @@ on:
       - feature
 
 jobs:
-  publish-and-deploy:
+  nightly-build:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
 
@@ -25,10 +25,15 @@ jobs:
         with:
           dotnet-version: 3.1.300
 
-      - name: Setup .NET Core 5.0
+      - name: Setup .NET 5
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.101
 
       - uses: actions/setup-node@v1
         with:
@@ -40,26 +45,26 @@ jobs:
           dotnet test --collect:"XPlat Code Coverage"
           find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
 
-      - name: Upload coverage to Codecov 
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage.cobertura.xml
           fail_ci_if_error: false
 
-      - name: 'Get Last Release'
+      - name: "Get Last Release"
         id: previoustag
         run: |
           LAST_VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
           echo "Last Version: ${LAST_VERSION}"
           echo "::set-output name=previous_tag::${LAST_VERSION}"
 
-      - name: 'Get Next Semantic Version'
+      - name: "Get Next Semantic Version"
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.previous_tag }}
 
-      - name: 'Get Next Version'
+      - name: "Get Next Version"
         id: get_next_version
         run: |
           current_branch=$(git symbolic-ref --short -q HEAD)
@@ -90,7 +95,7 @@ jobs:
           dotnet pack src/AntDesign.Components.Authentication/AntDesign.Components.Authentication.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
           next_version: ${{ steps.get_next_version.outputs.next_version }}
-     
+
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
@@ -99,7 +104,7 @@ jobs:
           retention-days: 5
 
       - name: Push to MyGet package registry
-        run: dotnet nuget push ./publish/*.nupkg --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push './publish/*.nupkg' --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
 
       - name: Sync to Gitee 💕
         uses: wearerequired/git-mirror-action@master
@@ -124,4 +129,3 @@ jobs:
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
-
