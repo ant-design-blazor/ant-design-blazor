@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <TargetFrameworks>net5;net6</TargetFrameworks>
-
   <PropertyGroup>
+    <TargetFrameworks>net5;net6</TargetFrameworks>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
