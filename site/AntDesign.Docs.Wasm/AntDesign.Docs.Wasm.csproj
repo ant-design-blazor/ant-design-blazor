@@ -1,12 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup Condition="$(EnableAOT) == 'true'">
-    <TargetFrameworks>net5;net6</TargetFrameworks>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="$(EnableAOT) != 'true'">
-    <TargetFramework>net5</TargetFramework>
-  </PropertyGroup>
+  <TargetFrameworks>net5;net6</TargetFrameworks>
 
   <PropertyGroup>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
