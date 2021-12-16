@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.300
-          
+
       - name: Setup .NET 5
         uses: actions/setup-dotnet@v1
         with:
@@ -26,7 +26,7 @@ jobs:
       - name: Setup .NET 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: 6.0.101
 
       - uses: actions/setup-node@v1
         with:
@@ -46,7 +46,7 @@ jobs:
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
           find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
 
-      - name: Upload coverage to Codecov 
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           files: ./coverage.cobertura.xml,./cobertura-coverage.xml
