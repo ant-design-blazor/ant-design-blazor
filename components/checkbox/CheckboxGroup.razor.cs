@@ -147,6 +147,26 @@ namespace AntDesign
                     }
                 });
             }
+            else
+            {
+                var invokeChange = false;
+
+                _checkboxItems.ForEach(x =>
+                {
+                    var checkBoxValue = x.Label.IsIn(value);
+                    if (checkBoxValue != x.Value)
+                    {
+                        invokeChange = true;
+                        x.SetValue(checkBoxValue);
+                        OnCheckboxChange(x, false);
+                    }
+                });
+
+                if (invokeChange)
+                {
+                    InvokeValueChange();
+                }
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -198,8 +218,9 @@ namespace AntDesign
         /// Called when [checkbox change].
         /// </summary>
         /// <param name="checkbox">The checkbox.</param>
+        /// <param name="invokeOnChange">Flag for whether or not to depart for a change event.</param>
         /// <returns></returns>
-        internal void OnCheckboxChange(Checkbox checkbox)
+        internal void OnCheckboxChange(Checkbox checkbox, bool invokeOnChange = true)
         {
             var index = _checkboxItems.IndexOf(checkbox);
             int indexOffset;
@@ -234,7 +255,16 @@ namespace AntDesign
                 }
             });
 
-            CurrentValue = _currentValue();
+            if (invokeOnChange)
+            {
+                CurrentValue = _currentValue();
+
+                InvokeValueChange();
+            }
+        }
+
+        private void InvokeValueChange()
+        {
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(CurrentValue);
