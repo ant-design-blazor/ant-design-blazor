@@ -316,13 +316,18 @@ namespace AntDesign
             get => _checkedKeys;
             set
             {
-                if (!value.SequenceEqual(_checkedKeys))
+                if (value == null)
                 {
-                    foreach (var item in ChildNodes)
-                    {
-                        item.SetChecked(value.Contains(item.Key));
-                    }
+                    _checkedKeys = Array.Empty<string>();
+                }
+                else if (!value.SequenceEqual(_checkedKeys))
+                {
                     _checkedKeys = value;
+                }
+
+                foreach (var item in ChildNodes)
+                {
+                    item.SetChecked(_checkedKeys.Contains(item.Key));
                 }
             }
         }
@@ -416,13 +421,20 @@ namespace AntDesign
 
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { m.Expand(true); m.Matched = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
+
             if (SearchExpression != null)
             {
                 searchDatas = allList.Where(x => SearchExpression(x)).ToList();
             }
-            else if (!string.IsNullOrEmpty(_searchValue))
+            else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
                 searchDatas = allList.Where(x => x.Title.Contains(_searchValue)).ToList();
             }
@@ -430,7 +442,7 @@ namespace AntDesign
             if (searchDatas != null && searchDatas.Any())
                 exceptList = allList.Except(searchDatas).ToList();
 
-            if (exceptList != null || searchDatas != null)
+            if (exceptList?.Any() == true || searchDatas?.Any() == true)
             {
                 exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
                 searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
