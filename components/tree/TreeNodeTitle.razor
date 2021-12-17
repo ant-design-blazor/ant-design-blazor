@@ -1,6 +1,9 @@
 ﻿@namespace AntDesign
 @inherits ComponentBase
 @typeparam TItem
+
+@using System.Text.RegularExpressions;
+
 @if (CanDraggable)
 {
     <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
@@ -39,8 +42,9 @@
                 else if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
                     var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    var regex = new Regex(TreeComponent.SearchValue);
                     <span>
-                        @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
+                        @((MarkupString)regex.Replace(SelfNode.Title,value,1))
                     </span>
                 }
                 else
@@ -95,8 +99,9 @@ else
                 @if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
                     var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    var regex = new Regex(TreeComponent.SearchValue);
                     <span>
-                        @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
+                        @((MarkupString)regex.Replace(SelfNode.Title,value,1))
                     </span>
                 }
                 else
