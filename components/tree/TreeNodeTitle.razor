@@ -36,9 +36,9 @@
                 {
                     @SelfNode.TitleTemplate
                 }
-                else if (SelfNode.Matched)
+                else if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
-                    var value = $"<span Style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
+                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
                     <span>
                         @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
                     </span>
