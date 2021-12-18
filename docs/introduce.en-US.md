@@ -57,7 +57,6 @@ WebAssembly static hosting examples:
 
 > From .NET 5, IE 11 is no longer officially supported. See [Blazor: Updated browser support](https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/blazor-browser-support-updated). Unofficial support is provided by [Blazor.Polyfill](https://github.com/Daddoon/Blazor.Polyfill) community project.
 
-
 ## 💿 Current Version
 
 - Release: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
