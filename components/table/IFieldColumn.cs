@@ -24,8 +24,8 @@ namespace AntDesign
 
         internal void ClearFilters();
 
-        internal void SetFilterModel(FilterModel<string> filterModel);
+        internal void SetFilterModel(ITableFilterModel filterModel);
 
-        internal void SetSortModel(SortModel<string> sortModel);
+        internal void SetSortModel(ITableSortModel sortModel);
     }
 }

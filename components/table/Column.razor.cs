@@ -450,22 +450,23 @@ namespace AntDesign
 
         void IFieldColumn.ClearFilters() => ResetFilters();
 
-        void IFieldColumn.SetFilterModel(FilterModel<string> filterModel)
+        void IFieldColumn.SetFilterModel(ITableFilterModel filterModel)
         {
             foreach (var filter in filterModel.Filters)
             {
-                filter.Value = GetObjectFromJsonElement((JsonElement)filter.Value);
+                if (filter.Value is JsonElement)
+                    filter.Value = GetObjectFromJsonElement((JsonElement)filter.Value);
             }
 
-            FilterModel = filterModel;
-
             if (_columnFilterType == TableFilterType.List)
-                _filters.Where(filter => FilterModel.Filters.Select(f => f.Text)
+                _filters.Where(filter => filterModel.Filters.Select(f => f.Text)
                                                             .ToList()
                                                             .Contains(filter.Text))
                         .ForEach(filter => filter.Selected = true);
             else
-                _filters = FilterModel.Filters;
+                _filters = filterModel.Filters;
+
+            FilterModel = new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType);
 
             _hasFilterSelected = true;
             StateHasChanged();
@@ -478,34 +479,53 @@ namespace AntDesign
         /// <returns></returns>
         private object GetObjectFromJsonElement(JsonElement value)
         {
-            object result = null;
-            switch (value.ValueKind)
+            if (_columnDataType == typeof(DateTime))
+                return value.GetDateTime();
+            else if (_columnDataType.IsEnum)
             {
-                case JsonValueKind.Null:
-                    result = null;
-                    break;
-                case JsonValueKind.Number:
-                    result = value.GetDouble();
-                    break;
-                case JsonValueKind.False:
-                    result = false;
-                    break;
-                case JsonValueKind.True:
-                    result = true;
-                    break;
-                case JsonValueKind.Undefined:
-                    result = null;
-                    break;
-                case JsonValueKind.String:
-                    result = value.GetString();
-                    break;
+                if (value.ValueKind == JsonValueKind.Number)
+                    return Enum.Parse(THelper.GetUnderlyingType<TData>(), value.GetInt32().ToString());
+                else
+                    return Enum.Parse(THelper.GetUnderlyingType<TData>(), value.GetString());
             }
-            return result;
+            else if (_columnDataType == typeof(byte))
+                return value.GetByte();
+            else if (_columnDataType == typeof(decimal))
+                return value.GetDecimal();
+            else if (_columnDataType == typeof(double))
+                return value.GetDouble();
+            else if (_columnDataType == typeof(short))
+                return value.GetInt16();
+            else if (_columnDataType == typeof(int))
+                return value.GetInt32();
+            else if (_columnDataType == typeof(long))
+                return value.GetInt64();
+            else if (_columnDataType == typeof(sbyte))
+                return value.GetSByte();
+            else if (_columnDataType == typeof(float))
+                return value.GetSingle();
+            else if (_columnDataType == typeof(ushort))
+                return value.GetUInt16();
+            else if (_columnDataType == typeof(uint))
+                return value.GetUInt32();
+            else if (_columnDataType == typeof(ulong))
+                return value.GetUInt64();
+            else if (_columnDataType == typeof(Guid))
+                return value.GetGuid();
+            else if (_columnDataType == typeof(bool))
+            {
+                if (value.ValueKind == JsonValueKind.True)
+                    return true;
+                else
+                    return false;
+            }
+            else
+                return value.GetString();
         }
 
-        void IFieldColumn.SetSortModel(SortModel<string> sortModel)
+        void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
-            SortModel = sortModel;
+            SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
             StateHasChanged();
         }

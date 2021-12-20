@@ -261,13 +261,13 @@ namespace AntDesign
                 if (queryModel.FilterModel.Any(x => x.FieldName.Equals(fieldColumn.FieldName)))
                 {
                     var filter = queryModel.FilterModel.Where(x => x.FieldName.Equals(fieldColumn.FieldName)).First();
-                    fieldColumn.SetFilterModel((FilterModel<string>)filter);
+                    fieldColumn.SetFilterModel(filter);
                 }
 
-                fieldColumn.SetSortModel((SortModel<string>)column);
+                fieldColumn.SetSortModel(column);
             }
 
-            this.ReloadAndInvokeChange((QueryModel<TItem>)queryModel);
+            this.ReloadAndInvokeChange();
         }
 
         public void ResetData()
@@ -345,7 +345,7 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
-            var queryModel = this.InternalReload(BuildQueryModel());
+            var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
             {
@@ -353,19 +353,10 @@ namespace AntDesign
             }
         }
 
-        private void ReloadAndInvokeChange(QueryModel<TItem> newQueryModel)
+        private QueryModel<TItem> InternalReload()
         {
-            var queryModel = this.InternalReload(newQueryModel);
-            StateHasChanged();
-            if (OnChange.HasDelegate)
-            {
-                OnChange.InvokeAsync(queryModel);
-            }
-        }
-
-        private QueryModel<TItem> InternalReload(QueryModel<TItem> queryModel)
-        {
-            _currentQueryModel = queryModel;
+            var queryModel = BuildQueryModel();
+            _currentQueryModel = BuildQueryModel();
 
             if (ServerSide)
             {
@@ -544,7 +535,7 @@ namespace AntDesign
                 _waitingDataSourceReload = false;
                 if (_hasInitialized)
                 {
-                    InternalReload(BuildQueryModel());
+                    InternalReload();
                 }
             }
 
