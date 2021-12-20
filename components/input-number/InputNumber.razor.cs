@@ -76,9 +76,12 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
-
+        
+        /// <summary>
+        /// Callback when value is inputed
+        /// </summary>
         [Parameter]
-        public bool UpdateOnInput { get; set; }
+        public EventCallback<TValue> OnInput { get; set; }
 
         private readonly bool _isNullable;
         private bool _hasDefaultValue;
@@ -408,13 +411,13 @@ namespace AntDesign
             await FocusAsync(Ref);
         }
 
-        private async Task OnInput(ChangeEventArgs args)
+        private async Task OnInputAsync(ChangeEventArgs args)
         {
             _inputString = args.Value?.ToString();
-            if (UpdateOnInput && _inputString != null)
+            if (OnInput.HasDelegate)
             {
-                await ConvertNumberAsync(_inputString);
-                _inputString = null;
+                var num = GetValueFromString(_inputString);
+                await OnInput.InvokeAsync(num);
             }
         }
 
@@ -463,6 +466,21 @@ namespace AntDesign
             {
                 await OnChange.InvokeAsync(value);
             }
+        }
+
+        private TValue GetValueFromString(string inputString)
+        {
+            _ = TryParseValueFromString(inputString, out TValue num, out _);
+            if (_greaterThanFunc(num, Max))
+                num = Max;
+            else if (_greaterThanFunc(Min, num))
+                num = Min;
+            if (_roundFunc != null)
+            {
+                num = _decimalPlaces.HasValue ? _roundFunc(num, _decimalPlaces.Value) : num;
+            }
+            
+            return num;
         }
 
         private string GetIconClass(string direction)
