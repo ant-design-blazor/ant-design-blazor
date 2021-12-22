@@ -240,11 +240,11 @@ namespace AntDesign
 
                     _ = OnValuesChangeAsync(default);
                 }
-                OnValueNotifiedChange(FieldIdentifier);
-                //if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
-                //{
-                //    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                //}
+
+                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
             }
         }
 
