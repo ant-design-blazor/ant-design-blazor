@@ -464,7 +464,7 @@ namespace AntDesign
                 if (_debounceTimer != null)
                 {
                     await _debounceTimer.DisposeAsync();
-
+                    
                     _debounceTimer = null;
                 }
             }
@@ -659,7 +659,6 @@ namespace AntDesign
 
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
-                //input
 
                 if (Suffix != null)
                 {
