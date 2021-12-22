@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 using System;
@@ -325,7 +325,14 @@ namespace AntDesign
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Skips internal filtering of Select when Search is enabled. Useful when loading items from a remote source
+        /// where the results may not contain the actual search text
+        /// </summary> 
+        [Parameter]
+        public bool SkipSearchFiltering { get; set; }
+    
         #endregion Parameters
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
@@ -1197,25 +1204,28 @@ namespace AntDesign
             }
 
             //_inputWidth = string.IsNullOrEmpty(_searchValue) ? InputDefaultWidth : $"{4 + _searchValue.Length * 8}px";
-
-            if (containsToken)
+            if (!SkipSearchFiltering)
             {
-                await TokenizeSearchedPhrase(_searchValue);
-            }
-
-            if (!string.IsNullOrWhiteSpace(_searchValue))
-            {
-                FilterOptionItems(_searchValue);
-            }
-            else
-            {
-                SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
-                if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
+                if (containsToken)
                 {
-                    SelectOptionItems.Remove(CustomTagSelectOptionItem);
-                    CustomTagSelectOptionItem = null;
+                    await TokenizeSearchedPhrase(_searchValue);
+                }
+
+                if (!string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    FilterOptionItems(_searchValue);
+                }
+                else
+                {
+                    SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
+                    if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
+                    {
+                        SelectOptionItems.Remove(CustomTagSelectOptionItem);
+                        CustomTagSelectOptionItem = null;
+                    }
                 }
             }
+            
             OnSearch?.Invoke(_searchValue);
         }
 

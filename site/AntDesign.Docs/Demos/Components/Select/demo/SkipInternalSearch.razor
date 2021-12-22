@@ -1,0 +1,71 @@
+<Select
+    @bind-Value="@_selectedValue"
+    Placeholder="Select a person"
+    EnableSearch
+    OnBlur="OnBlur"
+    OnFocus="OnFocus"
+    OnSelectedItemChanged="OnSelectedItemChangedHandler"
+    OnSearch="OnSearch"
+    SkipSearchFiltering
+    TItem="Person"
+    TItemValue="Person">
+
+    <SelectOptions>
+        @foreach (var item in FilteredPersons)
+        {
+            <SelectOption @key="@item.Value" TItemValue="Person" TItem="Person" Value=@item Label=@item.Name/>
+        }
+    </SelectOptions>
+</Select>
+<br/><br/>
+<p>
+    Selected Value: @_selectedValue?.Name <br/>
+    Selected Item Name: @_selectedItem?.Name
+</p>
+
+@code
+{
+    class Person
+    {
+        public string Value { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Person> _persons;
+    Person _selectedValue;
+    Person _selectedItem;
+
+    List<Person> FilteredPersons => string.IsNullOrWhiteSpace(_search) ? _persons : _persons.Where(p => !p.Name.StartsWith(_search)).ToList();
+    private string _search = "";
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person>
+        {
+            new Person { Value = "jack", Name = "Jack" },
+            new Person { Value = "lucy", Name = "Lucy" },
+            new Person { Value = "tom", Name = "Tom" }
+        };
+    }
+
+    private void OnSelectedItemChangedHandler(Person value)
+    {
+        _selectedItem = value;
+        Console.WriteLine($"selected: ${value?.Name}");
+    }
+
+    private void OnBlur()
+    {
+        Console.WriteLine("blur");
+    }
+
+    private void OnFocus()
+    {
+        Console.WriteLine("focus");
+    }
+
+    private void OnSearch(string value)
+    {
+        _search = value;
+    }
+}
