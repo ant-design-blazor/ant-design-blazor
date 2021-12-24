@@ -90,8 +90,12 @@ namespace AntDesign
                 radio.SetName(Name);
             }
             _radioItems.Add(radio);
-            radio.SetDisabledValue(_disabled);
-            OnDisabledValueChanged += radio.SetDisabledValue;
+            // If the current radio has been already disabled, this radio group won't sync the value of `Disabled`.
+            if (!radio.Disabled)
+            {
+                radio.SetDisabledValue(_disabled);
+                OnDisabledValueChanged += radio.SetDisabledValue;
+            }
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
                 await radio.Select();
@@ -123,25 +127,20 @@ namespace AntDesign
 
         internal async Task OnRadioChange(TValue value)
         {
-            if (!EqualsValue(this.CurrentValue, value))
+            var oldValue = CurrentValue;
+            // If the current value changes, it will invoke `ValueChanged` among property-set method.
+            CurrentValue = value;
+            // Have to check equal again in order to decide whether invoking `OnChange` or not.
+            if (!EqualsValue(oldValue, CurrentValue))
             {
-                this.CurrentValue = value;
-
-                await this.ValueChanged.InvokeAsync(value);
-
-                if (this.OnChange.HasDelegate)
+                if (OnChange.HasDelegate)
                 {
-                    await this.OnChange.InvokeAsync(value);
+                    await OnChange.InvokeAsync(value);
                 }
             }
         }
 
         private static bool EqualsValue(TValue left, TValue right)
-        {
-            if (left != null) return left.Equals(right);
-            if (right != null) return right.Equals(left);
-            if (left == null && right == null) return true;
-            return false;
-        }
+            => EqualityComparer<TValue>.Default.Equals(left, right);
     }
 }
