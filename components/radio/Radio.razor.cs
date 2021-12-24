@@ -19,7 +19,11 @@ namespace AntDesign
         public bool RadioButton { get; set; }
 
         [Parameter]
-        public bool Checked { get => _checked ?? false; set { _checked = value; } }
+        public bool Checked
+        {
+            get => _checked.GetValueOrDefault();
+            set => _checked = value;
+        }
 
         [Parameter]
         public bool DefaultChecked
@@ -47,13 +51,11 @@ namespace AntDesign
         [CascadingParameter(Name = "InGroup")]
         public bool InGroup { get; set; }
 
-        private ClassMapper _radioClassMapper = new ClassMapper();
-        private ClassMapper _inputClassMapper = new ClassMapper();
-        private ClassMapper _innerClassMapper = new ClassMapper();
+        private readonly ClassMapper _radioClassMapper = new();
+        private readonly ClassMapper _inputClassMapper = new();
+        private readonly ClassMapper _innerClassMapper = new();
 
         private ElementReference _inputRef;
-
-        private bool IsChecked => _checked ?? this.Checked;
 
         private bool? _checked;
 
@@ -69,18 +71,18 @@ namespace AntDesign
             ClassMapper
                 .If($"{prefixCls}-wrapper", () => !RadioButton)
                 .If($"{prefixCls}-button-wrapper", () => RadioButton)
-                .If($"{prefixCls}-wrapper-checked", () => IsChecked && !RadioButton)
-                .If($"{prefixCls}-button-wrapper-checked", () => IsChecked && RadioButton)
+                .If($"{prefixCls}-wrapper-checked", () => Checked && !RadioButton)
+                .If($"{prefixCls}-button-wrapper-checked", () => Checked && RadioButton)
                 .If($"{prefixCls}-wrapper-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton)
                 .If($"{prefixCls}-button-wrapper-rtl", () => RTL);
 
             _radioClassMapper
                 .If(prefixCls, () => !RadioButton)
-                .If($"{prefixCls}-checked", () => IsChecked && !RadioButton)
+                .If($"{prefixCls}-checked", () => Checked && !RadioButton)
                 .If($"{prefixCls}-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button", () => RadioButton)
-                .If($"{prefixCls}-button-checked", () => IsChecked && RadioButton)
+                .If($"{prefixCls}-button-checked", () => Checked && RadioButton)
                 .If($"{prefixCls}-button-disabled", () => Disabled && RadioButton)
                 .If($"{prefixCls}-rtl", () => RTL);
 
@@ -135,7 +137,7 @@ namespace AntDesign
 
         internal async Task Select()
         {
-            if (!Disabled && !IsChecked)
+            if (!Checked)
             {
                 this._checked = true;
                 await CheckedChange.InvokeAsync(true);
@@ -145,7 +147,7 @@ namespace AntDesign
 
         internal async Task UnSelect()
         {
-            if (!Disabled && this.IsChecked)
+            if (Checked)
             {
                 this._checked = false;
                 await CheckedChange.InvokeAsync(false);
