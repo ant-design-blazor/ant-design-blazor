@@ -1,10 +1,12 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
-using System;
-using AntDesign.Docs.Localization;
 
 namespace AntDesign.Docs.Shared
 {
@@ -20,6 +22,22 @@ namespace AntDesign.Docs.Shared
                 {
                     _filePath = value;
                     _waitForRefresh = true;
+                    _avatarList = Array.Empty<AvatarInfo>();
+                }
+            }
+        }
+
+        [Parameter]
+        public List<string> FilePaths
+        {
+            get => _filePaths;
+            set
+            {
+                if (_filePaths == null || value?.SequenceEqual(_filePaths) != true)
+                {
+                    _filePaths = value;
+                    _waitForRefresh = true;
+                    _avatarList = Array.Empty<AvatarInfo>();
                 }
             }
         }
@@ -31,6 +49,7 @@ namespace AntDesign.Docs.Shared
         [Inject] private ILanguageService LanguageService { get; set; }
 
         private AvatarInfo[] _avatarList;
+        private List<string> _filePaths;
         private string _filePath;
         private bool _waitForRefresh;
 
@@ -54,17 +73,34 @@ namespace AntDesign.Docs.Shared
 
         private async void OnLocationChanged(object _, LocationChangedEventArgs e)
         {
-            await GetContributors();
+            if (_waitForRefresh)
+            {
+                _waitForRefresh = false;
+                await GetContributors();
+            }
         }
 
         private async Task GetContributors()
         {
-            if (FilePath == null)
+            if (FilePath == null && FilePaths?.Any() != true)
                 return;
 #if DEBUG
             _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
 #else
-            _avatarList = await HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={FilePath}&owner=ant-design-blazor&repo=ant-design-blazor");
+            if (FilePath != null)
+            {
+                _avatarList = await HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={FilePath}&owner=ant-design-blazor&repo=ant-design-blazor");
+            }
+            else
+            {
+                var taskList = new List<Task<AvatarInfo[]>>();
+                foreach (var filePath in FilePaths)
+                {
+                    taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
+                }
+                await Task.WhenAll(taskList);
+                _avatarList = taskList.Select(x => x.Result.AsEnumerable()).Aggregate((x, y) => x.Union(y)).ToArray();
+            }
 #endif
             StateHasChanged();
         }
@@ -74,7 +110,7 @@ namespace AntDesign.Docs.Shared
             Navigation.LocationChanged -= OnLocationChanged;
         }
 
-        public class AvatarInfo
+        public struct AvatarInfo
         {
             public string Username { get; set; }
             public string Url { get; set; }
