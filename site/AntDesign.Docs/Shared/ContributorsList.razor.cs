@@ -13,21 +13,6 @@ namespace AntDesign.Docs.Shared
     public partial class ContributorsList : ComponentBase, IDisposable
     {
         [Parameter]
-        public string FilePath
-        {
-            get => _filePath;
-            set
-            {
-                if (_filePath != value)
-                {
-                    _filePath = value;
-                    _waitForRefresh = true;
-                    _avatarList = Array.Empty<AvatarInfo>();
-                }
-            }
-        }
-
-        [Parameter]
         public List<string> FilePaths
         {
             get => _filePaths;
@@ -50,7 +35,6 @@ namespace AntDesign.Docs.Shared
 
         private AvatarInfo[] _avatarList;
         private List<string> _filePaths;
-        private string _filePath;
         private bool _waitForRefresh;
 
         protected override async Task OnInitializedAsync()
@@ -82,25 +66,18 @@ namespace AntDesign.Docs.Shared
 
         private async Task GetContributors()
         {
-            if (FilePath == null && FilePaths?.Any() != true)
+            if (FilePaths?.Any() != true)
                 return;
 #if DEBUG
             _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
 #else
-            if (FilePath != null)
+            var taskList = new List<Task<AvatarInfo[]>>();
+            foreach (var filePath in FilePaths)
             {
-                _avatarList = await HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={FilePath}&owner=ant-design-blazor&repo=ant-design-blazor");
+                taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
             }
-            else
-            {
-                var taskList = new List<Task<AvatarInfo[]>>();
-                foreach (var filePath in FilePaths)
-                {
-                    taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
-                }
-                await Task.WhenAll(taskList);
-                _avatarList = taskList.Select(x => x.Result.AsEnumerable()).Aggregate((x, y) => x.Union(y)).ToArray();
-            }
+            await Task.WhenAll(taskList);
+            _avatarList = taskList.Select(x => x.Result.AsEnumerable()).Aggregate((x, y) => x.Union(y)).ToArray();
 #endif
             StateHasChanged();
         }
