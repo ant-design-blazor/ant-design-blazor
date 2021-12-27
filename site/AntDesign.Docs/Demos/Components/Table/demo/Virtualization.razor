@@ -4,7 +4,7 @@
     </SpaceItem>
 </Space>
 
-<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" Virtualizing>
+<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" EnableVirtualization>
     <Selection />
     <Column @bind-Field="@context.Name" Width="400" />
     <Column @bind-Field="@context.Age" Width="150" />

@@ -147,11 +147,13 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; } = true;
 
+#if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
         /// </summary>
         [Parameter]
-        public bool Virtualizing { get; set; }
+        public bool EnableVirtualization { get; set; }
+#endif
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }

@@ -174,7 +174,7 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
 #if NET5_0_OR_GREATER
-        if (table.Virtualizing && table.ScrollY != null)
+        if (table.EnableVirtualization && table.ScrollY != null)
         {
             <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
                                                                            ChildContent="table.bodyRow(table, level, rowDataCache)" />
