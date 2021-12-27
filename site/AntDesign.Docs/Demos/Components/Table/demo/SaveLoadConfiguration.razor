@@ -170,7 +170,8 @@
 
     void LoadTable()
     {
-        Table.ReloadData(SavedQueryModel);
+        if (SavedQueryModel is not null)
+            Table.ReloadData(SavedQueryModel);
     }
 
     void SaveTableWithJson()
@@ -180,12 +181,15 @@
 
     void LoadTableWithJson()
     {
-        var settings = new JsonSerializerOptions();
-        settings.Converters.Add(new SortModelConverter());
-        settings.Converters.Add(new FilterModelConverter());
-        QueryModel<Data> queryModel = JsonSerializer.Deserialize<QueryModel<Data>>(SavedQueryModelJson, settings);
+        if (SavedQueryModelJson is not null)
+        {
+            var settings = new JsonSerializerOptions();
+            settings.Converters.Add(new SortModelConverter());
+            settings.Converters.Add(new FilterModelConverter());
+            QueryModel<Data> queryModel = JsonSerializer.Deserialize<QueryModel<Data>>(SavedQueryModelJson, settings);
 
-        Table.ReloadData(queryModel);
+            Table.ReloadData(queryModel);
+        }
     }
 
     public class FilterModelConverter : JsonConverter<ITableFilterModel>

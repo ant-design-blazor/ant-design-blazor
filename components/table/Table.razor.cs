@@ -248,26 +248,29 @@ namespace AntDesign
 
         public void ReloadData(QueryModel queryModel)
         {
-            ChangePageIndex(queryModel.PageIndex);
-            ChangePageSize(queryModel.PageSize);
-
-            FlushCache();
-
-            foreach (var column in queryModel.SortModel)
+            if (queryModel is not null)
             {
-                List<IFieldColumn> fieldColumns = ColumnContext.HeaderColumns.Cast<IFieldColumn>().ToList();
-                IFieldColumn fieldColumn = fieldColumns.Where(x => x.FieldName.Equals(column.FieldName)).First();
+                ChangePageIndex(queryModel.PageIndex);
+                ChangePageSize(queryModel.PageSize);
 
-                if (queryModel.FilterModel.Any(x => x.FieldName.Equals(fieldColumn.FieldName)))
+                FlushCache();
+
+                foreach (var column in queryModel.SortModel)
                 {
-                    var filter = queryModel.FilterModel.Where(x => x.FieldName.Equals(fieldColumn.FieldName)).First();
-                    fieldColumn.SetFilterModel(filter);
+                    List<IFieldColumn> fieldColumns = ColumnContext.HeaderColumns.Cast<IFieldColumn>().ToList();
+                    IFieldColumn fieldColumn = fieldColumns.Where(x => x.FieldName.Equals(column.FieldName)).First();
+
+                    if (queryModel.FilterModel.Any(x => x.FieldName.Equals(fieldColumn.FieldName)))
+                    {
+                        var filter = queryModel.FilterModel.Where(x => x.FieldName.Equals(fieldColumn.FieldName)).First();
+                        fieldColumn.SetFilterModel(filter);
+                    }
+
+                    fieldColumn.SetSortModel(column);
                 }
 
-                fieldColumn.SetSortModel(column);
+                this.ReloadAndInvokeChange();
             }
-
-            this.ReloadAndInvokeChange();
         }
 
         public void ResetData()
