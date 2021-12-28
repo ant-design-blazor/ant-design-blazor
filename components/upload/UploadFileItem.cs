@@ -16,6 +16,8 @@ namespace AntDesign
 
         public string Url { get; set; }
 
+        public string ThumbUrl { get; set; }
+
         public string Response { get; set; }
 
         public UploadState State { get; set; }

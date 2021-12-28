@@ -41,7 +41,7 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string Action { get; set; }
-        
+
         [Parameter]
         public string Method { get; set; }
 
