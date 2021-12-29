@@ -68,7 +68,7 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePaths?.Any() != true)
                 return;
-#if false
+#if DEBUG
             _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
 #else
             var taskList = new List<Task<AvatarInfo[]>>();
