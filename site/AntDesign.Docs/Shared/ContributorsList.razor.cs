@@ -68,7 +68,7 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePaths?.Any() != true)
                 return;
-#if DEBUG
+#if false
             _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
 #else
             var taskList = new List<Task<AvatarInfo[]>>();
@@ -77,7 +77,7 @@ namespace AntDesign.Docs.Shared
                 taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
             }
             await Task.WhenAll(taskList);
-            _avatarList = taskList.Select(x => x.Result.AsEnumerable()).Aggregate((x, y) => x.Union(y)).ToArray();
+            _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
 #endif
             StateHasChanged();
         }
