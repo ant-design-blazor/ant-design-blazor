@@ -68,9 +68,6 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePaths?.Any() != true)
                 return;
-#if DEBUG
-            _avatarList = new AvatarInfo[] { new AvatarInfo() { Username = "ElderJames", Url = "https://avatars.githubusercontent.com/u/7550366?s=40&v=4" } };
-#else
             var taskList = new List<Task<AvatarInfo[]>>();
             foreach (var filePath in FilePaths)
             {
@@ -78,7 +75,6 @@ namespace AntDesign.Docs.Shared
             }
             await Task.WhenAll(taskList);
             _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
-#endif
             StateHasChanged();
         }
 
