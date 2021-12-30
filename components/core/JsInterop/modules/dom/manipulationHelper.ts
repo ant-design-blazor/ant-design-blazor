@@ -189,7 +189,7 @@ export class manipulationHelper {
     styleHelper.css(body,
       {
         "position": "relative",
-        "width": scrollBarSize > 0 ? "calc(100% - 17px)" : null,
+        "width": this.hasScrollbar() && scrollBarSize > 0 ? `calc(100% - ${scrollBarSize}px)` : null,
         "overflow": "hidden"
       });
     styleHelper.addCls(document.body, "ant-scrolling-effect");
