@@ -1,5 +1,5 @@
 ﻿<ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px;">
-    @if (_avatarList != null)
+    @if (_avatarList?.Any() == true)
     {
         @foreach (var item in _avatarList)
         {
@@ -10,6 +10,14 @@
                     </a>
                 </Unbound>
             </Tooltip>
+        }
+    }
+    else
+    {
+        for (var i = 0; i < 3; i++)
+        {
+            <SkeletonElement Style="margin-right: 8px;margin-bottom: 8px;" Type="avatar" 
+                             Active Size="SkeletonElementSize.Default" Shape="@SkeletonAvatarShape.Circle" />
         }
     }
 </ul>
