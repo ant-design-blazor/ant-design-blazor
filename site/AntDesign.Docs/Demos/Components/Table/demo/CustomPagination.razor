@@ -1,6 +1,6 @@
 ﻿@using System.ComponentModel
 
-<Table TItem="Data" DataSource="@data.Skip((pageIndex-1)*pageSize).Take(pageSize)">
+<Table TItem="Data" DataSource="data" @bind-PageSize="pageSize">
     <ChildContent>
         <Column @bind-Field="@context.Name">
             <a>@context.Name</a>
@@ -27,11 +27,11 @@
     <PaginationTemplate>
         <div style="display: flex; align-items: center">
             <Pagination Class="my-custom-pagination"
-                        Total="@total"
-                        PageSize="pageSize"
-                        Current="pageIndex"
-                        ShowSizeChanger="@true"
-                        OnChange="HandlePageChange" />
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
         </div>
     </PaginationTemplate>
 </Table>
@@ -66,8 +66,7 @@
     };
 
     private int total => data.Count();
-    private int pageSize { get; set; } = 1;
-    private int pageIndex { get; set; } = 1;
+    private int pageSize = 1;
 
     public class Data
     {
@@ -85,19 +84,6 @@
 
         [DisplayName("Tags")]
         public string[] Tags { get; set; }
-    }
-
-    private void HandlePageChange(PaginationEventArgs args)
-    {
-        if (pageIndex != args.Page)
-        {
-            pageIndex = args.Page;
-        }
-
-        if (pageSize != args.PageSize)
-        {
-            pageSize = args.PageSize;
-        }
     }
 }
 
