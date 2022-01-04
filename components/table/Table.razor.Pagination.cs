@@ -25,7 +25,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public RenderFragment PaginationTemplate { get; set; }
+        public RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)> PaginationTemplate { get; set; }
 
         [Parameter]
         public int Total { get; set; }
