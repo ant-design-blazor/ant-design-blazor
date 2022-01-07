@@ -286,13 +286,15 @@ namespace AntDesign.Core.Helpers.MemberPath
                         {
                             if (checkNull && exp.Type.IsClass)
                             {
-                                var containsKeyMethod = exp.Type.GetMethod(ContainsKeyMethod, BindingFlags.Public | BindingFlags.Instance)
-                                                     ?? throw new InvalidPathException($"'{ContainsKeyMethod}' method is not implemented in '{exp.Type}'");
-                                var containsKeyTest = Expression.IsTrue(Expression.Call(exp, containsKeyMethod, Expression.Constant(pathNode.Name, typeof(string))));
-                                test = test != null ? Expression.AndAlso(test, containsKeyTest) : containsKeyTest;
+                                var containsKeyMethod = exp.Type.GetMethod(ContainsKeyMethod, BindingFlags.Public | BindingFlags.Instance);
+                                if (containsKeyMethod != null)
+                                {
+                                    var containsKeyTest = Expression.IsTrue(Expression.Call(exp, containsKeyMethod, Expression.Constant(pathNode.Name, typeof(string))));
+                                    test = test != null ? Expression.AndAlso(test, containsKeyTest) : containsKeyTest;
+                                }
                             }
 
-                            var getMethod = exp.Type.GetMethod(GetItemMethod, BindingFlags.Public | BindingFlags.Instance)
+                            var getMethod = exp.Type.GetMethod(GetItemMethod, BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null)
                                          ?? throw new InvalidPathException($"'{GetItemMethod}' method is not implemented in '{exp.Type}'");
                             exp = Expression.Call(exp, getMethod, Expression.Constant(pathNode.Name));
 
