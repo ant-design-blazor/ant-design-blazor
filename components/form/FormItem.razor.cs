@@ -128,7 +128,7 @@ namespace AntDesign
 
         private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
 
-        public EditContext EditContext => Form?.EditContext;
+        private EditContext EditContext => Form?.EditContext;
 
         private string[] _validationMessages = Array.Empty<string>();
 
@@ -141,7 +141,7 @@ namespace AntDesign
         private PropertyReflector _propertyReflector;
 
         private ClassMapper _labelClassMapper = new ClassMapper();
-        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
         private PropertyInfo _fieldPropertyInfo;
@@ -152,15 +152,15 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            //if (Form == null)
-            //{
-            //    throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
-            //}
+            if (Form == null)
+            {
+                throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
+            }
 
             SetClass();
             SetRequiredCss();
 
-            Form?.AddFormItem(this);
+            Form.AddFormItem(this);
 
             if (!string.IsNullOrWhiteSpace(Help))
             {
@@ -190,13 +190,13 @@ namespace AntDesign
         {
             bool isRequired = false;
 
-            if ((Form != null && Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex))
+            if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
                 && _propertyReflector.RequiredAttribute != null)
             {
                 isRequired = true;
             }
 
-            if ((Form != null && Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex)
                  && Rules != null && Rules.Any(rule => rule.Required == true))
             {
                 isRequired = true;
@@ -221,9 +221,9 @@ namespace AntDesign
             {
                 labelColParameter = LabelCol;
             }
-            else if (Form?.LabelCol != null)
+            else if (Form.LabelCol != null)
             {
-                labelColParameter = Form?.LabelCol;
+                labelColParameter = Form.LabelCol;
             }
             else
             {
@@ -246,9 +246,9 @@ namespace AntDesign
             {
                 wrapperColParameter = WrapperCol;
             }
-            else if (Form?.WrapperCol != null)
+            else if (Form.WrapperCol != null)
             {
-                wrapperColParameter = Form?.WrapperCol;
+                wrapperColParameter = Form.WrapperCol;
             }
             else
             {
@@ -287,7 +287,7 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            if (Form != null && Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
                 _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
             }
@@ -338,7 +338,7 @@ namespace AntDesign
             {
                 var propertyValue = _fieldPropertyInfo.GetValue(_fieldIdentifier.Model);
 
-                var validateMessages = Form?.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
+                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
                 foreach (var rule in Rules)
                 {
