@@ -1,0 +1,62 @@
+﻿@namespace AntDesign.Internal
+@typeparam TItem
+@implements IDisposable
+@using AntDesign.TableModels
+
+<CascadingValue Value="_blockColumns" Name="AntDesign.Column.Blocked">
+    <CascadingValue Value="_rowData" Name="RowData" ChildContent="ChildContent" />
+</CascadingValue>
+
+@{ _blockColumns = false; }
+
+@code {
+    private bool _blockColumns = false;
+
+    private RowData<TItem> _rowData;
+
+    [Parameter]
+    public RowData<TItem> RowData { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Action<RowData<TItem>, bool> RowDataSelectedChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _rowData = RowData;
+        _rowData.SelectedChanged += OnRowDataSelectedChanged;
+        _rowData.ExpandedChanged += OnRowDataExpandedChanged;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_rowData != RowData)
+        {
+            _rowData.SelectedChanged -= OnRowDataSelectedChanged;
+            _rowData.ExpandedChanged -= OnRowDataExpandedChanged;
+            _rowData = RowData;
+            _rowData.SelectedChanged += OnRowDataSelectedChanged;
+            _rowData.ExpandedChanged += OnRowDataExpandedChanged;
+        }
+    }
+
+    private void OnRowDataSelectedChanged(RowData rowData, bool selected)
+    {
+        _blockColumns = true;
+        RowDataSelectedChanged?.Invoke(rowData as RowData<TItem>, selected);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnRowDataExpandedChanged(RowData rowData, bool expanded)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    void IDisposable.Dispose()
+    {
+        _rowData.SelectedChanged -= OnRowDataSelectedChanged;
+        _rowData.ExpandedChanged -= OnRowDataExpandedChanged;
+    }
+}

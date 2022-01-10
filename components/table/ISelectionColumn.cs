@@ -10,8 +10,6 @@ namespace AntDesign
 
         public IList<ISelectionColumn> RowSelections { get; }
 
-        public bool Check(bool @checked);
-
         public void StateHasChanged();
     }
 }
