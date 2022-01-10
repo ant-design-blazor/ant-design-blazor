@@ -1,6 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
+@using AntDesign.Internal
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
@@ -52,7 +53,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            @body(this, _showItems, 0, _dataSourceCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -70,7 +71,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body((this, _showItems, 0))
+                                            @body(this, _showItems, 0, _dataSourceCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -83,7 +84,7 @@
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
-                                            @body((this, _showItems, 0))
+                                            @body(this, _showItems, 0, _dataSourceCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -125,19 +126,21 @@
         @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
-         <thead class="ant-table-thead">
-             <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                 <CascadingValue Value="table" Name="AntDesign.TableRow.Table">
-                     <AntDesign.Internal.TableRow TItem="TItem">
-                         @table.ChildContent(_fieldModel)
-                         @if (table.ScrollY != null)
-                         {
-                             <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
-                         }
-                     </AntDesign.Internal.TableRow>
-                 </CascadingValue>
-             </CascadingValue>
-         </thead>
+        <thead class="ant-table-thead">
+            <CascadingValue Name="IsHeader" Value="true" IsFixed>
+                <CascadingValue Value="table" TValue="ITable" Name="AntDesign.TableRow.Table">
+                    <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                        <TableRow TItem="TItem">
+                            @table.ChildContent(_fieldModel)
+                            @if (table.ScrollY != null)
+                            {
+                                <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+                            }
+                        </TableRow>
+                    </CascadingValue>
+                </CascadingValue>
+            </CascadingValue>
+        </thead>
     </Template>;
 
 RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
@@ -157,14 +160,9 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
     </colgroup>
 </Template>;
 
-RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> body = context =>
+Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
+            (table, showItems, level, rowDataCache) =>
 @<Template>
-    @{
-        var table = context.table;
-        var showItems = context.showItems;
-        var level = context.level;
-    }
-
     @if (table._total <= 0)
     {
         <tr class="ant-table-placeholder">
@@ -175,53 +173,94 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
     }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
-        for (int i = 0; i < showItems.Count(); i++)
+#if NET5_0_OR_GREATER
+        if (table.EnableVirtualization && table.ScrollY != null)
         {
-            var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
-            var data = showItems.ElementAt(i);
-            var cacheKey = data.GetHashCode();
-            if (!table._dataSourceCache.ContainsKey(cacheKey) || table._dataSourceCache[cacheKey] == null)
-            {
-                var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
-                {
-                    Expanded = table.DefaultExpandAllRows
-                };
-                rowData.SelectedChanged += table.RowDataSelectedChanged;
-                table._dataSourceCache[cacheKey] = rowData;
-            }
-            var currentRowData = table._dataSourceCache[cacheKey];
-            var childrenData = table.TreeChildren(data);
-            var hasChildren = childrenData?.Any() == true;
-            currentRowData.CacheKey = cacheKey;
-            currentRowData.Level = level;
-            currentRowData.HasChildren = hasChildren;
-            currentRowData.RowIndex = rowIndex;
-            currentRowData.PageIndex = table.PageIndex;
-
-            <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
-                <CascadingValue Value="true" Name="IsBody" IsFixed>
-                    <CascadingValue Value="table" Name="AntDesign.TableRow.Table">
-                        <AntDesign.Internal.TableRow @key="currentRowData" TItem="TItem">
-                            @table.ChildContent(data)
-                        </AntDesign.Internal.TableRow>
-                    </CascadingValue>                        
-                </CascadingValue>
-            </CascadingValue>
-
-            @if (hasChildren && currentRowData.Expanded)
-            {
-                @table.body((table, table.SortFilterChildren(childrenData), level + 1));
-            }
-            @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
-            {
-                <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
-                    style="@(currentRowData.Expanded?"":"display: none;")">
-                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
-                        @table.ExpandTemplate(currentRowData)
-                    </td>
-                </tr>
-            }
+            <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
+                                                                           ChildContent="table.bodyRow(table, level, rowDataCache)" />
         }
+        else
+        {
+#endif
+            { @*Build will fail without this block*@ }
+        <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
+                     ChildContent="table.bodyRow(table, level, rowDataCache)" />
+#if NET5_0_OR_GREATER
+        }
+#endif
+    }
+</Template>;
+
+Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TItem data, int index)>> bodyRow = 
+            (table, level, rowDataCache) => tuple =>
+@<Template @key="tuple">
+    @{
+        int rowIndex;
+        if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
+        else rowIndex = tuple.index + 1;
+        var data = tuple.data;
+        bool selected = table.SelectedRows.Contains(data);
+        if (!rowDataCache.ContainsKey(data) || rowDataCache[data] == null)
+        {
+            var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+            {
+                Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
+            };
+            rowDataCache[data] = rowData;
+        }
+        var currentRowData = rowDataCache[data];
+        if (!table._allRowDataCache.ContainsKey(data))
+        {
+            table._allRowDataCache.Add(data, new());
+        }
+        if (!table._allRowDataCache[data].Contains(currentRowData))
+        {
+            table._allRowDataCache[data].Add(currentRowData);
+        }
+        var childrenData = table.TreeChildren(data);
+        var hasChildren = childrenData?.Any() == true;
+        var childrenRowDataCache = currentRowData.Children;
+        currentRowData.Level = level;
+        currentRowData.HasChildren = hasChildren;
+        currentRowData.RowIndex = rowIndex;
+        currentRowData.PageIndex = table.PageIndex;
+        currentRowData.SetSelected(selected);
+
+        <TableRowWrapper RowData="currentRowData" RowDataSelectedChanged="table.RowDataSelectedChanged">
+            @{
+                var rowAttributes = table.OnRow?.Invoke(currentRowData);
+                if (table.OnRowClick.HasDelegate)
+                {
+                    rowAttributes ??= new Dictionary<string, object>();
+                    rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
+                }
+
+                var rowClassName = table.RowClassName(currentRowData);
+                <CascadingValue Value="true" Name="IsBody" IsFixed>
+                    <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                        <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
+                            <TableRow @key="currentRowData.Data" TItem="TItem">
+                                @table.ChildContent(currentRowData.Data)
+                            </TableRow>
+                        </CascadingValue>
+                    </CascadingValue>
+                </CascadingValue>
+
+                @if (currentRowData.HasChildren && currentRowData.Expanded)
+                {
+                    @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache);
+                }
+                @if (!currentRowData.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
+                {
+                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
+                        style="@(currentRowData.Expanded?"":"display: none;")">
+                        <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                            @table.ExpandTemplate(currentRowData)
+                        </td>
+                    </tr>
+                }
+            }
+        </TableRowWrapper>
     }
 </Template>;
 

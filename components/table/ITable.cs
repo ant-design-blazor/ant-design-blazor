@@ -1,4 +1,5 @@
-﻿using AntDesign.TableModels;
+﻿using System.Collections.Generic;
+using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -9,6 +10,10 @@ namespace AntDesign
         QueryModel GetQueryModel();
 
         void SetSelection(string[] keys);
+
+        void SelectAll();
+
+        void UnselectAll();
 
         internal TableLocale Locale { get; }
 
@@ -32,15 +37,17 @@ namespace AntDesign
 
         internal SortDirection[] SortDirections { get; }
 
+        internal bool AllSelected { get; }
+
+        internal bool AnySelected { get; }
+
         internal void SelectionChanged();
 
-        internal void OnExpandChange(int cacheKey);
+        internal void OnExpandChange(RowData rowData);
 
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
-
-        internal int[] GetSelectedCacheKeys();
 
         internal void HasFixLeft();
 

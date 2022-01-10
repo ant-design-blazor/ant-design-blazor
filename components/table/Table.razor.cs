@@ -47,8 +47,19 @@ namespace AntDesign
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
+        /// <summary>
+        /// The max expand level when use DefaultExpandAllRows.
+        /// This attribute is used to avoid endless loop when the tree records have circular reference.
+        /// The default value is 4.
+        /// </summary>
+        [Parameter]
+        public int DefaultExpandMaxLevel { get; set; } = 4;
+
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+
+        [Parameter]
+        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
 
         [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
@@ -136,6 +147,14 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; } = true;
 
+#if NET5_0_OR_GREATER
+        /// <summary>
+        /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
+        /// </summary>
+        [Parameter]
+        public bool EnableVirtualization { get; set; }
+#endif
+
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
@@ -182,11 +201,11 @@ namespace AntDesign
         /// </summary>
         void ITable.OnColumnInitialized() => OnColumnInitialized();
 
-        void ITable.OnExpandChange(int cacheKey)
+        void ITable.OnExpandChange(RowData rowData)
         {
-            if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
+            if (OnExpand.HasDelegate)
             {
-                OnExpand.InvokeAsync(currentRowData);
+                OnExpand.InvokeAsync(rowData as RowData<TItem>);
             }
         }
 
@@ -325,6 +344,32 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            if (!_preventRender)
+            {
+                if (_outerSelectedRows != null)
+                {
+                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
+                    if (_selectedRows.Count != _outerSelectedRows.Count())
+                    {
+                        SelectedRowsChanged.InvokeAsync(_selectedRows);
+                    }
+                }
+                else
+                {
+                    _selectedRows?.Clear();
+                }
+
+                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
+                if (removedCacheItems.Length > 0)
+                {
+                    foreach (var item in removedCacheItems)
+                    {
+                        _dataSourceCache.Remove(item);
+                    }
+                    _allRowDataCache.Clear();
+                }
+            }
+
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
@@ -379,6 +424,55 @@ namespace AntDesign
             FlushCache();
         }
 
+        private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
+        {
+            if (items?.Any() != true) return Array.Empty<TItem>();
+            if (TreeChildren == null) return items;
+            var result = GetAllDataItemsWithParent(items.Select(x => new DataItemWithParent<TItem>
+            {
+                Data = x,
+                Parent = null
+            })).Select(x => x.Data);
+            if (onlySelectable) result = result.Where(x => RowSelectable(x));
+            return result.ToHashSet();
+
+            IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
+            {
+                if (dataItems?.Any() != true) return Array.Empty<DataItemWithParent<TItem>>();
+                if (TreeChildren == null) return dataItems ?? Array.Empty<DataItemWithParent<TItem>>();
+                return dataItems.Union(
+                    dataItems.SelectMany(
+                        x1 =>
+                        {
+                            var ancestors = x1.GetAllAncestors().Select(x2 => x2.Data).ToHashSet();
+                            return GetAllDataItemsWithParent(TreeChildren(x1.Data)?.Select(x2 => new DataItemWithParent<TItem>
+                            {
+                                Data = x2,
+                                Parent = x1
+                            }).Where(x2 => !ancestors.Contains(x2.Data) && x2.Data?.Equals(x1.Data) == false));
+                        })
+                    ).ToList();
+            }
+        }
+
+        class DataItemWithParent<T>
+        {
+            public T Data { get; set; }
+
+            public DataItemWithParent<T> Parent { get; set; }
+
+            public IEnumerable<DataItemWithParent<T>> GetAllAncestors()
+            {
+                var result = new HashSet<DataItemWithParent<T>>();
+                var parent = Parent;
+                while (parent != null)
+                {
+                    result.Add(parent);
+                    parent = parent.Parent;
+                }
+                return result;
+            }
+        }
 
         protected override void OnParametersSet()
         {
