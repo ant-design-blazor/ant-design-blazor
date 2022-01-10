@@ -8,6 +8,8 @@ namespace AntDesign.TableModels
     {
         public TItem Data { get; set; }
 
+        internal Dictionary<TItem, RowData<TItem>> Children { get; set; } = new();
+
         public RowData(int rowIndex, int pageIndex, TItem data)
         {
             this.RowIndex = rowIndex;
@@ -19,6 +21,8 @@ namespace AntDesign.TableModels
     public class RowData
     {
         private bool _selected;
+
+        private bool _expanded;
 
         public int RowIndex { get; set; }
 
@@ -37,7 +41,18 @@ namespace AntDesign.TableModels
             }
         }
 
-        public bool Expanded { get; set; }
+        public bool Expanded
+        {
+            get => _expanded;
+            set
+            {
+                if (_expanded != value)
+                {
+                    _expanded = value;
+                    ExpandedChanged?.Invoke(this, _expanded);
+                }
+            }
+        }
 
         public int Level { get; set; }
 
@@ -47,9 +62,16 @@ namespace AntDesign.TableModels
 
         public event Action<RowData, bool> SelectedChanged;
 
+        public event Action<RowData, bool> ExpandedChanged;
+
         internal void SetSelected(bool selected)
         {
             _selected = selected;
+        }
+
+        internal void SetExpanded(bool expanded)
+        {
+            _expanded = expanded;
         }
     }
 }

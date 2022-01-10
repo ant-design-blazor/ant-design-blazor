@@ -1,0 +1,37 @@
+﻿<Space>
+    <SpaceItem>
+        <Button OnClick="LoadData">Load data</Button>
+    </SpaceItem>
+</Space>
+
+<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" EnableVirtualization>
+    <Selection />
+    <Column @bind-Field="@context.Name" Width="400" />
+    <Column @bind-Field="@context.Age" Width="150" />
+    <Column @bind-Field="@context.Address" />
+</Table>
+
+@code {
+    class Data
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Data[] data = Array.Empty<Data>();
+
+    int pageSize = 10000;
+
+    void LoadData()
+    {
+        data = Enumerable.Range(0, 10000).Select(i => new Data()
+        {
+            Name = $"Edward King {i}",
+            Age = 32,
+            Address = $"Edward King {i}'s address"
+        }).ToArray();
+    }
+}

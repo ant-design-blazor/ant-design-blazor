@@ -16,24 +16,42 @@ namespace AntDesign
 
         [Parameter] public bool CheckStrictly { get; set; }
 
-        [CascadingParameter(Name = "AntDesign.Selection.OnChange")]
-        internal EventCallback<bool> OnChange { get; set; }
-
-        [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
-        internal ITableRow TableRow { get; set; }
-
-        [Parameter]
-        public virtual RenderFragment<CellData> CellRender { get; set; }
-
-        private bool _checked;
+        //private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && this.RowSelections.Where(x => !x.Disabled).Any(x => x.RowData.Selected)
-                                      && !this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
+                                      && !Table.AllSelected
+                                      && Table.AnySelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
         //private int[] _selectedIndexes;
+
+        private void OnCkeckedChange(bool selected)
+        {
+            if (IsHeader)
+            {
+                if (selected)
+                {
+                    Table.SelectAll();
+                }
+                else
+                {
+                    Table.UnselectAll();
+                }
+            }
+            else if (IsBody)
+            {
+                if (Type == "radio")
+                {
+                    Table.SetSelection(new[] { Key });
+                }
+                else
+                {
+                    RowData.Selected = selected;
+                    Table.Selection.StateHasChanged();
+                }
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -51,7 +69,6 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                TableRow.Selection = this;
                 Table?.Selection?.RowSelections.Add(this);
             }
         }
@@ -69,29 +86,10 @@ namespace AntDesign
             //}
         }
 
-        bool ISelectionColumn.Check(bool @checked)
-        {
-            return this.Check(@checked);
-        }
-
-        private bool Check(bool @checked)
-        {
-            if (this._checked != @checked)
-            {
-                this._checked = @checked;
-                //StateHasChanged();
-
-                return true;
-            }
-
-            return false;
-        }
-
         void ISelectionColumn.StateHasChanged()
         {
             if (IsHeader && Type == "checkbox")
             {
-                _checked = this.RowSelections.Any() && this.RowSelections.Where(x => !x.Disabled).All(x => x.RowData.Selected);
                 StateHasChanged();
             }
         }
