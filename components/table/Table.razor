@@ -10,7 +10,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Class="@_paginationClass"
+                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                            Class="@_paginationClass"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
@@ -105,7 +106,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Class="@_paginationClass"
+                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                            Class="@_paginationClass"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
