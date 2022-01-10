@@ -10,7 +10,7 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass"
                             Total="_total"
                             PageSize="PageSize"
@@ -106,7 +106,7 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == null ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass"
                             Total="_total"
                             PageSize="PageSize"
