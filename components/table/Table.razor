@@ -18,7 +18,7 @@
             }
             else
             {
-                @PaginationTemplate
+                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
 
@@ -113,7 +113,7 @@
             }
             else
             {
-                @PaginationTemplate
+                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
     </Spin>
