@@ -17,20 +17,6 @@ namespace AntDesign
             set
             {
                 _outerSelectedRows = value;
-                if (_dataSourceCache is null)
-                {
-                    _dataSourceCache = new Dictionary<int, RowData<TItem>>();
-                    _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
-                }
-                if (value == _selectedRows) return;
-                if (value != null && value.Any())
-                {
-                    _dataSourceCache.Values.ForEach(x => x.SetSelected(x.Data.IsIn(value)));
-                }
-                else
-                {
-                    _dataSourceCache.Values.ForEach(x => x.SetSelected(false));
-                }
             }
         }
 
@@ -38,14 +24,42 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private IEnumerable<TItem> _selectedRows;
+        private HashSet<TItem> _selectedRows = new();
+        private bool _preventRowDataTriggerSelectedRowsChanged;
+        private bool _preventChangeRowDataWithSameData;
+        private bool _preventRowDataSelectedChangedCallback;
 
-        private void RowDataSelectedChanged(RowData rowData, bool selected)
+        private void RowDataSelectedChanged(RowData<TItem> rowData, bool selected)
         {
-            if (SelectedRowsChanged.HasDelegate && _outerSelectedRows != _selectedRows)
+            if (_preventRowDataSelectedChangedCallback) return;
+            if (!RowSelectable(rowData.Data))
             {
-                _preventRender = true;
-                SelectedRowsChanged.InvokeAsync(_selectedRows);
+                rowData.SetSelected(!selected);
+                return;
+            }
+            if (selected)
+            {
+                _selectedRows.Add(rowData.Data);
+            }
+            else
+            {
+                _selectedRows.Remove(rowData.Data);
+            }
+            if (!_preventChangeRowDataWithSameData)
+            {
+                _preventRowDataSelectedChangedCallback = true;
+                if (_allRowDataCache.ContainsKey(rowData.Data))
+                {
+                    foreach (var rowDataWithSameData in _allRowDataCache[rowData.Data])
+                    {
+                        rowDataWithSameData.Selected = selected;
+                    }
+                }
+                _preventRowDataSelectedChangedCallback = false;
+            }
+            if (!_preventRowDataTriggerSelectedRowsChanged)
+            {
+                SelectionChanged();
             }
         }
 
@@ -55,16 +69,57 @@ namespace AntDesign
             set => _selection = value;
         }
 
+        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllItemsByTopLevelItems(_showItems, true).Count();
+
+        bool ITable.AnySelected => _selectedRows.Count > 0;
+
+        public void SelectAll()
+        {
+            _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _preventChangeRowDataWithSameData = true;
+            foreach (var rowDataList in _allRowDataCache.Values)
+            {
+                foreach (var rowData in rowDataList)
+                {
+                    rowData.Selected = true;
+                }
+            }
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventChangeRowDataWithSameData = false;
+            if (_selection != null)
+            {
+                _selection.StateHasChanged();
+            }
+            SelectionChanged();
+        }
+
+        public void UnselectAll()
+        {
+            _selectedRows.Clear();
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _preventChangeRowDataWithSameData = true;
+            foreach (var rowDataList in _allRowDataCache.Values)
+            {
+                foreach (var rowData in rowDataList)
+                {
+                    rowData.Selected = false;
+                }
+            }
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventChangeRowDataWithSameData = false;
+            if (_selection != null)
+            {
+                _selection.StateHasChanged();
+            }
+            SelectionChanged();
+        }
+
         public void SetSelection(string[] keys)
         {
             if (keys == null || !keys.Any())
             {
-                _dataSourceCache.Values.ForEach(x => x.Selected = false);
-                if (_selection != null)
-                {
-                    _selection.StateHasChanged();
-                }
-                SelectionChanged();
+                UnselectAll();
                 return;
             }
 
@@ -72,12 +127,14 @@ namespace AntDesign
             {
                 throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
             }
-            else
-            {
-                _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
-                _selection.StateHasChanged();
-                SelectionChanged();
-            }
+
+            _preventRowDataTriggerSelectedRowsChanged = true;
+            _preventChangeRowDataWithSameData = true;
+            _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+            _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventChangeRowDataWithSameData = false;
+            _selection.StateHasChanged();
+            SelectionChanged();
         }
 
         void ITable.SelectionChanged() => SelectionChanged();
@@ -87,6 +144,7 @@ namespace AntDesign
             if (SelectedRowsChanged.HasDelegate)
             {
                 _preventRender = true;
+                _outerSelectedRows = _selectedRows;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }
         }
