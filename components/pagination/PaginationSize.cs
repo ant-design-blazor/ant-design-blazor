@@ -4,10 +4,9 @@
 
 namespace AntDesign
 {
-    public enum TableSize
+    public enum PaginationSize
     {
         Default,
-        Middle,
         Small
     }
 }
