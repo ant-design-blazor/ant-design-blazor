@@ -87,14 +87,25 @@ namespace AntDesign
 
         private async Task HandlePageChange(PaginationEventArgs args)
         {
-            if (_pageIndex != args.Page)
-            {
-                await HandlePageIndexChange(args);
-            }
+            bool shouldInvokeChange = false;
 
             if (_pageSize != args.PageSize)
             {
+                shouldInvokeChange = true;
                 await HandlePageSizeChange(args);
+            }
+
+            if (_pageIndex != args.Page)
+            {
+                shouldInvokeChange = true;
+                await HandlePageIndexChange(args);
+            }
+
+            if (shouldInvokeChange)
+            {
+                ReloadAndInvokeChange();
+
+                StateHasChanged();
             }
         }
 
@@ -111,10 +122,6 @@ namespace AntDesign
             {
                 await OnPageIndexChange.InvokeAsync(args);
             }
-
-            ReloadAndInvokeChange();
-
-            StateHasChanged();
         }
 
         private async Task HandlePageSizeChange(PaginationEventArgs args)
@@ -130,10 +137,6 @@ namespace AntDesign
             {
                 await OnPageSizeChange.InvokeAsync(args);
             }
-
-            ReloadAndInvokeChange();
-
-            StateHasChanged();
         }
 
         private void ChangePageSize(int pageSize)
