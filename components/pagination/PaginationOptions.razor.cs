@@ -43,7 +43,8 @@ namespace AntDesign
 
         private string _goInputText = string.Empty;
 
-        private PaginationLocale Locale = LocaleProvider.CurrentLocale.Pagination;
+        [Parameter]
+        public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
 
         private int GetValidValue()
         {
