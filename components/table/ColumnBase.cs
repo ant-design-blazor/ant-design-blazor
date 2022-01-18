@@ -84,9 +84,6 @@ namespace AntDesign
 
         private ColumnAlign _align = ColumnAlign.Left;
 
-        [Parameter]
-        public virtual RenderFragment<CellData> CellRender { get; set; }
-
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);

@@ -24,7 +24,7 @@ namespace AntDesign.Core.Helpers
 
             Expression variable = sourceProperty;
             Expression body = Expression.Call(sourceProperty, typeof(object).GetMethod(nameof(ToString)));
-            Expression hasValueExpression = sourceType.IsValueType ? (Expression)Expression.Constant(true) : Expression.NotEqual(sourceProperty, Expression.Default(sourceType));
+            Expression hasValueExpression = sourceType.IsValueType ? Expression.Constant(true) : Expression.NotEqual(sourceProperty, Expression.Default(sourceType));
             Expression parsedFormatString = formatString;
 
             if (sourceType == typeof(TimeSpan))
