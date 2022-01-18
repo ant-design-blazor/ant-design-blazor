@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AntDesign.Internal;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -20,6 +21,9 @@ namespace AntDesign
 
         [CascadingParameter(Name = "AntDesign.Selection.TableRow")]
         internal ITableRow TableRow { get; set; }
+
+        [Parameter]
+        public virtual RenderFragment<CellData> CellRender { get; set; }
 
         private bool _checked;
 

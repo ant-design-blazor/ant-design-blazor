@@ -3,13 +3,20 @@
 @inherits ColumnBase
 
 <td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
-	@if (CellRender != null)
-	{
-		var cellData = new CellData(RowData);
-		@CellRender(cellData)
-	}
-	else
-	{
-		@ChildContent
-	}
+    @if (CellRender != null)
+    {
+        var cellData = new CellData(RowData);
+        @CellRender(cellData)
+    }
+    else
+    {
+        @ChildContent
+    }
 </td>
+
+@code {
+
+    [Parameter]
+    public virtual RenderFragment<CellData> CellRender { get; set; }
+
+}
