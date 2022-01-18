@@ -48,19 +48,19 @@ else if (IsHeader && HeaderColSpan != 0)
 	<CascadingValue Name="IsHeader" Value="false" IsFixed>
 		<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
 			@if (Sortable || (_filterable && _filters?.Any() == true))
-		{
-			@FilterToolTipSorter
-		}
-		else if (TitleTemplate != null)
-		{
-			@TitleTemplate
-		}
-		else
-		{
-			@Title
-		}
-	</th>
-</CascadingValue>
+		    {
+		    	@FilterToolTipSorter
+		    }
+		    else if (TitleTemplate != null)
+		    {
+		    	@TitleTemplate
+		    }
+		    else
+		    {
+		    	@Title
+		    }
+    	</th>
+    </CascadingValue>
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
@@ -76,10 +76,11 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 			class="ant-table-row-expand-icon @(RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
 			aria-label="@(RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
 			}
-		</td>
-	}
-	var cellData = new CellData(RowData);
-	var cellAttributes = OnCell?.Invoke(cellData);
+        </td>
+    }
+
+    var cellData = new CellData<TData>(RowData, Field, Format);
+    var cellAttributes = OnCell?.Invoke(cellData);
 	<CascadingValue Name="IsBody" Value="false" IsFixed>
 		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@Context.HeaderColumns[ColIndex].Title"  @attributes="cellAttributes">
 			@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
@@ -105,14 +106,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 		}
 		else
 		{
-			if (!string.IsNullOrWhiteSpace(Format))
-			{
-				@(Formatter<TData>.Format(Field, Format))
-			}
-			else
-			{
-				@Field
-			}
+			@cellData.FormattedValue
 		}
 	</td>
 </CascadingValue>

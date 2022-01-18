@@ -121,6 +121,9 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        [Parameter]
+        public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
+
         private TableFilterType _columnFilterType;
 
         private Type _columnDataType;

@@ -2,12 +2,14 @@
 @using System.ComponentModel.DataAnnotations
 
 <Table TItem="TestData" DataSource="@testData">
-    <Column @bind-Field="@context.Id" Sortable/>
-    <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
-    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)" Filters="DayOfWeekFilter" OnFilter="(a, b) => a == b"/>
-    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12['test'].N2A") Sortable/>
-    <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
-    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12['test'].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare"></Column>
+    <Column @bind-Field="@context.Id" Sortable />
+    <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable />
+    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)" Filters="DayOfWeekFilter" OnFilter="(a, b) => a == b" />
+    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12['test'].N2A") Sortable />
+    <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt" />
+    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12['test'].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare">
+        <CellRender Context="cell">@(cell.FieldValue == default?"--":cell.FormattedValue)</CellRender>
+    </Column>
 </Table>
 
 @code {
@@ -43,7 +45,7 @@
     }
 
     public TableFilter<int>[] DayOfWeekFilter =
-    {
+        {
         new() {Text = "Monday", Value = 1},
         new() {Text = "Tuesday", Value = 2},
         new() {Text = "Wednesdays", Value = 3},
@@ -53,7 +55,7 @@
         new() {Text = "Sunday", Value = 7},
     };
 
-    public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
+    public string[] DayName = { "None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday" };
 
     Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
     {
@@ -82,27 +84,28 @@
         return Enumerable.Range(0, 5).Select(index =>
         {
             var data = new TestData
-            {
-                Id = index,
-                DayOfWeek = rng.Next(1, 8),
-                Jobs = rng.Next(0, 20),
-                Popularity = rng.Next(0, 30),
-            };
-            data.N1 = new()
-            {
-                N1A = (index & 1) == 0 ? index : null,
-                N12 = new()
                 {
-                    {"no used", null},
+                    Id = index,
+                    DayOfWeek = rng.Next(1, 8),
+                    Jobs = rng.Next(0, 20),
+                    Popularity = rng.Next(0, 30),
+                };
+            data.N1 = new()
+                {
+                    N1A = (index & 1) == 0 ? index : null,
+                    N12 = new()
                     {
-                        "test", new Nested2()
+                        { "no used", null },
                         {
-                            N2A = DayName[data.DayOfWeek] + " - DI",
-                            Time = startDate.AddSeconds(rng.Next((int)range))
+                            "test",
+                            new Nested2()
+                            {
+                                N2A = DayName[data.DayOfWeek] + " - DI",
+                                Time = (index & 1) == 0 ? startDate.AddSeconds(rng.Next((int)range)) : null,
+                            }
                         }
                     }
-                }
-            };
+                };
             return data;
         }).ToArray();
     }

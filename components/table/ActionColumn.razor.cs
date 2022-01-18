@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -6,6 +7,9 @@ namespace AntDesign
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
+
+        [Parameter]
+        public virtual RenderFragment<CellData> CellRender { get; set; }
 
         protected override void OnInitialized()
         {
