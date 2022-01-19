@@ -1,0 +1,80 @@
+﻿@using Microsoft.JSInterop
+@namespace AntDesign
+@inherits AntComponentBase
+<div @attributes="InputAttributes" class="ant-splitbar ant-splitbar-@(IsHorizontal?"vertical":"horizontal")" style="@GetStyle()" id=@Id>
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; }
+    /// <summary>
+    /// 组件的Id属性值
+    /// </summary>
+    public string Id { get; private set; }
+    /// <summary>
+    /// 分割条方向 是否垂直分割
+    /// </summary>
+    [Parameter]
+    public bool IsHorizontal{ get; set; }
+    /// <summary>
+    /// 是否允许超出 需要有父容器包裹
+    /// </summary>
+    [Parameter]
+    public bool EnableOverflow { get; set; }
+    /// <summary>
+    /// 分割条宽度
+    /// </summary>
+    [Parameter]
+    public string Width { get; set; }
+    /// <summary>
+    /// 分割条高度
+    /// </summary>
+    [Parameter]
+    public string Height { get; set; }
+
+    private Lazy<Task<IJSRuntime>> moduleTask;
+    private IJSRuntime SplitBarJsObj;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (string.IsNullOrWhiteSpace(Id))
+        {
+            Id =nameof(SplitBar)+Guid.NewGuid().ToString("N");
+        }
+      
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+           await Js.InvokeAsync<IJSRuntime>(JSInteropConstants.CreateSplitbar, Id,IsHorizontal,EnableOverflow);
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+    }
+
+    private string GetStyle()
+    {
+        if (string.IsNullOrWhiteSpace(Width))
+        {
+            Width = IsHorizontal ? "auto" : "8px";
+        }
+        if (string.IsNullOrWhiteSpace(Height))
+        {
+            Height = IsHorizontal ? "8px" : "auto";
+        }
+
+        return $"width:{Width};height: {Height};";
+    }
+}

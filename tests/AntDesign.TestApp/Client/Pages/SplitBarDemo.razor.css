@@ -1,0 +1,25 @@
+﻿.left {
+    width: 180px;
+    padding-right: 20px;
+    float: left;
+    background: green;
+    height: 100%;
+    resize:block;
+}
+
+.right {
+    margin-left: -200px;
+    background: yellow;
+    width: auto;
+    height: 100%;
+}
+
+.item-contianer{
+    display:flex;
+}
+
+.item-contianer .item{
+    width:49%; 
+    height:200px;
+}
+ 

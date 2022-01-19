@@ -1,0 +1,24 @@
+﻿@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@splitbar-prefix-cls: ~'@{ant-prefix}-splitbar';
+
+.@{splitbar-prefix-cls} {
+    border: 1px solid #000;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    background: #ccc;
+    cursor: e-resize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    &-vertical {
+        cursor: n-resize;
+    }
+
+    &-horizontal {
+        cursor: e-resize;
+    }
+}

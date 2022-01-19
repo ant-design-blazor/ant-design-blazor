@@ -5,4 +5,5 @@ export { mentionsHelper } from './mentionsHelper';
 export { modalHelper } from './modalHelper';
 export { inputHelper } from './inputHelper';
 export { tableHelper } from './tableHelper';
+export { splitbar} from './splitbar';
 export { iconHelper } from './iconHelper';

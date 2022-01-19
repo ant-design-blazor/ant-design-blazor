@@ -1,0 +1,45 @@
+﻿@page "/splitbardemo"
+<h3>SplitBarDemo</h3>
+
+
+<section>
+    <Content style=" margin-bottom:50px;">
+        <Row style="@GetRandomColor()">
+            <Col style="@GetRandomColor()">例一</Col>
+            <SplitBar EnableOverflow>&nbsp;</SplitBar>
+            <Col style="@GetRandomColor()">拖动范围不受元素初始位置限制</Col>
+        </Row>
+    </Content>
+    <Content style=" margin-bottom:50px;">
+        <div style="overflow:hidden">
+            <div class="item-contianer">
+                <div class="item" style="@GetRandomColor()">例二</div>
+                <SplitBar>&nbsp;</SplitBar>
+                <div class="item" style="@GetRandomColor()">
+                    <div style=" height:90px">水平分割</div>
+                    <SplitBar IsHorizontal>&nbsp;</SplitBar>
+                    <div style="@GetRandomColor() height:90px">固定范围</div>
+                </div>
+            </div>
+            <SplitBar IsHorizontal>&nbsp;</SplitBar>
+            <div  style="@GetRandomColor() height:190px">固定范围</div>
+        </div>
+    </Content>
+    <Content style=" margin-bottom:50px;">
+        <div style=" display:flex;">
+            <div class="item" style="@GetRandomColor()">例三</div>
+            <SplitBar>&nbsp;</SplitBar>
+            <div class="item" style="@GetRandomColor()">2222222222</div>
+            <SplitBar>&nbsp;</SplitBar>
+            <div class="item" style="@GetRandomColor()">33333</div>
+        </div>
+    </Content>
+</section>
+
+@code {
+    private Random Random { get; set; } = new Random();
+    private string GetRandomColor()
+    {
+        return $"background-color:#{Random.Next().ToString("x6").Substring(0, 6)};";
+    }
+}

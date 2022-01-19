@@ -97,6 +97,12 @@ namespace AntDesign
         public static string UnbindTableScroll => TableComponentHelper.UnbindTableScroll;
         #endregion
 
+        #region splitbar
+
+        public static string CreateSplitbar => Splitbar.CreateSplitbar;
+
+        #endregion
+
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
         public static string Log => $"{FUNC_PREFIX}log";
 
@@ -180,6 +186,13 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "iconHelper.";
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
+
+        }
+        
+        public static class Splitbar
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitbar.";
+            public static string CreateSplitbar => $"{FUNC_PREFIX}CreateSplitbar";
 
         }
 
