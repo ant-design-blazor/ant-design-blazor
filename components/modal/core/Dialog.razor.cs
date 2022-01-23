@@ -104,6 +104,26 @@ namespace AntDesign
             return _modalStyle;
         }
 
+        private string GetBodyStyle()
+        {
+            var style = Config.BodyStyle;
+
+            if (Config.MaxBodyHeight != null)
+            {
+                var maxBodyHeight = Config.MaxBodyHeight.Value;
+                if (maxBodyHeight.IsT0)
+                {
+                    style += $";max-height:{maxBodyHeight.AsT0}px;overflow-y:scroll;";
+                }
+                else
+                {
+                    style += $";max-height:{maxBodyHeight.AsT1};overflow-y:scroll;";
+                }
+            }
+
+            return style;
+        }
+
         /// <summary>
         /// if Modal is draggable, reset the position style similar with the first show
         /// </summary>
