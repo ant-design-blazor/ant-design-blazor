@@ -45,6 +45,7 @@ namespace AntDesign
 
             column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
+            CurrentColIndex += column.HeaderColSpan - 1;
         }
 
         public void AddColGroup(IColumn column)
@@ -94,6 +95,7 @@ namespace AntDesign
             }
 
             column.ColIndex = CurrentColIndex;
+            CurrentColIndex += column.ColSpan - 1;
         }
 
         internal void HeaderColumnInitialed(IColumn column)

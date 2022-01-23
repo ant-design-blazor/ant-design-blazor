@@ -42,6 +42,15 @@ namespace AntDesign
         public RenderFragment<TItem> RowTemplate { get; set; }
 
         [Parameter]
+        public RenderFragment<TItem> Columns { get; set; }
+
+        [Parameter]
+        public RenderFragment<RowData<TItem>> ItemTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> HeaderTemplate { get; set; }
+
+        [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
 
         [Parameter]
@@ -408,6 +417,11 @@ namespace AntDesign
             if (RowTemplate != null)
             {
                 ChildContent = RowTemplate;
+            }
+
+            if (Columns != null)
+            {
+                ChildContent = Columns;
             }
 
             this.ColumnContext = new ColumnContext(this);
