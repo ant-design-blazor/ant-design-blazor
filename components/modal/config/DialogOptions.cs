@@ -82,7 +82,7 @@ namespace AntDesign
         /// <summary>
         /// max modal body content height
         /// </summary>
-        public OneOf<int, string>? MaxBodyHeight { get; set; } = null;
+        public string MaxBodyHeight { get; set; } = null;
 
         #region internal
 

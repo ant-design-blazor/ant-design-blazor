@@ -226,7 +226,7 @@ namespace AntDesign
         /// max modal content body height
         /// </summary>
         [Parameter]
-        public OneOf<int, string>? MaxBodyHeight { get; set; } = null;
+        public string MaxBodyHeight { get; set; } = null;
 
         #endregion Parameter
 

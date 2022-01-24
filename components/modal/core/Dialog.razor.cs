@@ -108,17 +108,10 @@ namespace AntDesign
         {
             var style = Config.BodyStyle;
 
-            if (Config.MaxBodyHeight != null)
+            if (!string.IsNullOrWhiteSpace(Config.MaxBodyHeight))
             {
-                var maxBodyHeight = Config.MaxBodyHeight.Value;
-                if (maxBodyHeight.IsT0)
-                {
-                    style += $";max-height:{maxBodyHeight.AsT0}px;overflow-y:scroll;";
-                }
-                else
-                {
-                    style += $";max-height:{maxBodyHeight.AsT1};overflow-y:scroll;";
-                }
+                var maxBodyHeight = (CssSizeLength)(Config.MaxBodyHeight);
+                style += $";max-height:{maxBodyHeight.ToString()};overflow-y:scroll;";
             }
 
             return style;
