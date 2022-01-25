@@ -1,0 +1,93 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Button Type="primary" OnClick="@ShowModal">
+    Open Modal with a Form
+</Button>
+<Modal Title="@("BasicModal")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form Loading="loading" Model="@model"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+          @ref="@_form">
+        <FormItem Label="Username">
+            <Input @bind-Value="@context.Username" />
+        </FormItem>
+        <FormItem Label="Password">
+            <InputPassword @bind-Value="@context.Password" />
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+
+    #region original form coding
+    public class Model
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool RememberMe { get; set; } = true;
+    }
+
+    private Model model = new Model();
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    #endregion
+
+    #region original modal coding
+
+    bool _visible = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    #endregion
+
+    /*
+     * Careful! 
+     * 
+     * next bind submit event to modal OK button 
+     */
+
+    private Form<Model> _form;
+
+    /// <summary>
+    /// when form is submited, close the modal
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    /// <summary>
+    /// on modal OK button is click, submit form manually
+    /// </summary>
+    /// <param name="e"></param>
+    private void HandleOk(MouseEventArgs e)
+    {
+        _form.Submit();
+    }
+}

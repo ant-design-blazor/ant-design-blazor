@@ -79,6 +79,11 @@ namespace AntDesign
         /// </summary>
         public Func<MouseEventArgs, Task> OnOk { get; set; }
 
+        /// <summary>
+        /// max modal body content height
+        /// </summary>
+        public string MaxBodyHeight { get; set; } = null;
+
         #region internal
 
 
