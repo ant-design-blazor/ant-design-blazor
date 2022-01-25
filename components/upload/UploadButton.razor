@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="@(!ShowButton?"display:none;":"")">
-    <div tabindex="0" class="ant-upload" style="position:relative;" @ref="_btn" data-fileid="@_fileId" role="button">
+    <span tabindex="0" class="ant-upload" style="position:relative;" @ref="_btn" data-fileid="@_fileId" role="button">
         <input type="file"
         webkitdirectory="@Directory" 
         multiple="@(Multiple || Directory)" 
@@ -22,5 +22,5 @@
         {
             @ChildContent
         }
-    </div>
+    </span>
 </div>
