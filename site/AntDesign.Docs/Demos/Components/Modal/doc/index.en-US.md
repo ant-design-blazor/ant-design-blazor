@@ -45,6 +45,7 @@ When requiring users to interact with the application, but without jumping to a 
 | OnOk              | Specify a function that will  be called when a user clicks the OK button | EventCallback<MouseEventArgs> | -             |
 | Draggable | Is it allowed to drag Modal through its Header（if true, at least one of Title and TitleTemplate must have a value） | bool | false |
 | DragInViewport | If Draggable is true, and is it only allowed drag Modal in the viewport | bool | true |
+| MaxBodyHeight | Modal content max height | string? | null |
 
 #### Note
 
