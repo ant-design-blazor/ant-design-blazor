@@ -21,7 +21,7 @@ namespace AntDesign
             MaskClosable = true;
         }
 
-        internal ModalRef ModalRef;
+        internal ModalRef ModalRef { get; set; }
 
         /// <summary>
         /// trigger after Dialog is closed
