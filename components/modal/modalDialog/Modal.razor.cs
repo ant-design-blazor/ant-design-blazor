@@ -222,6 +222,12 @@ namespace AntDesign
         [Parameter]
         public ModalLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Modal;
 
+        /// <summary>
+        /// max modal content body height
+        /// </summary>
+        [Parameter]
+        public string MaxBodyHeight { get; set; } = null;
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -298,8 +304,10 @@ namespace AntDesign
                 OkButtonProps = OkButtonProps,
 
                 CancelButtonProps = CancelButtonProps,
-                Rtl = Rtl
+                Rtl = Rtl,
+                MaxBodyHeight = MaxBodyHeight
             };
+
             return options;
         }
 
