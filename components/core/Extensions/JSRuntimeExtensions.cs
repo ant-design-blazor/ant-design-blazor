@@ -18,7 +18,6 @@ namespace AntDesign.Core.Extensions
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 throw;
             }
         }

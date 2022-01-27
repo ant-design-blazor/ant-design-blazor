@@ -87,7 +87,7 @@ namespace AntDesign
                         var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
                         if (Key == "sub1")
                         {
-                            Console.WriteLine(eval);
+                            //Console.WriteLine(eval);
                         }
                         return eval;
                         })
