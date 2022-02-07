@@ -46,5 +46,5 @@ And 4 other properties additionally.
 | Size | Set the size of `Button`.         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
 | Type | Type of the button.         | ButtonType | `ButtonType.Default` |
 | NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
-
+| Label | Value used for the aria-label        | string | null |
 
