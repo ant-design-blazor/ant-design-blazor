@@ -6,7 +6,7 @@
             @onclick="HandleOnClick" disabled="@Disabled"
             @onclick:stopPropagation="@OnClickStopPropagation"
             @onmouseup="OnMouseUp"
-            ant-click-animating-without-extra-node="@(this._animating ? "true":"false")">
+            ant-click-animating-without-extra-node="@(this._animating ? "true":"false")" aria-label="@Label">
         @if (Loading)
         {
             <span class="ant-btn-loading-icon">

@@ -25,6 +25,20 @@ namespace AntDesign.Tests.Button
                 <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""><span>Save</span></button>
             ");
         }
+        
+       [Fact]
+        public void Renders_a_button_with_contents_and_aria_label()
+        {
+            var cut = Context.RenderComponent<AntDesign.Button>(p =>{
+                p.AddChildContent("Save");
+                p.Add(x=>x.Label, "Save");
+               }
+            );
+
+            cut.MarkupMatches(@"
+                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" aria-label=""Save""><span>Save</span></button>
+            ");
+        }
 
         [Fact]
         public void Renders_a_disabled_the_button()

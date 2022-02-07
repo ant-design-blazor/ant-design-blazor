@@ -78,6 +78,12 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
+        /// Sets the ARIA label
+        /// </summary>
+        [Parameter]
+        public string Label { get; set; }
+        
+        /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
         [Parameter]
