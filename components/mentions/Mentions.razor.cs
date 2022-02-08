@@ -167,8 +167,6 @@ namespace AntDesign
 
         private void OnKeyPress(KeyboardEventArgs args)
         {
-            Console.WriteLine(args.Key);
-
             if (args == null) return;
             if (ValueChange.HasDelegate)
                 ValueChange.InvokeAsync(args.Code);
