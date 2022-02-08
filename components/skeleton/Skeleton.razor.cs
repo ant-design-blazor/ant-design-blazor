@@ -92,8 +92,6 @@ namespace AntDesign
         {
             if (Title == false) return;
 
-            Console.WriteLine(TitleWidth.Value);
-
             if (TitleWidth.Value == null)
             {
                 if (!Avatar && Paragraph)

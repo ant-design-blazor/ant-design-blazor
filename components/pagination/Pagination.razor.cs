@@ -178,7 +178,7 @@ namespace AntDesign
             var hasCurrent = _current != 0;
             if (hasCurrent && !hasOnChange)
             {
-                Console.WriteLine("Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.");
+                //Console.WriteLine("Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.");
             }
 
             var current = DefaultCurrent;
