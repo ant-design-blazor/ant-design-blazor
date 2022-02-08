@@ -75,8 +75,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg
 
 ### 服务端如何实现？
 
-- 服务端上传接口实现可以参考 [jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload/wiki#server-side)。
+- 服务端上传接口实现可以参考[Asp.Net Core WebAPI](https://github.com/ant-design-blazor/ant-design-blazor/discussions/2149) [jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload/wiki#server-side)。
 - 如果要做本地 mock 可以参考这个 [express 的例子](https://github.com/react-component/upload/blob/master/server.js)。
+
+### 如何获取FileStream
+
+目前并未实现FileStream,如果你追求在Server Side完成上传操作并省略WebAPI,你可以尝试使用官方的InputFile组件(并使用Antd的样式进行美化)
 
 ### 如何显示下载链接？
 
