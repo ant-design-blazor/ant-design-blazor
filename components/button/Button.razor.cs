@@ -23,6 +23,12 @@ namespace AntDesign
                 Size = value;
             }
         }
+        
+        /// <summary>
+        /// Sets the value of the aria-label attribute
+        /// </summary>
+        [Parameter]
+        public string AriaLabel { get; set; }
 
         /// <summary>
         /// Set the color of the button.
@@ -72,6 +78,7 @@ namespace AntDesign
         [Parameter]
         public string Icon { get; set; }
 
+        
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
