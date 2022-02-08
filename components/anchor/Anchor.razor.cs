@@ -164,7 +164,7 @@ namespace AntDesign
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+
                         }
                     }
                 }
