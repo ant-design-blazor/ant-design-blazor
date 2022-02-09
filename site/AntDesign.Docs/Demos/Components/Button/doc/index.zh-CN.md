@@ -32,6 +32,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
+| AriaLabel | Sets the aria-label attribute         | string    | null         |
 | Block | 将按钮宽度调整为其父宽度的选项 | bool    | false         | 
 | ChildContent | Content of the button.   | RenderFragment    | -         |
 | Danger | 设置危险按钮 | bool    | false         | 
