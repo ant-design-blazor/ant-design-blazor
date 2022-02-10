@@ -31,6 +31,7 @@ And 4 other properties additionally.
 
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
+| AriaLabel | Sets the aria-label attribute         | string    | null         |
 | Block | Option to fit button width to its parent width         | bool    | false         | 
 | ChildContent | Content of the button.   | RenderFragment    | -         |
 | Danger | Set the danger status of button | bool    | false         | 
