@@ -92,14 +92,19 @@ namespace AntDesign
 
         protected string FixedStyle => _fixedStyle;
 
+        private int ActualColumnSpan => IsHeader ? HeaderColSpan : ColSpan;
+
+        private int ColEndIndex => ColIndex + ActualColumnSpan;
+
         private void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
-                .GetIf(() => $"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
-                .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
-                .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
-                .If($"ant-table-cell-with-append", () => ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
+                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == "right" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
+                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
+                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == "right") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == "left") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
                 .If($"ant-table-cell-ellipsis", () => Ellipsis)
                 ;
         }
@@ -127,7 +132,7 @@ namespace AntDesign
                     Table?.TableLayoutIsFixed();
                 }
             }
-            else if (IsColGroup && Width == null)
+            else if (IsColGroup/* && Width == null*/)
             {
                 Context?.AddColGroup(this);
             }
@@ -156,6 +161,11 @@ namespace AntDesign
 
         private string CalcFixedStyle()
         {
+            if (Fixed == null)
+            {
+                Fixed = Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+            }
+
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
             {
@@ -197,9 +207,23 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
+            string fixedWidth;
+            if (fixedWidths.Length > 1)
+            {
+                fixedWidth = $"calc({string.Join(" + ", fixedWidths)})";
+            }
+            else if (fixedWidths.Length == 1)
+            {
+                fixedWidth = fixedWidths[0];
+            }
+            else
+            {
+                fixedWidth = "0px";
+            }
+
             cssStyleBuilder
                 .AddStyle("position", "sticky")
-                .AddStyle(Fixed, $"{(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths)})" : "0px")}");
+                .AddStyle(Fixed, fixedWidth);
 
             return cssStyleBuilder.Build();
         }

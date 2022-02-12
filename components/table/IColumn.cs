@@ -29,6 +29,8 @@ namespace AntDesign
 
         public int ColSpan { get; set; }
 
+        public int RowSpan { get; set; }
+
         public int HeaderColSpan { get; set; }
     }
 }

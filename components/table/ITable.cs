@@ -47,6 +47,10 @@ namespace AntDesign
 
         internal bool AnySelected { get; }
 
+        internal bool HasHeaderTemplate { get; }
+
+        internal bool HasItemTemplate { get; }
+
         internal void SelectionChanged();
 
         internal void OnExpandChange(RowData rowData);
