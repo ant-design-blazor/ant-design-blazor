@@ -4,7 +4,7 @@
 
 namespace AntDesign
 {
-    public class SimpleTableCell : ActionColumn
+    public class TableCell : ActionColumn
     {
     }
 }
