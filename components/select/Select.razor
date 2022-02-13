@@ -123,6 +123,7 @@
                                                        TItemValue="TItemValue"
                                                        TItem="TItem"
                                                        SearchValue="@_searchValue"
+													   SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
                                                        IsOverlayShow="@_dropDown.IsOverlayShow()"
 													   MaxTagCount="@_maxTagCountAsInt"
                                                        OnInput="@OnInputAsync"
@@ -130,7 +131,7 @@
                                                        OnKeyDown="@OnKeyDownAsync"
                                                        OnFocus="@OnInputFocusAsync"
                                                        OnBlur="@OnInputBlurAsync"
-                                                       OnClearClick="@OnInputClearClickAsync"                                                      
+                                                       OnClearClick="@OnInputClearClickAsync"
                                                        OnRemoveSelected="@OnRemoveSelectedAsync"
                                                        Placeholder="@Placeholder"
                                                        ShowPlaceholder="@ShowPlaceholder"/>
