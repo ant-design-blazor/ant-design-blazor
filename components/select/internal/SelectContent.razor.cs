@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using AntDesign.Core.JsInterop.ObservableApi;
@@ -61,6 +62,7 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
         [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+        [Parameter] public int SearchDebounceMilliseconds { get; set; }
         [Inject] protected IJSRuntime Js { get; set; }
         [Inject] private IDomEventListener DomEventListener { get; set; }
         protected ElementReference Ref
@@ -95,6 +97,7 @@ namespace AntDesign.Select.Internal
         private int _currentItemCount;
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
+        private Timer _debounceTimer;
 
         protected override void OnInitialized()
         {
@@ -230,6 +233,46 @@ namespace AntDesign.Select.Internal
                     await Js.FocusAsync(ParentSelect._inputRef);
                 }
             }
+        }
+
+        private async Task OnInputChange(ChangeEventArgs e)
+        {
+            if (SearchDebounceMilliseconds == 0)
+            {
+                await OnInput.InvokeAsync(e);
+                return;
+            }
+
+            await DebounceInputChange(e);
+        }
+
+        private async Task DebounceInputChange(ChangeEventArgs e, bool ignoreDebounce = false)
+        {
+            if (ignoreDebounce is false)
+            {
+                DebounceInput(e);
+                return;
+            }
+
+            if (_debounceTimer != null)
+            {
+                await _debounceTimer.DisposeAsync();
+
+                _debounceTimer = null;
+            }
+
+            await OnInput.InvokeAsync(e);
+        }
+
+        private void DebounceInput(ChangeEventArgs e)
+        {
+            _debounceTimer?.Dispose();
+            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, e, SearchDebounceMilliseconds, SearchDebounceMilliseconds);
+        }
+
+        private void DebounceTimerIntervalOnTick(object state)
+        {
+            InvokeAsync(async () => await DebounceInputChange((ChangeEventArgs)state, true));
         }
 
         private void SetInputWidth()
