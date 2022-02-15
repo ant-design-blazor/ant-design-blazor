@@ -78,6 +78,12 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool EnableSearch { get; set; }
         /// <summary>
+        /// Delays the processing of the search input event until the user has stopped 
+        /// typing for a predetermined amount of time
+        /// </summary>
+        [Parameter]
+        public int SearchDebounceMilliseconds { get; set; }
+        /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
         [Parameter] public bool Loading { get; set; }

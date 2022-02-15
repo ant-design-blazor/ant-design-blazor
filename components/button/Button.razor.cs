@@ -23,6 +23,12 @@ namespace AntDesign
                 Size = value;
             }
         }
+        
+        /// <summary>
+        /// Sets the value of the aria-label attribute
+        /// </summary>
+        [Parameter]
+        public string AriaLabel { get; set; }
 
         /// <summary>
         /// Set the color of the button.
