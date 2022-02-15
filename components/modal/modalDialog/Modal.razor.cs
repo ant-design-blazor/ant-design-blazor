@@ -213,8 +213,7 @@ namespace AntDesign
         /// <summary>
         /// Is RTL
         /// </summary>
-        [CascadingParameter]
-        public bool Rtl { get; set; } = false;
+        public bool Rtl => base.RTL;
 
         /// <summary>
         /// Modal Locale
