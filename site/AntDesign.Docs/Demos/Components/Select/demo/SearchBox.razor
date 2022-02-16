@@ -9,6 +9,7 @@
         Placeholder="input search text"
         ShowArrowIcon="false"
 		HideNotFoundContent="true"
+        SearchDebounceMilliseconds="350"
         OnSearch="@(async (value) => await OnSearch(value))"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 </Select>

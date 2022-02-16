@@ -35,6 +35,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
+| SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 0         |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
