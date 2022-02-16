@@ -125,7 +125,7 @@ namespace AntDesign
         {
             get
             {
-                return node => IsLeafExpression(node.DataItem);
+                return node => IsLeafExpression(DataSource, node.DataItem);
             }
         }
 
@@ -136,7 +136,7 @@ namespace AntDesign
         /// Specifies a method that returns whether the expression is a leaf node.
         /// </summary>
         [Parameter]
-        public Func<TItem, bool> IsLeafExpression { get; set; }
+        public Func<IEnumerable<TItem>, TItem, bool> IsLeafExpression { get; set; }
 
 
         protected virtual Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression

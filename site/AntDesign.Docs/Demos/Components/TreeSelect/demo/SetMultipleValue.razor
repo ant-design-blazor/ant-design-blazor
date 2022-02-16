@@ -6,8 +6,8 @@
             TitleExpression="m => m.MenuName"
             KeyExpression="m => m.MenuId"
             DataItemExpression="(menus, menuId) => menus.FirstOrDefault(m => m.MenuId == menuId)"
-            ChildrenMethodExpression="menuId => LocalJsonData.GetMenusByParentId(menuId)"
-            IsLeafExpression="m => LocalJsonData.HasChild(m.MenuId)"
+            ChildrenMethodExpression="(menus, menuId) => menus.Where(m => m.ParentId == menuId).ToList()"
+            IsLeafExpression="(menus,m) => menus.All(m => m.ParentId != m.MenuId)"
             Placeholder="Please select"
             TreeDefaultExpandAll>
 </SimpleTreeSelect>

@@ -1,0 +1,23 @@
+﻿@using AntDesign.Docs.Demos.Components.TreeSelect.Demo
+
+
+<TreeSelect TItem="WebMenu"
+                Style="width:100%;"
+                @bind-Value="@ParentDeptId"
+                DataSource="@(LocalJsonData.Data)"
+                Placeholder="请选择"
+                AllowClear="false"
+                TitleExpression="m => m.MenuName"
+                KeyExpression="m => m.MenuId"
+                ChildrenExpression="m => LocalJsonData.GetMenusByParentId(m.MenuId)"
+                IsLeafExpression="(menus,m) => menus.All(m => m.ParentId != m.MenuId)"
+                TreeDefaultExpandAll>
+
+       </TreeSelect>
+
+       @ParentDeptId
+
+@code{
+    private string ParentDeptId = "1";
+
+}

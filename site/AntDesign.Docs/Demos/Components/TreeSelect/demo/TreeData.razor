@@ -9,7 +9,7 @@
                   TitleExpression="data => data.Title"
                   KeyExpression="data => data.Value"
                   ChildrenExpression="data => data.Children "
-				  IsLeafExpression="data => data.Children == null "
+				  IsLeafExpression="(menus, data) => data.Children == null "
                   TreeDefaultExpandAll>
 </TreeSelect>
 
