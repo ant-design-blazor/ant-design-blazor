@@ -19,17 +19,17 @@
                    @onkeydown="OnKeyDown"
                    @attributes=@AdditonalAttributes()
                    @bind-value="@SearchValue"
-                   id="@ParentSelect.Id"
+                   id="@(ParentSelect.Id)_list"
                    type="search"
                    readonly="@(!ParentSelect.IsSearchEnabled)"
                    unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
                    role="combobox"
                    class="@Prefix-selection-search-input"
                    autocomplete="off"
-                   aria-owns="@(ParentSelect.Id)"
+                   aria-owns="@(ParentSelect.Id)_list"
                    aria-expanded="@IsOverlayShow"
                    aria-autocomplete="list"
-                   aria-controls="@(ParentSelect.Id)"
+                   aria-controls="@(ParentSelect.Id)_list"
                    aria-haspopup="listbox"
                    style="@_inputStyle"/>
         </span>

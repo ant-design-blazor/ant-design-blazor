@@ -7,7 +7,7 @@
 
 <CascadingValue Value="this" IsFixed="@(!IsGroupingEnabled)">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-        <div class="@ClassMapper.Class" style="@Style" id="@(Id)_list" tabindex="-1" @ref="Ref">
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
             <OverlayTrigger @ref="@_dropDown"
                             Visible="Open"
                             Disabled="Disabled"
