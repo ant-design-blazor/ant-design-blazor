@@ -22,6 +22,7 @@ Common Icon
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
+| Alt | Alternative text for the icon | string | - |
 | ClassName | 设置图标的样式名 |string         | -         |
 | Style   | 设置图标的样式，例如 fontSize 和 color| Css propertities         |
 | Spin | 是否有旋转动画 | boolean         |-       |
