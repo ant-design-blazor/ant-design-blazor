@@ -195,7 +195,6 @@ namespace AntDesign.Internal
                 Trigger.SetShouldRender(false);
                 await Task.Yield();
             }
-            else
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
