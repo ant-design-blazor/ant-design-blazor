@@ -17,6 +17,7 @@ Common Icon
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
+| Alt | Alternative text for the icon | string | - |
 | ClassName | className of Icon |string         | -         |
 | Style   | Style properties of icon, like fontSize and color| Css propertities         |
 | Spin | Rotate icon with animation | boolean         |-       |
