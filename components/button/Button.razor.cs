@@ -82,7 +82,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
-
+        
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
