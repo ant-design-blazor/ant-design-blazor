@@ -19,7 +19,7 @@
                    @onkeydown="OnKeyDown"
                    @attributes=@AdditonalAttributes()
                    @bind-value="@SearchValue"
-                   id="@ParentSelect.Id"
+                   id="@(ParentSelect.Id)_list"
                    type="search"
                    readonly="@(!ParentSelect.IsSearchEnabled)"
                    unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
