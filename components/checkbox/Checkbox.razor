@@ -1,9 +1,11 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
 
-<label class="@ClassMapperLabel.Class" style="@Style" id="@Id" @ref="Ref">
+<label class="@ClassMapperLabel.Class" style="@Style" for="@Id"  @ref="Ref">
     <span class="@ClassMapper.Class">
-        <input value="@Label"
+        <input 
+               id="@Id"
+               value="@Label"
                checked="@Checked"
                disabled="@Disabled"
 			   autofocus=@AutoFocus
