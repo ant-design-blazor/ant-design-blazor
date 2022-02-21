@@ -7,6 +7,9 @@ namespace AntDesign
     public partial class Icon : AntDomComponentBase
     {
         [Parameter]
+        public string Alt {get; set;}
+            
+        [Parameter]
         public bool Spin { get; set; }
 
         [Parameter]
