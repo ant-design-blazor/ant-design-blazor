@@ -147,7 +147,7 @@
 @background-color-base: hsv(0, 0, 96%); // Default grey background color
 
 // Disabled states
-@disabled-color: fade(#000, 25%);
+@disabled-color: fade(#000, 65%);
 @disabled-bg: @background-color-base;
 @disabled-active-bg: tint(@black, 90%);
 @disabled-color-dark: fade(#fff, 35%);
@@ -444,7 +444,7 @@
 @select-multiple-item-height-lg: 32px;
 @select-multiple-item-spacing-half: ceil((@input-padding-vertical-base / 2));
 @select-multiple-disabled-background: @input-disabled-bg;
-@select-multiple-item-disabled-color: #bfbfbf;
+@select-multiple-item-disabled-color: @disabled-color;
 @select-multiple-item-disabled-border-color: @select-border-color;
 
 // Cascader
