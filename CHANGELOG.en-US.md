@@ -29,13 +29,14 @@ timeline: true
 
 - Upload
 
-  - 📖 Add a reference implementation of the Upload interfacing API [#2274](https://github.com/ant-design-blazor/ant-design-blazor/pull/2274) [@SmRiley](https://github.com/SmRiley)
+  - 📖 Add a reference implementation of the Upload interfacing API. [#2274](https://github.com/ant-design-blazor/ant-design-blazor/pull/2274) [@SmRiley](https://github.com/SmRiley)
   - 🐞 Fixed center layout of upload. [#2267](https://github.com/ant-design-blazor/ant-design-blazor/pull/2267) [@oemil](https://github.com/oemil)
 
 - Modal
 
-  - 🆕 Add max content body set supported。 [#2264](https://github.com/ant-design-blazor/ant-design-blazor/pull/2264) [@zxyao145](https://github.com/zxyao145)
+  - 🆕 Add max content body set supported. [#2264](https://github.com/ant-design-blazor/ant-design-blazor/pull/2264) [@zxyao145](https://github.com/zxyao145)
   - 🐞 Fixed wrong width when without scroll bar. [#2212](https://github.com/ant-design-blazor/ant-design-blazor/pull/2212) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 Fixed RTL issue. [#2295](https://github.com/ant-design-blazor/ant-design-blazor/pull/2295) [@zxyao145](https://github.com/zxyao145)
 
 - Datepicker
 

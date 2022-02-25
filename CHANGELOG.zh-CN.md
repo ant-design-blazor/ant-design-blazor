@@ -21,8 +21,8 @@ timeline: true
 
 - Table
 
-  - 🆕 允许 从 CellRender 上下文中访问单元格数据[#2257](https://github.com/ant-design-blazor/ant-design-blazor/pull/2257) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 修复 PaginationOptions 的多语言设置[#2244](https://github.com/ant-design-blazor/ant-design-blazor/pull/2244) [@anranruye](https://github.com/anranruye)
+  - 🆕 允许 从 CellRender 上下文中访问单元格数据。[#2257](https://github.com/ant-design-blazor/ant-design-blazor/pull/2257) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 PaginationOptions 的多语言设置。[#2244](https://github.com/ant-design-blazor/ant-design-blazor/pull/2244) [@anranruye](https://github.com/anranruye)
   - 🐞 修复 当 PageIndex 和 PageSize 同时修改时，OnChagne 触发了两次。[#2239](https://github.com/ant-design-blazor/ant-design-blazor/pull/2239) [@anranruye](https://github.com/anranruye)
   - 🐞 修复 使用 DataTable 作为数据源的支持。[#2234](https://github.com/ant-design-blazor/ant-design-blazor/pull/2234) [@ElderJames](https://github.com/ElderJames)
   - 📖 文档 完善组件文档中关于 Table 的 API 部分。[#2219](https://github.com/ant-design-blazor/ant-design-blazor/pull/2219) [@SmRiley](https://github.com/SmRiley)
@@ -36,11 +36,12 @@ timeline: true
 
   - 🆕 增加 最大内容高度设置，提供内置 Form 表单的 demo。[#2264](https://github.com/ant-design-blazor/ant-design-blazor/pull/2264) [@zxyao145](https://github.com/zxyao145)
   - 🐞 修复 没有滚动条时错误的宽带设置。[#2212](https://github.com/ant-design-blazor/ant-design-blazor/pull/2212) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 RTL 问题。[#2295](https://github.com/ant-design-blazor/ant-design-blazor/pull/2295) [@zxyao145](https://github.com/zxyao145)
 
 - Datepicker
 
-  - 🌐 修复 datepicker 部分捷克语中的星期排序。[#2247](https://github.com/ant-design-blazor/ant-design-blazor/pull/2247) [@jeffraska](https://github.com/jeffraska)
-  - 🐞 修复 datepicker 缺失的前缀图标 [#2226](https://github.com/ant-design-blazor/ant-design-blazor/pull/2226) [@KarimFereidooni](https://github.com/KarimFereidooni)
+  - 🌐 修复 部分捷克语中的星期排序。[#2247](https://github.com/ant-design-blazor/ant-design-blazor/pull/2247) [@jeffraska](https://github.com/jeffraska)
+  - 🐞 修复 缺失的前缀图标。 [#2226](https://github.com/ant-design-blazor/ant-design-blazor/pull/2226) [@KarimFereidooni](https://github.com/KarimFereidooni)
 
 - 🐞 修复 图片无法居中。[#2287](https://github.com/ant-design-blazor/ant-design-blazor/pull/2287) [@zxyao145](https://github.com/zxyao145)
 - 💄 修复 Result 缺少的 Style 属性渲染。[#2256](https://github.com/ant-design-blazor/ant-design-blazor/pull/2256) [@CAPCHIK](https://github.com/CAPCHIK)
