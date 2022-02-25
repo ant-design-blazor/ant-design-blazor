@@ -1,4 +1,4 @@
----
+Ôªø---
 category: Components
 type: Feedback
 title: Drawer
@@ -60,7 +60,7 @@ tasks can be achieved more efficiently within thesame context.
 | MaskClosable      | Clicking on the mask (area outside the Drawer) to close the Drawer or not.      | `boolean`                                | `true`        |
 | Mask              | Whether to show mask or not.                                                    | `boolean`                                | `true`        |
 | CloseOnNavigation | Whether to close the drawer when the navigation history changes                 | `boolean`                                | `true`        |
-| Keyboard          |  «∑Ò÷ß≥÷º¸≈Ã esc πÿ±’                                                           | `boolean`                                | `true`        |
+| Keyboard          | Whether to support keyboard esc off                                             | `boolean`                                | `true`        |
 | MaskStyle         | Style for Drawer's mask element.                                                | `string`                                 | `{}`          |
 | BodyStyle         | Body style for modal body element. Such as height, padding etc.                 | `string`                                 | `{}`          |
 | Title             | The title for Drawer.                                                           | `OneOf<RenderFragment, string>`          | -             |
@@ -76,5 +76,5 @@ tasks can be achieved more efficiently within thesame context.
 
 | Property   | Description       | Type |
 | ---------- | ----------------- | ---- |
-| CloseAsync | close the drawer. | ``   |
-| OpenAsync  | open the drawer.  | ``   |
+| CloseAsync | close the drawer. |      |
+| OpenAsync  | open the drawer.  |      |
