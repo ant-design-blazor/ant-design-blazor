@@ -15,6 +15,39 @@ timeline: true
 
 ---
 
+### 0.10.4
+
+2022-02-25
+
+- Table
+
+  - 🆕 允许 从 CellRender 上下文中访问单元格数据。[#2257](https://github.com/ant-design-blazor/ant-design-blazor/pull/2257) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 PaginationOptions 的多语言设置。[#2244](https://github.com/ant-design-blazor/ant-design-blazor/pull/2244) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 当 PageIndex 和 PageSize 同时修改时，OnChagne 触发了两次。[#2239](https://github.com/ant-design-blazor/ant-design-blazor/pull/2239) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 使用 DataTable 作为数据源的支持。[#2234](https://github.com/ant-design-blazor/ant-design-blazor/pull/2234) [@ElderJames](https://github.com/ElderJames)
+  - 📖 文档 完善组件文档中关于 Table 的 API 部分。[#2219](https://github.com/ant-design-blazor/ant-design-blazor/pull/2219) [@SmRiley](https://github.com/SmRiley)
+
+- Upload
+
+  - 🐞 修复 拖拽上传区域的居中样式。[#2267](https://github.com/ant-design-blazor/ant-design-blazor/pull/2267) [@oemil](https://github.com/oemil)
+  - 📖 文档 添加 Upload 对接 API 的参考实现。[#2274](https://github.com/ant-design-blazor/ant-design-blazor/pull/2274) [@SmRiley](https://github.com/SmRiley)
+
+- Modal
+
+  - 🆕 增加 最大内容高度设置，提供内置 Form 表单的 demo。[#2264](https://github.com/ant-design-blazor/ant-design-blazor/pull/2264) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 没有滚动条时错误的宽带设置。[#2212](https://github.com/ant-design-blazor/ant-design-blazor/pull/2212) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 RTL 问题。[#2295](https://github.com/ant-design-blazor/ant-design-blazor/pull/2295) [@zxyao145](https://github.com/zxyao145)
+
+- Datepicker
+
+  - 🌐 修复 部分捷克语中的星期排序。[#2247](https://github.com/ant-design-blazor/ant-design-blazor/pull/2247) [@jeffraska](https://github.com/jeffraska)
+  - 🐞 修复 缺失的前缀图标。 [#2226](https://github.com/ant-design-blazor/ant-design-blazor/pull/2226) [@KarimFereidooni](https://github.com/KarimFereidooni)
+
+- 🐞 修复 图片无法居中。[#2287](https://github.com/ant-design-blazor/ant-design-blazor/pull/2287) [@zxyao145](https://github.com/zxyao145)
+- 💄 修复 Result 缺少的 Style 属性渲染。[#2256](https://github.com/ant-design-blazor/ant-design-blazor/pull/2256) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🐞 修复 完善 RadioGroup 和 Radio 之间 Disabled 状态的同步逻辑。[#2197](https://github.com/ant-design-blazor/ant-design-blazor/pull/2197) [@LeaFrock](https://github.com/LeaFrock)
+- 📖 文档 完善组件文档中关于 Input 和 Select 组件的 API 部分。[#2251](https://github.com/ant-design-blazor/ant-design-blazor/pull/2251) [@SmRiley](https://github.com/SmRiley)
+
 ### 0.10.3
 
 2021-12-19

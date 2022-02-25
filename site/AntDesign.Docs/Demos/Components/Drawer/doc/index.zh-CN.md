@@ -19,58 +19,58 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 
 ### Drawer
 
-| 参数             | 说明                                         | 类型          | 默认值    |
-| ---------------- | -------------------------------------------- | ------------- | --------- |
-| Title            | 标题         | string or slot | -         |
-| BodyStyle |可用于设置 Drawer 内容部分的样式                               | object        | -         |
-| Closable            |是否显示右上角的关闭按钮           | boolean | true         |
-| ChildContent |抽屉元素之间的子组件                                | object        | -         |
-| MaskClosable              |点击蒙层是否允许关闭         | boolean        | true        |
-| MaskStyle | 遮罩样式                               | object        | -         |
-| Placement | 抽屉的方向,可选值为 `left` , `top`,`right`,`bottom`        | string  | `right`         |
-| WrapClassName | 对话框外层容器的类名                               | string        | -         |
-| Width | 宽度                               | string\|int        | 256         |
-| Height | 高度, 在 placement 为 top 或 bottom 时使用                               | |int        |
-| ZIndex | 设置 Drawer 的 z-index                               | int        | -         |
-| OffsetX | X轴方向的偏移量，只在方向为 `'left'`或`'right'` 时生效 | int        | 0         |
-| OffsetY | Y轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | int        | 0         |
-| Visible | Drawer 是否可见                               | boolean        | -         |
-| Keyboard | 是否支持键盘 esc 关闭                               | boolean        | true         |
-| OnClose        | 点击遮罩层或右上角叉或取消按钮的回调                                   | function(e)     | -         |
-| OnViewInit             | 抽屉显示之前回调事件 | function(e)        | - |
+| 参数          | 说明                                                    | 类型           | 默认值  |
+| ------------- | ------------------------------------------------------- | -------------- | ------- |
+| Title         | 标题                                                    | string or slot | -       |
+| BodyStyle     | 可用于设置 Drawer 内容部分的样式                        | object         | -       |
+| Closable      | 是否显示右上角的关闭按钮                                | boolean        | true    |
+| ChildContent  | 抽屉元素之间的子组件                                    | object         | -       |
+| MaskClosable  | 点击蒙层是否允许关闭                                    | boolean        | true    |
+| MaskStyle     | 遮罩样式                                                | object         | -       |
+| Placement     | 抽屉的方向,可选值为 `left` , `top`,`right`,`bottom`     | string         | `right` |
+| WrapClassName | 对话框外层容器的类名                                    | string         | -       |
+| Width         | 宽度                                                    | string\|int    | 256     |
+| Height        | 高度, 在 placement 为 top 或 bottom 时使用              |                | int     |
+| ZIndex        | 设置 Drawer 的 z-index                                  | int            | -       |
+| OffsetX       | X 轴方向的偏移量，只在方向为 `'left'`或`'right'` 时生效 | int            | 0       |
+| OffsetY       | Y 轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | int            | 0       |
+| Visible       | Drawer 是否可见                                         | boolean        | -       |
+| Keyboard      | 是否支持键盘 esc 关闭                                   | boolean        | true    |
+| OnClose       | 点击遮罩层或右上角叉或取消按钮的回调                    | function(e)    | -       |
+| OnViewInit    | 抽屉显示之前回调事件                                    | function(e)    | -       |
 
 ### DrawerService
 
-| 方法名 | 说明                  | 参数                       | 返回             |
-| ------ | --------------------- | -------------------------- | ---------------- |
-| CreateAsync | 创建并打开一个 Drawer | `DrawerConfig`  | `DrawerRef` |
-| CreateAsync | 创建并打开一个 Drawer | `DrawerConfig` , TContentParams  | `DrawerRef<R>` |
+| 方法名      | 说明                  | 参数                            | 返回           |
+| ----------- | --------------------- | ------------------------------- | -------------- |
+| CreateAsync | 创建并打开一个 Drawer | `DrawerConfig`                  | `DrawerRef`    |
+| CreateAsync | 创建并打开一个 Drawer | `DrawerConfig` , TContentParams | `DrawerRef<R>` |
 
 ### DrawerOptions
 
-| 参数              | 说明                                                   | 类型                                     | 默认值    |
-| ----------------- | ------------------------------------------------------ | ---------------------------------------- | --------- |
-| Content           | Drawer body 的内容                                     | `OneOf<RenderFragment, string>`          | -         |
-| ContentParams     | 内容组件的输入参数 / Template的 context                | `D`                                      | -         |
-| Closable          | 是否显示右上角的关闭按钮                               | `boolean`                                | `true`    |
-| MaskClosable      | 点击蒙层是否允许关闭                                   | `boolean`                                | `true`    |
-| Mask              | 是否展示遮罩                                           | `boolean`                                | `true`    |
-| CloseOnNavigation | 导航历史变化时是否关闭抽屉组件                         | `boolean`                                | `true`    |
-| Keyboard          | 是否支持键盘esc关闭                                    | `boolean`                                | `true`    |
-| MaskStyle         | 遮罩样式                                               | `string`                                 | `{}`      |
-| BodyStyle         | Modal body 样式                                        | `string`                                 | `{}`      |
-| Title             | 标题                                                   | `OneOf<RenderFragment, string>`          | -         |
-| Width             | 宽度                                                   | `int`                                    | `256`     |
-| Height            | 高度, 只在方向为 `'top'`或`'bottom'` 时生效            | `int`                                    | `256`     |
-| WrapClassName     | 对话框外层容器的类名                                   | `string`                                 | -         |
-| ZIndex            | 设置 Drawer 的 `z-index`                               | `int`                                    | `1000`    |
-| Placement         | 抽屉的方向                                             | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |
-| OffsetX           | X轴方向的偏移量，只在方向为 `'left'`或`'right'` 时生效 | `int`                                    | `0`       |
-| OffsetY           | Y轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | `int`                                    | `0`       |
+| 参数              | 说明                                                    | 类型                                     | 默认值    |
+| ----------------- | ------------------------------------------------------- | ---------------------------------------- | --------- |
+| Content           | Drawer body 的内容                                      | `OneOf<RenderFragment, string>`          | -         |
+| ContentParams     | 内容组件的输入参数 / Template 的 context                | `D`                                      | -         |
+| Closable          | 是否显示右上角的关闭按钮                                | `boolean`                                | `true`    |
+| MaskClosable      | 点击蒙层是否允许关闭                                    | `boolean`                                | `true`    |
+| Mask              | 是否展示遮罩                                            | `boolean`                                | `true`    |
+| CloseOnNavigation | 导航历史变化时是否关闭抽屉组件                          | `boolean`                                | `true`    |
+| Keyboard          | 是否支持键盘 esc 关闭                                   | `boolean`                                | `true`    |
+| MaskStyle         | 遮罩样式                                                | `string`                                 | `{}`      |
+| BodyStyle         | Modal body 样式                                         | `string`                                 | `{}`      |
+| Title             | 标题                                                    | `OneOf<RenderFragment, string>`          | -         |
+| Width             | 宽度                                                    | `int`                                    | `256`     |
+| Height            | 高度, 只在方向为 `'top'`或`'bottom'` 时生效             | `int`                                    | `256`     |
+| WrapClassName     | 对话框外层容器的类名                                    | `string`                                 | -         |
+| ZIndex            | 设置 Drawer 的 `z-index`                                | `int`                                    | `1000`    |
+| Placement         | 抽屉的方向                                              | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |
+| OffsetX           | X 轴方向的偏移量，只在方向为 `'left'`或`'right'` 时生效 | `int`                                    | `0`       |
+| OffsetY           | Y 轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | `int`                                    | `0`       |
 
 ### DrawerRef
 
-| 名称  | 说明        | 类型                   |
-| ----- | ----------- | ---------------------- |
-| CloseAsync | 关闭 Drawer |  |
-| OpenAsync  | 打开 Drawer |           |
+| 名称       | 说明        | 类型 |
+| ---------- | ----------- | ---- |
+| CloseAsync | 关闭 Drawer |      |
+| OpenAsync  | 打开 Drawer |      |
