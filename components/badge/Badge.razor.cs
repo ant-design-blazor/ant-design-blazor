@@ -154,10 +154,11 @@ namespace AntDesign
                 .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
                 .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
                 .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
-                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => StatusOrPresetColor != null)
+                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
                 .If($"{prefixName}-zoom-leave {prefixName}-zoom-leave-active", () => _dotLeave)
+                .If($"{prefixName}-count-overflow", () => Count > OverflowCount)
                 ;
         }
 
