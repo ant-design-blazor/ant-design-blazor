@@ -1,0 +1,12 @@
+@import './index.less';
+
+.@{badge-prefix-cls} {
+
+    &-count:not(.@{badge-prefix-cls}-count-overflow) {
+        font-size: 0;
+
+        .@{number-prefix-cls}-only {
+            font-size: @badge-font-size;
+        }
+    }
+}
