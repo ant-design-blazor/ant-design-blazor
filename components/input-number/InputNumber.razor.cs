@@ -311,6 +311,7 @@ namespace AntDesign
             var num = _increaseFunc(Value, _step);
             await ChangeValueAsync(num);
 
+            _increaseTokenSource?.Cancel();
             _increaseTokenSource = new CancellationTokenSource();
             _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
         }
@@ -347,6 +348,7 @@ namespace AntDesign
             var num = _decreaseFunc(Value, _step);
             await ChangeValueAsync(num);
 
+            _decreaseTokenSource?.Cancel();
             _decreaseTokenSource = new CancellationTokenSource();
             _ = Decrease(_decreaseTokenSource.Token).ConfigureAwait(false);
         }
