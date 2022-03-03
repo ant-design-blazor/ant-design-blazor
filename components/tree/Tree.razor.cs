@@ -379,10 +379,12 @@ namespace AntDesign
         {
             if (treeNode.Checked)
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
-            else
+            else if (_checkedNodes.Any())
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
+
             _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
-            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
+            if (_checkedKeys.Length > 0 && CheckedKeysChanged.HasDelegate)
+                CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
