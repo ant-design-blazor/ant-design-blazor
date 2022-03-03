@@ -33,7 +33,16 @@
 						@foreach (var pane in _invisibleTabs)
 						{
 							<li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
-							@onclick="(e)=>HandleTabClick(pane)">@pane.Tab</li>
+							    @onclick="(e)=>HandleTabClick(pane)">
+                                @if (pane.TabTemplate != null)
+                                {
+                                    @pane.TabTemplate
+                                }
+                                else
+                                {
+                                    @pane.Tab
+                                }
+                            </li>
 						}
 					</ul>
 				</Overlay>
