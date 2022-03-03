@@ -325,9 +325,9 @@ namespace AntDesign
                     _checkedKeys = value;
                 }
 
-                foreach (var item in ChildNodes)
+                foreach (var item in _allNodes.Where(n => _checkedKeys.Contains(n.Key)))
                 {
-                    item.SetChecked(_checkedKeys.Contains(item.Key));
+                    item.SetChecked(true);
                 }
             }
         }
@@ -377,12 +377,15 @@ namespace AntDesign
         /// <param name="treeNode"></param>
         internal void AddOrRemoveCheckNode(TreeNode<TItem> treeNode)
         {
+            var old = _checkedKeys;
             if (treeNode.Checked)
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
             _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
-            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
+
+            if (_checkedKeys.Any() && !old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
+                CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
