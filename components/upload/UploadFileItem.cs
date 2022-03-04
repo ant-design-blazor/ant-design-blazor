@@ -41,7 +41,7 @@ namespace AntDesign
 
         public bool IsPicture()
         {
-            string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico" };
+            string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico",".jfif",".jpeg",".bmp",".tga",".svg",".tif" };
             Ext = FileName.Substring(FileName.LastIndexOf('.'));
             return imageTypes.Any(imageType => imageType.Equals(Ext, StringComparison.InvariantCultureIgnoreCase));
         }
