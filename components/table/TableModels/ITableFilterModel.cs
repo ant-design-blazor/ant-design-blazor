@@ -9,6 +9,8 @@ namespace AntDesign.TableModels
     {
         public string FieldName { get; }
 
+        public int ColumnIndex { get; }
+
         public IEnumerable<string> SelectedValues { get; }
 
         public IList<TableFilter> Filters { get; }
