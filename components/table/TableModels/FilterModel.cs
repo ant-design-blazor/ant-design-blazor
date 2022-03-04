@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using AntDesign.FilterExpression;
 
 namespace AntDesign.TableModels
@@ -15,19 +16,33 @@ namespace AntDesign.TableModels
     {
         public string FieldName { get; }
 
-        public IEnumerable<string> SelectedValues { get; set; }
+        public IEnumerable<string> SelectedValues { get; }
 
         public IList<TableFilter> Filters { get; }
 
         public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
 
-        private readonly FilterExpressionResolver<TField> _filterExpressionResolver = new FilterExpressionResolver<TField>();
+        public int ColumnIndex => _columnIndex;
 
-        private LambdaExpression _getFieldExpression;
+        private readonly FilterExpressionResolver<TField> _filterExpressionResolver = new FilterExpressionResolver<TField>();
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
+        private LambdaExpression _getFieldExpression;
+        private int _columnIndex;
+
+#if NET5_0_OR_GREATER
+        [JsonConstructor]
+#endif
+        public FilterModel(int columnIndex, string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters)
+        {
+            this.FieldName = fieldName;
+            this.SelectedValues = selectedValues;
+            this.Filters = filters;
+            this._columnIndex = columnIndex;
+        }
+
+        public FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
@@ -42,6 +57,7 @@ namespace AntDesign.TableModels
             this.SelectedValues = filters.Select(x => x.Value?.ToString());
             this.Filters = filters;
             this.FilterType = filterType;
+            this._columnIndex = column.ColIndex;
         }
 
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
@@ -108,9 +124,6 @@ namespace AntDesign.TableModels
             {
                 return source.Where(Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression));
             }
-
         }
-
-
     }
 }
