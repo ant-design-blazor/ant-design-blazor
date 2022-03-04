@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using AntDesign.Internal;
+using System.Text.Json.Serialization;
 
 namespace AntDesign.TableModels
 {
-    public class SortModel<TField> : ITableSortModel, IComparer<TField>
+    public class SortModel<TField> : ITableSortModel, IComparer<TField>, ICloneable
     {
         public int Priority { get; }
 
@@ -18,19 +16,36 @@ namespace AntDesign.TableModels
 
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
+        public int ColumnIndex => _columnIndex;
+
         private readonly Func<TField, TField, int> _comparer;
 
         private SortDirection _sortDirection;
 
         private LambdaExpression _getFieldExpression;
 
-        public SortModel(LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
+        private int _columnIndex;
+
+
+        public SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
             this.Priority = priority;
+            this._columnIndex = column.ColIndex;
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
             this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
+        }
+
+#if NET5_0_OR_GREATER
+        [JsonConstructor]
+#endif
+        public SortModel(int columnIndex, int priority, string fieldName, string sort)
+        {
+            this.Priority = priority;
+            this._columnIndex = columnIndex;
+            this.FieldName = fieldName;
+            this._sortDirection = SortDirection.Parse(sort);
         }
 
         void ITableSortModel.SetSortDirection(SortDirection sortDirection)
@@ -61,6 +76,11 @@ namespace AntDesign.TableModels
         public int Compare(TField x, TField y)
         {
             return _comparer?.Invoke(x, y) ?? 0;
+        }
+
+        public object Clone()
+        {
+            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort);
         }
     }
 }
