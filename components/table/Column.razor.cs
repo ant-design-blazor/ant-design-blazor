@@ -9,6 +9,7 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
+using AntDesign.Core.Helpers;
 
 namespace AntDesign
 {
@@ -195,7 +196,7 @@ namespace AntDesign
 
                 if (Sortable && GetFieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -284,7 +285,7 @@ namespace AntDesign
             if (IsHeader)
             {
                 FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
-                    new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
+                    new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
                     null;
             }
         }
@@ -395,7 +396,7 @@ namespace AntDesign
                 });
             }
             _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
@@ -455,79 +456,32 @@ namespace AntDesign
             foreach (var filter in filterModel.Filters)
             {
                 if (filter.Value is JsonElement)
-                    filter.Value = GetObjectFromJsonElement((JsonElement)filter.Value);
+                {
+                    filter.Value = JsonElementHelper<TData>.GetValue((JsonElement)filter.Value);
+                }
             }
 
             if (_columnFilterType == TableFilterType.List)
-                _filters.Where(filter => filterModel.Filters.Select(f => f.Text)
-                                                            .ToList()
-                                                            .Contains(filter.Text))
-                        .ForEach(filter => filter.Selected = true);
+            {
+                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                {
+                    filter.Selected = true;
+                }
+            }
             else
+            {
                 _filters = filterModel.Filters;
+            }
 
-            FilterModel = new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType);
+            FilterModel = new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType);
 
             _hasFilterSelected = true;
-            StateHasChanged();
-        }
-
-        /// <summary>
-        /// System.Text.Json deserialize 'object' type into 'JsonElement', so value inside filter is needed to convert to object
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private object GetObjectFromJsonElement(JsonElement value)
-        {
-            if (_columnDataType == typeof(DateTime))
-                return value.GetDateTime();
-            else if (_columnDataType.IsEnum)
-            {
-                if (value.ValueKind == JsonValueKind.Number)
-                    return Enum.Parse(THelper.GetUnderlyingType<TData>(), value.GetInt32().ToString());
-                else
-                    return Enum.Parse(THelper.GetUnderlyingType<TData>(), value.GetString());
-            }
-            else if (_columnDataType == typeof(byte))
-                return value.GetByte();
-            else if (_columnDataType == typeof(decimal))
-                return value.GetDecimal();
-            else if (_columnDataType == typeof(double))
-                return value.GetDouble();
-            else if (_columnDataType == typeof(short))
-                return value.GetInt16();
-            else if (_columnDataType == typeof(int))
-                return value.GetInt32();
-            else if (_columnDataType == typeof(long))
-                return value.GetInt64();
-            else if (_columnDataType == typeof(sbyte))
-                return value.GetSByte();
-            else if (_columnDataType == typeof(float))
-                return value.GetSingle();
-            else if (_columnDataType == typeof(ushort))
-                return value.GetUInt16();
-            else if (_columnDataType == typeof(uint))
-                return value.GetUInt32();
-            else if (_columnDataType == typeof(ulong))
-                return value.GetUInt64();
-            else if (_columnDataType == typeof(Guid))
-                return value.GetGuid();
-            else if (_columnDataType == typeof(bool))
-            {
-                if (value.ValueKind == JsonValueKind.True)
-                    return true;
-                else
-                    return false;
-            }
-            else
-                return value.GetString();
         }
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
-            SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
+            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
-            StateHasChanged();
         }
     }
 }

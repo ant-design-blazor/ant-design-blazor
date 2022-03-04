@@ -166,6 +166,8 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private IFieldColumn[] _fieldColumns;
+
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
@@ -223,6 +225,8 @@ namespace AntDesign
                 return;
             }
 
+            _fieldColumns = ColumnContext.HeaderColumns.Where(x => x is IFieldColumn field && field.FieldName is not null).Cast<IFieldColumn>().ToArray();
+
             ReloadAndInvokeChange();
             _hasInitialized = true;
         }
@@ -255,18 +259,16 @@ namespace AntDesign
 
                 FlushCache();
 
-                foreach (var column in queryModel.SortModel)
+                foreach (var sorter in queryModel.SortModel)
                 {
-                    List<IFieldColumn> fieldColumns = ColumnContext.HeaderColumns.Cast<IFieldColumn>().ToList();
-                    IFieldColumn fieldColumn = fieldColumns.Where(x => x.FieldName.Equals(column.FieldName)).First();
+                    var fieldColumn = _fieldColumns[sorter.ColumnIndex];
+                    fieldColumn.SetSortModel(sorter);
+                }
 
-                    if (queryModel.FilterModel.Any(x => x.FieldName.Equals(fieldColumn.FieldName)))
-                    {
-                        var filter = queryModel.FilterModel.Where(x => x.FieldName.Equals(fieldColumn.FieldName)).First();
-                        fieldColumn.SetFilterModel(filter);
-                    }
-
-                    fieldColumn.SetSortModel(column);
+                foreach (var filter in queryModel.FilterModel)
+                {
+                    var fieldColumn = _fieldColumns[filter.ColumnIndex];
+                    fieldColumn.SetFilterModel(filter);
                 }
 
                 this.ReloadAndInvokeChange();
@@ -297,7 +299,7 @@ namespace AntDesign
             }
         }
 
-        public QueryModel GetQueryModel() => BuildQueryModel();
+        public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
 
         private QueryModel<TItem> BuildQueryModel()
         {

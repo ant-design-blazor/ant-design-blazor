@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -32,6 +33,7 @@ namespace AntDesign.TableModels
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
+#endif
         public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
         {
             this.PageIndex = pageIndex;
@@ -39,10 +41,9 @@ namespace AntDesign.TableModels
             this.SortModel = sortModel;
             this.FilterModel = filterModel;
         }
-#endif
     }
 
-    public class QueryModel<TItem> : QueryModel
+    public class QueryModel<TItem> : QueryModel, ICloneable
     {
         internal QueryModel(int pageIndex, int pageSize) : base(pageIndex, pageSize)
         {
@@ -50,10 +51,10 @@ namespace AntDesign.TableModels
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
+#endif
         public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel) : base(pageIndex, pageSize, sortModel, filterModel)
         {
         }
-#endif
 
         internal void AddSortModel(ITableSortModel model)
         {
@@ -81,5 +82,12 @@ namespace AntDesign.TableModels
         }
 
         public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
+
+        public object Clone()
+        {
+            var sorters = this.SortModel.Select(x => x.Clone() as ITableSortModel).ToList();
+            var filters = this.FilterModel.ToList();
+            return new QueryModel<TItem>(PageIndex, PageSize, sorters, filters);
+        }
     }
 }

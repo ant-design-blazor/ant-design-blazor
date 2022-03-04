@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace AntDesign
@@ -32,6 +33,7 @@ namespace AntDesign
         }
 #if NET5_0_OR_GREATER
         [JsonConstructor]
+#endif
         public TableFilter(string text, object value, bool selected, TableFilterCompareOperator filterCompareOperator, TableFilterCondition filterCondition)
         {
             this.Text = text;
@@ -40,7 +42,6 @@ namespace AntDesign
             this.FilterCompareOperator = filterCompareOperator;
             this.FilterCondition = filterCondition;
         }
-#endif
     }
 
     public class TableFilter<TValue> : TableFilter
@@ -51,10 +52,11 @@ namespace AntDesign
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
+#endif
         public TableFilter(string text, object value, bool selected, TableFilterCompareOperator filterCompareOperator, TableFilterCondition filterCondition) : base(text, value, selected, filterCompareOperator, filterCondition)
         {
         }
-#endif
+
         new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
 
