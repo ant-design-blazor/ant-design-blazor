@@ -233,6 +233,8 @@ namespace AntDesign
 
         public void ReloadData()
         {
+            ResetData();
+
             PageIndex = 1;
 
             FlushCache();
@@ -242,6 +244,8 @@ namespace AntDesign
 
         public void ReloadData(int? pageIndex, int? pageSize = null)
         {
+            ResetData();
+
             ChangePageIndex(pageIndex ?? 1);
             ChangePageSize(pageSize ?? PageSize);
 
@@ -252,6 +256,8 @@ namespace AntDesign
 
         public void ReloadData(QueryModel queryModel)
         {
+            ResetData();
+
             if (queryModel is not null)
             {
                 ChangePageIndex(queryModel.PageIndex);
@@ -277,7 +283,7 @@ namespace AntDesign
 
         public void ResetData()
         {
-            ChangePageIndex(PageIndex);
+            ChangePageIndex(1);
             ChangePageSize(PageSize);
 
             FlushCache();
