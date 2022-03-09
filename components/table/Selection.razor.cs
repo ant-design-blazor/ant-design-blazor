@@ -16,6 +16,9 @@ namespace AntDesign
 
         [Parameter] public bool CheckStrictly { get; set; }
 
+        [Parameter]
+        public virtual RenderFragment<CellData> CellRender { get; set; }
+
         //private bool _checked;
 
         private bool Indeterminate => IsHeader
