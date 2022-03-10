@@ -112,6 +112,9 @@ namespace AntDesign
         [Parameter]
         public bool HasFeedback { get; set; }
 
+        [Parameter] 
+        public bool ShowFeedbackOnError { get; set; }
+
         [Parameter]
         public FormValidateStatus ValidateStatus { get; set; }
 
@@ -126,7 +129,9 @@ namespace AntDesign
                 { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
             };
 
-        private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
+        private bool IsShowIcon => (HasFeedback && _iconMap.ContainsKey(ValidateStatus));
+
+        private bool IsShowFeedbackOnError => (ShowFeedbackOnError && !_isValid);
 
         private EditContext EditContext => Form?.EditContext;
 
@@ -166,6 +171,11 @@ namespace AntDesign
             {
                 _validationMessages = new[] { Help };
             }
+
+            if (ShowFeedbackOnError && ValidateStatus == FormValidateStatus.Default)
+            {
+                ValidateStatus = FormValidateStatus.Error;
+            }
         }
 
         protected void SetClass()
@@ -174,9 +184,9 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
-                .If($"{_prefixCls}-has-feedback", () => HasFeedback)
+                .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
-                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => (HasFeedback || IsShowFeedbackOnError) && ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
                 .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
@@ -352,7 +362,7 @@ namespace AntDesign
                     };
 
                     var result = FormValidateHelper.GetValidationResult(validationContext);
-
+                   
                     if (result != null)
                     {
                         results.Add(result);
