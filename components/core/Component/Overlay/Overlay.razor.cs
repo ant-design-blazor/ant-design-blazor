@@ -70,7 +70,7 @@ namespace AntDesign.Internal
         /// By default Overlay does not render its content if Overlay hasn't been
         /// activated (shown at least once). Setting HiddenMode = true will 
         /// go through rendering process.
-        /// Use case: Select component, when using <SimpleOption> or <SelectOption>
+        /// Use case: Select component, when using <see cref="SimpleSelectOption"/> or <see cref="SelectOption{TItemValue, TItem}"/>
         /// needs HiddenMode = true, so the select options are initialized and 
         /// potential defaults can be rendered properly.
         /// </summary>
@@ -195,7 +195,6 @@ namespace AntDesign.Internal
                 Trigger.SetShouldRender(false);
                 await Task.Yield();
             }
-            else
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
@@ -330,7 +329,7 @@ namespace AntDesign.Internal
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
-                    Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
+                    //Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
                     await Task.Delay(10);
                     await AddOverlayToBody(overlayLeft, overlayTop);
                 }

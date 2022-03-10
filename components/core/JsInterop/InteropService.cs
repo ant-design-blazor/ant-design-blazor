@@ -26,7 +26,6 @@ namespace AntDesign.JsInterop
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 throw;
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -13,7 +12,18 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled != value)
+                {
+                    _disabled = value;
+                    OnDisabledValueChanged?.Invoke(_disabled);
+                }
+            }
+        }
 
         [Parameter]
         public RadioButtonStyle ButtonStyle { get; set; } = RadioButtonStyle.Outline;
@@ -38,12 +48,15 @@ namespace AntDesign
         [Parameter]
         public OneOf<string[], RadioOption<TValue>[]> Options { get; set; }
 
-        private List<Radio<TValue>> _radioItems = new List<Radio<TValue>>();
+        private bool _disabled;
+        private Action<bool> OnDisabledValueChanged { get; set; }
 
         private TValue _defaultValue;
 
         private bool _hasDefaultValue;
         private bool _defaultValueSetted;
+
+        private readonly List<Radio<TValue>> _radioItems = new();
 
         private static readonly Dictionary<RadioButtonStyle, string> _buttonStyleDics = new()
         {
@@ -77,6 +90,12 @@ namespace AntDesign
                 radio.SetName(Name);
             }
             _radioItems.Add(radio);
+            // If the current radio has been already disabled, this radio group won't sync the value of `Disabled`.
+            if (!radio.Disabled)
+            {
+                radio.SetDisabledValue(_disabled);
+                OnDisabledValueChanged += radio.SetDisabledValue;
+            }
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
                 await radio.Select();
@@ -87,6 +106,7 @@ namespace AntDesign
         internal void RemoveRadio(Radio<TValue> radio)
         {
             _radioItems.Remove(radio);
+            OnDisabledValueChanged -= radio.SetDisabledValue;
         }
 
         protected override async Task OnParametersSetAsync()
@@ -107,25 +127,20 @@ namespace AntDesign
 
         internal async Task OnRadioChange(TValue value)
         {
-            if (!EqualsValue(this.CurrentValue, value))
+            var oldValue = CurrentValue;
+            // If the current value changes, it will invoke `ValueChanged` among property-set method.
+            CurrentValue = value;
+            // Have to check equal again in order to decide whether invoking `OnChange` or not.
+            if (!EqualsValue(oldValue, CurrentValue))
             {
-                this.CurrentValue = value;
-
-                await this.ValueChanged.InvokeAsync(value);
-
-                if (this.OnChange.HasDelegate)
+                if (OnChange.HasDelegate)
                 {
-                    await this.OnChange.InvokeAsync(value);
+                    await OnChange.InvokeAsync(value);
                 }
             }
         }
 
         private static bool EqualsValue(TValue left, TValue right)
-        {
-            if (left != null) return left.Equals(right);
-            if (right != null) return right.Equals(left);
-            if (left == null && right == null) return true;
-            return false;
-        }
+            => EqualityComparer<TValue>.Default.Equals(left, right);
     }
 }

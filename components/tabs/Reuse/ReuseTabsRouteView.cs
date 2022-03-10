@@ -20,7 +20,7 @@ namespace AntDesign
 
         private string CurrentUrl => Navmgr.Uri;
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.OrderBy(x => x.CreatedAt).ToArray();
+        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
 
         public void RemovePage(string key)
         {
@@ -61,6 +61,7 @@ namespace AntDesign
                 builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
                 {
                     b.OpenComponent(20, layoutType);
+                    b.AddAttribute(21, "Body", body);
                     b.CloseComponent();
                 }));
             }
@@ -74,6 +75,7 @@ namespace AntDesign
                     Body = body,
                     Url = CurrentUrl,
                     CreatedAt = DateTime.Now,
+                    Ignore = false
                 };
             }
         }
@@ -90,25 +92,35 @@ namespace AntDesign
 
                 builder.AddComponentReferenceCapture(2, @ref =>
                 {
-                    _pageMap[url].Title ??= GetPageTitle(routeData.PageType, url, @ref);
+                    GetPageInfo(_pageMap[url], routeData.PageType, url, @ref);
                 });
 
                 builder.CloseComponent();
             };
         }
 
-        private static RenderFragment GetPageTitle(Type pageType, string url, object page)
+        private void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
         {
             if (page is IReuseTabsPage resuse)
             {
-                return resuse.GetPageTitle();
-            }
-            else if (pageType.GetCustomAttributes(true).FirstOrDefault(o => o is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute attr && attr is { })
-            {
-                return attr.Title?.ToRenderFragment();
+                pageItem.Title ??= resuse.GetPageTitle();
             }
 
-            return new Uri(url).PathAndQuery.ToRenderFragment();
+            var attributes = pageType.GetCustomAttributes(true);
+
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr != null)
+            {
+                pageItem.Title ??= titleAttr.Title?.ToRenderFragment();
+            }
+
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageAttribute) is ReuseTabsPageAttribute attr && attr != null)
+            {
+                pageItem.Title ??= attr.Title?.ToRenderFragment();
+                pageItem.Ignore = attr.Ignore;
+                pageItem.Closable = attr.Closable;
+            }
+
+            pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
         }
     }
 }

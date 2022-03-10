@@ -3,6 +3,10 @@ import { styleHelper } from '../styleHelper'
 import { state } from '../stateProvider'
 import * as enums from '../enums';
 
+
+let cachedScrollBarSize: number | undefined = undefined;
+
+
 export class manipulationHelper {
   static addElementToBody(element) {
     document.body.appendChild(element);
@@ -12,11 +16,12 @@ export class manipulationHelper {
     document.body.removeChild(element);
   }
 
-  static addElementTo(addElement, elementSelector): boolean {
+  static addElementTo(addElement, elementSelector, prepend = false): boolean {
     let parent = domInfoHelper.get(elementSelector);
     if (parent && addElement) {
       if (parent instanceof Node && addElement instanceof Node) {
-        parent.appendChild(addElement);
+        if (prepend) parent.insertBefore(addElement, parent.firstChild);
+        else parent.appendChild(addElement);
         return true;
       } else {
         console.log("does not implement node", parent, addElement);
@@ -38,6 +43,30 @@ export class manipulationHelper {
       for (let key in attributes) {
         dom.setAttribute(key, attributes[key]);
       }
+    }
+  }
+  
+  static copyElement(element) {
+    if (!this.copyElementAsRichText(element)) {
+      this.copy(element.innerText);
+    }
+  }
+
+  private static copyElementAsRichText(element) {
+    var selection = document.getSelection();
+    if (selection.rangeCount > 0) {
+      selection.removeAllRanges();
+    }
+    var range = document.createRange();
+    range.selectNode(element);
+    selection.addRange(range);
+    try {
+      var successful = document.execCommand('copy');
+      selection.removeAllRanges();
+      return successful;
+    } catch (err) {
+      selection.removeAllRanges();
+      return false;
     }
   }
 
@@ -156,10 +185,11 @@ export class manipulationHelper {
       oldBodyCache[key] = body.style[key];
     });
     state.oldBodyCacheStack.push(oldBodyCache);
+    const scrollBarSize = this.getScrollBarSize();
     styleHelper.css(body,
       {
         "position": "relative",
-        "width": this.hasScrollbar() ? "calc(100% - 17px)" : null,
+        "width": this.hasScrollbar() && scrollBarSize > 0 ? `calc(100% - ${scrollBarSize}px)` : null,
         "overflow": "hidden"
       });
     styleHelper.addCls(document.body, "ant-scrolling-effect");
@@ -183,4 +213,51 @@ export class manipulationHelper {
     return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
   }
 
+
+  /**
+   * getScrollBarSize
+   * source https://github.com/react-component/util/blob/master/src/getScrollBarSize.tsx
+   * 
+   * @param fresh force get scrollBar size and don't use cache
+   * @returns 
+   */
+   static getScrollBarSize = (fresh: boolean = false) => {
+    if (typeof document === "undefined") {
+      return 0;
+    }
+
+    if (fresh || cachedScrollBarSize === undefined) {
+      const inner = document.createElement("div");
+      inner.style.width = "100%";
+      inner.style.height = "200px";
+
+      const outer = document.createElement("div");
+      const outerStyle = outer.style;
+
+      outerStyle.position = "absolute";
+      outerStyle.top = "0";
+      outerStyle.left = "0";
+      outerStyle.pointerEvents = "none";
+      outerStyle.visibility = "hidden";
+      outerStyle.width = "200px";
+      outerStyle.height = "150px";
+      outerStyle.overflow = "hidden";
+
+      outer.appendChild(inner);
+
+      document.body.appendChild(outer);
+
+      const widthContained = inner.offsetWidth;
+      outer.style.overflow = "scroll";
+      let widthScroll = inner.offsetWidth;
+
+      if (widthContained === widthScroll) {
+        widthScroll = outer.clientWidth;
+      }
+
+      document.body.removeChild(outer);
+      cachedScrollBarSize = widthContained - widthScroll;
+    }
+    return cachedScrollBarSize;
+  };
 }

@@ -1,6 +1,7 @@
 ﻿@inherits AntDesignTestBase
 @code {
     record Person(int Id, string Name);
+    public record PersonNullable(string? Id, string Name);
     class PersonClass 
     {
         public PersonClass(int id, string name) 
@@ -28,17 +29,21 @@
         new PersonClass(4, "Emily"),
     };
 
+    public Select_Value_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+                    .SetResult(new AntDesign.JsInterop.DomRect());  
+    }
+
 
     [Fact]
     //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
     public void Keep_value_when_corresponding_item_in_DataSource_removed() 
     {
         //Arrange
-        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());
         var selectedPersion = _persons[2];
         int value = 0;
-        Action<int> ValueChanged = (v) => value = v;        
+        Action<int> ValueChanged = (v) => value = v;
         var cut = Render<AntDesign.Select<int, Person>>(
             @<AntDesign.Select DataSource="@_persons"
                 LabelName="@nameof(Person.Name)"
@@ -46,8 +51,8 @@
                 Value="@selectedPersion.Id"
                 ValueChanged="@ValueChanged"
                 >
-            </AntDesign.Select>
-        );
+    </AntDesign.Select>
+    );
         var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
         //Act
         _persons.Remove(_persons.First(x => x.Id == value));        
@@ -60,62 +65,278 @@
         cut.Instance.Value.Should().Be(selectedPersion.Id);
     }
 
-//Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
-//    [Fact]
-//    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
-//    public void Keep_value_when_DataSource_changed() 
-//    {
-//        //Arrange
-//        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-//            .SetResult(new AntDesign.JsInterop.DomRect());
-//        var selectedPersion = _persons[2];
-//        int value = 0;
-//        Action<int> ValueChanged = (v) => value = v;        
-//        var cut = Render<AntDesign.Select<int, Person>>(
-//            @<AntDesign.Select DataSource="@_persons"
-//                LabelName="@nameof(Person.Name)"
-//                ValueName="@nameof(Person.Id)"
-//                Value="@selectedPersion.Id"
-//                ValueChanged="@ValueChanged"
-//                >
-//            </AntDesign.Select>
-//        );
-//        var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
-//        //Act
-//        _persons.Remove(_persons.First(x => x.Id == value));
-//        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, new List<Person>()));
-//        //Assert        
-//        prevSelectedItem.Should().Be(selectedPersion.Name);
-//        cut.Invoking(c => c.Find(".ant-select-selection-item"))
-//            .Should().Throw<Bunit.ElementNotFoundException>();
-//        value.Should().Be(selectedPersion.Id);
-//        cut.Instance.Value.Should().Be(selectedPersion.Id);
-//    }
+    //Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+    //    [Fact]
+    //    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+    //    public void Keep_value_when_DataSource_changed() 
+    //    {
+    //        //Arrange
+    //        var selectedPersion = _persons[2];
+    //        int value = 0;
+    //        Action<int> ValueChanged = (v) => value = v;        
+    //        var cut = Render<AntDesign.Select<int, Person>>(
+    //            @<AntDesign.Select DataSource="@_persons"
+    //                LabelName="@nameof(Person.Name)"
+    //                ValueName="@nameof(Person.Id)"
+    //                Value="@selectedPersion.Id"
+    //                ValueChanged="@ValueChanged"
+    //                >
+    //            </AntDesign.Select>
+    //        );
+    //        var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
+    //        //Act
+    //        _persons.Remove(_persons.First(x => x.Id == value));
+    //        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, new List<Person>()));
+    //        //Assert        
+    //        prevSelectedItem.Should().Be(selectedPersion.Name);
+    //        cut.Invoking(c => c.Find(".ant-select-selection-item"))
+    //            .Should().Throw<Bunit.ElementNotFoundException>();
+    //        value.Should().Be(selectedPersion.Id);
+    //        cut.Instance.Value.Should().Be(selectedPersion.Id);
+    //    }
 
-//Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
-//    [Fact]
-//    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
-//    public void Keep_value_when_changed_to_nonexisting_in_DataSource() 
-//    {
-//        //Arrange
-//        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-//            .SetResult(new AntDesign.JsInterop.DomRect());
-//        var selectedPersion = _persons[2];
-//        int value = 0;
-//        Action<int> ValueChanged = (v) => value = v;        
-//        var cut = Render<AntDesign.Select<int, Person>>(
-//            @<AntDesign.Select DataSource="@_persons"
-//                LabelName="@nameof(Person.Name)"
-//                ValueName="@nameof(Person.Id)"
-//                Value="@selectedPersion.Id"
-//                ValueChanged="@ValueChanged"
-//                >
-//            </AntDesign.Select>
-//        );        
-//        //Act        
-//        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, 10));
-//        //Assert
-//        value.Should().Be(10);
-//        cut.Instance.Value.Should().Be(10);
-//    }
+    //Uncomment on implementation of proposal in PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+    //    [Fact]
+    //    //PR #1906 https://github.com/ant-design-blazor/ant-design-blazor/pull/1906#issuecomment-912615575
+    //    public void Keep_value_when_changed_to_nonexisting_in_DataSource() 
+    //    {
+    //        //Arrange
+    //        var selectedPersion = _persons[2];
+    //        int value = 0;
+    //        Action<int> ValueChanged = (v) => value = v;        
+    //        var cut = Render<AntDesign.Select<int, Person>>(
+    //            @<AntDesign.Select DataSource="@_persons"
+    //                LabelName="@nameof(Person.Name)"
+    //                ValueName="@nameof(Person.Id)"
+    //                Value="@selectedPersion.Id"
+    //                ValueChanged="@ValueChanged"
+    //                >
+    //            </AntDesign.Select>
+    //        );        
+    //        //Act        
+    //        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, 10));
+    //        //Assert
+    //        value.Should().Be(10);
+    //        cut.Instance.Value.Should().Be(10);
+    //    }
+
+    [Theory]
+    [MemberData(nameof(AllowClearWithoutValueOnClearTheory))]
+    public void AllowClear_button_behavior_without_ValueOnClear_set_with_DataSource(List<PersonNullable> dataSource, 
+        string? initialValue, bool defaultActiveFirstOption, string? expectedValue, string? expectedLabel)
+    {
+        string? value = "-1"; //set initial value to a not-possible value
+        Action<string?> ValueChanged = (v) =>value = v;
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                Value="@initialValue"
+                ValueChanged="@ValueChanged"
+                DefaultActiveFirstOption="@defaultActiveFirstOption"
+                AllowClear>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        cut.Find("span.ant-select-clear").Click();
+        if (expectedLabel == string.Empty)
+        {
+            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+        }
+        else
+        {
+            var selectContent = cut.Find("span.ant-select-selection-item");
+            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
+        }
+
+        value.Should().Be(expectedValue);
+        cut.Instance.Value.Should().Be(expectedValue);
+    }
+
+    [Theory]
+    [MemberData(nameof(AllowClearWithoutValueOnClearTheory))]
+    public void AllowClear_button_behavior_without_ValueOnClear_set_with_SelectOption(List<PersonNullable> dataSource, 
+        string? initialValue, bool defaultActiveFirstOption, string? expectedValue, string? expectedLabel)
+    {
+        string? value = "-1"; //set initial value to a not-possible value
+        Action<string?> ValueChanged = (v) =>value = v;
+        var cut = Render<AntDesign.Select<string?, string>>(
+            @<AntDesign.Select 
+                TItemValue="string?"
+                TItem="string"
+                Value="@initialValue"
+                ValueChanged="@ValueChanged"
+                DefaultActiveFirstOption="@defaultActiveFirstOption"
+                AllowClear>
+                <SelectOptions>
+                    @foreach(var item in dataSource)
+                    {
+                        <SelectOption TItemValue="string?" TItem="string" Value="@item.Id" Label="@item.Name" />
+                    }
+                </SelectOptions>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        cut.Find("span.ant-select-clear").Click();
+        if (expectedLabel == string.Empty)
+        {
+            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+        }
+        else
+        {
+            var selectContent = cut.Find("span.ant-select-selection-item");
+            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
+        }
+
+        value.Should().Be(expectedValue);
+        cut.Instance.Value.Should().Be(expectedValue);
+    }
+
+    public static List<PersonNullable> GetAllowClearDataSource(string? id = null, string? title = null)
+    {
+        var baseDatasource = new List<PersonNullable>()
+            {
+                new PersonNullable("2", "Test 2"),
+                new PersonNullable("3", "Test 3"),
+                new PersonNullable("4", "Test 4")
+            };
+
+        if (title is not null)
+        {
+            baseDatasource.Add(new PersonNullable(id, title));
+        }
+        return baseDatasource;
+    }
+
+    public static IEnumerable<object[]> AllowClearWithoutValueOnClearTheory()
+    {
+        return new List<object[]>
+        {
+            new object[] { GetAllowClearDataSource(), null!, true, null!, String.Empty },            
+            new object[] { GetAllowClearDataSource(null, "Test 1"), null!, true, null!, "Test 1" },
+            new object[] { GetAllowClearDataSource(), "3", true, null!, String.Empty }, //reset to default(string?)
+            new object[] { GetAllowClearDataSource(null, "Test 1"), "3", true, null!, "Test 1" }, //reset to null entry
+            
+        };
+
+    }
+
+    [Theory]
+    [MemberData(nameof(AllowClearWithValueOnClearTheory))]
+    public void AllowClear_button_behavior_with_ValueOnClear_set_with_DataSource(List<PersonNullable> dataSource, 
+        string? initialValue, bool defaultActiveFirstOption, string? valueOnClear, string? expectedValue, string? expectedLabel)
+    {
+        string? value = "-1"; //set initial value to a not-possible value
+        Action<string?> ValueChanged = (v) =>value = v;
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                Value="@initialValue"
+                ValueChanged="@ValueChanged"
+                DefaultActiveFirstOption="@defaultActiveFirstOption"
+                ValueOnClear="@valueOnClear"
+                AllowClear>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        cut.Find("span.ant-select-clear").Click();
+        if (expectedLabel == string.Empty)
+        {
+            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+        }
+        else
+        {
+            var selectContent = cut.Find("span.ant-select-selection-item");
+            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
+        }
+
+        value.Should().Be(expectedValue);
+        cut.Instance.Value.Should().Be(expectedValue);
+    }
+
+    [Theory]
+    [MemberData(nameof(AllowClearWithValueOnClearTheory))]
+    public void AllowClear_button_behavior_with_ValueOnClear_set_with_SelectOption(List<PersonNullable> dataSource, 
+        string? initialValue, bool defaultActiveFirstOption, string? valueOnClear, string? expectedValue, string? expectedLabel)
+    {
+        string? value = "-1"; //set initial value to a not-possible value
+        Action<string?> ValueChanged = (v) =>value = v;
+        var cut = Render<AntDesign.Select<string?, string>>(
+            @<AntDesign.Select 
+                TItemValue="string?"
+                TItem="string"
+                Value="@initialValue"
+                ValueChanged="@ValueChanged"
+                DefaultActiveFirstOption="@defaultActiveFirstOption"
+                ValueOnClear="@valueOnClear"
+                AllowClear>
+                <SelectOptions>
+                    @foreach(var item in dataSource)
+                    {
+                        <SelectOption TItemValue="string?" TItem="string" Value="@item.Id" Label="@item.Name" />
+                    }
+                </SelectOptions>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        cut.Find("span.ant-select-clear").Click();
+        if (expectedLabel == string.Empty)
+        {
+            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+        }
+        else
+        {
+            var selectContent = cut.Find("span.ant-select-selection-item");
+            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
+        }
+
+        value.Should().Be(expectedValue);
+        cut.Instance.Value.Should().Be(expectedValue);
+    }
+
+    public static IEnumerable<object[]> AllowClearWithValueOnClearTheory()
+    {
+        return new List<object[]>
+        {
+            new object[] { GetAllowClearDataSource(), null!, true, null!, null!, String.Empty },            
+            new object[] { GetAllowClearDataSource(null, "Test 1"), null!, true, null!, null!, "Test 1" },
+            new object[] { GetAllowClearDataSource(), "3", true, null!, null!, String.Empty }, //reset to default(string?)
+            new object[] { GetAllowClearDataSource(null, "Test 1"), "3", true, null!, null!, "Test 1" }, //reset to null entry
+            new object[] { GetAllowClearDataSource(), null!, true, 10, 10, String.Empty },            
+            new object[] { GetAllowClearDataSource(null, "Test 1"), null!, true, 10, 10, String.Empty },
+            new object[] { GetAllowClearDataSource(), "3", true, 10, 10, String.Empty }, //reset to default(string?)
+            new object[] { GetAllowClearDataSource(null, "Test 1"), "3", true, 10, 10, String.Empty }, //reset to null entry
+        };
+
+    }
+
 }

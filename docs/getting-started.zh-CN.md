@@ -58,6 +58,12 @@ $ dotnet add package AntDesign
   <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 ```
 
+- 在 `_Imports.razor` 中加入命名空间
+
+  ```
+  @using AntDesign
+  ```
+
 然后在 Razor 模板中使用：
 
 ```html

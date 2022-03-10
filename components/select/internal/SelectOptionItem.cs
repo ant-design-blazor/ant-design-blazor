@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Select.Internal
@@ -10,12 +14,12 @@ namespace AntDesign.Select.Internal
     /// <typeparam name="TItem"></typeparam>
     public class SelectOptionItem<TItemValue, TItem>
     {
-        public ElementReference Ref { get => ChildComponent.Ref; }
+        public ElementReference Ref { get => ChildComponent?.Ref ?? default; }
         //public ForwardRef SelectedTagRefBack { get; set; } = new ForwardRef();
 
         /// <summary>
-        /// ElementRef that will be used by <see cref="SelectContent.razor"/> only
-        /// for selected Mode=Multiple & MaxTagCount=Responsive
+        /// ElementRef that will be used by <see cref="SelectContent{TItemValue, TItem}"/> only
+        /// for selected Mode=Multiple and MaxTagCount=Responsive
         /// </summary>
         public ElementReference SelectedTagRef { get; set; }
 

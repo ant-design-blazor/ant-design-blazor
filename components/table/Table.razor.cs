@@ -166,6 +166,8 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private IFieldColumn[] _fieldColumns;
+
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
@@ -223,22 +225,87 @@ namespace AntDesign
                 return;
             }
 
+            _fieldColumns = ColumnContext.HeaderColumns.Where(x => x is IFieldColumn field && field.FieldName is not null).Cast<IFieldColumn>().ToArray();
+
             ReloadAndInvokeChange();
             _hasInitialized = true;
         }
 
         public void ReloadData()
         {
+            ResetData();
+
             PageIndex = 1;
 
             FlushCache();
 
-            this.InternalReload();
-
-            StateHasChanged();
+            this.ReloadAndInvokeChange();
         }
 
-        public QueryModel GetQueryModel() => BuildQueryModel();
+        public void ReloadData(int? pageIndex, int? pageSize = null)
+        {
+            ResetData();
+
+            ChangePageIndex(pageIndex ?? 1);
+            ChangePageSize(pageSize ?? PageSize);
+
+            FlushCache();
+
+            this.ReloadAndInvokeChange();
+        }
+
+        public void ReloadData(QueryModel queryModel)
+        {
+            ResetData();
+
+            if (queryModel is not null)
+            {
+                ChangePageIndex(queryModel.PageIndex);
+                ChangePageSize(queryModel.PageSize);
+
+                FlushCache();
+
+                foreach (var sorter in queryModel.SortModel)
+                {
+                    var fieldColumn = _fieldColumns[sorter.ColumnIndex];
+                    fieldColumn.SetSortModel(sorter);
+                }
+
+                foreach (var filter in queryModel.FilterModel)
+                {
+                    var fieldColumn = _fieldColumns[filter.ColumnIndex];
+                    fieldColumn.SetFilterModel(filter);
+                }
+
+                this.ReloadAndInvokeChange();
+            }
+        }
+
+        public void ResetData()
+        {
+            ChangePageIndex(1);
+            ChangePageSize(PageSize);
+
+            FlushCache();
+
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col is IFieldColumn fieldColumn)
+                {
+                    if (fieldColumn.SortModel != null)
+                    {
+                        fieldColumn.ClearSorter();
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        fieldColumn.ClearFilters();
+                    }
+                }
+            }
+        }
+
+        public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
 
         private QueryModel<TItem> BuildQueryModel()
         {
@@ -300,6 +367,7 @@ namespace AntDesign
         private QueryModel<TItem> InternalReload()
         {
             var queryModel = BuildQueryModel();
+            _currentQueryModel = queryModel;
 
             if (ServerSide)
             {
@@ -310,25 +378,10 @@ namespace AntDesign
             {
                 if (_dataSource != null)
                 {
-                    var query = _dataSource.AsQueryable();
-                    foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
-                    {
-                        query = sort.SortList(query);
-                    }
-
-                    foreach (var filter in queryModel.FilterModel)
-                    {
-                        query = filter.FilterList(query);
-                    }
+                    var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-
-                    query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-                    queryModel.SetQueryableLambda(query);
-
-                    _currentQueryModel = queryModel;
-
-                    _showItems = query;
+                    _showItems = queryModel.CurrentPagedRecords(query);
                 }
                 else
                 {

@@ -305,11 +305,32 @@ namespace AntDesign
         [Parameter]
         public bool CheckStrictly { get; set; }
 
+        private string[] _checkedKeys = Array.Empty<string>();
+
         /// <summary>
         /// Checked  keys
         /// </summary>
         [Parameter]
-        public string[] CheckedKeys { get; set; } = Array.Empty<string>();
+        public string[] CheckedKeys
+        {
+            get => _checkedKeys;
+            set
+            {
+                if (value == null)
+                {
+                    _checkedKeys = Array.Empty<string>();
+                }
+                else if (!value.SequenceEqual(_checkedKeys))
+                {
+                    _checkedKeys = value;
+                }
+
+                foreach (var item in ChildNodes)
+                {
+                    item.SetChecked(_checkedKeys.Contains(item.Key));
+                }
+            }
+        }
 
         /// <summary>
         ///  @bind-CheckedKeys
@@ -360,8 +381,8 @@ namespace AntDesign
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
-            CheckedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
-            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(CheckedKeys);
+            _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
+            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
@@ -400,13 +421,20 @@ namespace AntDesign
 
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { m.Expand(true); m.Matched = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
+
             if (SearchExpression != null)
             {
                 searchDatas = allList.Where(x => SearchExpression(x)).ToList();
             }
-            else if (!string.IsNullOrEmpty(_searchValue))
+            else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
                 searchDatas = allList.Where(x => x.Title.Contains(_searchValue)).ToList();
             }
@@ -414,7 +442,7 @@ namespace AntDesign
             if (searchDatas != null && searchDatas.Any())
                 exceptList = allList.Except(searchDatas).ToList();
 
-            if (exceptList != null || searchDatas != null)
+            if (exceptList?.Any() == true || searchDatas?.Any() == true)
             {
                 exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
                 searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });

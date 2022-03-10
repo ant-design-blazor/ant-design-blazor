@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -24,6 +25,9 @@ namespace AntDesign.Docs.Pages
         private bool _waitingHighlight = false;
 
         private string _filePath;
+
+        private List<string> _filePaths;
+
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
@@ -63,6 +67,7 @@ namespace AntDesign.Docs.Pages
                 await MainLayout.ChangePrevNextNav(FileName);
 
                 _filePath = $"docs/{FileName}.{CurrentLanguage}.md";
+                _filePaths = new() { _filePath };
             }
         }
 

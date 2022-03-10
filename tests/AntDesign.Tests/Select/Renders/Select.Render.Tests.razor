@@ -3,6 +3,7 @@
 @using System.Text.Json
 @inherits AntDesignTestBase
 @code {
+    public record PersonNullable(string? Id, string Name);
     enum City
     {
         [Display(Name = "Shanghai City")]
@@ -22,9 +23,7 @@
     {
          //Arrange
             
-        var cut = Render<EnumSelect<City>>(
-    @<EnumSelect TEnum="City"></EnumSelect>
-    );
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect>);
         var options = cut.FindAll(".ant-select-item-option-content");
 
         Assert.Equal(3, options.Count);
@@ -37,31 +36,46 @@
     public async Task Render_select_dropdown_on_arrow_click()
     {
 		#if !NET6_0_OR_GREATER
-			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();;
+#pragma warning disable CS0618 // Type or member is obsolete
+            JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
 		#endif
+        JSInterop.SetupVoid(JSInteropConstants.ScrollTo, _ => true).SetVoidResult();
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });        
 
         var mock = base.MockedDomEventListener;
-        Action<JsonElement>? onMouseUpCallback = default;
+        Action<JsonElement>? onTriggerMouseUpCallback = default;        
+        Action<JsonElement>? onTriggerClickCallback = default;        
         mock.Setup(s => s.AddShared<JsonElement>("document", "mouseup", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
             .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
                 {                
                     if (callback.Target is AntDesign.Internal.OverlayTrigger)
                     {
-                        onMouseUpCallback = callback;                
+                        onTriggerMouseUpCallback = callback;                
                     }
                 });
+        mock.Setup(s => s.AddExclusive<JsonElement>(It.IsAny<ElementReference>(), "click", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
+            .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
+                {                
+                    if (callback.Target is AntDesign.Internal.OverlayTrigger)
+                    {
+                        onTriggerClickCallback = callback;                
+                    }
+                });
+
 
         var plannedInvocation = JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true);
         var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect>);
         //Act
         var arrow = cut.Find("span.ant-select-arrow");
-        onMouseUpCallback.Should().NotBeNull();
+        onTriggerMouseUpCallback.Should().NotBeNull();
+        onTriggerClickCallback.Should().NotBeNull();
         
         await cut.InvokeAsync(() => arrow.Click());
+        onTriggerMouseUpCallback?.Invoke(JsonDocument.Parse("{}").RootElement);
+        onTriggerClickCallback?.Invoke(default);
         cut.WaitForState(() => !cut.Find("div.ant-select-dropdown").ClassList.Contains("ant-select-dropdown-hidden"));
-        await cut.InvokeAsync(() => onMouseUpCallback?.Invoke(default));
         //This is probably not the best solution. However this test is awkward - we are testing
         //for something that should not appear. In failing scenarios it appears after some
         //time (due to multiple async/await and re-renderings). That actually points to
@@ -72,5 +86,37 @@
         //Assert
         var dropdown = cut.Find("div.ant-select-dropdown");
         dropdown.ClassList.Should().NotContain("ant-select-dropdown-hidden");
+    }
+
+    [Fact]
+    public void AllowClear_button_not_rendered_for_no_data()
+    {
+        var dataSource = new List<PersonNullable>()
+        {
+            new PersonNullable("2", "Test 2"),
+            new PersonNullable("3", "Test 3"),
+            new PersonNullable("4", "Test 4")
+        };
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                TItem="PersonNullable"
+                TItemValue="string?"
+                Value="null"
+                AllowClear>
+        </AntDesign.Select>);
+        //Act
+
+        //normally blazor would rerender and in Select.OnParametersSet() 
+        //would load newly set value into the SelectContent, but bUnit does 
+        //not rerender, so it has to be forced. This could probably be fixed
+        //by forcing StateHasChanged on the Select component, but requires 
+        //investigation if it won't cause multiple re-renders.
+        cut.Render(); 
+        //Assert
+        cut.Invoking(c => c.Find("span.ant-select-clear"))
+                .Should().Throw<Bunit.ElementNotFoundException>();
+       
     }
 }

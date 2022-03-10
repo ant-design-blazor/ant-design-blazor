@@ -35,7 +35,7 @@ namespace AntDesign
         public string RouterLink { get; set; }
 
         [Parameter]
-        public NavLinkMatch RouterMatch { get; set; }
+        public NavLinkMatch RouterMatch { get; set; } = NavLinkMatch.All;
 
         [Parameter]
         public string Title { get; set; }

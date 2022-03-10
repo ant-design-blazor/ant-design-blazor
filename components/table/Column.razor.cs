@@ -8,6 +8,8 @@ using System.Reflection;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
+using AntDesign.Core.Helpers;
 
 namespace AntDesign
 {
@@ -121,6 +123,9 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        [Parameter]
+        public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
+
         private TableFilterType _columnFilterType;
 
         private Type _columnDataType;
@@ -191,7 +196,7 @@ namespace AntDesign
 
                 if (Sortable && GetFieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -280,7 +285,7 @@ namespace AntDesign
             if (IsHeader)
             {
                 FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
-                    new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
+                    new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
                     null;
             }
         }
@@ -391,7 +396,7 @@ namespace AntDesign
                 });
             }
             _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
@@ -442,6 +447,41 @@ namespace AntDesign
         private void InitFilters()
         {
             _filters = new List<TableFilter>() { GetNewFilter() };
+        }
+
+        void IFieldColumn.ClearFilters() => ResetFilters();
+
+        void IFieldColumn.SetFilterModel(ITableFilterModel filterModel)
+        {
+            foreach (var filter in filterModel.Filters)
+            {
+                if (filter.Value is JsonElement)
+                {
+                    filter.Value = JsonElementHelper<TData>.GetValue((JsonElement)filter.Value);
+                }
+            }
+
+            if (_columnFilterType == TableFilterType.List)
+            {
+                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                {
+                    filter.Selected = true;
+                }
+            }
+            else
+            {
+                _filters = filterModel.Filters;
+            }
+
+            FilterModel = new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType);
+
+            _hasFilterSelected = true;
+        }
+
+        void IFieldColumn.SetSortModel(ITableSortModel sortModel)
+        {
+            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
+            this.SetSorter(SortDirection.Parse(sortModel.Sort));
         }
     }
 }

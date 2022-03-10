@@ -10,11 +10,11 @@
 
 @code {
 
-	  [Parameter ] public string Id { get; set; }
+    [Parameter] public string Id { get; set; }
 
-	  private int currentCount = 0;
+    private int currentCount = 0;
 
-	  public RenderFragment GetPageTitle() =>@<span>@($"Counter {Id}")</span>;
+    public RenderFragment GetPageTitle() =>@<span>@($"Counter {Id}")</span>;
 
     private void IncrementCount()
     {

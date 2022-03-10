@@ -265,7 +265,9 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                if (Unbound != null)
+                var isUnbound = Unbound != null || (ChildContent == null && Ref.Id != null);
+
+                if (isUnbound)
                 {
                     Ref = RefBack.Current;
 
@@ -279,7 +281,7 @@ namespace AntDesign.Internal
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
                 {
-                    if (Unbound != null)
+                    if (isUnbound)
                     {
                         await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, Ref, TriggerCls);
                     }
@@ -431,6 +433,9 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnTriggerClick()
         {
+            //_mouseInTrigger might have been set by a different event,
+            //so track that to know if should be reset at the end of this method
+            bool resetMouseInTrigger = !_mouseInTrigger;
             _mouseInTrigger = true;
             if (IsContainTrigger(TriggerType.Click))
             {
@@ -447,7 +452,10 @@ namespace AntDesign.Internal
             {
                 await Hide();
             }
-            _mouseInTrigger = false;
+            if (resetMouseInTrigger)
+            {
+                _mouseInTrigger = false;
+            }
         }
 
         protected virtual async Task OnTriggerContextmenu(MouseEventArgs args)

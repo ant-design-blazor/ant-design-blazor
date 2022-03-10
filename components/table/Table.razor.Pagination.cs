@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -86,14 +87,25 @@ namespace AntDesign
 
         private async Task HandlePageChange(PaginationEventArgs args)
         {
-            if (_pageIndex != args.Page)
-            {
-                await HandlePageIndexChange(args);
-            }
+            bool shouldInvokeChange = false;
 
             if (_pageSize != args.PageSize)
             {
+                shouldInvokeChange = true;
                 await HandlePageSizeChange(args);
+            }
+
+            if (_pageIndex != args.Page)
+            {
+                shouldInvokeChange = true;
+                await HandlePageIndexChange(args);
+            }
+
+            if (shouldInvokeChange)
+            {
+                ReloadAndInvokeChange();
+
+                StateHasChanged();
             }
         }
 
@@ -110,10 +122,6 @@ namespace AntDesign
             {
                 await OnPageIndexChange.InvokeAsync(args);
             }
-
-            ReloadAndInvokeChange();
-
-            StateHasChanged();
         }
 
         private async Task HandlePageSizeChange(PaginationEventArgs args)
@@ -129,10 +137,40 @@ namespace AntDesign
             {
                 await OnPageSizeChange.InvokeAsync(args);
             }
+        }
 
-            ReloadAndInvokeChange();
+        private void ChangePageSize(int pageSize)
+        {
+            pageSize = Math.Max(1, pageSize);
 
-            StateHasChanged();
+            if (_pageSize == pageSize)
+            {
+                return;
+            }
+
+            _pageSize = pageSize;
+
+            if (PageSizeChanged.HasDelegate)
+            {
+                PageSizeChanged.InvokeAsync(_pageSize);
+            }
+        }
+
+        private void ChangePageIndex(int pageIndex)
+        {
+            pageIndex = Math.Max(1, pageIndex);
+
+            if (_pageIndex == pageIndex)
+            {
+                return;
+            }
+
+            _pageIndex = pageIndex;
+
+            if (PageIndexChanged.HasDelegate)
+            {
+                PageIndexChanged.InvokeAsync(_pageIndex);
+            }
         }
     }
 }

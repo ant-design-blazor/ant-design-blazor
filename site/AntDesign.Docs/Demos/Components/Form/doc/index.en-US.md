@@ -14,7 +14,42 @@ High performance Form component with data scope management. Including data colle
 - When you need to validate fields in certain rules.
 
 ## API
-(Help Wanted)
+### From
+| Name | Description | Type | Default Value |
+| --- | --- | --- | --- |
+| Layout | Form Layout | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
+| LabelCol | label label layout, same as \<Col\> component, set span offset value | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
+| LabelColSpan | Same as LabelCol.Span | int |-|
+| LabelColOffset | Same as LabelCol.Offset | int |-|
+| WrapperCol | When you need to set the layout style for the input control, use this attribute. The usage is the same as labelCol | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
+| WrapperColSpan | Same as WrapperCol.Span | int |-|
+| WrapperColOffset | Same as WrapperCol.Offset | int |-|
+| Size | Set the size of the field component (antd component only) | small \| middle \| large | middle |
+| Name | The name of the form, which will be used as the prefix of the form field id | string |-|
+| Model | Generic Object of Operation | T |-|
+| Loading | Is the form loading | bool | false |
+| OnFinish | Submit Event | EventCallback\<EditContext\> |-|
+| OnFinishFailed | Submission failure (verification failure) callback event | EventCallback\<EditContext\> |-|
+| ValidateOnChange | Whether to verify when changing | bool | false |
+### FromItem
+| Name | Description | Type | Default Value |
+| --- | --- | --- | --- |
+| Label | **label** Label text | string | Display or DisplayName characteristics of the input component |
+| LabelTemplate | **label** Template | RenderFragment |-|
+| LabelCol | **label** label layout, same as \<Col\> component, set span offset value | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
+| LabelAlign | **label** Label text alignment | left \| right | left |
+| LabelColSpan | Same as LabelCol.Span | int |-|
+| LabelColOffset | Same as LabelCol.Offset | int |-|
+| WrapperCol | When you need to set the layout style for the input control, use this attribute, the usage is the same as labelCol | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
+| WrapperColSpan | Same as WrapperCol.Span | int |-|
+| WrapperColOffset | Same as WrapperCol.Offset | int |-|
+| NoStyle | No style when true, it is used as a pure field control | bool | false |
+| Required | Whether it is required or not, true will generate * sign after label | bool | Required feature of input binding attribute |
+| LabelStyle | **Label** Label Style | string |-|
+| Rules | Validation rules, set the validation logic of the field | [FormValidationRule[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/Validate/Rule/FormValidationRule.cs) |-|
+| HasFeedback | Used in conjunction with the **validateStatus** property to display the verification status icon. It is recommended to use it only with the Input component | bool | false |
+| ValidateStatus | Validation status, if not set, it will be automatically generated according to validation rules | [FormValidateStatus](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/FormValidateStatus.cs) | FormValidateStatus.Default |
+| Help | Prompt information | string | Automatically generated according to verification rules |
 
 
 ### Rules
@@ -52,19 +87,28 @@ var validateMessages = new FormValidateErrorMessages {
 ```
 
 Besides, [ConfigProvider](Demo TODO) also provides a global configuration scheme that allows for uniform configuration error notification templates:
-
 ```csharp
+//in App.Razor
 var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is Required!",
   // ...
 };
 
-var formConfig = new FromConfig {
+var formConfig = new FormConfig {
     ValidateMessages = validateMessages
 }
 
 <ConfigProvider Form="formConfig">
-  <Form />
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
 </ConfigProvider>;
 ```
 

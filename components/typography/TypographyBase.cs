@@ -56,25 +56,15 @@ namespace AntDesign
             {
                 return;
             }
-            else if (CopyConfig is null)
+            if (string.IsNullOrEmpty(CopyConfig?.Text))
             {
-                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, await Service.RenderAsync(ChildContent));
-            }
-            else if (CopyConfig.OnCopy is null)
-            {
-                if (string.IsNullOrEmpty(CopyConfig.Text))
-                {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.Copy, await Service.RenderAsync(ChildContent));
-                }
-                else
-                {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
-                }
+                await this.JsInvokeAsync<object>(JSInteropConstants.CopyElement, Ref);
             }
             else
             {
-                CopyConfig.OnCopy.Invoke();
+                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
             }
+            CopyConfig?.OnCopy?.Invoke();
         }
     }
 

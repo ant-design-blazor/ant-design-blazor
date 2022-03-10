@@ -30,7 +30,7 @@ namespace AntDesign.Tests.Table
             var exp = typeof(T1).BuildAccessPropertyLambdaExpression("T2.Arr[2]");
 
             var memberInfo = ColumnExpressionHelper.GetReturnMemberInfo(exp);
-            Assert.Equal(nameof(T2.Arr), memberInfo.Name);
+            Assert.Equal(nameof(T2.Arr), memberInfo!.Name);
         }
 
         [Fact]
@@ -43,12 +43,12 @@ namespace AntDesign.Tests.Table
 
         public class T1
         {
-            public T2 T2 { get; set; }
+            public T2 T2 { get; set; } = default!;
         }
 
         public class T2
         {
-            public List<int> Arr { get; set; }
+            public List<int> Arr { get; set; } = default!;
         }
     }
 }

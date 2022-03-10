@@ -54,7 +54,6 @@ namespace AntDesign
                 if (value?.Any() != true)
                 {
                     _nodelist = null;
-                    return;
                 }
                 if (_nodelist == null) _nodelist = new List<CascaderNode>();
                 else if (_nodelist.Count != 0) _nodelist.Clear();
@@ -64,7 +63,7 @@ namespace AntDesign
             }
         }
 
-        private List<CascaderNode> _nodelist;
+        private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _renderNodes = new List<CascaderNode>();
@@ -130,12 +129,19 @@ namespace AntDesign
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
-        private void InputOnToggle()
+        private async void InputOnToggle()
         {
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
             if (!_dropdownOpened)
             {
+                var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
+                _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+                if (!_nodelist.Any())
+                {
+                    _menuStyle += "height:auto;";
+                }
+
                 _dropdownOpened = true;
             }
         }

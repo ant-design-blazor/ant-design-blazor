@@ -8,7 +8,7 @@
 
 <div align="center">
 
-A set of enterprise-class UI components based on Ant Design and Blazor.
+A rich set of enterprise-class UI components based on Ant Design and Blazor.
 
 ![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
@@ -56,7 +56,9 @@ WebAssembly static hosting examples:
 | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                                                          Edge 16 / IE 11†                                                                                           |                                                                                                 522                                                                                                  |                                                                                                57                                                                                                |                                                                                                11                                                                                                |                                                                                              44                                                                                              |                                                                                               Chromium 57                                                                                                |
 
-> Due to [WebAssembly](https://webassembly.org) restriction, Blazor WebAssembly doesn't support IE browser, but Blazor Server supports IE 11† with additional polyfills. See [official documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)
+> Due to [WebAssembly](https://webassembly.org) restriction, Blazor WebAssembly doesn't support IE browser, but Blazor Server supports IE 11† with additional polyfills. See [official documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987).
+
+> From .NET 5, IE 11 is no longer officially supported. See [Blazor: Updated browser support](https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/blazor-browser-support-updated). Unofficial support is provided by [Blazor.Polyfill](https://github.com/Daddoon/Blazor.Polyfill) community project.
 
 ## 💿 Current Version
 
@@ -110,19 +112,19 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services in `Program.cs` (WebAssembly)
+- Register the services in `Program.cs` (client-side WebAssembly Blazor)
 
   ```csharp
   builder.Services.AddAntDesign();
   ```
 
-  or `Startup.cs` (Server)
+  or `Startup.cs` (server-side Blazor)
 
   ```csharp
   services.AddAntDesign();
   ```
 
-- Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.cshtml` (Server)
+- Link the static files in `wwwroot/index.html` (client-side WebAssembly Blazor) or `Pages/_Host.cshtml` (server-side Blazor)
 
   ```html
   <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
@@ -152,10 +154,10 @@ Options for the template：
   <AntContainer />   <-- add this component ✨
   ```
 
-- Finally, it can be referenced in the `.razor' component!
+- Finally, it can be referenced in the `.razor` component!
 
   ```razor
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="@ButtonType.Primary">Hello World!</Button>
   ```
 
 ## ⌨️ Local Development

@@ -19,10 +19,10 @@ namespace AntDesign.FilterExpression
 
         public Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
-            return GetCaseInsensitiveСomparation(compareOperator, leftExpr, rightExpr);
+            return GetCaseInsensitiveComparation(compareOperator, leftExpr, rightExpr);
         }
 
-        private Expression GetCaseInsensitiveСomparation(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
+        private Expression GetCaseInsensitiveComparation(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
             MethodInfo miLower = typeof(string).GetMethod("ToLower", Array.Empty<Type>());
             Expression notNull = Expression.NotEqual(leftExpr, Expression.Constant(null));

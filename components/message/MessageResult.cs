@@ -20,7 +20,6 @@ namespace AntDesign
         {
             var t = Task.ContinueWith((result) =>
             {
-                Console.WriteLine("ContinueWith");
                 action?.Invoke();
             }, TaskScheduler.Current);
             return new MessageResult(t);

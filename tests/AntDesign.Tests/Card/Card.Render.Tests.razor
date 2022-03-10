@@ -1,0 +1,118 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+    [Fact]
+    public void Render_basic_card()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Card>(
+            @<Card Title="Default size card" Style="width:300px;">
+                <Extra><a>More</a></Extra>
+                <Body><p>Card content</p></Body>
+    </Card>
+    );
+        //Act
+        //Assert
+        cut.MarkupMatches(
+            @"<div class="" ant-card ant-card-bordered"" style=""width:300px;"" id:ignore>
+    <div class=""ant-card-head"">
+            <div class=""ant-card-head-wrapper"">
+                <div class=""ant-card-head-title"">Default size card</div>
+                    <div class=""ant-card-extra""><a>More</a></div>
+                </div>
+            </div>
+        <div class=""ant-card-body""><p>Card content</p></div>
+    </div>");
+    }
+
+    [Fact]
+    public void Render_card_with_tabs()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true).SetResult(new());
+        var cut = Render<AntDesign.Card>(
+            @<Card Title=@("Card title")>        
+                <CardTabs>
+                    <Tabs DefaultActiveKey="1">
+                        <TabPane Key="1">
+                            <TabTemplate>Tab 1</TabTemplate>
+                            <ChildContent>Content of Tab Pane 1</ChildContent>
+                        </TabPane>
+                        <TabPane Key="2">
+                            <TabTemplate>Tab 2</TabTemplate>
+                            <ChildContent>Content of Tab Pane 2</ChildContent>
+                        </TabPane>
+                    </Tabs>
+                </CardTabs>
+            </Card>
+    );
+        //Act
+        //Assert
+        cut.MarkupMatches(
+            @"<div class="" ant-card ant-card-bordered ant-card-contain-tabs"" id:ignore>
+            <div class=""ant-card-head"">
+                <div class=""ant-card-head-wrapper"">
+                        <div class=""ant-card-head-title"">Card title</div>
+                </div>
+                <div class=""ant-tabs ant-tabs-top ant-tabs-line ant-tabs-large ant-tabs-head-tabs ant-tabs-no-animation"" id:ignore>
+                <div role=""tablist"" class=""ant-tabs-nav"">
+                    <div class=""ant-tabs-nav-wrap "" >
+                        <div class=""ant-tabs-nav-list"" style="""">                                
+                            <div aria-controls:ignore aria-selected="""" class="" ant-tabs-tab ant-tabs-tab-active ant-tabs-tab-with-remove"" draggable=""False"" id:ignore ondragover=""event.preventDefault();"">
+                                <div role=""tab"" aria-selected=""false"" class=""ant-tabs-tab-btn"" tabindex=""0"">
+                                    Tab 1
+                                </div>
+                            </div>
+                            <div aria-controls:ignore class="" ant-tabs-tab ant-tabs-tab-with-remove"" draggable=""False"" id:ignore ondragover=""event.preventDefault();"">
+                                <div role=""tab"" aria-selected=""false"" class=""ant-tabs-tab-btn"" tabindex=""0"">
+                                    Tab 2
+                                </div>
+                            </div>                                                                        
+                            <div class=""ant-tabs-ink-bar ant-tabs-ink-bar-animated"" style=""left: 0px; width: 0px""></div>
+                        </div>
+                    </div>
+                        <div class=""ant-tabs-nav-operations ant-tabs-nav-operations-hidden"">
+                            <button tabindex=""-1"" class=""ant-tabs-nav-more"" id=""rc-tabs-0-more"" aria-expanded=""false"" aria-haspopup=""listbox"" aria-hidden=""true"" aria-controls=""rc-tabs-0-more-popup"" type=""button"" style=""visibility: hidden; order: 1;"">
+                                <span role=""img"" class="" anticon anticon-ellipsis"" id:ignore>
+                                    <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor"" style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon"" viewBox=""0 0 1024 1024"">  <path d=""M176 511a56 56 0 1 0 112 0 56 56 0 1 0-112 0zm280 0a56 56 0 1 0 112 0 56 56 0 1 0-112 0zm280 0a56 56 0 1 0 112 0 56 56 0 1 0-112 0z""></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class=""ant-card-body"">Content of Tab Pane 1</div>
+    </div>");
+    }
+
+    [Fact]
+    public void Card_with_tabs_changes_pane_onClick()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true).SetResult(new());
+        var cut = Render<AntDesign.Card>(
+            @<Card Title=@("Card title")>        
+                <CardTabs>
+                    <Tabs DefaultActiveKey="1">
+                        <TabPane Key="1">
+                            <TabTemplate>Tab 1</TabTemplate>
+                            <ChildContent>Content of Tab Pane 1</ChildContent>
+                        </TabPane>
+                        <TabPane Key="2">
+                            <TabTemplate>Tab 2</TabTemplate>
+                            <ChildContent>Content of Tab Pane 2</ChildContent>
+                        </TabPane>
+                    </Tabs>
+                </CardTabs>
+    </Card>
+    );
+        //Act
+        var tab2 = cut.FindAll("div.ant-tabs-tab")[1];
+        tab2.Click();
+        //Assert
+        cut.Find("div.ant-card-body").TextContent.Trim().Should().Be("Content of Tab Pane 2");        
+        cut.FindAll("div.ant-tabs-tab")[1].ClassList.Should().Contain("ant-tabs-tab-active");
+    }
+}
