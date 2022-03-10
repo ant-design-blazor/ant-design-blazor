@@ -48,7 +48,7 @@ namespace AntDesign
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
-        private string _key;        
+        private string _key;
 
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
