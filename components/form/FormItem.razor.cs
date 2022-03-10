@@ -361,8 +361,7 @@ namespace AntDesign
                         ValidateMessages = validateMessages,
                     };
 
-                    var result = FormValidateHelper.GetValidationResult(validationContext);
-                   
+                    var result = FormValidateHelper.GetValidationResult(validationContext);                   
                     if (result != null)
                     {
                         results.Add(result);
