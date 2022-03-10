@@ -8,6 +8,10 @@ namespace AntDesign
 {
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
+    
+        [Inject]
+        private IComponentIdGenerator ComponentIdGenerator { get; set; }
+            
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -80,6 +84,11 @@ namespace AntDesign
             {
                 CurrentValue = _defaultValue;
                 _defaultValueSetted = true;
+            }
+            
+            if(string.IsNullOrEmpty(Name))
+            {
+                Name = ComponentIdGenerator.Generate(this);
             }
         }
 
