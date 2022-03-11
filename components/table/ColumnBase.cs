@@ -82,13 +82,13 @@ namespace AntDesign
             }
         }
 
-        private ColumnAlign _align = ColumnAlign.Left;
-
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
         private string _fixedStyle;
+
+        private ColumnAlign _align = ColumnAlign.Left;
 
         protected string FixedStyle => _fixedStyle;
 
