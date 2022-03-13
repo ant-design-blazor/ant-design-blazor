@@ -7,6 +7,10 @@
 .input-lg() {
   padding: @input-padding-vertical-lg @input-padding-horizontal-lg;
   font-size: @font-size-lg;
+
+  input {
+    font-size: @font-size-lg;
+  }
 }
 
 .input-sm() {
@@ -14,23 +18,30 @@
 }
 
 // input status
-// == when focus or actived
-.active(@color: @outline-color) {
+// == when focus or active
+.active(@borderColor: @primary-color; @hoverBorderColor: @primary-color-hover; @outlineColor: @primary-color-outline) {
   & when (@theme = dark) {
-    border-color: @color;
+    border-color: @borderColor;
   }
-  & when not (@theme = dark) {
-    border-color: ~`colorPalette('@{color}', 5) `;
+  & when (not (@theme = dark) and not (@theme = variable)) {
+    border-color: @hoverBorderColor;
   }
-  border-right-width: @border-width-base !important;
+  & when not (@theme = variable) {
+    box-shadow: @input-outline-offset @outline-blur-size @outline-width
+      fade(@borderColor, @outline-fade);
+  }
+  & when (@theme = variable) {
+    border-color: @hoverBorderColor;
+    box-shadow: @input-outline-offset @outline-blur-size @outline-width @outlineColor;
+  }
+  border-right-width: @border-width-base;
   outline: 0;
-  box-shadow: @input-outline-offset @outline-blur-size @outline-width fade(@color, @outline-fade);
 }
 
-// == when hoverd
+// == when hover
 .hover(@color: @input-hover-border-color) {
   border-color: @color;
-  border-right-width: @border-width-base !important;
+  border-right-width: @border-width-base;
 }
 
 .disabled() {
@@ -286,11 +297,6 @@
   }
 
   .@{inputClass}-affix-wrapper {
-    &:not(:first-child) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
     &:not(:last-child) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -298,6 +304,12 @@
         border-top-left-radius: @border-radius-base;
         border-bottom-left-radius: @border-radius-base;
       }
+    }
+
+    &:not(:first-child),
+    .@{ant-prefix}-input-search &:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 
@@ -412,5 +424,55 @@
         }
       }
     }
+  }
+}
+
+.status-color(
+  @prefix-cls: @input-prefix-cls;
+  @text-color: @input-color;
+  @border-color: @input-border-color;
+  @background-color: @input-bg;
+  @hoverBorderColor: @primary-color-hover;
+  @outlineColor: @primary-color-outline;
+) {
+  &:not(.@{prefix-cls}-disabled):not(.@{prefix-cls}-borderless).@{prefix-cls} {
+    &,
+    &:hover {
+      background: @background-color;
+      border-color: @border-color;
+    }
+
+    &:focus,
+    &-focused {
+      .active(@text-color, @hoverBorderColor, @outlineColor);
+    }
+  }
+}
+
+.status-color-common(
+  @prefix-cls: @input-prefix-cls;
+  @text-color: @input-color;
+  @border-color: @input-border-color;
+  @background-color: @input-bg;
+  @hoverBorderColor: @primary-color-hover;
+  @outlineColor: @primary-color-outline;
+) {
+  .@{prefix-cls}-feedback-icon {
+    color: @text-color;
+  }
+
+  .@{prefix-cls}-prefix {
+    color: @text-color;
+  }
+}
+
+.group-status-color(
+  @prefix-cls: @input-prefix-cls;
+  @text-color: @input-color;
+  @border-color: @input-border-color;
+) {
+  .@{prefix-cls}-group-addon {
+    color: @text-color;
+    border-color: @border-color;
   }
 }
