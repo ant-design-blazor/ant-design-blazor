@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -21,6 +22,9 @@ namespace AntDesign
         private bool _previousParsingAttemptFailed;
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
+        private PropertyReflector? _propertyReflector;
+
+        protected string PropertyName => _propertyReflector?.PropertyName;
 
         [CascadingParameter(Name = "FormItem")]
         private IFormItem FormItem { get; set; }
@@ -269,6 +273,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
+
+            if (ValueExpression is not null)
+                _propertyReflector = PropertyReflector.Create(ValueExpression);
+
             base.OnInitialized();
 
             FormItem?.AddControl(this);

@@ -8,10 +8,10 @@ namespace AntDesign
 {
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
-    
+
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
-            
+
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -85,10 +85,10 @@ namespace AntDesign
                 CurrentValue = _defaultValue;
                 _defaultValueSetted = true;
             }
-            
-            if(string.IsNullOrEmpty(Name))
+
+            if (string.IsNullOrEmpty(Name))
             {
-                Name = ComponentIdGenerator.Generate(this);
+                Name = PropertyName ?? ComponentIdGenerator.Generate(this);
             }
         }
 
@@ -98,6 +98,7 @@ namespace AntDesign
             {
                 radio.SetName(Name);
             }
+
             _radioItems.Add(radio);
             // If the current radio has been already disabled, this radio group won't sync the value of `Disabled`.
             if (!radio.Disabled)
