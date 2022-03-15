@@ -15,7 +15,7 @@ namespace AntDesign.Core.Reflection
 
         public string PropertyName { get; set; }
 
-        private PropertyReflector(PropertyInfo propertyInfo)
+        private PropertyReflector(MemberInfo propertyInfo)
         {
             this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
             this.DisplayName = propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
@@ -45,8 +45,7 @@ namespace AntDesign.Core.Reflection
                 throw new ArgumentException($"The provided expression contains a {accessorBody.GetType().Name} which is not supported. {nameof(PropertyReflector)} only supports simple member accessors (fields, properties) of an object.");
             }
 
-            var property = memberExpression.Member as PropertyInfo;
-            return new PropertyReflector(property);
+            return new PropertyReflector(memberExpression.Member);
         }
     }
 }
