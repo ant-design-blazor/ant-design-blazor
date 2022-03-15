@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.10.5
+
+2022-03-15
+
+- 🐞 修复 Radio 在 RadioGroup 中时如果没有指定Name则设置默认的 Name。 [#2330](https://github.com/ant-design-blazor/ant-design-blazor/pull/2330) [@bweissronin](https://github.com/bweissronin)
+- 🛠 修改 Upload 添加更多图片格式。[#2321](https://github.com/ant-design-blazor/ant-design-blazor/pull/2321) [@scugzbc](https://github.com/scugzbc)
+- 🐞 修复 Tabs 数量超出范围时 TabTemplate 不能显示在 dropdown 中的问题。[#2320](https://github.com/ant-design-blazor/ant-design-blazor/pull/2320) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 渲染循环和选项框勾选不正常。[#2319](https://github.com/ant-design-blazor/ant-design-blazor/pull/2319) [@gmij](https://github.com/gmij)
+- 🐞 修复 InputNumber 连续加减切换时偶尔出现的不停止问题。[#2317](https://github.com/ant-design-blazor/ant-design-blazor/pull/2317) [@jeffraska](https://github.com/jeffraska)
+- 🐞 修复 Select 使用DataSource时下拉列表不能滚动到已选项的问题。[#2316](https://github.com/ant-design-blazor/ant-design-blazor/pull/2316) [@jeffraska](https://github.com/jeffraska)
+- 🐞 修复 Badge 数字间的间隙。[#2315](https://github.com/ant-design-blazor/ant-design-blazor/pull/2315) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.10.4
 
 2022-02-25

@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.10.5
+
+2022-03-15
+
+- 🐞 Fixed Radio default name value for radio in group. [#2330](https://github.com/ant-design-blazor/ant-design-blazor/pull/2330) [@bweissronin](https://github.com/bweissronin)
+- 🛠 Fixed Upload that add more image file type [#2321](https://github.com/ant-design-blazor/ant-design-blazor/pull/2321) [@scugzbc](https://github.com/scugzbc)
+- 🐞 Fixed Tabs that TabTemplate can't display in the overflow dropdown. [#2320](https://github.com/ant-design-blazor/ant-design-blazor/pull/2320) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree that dead-loop rendering and checkbox check incorrectly [#2319](https://github.com/ant-design-blazor/ant-design-blazor/pull/2319) [@gmij](https://github.com/gmij)
+- 🐞 Fixed InputNumber that possible nonstoppable increase/decrease. [#2317](https://github.com/ant-design-blazor/ant-design-blazor/pull/2317) [@jeffraska](https://github.com/jeffraska)
+- 🐞 Fix Select that item scroll into view when using DataSource. [#2316](https://github.com/ant-design-blazor/ant-design-blazor/pull/2316) [@jeffraska](https://github.com/jeffraska)
+- 🐞 Fixed Badge the gap of numbers. [#2315](https://github.com/ant-design-blazor/ant-design-blazor/pull/2315) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.10.4
 
 2022-02-25
