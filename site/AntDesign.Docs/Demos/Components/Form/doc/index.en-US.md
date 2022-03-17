@@ -48,6 +48,7 @@ High performance Form component with data scope management. Including data colle
 | LabelStyle | **Label** Label Style | string |-|
 | Rules | Validation rules, set the validation logic of the field | [FormValidationRule[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/Validate/Rule/FormValidationRule.cs) |-|
 | HasFeedback | Used in conjunction with the **validateStatus** property to display the verification status icon. It is recommended to use it only with the Input component | bool | false |
+| ShowFeedbackOn | Used in conjunction with **ValidateStatus** property to display the verification status icon when the field is in error or valid. **ValidateStatus** defaults to Error if not set. It is recommended to use it only with the Input component. | bool | false |
 | ValidateStatus | Validation status, if not set, it will be automatically generated according to validation rules | [FormValidateStatus](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/FormValidateStatus.cs) | FormValidateStatus.Default |
 | Help | Prompt information | string | Automatically generated according to verification rules |
 
