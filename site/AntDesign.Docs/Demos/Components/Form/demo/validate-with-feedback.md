@@ -1,8 +1,8 @@
 ---
 order: 103
 title:
-zh-CN:
-en-US: Validate with Feedback
+  zh-CN:
+  en-US: Validate with Feedback
 ---
 
 ## zh-CN

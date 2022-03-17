@@ -24,7 +24,7 @@
                     @ChildContent
                 </CascadingValue>
             </div>
-            @if (IsShowIcon || IsShowFeedbackOnError)
+            @if (IsShowFeedback)
             {
                 <span class=@($"{_prefixCls}-children-icon")><Icon Type="@(_iconMap[ValidateStatus].type)" Theme="@(_iconMap[ValidateStatus].theme)" /></span>
             }

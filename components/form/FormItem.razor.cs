@@ -113,7 +113,7 @@ namespace AntDesign
         public bool HasFeedback { get; set; }
 
         [Parameter] 
-        public bool ShowFeedbackOnError { get; set; }
+        public bool ShowFeedbackOn { get; set; }
 
         [Parameter]
         public FormValidateStatus ValidateStatus { get; set; }
@@ -131,7 +131,10 @@ namespace AntDesign
 
         private bool IsShowIcon => (HasFeedback && _iconMap.ContainsKey(ValidateStatus));
 
-        private bool IsShowFeedbackOnError => (ShowFeedbackOnError && !_isValid);
+        private bool IsShowFeedbackOnError => (ShowFeedbackOn && !_isValid);
+        private bool IsShowFeedbackOnSuccess => (ShowFeedbackOn && _isValid);
+
+        private bool IsShowFeedback => HasFeedback || IsShowFeedbackOnSuccess || IsShowFeedbackOnError;
 
         private EditContext EditContext => Form?.EditContext;
 
@@ -172,7 +175,7 @@ namespace AntDesign
                 _validationMessages = new[] { Help };
             }
 
-            if (ShowFeedbackOnError && ValidateStatus == FormValidateStatus.Default)
+            if (ShowFeedbackOn && ValidateStatus == FormValidateStatus.Default)
             {
                 ValidateStatus = FormValidateStatus.Error;
             }
@@ -186,7 +189,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
-                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => (HasFeedback || IsShowFeedbackOnError) && ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => IsShowFeedback && ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
                 .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
