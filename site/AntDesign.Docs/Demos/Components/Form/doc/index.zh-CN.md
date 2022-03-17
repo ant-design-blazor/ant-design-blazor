@@ -49,6 +49,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | LabelStyle | **Label**标签的Style | string | - |
 | Rules | 校验规则,设置字段的校验逻辑 | [FormValidationRule[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/Validate/Rule/FormValidationRule.cs) | - |
 | HasFeedback | 配合 **validateStatus** 属性使用，展示校验状态图标，建议只配合 Input 组件使用 | bool | false |
+| ShowFeedbackOn | | bool | false |
 | ValidateStatus | 校验状态，如不设置，则会根据校验规则自动生成 | [FormValidateStatus](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/FormValidateStatus.cs) | FormValidateStatus.Default |
 | Help | 提示信息 | string | 根据校验规则自动生成 |
   
