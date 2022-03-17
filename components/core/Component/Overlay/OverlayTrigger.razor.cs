@@ -320,7 +320,8 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            if (IsOverlayShow())
+                DomEventListener.Dispose();
 
             base.Dispose(disposing);
         }
