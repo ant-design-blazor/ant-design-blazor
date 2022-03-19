@@ -8,7 +8,7 @@
 @if (paginationAtTop)
 {
     string pagingStyle = "margin-bottom:5px; text-align:" + (paginationAtRight ? "right" : "left");
-    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
+    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="PaginationSize.Small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
 }
 <Table @ref="RefTable" TItem="TItem" DataSource="DataSource" PageSize="int.MaxValue" HidePagination="true" Responsive="false" Size="@TableSize.Small" Bordered="true" ScrollY="60vh" RowClassName="@(d => ((d.Data == EditItem && !string.IsNullOrEmpty(EditFieldValidationMessage.Value)) ? "lynx-dg-danger" : ""))">
     <RowTemplate>
@@ -243,7 +243,7 @@
 @if (!paginationAtTop)
 {
     string pagingStyle = "margin-top:5px; text-align:" + (paginationAtRight ? "right" : "left");
-    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
+    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="PaginationSize.Small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
 }
 <style>
     .lynx-dg-editable-cell {
