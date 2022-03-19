@@ -1,0 +1,197 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+@using System.ComponentModel.DataAnnotations
+@using System.Globalization
+
+<CascadingValue Value="ExternalVaildateErrors">
+    <DynamicTable TItem="Student" DataSource="StudentList" TotalCount="totalCount" PageChanged="e=>{Query(e.Page,e.PageSize);}" />
+</CascadingValue>
+<Button Type="primary" OnClick="Validate">Validate</Button>
+
+@code {
+    private List<Student> FullStudentList = CreateRandomList();
+    private List<Student> StudentList;
+    private int totalCount = 0;
+    private int pageIndex = 1;
+    private int pageSize = 20;
+    private DynamicTable<Student> dynamicTable;
+    [Parameter]
+    public List<VaildateErrorItem> ExternalVaildateErrors { get; set; } = new List<VaildateErrorItem>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Query(1, pageSize);
+    }
+
+    private void Query(int page, int pagesize)
+    {
+        pageIndex = page;
+        pageSize = pagesize;
+        StudentList = FullStudentList.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+        StudentList[0].Name = "try double-click";
+        totalCount = FullStudentList.Count;
+        ExternalVaildateErrors.Clear();
+    }
+
+    private void Validate()
+    {
+        ExternalVaildateErrors.Clear();
+        if (StudentList == null)
+        {
+            return;
+        }
+        foreach (var item in StudentList)
+        {
+            ExternalVaildateErrors.AddRange(VaildateErrorItem.Vaildate(item));
+        }
+    }
+
+    private static List<Student> CreateRandomList()
+    {
+        Random r = new Random();
+        int total = r.Next(200, 400);
+        List<Student> list = new();
+        for (int i = 0; i < total; i++)
+        {
+            var s = new Student()
+                {
+                    No = "ID" + i.ToString().PadLeft(5, '0'),
+                    Name = GetRandomString(r),
+                    Rank = r.Next(1, 20) / 2.0m,
+                    Birthday = new DateTime(r.Next(1990, 2005), r.Next(1, 12), r.Next(1, 28)),
+                    Score = r.Next(200, 800),
+                    Checkable = r.Next(1, 10) > 2
+                };
+            list.Add(s);
+        }
+
+        return list;
+    }
+
+    private static string GetRandomString(Random r)
+    {
+        int len = r.Next(3, 20);
+        char[] c = new char[len];
+        for (int i = 0; i < len; i++)
+        {
+            c[i] = (char)r.Next((int)'A', (int)'z' + 1);
+        }
+        return new string(c);
+    }
+
+    class Student : IDynamicTableCheckedColumnDefinition
+    {
+        #region IDynamicTableCheckedColumnDefinition
+        [Display(AutoGenerateField = false)]
+        public bool Checked { get; set; }
+        [Display(AutoGenerateField = false)]
+        public bool Checkable { get; set; }
+        #endregion
+
+        [DynamicTableView(typeof(SendButton), nameof(SendButton.DataObject))]
+        [AutoGenerateBehavior(DataFormVisibility = false)]
+        [DynamicTableColumnSetup(IsReadOnly = true, CanSort = false, Width = 70, Frozen = true, HeaderFontStyle = "text-align:center")]
+        public BindEntityProperty Send { get; set; } //this property defined an action column
+
+        [Display(Name = "Number")]
+        [DynamicTableColumnSetup(IsReadOnly = true, Frozen = true)]
+        public string No { get; set; }
+
+        [RegularExpression("^[A-Za-z\\s]*", ErrorMessage = "Name is invalid. Alphabet letters only.")]
+        [StringLength(32, MinimumLength = 2)]
+        public string Name { get; set; }
+
+        [DisplayFormat(DataFormatString = "yyyy/MM")]
+        [DynamicTableView(TextAlignment = TextAlignment.Right)]
+        [DynamicTableEdit(typeof(DatePicker<DateTime>), nameof(DatePicker<DateTime>.Value), new string[] { "Picker" }, new object[] { DatePickerType.Month })]
+        public DateTime Birthday { get; set; }
+
+        [DynamicTableView(TextAlignment = TextAlignment.Right)]
+        [Range(typeof(decimal), "0", "750")]
+        public decimal Score { get; set; }
+
+        [DynamicTableColumnSetup(CanSort = false, Width = 300)]
+        public string Memo { get; set; }
+
+        //when DispalyFormat won't fit your needs, converter allow you flexible shape the data.
+        [DynamicTableView(ConverterType = typeof(RankConverter), TextAlignment = TextAlignment.Center)]
+        [DynamicTableEdit(typeof(Rate), nameof(Rate.Value), new string[] { nameof(Rate.AllowClear), nameof(Rate.AllowHalf), nameof(Rate.Count) }, new object[] { false, true, 10 })]
+        //UIControl is applied for DataForm, DynamicTableEdit is applied for DynamicTable
+        [UIControl(typeof(Rate), nameof(Rate.Value), new string[] { nameof(Rate.AllowClear), nameof(Rate.AllowHalf), nameof(Rate.Count) }, new object[] { false, true, 10 })]
+        public decimal Rank { get; set; }
+    }
+
+    class RankConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is decimal v1)
+            {
+                if (v1 < 6)
+                {
+                    return "E";
+                }
+                else if (v1 < 8)
+                {
+                    return "D";
+                }
+                else if (v1 < 9)
+                {
+                    return "B";
+                }
+                else if (v1 < 10)
+                {
+                    return "A";
+                }
+                else
+                {
+                    return "S";
+                }
+            }
+            return (value ?? "").ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+    class SendButton : BindEntityButton
+    {
+        [Inject]
+        protected NotificationService notificationService { get; set; }
+
+        public SendButton()
+        {
+            this.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, Button_Click);
+        }
+
+        public override void OnDataObjectChanged(object newDataObject, object oldDataObject)
+        {
+            if (newDataObject is Student std)
+            {
+                //You can change the button properties here, base on the context data.
+                this.ChildContent = (b) => { b.AddMarkupContent(0, "Send"); };
+                this.Disabled = !std.Checkable;
+            }
+        }
+
+        async void Button_Click(MouseEventArgs e)
+        {
+            var context = DataObject as Student;
+            if (context != null)
+            {
+                await notificationService.Open(new NotificationConfig()
+                    {
+                        Message = $"Send email to {context.No} success.",
+                        Description = "This is a demo, you can do anything here (e.g.: call backend api)."
+                    });
+            }
+        }
+
+    }
+
+}

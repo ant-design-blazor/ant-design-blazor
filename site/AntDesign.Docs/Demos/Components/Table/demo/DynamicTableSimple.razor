@@ -1,0 +1,33 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+
+<DynamicTable TItem="Student" DataSource="StudentList" IsReadOnly="true"  />
+
+@code {
+    private List<Student> StudentList;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        StudentList = new List<Student>()
+        {
+            new Student(){ No="0001", Birthday=new DateTime(1990,1,1), Name="Peter", Rank=3.5m, Score=560 },
+            new Student(){ No="0002", Birthday=new DateTime(1991,5,1), Name="Mary", Rank=6m, Score=467 },
+            new Student(){ No="0003", Birthday=new DateTime(1990,11,1), Name="John", Rank=9m, Score=730 },
+            new Student(){ No="0004", Birthday=new DateTime(1992,7,1), Name="Tim", Rank=5.5m, Score=242 },
+            new Student(){ No="0005", Birthday=new DateTime(1990,2,1), Name="Jean", Rank=4.5m, Score=115 },
+            new Student(){ No="0006", Birthday=new DateTime(1990,11,1), Name="Bill", Rank=8.5m, Score=620 },
+        };
+    }
+
+    class Student
+    {
+        public string No { get; set; }
+        public string Name { get; set; }
+        public DateTime Birthday { get; set; }
+        public decimal Score { get; set; }
+        public string Memo { get; set; }
+        public decimal Rank { get; set; }
+    }
+
+}

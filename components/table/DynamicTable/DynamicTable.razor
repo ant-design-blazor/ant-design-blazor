@@ -1,0 +1,352 @@
+﻿@using AntDesign
+@using Microsoft.AspNetCore.Components.Web
+@using AntDesign.Core.Reflection
+
+@typeparam TItem
+@namespace AntDesign
+
+@if (paginationAtTop)
+{
+    string pagingStyle = "margin-bottom:5px; text-align:" + (paginationAtRight ? "right" : "left");
+    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
+}
+<Table @ref="RefTable" TItem="TItem" DataSource="DataSource" PageSize="int.MaxValue" HidePagination="true" Responsive="false" Size="@TableSize.Small" Bordered="true" ScrollY="60vh" RowClassName="@(d => ((d.Data == EditItem && !string.IsNullOrEmpty(EditFieldValidationMessage.Value)) ? "lynx-dg-danger" : ""))">
+    <RowTemplate>
+        @if (!string.IsNullOrEmpty(this.EntityCheckedPropertyName))
+        {
+            var checkedProperty = this._entityClassAccessor.Fields.FirstOrDefault(f => f.Value.PropertyInfo.PropertyType == typeof(bool) && this.EntityCheckedPropertyName.Equals(f.Value.PropertyInfo.Name));
+            if (checkedProperty.Value != null)
+            {
+                <Column TData="bool" Fixed="left" Align="ColumnAlign.Center" Field="GetPropertyValue<bool>(context, checkedProperty.Value.PropertyInfo)" FieldExpression="GetPropertyExpression<bool>(context, checkedProperty.Value.PropertyInfo)" FieldChanged="(e) => { SetPropertyValue(context, checkedProperty.Value.PropertyInfo, e); }" Width="35px">
+                    <TitleTemplate>
+                        @if (this.MulitSelect)
+                        {
+                            <Checkbox Disabled="@(this.DataSource?.Any() != true)" Checked="this.CheckedAll" Indeterminate="this.PartialChecked" CheckedChanged="async (e) => { if (this.DataSource?.Any() == true && this.CheckedAll != e) {await AntDesign.EnumerableExtensions.ForEachAsync(this.DataSource, async f => { if ((f as IDynamicTableCheckedColumnDefinition)?.Checkable != false) { ReflectUtility.SetProperty(f, this.EntityCheckedPropertyName, e); } }); } }" CheckedExpression="() => this.CheckedAll" />
+                        }
+                        else
+                        {
+                            <span>*</span>
+                        }
+                    </TitleTemplate>
+                    <ChildContent>
+                        <Checkbox Disabled="@((context as IDynamicTableCheckedColumnDefinition)?.Checkable == false)" Checked="GetPropertyValue<bool>(context, checkedProperty.Value.PropertyInfo)" CheckedChanged="e => checkedProperty.Value.PropertyInfo.SetValue(context, e)" CheckedExpression="checkedProperty.Value.GetPropertyExpression<bool>(context)" CheckedChange="@(e => { if (!MulitSelect) { UpdateSingleSelectStatus(context, e); } })" />
+                    </ChildContent>
+                </Column>
+            }
+        }
+
+        @foreach (var item in this._entityClassAccessor.Fields)
+        {
+            if (item.Value.DisplayAttribute?.GetAutoGenerateField() == false)
+            {
+                continue;
+            }
+            if (item.Value?.AutoGenerateBehaviorAttribute?.DynamicTableVisibility == false)
+            {
+                continue;
+            }
+            if (!string.IsNullOrEmpty(this.EntityCheckedPropertyName) &&
+            this.EntityCheckedPropertyName.Equals(item.Value.PropertyInfo.Name) &&
+            item.Value.PropertyInfo.PropertyType == typeof(bool))
+            {
+                continue;
+            }
+
+            RenderFragment valueViewRenderFragment =@<div class="lynx-dg-editable-cell-value-wrap" style="padding-right: 24px; display: inline-block;width:100%; height:30px" @onclick="() => startEdit(context, item.Key)" id="@($"lynx_dg_{context.GetHashCode()}_{item.Key}")">@(GetPropertyStringValue(context, item.Value))</div>;
+            RenderFragment titleRenderFragment =@<AntDesign.Text Style="@item.Value.GetDataGridHeaderStyle" Ellipsis>@(this._entityClassAccessor.GetDisplayName(item.Value.PropertyInfo))</AntDesign.Text>;
+            RenderFragment editErrTipRenderFragment =@<Tooltip Style="display: inline-block;position:absolute;z-index: 2;margin: -8px;" Placement="Placement.TopLeft" Title="@EditFieldValidationMessage"><Icon Type="exclamation-circle" Theme="fill" Style="color:red;font-size:10pt" /></Tooltip>;
+            RenderFragment viewErrTipRenderFragment =@<Tooltip Style="display: inline-block;position:absolute;z-index: 2;margin: -8px;" Placement="Placement.TopLeft" Title="@GetExternalVaildateErrors(context, item.Key)"><Icon Type="exclamation-circle" Theme="fill" Style="color:orange;font-size:10pt" /></Tooltip>;
+            RenderFragment valueEditRenderFragment = null;
+
+            if (item.Value.PropertyInfo.PropertyType == typeof(BindEntityProperty))
+            {
+                if (item.Value.DataGridViewAttribute?._uicontroltype?.IsSubTypeOf(typeof(IBindEntityControl)) == true)
+                {
+                    <ActionColumn Width="@(item.Value.DataGridColumnSetupAttribute?.Width <= 0 ? "150px" : $"{item.Value.DataGridColumnSetupAttribute?.Width}px")"
+                      Fixed="@((item.Value.DataGridColumnSetupAttribute?.Frozen == true) ? "left" : "")" Align="@((AntDesign.ColumnAlign)Enum.Parse(typeof(AntDesign.ColumnAlign), item.Value.DataGridViewAttribute?.TextAlignment.ToString() ?? "Left", true))">
+                        <TitleTemplate>
+                            <Text Style="@item.Value.GetDataGridHeaderStyle">@(this._entityClassAccessor.GetDisplayName(item.Value.PropertyInfo))</Text>
+                        </TitleTemplate>
+                        <ChildContent>
+                            @item.Value.GetUIControl(item.Value.DataGridViewAttribute._uicontroltype, null, this, context, true, new Dictionary<string, object>() { { "DataObject", context } })
+                        </ChildContent>
+                    </ActionColumn>
+                }
+            }
+            else
+            {
+                @if (item.Value.DataGridEditAttribute != null)
+                {
+
+                    item.Value.CurrentItem = context;
+                    valueEditRenderFragment = item.Value.GetUIControl(item.Value.DataGridEditAttribute._uicontroltype, item.Value.DataGridEditAttribute.BindPropertyName, this, context, true, item.Value.DataGridEditAttribute.ExtraProperties);
+                }
+                else
+                {
+                    @if (item.Value.PropertyInfo.PropertyType == typeof(string))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(Input<string>), "Value", this, context, true,
+                        new Dictionary<string, object>()        {
+        { "Placeholder", item.Value?.DisplayAttribute?.GetPrompt() },
+        { "MaxLength",item.Value.MaxLength },
+        {"OnBlur",EventCallback.Factory.Create<FocusEventArgs>(this,(e)=>{stopEdit();})}
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(int))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<int>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.IntRangeMin },
+        { "Max", item.Value.IntRangeMax } ,
+        {"OnBlur",EventCallback.Factory.Create<FocusEventArgs>(this,(e)=>{stopEdit();})}
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(long))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<long>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.Int64RangeMin },
+        { "Max", item.Value.Int64RangeMax } ,
+        {"OnBlur",EventCallback.Factory.Create<FocusEventArgs>(this,(e)=>{stopEdit();})}
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(int?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<int?>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.IntRangeMin },
+        { "Max", item.Value.IntRangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(long?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<long?>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.Int64RangeMin },
+        { "Max", item.Value.Int64RangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(decimal))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<decimal>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.DecimalRangeMin },
+        { "Max", item.Value.DecimalRangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(double))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<double>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.DoubleRangeMin },
+        { "Max", item.Value.DoubleRangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(decimal?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<decimal?>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.DecimalRangeMin },
+        { "Max", item.Value.DecimalRangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(double?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(InputNumber<double?>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Min", item.Value.DoubleRangeMin },
+        { "Max", item.Value.DoubleRangeMax },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(DateTime))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(DatePicker<DateTime>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Format", item.Value.DataFormat },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(DateTime?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(DatePicker<DateTime?>), "Value", this, context, true,
+                        new Dictionary<string, object>() {
+        { "Format", item.Value.DataFormat },
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+                                }
+                        );
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(Guid))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(Input<Guid>), "Value", this, context, true, new Dictionary<string, object>() {
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+        });
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(Guid?))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(Input<Guid?>), "Value", this, context, true, new Dictionary<string, object>() {
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) } });
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(bool))
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(Switch), "Value", this, context, true, new Dictionary<string, object>()
+        {
+        { "OnBlur", EventCallback.Factory.Create<FocusEventArgs>(this, (e) => { stopEdit(); }) }
+        });
+                        item.Value.CurrentItem = context;
+                        if (item.Value.BooleanValue)
+                        {
+                            valueViewRenderFragment =@<Icon Type="check" Theme="outline" />;
+                        }
+                        else
+                        {
+                            valueViewRenderFragment =@<Icon Type="close" Theme="outline" />;
+                        }
+
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType.IsEnum)
+                    {
+                        valueEditRenderFragment = item.Value.GetUIControl(typeof(AntDesign.EnumSelect<>).MakeGenericType(item.Value.PropertyInfo.PropertyType), "Value", this, context, true, new Dictionary<string, object>() { { "OnBlur", new Action(() => { stopEdit(); }) } });
+                    }
+                    else if (item.Value.PropertyInfo.PropertyType == typeof(BindEntityProperty))
+                    {
+                        valueEditRenderFragment = null;
+                        valueViewRenderFragment = null;
+                    }
+
+                }
+
+                if (valueViewRenderFragment != null || valueEditRenderFragment != null)
+                {
+                    @CreateColumn(item.Value, context, this, titleRenderFragment, valueEditRenderFragment, editErrTipRenderFragment, valueViewRenderFragment, viewErrTipRenderFragment)
+                }
+            }
+        }
+
+    </RowTemplate>
+</Table>
+@if (!paginationAtTop)
+{
+    string pagingStyle = "margin-top:5px; text-align:" + (paginationAtRight ? "right" : "left");
+    <Pagination Style="@pagingStyle" ShowTotal="ShowTotal" Size="small" ShowSizeChanger="ShowSizeChanger" ShowQuickJumper="ShowQuickJumper" Current="@PageIndex" DefaultPageSize="@PageSize" PageSizeOptions="PageSizeOptions" HideOnSinglePage="true" OnChange="onPageChanged" PageSize="@PageSize" Total="@TotalCount" />
+}
+<style>
+    .lynx-dg-editable-cell {
+        position: relative;
+    }
+
+    .lynx-dg-danger {
+        background-color: #fff1f0;
+    }
+
+    .lynx-dg-editable-cell-value-wrap {
+        padding: 5px 12px;
+        cursor: pointer;
+        word-wrap: break-word;
+    }
+
+    .lynx-dg-editable-row:hover .lynx-dg-editable-cell-value-wrap {
+        padding: 4px 11px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+    }
+
+    [data-theme='dark'] .lynx-dg-editable-row:hover .lynx-dg-editable-cell-value-wrap {
+        border: 1px solid #434343;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem> DataSource { get; set; }
+    [Parameter]
+    public int PageIndex { get; set; } = 1;
+    [Parameter]
+    public int PageSize { get; set; } = 20;
+    [Parameter]
+    public int TotalCount { get; set; }
+    [Parameter]
+    public string PaginationPosition { get; set; } = "bottomRight";
+    [Parameter]
+    public RenderFragment Pagination { get; set; }
+    [Parameter]
+    public EventCallback<PaginationEventArgs> PageChanged { get; set; }
+    [Parameter]
+    public OneOf.OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>? ShowTotal { get; set; } 
+    [Parameter]
+    public bool ShowSizeChanger { get; set; } = true;
+    [Parameter]
+    public bool ShowQuickJumper { get; set; } = true;
+    [Parameter]
+    public int[] PageSizeOptions { get; set; } = new[] { 10,20,50,100 };
+    private async void onPageChanged(AntDesign.PaginationEventArgs e)
+    {
+        this.PageIndex = e.Page;
+        this.PageSize = e.PageSize;
+        if (PageChanged.HasDelegate)
+        {
+            await PageChanged.InvokeAsync(e);
+        }
+    }
+
+    private bool paginationAtRight
+    {
+        get
+        {
+            return PaginationPosition?.Contains("right", StringComparison.OrdinalIgnoreCase) == true;
+        }
+    }
+
+    private bool paginationAtTop
+    {
+        get
+        {
+            return PaginationPosition?.Contains("top", StringComparison.OrdinalIgnoreCase) == true;
+        }
+    }
+
+    private AntDesign.Table<TItem> RefTable;
+    private int rowWidth = -1;
+
+    void startEdit(TItem data, string field)
+    {
+        if (this.DataSource != null && this.DataSource.Contains(EditItem) && (EditItem != data || field != EditField))
+        {
+            EditFieldValidationMessage = ValidateField(EditItem, EditField);
+            if (!string.IsNullOrEmpty(EditFieldValidationMessage.Value))
+            {
+                return;
+            }
+        }
+
+        EditItem = data;
+        EditField = field;
+    }
+
+    void stopEdit()
+    {
+        EditFieldValidationMessage = ValidateField(EditItem, EditField);
+        if (string.IsNullOrEmpty(EditFieldValidationMessage.Value))
+        {
+            EditItem = null;
+            EditField = "";
+        }
+        this.StateHasChanged();
+    }
+
+}

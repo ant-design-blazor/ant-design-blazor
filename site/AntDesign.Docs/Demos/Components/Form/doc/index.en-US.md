@@ -111,6 +111,29 @@ var formConfig = new FormConfig {
   </Router>
 </ConfigProvider>;
 ```
+### DataForm
+
+DataForm generates editable form for specified entity
+
+| Name | Description | Type | Default Value |
+| --- | --- | --- | --- |
+| TItem | Type of Entity class | Type | - |
+| CurrentItem | An instance of `TItem`, two-way binding between the UI elements of DataForm and its properties | T | - |
+| ColumnsCount | How many columns will be displayed (1-6) | int | 1 |
+| ReferenceForm | The `AntDesign.IForm` in DataForm, can be used for invoking submit/validation. | IForm | - |
+
+### DataForm.Annotations
+
+DataForm allows customized UI elements by using Attributes for properties
+
+| Annotation | Description | Type |Parameters |
+| --- | --- | --- | --- |
+| .NET built-in | The built-in Annotations£¬include [Display],[DisplayFormat] and validation Annotations | System.ComponentModel.DataAnnotations.* | - |
+| SizeInDataForm | Define the size of UI elements in DataForm | AntDesign.DataAnnotations.SizeInDataFormAttribute | Normal,FullLine,TwoLines,FourLines |
+| UIControl | You can customize UI elements for the property if not satisfied with the default ones | AntDesign.DataAnnotations.UIControlAttribute | uicontroltype: UI element's type, it must be ComponentBase's subclass; bindproperty£ºa bind property in UI element could be used like @bind-{bindproperty}; extraProperties and extraPropertyValues: you can set any properties for the UI element |
+| DataSourceBind | For UI elements like Select<,>, set DataSource,LableName and ValueName | AntDesign.DataAnnotations.DataSourceBindAttribute | It's advised to use a static property as datasource, ohterwise will create a new instance. |
+| QueryConditionOperator | In query mode, define the operator for the condition, like: equal, bigger then, include... | AntDesign.DataAnnotations.QueryConditionOperatorAttribute | - |
+| AutoGenerateBehavior | Define the usablilty and visibilty in DataForm. Attention£º[Display(AutoGenerateField=false)] will override this attribute's settings | AntDesign.DataAnnotations.AutoGenerateBehaviorAttribute | DataFormEnabled, DataFormVisibility |
 
 <style>
 .code-box-demo .ant-form:not(.ant-form-inline):not(.ant-form-vertical) {

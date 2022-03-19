@@ -1,0 +1,92 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+@using System.ComponentModel.DataAnnotations
+@inject MessageService message
+
+<DataForm TItem="StudentQueryEntity" CurrentItem="student" />
+<Divider />
+<Button Type="primary" OnClick="()=>{message.Info(student.ToString());}">Show conditions</Button>
+
+@code {
+    private StudentQueryEntity student;
+
+    protected override Task OnInitializedAsync()
+    {
+        student = new StudentQueryEntity(); //no need create instance for all properties, it will be done automaticly.
+
+        student.No.Checked = true; //you can make some conditions effect by default.
+
+        //you can set default values for the conditions.
+        student.Birthday.Value = DateTime.Today.AddYears(-15);
+        student.Birthday.Value2 = DateTime.Today.AddYears(-5);
+        student.Birthday.Checked = false; //when set the member's value will auto set the Checked=true, if it's not intended, should set Checked=false back.
+
+        student.Grade.EnforceCondition = true; //this makes the condition become a must choose item.
+
+        return base.OnInitializedAsync();
+    }
+
+    class StudentQueryEntity : QueryConditionEntityViewBase //Query mode only support a QueryConditionEntityViewBase's sub-class.
+    {
+        [Display(Name = "Number")]
+        [QueryConditionOperator(QueryConditionOperator.Contain)] //default value for operator is equal
+        public QueryConditionStringItem No { get; set; } //no need create instance for all properties, it will be done automaticly.
+
+        [QueryConditionOperator(QueryConditionOperator.Contain)]
+        public QueryConditionStringItem Name { get; set; }
+
+        public QueryConditionItem<Grade> Grade { get; set; }
+
+        [QueryConditionOperator(QueryConditionOperator.Between)]
+        [UIControl(typeof(DatePicker<DateTime>), nameof(DatePicker<DateTime>.Value), new string[] { "Picker" }, new object[] { DatePickerType.Month })]
+        public QueryConditionDateTimeRangeItem Birthday { get; set; }
+
+        [QueryConditionOperator(QueryConditionOperator.BiggerOrEqual)]
+        public QueryConditionDecimalItem Score { get; set; }
+
+        [DataSourceBind(typeof(StudentQueryEntity), nameof(StudentQueryEntity.AdditionalCourse), nameof(KeyValueItem.Key), nameof(KeyValueItem.Value))]
+        public QueryConditionMultiValueItem<int> Course { get; set; } //currently, multi-value item only support string/int/guid
+
+        //The dict table can be store in other places.
+        private static List<KeyValueItem> additionalCourse;
+        [Display(AutoGenerateField = false)]
+        public static IEnumerable<KeyValueItem> AdditionalCourse
+        {
+            get
+            {
+                if (additionalCourse == null)
+                {
+                    additionalCourse = new List<KeyValueItem>() {
+                        new KeyValueItem(){ Key="N/A", Value=0},
+                        new KeyValueItem() { Key="Physical", Value=1},
+                        new KeyValueItem() { Key="Chemistry", Value=2},
+                        new KeyValueItem() { Key="Philosophy ", Value=3},
+                        new KeyValueItem() { Key="Geography", Value=4},
+                        new KeyValueItem() { Key="Biology", Value=5},
+                    };
+                }
+                return additionalCourse;
+            }
+        }
+    }
+
+    enum Grade
+    {
+        [Display(Name = "Prior")]
+        HighSchool_Pr = 0,
+        [Display(Name = "Grade1")]
+        HighSchool_G1 = 1,
+        [Display(Name = "Grade2")]
+        HighSchool_G2 = 2,
+        [Display(Name = "Grade3")]
+        HighSchool_G3 = 3,
+        [Display(Name = "Restudy")]
+        HighSchool_ReStudy = 4
+    }
+
+    class KeyValueItem
+    {
+        public int Value { get; set; }
+        public string Key { get; set; }
+    }
+}

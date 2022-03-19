@@ -1,0 +1,25 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+@using System.ComponentModel.DataAnnotations
+<DataForm TItem="Student" CurrentItem="student" />
+@code {
+    private Student student;
+    private DataForm<Student> _dataForm;
+
+    protected override Task OnInitializedAsync()
+    {
+        student = new Student() { Birthday = new DateTime(1990, 1, 1), No = "001", Name = "Peter", Score = 599, Rank = 3.5m };
+        return base.OnInitializedAsync();
+    }
+
+    class Student
+    {
+        public string No { get; set; }
+        public string Name { get; set; }
+        public DateTime Birthday { get; set; }
+        public decimal Score { get; set; }
+        public string Memo { get; set; }
+        public decimal Rank { get; set; }
+    }
+
+}

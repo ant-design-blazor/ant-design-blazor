@@ -76,3 +76,36 @@ The table supports responsive by default, and when the screen width is less than
 In small-screen mode, only certain features are currently supported, and mis-styling will occur in tables with some features such as group, expanded columns, tree data, summary cell, etc. 
 
 If you want to disable responsive, you can set `Responsive="false"`.
+
+### DynamicTable
+| Parameter             | Instruction             | Type                         | Defaults |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| TItem | Generic parameter | Type | - |
+| DataSource | Datasource to be dispalyed in the table | IEnumerable<TItem> | - |
+| PageIndex | Pagination index | int | 1 |
+| PageSize | Record count of each page  | int | 20 |
+| TotalCount | Total record count before Pagination | int | 0 |
+| PaginationPosition | Pagination bar's position, ref: Table.PaginationPosition | string | bottomRight |
+| PageChanged | Event, invoke when PageIndex/PageSize is changed | EventCallBack<PaginationEventArgs> | null |
+| RefTable | The instance of AntDesign.Table object inside the DynamicTable | Table | - |
+| IsReadOnly | When value is set to false, inside table edit is allowed. | bool | false |
+| ExternalVaildateErrors | Cell positions of the datas included in the error list will be marked | IEnumerable<VaildateErrorItem> | null |
+| EntityCheckedPropertyName | For binding checkbox columns with an entity's property£¬but if IDynamicTableCheckedColumnDefinition interface is implemented, manual binding isn't needed | string | null/"Checked" |
+| MulitSelect | multi/single select for rows£¬only effective if EntityCheckedPropertyName is set. | bool | true |
+| CheckColumnVisibility | User defined function, check if the column is editable in runtime | Func<string, bool> | null |
+| CheckCellEditable | User defined function, check if the cell is editable in runtime | Func<string, TItem, bool> | null |
+
+### DynamicTable.Annotations
+
+DynamicTable allows customized UI elements by using Attributes for properties
+
+| Annotation | Description | Type |Parameters |
+| --- | --- | --- | --- |
+| .NET built-in | The built-in Annotations£¬include [Display],[DisplayFormat] and validation Annotations | System.ComponentModel.DataAnnotations.* | - |
+| DataSourceBind | For UI elements like Select<,>, designate DataSource,LableName and ValueName | AntDesign.DataAnnotations.DataSourceBindAttribute | It's advised to use a static property as datasource, ohterwise will create a new instance. |
+| AutoGenerateBehavior | Define visibilty in DynamicTable. Attention£º[Display(AutoGenerateField=false)] will override this attribute's settings | AntDesign.DataAnnotations.AutoGenerateBehaviorAttribute | DynamicTableVisibility |
+| DynamicTableView | You can customize UI elements for the property if not satisfied with the default ones in view mode | AntDesign.DataAnnotations.DynamicTableViewAttribute | uicontroltype: UI element's type, it must be ComponentBase's subclass; bindproperty£ºa bind property in UI element could be used like @bind-{bindproperty}; extraProperties and extraPropertyValues: you can set any properties for the UI element |
+| DynamicTableView.ConverterType | Provide a highly flexible format convert method | IValueConverter | - |
+| DynamicTableEdit | You can customized UI elements for the property if not satisfied with the default ones in edit mode | uicontroltype: UI element's type', it must be ComponentBase's subclass; bindproperty£ºa bind property in UI element could be used like @bind-{bindproperty}; extraProperties and extraPropertyValues: you can set any properties for the UI element |
+| DisplayConverter | Same as DynamicTableView.ConverterType, but also effective in DiffForm | AntDesign.DataAnnotations.DisplayConverterAttribute | - |
+| DynamicTableColumnSetup | Provide a way to set column's IsReadOnly,CanSort,Width,Frozen propertys. | AntDesign.DynamicTableColumnSetupAttribute | - |

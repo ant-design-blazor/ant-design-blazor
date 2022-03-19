@@ -1,0 +1,115 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+@using System.ComponentModel.DataAnnotations
+@inject MessageService message
+
+<Checkbox CheckedChanged="e=>columnsCount=e?2:1">Two columns</Checkbox>
+<Button OnClick="CheckForm" Type="primary">Validate</Button>
+<Divider />
+<DataForm TItem="Student" CurrentItem="student" @ref="_dataForm" ColumnsCount="(int)columnsCount" />
+
+@code {
+    private Student student;
+    private DataForm<Student> _dataForm;
+    private double columnsCount = 1;
+
+    protected override Task OnInitializedAsync()
+    {
+        student = new Student() { Birthday = new DateTime(1990, 1, 1), Grade = Grade.HighSchool_G2, No = "001", Name = "Peter", Score = 599, Rank = 3.5m };
+        return base.OnInitializedAsync();
+    }
+
+    private async void CheckForm()
+    {
+        if (_dataForm.ReferenceForm.Validate())
+        {
+            await message.Success("All data is valid.");
+        }
+        else
+        {
+            await message.Warning("Data is invalid.");
+        }
+    }
+
+    class Student
+    {
+        [Key]
+        [Display(Name = "Number", Order = 1)]
+        [RegularExpression("^\\d{3}$", ErrorMessage = "Format: 3 numbers")]
+        public string No { get; set; }
+
+        [MaxLength(16)]
+        [MinLength(2)]
+        [Display(Order = 2)]
+        public string Name { get; set; }
+
+        [DisplayFormat(DataFormatString = "yyyy")]
+        [Range(typeof(DateTime), "1900-1-1", "2020-12-31")]
+        [Display(Order = 4)]
+        [UIControl(typeof(DatePicker<DateTime>), nameof(DatePicker<DateTime>.Value), new string[] { "Picker" }, new object[] { DatePickerType.Month })]
+        public DateTime Birthday { get; set; }
+
+        [Display(Order = 3)]
+        public Grade Grade { get; set; }
+
+        [Range(typeof(decimal), "0", "750")]
+        [Display(Order = 5)]
+        public decimal Score { get; set; }
+
+        [Display(Order = 4)]
+        [SizeInDataForm(SizeInDataForm.TwoLines)]
+        [MaxLength(255)]
+        public string Memo { get; set; }
+
+        [Display(Order = 7)]
+        [UIControl(typeof(Rate), nameof(Rate.Value), new string[] { nameof(Rate.AllowClear), nameof(Rate.AllowHalf), nameof(Rate.Count) }, new object[] { false, true, 10 })]
+        [SizeInDataForm(SizeInDataForm.FullLine)]
+        public decimal Rank { get; set; }
+
+        [Display(Order = 6)]
+        [UIControl(typeof(Select<int, KeyValueItem>), "Value", new string[] { "AllowClear" }, new object[] { false })]
+        [DataSourceBind(typeof(Student), nameof(Student.AdditionalCourse), nameof(KeyValueItem.Key), nameof(KeyValueItem.Value))]
+        public int Course { get; set; }
+
+        private static List<KeyValueItem> additionalCourse;
+        [Display(AutoGenerateField = false)]
+        public static IEnumerable<KeyValueItem> AdditionalCourse
+        {
+            get
+            {
+                if (additionalCourse == null)
+                {
+                    additionalCourse = new List<KeyValueItem>() {
+                        new KeyValueItem(){ Key="N/A", Value=0},
+                        new KeyValueItem() { Key="Physical", Value=1},
+                        new KeyValueItem() { Key="Chemistry", Value=2},
+                        new KeyValueItem() { Key="Philosophy ", Value=3},
+                        new KeyValueItem() { Key="Geography", Value=4},
+                        new KeyValueItem() { Key="Biology", Value=5},
+                    };
+                }
+                return additionalCourse;
+            }
+        }
+    }
+
+    enum Grade
+    {
+        [Display(Name = "Prior")]
+        HighSchool_Pr = 0,
+        [Display(Name = "Grade1")]
+        HighSchool_G1 = 1,
+        [Display(Name = "Grade2")]
+        HighSchool_G2 = 2,
+        [Display(Name = "Grade3")]
+        HighSchool_G3 = 3,
+        [Display(Name = "Restudy")]
+        HighSchool_ReStudy = 4
+    }
+
+    class KeyValueItem
+    {
+        public int Value { get; set; }
+        public string Key { get; set; }
+    }
+}

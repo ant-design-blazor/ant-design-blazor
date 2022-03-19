@@ -111,6 +111,30 @@ var formConfig = new FormConfig {
   </Router>
 </ConfigProvider>;
 ```
+### DataForm
+
+DataForm 为指定的实体类自动生成编辑表单
+
+| 名称 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| TItem | 实体类类型 | Type | - |
+| CurrentItem | `TItem` 的实例，界面上的元素将与该对象的属性进行双向绑定 | T | - |
+| ColumnsCount | 默认情况下，采用几列来展现各个字段(1-6) | int | 1 |
+| ReferenceForm | DataForm 中，实际的 `AntDesign.IForm` 对象，可用于执行提交、校验等操作。| IForm | - |
+
+### DataForm.Annotations
+
+DataForm 支持根据实体类属性上添加的Attributes标签，实现定制化UI元素
+
+| Annotation | 说明 | 类型 |参数 |
+| --- | --- | --- | --- |
+| 原生 | 系统自带Annotation，包括[Display],[DisplayFormat]以及各类校验Annotation | System.ComponentModel.DataAnnotations.* | - |
+| SizeInDataForm | 该属性生成的UI元素在DataForm中的尺寸 | AntDesign.DataAnnotations.SizeInDataFormAttribute | Normal,FullLine,TwoLines,FourLines |
+| UIControl | 如果默认生成的UI元素不符合实际需求，可以通过该标签指定UI元素类型 | AntDesign.DataAnnotations.UIControlAttribute | uicontroltype: UI元素类型，需要是ComponentBase的子类；bindproperty：UI元素中一个支持@bind-{bindproperty}形式绑定的属性; extraProperties与extraPropertyValues，可以额外为控件设置属性 |
+| DataSourceBind | 对于Select<,>等类型的控件，指定DataSource数据源和LableName、ValueName属性 | AntDesign.DataAnnotations.DataSourceBindAttribute | 数据源类型建议是类中的静态属性，若是非静态属性，将创建一个类的实例 |
+| QueryConditionOperator | 在查询模式下，指定相应条件字段使用的运算符，比如等于，包含，大于 等… | AntDesign.DataAnnotations.QueryConditionOperatorAttribute | - |
+| AutoGenerateBehavior | 指定该属性在DataForm中的可见性和可用性，注意：当设置[Display(AutoGenerateField=false)]时，该属性无效。 | AntDesign.DataAnnotations.AutoGenerateBehaviorAttribute | DataFormEnabled, DataFormVisibility |
+
 
 <style>
 .code-box-demo .ant-form:not(.ant-form-inline):not(.ant-form-vertical) {

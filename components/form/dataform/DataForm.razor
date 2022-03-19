@@ -1,0 +1,370 @@
+﻿@using AntDesign
+@using AntDesign.DataAnnotations
+@using AntDesign.Core.Reflection
+@typeparam TItem
+@namespace AntDesign
+
+<Form @ref="ReferenceForm" Model="CurrentItem" TModel="TItem" Name="dataform">
+    <Row>
+        @foreach (var item in _entityClassAccessor.Fields)
+        {
+            if (item.Value.DisplayAttribute?.GetAutoGenerateField() == false)
+            {
+                continue;
+            }
+            if (item.Value?.AutoGenerateBehaviorAttribute?.DataFormVisibility == false)
+            {
+                continue;
+            }
+            if (item.Value.PropertyInfo.PropertyType == typeof(BindEntityProperty))
+            {
+                continue;
+            }
+
+            string itemName = item.Key;
+            int spanSize = 24 / ColumnsCount;
+            if (item.Value.SizeInDataForm != SizeInDataForm.Normal)
+            {
+                spanSize = 24;
+            }
+            <AntDesign.Col Span="@spanSize">
+                <FormItem LabelAlign="AntLabelAlignType.Right">
+                    <LabelTemplate>
+                        <div style=" display: inline-block; width:150px; text-wrap:normal; text-overflow:ellipsis">
+                            @if (ReflectUtility.IsSubTypeOf(item.Value.PropertyInfo.PropertyType, typeof(IQueryConditionItem)))
+                            {
+                                <Checkbox @bind-Checked="@item.Value.QueryConditionItem.Checked" Disabled="@item.Value.QueryConditionItem.EnforceCondition">
+                                    <span style="word-wrap:break-word">
+                                        @(item.Value.DisplayAttribute?.GetName()??item.Key)
+                                    </span>
+                                </Checkbox>
+                            }
+                            else
+                            {
+                                <span>@(item.Value.DisplayAttribute?.GetName()??item.Key)</span>
+                            }
+                            <span> &nbsp;&nbsp;</span>
+                        </div>
+                    </LabelTemplate>
+                    <ChildContent>
+                        @if (item.Value.UIControlAttribute != null)
+                        {
+                            @if (ReflectUtility.IsSubTypeOf(item.Value.PropertyInfo.PropertyType, typeof(IQueryConditionItem)))
+                            {
+                                IDictionary<string, object> pairs = item.Value.UIControlAttribute.ExtraProperties;
+                                if (item.Value.UIControlAttribute.ExtraProperties == null)
+                                {
+                                    pairs = new Dictionary<string, object>() { { "Disabled", (!item.Value.QueryConditionItem.Checked) } };
+                                }
+                                else
+                                {
+                                    pairs["Disabled"] = (!item.Value.QueryConditionItem.Checked);
+                                }
+                                <InputGroup Compact>
+                                    @item.Value.GetUIControl(item.Value.UIControlAttribute._uicontroltype, item.Value.UIControlAttribute.BindPropertyName, this, CurrentItem, true, pairs)
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none;" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+
+                            }
+                            else
+                            {
+                                @item.Value.GetUIControl(item.Value.UIControlAttribute._uicontroltype, item.Value.UIControlAttribute.BindPropertyName, this, CurrentItem, true, item.Value.UIControlAttribute.ExtraProperties)
+                            }
+                        }
+                        else
+                        {
+                            @if (item.Value.PropertyInfo.PropertyType == typeof(string))
+                            {
+                                if (item.Value.SizeInDataForm == SizeInDataForm.TwoLines || item.Value.SizeInDataForm == SizeInDataForm.FourLines)
+                                {
+                                    uint rows = (uint)(int)item.Value.SizeInDataForm;
+                                    @item.Value.GetUIControl(typeof(TextArea), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Placeholder", item.Value?.DisplayAttribute?.GetPrompt() },
+                    {"MaxLength",item.Value.MaxLength } ,
+                    { "Rows",rows},
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                                }
+                                else
+                                {
+                                    @item.Value.GetUIControl(typeof(Input<string>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Placeholder", item.Value?.DisplayAttribute?.GetPrompt() },
+                    { "MaxLength",item.Value.MaxLength } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                                }
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(int))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<int>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.IntRangeMin },
+                    { "Max", item.Value.IntRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(long))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<long>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.Int64RangeMin },
+                    { "Max", item.Value.Int64RangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(int?))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<int?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.IntRangeMin },
+                    { "Max", item.Value.IntRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(long?))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<long?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.Int64RangeMin },
+                    { "Max", item.Value.Int64RangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(decimal))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<decimal>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.DecimalRangeMin },
+                    { "Max", item.Value.DecimalRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(double))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<double>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.DoubleRangeMin },
+                    { "Max", item.Value.DoubleRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(decimal?))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<decimal?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.DecimalRangeMin },
+                    { "Max", item.Value.DecimalRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(double?))
+                            {
+                                @item.Value.GetUIControl(typeof(InputNumber<double?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Min", item.Value.DoubleRangeMin },
+                    { "Max", item.Value.DoubleRangeMax } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(DateTime))
+                            {
+                                @item.Value.GetUIControl(typeof(DatePicker<DateTime>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Format", item.Value.DataFormat } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(DateTime?))
+                            {
+                                @item.Value.GetUIControl(typeof(DatePicker<DateTime?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    { "Format", item.Value.DataFormat } ,
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(Guid))
+                            {
+                                @item.Value.GetUIControl(typeof(Input<Guid>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(Guid?))
+                            {
+                                @item.Value.GetUIControl(typeof(Input<Guid?>), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(bool) || item.Value.PropertyInfo.PropertyType == typeof(bool?))
+                            {
+                                @item.Value.GetUIControl(typeof(Switch), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType.IsEnum)
+                            {
+                                @item.Value.GetUIControl(typeof(AntDesign.EnumSelect<>).MakeGenericType(item.Value.PropertyInfo.PropertyType), "Value", this, CurrentItem, true,
+                    new Dictionary<string, object>() {
+                    {"Disabled",item.Value.AutoGenerateBehaviorAttribute?.DataFormEnabled==false } }
+                    )
+                                ;
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionItem<bool>))
+                            {
+                                <Switch @bind-Value="@(item.Value.QueryConditionBooleanItem.Value)" Disabled="@(!item.Value.QueryConditionItem.Checked)" />
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionStringItem))
+                            {
+                                <InputGroup Compact>
+                                    <Input Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionStringItem.Value)" Placeholder="@(item.Value?.DisplayAttribute?.GetPrompt())" MaxLength="@item.Value.MaxLength" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionGuidItem))
+                            {
+                                <InputGroup Compact>
+                                    <Input Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionGuidItem.Value)" Placeholder="@(item.Value?.DisplayAttribute?.GetPrompt())" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionInt32Item))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt32Item.Value)" Min="@(item.Value.IntRangeMin)" Max="@(item.Value.IntRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionInt64Item))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt64Item.Value)" Min="@(item.Value.Int64RangeMin)" Max="@(item.Value.Int64RangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDecimalItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDecimalItem.Value)" Min="@(item.Value.DecimalRangeMin)" Max="@(item.Value.DecimalRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDoubleItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDoubleItem.Value)" Min="@(item.Value.DoubleRangeMin)" Max="@(item.Value.DoubleRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDateTimeItem))
+                            {
+                                <InputGroup Compact>
+                                    <DatePicker Disabled="@(!item.Value.QueryConditionItem.Checked)" TValue="DateTime" @bind-Value="@(item.Value.QueryConditionDateTimeItem.Value)" Format="@(item.Value.DataFormat)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionInt32RangeItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt32RangeItem.Value)" Style="width: auto; text-align: center" Placeholder="Minimum" Min="@(item.Value.IntRangeMin)" Max="@(item.Value.IntRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 80px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt32RangeItem.Value2)" InputElementSuffixClass="site-input-right" Style="width: auto; text-align: center" Placeholder="Maximum" Min="@(item.Value.IntRangeMin)" Max="@(item.Value.IntRangeMax)" />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionInt64RangeItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt64RangeItem.Value)" Style="width: auto; text-align: center" Placeholder="Minimum" Min="@(item.Value.Int64RangeMin)" Max="@(item.Value.Int64RangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 80px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionInt64RangeItem.Value2)" InputElementSuffixClass="site-input-right" Style="width: auto; text-align: center" Placeholder="Maximum" Min="@(item.Value.Int64RangeMin)" Max="@(item.Value.Int64RangeMax)" />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDecimalRangeItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDecimalRangeItem.Value)" Style="width: auto; text-align: center" Placeholder="Minimum" Min="@(item.Value.DecimalRangeMin)" Max="@(item.Value.DecimalRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 80px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDecimalRangeItem.Value2)" InputElementSuffixClass="site-input-right" Style="width: auto; text-align: center" Placeholder="Maximum" Min="@(item.Value.DecimalRangeMin)" Max="@(item.Value.DecimalRangeMax)" />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDoubleRangeItem))
+                            {
+                                <InputGroup Compact>
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDoubleRangeItem.Value)" Style="width: auto; text-align: center" Placeholder="Minimum" Min="@(item.Value.DoubleRangeMin)" Max="@(item.Value.DoubleRangeMax)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 80px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                    <InputNumber Disabled="@(!item.Value.QueryConditionItem.Checked)" @bind-Value="@(item.Value.QueryConditionDoubleRangeItem.Value2)" InputElementSuffixClass="site-input-right" Style="width: auto; text-align: center" Placeholder="Maximum" Min="@(item.Value.DoubleRangeMin)" Max="@(item.Value.DoubleRangeMax)" />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionDateTimeRangeItem))
+                            {
+                                <InputGroup Compact>
+                                    <DatePicker Disabled="@(!item.Value.QueryConditionItem.Checked)" TValue="DateTime" @bind-Value="@(item.Value.QueryConditionDateTimeRangeItem.Value)" Style="width: auto; text-align: center" Format="@(item.Value.DataFormat)" />
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 80px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                    <DatePicker Disabled="@(!item.Value.QueryConditionItem.Checked)" TValue="DateTime" @bind-Value="@(item.Value.QueryConditionDateTimeRangeItem.Value2)" Style="width: auto; text-align: center" Format="@(item.Value.DataFormat)" />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType.IsSubTypeOf(typeof(QueryConditionItem<>)) && (item.Value.PropertyInfo.PropertyType.GetGenericArguments()?.FirstOrDefault()?.IsEnum == true))
+                            {
+                                <InputGroup Compact>
+                                    @item.Value.GetUIControl(typeof(EnumSelect<>).MakeGenericType(item.Value.PropertyInfo.PropertyType.GetGenericArguments().FirstOrDefault()), "Value", this, CurrentItem, true,
+                        new Dictionary<string, object>() { { "Disabled", (!item.Value.QueryConditionItem.Checked) } }
+                        )
+                                    <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 70px; border-left: 0; border-right: 0; pointer-events: none; font-size:xx-small; text-align:center;" Size="small" Placeholder="@(item.Value.GetQueryConditionOperatorString())" Disabled />
+                                </InputGroup>
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionMultiStringItem) || item.Value.PropertyInfo.PropertyType.IsSubTypeOf(typeof(QueryConditionMultiStringItem)))
+                            {
+                                @RenderMultiItems(item.Value,
+                    (() => item.Value.QueryConditionMulitStringItem.Values),
+                    EventCallback.Factory.Create<IEnumerable<string>>(this, (e) => { item.Value.QueryConditionMulitStringItem.Values = e; }))
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionMultiItem<int>) || item.Value.PropertyInfo.PropertyType.IsSubTypeOf(typeof(QueryConditionMultiItem<int>)))
+                            {
+                                @RenderMultiItems(item.Value,
+                    (() => item.Value.QueryConditionMulitIntItem.Values),
+                    EventCallback.Factory.Create<IEnumerable<int>>(this, (e) => { item.Value.QueryConditionMulitIntItem.Values = e; }))
+                            }
+                            else if (item.Value.PropertyInfo.PropertyType == typeof(QueryConditionMultiItem<Guid>) || item.Value.PropertyInfo.PropertyType.IsSubTypeOf(typeof(QueryConditionMultiItem<Guid>)))
+                            {
+                                @RenderMultiItems(item.Value,
+                    (() => item.Value.QueryConditionMulitGuidItem.Values),
+                    EventCallback.Factory.Create<IEnumerable<Guid>>(this, (e) => { item.Value.QueryConditionMulitGuidItem.Values = e; }))
+                            }
+                            else
+                            {
+                                <span>Not support type: </span>
+
+                                <span>@(item.Value.PropertyInfo.PropertyType.ToString())</span>
+                            }
+                        }
+                    </ChildContent>
+                </FormItem>
+            </AntDesign.Col>
+        }
+    </Row>
+</Form>
+<style>
+    [data-theme='compact'] .ant-advanced-search-form,
+    .ant-advanced-search-form {
+        padding: 24px;
+        background: #fbfbfb;
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+        [data-theme='compact'] .ant-advanced-search-form .ant-form-item,
+        .ant-advanced-search-form .ant-form-item {
+            display: flex;
+        }
+
+        [data-theme='compact'] .ant-advanced-search-form .ant-form-item-control-wrapper,
+        .ant-advanced-search-form .ant-form-item-control-wrapper {
+            flex: 1;
+        }
+</style>
+@code {
+    public AntDesign.Internal.IForm ReferenceForm;
+}
