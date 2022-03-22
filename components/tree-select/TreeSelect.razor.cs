@@ -276,14 +276,30 @@ namespace AntDesign
                 return;
             }
 
-            data.ForEach(menuId =>
+            //  通过DataItemExpression来生成选中项
+            if (DataItemExpression != null)
             {
-                var d = DataItemExpression?.Invoke(DataSource, menuId);
-                if (d != null)
+                data.ForEach(menuId =>
                 {
-                    var o = CreateOption(d, true);
-                }
-            });
+                    var d = DataItemExpression?.Invoke(DataSource, menuId);
+                    if (d != null)
+                    {
+                        var o = CreateOption(d, true);
+                    }
+                });
+            }
+            else
+            {
+                //  通过目前的树节点，生成选中项，对于延时的节点，建议使用DataItemExpression来加载
+                data.ForEach(menuId =>
+                {
+                    var d = _tree._allNodes.FirstOrDefault(m => m.Key == menuId);
+                    if (d != null)
+                    {
+                        var o = CreateOption(d, true);
+                    }
+                });
+            }
         }
 
         private void CreateOptionsByTreeNode(IEnumerable<string> data)
@@ -307,7 +323,7 @@ namespace AntDesign
                 Item = data.DataItem,
                 IsAddedTag = SelectMode != SelectMode.Default
             };
-            if (append)
+            if (append && !SelectOptionItems.Any(m => m.Value == o.Value))
                 SelectOptionItems.Add(o);
             return o;
         }
@@ -321,7 +337,7 @@ namespace AntDesign
                 Item = data,
                 IsAddedTag = SelectMode != SelectMode.Default
             };
-            if (append)
+            if (append && !SelectOptionItems.Any(m => m.Value == o.Value))
                 SelectOptionItems.Add(o);
             return o;
         }
