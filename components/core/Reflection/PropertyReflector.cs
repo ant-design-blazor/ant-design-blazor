@@ -40,12 +40,12 @@ namespace AntDesign.Core.Reflection
                 accessorBody = unaryExpression.Operand;
             }
 
-            if (!(accessorBody is MemberExpression memberExpression))
+            if (accessorBody is MemberExpression memberExpression)
             {
-                throw new ArgumentException($"The provided expression contains a {accessorBody.GetType().Name} which is not supported. {nameof(PropertyReflector)} only supports simple member accessors (fields, properties) of an object.");
+                return new PropertyReflector(memberExpression.Member);
             }
 
-            return new PropertyReflector(memberExpression.Member);
+            return new PropertyReflector();
         }
     }
 }
