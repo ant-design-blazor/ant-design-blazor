@@ -129,7 +129,7 @@ namespace AntDesign
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
-        private async void InputOnToggle()
+        private async Task InputOnToggle()
         {
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
