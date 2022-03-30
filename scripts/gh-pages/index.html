@@ -8,8 +8,8 @@
     <title>Ant Design of Blazor</title>
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
-    <link href="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/css/docs.default.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
+    <link href="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign.Docs/css/docs.default.css" rel="stylesheet">
     <link href="manifest.json" rel="manifest" />
     <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
 </head>
@@ -175,7 +175,7 @@
                 }
             </style>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
-                <img src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/logo.png" alt="logo" width="256">
+                <img src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/logo.png" alt="logo" width="256">
                 <div class="page-loading-warp">
                     <div class="ant-spin ant-spin-lg ant-spin-spinning">
                         <span class="ant-spin-dot ant-spin-dot-spin">
@@ -187,7 +187,11 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <img src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/logo.png" width="32" style="margin-right: 8px;"> Ant Design of Blazor
+                    <img src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/logo.png" width="32" style="margin-right: 8px;"> 
+                    Ant Design of Blazor
+                </div>
+                <div id="network-tip" style="display: flex; justify-content: center; align-items: center; display:none;">
+                    如果 CDN 资源加载过久，可以尝试开启 <a href="https://github.com/dotnetcore/FastGithub">FastGithub</a> 或 <a href="https://gitee.com/docmirror/dev-sidecar">dev-sidecar</a> 进行网络优化。
                 </div>
             </div>
         </div>
@@ -205,7 +209,8 @@
                                     </span>
                                     <span class="ant-modal-confirm-title">提示</span>
                                     <div class="ant-modal-confirm-content">建议中国内地用户访问国内镜像站点，加载更快！</div>
-                                </div><div class="ant-modal-confirm-btns">
+                                </div>
+                                <div class="ant-modal-confirm-btns">
                                     <button type="button" class="ant-btn" onclick="cancel();"><span>取 消</span></button>
                                     <a class="ant-btn ant-btn-primary" href="https://ant-design-blazor.gitee.io/zh-CN/"><span>确 定</span></a>
                                 </div>
@@ -217,7 +222,7 @@
         </div>
         <script>
             var alert = document.querySelector('#lang-alert');
-
+            var tip = document.querySelector('#network-tip');
             !function () {
                 var lang = navigator.language || navigator.userLanguage;
                 lang = lang.substr(0, 2);
@@ -225,6 +230,12 @@
                     setTimeout(function () {
                         alert.style.display = 'block';
                     }, 5000);
+                }
+
+                if (lang =='zh'){
+                    setTimeout(() => {
+                        tip.style.display = 'block';
+                    }, 10000);
                 }
             }();
 
@@ -265,10 +276,10 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Charts/g2plot.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign/js/ant-design-blazor.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/js/prism.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign.Charts/g2plot.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign.Docs/js/prism.js"></script>
     <script>
         window.AntDesign.Prism = {};
         window.AntDesign.Prism.highlight = function (code, language) {
@@ -292,14 +303,14 @@
     </script>
 
     <!-- use compression via https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-5.0#compression -->
-    <script src="https://cdn.jsdelivr.net/gh/google/brotli/js/decode.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="https://raw.fastgit.org/google/brotli/v1.0.9/js/decode.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_framework/blazor.webassembly.js" autostart="false"></script>
     <script>
         Blazor.start({
             loadBootResource: function (type, name, defaultUri, integrity) {
                 if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
                     return (async function () {
-                        defaultUri = 'https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/' + defaultUri;
+                        defaultUri = 'https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/' + defaultUri;
                         const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
                         if (!response.ok) {
                             throw new Error(response.statusText);
@@ -316,9 +327,9 @@
             }
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/js/docsearch.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/less@2.7.2/dist/less.min.js"></script>
+    <script src="https://unpkg.com/docsearch.js@2.6.3/dist/cdn/docsearch.min.js"></script>
+    <script src="https://raw.fastgit.org/ant-design-blazor/ant-design-blazor.github.io/{version}/_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script src="https://unpkg.com/less@2.7.2/dist/less.min.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 </html>

@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Logging;
 
 namespace AntDesign.Docs.Shared
 {
     public partial class ContributorsList : ComponentBase, IDisposable
     {
+        [Inject] private ILogger<ContributorsList> Logger { get; set; }
+
         [Parameter]
         public List<string> FilePaths
         {
@@ -60,7 +63,14 @@ namespace AntDesign.Docs.Shared
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                await GetContributors();
+                try
+                {
+                    await GetContributors();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Contributors load faild.");
+                }
             }
         }
 
