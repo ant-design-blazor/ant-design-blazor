@@ -54,8 +54,8 @@ $ dotnet add package AntDesign
 在 `wwwroot/index.html` 中引入了
 
 ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 ```
 
 - 在 `_Imports.razor` 中加入命名空间
