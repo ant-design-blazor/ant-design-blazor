@@ -11,9 +11,9 @@
 
 	private string ConvertValue()
 	{
-		if (string.IsNullOrWhiteSpace(_value))
+		if (string.IsNullOrWhiteSpace(_value) || !decimal.TryParse(_value,out var decimalValue))
 			return string.Empty;
 		else
-			return Convert.ToDecimal(_value).ToString("#,0.##############################");
+			return decimalValue.ToString("#,0.##############################");
 	}
 }
