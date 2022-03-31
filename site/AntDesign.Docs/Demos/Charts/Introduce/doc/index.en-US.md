@@ -8,11 +8,11 @@ cover:
 
 A Blazor chart library, based on G2Plot.
 
-Github: https://github.com/ant-design-blazor/ant-design-charts-blazor
+GitHub: https://github.com/ant-design-blazor/ant-design-charts-blazor
 
 ## 📦 Installation Guide
 
-- Go to the project folder of the application and install the Nuget package reference
+- Go to the project folder of the application and install the NuGet package reference
 
   ```bash
   $ dotnet add package AntDesign.Charts
