@@ -108,8 +108,8 @@ title: Ant Design of Blazor
 - 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.cshtml`(Server) 中引入静态文件:
 
   ```
-    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
-    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - 在 `_Imports.razor` 中加入命名空间
