@@ -6,16 +6,19 @@
     
 }
 else
-{
+{   
+    <div class="@(TabsOutClass??"ant-tabs-outer-container")">
     <Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@CurrentUrl" OnClose="RemovePage" Draggable="Draggable" Size="Size">
         @foreach (var item in Pages)
         {
-            <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
+            <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass"  Closable="item.Closable" ForceRender>
                 <TabTemplate>
                     @item.Title
                 </TabTemplate>
-                <ChildContent>
+                <ChildContent >
+                    <div class="@(TabPaneContentClass??"ant-tabs-inner-container")">
                     @Body(item)
+                    </div>
                 </ChildContent>
                 <TabContextMenu>
                     <Menu>
@@ -29,4 +32,22 @@ else
             </TabPane>
         }
     </Tabs>
+    </div>
 }
+<style>
+
+.ant-tabs-outer-container{
+	width: calc(100%);
+    height: calc(100%);
+    position: relative;
+    overflow: hidden;
+}
+.ant-tabs-inner-container{
+	position: absolute;
+    left:5px;
+    bottom:0px;
+    top:40px;
+    right: 0px;
+    overflow:auto;
+}
+</style>

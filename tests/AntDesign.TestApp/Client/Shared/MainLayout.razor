@@ -1,23 +1,41 @@
 ﻿@inherits LayoutComponentBase
 
 <Layout Style="height: 100vh;">
-	<Sider  Collapsible Collapsed=@collapsed NoTrigger>
+	<Sider  Collapsible Collapsed=@collapsed >
 		<div class="logo" />
 		<NavMenu />
 	</Sider>
 	<Layout>
-		<Header>
+		<Header >
 			<LoginDisplay />
 			<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
 		</Header>
 		<Content>
-			<div>
-				<ReuseTabs Draggable Size="TabSize.Small" />
-			</div>
+			@*<ReuseTabs Draggable   />*@
+			<ReuseTabs Draggable TabsOutClass="app-tabs-outer-container"  TabPaneContentClass="app-tabs-inner-container"   />
 		</Content>
-		<Footer>Footer</Footer>
+        <Footer>👍antblazor.com</Footer>
 	</Layout>
 </Layout>
+<style>
+    html{overflow:hidden;}
+
+.app-tabs-outer-container {
+    width: calc(100%);
+    height: calc(100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.app-tabs-inner-container {
+    position: absolute;
+    left: 10px;
+    top: 40px;
+    right: -17px; /*隐藏Y滚动条*/
+    bottom: 0px;
+    overflow: auto;
+}
+</style>
 
 @code
 {

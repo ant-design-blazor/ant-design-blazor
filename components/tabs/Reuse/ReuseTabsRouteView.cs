@@ -20,7 +20,7 @@ namespace AntDesign
 
         private string CurrentUrl => Navmgr.Uri;
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
+        public ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
 
         public void RemovePage(string key)
         {

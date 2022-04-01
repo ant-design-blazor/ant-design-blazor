@@ -9,6 +9,12 @@ namespace AntDesign
         public string TabPaneClass { get; set; }
 
         [Parameter]
+        public string TabsOutClass { get; set; }
+        [Parameter]
+        public string TabPaneContentClass { get; set; }
+               
+
+        [Parameter]
         public bool Draggable { get; set; }
 
         [Parameter]
