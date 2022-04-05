@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -324,11 +324,11 @@ namespace AntDesign
                 {
                     _checkedKeys = value;
                 }
-
-                foreach (var item in _allNodes.Where(n => _checkedKeys.Contains(n.Key)))
-                {
-                    item.SetChecked(true);
-                }
+                //有问题删除，否则总有一个选中
+                //foreach (var item in _allNodes.Where(n => _checkedKeys.Contains(n.Key)))
+                //{
+                //    item.SetChecked(true);
+                //}
             }
         }
 
@@ -384,8 +384,12 @@ namespace AntDesign
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
             _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
 
-            if (_checkedKeys.Any() && !old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
+            if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
                 CheckedKeysChanged.InvokeAsync(_checkedKeys);
+
+            //_checkedKeys.Any()删除，否则绑定总剩余一个
+            //if (_checkedKeys.Any() && !old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
+            //    CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
