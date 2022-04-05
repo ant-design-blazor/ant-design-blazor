@@ -324,11 +324,6 @@ namespace AntDesign
                 {
                     _checkedKeys = value;
                 }
-                //有问题删除，否则总有一个选中
-                //foreach (var item in _allNodes.Where(n => _checkedKeys.Contains(n.Key)))
-                //{
-                //    item.SetChecked(true);
-                //}
             }
         }
 
@@ -386,10 +381,6 @@ namespace AntDesign
 
             if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
                 CheckedKeysChanged.InvokeAsync(_checkedKeys);
-
-            //_checkedKeys.Any()删除，否则绑定总剩余一个
-            //if (_checkedKeys.Any() && !old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
-            //    CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
         #endregion Checkable
