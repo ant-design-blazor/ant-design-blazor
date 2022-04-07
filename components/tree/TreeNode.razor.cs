@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -157,7 +157,7 @@ namespace AntDesign
                 _key = value;
             }
         }
-
+      
         private bool _disabled;
 
         /// <summary>
@@ -397,11 +397,12 @@ namespace AntDesign
 
         #region Checkbox
 
+        private bool _checked;
         /// <summary>
         /// According to check the
         /// </summary>
         [Parameter]
-        public bool Checked { get; set; }
+         public bool Checked { get; set; }     
 
         [Parameter]
         public bool Indeterminate { get; set; }
@@ -791,7 +792,6 @@ namespace AntDesign
         bool _defaultBinding;
 
         protected override void OnInitialized()
-
         {
             SetTreeNodeClassMapper();
             if (ParentNode != null)
@@ -826,7 +826,6 @@ namespace AntDesign
             DefaultBinding();
             base.OnParametersSet();
         }
-
         private void DefaultBinding()
         {
             if (!_defaultBinding)
@@ -834,6 +833,31 @@ namespace AntDesign
                 _defaultBinding = true;
                 if (this.Checked)
                     this.SetChecked(true);
+                this.SetChecked(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);           
+                this.SetSelected(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
+                if (!TreeComponent.DefaultExpandAll)
+                {
+                    if (this.Expanded)
+                        this.OpenPropagation();
+
+                    if (TreeComponent.DefaultExpandedKeys != null)
+                    {
+                        if (TreeComponent.DefaultExpandedKeys.Contains(this.Key))
+                        {
+                            this.OpenPropagation();
+                        };
+                    }             
+                }
+            }
+        }
+        private void DefaultBindingold()
+        {
+            if (!_defaultBinding)
+            {
+                _defaultBinding = true;
+                if (this.Checked)
+                    this.SetChecked(true);
+                
                 TreeComponent.DefaultCheckedKeys?.ForEach(k =>
                 {
                     var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
