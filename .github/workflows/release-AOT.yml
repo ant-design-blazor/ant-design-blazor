@@ -52,13 +52,6 @@ jobs:
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: cargo/wwwroot
-
       - name: Deploy to Github.io 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -67,13 +60,21 @@ jobs:
           publish_branch: master
           publish_dir: ./cargo/wwwroot
           cname: antblazor.com
-          keep_files: true
+          force_orphan: true
           tag_name: ${{ steps.publish.outputs.package_version }}
 
-      - name: Sync to Gitee 💕
+      - name: Sync repo to Gitee 💕
         uses: wearerequired/git-mirror-action@master
         env:
           SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
         with:
           source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
           destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
+
+      - name: Sync website to Gitee 💕
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.github.io.git"
+          destination-repo: "git@gitee.com:ant-design-blazor/website.git"
