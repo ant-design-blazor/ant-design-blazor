@@ -340,6 +340,30 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Expand all child nodes
+        /// </summary>
+        public void ExpandAll()
+        {
+            Expanded = true;
+            ChildNodes.ForEach(node => Switch(node, true));
+        }
+
+        /// <summary>
+        /// Collapse all child nodes
+        /// </summary>
+        public void CollapseAll()
+        {
+            Expanded = false;
+            ChildNodes.ForEach(node => Switch(node, false));
+        }
+
+        private void Switch(TreeNode<TItem> node, bool expanded)
+        {
+            node.Expand(expanded);
+            node.ChildNodes.ForEach(n => Switch(n, expanded));
+        }
+
+        /// <summary>
         /// The real expand state, as long as there is a expaneded node on the path, then all the folds below
         /// </summary>
         internal bool RealDisplay
