@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -348,8 +348,7 @@ namespace AntDesign
         /// </summary>
         public void ExpandAll()
         {
-            Expanded = true;
-            ChildNodes.ForEach(node => Switch(node, true));
+            Switch(this, true);
         }
 
         /// <summary>
@@ -357,10 +356,14 @@ namespace AntDesign
         /// </summary>
         public void CollapseAll()
         {
-            Expanded = false;
-            ChildNodes.ForEach(node => Switch(node, false));
+            Switch(this, false);
         }
 
+        /// <summary>
+        /// 节点展开关闭
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="expanded"></param>
         private void Switch(TreeNode<TItem> node, bool expanded)
         {
             node.Expand(expanded);
