@@ -434,6 +434,12 @@ namespace AntDesign
 
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -747,7 +753,7 @@ namespace AntDesign
         /// </summary>
         public void ExpandAll()
         {
-            this.ChildNodes.ForEach(node => Switch(node, true));
+            ChildNodes.ForEach(node => _ = Switch(node, true));
         }
 
         /// <summary>
@@ -755,7 +761,7 @@ namespace AntDesign
         /// </summary>
         public void CollapseAll()
         {
-            this.ChildNodes.ForEach(node => Switch(node, false));
+            ChildNodes.ForEach(node => _ = Switch(node, false));
         }
 
         /// <summary>
@@ -763,10 +769,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="node"></param>
         /// <param name="expanded"></param>
-        private void Switch(TreeNode<TItem> node, bool expanded)
+        private async Task Switch(TreeNode<TItem> node, bool expanded)
         {
-            node.Expand(expanded);
-            node.ChildNodes.ForEach(n => Switch(n, expanded));
+            await node.Expand(expanded);
+            node.ChildNodes.ForEach(n => _ = Switch(n, expanded));
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
@@ -777,6 +783,7 @@ namespace AntDesign
                 node.SetLoading(true);
                 await OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
                 node.SetLoading(false);
+                StateHasChanged();
             }
 
             if (OnExpandChanged.HasDelegate)

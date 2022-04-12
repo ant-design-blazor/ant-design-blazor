@@ -1,10 +1,13 @@
 <div>
-    <Tree DataSource="_datas"
+    <Tree DataSource="_datas" @ref="_tree"
           TitleExpression="x => x.DataItem.Title"
           ChildrenExpression="x => x.DataItem.Childs"
           IsLeafExpression="x => x.TreeLevel > 2"
           OnNodeLoadDelayAsync="OnNodeLoadDelayAsync" TItem="Data"></Tree>
 </div>
+
+<Button OnClick="ExpandAll">Expand All</Button>
+<Button OnClick="ExpandAllChild">Expand Node "C" And Expand All Child Nodes</Button>
 
 @code{
     public record Data(string Title)
@@ -14,6 +17,18 @@
 
     List<Data> _datas = new() { new("A"), new("B"), new("C") };
 
+    Tree<Data> _tree;
+
+    private void ExpandAll()
+    {
+        _tree.ExpandAll();
+    }
+
+    private void ExpandAllChild()
+    {
+        _tree.FindFirstOrDefaultNode(n => n.Title == "C").ExpandAll();
+    }
+
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
     {
 
@@ -21,7 +36,10 @@
 
         var dataItem = ((Data)args.Node.DataItem);
         dataItem.Childs.Clear();
-        dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
-        dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
+        if (args.Node.TreeLevel < 3)
+        {
+            dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
+            dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
+        }
     }
 }
