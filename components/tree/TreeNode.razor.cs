@@ -337,10 +337,12 @@ namespace AntDesign
         /// Expand the node
         /// </summary>
         /// <param name="expanded"></param>
-        public void Expand(bool expanded)
+        public async Task Expand(bool expanded)
         {
             if (Expanded == expanded) return;
             Expanded = expanded;
+
+            await TreeComponent?.OnNodeExpand(this, Expanded, new MouseEventArgs());
         }
 
         /// <summary>
@@ -348,7 +350,7 @@ namespace AntDesign
         /// </summary>
         public void ExpandAll()
         {
-            SwitchAllNodes(this, true);
+            _ = SwitchAllNodes(this, true);
         }
 
         /// <summary>
@@ -356,7 +358,7 @@ namespace AntDesign
         /// </summary>
         public void CollapseAll()
         {
-            SwitchAllNodes(this, false);
+            _ = SwitchAllNodes(this, false);
         }
 
         /// <summary>
@@ -364,10 +366,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="node"></param>
         /// <param name="expanded"></param>
-        private void SwitchAllNodes(TreeNode<TItem> node, bool expanded)
+        private async Task SwitchAllNodes(TreeNode<TItem> node, bool expanded)
         {
-            node.Expand(expanded);
-            node.ChildNodes.ForEach(n => SwitchAllNodes(n, expanded));
+            await node.Expand(expanded);
+            node.ChildNodes.ForEach(n => _ = SwitchAllNodes(n, expanded));
         }
 
         /// <summary>
