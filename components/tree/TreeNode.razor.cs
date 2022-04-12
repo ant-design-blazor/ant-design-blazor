@@ -348,7 +348,7 @@ namespace AntDesign
         /// </summary>
         public void ExpandAll()
         {
-            Switch(this, true);
+            SwitchAllNodes(this, true);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace AntDesign
         /// </summary>
         public void CollapseAll()
         {
-            Switch(this, false);
+            SwitchAllNodes(this, false);
         }
 
         /// <summary>
@@ -364,10 +364,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="node"></param>
         /// <param name="expanded"></param>
-        private void Switch(TreeNode<TItem> node, bool expanded)
+        private void SwitchAllNodes(TreeNode<TItem> node, bool expanded)
         {
             node.Expand(expanded);
-            node.ChildNodes.ForEach(n => Switch(n, expanded));
+            node.ChildNodes.ForEach(n => SwitchAllNodes(n, expanded));
         }
 
         /// <summary>
