@@ -12,3 +12,6 @@ title:
 ## en-US
 
 Allows for custom rendering of tags
+
+注意如果使用Enabled/Disabled状态时, 需要自行处理
+LabelTemplateItem和LabelTemplateItemContent元素的Style
