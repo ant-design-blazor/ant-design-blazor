@@ -9,11 +9,11 @@ cover:
 
 Ant Design Charts Blazor 图表库基于 G2Plot 开发，
 
-Github: https://github.com/ant-design-blazor/ant-design-charts-blazor
+GitHub: https://github.com/ant-design-blazor/ant-design-charts-blazor
 
 ## 📦 安装
 
-- 进入应用的项目文件夹，安装 Nuget 包引用
+- 进入应用的项目文件夹，安装 NuGet 包引用
 
   ```bash
   $ dotnet add package AntDesign.Charts

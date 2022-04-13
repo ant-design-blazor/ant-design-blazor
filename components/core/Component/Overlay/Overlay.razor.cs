@@ -195,7 +195,6 @@ namespace AntDesign.Internal
                 Trigger.SetShouldRender(false);
                 await Task.Yield();
             }
-            else
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
@@ -330,7 +329,7 @@ namespace AntDesign.Internal
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
-                    Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
+                    //Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
                     await Task.Delay(10);
                     await AddOverlayToBody(overlayLeft, overlayTop);
                 }

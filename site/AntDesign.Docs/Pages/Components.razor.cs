@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,8 @@ namespace AntDesign.Docs.Pages
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
         private string _filePath;
+
+        private List<string> _filePaths;
 
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/blob/master/{_filePath}";
 
@@ -85,7 +88,12 @@ namespace AntDesign.Docs.Pages
                 await MainLayout.ChangePrevNextNav(Name);
                 _demoComponent = await DemoService.GetComponentAsync(Name);
                 _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
-
+                _filePaths = new() { _filePath };
+                foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue) ?? Array.Empty<DemoItem>())
+                {
+                    _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Name}.md");
+                    _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Type[(item.Type.LastIndexOf('.') + 1)..]}.razor");
+                }
                 StateHasChanged();
             }
         }

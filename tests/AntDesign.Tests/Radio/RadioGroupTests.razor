@@ -13,28 +13,28 @@
         @<div class="ant-radio-group ant-radio-group-outline" id:ignore>
             <label class="ant-radio-wrapper ant-radio-wrapper-checked" id:ignore>
                 <span class="ant-radio ant-radio-checked">
-                    <input type="radio" class="ant-radio-input" value="1" checked="">
+                    <input type="radio" class="ant-radio-input" value="1" name:ignore checked="">
                     <span class="ant-radio-inner"></span>
                 </span>
                 <span>A</span>
             </label>
             <label class="ant-radio-wrapper" id:ignore>
                 <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" value="2">
+                    <input type="radio" class="ant-radio-input" name:ignore value="2">
                     <span class="ant-radio-inner"></span>
                 </span>
                 <span>B</span>
             </label>
             <label class="ant-radio-wrapper" id:ignore>
                 <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" value="3">
+                    <input type="radio" class="ant-radio-input" name:ignore value="3">
                     <span class="ant-radio-inner"></span>
                 </span>
                 <span>C</span>
             </label>
             <label class="ant-radio-wrapper" id:ignore>
                 <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" value="4">
+                    <input type="radio" class="ant-radio-input" name:ignore value="4">
                     <span class="ant-radio-inner"></span>
                 </span>
                 <span>D</span>
@@ -91,9 +91,55 @@
             <Radio Value="2">B</Radio>
             <Radio Value="3">C</Radio>
             <Radio Value="4">D</Radio>
-        </RadioGroup>);
+    </RadioGroup>
+    );
 
         //Assert
         cut.Instance.Value.Should().Be(2);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Sync_Disabled_basic_radioGroup(bool initGroupDisabled)
+    {
+        //Arrange
+        int value = 1;
+        IRenderedComponent<RadioGroup<int>> radioGroup = Render<RadioGroup<int>>(
+            @<RadioGroup @bind-Value=@value Disabled=@initGroupDisabled>
+                    <Radio Value="1">A</Radio>
+                    <Radio Value="2">B</Radio>
+    </RadioGroup>
+    );
+        var members = radioGroup.FindComponents<Radio<int>>();
+        //Act
+#pragma warning disable BL0005
+        radioGroup.Instance.Disabled = !initGroupDisabled;
+#pragma warning restore BL0005
+        //Assert
+        Assert.All(members, e => Assert.Equal(!initGroupDisabled, e.Instance.Disabled));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Sync_Disabled_exist_disabled_member_radioGroup(bool initGroupDisabled)
+    {
+        //Arrange
+        int value = 1;
+        IRenderedComponent<RadioGroup<int>> radioGroup = Render<RadioGroup<int>>(
+            @<RadioGroup @bind-Value=@value Disabled=@initGroupDisabled>
+                    <Radio Value="1" Disabled=true>A</Radio>
+                    <Radio Value="2">B</Radio>
+        </RadioGroup>
+        );
+        var members = radioGroup.FindComponents<Radio<int>>();
+        //Act
+#pragma warning disable BL0005
+        radioGroup.Instance.Disabled = !initGroupDisabled;
+#pragma warning restore BL0005
+        //Assert
+        members[0].Instance.Disabled.Should().BeTrue();
+        members[1].Instance.Disabled.Should().Be(!initGroupDisabled);
     }
 }

@@ -52,7 +52,7 @@
 
 	void OnSelect(TreeEventArgs<string> e)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(e));
+		Console.WriteLine(JsonSerializer.Serialize(e.Node.DataItem));
 	}
 }
 

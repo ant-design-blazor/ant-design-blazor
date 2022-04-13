@@ -1,12 +1,11 @@
 <div>
-  <Search @bind-Value="@searchKey" Placeholder="Search.." />
-  <Tree ShowIcon 
-        SearchValue="@searchKey" 
-        MatchedClass="site-tree-search-value"
-        DataSource="games"
-        TitleExpression="x => x.DataItem.Text"
-        ChildrenExpression="x => x.DataItem.Items"
-        IconExpression="x => x.DataItem.Icon"></Tree>
+    <Search @bind-Value="@searchKey" Placeholder="Search.." />
+    <Tree ShowIcon
+          SearchValue="@searchKey"
+          MatchedClass="site-tree-search-value"
+          DataSource="datas"
+          TitleExpression="x => x.DataItem.Title"
+          ChildrenExpression="x => x.DataItem.Children"></Tree>
 </div>
 
 <style>
@@ -18,39 +17,64 @@
 @code {
     string searchKey;
 
-    List<GameElement> games = new List<GameElement>()
+    List<Data> datas = new List<Data>()
     {
-        new ("100","XBox","windows")
+        new("0-0","0-0")
         {
-            Items = new List<GameElement>()
+            Children = new()
             {
-                new ("101","Halo"),
-                new ("102","Gears of War"),
-                new ("103","Forza Motosport"),
+                new("0-0-0", "0-0-0")
+                {
+                    Children = new()
+                    {
+                        new("0-0-0-0", "0-0-0-0"),
+                        new("0-0-0-1", "0-0-0-1"),
+                        new("0-0-0-2", "0-0-0-2"),
+                    }
+                },
+                new("0-0-1","0-0-1")
+                {
+                    Children = new()
+                    {
+                        new("0-0-1-0", "0-0-1-0"),
+                        new("0-0-1-1", "0-0-1-1"),
+                        new("0-0-1-2", "0-0-1-2"),
+                    }
+                },
+                new("0-0-2","0-0-2"),
             }
         },
-        new ("200","PlayStation","desktop")
+        new("0-1","0-1")
         {
-            Items = new List<GameElement>()
+            Children = new()
             {
-                new ("201","Uncharted"),
-                new ("202","God Of War"),
-                new ("203","The Order:1886"),
+                new("0-1-0", "0-1-0")
+                {
+                    Children = new()
+                    {
+                        new("0-1-0-0","0-1-0-0"),
+                        new("0-1-0-1","0-1-0-1"),
+                        new("0-1-0-2","0-1-0-2"),
+                    },
+                },
+                new ("0-1-1","0-1-1")
+                {
+                    Children = new()
+                    {
+                        new("0-1-1-0","0-1-1-0"),
+                        new("0-1-1-1","0-1-1-1"),
+                        new("0-1-1-2","0-1-1-2"),
+                    },
+                },
+                new("0-1-2","0-1-2"),
             }
         },
-        new ("300","Switch","mobile")
-        {
-            Items = new List<GameElement>()
-            {
-                new ("301","Super Mario Bros"),
-                new ("302","The Legend of Zelda"),
-            }
-        }
+        new("0-2","0-2"),
     };
 
-    private record GameElement(string Id, string Text, string Icon = null)
+    private record Data(string Id, string Title)
     {
-        public List<GameElement> Items { get; set; } = new List<GameElement>();
+        public List<Data> Children { get; set; } = new List<Data>();
     }
 }
 

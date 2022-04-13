@@ -64,7 +64,7 @@
       "quarterSelect": "Vybrat čtvrtletí",
       "week": "Týden",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Ne", "Po", "Út", "St", "Čt", "Pá", "So" ]
+      "shortWeekDays": [ "Po", "Út", "St", "Čt", "Pá", "So", "Ne" ]
     },
     "timePickerLocale": {
       "placeholder": "Vybrat čas",

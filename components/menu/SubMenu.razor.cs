@@ -85,10 +85,6 @@ namespace AntDesign
                     .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => {
                         var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
-                        if (Key == "sub1")
-                        {
-                            Console.WriteLine(eval);
-                        }
                         return eval;
                         })
                     ;

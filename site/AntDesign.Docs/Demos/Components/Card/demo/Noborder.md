@@ -2,7 +2,7 @@
 order: 1
 title:
   zh-CN: 无边框 
-  en-US: No borde
+  en-US: No border
 ---
 
 ## zh-CN

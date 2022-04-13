@@ -15,7 +15,7 @@ Such features, together with packaging the production version, are covered in th
 
 ### Installation
 
-We strongly recommended to develop Blazor with `.NET Core SDK`, you can install it form `https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987`.
+We strongly recommend to develop Blazor with the `.NET Core SDK`. You can install it from `https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987`.
 
 ### Create a New Blazor WebAssembly Project
 
@@ -68,6 +68,6 @@ public void ConfigureServices(IServiceCollection services)
 Import the styles and script in `wwwroot/index.html`
 
 ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 ```

@@ -213,14 +213,19 @@ namespace AntDesign
         /// <summary>
         /// Is RTL
         /// </summary>
-        [CascadingParameter]
-        public bool Rtl { get; set; } = false;
+        public bool Rtl => base.RTL;
 
         /// <summary>
         /// Modal Locale
         /// </summary>
         [Parameter]
         public ModalLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Modal;
+
+        /// <summary>
+        /// max modal content body height
+        /// </summary>
+        [Parameter]
+        public string MaxBodyHeight { get; set; } = null;
 
         #endregion Parameter
 
@@ -298,8 +303,10 @@ namespace AntDesign
                 OkButtonProps = OkButtonProps,
 
                 CancelButtonProps = CancelButtonProps,
-                Rtl = Rtl
+                Rtl = Rtl,
+                MaxBodyHeight = MaxBodyHeight
             };
+
             return options;
         }
 
