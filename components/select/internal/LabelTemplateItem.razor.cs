@@ -10,6 +10,7 @@ namespace AntDesign.Select
 {
     public partial class LabelTemplateItem<TItemValue, TItem>
     {
+        [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "SelectContent")] private SelectContent<TItemValue, TItem> ParentSelectContent { get; set; }
         [CascadingParameter(Name = "SelectOption")] private SelectOptionItem<TItemValue, TItem> SelectOption { get; set; }
         [Parameter] public RenderFragment<TItem> LabelTemplateItemContent { get; set; }
@@ -38,7 +39,7 @@ namespace AntDesign.Select
 
         protected override void OnInitialized()
         {
-            if (ParentSelectContent.ParentSelect.SelectMode == SelectMode.Default
+            if (ParentSelect.SelectMode == SelectMode.Default
                 && string.IsNullOrWhiteSpace(Class)
                 && string.IsNullOrWhiteSpace(ContentStyle))
             {
