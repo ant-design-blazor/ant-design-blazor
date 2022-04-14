@@ -29,7 +29,7 @@ namespace AntDesign
             OneOf<string, RenderFragment> title,
             ConfirmButtons confirmButtons,
             ConfirmIcon confirmIcon,
-            ConfirmButtonOptions options, 
+            ConfirmButtonOptions options,
             ConfirmAutoFocusButton? autoFocusButton = ConfirmAutoFocusButton.Ok)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
@@ -39,7 +39,7 @@ namespace AntDesign
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
             };
-            
+
             if (autoFocusButton != null)
                 confirmOptions.AutoFocusButton = (ConfirmAutoFocusButton)autoFocusButton;
 
