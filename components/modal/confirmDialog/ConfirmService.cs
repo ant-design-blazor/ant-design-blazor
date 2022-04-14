@@ -30,7 +30,7 @@ namespace AntDesign
             ConfirmButtons confirmButtons,
             ConfirmIcon confirmIcon,
             ConfirmButtonOptions options, 
-            ConfirmAutoFocusButton autoFocusButton = ConfirmAutoFocusButton.Ok)
+            ConfirmAutoFocusButton? autoFocusButton = ConfirmAutoFocusButton.Ok)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             ConfirmOptions confirmOptions = new ConfirmOptions()
