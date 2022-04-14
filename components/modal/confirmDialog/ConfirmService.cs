@@ -38,8 +38,11 @@ namespace AntDesign
                 Content = content,
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
-                AutoFocusButton = autoFocusButton,
             };
+            
+            if (autoFocusButton != null)
+                confirmOptions.AutoFocusButton = (ConfirmAutoFocusButton)autoFocusButton;
+
             if (title.IsT0)
             {
                 confirmOptions.Title = title.AsT0;
