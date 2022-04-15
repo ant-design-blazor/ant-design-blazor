@@ -34,15 +34,16 @@ namespace AntDesign
             set
             {
                 _step = value;
+                NumberFormatInfo nfi = CultureInfo.NumberFormat;
                 var stepStr = _step.ToString();
                 if (string.IsNullOrEmpty(_format))
                 {
-                    _format = string.Join('.', stepStr.Split('.').Select(n => new string('0', n.Length)));
+                    _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));
                 }
                 else
                 {
-                    if (stepStr.IndexOf('.') > 0)
-                        _decimalPlaces = stepStr.Length - stepStr.IndexOf('.') - 1;
+                    if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
+                        _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
                     else
                         _decimalPlaces = 0;
                 }
