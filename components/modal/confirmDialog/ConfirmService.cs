@@ -22,13 +22,15 @@ namespace AntDesign
         /// <param name="confirmButtons">the buttons of dialog</param>
         /// <param name="confirmIcon">the icon of dialog</param>
         /// <param name="options">the configuration options for dialog</param>
+        /// <param name="autoFocusButton">the autofocus button</param>
         /// <returns></returns>
         public async Task<ConfirmResult> Show(
             OneOf<string, RenderFragment> content,
             OneOf<string, RenderFragment> title,
             ConfirmButtons confirmButtons,
             ConfirmIcon confirmIcon,
-            ConfirmButtonOptions options)
+            ConfirmButtonOptions options,
+            ConfirmAutoFocusButton? autoFocusButton = ConfirmAutoFocusButton.Ok)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             ConfirmOptions confirmOptions = new ConfirmOptions()
@@ -37,6 +39,10 @@ namespace AntDesign
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
             };
+
+            if (autoFocusButton != null)
+                confirmOptions.AutoFocusButton = (ConfirmAutoFocusButton)autoFocusButton;
+
             if (title.IsT0)
             {
                 confirmOptions.Title = title.AsT0;

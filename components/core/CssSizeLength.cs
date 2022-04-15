@@ -87,7 +87,7 @@ namespace AntDesign
                 throw new FormatException();
             }
 
-            _value = int.Parse(value.Substring(0, index), CultureInfo.InvariantCulture);
+            _value = decimal.Parse(value.Substring(0, index), CultureInfo.InvariantCulture);
 
             if (index == value.Length)
             {
