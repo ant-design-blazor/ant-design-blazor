@@ -1,0 +1,56 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+    class Model
+    {
+        public string Name { get; set; } = "";
+    }
+
+    class CompositeModel
+    {
+        public Model First { get; set; } = new Model { };
+        public Model Second { get; set; } = new Model { };
+    }
+
+    FormValidationRule _validateStringValueMaxThreeCharacters = new FormValidationRule {
+        Type = FormFieldType.String, 
+        Max = 3, 
+        Message = "This field cannot be longer than 3 characters." 
+    };
+
+
+#if NET6_0
+    [Fact]
+    public void Form_EditContext_with_RulesModeValidation_and_CompositeModel_should_validate_properly()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+
+        var rules = new [] { _validateStringValueMaxThreeCharacters };
+        CompositeModel model = new CompositeModel();
+        Form<CompositeModel>? form = null;
+        var cut = Render<Form<CompositeModel>>(
+            @<AntDesign.Form @ref="@form" Model="@model"
+                ValidateOnChange="@true" ValidateMode=@FormValidateMode.Rules>
+                <AntDesign.FormItem Label="Name of First" Rules=rules>
+                    <AntDesign.Input Id="firstInput" @bind-Value=@context.First.Name DebounceMilliseconds="0"/>
+                </AntDesign.FormItem>    
+                <AntDesign.FormItem  Label="Name of Second" Rules=rules>
+                    <AntDesign.Input Id="secondInput" @bind-Value=@context.Second.Name DebounceMilliseconds="0"/>
+                </AntDesign.FormItem>    
+            </AntDesign.Form>
+            );        
+        //Act
+        var secondInput = cut.Find("#secondInput");
+        secondInput.Input("1234");
+        secondInput.KeyUp(String.Empty);
+        
+        var firstInputValidationMessages = form!.EditContext.GetValidationMessages(() => model.First.Name);
+        var secondInputValidationMessages = form!.EditContext.GetValidationMessages(() => model.Second.Name);
+        //Assert
+        firstInputValidationMessages.Should().BeEmpty();
+        secondInputValidationMessages.Should().HaveCount(1).And.Contain(_validateStringValueMaxThreeCharacters.Message);
+    }
+#endif
+}
