@@ -151,7 +151,6 @@ namespace AntDesign
             SetClassMap();
             SetButtonColorStyle();
         }
-//方便后面扩展中重写
         protected virtual async Task HandleOnClick(MouseEventArgs args)
         {
             if (OnClick.HasDelegate)
