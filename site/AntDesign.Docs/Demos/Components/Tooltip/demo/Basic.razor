@@ -7,3 +7,13 @@
         <span @ref="@context.Current">Tooltip (unbounded) will show on mouse enter.</span>
     </Unbound>
 </Tooltip>
+<br/>
+<Tooltip Title="@("Triggered by focusing on element")" Trigger="_triggerTypes">
+    <span>Tooltip will show on focused.</span>
+</Tooltip>
+
+@code{
+
+    private Trigger[] _triggerTypes = { Trigger.Focus };
+
+}
