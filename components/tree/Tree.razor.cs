@@ -687,7 +687,7 @@ namespace AntDesign
         /// </summary>
         public void ExpandAll()
         {
-            ChildNodes.ForEach(node => _ = Switch(node, true));
+            ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
 
         /// <summary>
@@ -695,18 +695,7 @@ namespace AntDesign
         /// </summary>
         public void CollapseAll()
         {
-            ChildNodes.ForEach(node => _ = Switch(node, false));
-        }
-
-        /// <summary>
-        /// 节点展开关闭
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="expanded"></param>
-        private async Task Switch(TreeNode<TItem> node, bool expanded)
-        {
-            await node.Expand(expanded);
-            node.ChildNodes.ForEach(n => _ = Switch(n, expanded));
+            ChildNodes.ForEach(node => _ = node.CollapseAll());
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
