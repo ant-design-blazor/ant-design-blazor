@@ -344,17 +344,17 @@ namespace AntDesign
         /// <summary>
         /// Expand all child nodes
         /// </summary>
-        public void ExpandAll()
+        public async Task ExpandAll()
         {
-            _ = SwitchAllNodes(this, true);
+            await SwitchAllNodes(this, true);
         }
 
         /// <summary>
         /// Collapse all child nodes
         /// </summary>
-        public void CollapseAll()
+        public async Task CollapseAll()
         {
-            _ = SwitchAllNodes(this, false);
+            await SwitchAllNodes(this, false);
         }
 
         /// <summary>
