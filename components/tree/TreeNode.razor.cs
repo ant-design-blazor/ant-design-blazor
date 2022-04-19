@@ -348,7 +348,7 @@ namespace AntDesign
         /// <summary>
         /// Expand all child nodes
         /// </summary>
-        public async Task ExpandAll()
+        internal async Task ExpandAll()
         {
             await SwitchAllNodes(this, true);
         }
