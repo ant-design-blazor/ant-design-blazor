@@ -685,17 +685,23 @@ namespace AntDesign
         /// <summary>
         /// Expand all nodes
         /// </summary>
-        public void ExpandAll()
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            ChildNodes.ForEach(node => _ = node.ExpandAll());
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+            else
+                ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
 
         /// <summary>
         /// Collapse all nodes
         /// </summary>
-        public void CollapseAll()
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            ChildNodes.ForEach(node => _ = node.CollapseAll());
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+            else
+                ChildNodes.ForEach(node => _ = node.CollapseAll());
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
