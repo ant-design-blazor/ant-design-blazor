@@ -26,7 +26,7 @@
 
     private void ExpandAllChild()
     {
-        _tree.FindFirstOrDefaultNode(n => n.Title == "C").ExpandAll();
+        _tree.ExpandAll(n => n.Title == "C");
     }
 
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
