@@ -32,26 +32,9 @@ namespace AntDesign
         {
             try
             {
-                //下载需要的js 脚本部分
-                string jsDown =
-                   "async function downloadFileFromStream(fileName,url) {" +
-                   "    triggerFileDownload(fileName, url);" +
-                   "    URL.revokeObjectURL(url);" +
-                   "}" +
-                   "" +
-                   "function triggerFileDownload(fileName, url) {" +
-                   "    const anchorElement = document.createElement('a');" +
-                   "   anchorElement.href = url;" +
-                   "" +
-                   "    if (fileName) {" +
-                   "        anchorElement.download = fileName;" +
-                   "    }" +
-                   "" +
-                   "    anchorElement.click();" +
-                   "   anchorElement.remove();" +
-                   "}";
-                await IJSRuntime.InvokeVoidAsync("eval", jsDown);
-                await IJSRuntime.InvokeVoidAsync("downloadFileFromStream", ExportFileName,FilePath);
+                fileDownload(url,fileName)
+                //form components/core/JsInterop/modules/components/fileDownLoad.Ts
+                await IJSRuntime.InvokeVoidAsync("fileDownload",FilePath, ExportFileName);
             }
             catch (Exception ex)
             {
