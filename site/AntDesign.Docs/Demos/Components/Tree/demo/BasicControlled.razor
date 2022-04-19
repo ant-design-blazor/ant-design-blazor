@@ -126,12 +126,12 @@
 
     private void ExpandAllChild()
     {
-        _tree.FindFirstOrDefaultNode(n => n.Key == "0-0").ExpandAll();
+        _tree.ExpandAll(n => n.Key == "0-0");
     }
 
     private void CollapseAllChild()
     {
-        _tree.FindFirstOrDefaultNode(n => n.Key == "0-0").CollapseAll();
+        _tree.CollapseAll(n => n.Key == "0-0");
     }
 
     private void OnCheck(TreeEventArgs<string> e)
