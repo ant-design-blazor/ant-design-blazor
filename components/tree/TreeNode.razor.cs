@@ -352,7 +352,7 @@ namespace AntDesign
         /// <summary>
         /// Collapse all child nodes
         /// </summary>
-        public async Task CollapseAll()
+        internal async Task CollapseAll()
         {
             await SwitchAllNodes(this, false);
         }
