@@ -25,7 +25,7 @@ Segmentfault / Stack Overflow is a much better place to ask questions since:
 
 To save time, we will systematically close all issues about general support and redirect people to Segmentfault / Stack Overflow.
 
-If you would like to chat about the question in real-time, you can reach out via [our slack channel][slack].
+If you would like to chat about the question in real-time, you can reach out via [our discord server][discord].
 
 ## <a name="issue"></a> Found a Bug?
 If you find a bug in the source code, you can help us by
@@ -233,5 +233,5 @@ A detailed explanation can be found in this [document][commit-message-format].
 [commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#
 [dev-doc]: https://github.com/ant-design-blazor/ant-design-blazor/blob/master/docs/DEVELOPER.md
 [github]: https://github.com/ant-design-blazor/ant-design-blazor
-[slack]: https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA
+[discord]: https://discord.com/invite/jqu3Xeq
 [plunker]: http://plnkr.co/edit
