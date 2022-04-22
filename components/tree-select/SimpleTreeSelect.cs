@@ -13,16 +13,16 @@ namespace AntDesign
     {
 
 
-        protected IEnumerable<TItem> RootData => ChildrenMethodExpression?.Invoke(RootValue);
+        protected IEnumerable<TItem> RootData => ChildrenMethodExpression?.Invoke(DataSource, RootValue);
 
 
         /// <summary>
         /// Specifies a method  to return a child node
         /// </summary>
         [Parameter]
-        public Func<string, IList<TItem>> ChildrenMethodExpression { get; set; }
+        public Func<IEnumerable<TItem>, string, IList<TItem>> ChildrenMethodExpression { get; set; }
 
-        protected override Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression => node => ChildrenMethodExpression(TreeNodeKeyExpression(node));
+        protected override Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression => node => ChildrenMethodExpression(DataSource, TreeNodeKeyExpression(node));
 
 
         protected override Dictionary<string, object> TreeAttributes
