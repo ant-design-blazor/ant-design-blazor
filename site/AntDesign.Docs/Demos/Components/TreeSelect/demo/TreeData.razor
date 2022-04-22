@@ -1,4 +1,4 @@
-@using AntDesign.Docs.Demos.Components.TreeSelect.Demo
+
 
 <TreeSelect TItem="Data" 
                   Style="width:100%;"
@@ -6,10 +6,11 @@
                   @bind-Value="@value"
                   Placeholder="Please select"
                   AllowClear
+                  Multiple
                   TitleExpression="data => data.Title"
                   KeyExpression="data => data.Value"
                   ChildrenExpression="data => data.Children "
-				  IsLeafExpression="data => data.Children == null "
+				  IsLeafExpression="(menus, data) => data.Children == null "
                   TreeDefaultExpandAll>
 </TreeSelect>
 
