@@ -134,7 +134,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public bool Responsive { get; set; } = true;
+        public bool Responsive { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -196,8 +196,7 @@ namespace AntDesign
             _summaryRows.Add(summaryRow);
         }
 
-
-        void OnColumnInitialized()
+        private void OnColumnInitialized()
         {
             if (_hasInitialized)
             {
@@ -373,7 +372,6 @@ namespace AntDesign
             FlushCache();
         }
 
-
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -492,7 +490,7 @@ namespace AntDesign
             return RowExpandable(rowData as RowData<TItem>);
         }
 
-        IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
+        private IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
         {
             if (_currentQueryModel == null || ServerSide)
             {
