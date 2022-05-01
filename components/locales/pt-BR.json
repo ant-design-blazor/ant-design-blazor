@@ -13,27 +13,36 @@
     "next_3": "3 próximas páginas"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Domingo",
     "lang": {
       "placeholder": "Selecionar data",
+      "yearPlaceholder": "Selecionar ano",
+      "quarterPlaceholder": "Selecionar trimestre",
+      "monthPlaceholder": "Selecionar mês",
+      "weekPlaceholder": "Selecionar semana",
       "rangePlaceholder": [ "Data inicial", "Data final" ],
+      "rangeYearPlaceholder": [ "Ano inicial", "Ano final" ],
+      "rangeMonthPlaceholder": [ "Mês inicial", "Mês final" ],
+      "rangeWeekPlaceholder": [ "Semana inicial", "Semana final" ],
       "locale": "pt_BR",
       "today": "Hoje",
       "now": "Agora",
       "backToToday": "Voltar para hoje",
-      "ok": "Ok",
+      "ok": "Aceitar",
       "clear": "Limpar",
       "month": "Mês",
       "year": "Ano",
       "timeSelect": "Selecionar hora",
       "dateSelect": "Selecionar data",
-      "monthSelect": "Escolher mês",
-      "yearSelect": "Escolher ano",
-      "decadeSelect": "Escolher década",
+      "weekSelect": "Selecionar semana",
+      "monthSelect": "Selecionar mês",
+      "yearSelect": "Selecionar ano",
+      "decadeSelect": "Selecionar década",
       "yearFormat": "yyyy",
-      "dateFormat": "d/M/yyyy",
-      "dayFormat": "d",
-      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
-      "monthBeforeYear": false,
+      "dateFormat": "dd-MM-YYYY",
+      "dayFormat": "dd",
+      "dateTimeFormat": "dd-MM-YYYY HH:mm:ss",
+      "monthBeforeYear": true,
       "previousMonth": "Mês anterior (PageUp)",
       "nextMonth": "Próximo mês (PageDown)",
       "previousYear": "Ano anterior (Control + esquerda)",
@@ -41,19 +50,42 @@
       "previousDecade": "Década anterior",
       "nextDecade": "Próxima década",
       "previousCentury": "Século anterior",
-      "nextCentury": "Próximo século"
+      "nextCentury": "Próximo século",
+      "startDate": "Data inicial",
+      "startWeek": "Semana inicial",
+      "startMonth": "Mês inicial",
+      "startYear": "Ano inicial",
+      "startQuarter": "Trimestre inicial",
+      "endDate": "Data final",
+      "endWeek": "Semana final",
+      "endMonth": "Mês final",
+      "endYear": "Ano final",
+      "endQuarter": "Trimestre final",
+      "quarterSelect": "Selecionar trimestre",
+      "week": "Semana",
+      "monthFormat": "MM",
+      "shortWeekDays": [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb" ]
     },
     "timePickerLocale": {
-      "placeholder": "Hora"
+      "placeholder": "Hora",
+      "rangePlaceholder": [ "Hora inicial", "Hora final" ]
     }
   },
   "TimePicker": {
-    "placeholder": "Hora"
+    "placeholder": "Hora",
+    "rangePlaceholder": [ "Hora inicial", "Hora final" ]
   },
   "Calendar": {
     "lang": {
       "placeholder": "Selecionar data",
+      "yearPlaceholder": "Selecionar ano",
+      "quarterPlaceholder": "Selecionar trimestre",
+      "monthPlaceholder": "Selecionar mês",
+      "weekPlaceholder": "Selecionar semana",
       "rangePlaceholder": [ "Data inicial", "Data final" ],
+      "rangeYearPlaceholder": [ "Ano inicial", "Ano final" ],
+      "rangeMonthPlaceholder": [ "Mês inicial", "Mês final" ],
+      "rangeWeekPlaceholder": [ "Semana inicial", "Semana final" ],
       "locale": "pt_BR",
       "today": "Hoje",
       "now": "Agora",
@@ -64,6 +96,7 @@
       "year": "Ano",
       "timeSelect": "Selecionar hora",
       "dateSelect": "Selecionar data",
+      "weekSelect": "Selecionar semana",
       "monthSelect": "Escolher mês",
       "yearSelect": "Escolher ano",
       "decadeSelect": "Escolher década",
@@ -82,37 +115,66 @@
       "nextCentury": "Próximo século"
     },
     "timePickerLocale": {
-      "placeholder": "Hora"
+      "placeholder": "Hora",
+      "rangePlaceholder": [ "Hora inicial", "Hora final" ]
     }
   },
+  "global": { "placeholder": "Please select" },
   "Table": {
     "filterTitle": "Filtro",
-    "filterConfirm": "OK",
+    "filterConfirm": "Confirmar",
     "filterReset": "Resetar",
     "selectAll": "Selecionar página atual",
-    "selectInvert": "Inverter seleção"
+    "selectInvert": "Inverter seleção",
+    "selectionAll": "Select all data",
+    "sortTitle": "Ordenação",
+    "expand": "Expandir linha",
+    "collapse": "Recolher linha",
+    "triggerDesc": "Clique para ordenação descrecente",
+    "triggerAsc": "Clique para ordenação crescente",
+    "cancelSort": "Clique para cancelar a ordenação",
+    "filterOptions": {
+      "true": "Verdadeiro",
+      "false": "Falso",
+      "and": "E",
+      "or": "Ou",
+      "equals": "Igual",
+      "notEquals": "Diferente",
+      "contains": "Contém",
+      "notContains": "não contém",
+      "startsWith": "Começa com",
+      "endsWith": "Termina com",
+      "greaterThan": "Maior",
+      "lessThan": "Menor",
+      "greaterThanOrEquals": "Maior igual",
+      "lessThanOrEquals": "Menor igual",
+      "isNull": "Nulo",
+      "isNotNull": "Não nulo",
+      "theSameDateWith": "Data igual"
+    }
   },
   "Modal": {
-    "okText": "OK",
+    "okText": "Confirmar",
     "cancelText": "Cancelar"
   },
   "Confirm": {
-    "okText": "OK",
+    "okText": "Confirmar",
     "cancelText": "Cancelar",
     "yesText": "Sim",
-    "noText": "Não",
-    "retryText": "Tentar de novo",
+    "noText": "No",
+    "retryText": "Tentar novamente",
     "abortText": "Abortar",
     "ignoreText": "Ignorar"
   },
   "Popconfirm": {
-    "okText": "OK",
+    "okText": "Confirmar",
     "cancelText": "Cancelar"
   },
   "Transfer": {
+    "titles": [ "", "" ],
     "searchPlaceholder": "Procurar",
     "itemUnit": "item",
-    "itemsUnit": "items"
+    "itemsUnit": "itens"
   },
   "Upload": {
     "uploading": "Enviando...",
@@ -121,13 +183,69 @@
     "previewFile": "Visualizar arquivo",
     "downloadFile": "Baixar arquivo"
   },
-  "Empty": {
-    "description": "Não há dados"
-  },
+  "Empty": { "description": "Não há dados" },
+  "Icon": { "icon": "ícone" },
   "Text": {
     "edit": "editar",
     "copy": "copiar",
     "copied": "copiado",
     "expand": "expandir"
+  },
+  "PageHeader": { "back": "Voltar" },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Erro de validação de campo ${label}",
+      "required": "Por favor informe ${label}",
+      "enum": "${label} precisa ser um valor de [${enum}]",
+      "whitespace": "${label} não pode ser um caractere vazio",
+      "date": {
+        "format": "${label} formato da data esta inválido",
+        "parse": "${label} não é possível converter para data",
+        "invalid": "${label} é uam data inválida"
+      },
+      "types": {
+        "string": "${label} não é uma ${type} válida",
+        "method": "${label} não é um ${type} válido",
+        "array": "${label} não é um ${type} válido",
+        "object": "${label} não é um ${type} válido",
+        "number": "${label} não é um ${type} válido",
+        "date": "${label} não é uma ${type} válida",
+        "boolean": "${label} não é um ${type} válido",
+        "integer": "${label} não é um ${type} válido",
+        "float": "${label} não é um ${type} válido",
+        "regexp": "${label} não é uma ${type} válida",
+        "email": "${label} não é um ${type} válido",
+        "url": "${label} não é uma ${type} válida",
+        "hex": "${label} não é um ${type} válido"
+      },
+      "string": {
+        "len": "${label} precisa ter ${len} caracteres",
+        "min": "${label} precisa ter no mínimo ${min} caracteres",
+        "max": "${label} pode ter no máximo ${max} caracteres",
+        "range": "${label} precisa conter de ${min} até ${max} caracteres"
+      },
+      "number": {
+        "len": "${label} precisa ser igual a ${len}",
+        "min": "${label} o valor mínimo é ${min}",
+        "max": "${label} o valor mínimo máximo ${max}",
+        "range": "${label} precisa estar entre ${min}-${max}"
+      },
+      "array": {
+        "len": "Precisa ter ${len} ${label}",
+        "min": "No mínimo ${min} ${label}",
+        "max": "No máximo ${max} ${label}",
+        "range": "A quantidade ${label} precisa estar entre ${min}-${max}"
+      },
+      "pattern": { "mismatch": "${label} não corresponde ao padrão ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Visualizar"
+  },
+  "ReuseTabs": {
+    "Close": "Fechar",
+    "CloseAllTabs": "Fechar todas as abas",
+    "CloseAllButThis": "Fechar todas as abas menos esta",
+    "PinTab": "Fixar aba"
   }
 }
