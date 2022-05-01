@@ -42,7 +42,7 @@
       "dateFormat": "dd-MM-YYYY",
       "dayFormat": "dd",
       "dateTimeFormat": "dd-MM-YYYY HH:mm:ss",
-      "monthBeforeYear": true,
+      "monthBeforeYear": false,
       "previousMonth": "Mês anterior (PageUp)",
       "nextMonth": "Próximo mês (PageDown)",
       "previousYear": "Ano anterior (Control + esquerda)",
