@@ -108,7 +108,7 @@ async function printLog() {
       const pr = prs[j];
 
       // Use jquery to get full html page since it don't need auth token
-      const res = await fetch(`https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/pull/${pr}`);
+      const res = await fetch(`https://github.com/ant-design-blazor/ant-design-blazor/pull/${pr}`);
       if (res.url.includes('/issues/')) {
         continue;
       }
