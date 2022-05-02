@@ -32,7 +32,7 @@
 - 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET Standard 2.1 / .NET 5，可直接引用丰富的 .NET 类库。
+- ⚙️ 基于 .NET Standard 2.1 / .NET 5 / .NET 6，可直接引用丰富的 .NET 类库。
 - 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
 
 ## 🌈 在线示例
@@ -44,8 +44,8 @@ WebAssembly 静态托管页面示例
 
 ## 🖥 支持环境
 
-- .NET Core 3.1 / .NET 5。
-- Blazor WebAssembly 3.2 /.NET 5 正式版。
+- .NET Core 3.1 / .NET 5 / .NET 6。
+- Blazor WebAssembly 3.2 /.NET 5 /.NET 6 正式版。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)）。
@@ -74,7 +74,7 @@ WebAssembly 静态托管页面示例
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 以上版本，推荐 .NET 5
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1 以上版本，推荐 .NET 6。
 
 ### 从模板创建一个新项目 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
@@ -155,7 +155,7 @@ WebAssembly 静态托管页面示例
 
 ## ⌨️ 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0?WT.mc_id=DT-MVP-5003987) 5.0.100 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/6.0?WT.mc_id=DT-MVP-5003987) 6.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
@@ -169,7 +169,7 @@ WebAssembly 静态托管页面示例
 
 - 打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ant-design-blazor/ant-design-blazor/wiki)。
 
-  > 推荐使用 Visual Studio 2019 开发。
+  > 推荐使用 Visual Studio 2022 开发。
 
 ## 🔗 链接
 

@@ -32,7 +32,7 @@ English | [简体中文](README-zh_CN.md)
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
 - 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ .NET Standard 2.1/.NET 5 based, with direct reference to the rich .NET ecosystem.
+- ⚙️ .NET Standard 2.1/.NET 5/.NET 6 based, with direct reference to the rich .NET ecosystem.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
@@ -44,7 +44,7 @@ WebAssembly static hosting examples:
 
 ## 🖥 Environment Support
 
-- .NET Core 3.1 / .NET 5
+- Compatible with .NET Core 3.1 / .NET 5 / .NET 6。
 - Blazor WebAssembly 3.2/.NET 5 Release
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
@@ -74,7 +74,7 @@ Therefore, you can use the custom theme styles of Ant Design directly.
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 or later, .NET 5 is even better.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 or later, .NET 6 is even better.
 
 ### Create a new project from the dotnet new template [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
@@ -161,7 +161,7 @@ Options for the template：
 
 ## ⌨️ Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0?WT.mc_id=DT-MVP-5003987) 5.0.100 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/6.0?WT.mc_id=DT-MVP-5003987) 6.0.100 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -175,7 +175,7 @@ Options for the template：
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
 
-  > Visual Studio 2019 is recommended for development.
+  > Visual Studio 2022 is recommended for development.
 
 ## 🔗 Links
 
