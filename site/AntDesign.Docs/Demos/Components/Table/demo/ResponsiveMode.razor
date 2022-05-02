@@ -1,40 +1,38 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<div style="width:500px">
-  <Table TItem="Data" DataSource="@data" Responsive>
-    <Column @bind-Field="@context.Name">
-      <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Age"></Column>
-    <Column @bind-Field="@context.Address">
-      <TitleTemplate>
-        <span> <Icon Type="environment" /> Address </span>
-      </TitleTemplate>
-    </Column>
-    <Column @bind-Field="@context.Tags">
-      @foreach (var tag in context.Tags)
+<Table TItem="Data" DataSource="@data" Responsive>
+  <Column @bind-Field="@context.Name">
+    <a>@context.Name</a>
+  </Column>
+  <Column @bind-Field="@context.Age"></Column>
+  <Column @bind-Field="@context.Address">
+    <TitleTemplate>
+      <span> <Icon Type="environment" /> Address </span>
+    </TitleTemplate>
+  </Column>
+  <Column @bind-Field="@context.Tags">
+    @foreach (var tag in context.Tags)
+    {
+      var color = tag.Length > 5 ? "geekblue" : "green";
+      if (tag == "loser")
       {
-        var color = tag.Length > 5 ? "geekblue" : "green";
-        if (tag == "loser")
-        {
-          color = "volcano";
-        }
-        <Tag Color="@color">@tag</Tag>
+        color = "volcano";
       }
-    </Column>
-    <ActionColumn Title="Action">
-      <Space Size=@("middle")>
-        <SpaceItem>
-          <a>Invite @context.Name</a>
-        </SpaceItem>
-        <SpaceItem>
-          <a>Delete</a>
-        </SpaceItem>
-      </Space>
-    </ActionColumn>
-  </Table>
-</div>
+      <Tag Color="@color">@tag</Tag>
+    }
+  </Column>
+  <ActionColumn Title="Action">
+    <Space Size=@("middle")>
+      <SpaceItem>
+        <a>Invite @context.Name</a>
+      </SpaceItem>
+      <SpaceItem>
+        <a>Delete</a>
+      </SpaceItem>
+    </Space>
+  </ActionColumn>
+</Table>
 
 @code{
     Data[] data = new Data[]
