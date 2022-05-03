@@ -49,7 +49,7 @@ namespace AntDesign.Docs.Services
             await _componentCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
-                return components.ToDictionary(x => x.Title.ToLower(), x => x);
+                return components.ToDictionary(x => $"{x.Category.ToLower()}/{x.Title.ToLower()}", x => x);
             });
 
             _demoMenuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();

@@ -37,13 +37,16 @@ namespace AntDesign.Docs.Build.CLI.Command
             ["Other"] = 7,
             ["其他"] = 7,
             ["Charts"] = 8,
-            ["图表"] = 8
+            ["图表"] = 8,
+            ["Experimental"] = 9,
+            ["实验性功能"] = 9,
         };
 
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
             ["Components"] = "组件",
-            ["Charts"] = "图表"
+            ["Charts"] = "图表",
+            ["Experimental"] = "实验性功能"
         };
 
         public void Execute(CommandLineApplication command)
@@ -86,8 +89,14 @@ namespace AntDesign.Docs.Build.CLI.Command
                 string demoDirectory = Path.Combine(Directory.GetCurrentDirectory(), demoDir);
                 string docsDirectory = Path.Combine(Directory.GetCurrentDirectory(), docsDir);
 
-                GenerateFiles(demoDirectory, docsDirectory, output);
-
+                try
+                {
+                    GenerateFiles(demoDirectory, docsDirectory, output);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
                 return 0;
             });
         }
