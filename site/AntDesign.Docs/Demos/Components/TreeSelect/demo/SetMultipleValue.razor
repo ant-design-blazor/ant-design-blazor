@@ -1,15 +1,28 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
-namespace AntDesign.Docs.Demos.Components.TreeSelect.Demo
-{
-    public class WebMenu
+<SimpleTreeSelect Multiple="true" TItem="WebMenu" @bind-Values="selectMenuId"
+            DataSource="@(LocalJsonData.Data)" AllowClear="true"
+            TitleExpression="m => m.MenuName"
+            KeyExpression="m => m.MenuId"
+            DataItemExpression="(menus, menuId) => menus.FirstOrDefault(m => m.MenuId == menuId)"
+            ChildrenMethodExpression="(menus, menuId) => menus.Where(m => m.ParentId == menuId).ToList()"
+            IsLeafExpression="(menus,m) => menus.All(m => m.ParentId != m.MenuId)"
+            Placeholder="Please select"
+            TreeDefaultExpandAll>
+</SimpleTreeSelect>
+
+select MenuId: @string.Join(',', selectMenuId ?? new[] { ""})
+
+<Button OnClick="ChangeMenuId" OnClickStopPropagation="true">Update</Button>
+
+@code{
+    private IEnumerable<string> selectMenuId = new[] { "3", "1"};
+
+    private void ChangeMenuId()
+    {
+        selectMenuId = new[] { "5", "2" };
+    }
+        public class WebMenu
     {
 
         public string MenuId { get; set; }
@@ -51,11 +64,5 @@ namespace AntDesign.Docs.Demos.Components.TreeSelect.Demo
         {
             return _data.Where(m => m.ParentId == parentId).ToList();
         }
-
-        public static bool HasChild(string parentId)
-        {
-            return _data.All(m => m.ParentId != parentId);
-        }
     }
-
 }
