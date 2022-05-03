@@ -61,6 +61,7 @@ namespace AntDesign.Docs.Pages
 
         private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
+            Name = null;
             await HandleNavigate();
         }
 
@@ -72,12 +73,16 @@ namespace AntDesign.Docs.Pages
 
         private async Task HandleNavigate()
         {
-            if (string.IsNullOrEmpty(Name))
+            var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var fullPageName = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+            if (fullPageName.StartsWith("docs"))
             {
-                var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+                return;
+            }
+            if (fullPageName.Split("/").Length != 2)
+            {
                 var menus = await DemoService.GetMenuAsync();
-                var current = menus.FirstOrDefault(x => x.Url == newUrl.ToLowerInvariant());
+                var current = menus.FirstOrDefault(x => x.Url == fullPageName.ToLowerInvariant());
                 if (current != null)
                 {
                     NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Children[0].Url}");
@@ -86,7 +91,7 @@ namespace AntDesign.Docs.Pages
             else
             {
                 await MainLayout.ChangePrevNextNav(Name);
-                _demoComponent = await DemoService.GetComponentAsync(Name);
+                _demoComponent = await DemoService.GetComponentAsync($"{fullPageName}");
                 _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
                 _filePaths = new() { _filePath };
                 foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue) ?? Array.Empty<DemoItem>())

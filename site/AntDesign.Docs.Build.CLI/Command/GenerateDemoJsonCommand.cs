@@ -95,6 +95,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                         componentDic.Add(language, new DemoComponent()
                         {
+                            Category = docData.Meta["category"],
                             Title = docData.Meta["title"],
                             SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                             Type = docData.Meta["type"],
