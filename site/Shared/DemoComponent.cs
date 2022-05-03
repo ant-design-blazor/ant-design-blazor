@@ -4,6 +4,7 @@ namespace AntDesign.Docs
 {
     public class DemoComponent
     {
+        public string Category { get; set; }
         public string Title { get; set; }
 
         public string SubTitle { get; set; }
