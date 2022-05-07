@@ -51,7 +51,7 @@ jobs:
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
           
-      - name: Prepare for devops gitee pages
+      - name: Prepare for deploy gitee pages
         id: publish
         run: |
           VERSION=`git describe --tags`
@@ -66,7 +66,7 @@ jobs:
           publish_dir: ./cargo/wwwroot
           force_orphan: true
 
-      - name: Prepare for devops github pages
+      - name: Prepare for deploy github pages
         id: publish
         run: |
           VERSION=`git describe --tags`
