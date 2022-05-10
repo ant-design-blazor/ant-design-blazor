@@ -15,6 +15,22 @@ timeline: true
 
 ---
 
+### 0.10.6
+
+`2022-05-10`
+
+- 🐞 Fixed Tooltip Tabindex. [#2404](https://github.com/ant-design-blazor/ant-design-blazor/pull/2404) [@bweissronin](https://github.com/bweissronin)
+- 🐞 Fixed From FieldIdentifier equality check in Rules Mode OnFieldChanged. [#2400](https://github.com/ant-design-blazor/ant-design-blazor/pull/2400) [@GHMonad](https://github.com/GHMonad)
+- 🐞 Fixed localization of decimal point when converting InputNumber string to numeric type. [#2398](https://github.com/ant-design-blazor/ant-design-blazor/pull/2398) [@jp-rl](https://github.com/jp-rl)
+- Select
+  - 🐞 Fixed a bug when using LabelTemplate in Select. [#2399](https://github.com/ant-design-blazor/ant-design-blazor/pull/2399) [@charset](https://github.com/charset)
+  - 🐞 Fixed can't clear selected option when set value null. [#2371](https://github.com/ant-design-blazor/ant-design-blazor/pull/2371) [@ElderJames](https://github.com/ElderJames)
+
+- ⚡️ Optimize the speed of expanding lots of nodes [#2385](https://github.com/ant-design-blazor/ant-design-blazor/pull/2385) [@densen2014](https://github.com/densen2014)
+- 🐞 Fixed Cascader dropdown can't open correctly on click. [#2363](https://github.com/ant-design-blazor/ant-design-blazor/pull/2363) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Upload wrong drag area. [#2360](https://github.com/ant-design-blazor/ant-design-blazor/pull/2360) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input throw exception when binding a List or Dictionary item. [#2359](https://github.com/ant-design-blazor/ant-design-blazor/pull/2359) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.10.5
 
 2022-03-15
