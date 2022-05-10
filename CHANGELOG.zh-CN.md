@@ -15,16 +15,35 @@ timeline: true
 
 ---
 
+### 0.10.6
+
+`2022-05-10`
+
+上海加油 ❤️
+
+- 🐞 修复 Tooltip 的 tabindex，优化 a11y。 [#2404](https://github.com/ant-design-blazor/ant-design-blazor/pull/2404) [@bweissronin](https://github.com/bweissronin)
+- 🐞 修复 Form 绑定同名属性时的报异常问题。 [#2400](https://github.com/ant-design-blazor/ant-design-blazor/pull/2400) [@GHMonad](https://github.com/GHMonad)
+- 🐞 修复 InputNumber 字符串转换为数字类型时的小数点本地化问题。 [#2398](https://github.com/ant-design-blazor/ant-design-blazor/pull/2398) [@jp-rl](https://github.com/jp-rl)
+
+- Select
+  - 🐞 修复当 Select 状态是禁用时, Label 还可以删除操作, 而且 Label 还有鲜艳的颜色。 [#2399](https://github.com/ant-design-blazor/ant-design-blazor/pull/2399) [@charset](https://github.com/charset)
+  - 🐞 修复 Select 当设置 Value 为 null 后不能清除选项的问题。 [#2371](https://github.com/ant-design-blazor/ant-design-blazor/pull/2371) [@ElderJames](https://github.com/ElderJames)
+  
+- ⚡️ Tree 优化展开大量节点是的性能。 [#2385](https://github.com/ant-design-blazor/ant-design-blazor/pull/2385) [@densen2014](https://github.com/densen2014)
+- 🐞 修复 Cascader 下拉列表在点击时不能打开的问题。 [#2363](https://github.com/ant-design-blazor/ant-design-blazor/pull/2363) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Upload 错误的拖动区域。 [#2360](https://github.com/ant-design-blazor/ant-design-blazor/pull/2360) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input 绑定列表或字典元素时的报错。 [#2359](https://github.com/ant-design-blazor/ant-design-blazor/pull/2359) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.10.5
 
 2022-03-15
 
-- 🐞 修复 Radio 在 RadioGroup 中时如果没有指定Name则设置默认的 Name。 [#2330](https://github.com/ant-design-blazor/ant-design-blazor/pull/2330) [@bweissronin](https://github.com/bweissronin)
+- 🐞 修复 Radio 在 RadioGroup 中时如果没有指定 Name 则设置默认的 Name。 [#2330](https://github.com/ant-design-blazor/ant-design-blazor/pull/2330) [@bweissronin](https://github.com/bweissronin)
 - 🛠 修改 Upload 添加更多图片格式。[#2321](https://github.com/ant-design-blazor/ant-design-blazor/pull/2321) [@scugzbc](https://github.com/scugzbc)
 - 🐞 修复 Tabs 数量超出范围时 TabTemplate 不能显示在 dropdown 中的问题。[#2320](https://github.com/ant-design-blazor/ant-design-blazor/pull/2320) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Tree 渲染循环和选项框勾选不正常。[#2319](https://github.com/ant-design-blazor/ant-design-blazor/pull/2319) [@gmij](https://github.com/gmij)
 - 🐞 修复 InputNumber 连续加减切换时偶尔出现的不停止问题。[#2317](https://github.com/ant-design-blazor/ant-design-blazor/pull/2317) [@jeffraska](https://github.com/jeffraska)
-- 🐞 修复 Select 使用DataSource时下拉列表不能滚动到已选项的问题。[#2316](https://github.com/ant-design-blazor/ant-design-blazor/pull/2316) [@jeffraska](https://github.com/jeffraska)
+- 🐞 修复 Select 使用 DataSource 时下拉列表不能滚动到已选项的问题。[#2316](https://github.com/ant-design-blazor/ant-design-blazor/pull/2316) [@jeffraska](https://github.com/jeffraska)
 - 🐞 修复 Badge 数字间的间隙。[#2315](https://github.com/ant-design-blazor/ant-design-blazor/pull/2315) [@ElderJames](https://github.com/ElderJames)
 
 ### 0.10.4
