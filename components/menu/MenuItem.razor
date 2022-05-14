@@ -8,16 +8,7 @@
 		<Tooltip Title="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
 			<Unbound Context="tooltip">
                 <li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
-                    @if (IconTemplate != null)
-                    {
-						<span role="img" class=" anticon anticon-container">
-							@IconTemplate
-						</span>
-                    }
-                    else if (Icon != null)
-                    {
-                        <Icon Type="@Icon" />
-                    }
+                    @icon(this)
                     <span class="ant-menu-title-content">
                         @if (RouterLink == null)
                         {
@@ -35,11 +26,7 @@
 	else
 	{
 		<li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key">
-			@if (Icon != null)
-			{
-				<Icon Type="@Icon" />
-			}
-
+			  @icon(this)
 			<span class="ant-menu-title-content">
 				@if (RouterLink == null)
 				{
@@ -65,6 +52,21 @@
 		{
 			@item.ChildContent
 		}
-	</Template>
-	;
+    </Template>
+  ;
+
+  RenderFragment<MenuItem> icon = item =>
+  @<Template>
+    @if (item.IconTemplate != null)
+      {
+        <span role="img" class=" anticon anticon-container">
+          @item.IconTemplate
+        </span>
+      }
+      else if (item.Icon != null)
+      {
+        <Icon Type="@item.Icon" />
+      }
+    </Template>
+  ;
 }
