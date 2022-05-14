@@ -47,7 +47,6 @@ namespace AntDesign.Internal
         [Parameter]
         public string OverlayChildPrefixCls { get; set; } = "";
 
-
         [Parameter]
         public int HideMillisecondsDelay { get; set; } = 100;
 
@@ -68,10 +67,10 @@ namespace AntDesign.Internal
 
         /// <summary>
         /// By default Overlay does not render its content if Overlay hasn't been
-        /// activated (shown at least once). Setting HiddenMode = true will 
+        /// activated (shown at least once). Setting HiddenMode = true will
         /// go through rendering process.
         /// Use case: Select component, when using <see cref="SimpleSelectOption"/> or <see cref="SelectOption{TItemValue, TItem}"/>
-        /// needs HiddenMode = true, so the select options are initialized and 
+        /// needs HiddenMode = true, so the select options are initialized and
         /// potential defaults can be rendered properly.
         /// </summary>
         [Parameter]
@@ -97,9 +96,10 @@ namespace AntDesign.Internal
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
 
-        //if this style needs to be changed, also change 
+        //if this style needs to be changed, also change
         //the removal of that style in js interop overlay.ts class (in constructor)
-        private string _overlayStyle = "display: none;"; //initial value prevents from screen flickering when adding overlay to dom; it will be overwritten immediately 
+        private string _overlayStyle = "display: none;"; //initial value prevents from screen flickering when adding overlay to dom; it will be overwritten immediately
+
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
@@ -178,7 +178,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, Ref.Id);
                 });
             }
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -299,11 +299,13 @@ namespace AntDesign.Internal
         /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+
         private OverlayPosition _position;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
         private int _recurenceGuard = 0;
+
         private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
             if (!_hasAddOverlayToBody)
@@ -311,7 +313,7 @@ namespace AntDesign.Internal
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
                 _recurenceGuard++;
 
-                //In ServerSide it may happen that trigger element reference has not yet been retrieved.                    
+                //In ServerSide it may happen that trigger element reference has not yet been retrieved.
                 if (!(await WaitFor(() => Trigger.Ref.Id is not null)))
                 {
                     //Place where Error Boundary could be utilized

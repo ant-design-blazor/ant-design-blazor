@@ -72,12 +72,12 @@ namespace AntDesign
                .If(PrefixCls, () => _affixed);
         }
 
-        public async override Task SetParametersAsync(ParameterView parameters)
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
 
@@ -158,7 +158,7 @@ namespace AntDesign
             {
                 if (domRect.Bottom > bottomDist)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: { window.InnerHeight - bottomDist}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + $"bottom: {window.InnerHeight - bottomDist}px; position: fixed;";
                     Affixed = true;
                 }
                 else
@@ -188,7 +188,7 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
         }
     }
 }

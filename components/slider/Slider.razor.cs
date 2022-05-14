@@ -408,7 +408,7 @@ namespace AntDesign
             SetStyle();
         }
 
-        public async override Task SetParametersAsync(ParameterView parameters)
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
 
@@ -495,7 +495,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -806,7 +806,7 @@ namespace AntDesign
         /// @bind-Value="model.PropertyName"
         /// </example>
         [Parameter]
-        public sealed override TValue Value
+        public override sealed TValue Value
         {
             get { return _value; }
             set

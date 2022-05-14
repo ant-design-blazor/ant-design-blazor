@@ -36,9 +36,11 @@ namespace AntDesign.Select.Internal
                     SetInputWidth();
             }
         }
+
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
         [Parameter] public bool ShowPlaceholder { get; set; }
+
         [Parameter]
         public int MaxTagCount
         {
@@ -52,6 +54,7 @@ namespace AntDesign.Select.Internal
                 }
             }
         }
+
         [Parameter] public EventCallback<ChangeEventArgs> OnInput { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
@@ -63,6 +66,7 @@ namespace AntDesign.Select.Internal
         [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
         [Inject] protected IJSRuntime Js { get; set; }
         [Inject] private IDomEventListener DomEventListener { get; set; }
+
         protected ElementReference Ref
         {
             get { return _ref; }
@@ -74,7 +78,7 @@ namespace AntDesign.Select.Internal
         }
 
         private const char Ellipse = (char)0x2026;
-        private const int ItemMargin = 4; //taken from each tag item 
+        private const int ItemMargin = 4; //taken from each tag item
         private string _inputStyle = string.Empty;
         private string _inputWidth;
         private bool _suppressInput;
@@ -121,8 +125,8 @@ namespace AntDesign.Select.Internal
                 {
                     _currentItemCount = ParentSelect.SelectedOptionItems.Count;
                     //even though it is run in OnAfterRender, it may happen that the browser
-                    //did not manage to render yet the element; force a continuous check 
-                    //until the element gets the id                    
+                    //did not manage to render yet the element; force a continuous check
+                    //until the element gets the id
                     while (_aggregateTag.Id is null)
                     {
                         await Task.Delay(5);
@@ -221,7 +225,7 @@ namespace AntDesign.Select.Internal
             if (renderAgain)
                 StateHasChanged();
 
-            //force focus on cursor 
+            //force focus on cursor
             if (ParentSelect.IsDropdownShown() || forceInputFocus)
             {
                 var isFocused = await Js.InvokeAsync<bool>(JSInteropConstants.HasFocus, ParentSelect._inputRef);
@@ -324,10 +328,10 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
-        /// Any item may overflow. In case of first item, when there 
+        /// Any item may overflow. In case of first item, when there
         /// are any other elements inside SelectContent (prefix, suffix, clear btn, etc)
         /// default MaxWidth will force th SelectContent to grow. Changing the MaxWidth
-        /// allows the overflowing item to fit in a single line. 
+        /// allows the overflowing item to fit in a single line.
         /// TODO: use relative units
         /// </summary>
         /// <returns></returns>
@@ -367,9 +371,10 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
-        /// Indicates that a page is being refreshed 
+        /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+
         private int _maxTagCount;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
@@ -402,7 +407,6 @@ namespace AntDesign.Select.Internal
         //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
         private async void OnBlurInternal(JsonElement e) => await OnBlur.InvokeAsync(new());
 
-
         public bool IsDisposed { get; private set; }
 
         protected virtual void Dispose(bool disposing)
@@ -418,7 +422,7 @@ namespace AntDesign.Select.Internal
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
 
             if (IsDisposed) return;
 

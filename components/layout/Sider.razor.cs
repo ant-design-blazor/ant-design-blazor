@@ -172,7 +172,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
             base.Dispose(disposing);
         }
     }
