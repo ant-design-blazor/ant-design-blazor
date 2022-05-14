@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
@@ -27,9 +24,6 @@ namespace AntDesign.Docs.Shared
         [Inject]
         public DemoService DemoService { get; set; }
 
-        [Inject]
-        public IJSRuntime JsInterop { get; set; }
-
         internal PrevNextNav PrevNextNav { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -37,16 +31,7 @@ namespace AntDesign.Docs.Shared
             StateHasChanged();
             await DemoService.InitializeDemos();
 
-            LanguageService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
-            }
         }
 
         public async Task ChangePrevNextNav(string currentTitle)
@@ -60,12 +45,6 @@ namespace AntDesign.Docs.Shared
             PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 
-        private async void OnLanguageChanged(object sender, CultureInfo culture)
-        {
-            await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.localeChange", culture.Name);
-            await InvokeAsync(StateHasChanged);
-        }
-
         private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
             StateHasChanged();
@@ -73,7 +52,6 @@ namespace AntDesign.Docs.Shared
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
             NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
