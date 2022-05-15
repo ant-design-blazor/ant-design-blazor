@@ -81,7 +81,7 @@ namespace AntDesign.Docs.Services
         {
             await InitializeAsync(CurrentLanguage);
             return _componentCache.TryGetValue(CurrentLanguage, out var component)
-                ? (await component)[componentName.ToLower()]
+                ? (await component).TryGetValue(componentName.ToLower(), out var demoComponent)? demoComponent:null
                 : null;
         }
 
