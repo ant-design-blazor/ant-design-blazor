@@ -41,7 +41,7 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string Action { get; set; }
-        
+
         [Parameter]
         public string Method { get; set; }
 
@@ -94,7 +94,7 @@ namespace AntDesign.Internal
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && !Disabled && Upload?.Drag == false)
+            if (firstRender && !Disabled && Upload?.Drag == false && !string.IsNullOrWhiteSpace(Action))
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
             }
