@@ -1,0 +1,29 @@
+<InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+
+<Upload Name="files" FileList="fileList">
+    <label class="ant-btn" for="fileInput">
+        <Icon Type="upload" />
+        Click to Upload
+    </label>
+</Upload>
+
+@inject IJSRuntime Js;
+@code {
+    
+  List<UploadFileItem> fileList = new List<UploadFileItem>();
+  
+  #if NET5_0_OR_GREATER
+  IList<IBrowserFile> files = new List<IBrowserFile>();
+  private void UploadFiles(InputFileChangeEventArgs e)
+  {
+    foreach (var file in e.GetMultipleFiles())
+    {
+        files.Add(file);
+    }
+    //TODO upload the files to the server
+    
+     fileList = files.Select(file => new UploadFileItem { FileName = file.Name, Size = file.Size }).ToList();
+  }
+#endif
+
+}
