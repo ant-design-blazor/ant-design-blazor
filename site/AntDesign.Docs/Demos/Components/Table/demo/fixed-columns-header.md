@@ -13,6 +13,8 @@ title:
 >
 > 建议指定 `ScrollX` 为大于表格宽度的固定值或百分比。注意，且非固定列宽度之和不要超过 `ScrollX`。
 
+**注意：如果右侧固定列出现错位，请设置 `ScrollBarWidth` 来固定滚动条宽度。**
+
 ## en-US
 
 A Solution for displaying large amounts of data with long columns.
@@ -21,3 +23,4 @@ A Solution for displaying large amounts of data with long columns.
 >
 > A fixed value which is greater than table width for `ScrollX` is recommended. The sum of unfixed columns should not greater than `ScrollX`.
 
+**Note: If the fixed column on the right is misplaced, set 'ScrollBarWidth' to fix the width of the table scroll bar.**
