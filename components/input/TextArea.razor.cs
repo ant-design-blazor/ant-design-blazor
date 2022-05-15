@@ -20,7 +20,7 @@ namespace AntDesign
         private DotNetObjectReference<TextArea> _reference;
 
         /// <summary>
-        /// Will adjust (grow or shrink) the `TextArea` according to content. 
+        /// Will adjust (grow or shrink) the `TextArea` according to content.
         /// Can work in connection with `MaxRows` and `MinRows`.
         /// Sets resize attribute of the textarea HTML element to: none.
         /// </summary>
@@ -43,14 +43,14 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When `false`, value will be set to `null` when content is empty 
-        /// or whitespace. When `true`, value will be set to empty string.        
+        /// When `false`, value will be set to `null` when content is empty
+        /// or whitespace. When `true`, value will be set to empty string.
         /// </summary>
         [Parameter]
         public bool DefaultToEmptyString { get; set; }
 
         /// <summary>
-        /// `TextArea` will allow growing, but it will stop when visible 
+        /// `TextArea` will allow growing, but it will stop when visible
         /// rows = MaxRows (will not grow further).
         /// Default value = uint.MaxValue
         /// </summary>
@@ -79,7 +79,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// `TextArea` will allow shrinking, but it will stop when visible 
+        /// `TextArea` will allow shrinking, but it will stop when visible
         /// rows = MinRows (will not shrink further).
         /// Default value = DEFAULT_MIN_ROWS = 1
         /// </summary>
@@ -173,7 +173,7 @@ namespace AntDesign
             }
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
 
@@ -229,7 +229,6 @@ namespace AntDesign
             }
             result = value;
             return true;
-
         }
 
         protected override void Dispose(bool disposing)
@@ -237,7 +236,7 @@ namespace AntDesign
             if (AutoSize && !_isReloading)
             {
                 _reference?.Dispose();
-                DomEventListener.Dispose();
+                DomEventListener?.Dispose();
 
                 _ = InvokeAsync(async () =>
                 {
@@ -252,6 +251,7 @@ namespace AntDesign
         /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+
         private bool _autoSize;
         private bool _valueHasChanged;
         private bool _isInputing;

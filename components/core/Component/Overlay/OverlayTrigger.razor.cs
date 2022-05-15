@@ -31,14 +31,14 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         /// <summary>
-        /// Trigger (link, button, etc) 
+        /// Trigger (link, button, etc)
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -70,7 +70,7 @@ namespace AntDesign.Internal
         public bool InlineFlexMode { get; set; } = false;
 
         /// <summary>
-        /// Behave like a button: when clicked invoke OnClick 
+        /// Behave like a button: when clicked invoke OnClick
         /// (unless OnClickDiv is overriden and does not call base).
         /// </summary>
         [Parameter]
@@ -107,7 +107,7 @@ namespace AntDesign.Internal
         public EventCallback<bool> OnOverlayHiding { get; set; }
 
         /// <summary>
-        /// Callback when overlay visibility is changing. 
+        /// Callback when overlay visibility is changing.
         /// </summary>
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
@@ -177,14 +177,14 @@ namespace AntDesign.Internal
         internal PlacementType GetPlacementType() => _placement;
 
         /// <summary>
-        /// Override default placement class which is based on `Placement` parameter. 
+        /// Override default placement class which is based on `Placement` parameter.
         /// </summary>
         [Parameter]
         public string PlacementCls { get; set; }
 
         /// <summary>
-        /// Define what is going to be the container of the overlay. 
-        /// Example use case: when overlay has to be contained in a 
+        /// Define what is going to be the container of the overlay.
+        /// Example use case: when overlay has to be contained in a
         /// scrollable area.
         /// </summary>
         [Parameter]
@@ -207,7 +207,7 @@ namespace AntDesign.Internal
         public string TriggerCls { get; set; }
 
         /// <summary>
-        /// Manually set reference to triggering element. 
+        /// Manually set reference to triggering element.
         /// </summary>
         [Parameter]
         public ElementReference TriggerReference
@@ -219,7 +219,7 @@ namespace AntDesign.Internal
         internal TriggerType[] GetTriggerType() => _trigger;
 
         /// <summary>
-        /// ChildElement with ElementReference set to avoid wrapping div. 
+        /// ChildElement with ElementReference set to avoid wrapping div.
         /// </summary>
         [Parameter]
         public RenderFragment<ForwardRef> Unbound { get; set; }
@@ -320,7 +320,7 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
 
             base.Dispose(disposing);
         }
@@ -493,7 +493,6 @@ namespace AntDesign.Internal
                 Hide();
             }
         }
-
 
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {

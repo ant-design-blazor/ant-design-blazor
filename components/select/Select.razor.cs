@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-
 namespace AntDesign
 {
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
@@ -34,10 +33,9 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
 
-
-        bool _dataSourceHasChanged = false;
-        IEnumerable<TItem> _dataSourceCopy;
-        IEnumerable<TItem> _dataSourceShallowCopy;
+        private bool _dataSourceHasChanged = false;
+        private IEnumerable<TItem> _dataSourceCopy;
+        private IEnumerable<TItem> _dataSourceShallowCopy;
         //private bool? _isTItemPrimitive;
         //private bool IsTItemPrimitive
         //{
@@ -54,11 +52,12 @@ namespace AntDesign
         /// <summary>
         /// MethodInfo will contain attached MemberwiseClone protected
         /// method. Due to its protection level, it has to be accessed
-        /// using reflection. It will be used during generation of 
+        /// using reflection. It will be used during generation of
         /// the DataSource shallow copy (which is a new list of DataSource
         /// items with shallow copy of each item).
         /// </summary>
         private MethodInfo _dataSourceItemShallowCopyMehtod;
+
         private MethodInfo GetDataSourceItemCloneMethod()
         {
             if (_dataSourceItemShallowCopyMehtod is null)
@@ -75,12 +74,12 @@ namespace AntDesign
 
         /// <summary>
         /// The datasource for this component.
-        /// </summary>        
+        /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
 
         /// <summary>
-        /// EqualityComparer that will be used during DataSource change 
+        /// EqualityComparer that will be used during DataSource change
         /// detection. If no comparer set, default .Net is going to be
         /// used.
         /// </summary>
@@ -104,7 +103,6 @@ namespace AntDesign
             }
         }
 
-
         /// <summary>
         /// The name of the property to be used as a disabled indicator.
         /// </summary>
@@ -120,7 +118,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Will match drowdown width: 
+        /// Will match drowdown width:
         /// - for boolean: true - with widest item in the dropdown list
         /// - for string: with value (e.g.: "256px")
         /// </summary>
@@ -136,10 +134,9 @@ namespace AntDesign
         /// </summary>
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
 
-
         /// <summary>
-        /// The name of the property to be used as a group indicator. 
-        /// If the value is set, the entries are displayed in groups. 
+        /// The name of the property to be used as a group indicator.
+        /// If the value is set, the entries are displayed in groups.
         /// Use additional SortByGroup and SortByLabel.
         /// </summary>
         [Parameter]
@@ -154,17 +151,15 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Is used to increase the speed. If you expect changes to the label name, 
+        /// Is used to increase the speed. If you expect changes to the label name,
         /// group name or disabled indicator, disable this property.
         /// </summary>
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
-
 
         /// <summary>
         /// Is used to customize the item style.
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
-
 
         /// <summary>
         /// The name of the property to be used for the label.
@@ -211,8 +206,8 @@ namespace AntDesign
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
 
         /// <summary>
-        /// Called when the datasource changes. From null to <see cref="IEnumerable{TItem}"/>, 
-        /// from <see cref="IEnumerable{TItem}"/> to <see cref="IEnumerable{TItem}"/> 
+        /// Called when the datasource changes. From null to <see cref="IEnumerable{TItem}"/>,
+        /// from <see cref="IEnumerable{TItem}"/> to <see cref="IEnumerable{TItem}"/>
         /// or from <see cref="IEnumerable{TItem}"/> to null.
         /// It does not trigger if a value inside the <see cref="IEnumerable{TItem}"/> changes.
         /// </summary>
@@ -222,6 +217,7 @@ namespace AntDesign
         /// Called when the dropdown visibility changes.
         /// </summary>
         [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
+
         /// <summary>
         /// Called when mouse enter.
         /// </summary>
@@ -244,8 +240,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
-
         private bool _showArrowIconChanged;
+
         /// <summary>
         /// Whether to show the drop-down arrow
         /// </summary>
@@ -259,19 +255,23 @@ namespace AntDesign
                 _showArrowIconChanged = true;
             }
         }
+
         /// <summary>
         /// Whether show search input in single mode.
         /// </summary>
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
+
         /// <summary>
         /// Define what characters will be treated as token separators for newly created tags.
         /// Useful when creating new tags using only keyboard.
         /// </summary>
         [Parameter] public char[] TokenSeparators { get; set; }
+
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+
         /// <summary>
         /// The name of the property to be used for the value.
         /// </summary>
@@ -287,8 +287,7 @@ namespace AntDesign
             }
         }
 
-
-        bool _valueHasChanged;
+        private bool _valueHasChanged;
 
         /// <summary>
         /// Get or set the selected value.
@@ -310,7 +309,7 @@ namespace AntDesign
 
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
-        /// </summary> 
+        /// </summary>
         [Parameter]
         public TItemValue DefaultValue
         {
@@ -333,6 +332,7 @@ namespace AntDesign
         #region Properties
 
         private const string ClassPrefix = "ant-select";
+
         /// <summary>
         /// Indicates if the GroupName is used. When this value is True, the SelectOptions will be rendered in group mode.
         /// </summary>
@@ -361,7 +361,6 @@ namespace AntDesign
         private string _labelName;
 
         internal Func<TItem, string> _getLabel;
-
 
         private string _groupName = string.Empty;
 
@@ -610,7 +609,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -624,7 +623,6 @@ namespace AntDesign
         /// </summary>
         private void CreateDeleteSelectOptions()
         {
-
             if (_datasource == null)
                 return;
 
@@ -740,7 +738,6 @@ namespace AntDesign
             }
         }
 
-
         /// <summary>
         /// Sets the CSS classes to change the visual style
         /// </summary>
@@ -815,7 +812,6 @@ namespace AntDesign
             }
         }
 
-
         /// <summary>
         /// Scrolls to the item via JavaScript.
         /// </summary>
@@ -826,7 +822,6 @@ namespace AntDesign
             await JsInvokeAsync(JSInteropConstants.ScrollTo, element, _scrollableSelectDiv);
         }
 
-
         /// <summary>
         /// Called by the Form reset method
         /// </summary>
@@ -834,7 +829,6 @@ namespace AntDesign
         {
             _ = ClearSelectedAsync();
         }
-
 
         /// <summary>
         /// If DefaultActiveFirstItem is True, the first item which is not IsDisabled(True) is set as selected.
@@ -1068,12 +1062,13 @@ namespace AntDesign
         }
 
         #region Events
+
         /// <summary>
         /// When newly set Value is not found in SelectOptionItems, it is reset to
-        /// default. This property holds the value before reset. It may be needed 
+        /// default. This property holds the value before reset. It may be needed
         /// to be reaplied (for example when new Value is set at the same time
-        /// as new SelectOption is added, but Value in the component is set 
-        /// before new SelectOptionItem has been created).        
+        /// as new SelectOption is added, but Value in the component is set
+        /// before new SelectOptionItem has been created).
         /// </summary>
         internal TItemValue LastValueBeforeReset { get; set; }
 
@@ -1162,7 +1157,6 @@ namespace AntDesign
                 SelectedOptionItems.Add(optionItem);
             }
         }
-
 
         /// <summary>
         /// Method is called via EventCallBack if the value of the Input element was changed by keyboard
@@ -1772,8 +1766,6 @@ namespace AntDesign
             }
         }
 
-
-
         /// <summary>
         /// Method is called via EventCallBack if the Input element loses the focus
         /// </summary>
@@ -1800,7 +1792,6 @@ namespace AntDesign
                 OnBlur?.Invoke();
             }
         }
-
 
         /// <summary>
         /// Search the first selected item, set IsActive to False for all other items and call the scrollIntoView function via JavaScript.
@@ -1837,7 +1828,6 @@ namespace AntDesign
             }
         }
 
-
         /// <summary>
         /// Method is called via EventCallBack if the user clicked on the Close icon of a Tag.
         /// </summary>
@@ -1846,7 +1836,6 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
         }
-
 
         #endregion Events
     }

@@ -471,7 +471,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -484,7 +484,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                 }
             }
-            DomEventListener.Dispose();
+            DomEventListener?.Dispose();
         }
 
         bool ITable.RowExpandable(RowData rowData)

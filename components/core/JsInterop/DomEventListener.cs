@@ -18,6 +18,7 @@ namespace AntDesign.JsInterop
         private readonly IJSRuntime _jsRuntime;
         private readonly DomEventSubscriptionStore _domEventSubscriptionsStore;
         private readonly string _id;
+        private bool _isDisposed;
 
         public DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore)
         {
@@ -55,7 +56,7 @@ namespace AntDesign.JsInterop
             var key = FormatKey(dom, eventName);
             if (_dotNetObjectStore.TryGetValue(key, out IDisposable value))
             {
-                value.Dispose();
+                value?.Dispose();
             }
             _dotNetObjectStore.Remove(key);
         }
@@ -64,7 +65,7 @@ namespace AntDesign.JsInterop
         {
             foreach (var (k, v) in _dotNetObjectStore)
             {
-                v.Dispose();
+                v?.Dispose();
             }
             _dotNetObjectStore.Clear();
         }
@@ -122,9 +123,10 @@ namespace AntDesign.JsInterop
             }
         }
 
-        #endregion
+        #endregion SharedEventListerner
 
         #region ResizeObserver
+
         public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
@@ -191,7 +193,7 @@ namespace AntDesign.JsInterop
 
         private async ValueTask<bool> IsResizeObserverSupported() => _isResizeObserverSupported ??= await _jsRuntime.IsResizeObserverSupported();
 
-        #endregion
+        #endregion ResizeObserver
 
         #region EventListenerToFirstChild
 
@@ -228,12 +230,16 @@ namespace AntDesign.JsInterop
             }
         }
 
-        #endregion
+        #endregion EventListenerToFirstChild
 
         public void Dispose()
         {
-            DisposeExclusive();
-            DisposeShared();
+            if (!_isDisposed)
+            {
+                DisposeExclusive();
+                DisposeShared();
+                _isDisposed = true;
+            }
         }
     }
 
