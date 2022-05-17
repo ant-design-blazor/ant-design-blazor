@@ -43,7 +43,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Bordered | 是否展示外边框和列边框 | bool | false |
 | ScrollX | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比 | string | - |
 | ScrollY | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string | - |
-| ScrollBarWidth | 滚动条控件宽度 | int | 17 |
+| ScrollBarWidth | 滚动条宽度 | string | "17px" |
 | IndentSize | 展示树形数据时，每层缩进的宽度，以 px 为单位 | int | 15 |
 | ExpandIconColumnIndex | 自定义展开图标所在列索引 | int | - |
 | RowClassName | 表格行的类名 | Func<RowData<TItem>, string> | _ => "" |
