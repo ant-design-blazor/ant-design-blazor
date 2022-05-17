@@ -45,7 +45,7 @@
                                         @header(this)
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY);--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
                                     <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
@@ -62,8 +62,8 @@
                             }
                             else if (ScrollX != null)
                             {
-                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
-                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle">
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
@@ -81,7 +81,7 @@
                             else
                             {
                                 <div class="ant-table-content">
-                                    <table style="@TableLayoutStyle">
+                                    <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
@@ -124,8 +124,8 @@
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
-    @<Template>
-        @{
+  @<Template>
+                @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
         <thead class="ant-table-thead">
@@ -146,32 +146,32 @@
     </Template>;
 
 RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
-@<Template>
-    @{
+  @<Template>
+            @{
         var table = ctx.table;
         var header = ctx.header;
-    }
-    <colgroup>
-        <CascadingValue Name="IsColGroup" Value="true" IsFixed>
-            @table.ChildContent(_fieldModel)
-        </CascadingValue>
-        @if (table.ScrollY != null && header)
+            }
+            <colgroup>
+                <CascadingValue Name="IsColGroup" Value="true" IsFixed>
+                    @table.ChildContent(_fieldModel)
+                </CascadingValue>
+                @if (table.ScrollY != null && header)
         {
-            <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
+                    <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
         }
-    </colgroup>
-</Template>;
+            </colgroup>
+  </Template>;
 
 Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
 @<Template>
     @if (table._total <= 0)
     {
-        <tr class="ant-table-placeholder">
-            <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                <Empty Simple />
-            </td>
-        </tr>
+                <tr class="ant-table-placeholder">
+                    <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                        <Empty Simple />
+                    </td>
+                </tr>
     }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
@@ -264,21 +264,21 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
             }
         </TableRowWrapper>
     }
-</Template>;
+  </Template>;
 
 RenderFragment<Table<TItem>> tfoot = table =>@<Template>
-    @if (table._summaryRows?.Any() == true)
+            @if (table._summaryRows?.Any() == true)
     {
-        <CascadingValue Value="true" Name="IsSummary" IsFixed>
-            <tfoot class="ant-table-summary">
-                @foreach (var row in table._summaryRows)
+                <CascadingValue Value="true" Name="IsSummary" IsFixed>
+                    <tfoot class="ant-table-summary">
+                        @foreach (var row in table._summaryRows)
                 {
-                    <tr>
-                        @row.ChildContent
-                    </tr>
+                            <tr>
+                                @row.ChildContent
+                            </tr>
                 }
-            </tfoot>
-        </CascadingValue>
+                    </tfoot>
+                </CascadingValue>
     }
-</Template>;
+  </Template>;
 }

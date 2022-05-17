@@ -41,7 +41,7 @@ Specify `dataSource` of Table as an array of data.
 | Bordered | Whether to display the outer border and column border | bool | false |
 | ScrollX | Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage | string | - |
 | ScrollY | Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value | string | - |
-| ScrollBarWidth | Scroll bar control width | int | 17 |
+| ScrollBarWidth | Scroll bar width | string | "17px" |
 | IndentSize | When displaying tree data, the width of each level of indentation, in px | int | 15 |
 | ExpandIconColumnIndex | Index of the column where the custom expand icon is located | int | - |
 | RowClassName | The class name of the table row | Func<RowData<TItem>, string> | _ => "" |
@@ -50,6 +50,7 @@ Specify `dataSource` of Table as an array of data.
 | SortDirections | Supported sorting methods, covering sortDirections in Table | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
 | TableLayout | The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column | string | - |
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
+
 ### Column
 | Parameter             | Instruction             | Type                         | Defaults |
 | ---------------- | ---------------- | ---------------------------- | ------ |

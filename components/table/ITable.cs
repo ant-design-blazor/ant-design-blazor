@@ -33,7 +33,7 @@ namespace AntDesign
 
         internal string ScrollY { get; }
 
-        internal int ScrollBarWidth { get; }
+        internal string ScrollBarWidth { get; }
 
         internal int ExpandIconColumnIndex { get; }
 
