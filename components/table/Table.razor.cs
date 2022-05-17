@@ -104,7 +104,7 @@ namespace AntDesign
         public string ScrollY { get; set; }
 
         [Parameter]
-        public int ScrollBarWidth { get; set; } = 17;
+        public string ScrollBarWidth { get => _scrollBarWidth; set => _scrollBarWidth = value; }
 
         [Parameter]
         public int IndentSize { get; set; } = 15;
@@ -172,10 +172,12 @@ namespace AntDesign
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
+        private string _scrollBarWidth = "17px";
 
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
+
         private QueryModel _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
@@ -190,7 +192,7 @@ namespace AntDesign
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
-        int ITable.ScrollBarWidth => ScrollBarWidth;
+        string ITable.ScrollBarWidth => _scrollBarWidth;
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -442,6 +444,7 @@ namespace AntDesign
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
                 .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
                 .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
+                .If($"{prefixCls}-has-scrollbar-width", () => ScrollBarWidth != null)
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
