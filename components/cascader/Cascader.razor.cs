@@ -46,22 +46,16 @@ namespace AntDesign
             get => _nodelist ?? Enumerable.Empty<CascaderNode>();
             set
             {
-                if (value != null || _nodelist?.SequenceEqual(value) == true)
-                {
-                    return;
-                }
+                if (value == null && _nodelist == null) return;
+                if (value != null && _nodelist?.SequenceEqual(value) == true) return;
 
                 _nodelist = _nodelist ?? new List<CascaderNode>();
                 _nodelist?.Clear();
                 _searchList?.Clear();
-
-                if (value == null)
+                if (value != null)
                 {
-                    return;
+                    _nodelist.AddRange(value);
                 }
-
-                _nodelist.AddRange(value);
-
                 ProcessParentAndDefault();
             }
         }
