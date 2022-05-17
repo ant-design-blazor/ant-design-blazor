@@ -197,6 +197,7 @@
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
+
     <!-- use compression via https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-5.0#compression -->
     <script src="decode.js"></script>
 
@@ -209,10 +210,6 @@
         window.AntDesign.Prism.highlightAll = function () {
             Prism.highlightAll();
         }
-
-        window.less = {
-            async: true
-        };
 
         window.changeColor = function (hex, ref) {
             window.less
@@ -245,7 +242,7 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/less@2.7.2/dist/less.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>

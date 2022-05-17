@@ -46,16 +46,23 @@ jobs:
           echo "::set-output name=package_version::${VERSION}"
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
+          # dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
 
-      - name: Prepare for deploy gitee pages
-        run: |
-          VERSION=`git describe --tags`
-          cp -rf scripts/gitee-pages/* scripts/gitee-pages/.spa ./cargo/wwwroot
-          sed -i s/{version}/$VERSION/g ./cargo/wwwroot/index.html
+      - name: Deploy to Azure
+        id: deploy_azure
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_FLOWER_0D9F2A700 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "cargo/wwwroot" 
+          output_location: "cargo/wwwroot"
 
       - name: Deploy to Gitee 🚀
         uses: peaceiris/actions-gh-pages@v3
@@ -64,12 +71,6 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./cargo/wwwroot
           force_orphan: true
-
-      - name: Prepare for deploy github pages
-        run: |
-          VERSION=`git describe --tags`
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll ./cargo/wwwroot
-          sed -i s/{version}/$VERSION/g ./cargo/wwwroot/index.html
 
       - name: Deploy to Github.io 🚀
         uses: peaceiris/actions-gh-pages@v3
