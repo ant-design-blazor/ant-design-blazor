@@ -43,22 +43,19 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<CascaderNode> Options
         {
-            get
-            {
-                if (_nodelist != null)
-                    return _nodelist;
-                return Array.Empty<CascaderNode>();
-            }
+            get => _nodelist ?? Enumerable.Empty<CascaderNode>();
             set
             {
-                if (value?.Any() != true)
-                {
-                    _nodelist = null;
-                }
-                if (_nodelist == null) _nodelist = new List<CascaderNode>();
-                else if (_nodelist.Count != 0) _nodelist.Clear();
-                _nodelist.AddRange(value);
+                if (value == null && _nodelist == null) return;
+                if (value != null && _nodelist?.SequenceEqual(value) == true) return;
 
+                _nodelist = _nodelist ?? new List<CascaderNode>();
+                _nodelist?.Clear();
+                _searchList?.Clear();
+                if (value != null)
+                {
+                    _nodelist.AddRange(value);
+                }
                 ProcessParentAndDefault();
             }
         }
