@@ -8,14 +8,19 @@
         headerRef.scrollLeft = bodyRef.scrollLeft;
       }
     }
-    bodyRef.bindScroll();
-    bodyRef.addEventListener('scroll', bodyRef.bindScroll);
+
+    // direct setting classlist will not work, so delay 500ms for workaround
+    setTimeout(() => {
+     bodyRef && bodyRef.bindScroll();
+    }, 500);
+
+    bodyRef.addEventListener && bodyRef.addEventListener('scroll', bodyRef.bindScroll);
     window.addEventListener('resize', bodyRef.bindScroll);
   }
 
   static unbindTableScroll(bodyRef) {
     if (bodyRef) {
-      bodyRef.removeEventListener('scroll', bodyRef.bindScroll);
+      bodyRef.removeEventListener && bodyRef.removeEventListener('scroll', bodyRef.bindScroll);
       window.removeEventListener('resize', bodyRef.bindScroll);
     }
   }
