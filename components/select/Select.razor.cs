@@ -452,6 +452,7 @@ namespace AntDesign
                 return;
             }
 
+            // clear DataSource
             if (DataSource == null && _datasource != null)
             {
                 SelectOptionItems.Clear();
@@ -467,7 +468,8 @@ namespace AntDesign
                 return;
             }
 
-            if (DataSource != null && !DataSource.Any() && SelectOptionItems.Any())
+            // clear DataSource
+            if (DataSource?.Any() == false && SelectOptionItems.Any())
             {
                 SelectOptionItems.Clear();
                 SelectedOptionItems.Clear();
@@ -484,6 +486,7 @@ namespace AntDesign
                 return;
             }
 
+            // DataSource maybe changed
             if (DataSource != null)
             {
                 if (_datasource == null)
@@ -506,10 +509,13 @@ namespace AntDesign
 
                 if (_dataSourceHasChanged)
                 {
-                    OnDataSourceChanged?.Invoke();
                     _datasource = DataSource;
                     if (_isPrimitive)
                     {
+                        // Maybe a workaound for issues 2439
+                        SelectOptionItems.Clear();
+                        SelectedOptionItems.Clear();
+
                         _dataSourceCopy = _datasource.ToList();
                     }
                     else
@@ -521,6 +527,8 @@ namespace AntDesign
                         var cloneMethod = GetDataSourceItemCloneMethod();
                         _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
                     }
+
+                    OnDataSourceChanged?.Invoke();
                 }
             }
         }

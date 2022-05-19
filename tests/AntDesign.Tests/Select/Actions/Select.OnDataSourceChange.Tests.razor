@@ -28,6 +28,11 @@
         new PersonClass(4, "Emily"),
     };
 
+    List<string> _personsString = new List<string>
+    {
+        "John","Lucy","Jack","Emily"
+    };
+
     [Fact]
     public void Action_fired_when_datasource_changed()
     {
@@ -276,4 +281,75 @@
         handlerCalled.Should().BeTrue();
     }
 
+    [Fact]
+    public void Object_DataSource_change_with_right_order()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 2;
+        Action<int> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                AllowClear
+                >
+            </AntDesign.Select>
+        );
+        var newDataSource = new List<Person>(_persons) { new Person(5, "NewPerson") };
+        //Act
+        cut.SetParametersAndRender(parameters =>
+            parameters
+                .Add(p => p.DataSource, newDataSource)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(5);
+        for (int i = 0; i < options.Count; i++)
+        {
+            options[i].TextContent.Trim().Should().Be(newDataSource[i].Name);
+        }
+        selectedItem.TextContent.Trim().Should().Be("Lucy");
+        value.Should().Be(2);
+    }
+
+    [Fact] // Issues: #2439
+    public void Primitive_DataSource_change_with_right_order()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        string value = "Lucy";
+        Action<string> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@_personsString"
+                Value="@value"
+                ValueChanged="@ValueChanged"
+                AllowClear
+                >
+            </AntDesign.Select>
+        );
+        var newDataSource = new List<string>() { "NewPerson" }.Union(_personsString).ToList();
+        //Act
+        cut.SetParametersAndRender(parameters =>
+            parameters
+                .Add(p => p.DataSource, newDataSource)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(5);
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            options[i].TextContent.Trim().Should().Be(newDataSource[i]);
+        }
+
+        selectedItem.TextContent.Trim().Should().Be("Lucy");
+        value.Should().Be("Lucy");
+    }
 }
