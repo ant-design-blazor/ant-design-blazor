@@ -452,6 +452,7 @@ namespace AntDesign
                 return;
             }
 
+            // set new DataSource
             if (DataSource == null && _datasource != null)
             {
                 SelectOptionItems.Clear();
@@ -467,7 +468,8 @@ namespace AntDesign
                 return;
             }
 
-            if (DataSource != null && !DataSource.Any() && SelectOptionItems.Any())
+            // empty the DataSource
+            if (DataSource?.Any() == false && SelectOptionItems.Any())
             {
                 SelectOptionItems.Clear();
                 SelectedOptionItems.Clear();
@@ -484,6 +486,7 @@ namespace AntDesign
                 return;
             }
 
+            // DataSource maybe changed
             if (DataSource != null)
             {
                 if (_datasource == null)
@@ -506,7 +509,9 @@ namespace AntDesign
 
                 if (_dataSourceHasChanged)
                 {
-                    OnDataSourceChanged?.Invoke();
+                    SelectOptionItems.Clear();
+                    SelectedOptionItems.Clear();
+
                     _datasource = DataSource;
                     if (_isPrimitive)
                     {
@@ -521,6 +526,8 @@ namespace AntDesign
                         var cloneMethod = GetDataSourceItemCloneMethod();
                         _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
                     }
+
+                    OnDataSourceChanged?.Invoke();
                 }
             }
         }
