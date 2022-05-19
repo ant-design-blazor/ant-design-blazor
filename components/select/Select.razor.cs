@@ -452,7 +452,7 @@ namespace AntDesign
                 return;
             }
 
-            // set new DataSource
+            // clear DataSource
             if (DataSource == null && _datasource != null)
             {
                 SelectOptionItems.Clear();
@@ -468,7 +468,7 @@ namespace AntDesign
                 return;
             }
 
-            // empty the DataSource
+            // clear DataSource
             if (DataSource?.Any() == false && SelectOptionItems.Any())
             {
                 SelectOptionItems.Clear();
@@ -509,12 +509,13 @@ namespace AntDesign
 
                 if (_dataSourceHasChanged)
                 {
-                    SelectOptionItems.Clear();
-                    SelectedOptionItems.Clear();
-
                     _datasource = DataSource;
                     if (_isPrimitive)
                     {
+                        // Maybe a workaound for issues 2439
+                        SelectOptionItems.Clear();
+                        SelectedOptionItems.Clear();
+
                         _dataSourceCopy = _datasource.ToList();
                     }
                     else
