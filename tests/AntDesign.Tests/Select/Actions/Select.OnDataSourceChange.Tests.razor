@@ -1,18 +1,18 @@
 ﻿@inherits AntDesignTestBase
 @code {
-  record Person(int Id, string Name);
-  class PersonClass
-  {
-    public PersonClass(int id, string name)
+    record Person(int Id, string Name);
+    class PersonClass
     {
-      Id = id;
-      Name = name;
+        public PersonClass(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
-    public int Id { get; set; }
-    public string Name { get; set; }
-  }
 
-  List<Person> _persons = new List<Person>
+    List<Person> _persons = new List<Person>
     {
         new Person(1, "John"),
         new Person(2, "Lucy"),
@@ -20,7 +20,7 @@
         new Person(4, "Emily"),
     };
 
-  List<PersonClass> _personsClass = new List<PersonClass>
+    List<PersonClass> _personsClass = new List<PersonClass>
     {
         new PersonClass(1, "John"),
         new PersonClass(2, "Lucy"),
