@@ -1,0 +1,59 @@
+﻿Loading: <Switch @bind-Value="_loading" />
+Bordered: <Switch @bind-Value="_bordered"></Switch>
+
+<SimpleTable Loading=_loading Bordered=_bordered Responsive=_responsive  >
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Temp. (C)</th>
+      <th>Temp. (F)</th>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var forecast in forecasts)
+    {
+      <tr>
+        <td>@forecast.Date.ToShortDateString()</td>
+        <td>@forecast.TemperatureC</td>
+        <td>@forecast.TemperatureF</td>
+        <td>@forecast.Summary</td>
+      </tr>
+    }
+  </tbody>
+</SimpleTable>
+
+@code {
+  private WeatherForecast[] forecasts;
+  private bool _loading, _bordered, _responsive, _fixedHeader;
+  TableSize _size = null;
+  private TableSize[] _tableSizes = { null, TableSize.Small, TableSize.Middle };
+
+  protected override async Task OnInitializedAsync()
+  {
+    forecasts = await GetForecastAsync(DateTime.Now);
+  }
+
+  public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
+  {
+    return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
+      {
+        Date = startDate.AddDays(index),
+        TemperatureC = new Random().Next(-20, 55),
+        Summary = Summaries[new Random().Next(Summaries.Length)]
+      }).ToArray());
+  }
+
+  public class WeatherForecast
+  {
+    public DateTime Date { get; set; }
+    public int TemperatureC { get; set; }
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    public string Summary { get; set; }
+  }
+
+  private static readonly string[] Summaries = new[]
+  {
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+  };
+}

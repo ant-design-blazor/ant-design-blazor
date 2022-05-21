@@ -1,0 +1,119 @@
+@import './index.less';
+
+.@{table-prefix-cls}-simple {
+    // ============================= Cell =============================
+    thead > tr > th,
+    tbody > tr > td,
+    tfoot > tr > th,
+    tfoot > tr > td {
+        position: relative;
+        padding: @table-padding-vertical @table-padding-horizontal;
+        overflow-wrap: break-word;
+    }
+    // ============================ Footer ============================
+    tfoot {
+        padding: @table-padding-vertical @table-padding-horizontal;
+        color: @table-footer-color;
+        background: @table-footer-bg;
+    }
+    // ============================ Header ============================
+    thead {
+        > tr {
+            > th {
+                position: relative;
+                color: @table-header-color;
+                font-weight: 500;
+                text-align: left;
+                background: @table-header-bg;
+                border-bottom: @border-width-base @border-style-base @table-border-color;
+                transition: background 0.3s ease;
+
+                &[colspan]:not([colspan='1']) {
+                    text-align: center;
+                }
+
+                &:not(:last-child):not(.@{table-prefix-cls}-selection-column):not(.@{table-prefix-cls}-row-expand-icon-cell):not([colspan])::before {
+                    position: absolute;
+                    top: 50%;
+                    right: 0;
+                    width: 1px;
+                    height: 1.6em;
+                    background-color: @table-header-cell-split-color;
+                    transform: translateY(-50%);
+                    transition: background-color 0.3s;
+                    content: '';
+                }
+            }
+        }
+    }
+    // ============================= Body =============================
+    tbody {
+        > tr {
+            > td {
+                border-bottom: @border-width-base @border-style-base @table-border-color;
+                transition: background 0.3s;
+                // ========================= Nest Table ===========================
+                > .@{table-prefix-cls}-wrapper:only-child,
+                > .@{table-prefix-cls}-expanded-row-fixed > .@{table-prefix-cls}-wrapper:only-child {
+                    .@{table-prefix-cls} {
+                        margin: -@table-padding-vertical -@table-padding-horizontal -@table-padding-vertical (@table-padding-horizontal + ceil(@font-size-sm * 1.4));
+
+                        tbody > tr:last-child > td {
+                            border-bottom: 0;
+
+                            &:first-child,
+                            &:last-child {
+                                border-radius: 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &:hover {
+                > td {
+                    background: @table-row-hover-bg;
+                }
+            }
+        }
+    }
+
+    &.@{table-prefix-cls}-bordered {
+        border: @table-border;
+        // ============================ Title =============================
+        > .@{table-prefix-cls}-title {
+            border: @table-border;
+            border-bottom: 0;
+        }
+
+        > table {
+            // ============================= Cell =============================
+            > thead > tr > th,
+            > tbody > tr > td,
+            > tfoot > tr > th,
+            > tfoot > tr > td {
+                border-right: @table-border;
+            }
+            // ============================ Header ============================
+            > thead {
+                > tr:not(:last-child) > th {
+                    border-bottom: @border-width-base @border-style-base @table-border-color;
+                }
+
+                > tr > th {
+                    &::before {
+                        background-color: transparent !important;
+                    }
+                }
+            }
+            // Fixed right should provides additional border
+            > thead > tr,
+            > tbody > tr,
+            > tfoot > tr {
+                > .@{table-prefix-cls}-cell-fix-right-first::after {
+                    border-right: @table-border;
+                }
+            }
+        }
+    }
+}
