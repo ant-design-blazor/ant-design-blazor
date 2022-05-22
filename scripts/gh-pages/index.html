@@ -193,6 +193,9 @@
             </div>
         </div>
     </app>
+    <div id="toast-zh" class="toast ">文档已更新，请点击 <a id="reload">此处</a> 更新。</div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a id="reload">here</a> to update.</div>
+
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
@@ -249,9 +252,7 @@
         fetch("/version.json?t="+ new Date().getTime())
             .then(response => response.json())
             .then(data =>  {
-                if (data.version!= '{version}') {
-                    window.location.reload(true);
-                }
+              console.log('Latest version is:'+ data.version);
             });
     </script>
 
@@ -259,6 +260,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        let newWorker;
+      
+        function showUpdateBar() {
+          var lang = navigator.language || navigator.userLanguage;
+          lang = lang.substr(0, 2);
+          let toast = lang == 'zh'? document.getElementById('toast-zh') : document.getElementById('toast-en');
+          toast.classList.add('show');
+        }
+      
+        // The click event on the pop up notification
+        document.getElementById('reload').addEventListener('click', function(){
+          newWorker.postMessage({ action: 'skipWaiting' });
+        });
+      
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js').then(reg => {
+            reg.addEventListener('updatefound', () => {
+              // A wild service worker has appeared in reg.installing!
+              newWorker = reg.installing;
+      
+              newWorker.addEventListener('statechange', () => {
+                // Has network.state changed?
+                switch (newWorker.state) {
+                  case 'installed':
+                    if (navigator.serviceWorker.controller) {
+                      // new update available
+                      showUpdateBar();
+                    }
+                    // No update available
+                    break;
+                }
+              });
+            });
+          });
+      
+          let refreshing;
+          navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+          });
+        }
+      
+      </script>
 </body>
 </html>
