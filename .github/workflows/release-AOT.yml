@@ -50,11 +50,13 @@ jobs:
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           dotnet build
           # dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
+          cp -rf cargo/staticwebapp.config.json cargo/wwwroot
 
-      - name: Deploy to Azure
+      - name: Deploy to Azure 🚀
         id: deploy_azure
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -63,6 +65,8 @@ jobs:
           action: "upload"
           app_location: "cargo/wwwroot" 
           output_location: "cargo/wwwroot"
+          skip_api_build: true
+          skip_app_build: true
 
       - name: Deploy to Gitee 🚀
         uses: peaceiris/actions-gh-pages@v3
