@@ -24,6 +24,7 @@ timeline: true
 - Table
   - 🐞 Fixed exception caused by js interop with addEventListener. [#2460](https://github.com/ant-design-blazor/ant-design-blazor/pull/2460) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed null exception cause by event listener. [#2448](https://github.com/ant-design-blazor/ant-design-blazor/pull/2448) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed that too length content in responsive mode will brace up the table.  [#2470](https://github.com/ant-design-blazor/ant-design-blazor/pull/2470) [@ElderJames](https://github.com/ElderJames)
 
 - 🐞 Fixed cascader to avoid adding items in search list in a loop. [#2457](https://github.com/ant-design-blazor/ant-design-blazor/pull/2457) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed menu IconTemplate does not work in MenuItem of SubMenu. [#2449](https://github.com/ant-design-blazor/ant-design-blazor/pull/2449) [@ElderJames](https://github.com/ElderJames)

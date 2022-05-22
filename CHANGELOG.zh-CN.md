@@ -23,6 +23,7 @@ timeline: true
 - Table
   - 🐞 修复 调用 addEventListener 时抛异常的问题[#2460](https://github.com/ant-design-blazor/ant-design-blazor/pull/2460) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 在 Dispose 时，DomEventListener 会抛出空引用异常的问题。[#2448](https://github.com/ant-design-blazor/ant-design-blazor/pull/2448) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在小屏模式时，内容过长会导致页面被撑开的问题。[#2470](https://github.com/ant-design-blazor/ant-design-blazor/pull/2470) [@ElderJames](https://github.com/ElderJames)
 
 - 🐞 修复 Cascader 在搜索时，结果列表会循环增加的问题[#2457](https://github.com/ant-design-blazor/ant-design-blazor/pull/2457) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Menu 的 IconTemplate 在 SubMenu 中无效的问题。[#2449](https://github.com/ant-design-blazor/ant-design-blazor/pull/2449) [@ElderJames](https://github.com/ElderJames)
