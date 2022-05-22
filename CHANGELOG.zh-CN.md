@@ -14,6 +14,21 @@ timeline: true
 - 主版本号：含有破坏性更新和新特性，不在发布周期内。
 
 ---
+### 0.10.7
+
+`2022-05-22`
+
+- 🐞 修复 Select 在更换有部分相同元素的 DataSource 时，不相同的元素会从最后开始排序的问题[#2462](https://github.com/ant-design-blazor/ant-design-blazor/pull/2462) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 调用 addEventListener 时抛异常的问题[#2460](https://github.com/ant-design-blazor/ant-design-blazor/pull/2460) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在 Dispose 时，DomEventListener 会抛出空引用异常的问题。[#2448](https://github.com/ant-design-blazor/ant-design-blazor/pull/2448) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在小屏模式时，内容过长会导致页面被撑开的问题。[#2470](https://github.com/ant-design-blazor/ant-design-blazor/pull/2470) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Cascader 在搜索时，结果列表会循环增加的问题[#2457](https://github.com/ant-design-blazor/ant-design-blazor/pull/2457) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 的 IconTemplate 在 SubMenu 中无效的问题。[#2449](https://github.com/ant-design-blazor/ant-design-blazor/pull/2449) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 节点含有 | 字符，并且 SearchVaule 搜索 | 时的显示异常问题。[#2437](https://github.com/ant-design-blazor/ant-design-blazor/pull/2437) [@ElderJames](https://github.com/ElderJames)
+
 
 ### 0.10.6
 
