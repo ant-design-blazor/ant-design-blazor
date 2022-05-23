@@ -540,6 +540,23 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
+        /// <summary>
+        /// Update check status when bind default
+        /// </summary>
+        /// <param name="halfChecked"></param>
+        private void UpdateCheckStateDefault(bool? halfChecked = null)
+        {
+            if (halfChecked == true)
+            {
+                //If the child node is indeterminate, the parent node must is indeterminate.
+                this.Checked = false;
+                this.Indeterminate = true;
+            }
+            else if (HasChildNodes == true && !DisableCheckbox)
+            {
+                //Determines the selection status of the current node
+                bool hasChecked = false;
+                bool hasUnchecked = false;
 
         #endregion Checkbox
 
