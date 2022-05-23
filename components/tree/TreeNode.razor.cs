@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -157,7 +157,7 @@ namespace AntDesign
                 _key = value;
             }
         }
-      
+
         private bool _disabled;
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace AntDesign
         /// According to check the
         /// </summary>
         [Parameter]
-         public bool Checked { get; set; }     
+        public bool Checked { get; set; }
 
         [Parameter]
         public bool Indeterminate { get; set; }
@@ -460,21 +460,54 @@ namespace AntDesign
                 TreeComponent.AddOrRemoveCheckNode(this);
             StateHasChanged();
         }
+        /// <summary>
+        /// Set the checkbox state whern bind default
+        /// </summary>
+        /// <param name="check"></param>
+        private void SetCheckedDefault(bool check)
+        {
+            if (TreeComponent.CheckStrictly)
+            {
+                this.Checked = check;
+            }
+            else
+            {
+                SetChildCheckedDefault(this, check);
+                if (ParentNode != null)
+                    ParentNode.UpdateCheckStateDefault();
+            }
+            StateHasChanged();
+        }
 
         /// <summary>
-        /// Sets the checkbox status of child nodes
+        /// Sets the checkbox status of child nodes 
         /// </summary>
         /// <param name="subnode"></param>
         /// <param name="check"></param>
         private void SetChildChecked(TreeNode<TItem> subnode, bool check)
         {
             if (Disabled) return;
+            if (DisableCheckbox) return;
             this.Checked = DisableCheckbox ? false : check;
             this.Indeterminate = false;
             TreeComponent.AddOrRemoveCheckNode(this);
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
+        }
+        /// <summary>
+        /// Sets the checkbox status of child nodes whern bind default
+        /// </summary>
+        /// <param name="subnode"></param>
+        /// <param name="check"></param>
+        private void SetChildCheckedDefault(TreeNode<TItem> subnode, bool check)
+        {
+            this.Checked = check;
+            this.Indeterminate = false;
+            TreeComponent.AddOrRemoveCheckNode(this);
+            if (subnode.HasChildNodes)
+                foreach (var child in subnode.ChildNodes)
+                    child?.SetChildCheckedDefault(child, check);
         }
 
         /// <summary>
@@ -540,10 +573,6 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
-        /// <summary>
-        /// Update check status when bind default
-        /// </summary>
-        /// <param name="halfChecked"></param>
         private void UpdateCheckStateDefault(bool? halfChecked = null)
         {
             if (halfChecked == true)
@@ -557,6 +586,49 @@ namespace AntDesign
                 //Determines the selection status of the current node
                 bool hasChecked = false;
                 bool hasUnchecked = false;
+
+                foreach (var item in ChildNodes)
+                {
+                    if (item.Indeterminate)
+                    {
+                        hasChecked = true;
+                        hasUnchecked = true;
+                        break;
+                    }
+                    else if (item.Checked)
+                    {
+                        hasChecked = true;
+                    }
+                    else if (!item.Checked)
+                    {
+                        hasUnchecked = true;
+                    }
+                }
+
+                if (hasChecked && !hasUnchecked)
+                {
+                    this.Checked = true;
+                    this.Indeterminate = false;
+                }
+                else if (!hasChecked && hasUnchecked)
+                {
+                    this.Checked = false;
+                    this.Indeterminate = false;
+                }
+                else if (hasChecked && hasUnchecked)
+                {
+                    this.Checked = false;
+                    this.Indeterminate = true;
+                }
+            }
+            TreeComponent.AddOrRemoveCheckNode(this);
+
+            if (ParentNode != null)
+                ParentNode.UpdateCheckStateDefault(this.Indeterminate);
+
+            if (ParentNode == null)
+                StateHasChanged();
+        }
 
         #endregion Checkbox
 
@@ -849,8 +921,8 @@ namespace AntDesign
             {
                 _defaultBinding = true;
                 if (this.Checked)
-                    this.SetChecked(true);
-                this.SetChecked(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);           
+                    this.SetCheckedDefault(true);
+                this.SetCheckedDefault(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);
                 this.SetSelected(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
                 if (!TreeComponent.DefaultExpandAll)
                 {
@@ -863,7 +935,7 @@ namespace AntDesign
                         {
                             this.OpenPropagation();
                         };
-                    }             
+                    }
                 }
             }
         }
@@ -874,7 +946,7 @@ namespace AntDesign
                 _defaultBinding = true;
                 if (this.Checked)
                     this.SetChecked(true);
-                
+
                 TreeComponent.DefaultCheckedKeys?.ForEach(k =>
                 {
                     var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
