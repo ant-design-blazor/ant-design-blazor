@@ -206,7 +206,8 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
-
+        [Parameter]
+        public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 

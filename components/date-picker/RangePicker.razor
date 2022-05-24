@@ -26,6 +26,23 @@
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                 </div>
+                @if (Ranges != null)
+                {
+                    <div class="@(PrefixCls)-footer">
+                        <div class="@(PrefixCls)-footer-extra">
+                            <Space Wrap>
+                                @foreach (var range in Ranges)
+                                {
+                                    <SpaceItem>
+                                        <div @onmouseout="()=>OnRangeItemOut(range.Value)"@onmouseover="()=>OnRangeItemOver(range.Value)">
+                                            <Tag OnClick="()=>OnRangeItemClicked(range.Value)" PresetColor="@PresetColor.Blue">@range.Key</Tag>
+                                        </div>
+                                    </SpaceItem>
+                                }
+                            </Space>
+                        </div>
+                    </div>
+                }
                 @if (RenderExtraFooter != null && !IsShowTime)
                 {
                     <div class="@(PrefixCls)-footer">

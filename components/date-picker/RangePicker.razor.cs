@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,6 +12,7 @@ namespace AntDesign
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
         private TValue _value;
+        private TValue _swpValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -77,7 +79,21 @@ namespace AntDesign
                 return false;
             };
         }
-
+        private void OnRangeItemOver(DateTime?[] range)
+        {
+            _swpValue = Value;
+            Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+        }
+        private async Task OnRangeItemOut(DateTime?[] range)
+        {
+            Value = _swpValue;
+        }
+        private async Task OnRangeItemClicked(DateTime?[] range)
+        {
+            _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            ChangeValue((DateTime)range[0], 0);
+            ChangeValue((DateTime)range[1], 1);
+        }
         private async Task OnInputClick(int index)
         {
             _duringFocus = false;
