@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,6 +14,7 @@ namespace AntDesign
     {
         private TValue _value;
         private TValue _lastValue;
+		private TValue _swpValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.

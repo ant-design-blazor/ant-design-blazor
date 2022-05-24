@@ -12,7 +12,8 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string ShowTimeFormat { get; set; }
-
+        [Parameter]
+        public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
         [Parameter]
         public string Format { get; set; }
 
@@ -30,6 +31,13 @@ namespace AntDesign.Internal
 
         [Parameter]
         public EventCallback OnOkClick { get; set; }
+        
+        [Parameter]
+        public  EventCallback<DateTime?[]> OnRangeItemOver { get; set; }
+        [Parameter]
+        public EventCallback<DateTime?[]> OnRangeItemOut { get; set; }
+        [Parameter]
+        public EventCallback<DateTime?[]> OnRangeItemClicked { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
@@ -48,7 +56,27 @@ namespace AntDesign.Internal
 
         private bool _isOkDisabled;
 
-        private DatePickerDisabledTime GetDisabledTime()
+ 		private void RangeItemOver(DateTime?[] rangeitem)
+        {
+            if(OnRangeItemOver.HasDelegate)
+            {
+                OnRangeItemOver.InvokeAsync(rangeitem);
+            }
+        }
+        private void RangeItemOut(DateTime?[] rangeitem)
+        {
+            if (OnRangeItemOut.HasDelegate)
+            {
+                OnRangeItemOut.InvokeAsync(rangeitem);
+            }
+        }
+        private void RangeItemClicked(DateTime?[] rangeitem)
+        {
+            if (OnRangeItemClicked.HasDelegate)
+            {
+                OnRangeItemClicked.InvokeAsync(rangeitem);
+            }
+        }        private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
             List<int> disabledMinutes = new List<int>();

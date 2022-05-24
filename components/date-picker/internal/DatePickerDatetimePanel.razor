@@ -3,7 +3,7 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-	var calendar = CultureInfo.Calendar;
+    var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -32,25 +32,25 @@
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
-                            @attributes="GetAttributes()"
-                            MaxRow="6"
-                            MaxCol="7"
-                            ViewStartDate="startDate"
-                            ShowFooter="@ShowToday"
-                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
-                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                            IsSelected="date => DateHelper.IsSameDay(date, Value)"
-                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
-                            OnValueSelect="OnSelectDate"
-                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
-                            SkipDays="skipDays">
+                        @attributes="GetAttributes()"
+                        MaxRow="6"
+                        MaxCol="7"
+                        ViewStartDate="startDate"
+                        ShowFooter="@ShowToday"
+                        IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                        IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                        IsSelected="date => DateHelper.IsSameDay(date, Value)"
+                        GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
+                        OnValueSelect="OnSelectDate"
+                        GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
+                        SkipDays="skipDays">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
-                                  @attributes="GetAttributes()" />
+                              @attributes="GetAttributes()" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in Locale.Lang.ShortWeekDays)
+                    @foreach (string weekDay in Locale.Lang.ShortWeekDays)
                     {
                         <th>@weekDay</th>
                     }
@@ -144,7 +144,7 @@
 
                         <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
+                         @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
                         </li>
@@ -160,12 +160,12 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
-						string isSelectedCls = selected(viewTime.Second, Value?.Second);
+                        string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
+                         @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>
                         </li>
@@ -216,18 +216,34 @@
 
 <div class="@(PrefixCls)-footer">
     <ul class="@(PrefixCls)-ranges">
-        @if (ShowToday)
+        @if (Ranges != null)
         {
-            <li class="@(PrefixCls)-now">
-                <a class="@(PrefixCls)-now-btn"
-                @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                    @Locale.Lang.Now
-                </a>
-            </li>            
+                    <Space Wrap>
+                        @foreach (var range in Ranges)
+                        {
+                            <SpaceItem>
+                                <div @onmouseout="()=>RangeItemOut(range.Value)" @onmouseover="()=>RangeItemOver(range.Value)">
+                                    <Tag OnClick="()=>RangeItemClicked(range.Value)" PresetColor="@PresetColor.Blue">@range.Key</Tag>
+                                </div>
+                            </SpaceItem>
+                        }
+                    </Space>
+        }
+        else
+        {
+            @if (ShowToday)
+            {
+                <li class="@(PrefixCls)-now">
+                    <a class="@(PrefixCls)-now-btn"
+               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+                        @Locale.Lang.Now
+                    </a>
+                </li>
+            }
         }
         <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary" Disabled="_isOkDisabled"
-                       OnClick="OnOkClick">
+                    OnClick="OnOkClick">
                 @Locale.Lang.Ok
             </Button>
         </li>

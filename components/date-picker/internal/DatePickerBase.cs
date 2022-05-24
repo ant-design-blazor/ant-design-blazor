@@ -16,6 +16,7 @@ namespace AntDesign
     public class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
         DateTime? IDatePicker.HoverDateTime { get; set; }
+        private TValue _swpValue;
 
         public const int START_PICKER_INDEX = 0;
         public const int END_PICKER_INDEX = 0;
@@ -206,7 +207,8 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
-
+        [Parameter]
+        public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
@@ -491,6 +493,29 @@ namespace AntDesign
             {
                 Close();
             }
+        }
+        public async Task OnRangeItemOver(DateTime?[] range)
+        {
+            if (IsRange)
+            {
+                _swpValue = Value;
+                Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            }
+        }
+        public async Task OnRangeItemOut(DateTime?[] range)
+        {
+            if (IsRange)
+            {
+                Value = _swpValue;
+            }
+        }
+        public async Task OnRangeItemClicked(DateTime?[] range)
+        {
+            _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            ChangeValue((DateTime)range[0], 0);
+            ChangeValue((DateTime)range[1], 1);
+            Close();
+            return;
         }
 
         private async Task<bool> SwitchFocus(int index)
