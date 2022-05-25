@@ -14,7 +14,7 @@ namespace AntDesign
             get => _hidePagination;
             set
             {
-                if (_hidePagination != true)
+                if (_hidePagination == true)
                 {
                     _pageSize = DataSource.Count();
                 }
