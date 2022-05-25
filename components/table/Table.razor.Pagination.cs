@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -8,7 +9,17 @@ namespace AntDesign
     public partial class Table<TItem> : ITable
     {
         [Parameter]
-        public bool HidePagination { get; set; }
+        public bool HidePagination
+        {
+            get => _hidePagination;
+            set
+            {
+                if (_hidePagination != true)
+                {
+                    _pageSize = DataSource.Count();
+                }
+            }
+        }
 
         /// <summary>
         /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
@@ -79,6 +90,7 @@ namespace AntDesign
         private string _paginationClass;
         private int _pageIndex = 1;
         private int _pageSize = 10;
+        private bool _hidePagination = false;
 
         private void InitializePagination()
         {
