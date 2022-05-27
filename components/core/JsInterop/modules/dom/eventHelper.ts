@@ -79,8 +79,8 @@ export class eventHelper {
 
   private static debounce(func, wait, immediate) {
     var timeout;
-    return () => {
-      const context = this, args = arguments;
+    return (...args) => {
+      const context = this;
       const later = () => {
         timeout = null;
         if (!immediate) func.apply(this, args);
