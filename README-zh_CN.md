@@ -34,17 +34,17 @@
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
 - ⚙️ 基于 .NET Standard 2.1 / .NET 5 / .NET 6，可直接引用丰富的 .NET 类库。
 - 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
+- 💴 基于 MIT 开源协议，.NET 基金会项目，商业应用免费。
 
 ## 🌈 在线示例
 
 WebAssembly 静态托管页面示例
 
-- [GitHub](https://ant-design-blazor.github.io)
-- [Gitee](https://ant-design-blazor.gitee.io/)
+- [Azure Static WebApp](https://antblazor.com/)
 
 ## 🖥 支持环境
 
-- .NET Core 3.1 / .NET 5 / .NET 6。
+- 兼容 .NET Core 3.1 / .NET 5 / .NET 6。
 - Blazor WebAssembly 3.2 /.NET 5 /.NET 6 正式版。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
@@ -175,6 +175,7 @@ WebAssembly 静态托管页面示例
 ## 🔗 链接
 
 - [文档主页](https://ant-design-blazor.gitee.io)
+- [Ant Design Blazor 商业应用调查](https://wj.qq.com/s2/10306537/c332/)
 - [Blazor 官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn 平台 Blazor 教程](https://docs.microsoft.com/zh-cn/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 

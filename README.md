@@ -39,8 +39,7 @@ English | [简体中文](README-zh_CN.md)
 
 WebAssembly static hosting examples:
 
-- [GitHub](https://ant-design-blazor.github.io/)
-- [Gitee](https://ant-design-blazor.gitee.io/)
+- [Azure Static WebApp](https://antblazor.com/)
 
 ## 🖥 Environment Support
 
