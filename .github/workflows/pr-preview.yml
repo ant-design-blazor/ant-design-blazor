@@ -63,7 +63,7 @@ jobs:
           git checkout fork
           npm install
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
 
       - name: Deploy Preview 🚀
         env:
