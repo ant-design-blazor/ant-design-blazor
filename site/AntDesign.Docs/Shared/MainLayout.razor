@@ -1,7 +1,18 @@
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <div id="react-content">
     <MainHeader OnMobileModeChanged="isMobile=> _isMobile=isMobile" />
+    @if (LanguageService.CurrentCulture.Name == "zh-CN")
+    {
+        <Alert Banner Type="@AlertType.Warning">
+            <Icon>
+                <Icon Type="notification" Theme="outline"/>
+            </Icon>
+            <MessageTemplate>
+               为了能更好地了解您的商业使用需求，请参与 <a href="https://wj.qq.com/s2/10306537/c332/">Ant Design Blazor 商业应用调查</a>，一起建设商业应用社区，为企业系统研发赋能！
+            </MessageTemplate>
+        </Alert>
+    }
     <div class="main-wrapper">
         @if (_isMobile)
         {
