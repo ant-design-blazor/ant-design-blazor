@@ -38,15 +38,15 @@ namespace AntDesign.Docs.Build.CLI.Command
             ["其他"] = 7,
             ["Charts"] = 8,
             ["图表"] = 8,
-            ["Experimental"] = 9,
-            ["实验性功能"] = 9,
+            //["Experimental"] = 9,
+            //["实验性功能"] = 9,
         };
 
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
             ["Components"] = "组件",
             ["Charts"] = "图表",
-            ["Experimental"] = "实验性功能"
+            //["Experimental"] = "实验性功能"
         };
 
         public void Execute(CommandLineApplication command)
@@ -176,6 +176,10 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 foreach (var component in categoryComponent)
                 {
+                    if (!_demoCategoryMap.ContainsKey(component.Key))
+                    {
+                        continue;
+                    }
                     menu.Add(new DemoMenuItem()
                     {
                         Order = Array.IndexOf(_demoCategoryMap.Select(x => x.Key).ToArray(), component.Key) + 1,

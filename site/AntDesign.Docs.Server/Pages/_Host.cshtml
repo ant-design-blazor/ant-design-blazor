@@ -10,7 +10,6 @@
     <title>Ant Design of Blazor</title>
     <base href="~/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
-    @*<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">*@
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
     <link rel="stylesheet" href="@("https://unpkg.com/@docsearch/css@3.0.0/dist/style.css")" />
     <link href="_content/AntDesign.Docs/css/docs.default.css" rel="stylesheet">
@@ -23,7 +22,7 @@
 #if NET5_0_OR_GREATER
         var polyfillPath = "_framework/blazor.polyfill.min.js";
 #else
-        var polyfillPath = "https://cdn.jsdelivr.net/gh/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
+        var polyfillPath = "https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
 #endif
 #if NET6_0
         var isNET6 = true;

@@ -1,6 +1,8 @@
 ﻿@layout BlankLayout
 @page "/"
 
+<PageTitle>Ant Design of Blazor</PageTitle>
+
 <div id="react-content">
     <MainHeader IsHome />
     <div class="home-container">
@@ -36,7 +38,7 @@
                             <Button Type="primary" Shape="round">@Language.Resources["app.home.getting-started"]</Button>
                         </a>
                         <a href="/@Language.CurrentCulture.Name/components">
-                            <Button Shape="round">@Language.Resources["app.home.components"]</Button>
+                            <Button Shape="round" Icon="github">@Language.Resources["app.home.star-on-github"]</Button>
                         </a>
                     </div>
                 </div>

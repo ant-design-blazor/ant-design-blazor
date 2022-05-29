@@ -1,5 +1,11 @@
 [
   {
+    "img": "https://github.com/BeiYinZhiNian/Caviar-Blazor/raw/master/docs/images/home.png",
+    "title": "Caviar-Blazor",
+    "description": "app.home.product-caviar-blazor",
+    "href": "https://github.com/BeiYinZhiNian/Caviar-Blazor"
+  },
+  {
     "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*ZhzDQLMyYlYAAAAAAAAAAABkARQnAQ",
     "title": "Ant Design Charts Blazor",
     "description": "app.home.product-antv-slogan",
