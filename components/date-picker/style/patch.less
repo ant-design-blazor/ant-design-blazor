@@ -1,0 +1,19 @@
+// inline mode
+.@{picker-prefix-cls}-inline {
+  border: none;
+  padding: 0;
+  .@{picker-prefix-cls} {
+    &-range-arrow {
+      display: none !important;
+    }
+    &-dropdown {
+      z-index: auto;
+    }
+  }
+}
+
+// overwrite css in index.less to make sure picker popup is in the right position
+.@{picker-prefix-cls}-dropdown {
+  top: unset;
+  left: unset;
+}

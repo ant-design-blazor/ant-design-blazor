@@ -1,5 +1,29 @@
-﻿.disabled {
-  color: rgba(0,0,0,.25);
-  cursor: not-allowed;
-  pointer-events: none;
+.ant-dropdown-menu {
+  & > ul {
+    list-style: inherit;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.ant-dropdown {
+  top: 0;
+  left: 0;
+  position: relative;
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.@{dropdown-prefix-cls} {
+  &-menu {
+    &-item,
+    &-submenu-title {
+      .@{dropdown-prefix-cls}-menu-submenu-arrow {
+        .@{dropdown-prefix-cls}-rtl & {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
 }
