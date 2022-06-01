@@ -11,10 +11,6 @@ import { buildConfig } from '../../build-config';
 import { compile as compileLess } from '../../build/compile-styles';
 import { generateLessVars } from '../../build/generate-less-vars';
 import { copyStylesToSrc } from '../../build/migration-styles';
-// import { execNodeTask } from '../util/task-helpers';
-
-/** Run `ng build ant-design-blazor-lib` */
-// task('library:build-zorro', execNodeTask('@angular/cli', 'ng', ['build', 'ant-design-blazor-lib']));
 
 task('library:mkdir-dir', done => {
   mkdirsSync(buildConfig.publishDir);
@@ -50,9 +46,8 @@ task('library:copy-libs', () => {
 task(
   'build:library',
   series(
-    // 'library:build-zorro',
     'library:mkdir-dir',
-    parallel('library:compile-less', 'library:copy-resources', 'library:generate-less-vars'),
+    parallel('library:scripts', 'library:compile-less', 'library:copy-resources', 'library:generate-less-vars'),
     'library:copy-libs'
   )
 );
