@@ -31,23 +31,21 @@ task('library:generate-less-vars', done => {
   done();
 });
 
-// Copies README.md file to the public directory.
-task('library:copy-resources', () => {
-  return src([join(buildConfig.projectDir, 'README.md'), join(buildConfig.componentsDir)]).pipe(
-    dest(join(buildConfig.publishDir))
-  );
+// Copies files without ngcc to lib folder.
+task('library:copy-libs-css', () => {
+  return src([join(buildConfig.publishDir, '*.css')]).pipe(dest(join(buildConfig.componentsDir, 'wwwroot/css')));
 });
 
-// Copies files without ngcc to lib folder.
-task('library:copy-libs', () => {
-  return src([join(buildConfig.publishDir, '**/*')]).pipe(dest(join(buildConfig.libDir)));
+task('library:copy-libs-js', () => {
+  return src([join(buildConfig.publishDir, '*.js*')]).pipe(dest(join(buildConfig.componentsDir, 'wwwroot/js')));
 });
 
 task(
   'build:library',
   series(
+    'clean',
     'library:mkdir-dir',
-    parallel('library:scripts', 'library:compile-less', 'library:copy-resources', 'library:generate-less-vars'),
-    'library:copy-libs'
+    parallel('library:scripts', 'library:compile-less'),
+    parallel('library:copy-libs-css', 'library:copy-libs-js'),
   )
 );

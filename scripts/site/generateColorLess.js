@@ -10,7 +10,7 @@ const options = {
   themeVariables: [
     '@primary-color',
   ],
-  outputFilePath: path.join(__dirname, '../../site/AntDesign.Docs/wwwroot/css/color.less'),
+  outputFilePath: path.join(__dirname, '../../site/AntDesign.Docs/wwwroot/color.less'),
 };
 
 if (require.main === module) {

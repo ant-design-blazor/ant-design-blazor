@@ -32,7 +32,7 @@ task('ts', function () {
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
         .pipe(sourcemaps.write('./'))
-        .pipe(dest(join(buildConfig.publishDir, 'js')));
+        .pipe(dest(join(buildConfig.publishDir)));
 });
 
 task("tsSplit", function () {
