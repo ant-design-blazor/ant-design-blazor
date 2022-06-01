@@ -63,6 +63,7 @@
     "lint-staged": "^10.2.11",
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
+    "resolve-bin": "^0.4.0",
     "simple-git": "^3.7.0",
     "tsify": "^4.0.2",
     "ts-node":"^10.8.0",
