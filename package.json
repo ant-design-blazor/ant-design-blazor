@@ -62,6 +62,7 @@
     "open": "^7.0.3",
     "simple-git": "^3.7.0",
     "tsify": "^4.0.2",
+    "ts-node":"^10.8.0",
     "typescript": "^3.8.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
