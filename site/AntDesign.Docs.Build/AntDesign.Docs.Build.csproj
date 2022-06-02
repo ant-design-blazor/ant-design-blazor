@@ -21,8 +21,8 @@
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />
   </Target>
 
   <PropertyGroup>
