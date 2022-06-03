@@ -1,22 +1,13 @@
-.ant-dropdown-menu {
-    & > ul {
-      list-style: inherit;
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  
-  .@{dropdown-prefix-cls} {
-    &-menu {
-      &-item,
-      &-submenu-title {
-        .@{dropdown-prefix-cls}-menu-submenu-arrow {
-          .@{dropdown-prefix-cls}-rtl & {
-            transform: rotate(180deg);
-          }
+.@{dropdown-prefix-cls} {
+  &-menu {
+    &-item,
+    &-submenu-title {
+      .@{dropdown-prefix-cls}-menu-submenu-arrow {
+        .@{dropdown-prefix-cls}-rtl & {
+          transform: rotate(180deg);
         }
       }
     }
   }
+}
   
