@@ -5,15 +5,15 @@
 </Tooltip>
 
 @code {
-	string _value;
+  string _value;
 
-	string TooltipValue => ConvertValue();
+  string TooltipValue => ConvertValue();
 
-	private string ConvertValue()
-	{
-		if (string.IsNullOrWhiteSpace(_value))
-			return string.Empty;
-		else
-			return Convert.ToDecimal(_value).ToString("#,0.##############################");
-	}
+  private string ConvertValue()
+  {
+    if (string.IsNullOrWhiteSpace(_value))
+      return string.Empty;
+    else
+      return decimal.TryParse(_value, out var v) ? v.ToString("#,0.##############################") : string.Empty;
+  }
 }

@@ -41,7 +41,7 @@ export class eventHelper {
         (dom as HTMLElement).addEventListener(eventName, callback);
       }
     }
-  }  
+  }
 
   static addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
     const dom = domInfoHelper.get(element);
@@ -79,8 +79,8 @@ export class eventHelper {
 
   private static debounce(func, wait, immediate) {
     var timeout;
-    return () => {
-      const context = this, args = arguments;
+    return (...args) => {
+      const context = this;
       const later = () => {
         timeout = null;
         if (!immediate) func.apply(this, args);

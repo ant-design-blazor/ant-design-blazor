@@ -118,7 +118,7 @@ export class infoHelper {
   }
 
   static getMaxZIndex(): number {
-    return [...document.querySelectorAll("*")].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
+    return Array.from(document.querySelectorAll("*")).reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
   }  
 
   static isFixedPosition(element) {
