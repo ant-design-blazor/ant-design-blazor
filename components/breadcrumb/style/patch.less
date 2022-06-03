@@ -1,15 +1,29 @@
-﻿.@{breadcrumb-prefix-cls} {
-  &-link {
-    .@{iconfont-css-prefix} + span {
-      margin-left: 4px;
+.@{breadcrumb-prefix-cls} {
+    &-link {
+        .@{iconfont-css-prefix} + span {
+            margin-left: 4px;
+        }
     }
-  }
+    // We introduced an extra layer.
+    .ant-blazor-breadcrumb-item:last-child {
+        color: @breadcrumb-last-item-color;
 
-  .ant-blazor-breadcrumb-item:last-child {
-    color: rgba(0, 0, 0, 0.65);
-  }
+        a {
+            color: @breadcrumb-last-item-color;
+        }
+    }
 
-  .ant-blazor-breadcrumb-item:last-child .ant-breadcrumb-separator {
-    display: none;
-  }
+    .ant-blazor-breadcrumb-item:last-child .@{breadcrumb-prefix-cls}-separator {
+        display: none;
+    }
+
+    &-rtl {
+        > .ant-blazor-breadcrumb-item {
+            float: right;
+        }
+    }
+}
+
+.ant-blazor-breadcrum {
+    display: block;
 }
