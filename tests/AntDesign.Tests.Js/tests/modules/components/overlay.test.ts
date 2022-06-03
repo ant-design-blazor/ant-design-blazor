@@ -220,8 +220,8 @@ const theoryHorizontalCalculationData: Array<positionCalculationTheory> = [
       expected: { position1: 951, position2: -1051 }
     },
     { 
-      coversPlacementScenarios: "TopCenter & Top & BottomCenter & Bottom",
-      placement: Placement.TopCenter,      
+      coversPlacementScenarios: "Top & Top & Bottom & Bottom",
+      placement: Placement.Top,      
       position: "left",
       trigger: { startingPosition: 790, width: 157,
         domInfoResult: {

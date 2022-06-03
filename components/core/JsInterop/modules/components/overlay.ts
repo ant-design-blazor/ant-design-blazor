@@ -5,7 +5,6 @@ import { mutationObserver as mutation } from '../../ObservableApi/mutationObserv
 //Make sure the enum is identical as C# AntDesign.Placement enum
 export enum Placement {
   TopLeft       = 0,
-  TopCenter     = 1,
   Top           = 2,
   TopRight      = 3,
   Left          = 4,
@@ -15,7 +14,6 @@ export enum Placement {
   RightTop      = 8,
   RightBottom   = 9,
   BottomLeft    = 10,
-  BottomCenter  = 11,
   Bottom        = 12,
   BottomRight   = 13
 }
@@ -64,7 +62,6 @@ export class Overlay {
         { horizontal: "left" | "right", vertical: "top" | "bottom", class: string }> =
     new Map([
       [Placement.TopLeft,       { horizontal: "left", vertical: "bottom", class: "topLeft"  }],
-      [Placement.TopCenter,     { horizontal: "left", vertical: "bottom", class: "topCenter" }],
       [Placement.Top,           { horizontal: "left", vertical: "bottom", class: "top" }],
       [Placement.TopRight,      { horizontal: "right", vertical: "bottom", class: "topRight" }],
       [Placement.Left,          { horizontal: "right", vertical: "top", class: "left" }],
@@ -74,7 +71,6 @@ export class Overlay {
       [Placement.RightTop,      { horizontal: "left", vertical: "top", class: "rightTop" }],
       [Placement.RightBottom,   { horizontal: "left", vertical: "bottom", class: "rightBottom" }],
       [Placement.BottomLeft,    { horizontal: "left", vertical: "top", class: "bottomLeft" }],
-      [Placement.BottomCenter,  { horizontal: "left", vertical: "top", class: "bottomCenter" }],
       [Placement.Bottom,        { horizontal: "left", vertical: "top", class: "bottom" }],
       [Placement.BottomRight,   { horizontal: "right", vertical: "top", class: "bottomRight" }],
     ]);
@@ -82,7 +78,6 @@ export class Overlay {
   private static reverseVerticalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.BottomLeft],
-      [Placement.TopCenter,     (position: string) => Placement.BottomCenter],
       [Placement.Top,           (position: string) => Placement.Bottom],
       [Placement.TopRight,      (position: string) => Placement.BottomRight],
       [Placement.Left,          (position: string) => position === "top" ? Placement.LeftBottom : Placement.LeftTop],
@@ -92,7 +87,6 @@ export class Overlay {
       [Placement.RightTop,      (position: string) => Placement.RightBottom],
       [Placement.RightBottom,   (position: string) => Placement.RightTop],
       [Placement.BottomLeft,    (position: string) => Placement.TopLeft],
-      [Placement.BottomCenter,  (position: string) => Placement.TopCenter],
       [Placement.Bottom,        (position: string) => Placement.Top],
       [Placement.BottomRight,   (position: string) => Placement.TopRight]
     ]);
@@ -100,7 +94,6 @@ export class Overlay {
   private static reverseHorizontalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.TopRight],
-      [Placement.TopCenter,     (position: string) => position === "left" ? Placement.TopRight : Placement.TopLeft],
       [Placement.Top,     (position: string) => position === "left" ? Placement.TopRight : Placement.TopLeft],
       [Placement.TopRight,      (position: string) => Placement.TopLeft],
       [Placement.Left,          (position: string) => Placement.Right],
@@ -110,7 +103,6 @@ export class Overlay {
       [Placement.RightTop,      (position: string) => Placement.LeftBottom],
       [Placement.RightBottom,   (position: string) => Placement.LeftTop],
       [Placement.BottomLeft,    (position: string) => Placement.BottomRight],
-      [Placement.BottomCenter,  (position: string) => position === "left" ? Placement.BottomRight : Placement.BottomLeft],
       [Placement.Bottom,        (position: string) => position === "left" ? Placement.BottomRight : Placement.BottomLeft],
       [Placement.BottomRight,   (position: string) => Placement.BottomLeft]
     ]);    
@@ -118,7 +110,6 @@ export class Overlay {
   private static arrowCenterPlacementMatch: Map<Placement, Placement> =
     new Map([
       [Placement.TopLeft,       Placement.Top],
-      [Placement.TopCenter,     Placement.TopCenter],
       [Placement.Top,           Placement.Top],
       [Placement.TopRight,      Placement.Top],
       [Placement.Left,          Placement.Left],
@@ -128,7 +119,6 @@ export class Overlay {
       [Placement.RightTop,      Placement.Right],
       [Placement.RightBottom,   Placement.Right],
       [Placement.BottomLeft,    Placement.Bottom],
-      [Placement.BottomCenter,  Placement.BottomCenter],
       [Placement.Bottom,        Placement.Bottom],
       [Placement.BottomRight,   Placement.Bottom]
     ]);   
@@ -254,7 +244,6 @@ export class Overlay {
             };              
           }; 
         case Placement.BottomLeft:
-        case Placement.BottomCenter:
         case Placement.Bottom:
         case Placement.BottomRight:
           return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
@@ -278,7 +267,6 @@ export class Overlay {
     if (position === "bottom") {
       switch (placement) {
         case Placement.TopLeft:
-        case Placement.TopCenter:
         case Placement.Top:
         case Placement.TopRight:
           return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
@@ -325,9 +313,8 @@ export class Overlay {
             position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
             return position;
           };
-        case Placement.TopCenter:
+
         case Placement.Top:
-        case Placement.BottomCenter:
         case Placement.Bottom:
           return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
             const position: horizontalPosition = {

@@ -24,7 +24,7 @@
     "start": "dotnet watch -p ./site/AntDesign.Docs.Server run -f net5",
     "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run -f net5",
     "build:lib": "gulp build:library",
-    "build:doc": "gulp build:preview --max-old-space-size=8192",
+    "build:doc": "gulp build:preview --max-old-space-size=81920",
     "preinstall": "dotnet tool restore",
     "changelog": "node ./scripts/print-changelog"
   },
