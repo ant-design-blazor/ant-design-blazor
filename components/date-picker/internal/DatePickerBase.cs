@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -125,7 +125,7 @@ namespace AntDesign
         }
 
         public bool IsShowTime { get; protected set; }
-        public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
+        public string ShowTimeFormat { get; protected set; }
         protected OneOf<bool, string> _showTime = null;
 
         private bool _timeFormatProvided;
@@ -244,9 +244,12 @@ namespace AntDesign
         [Parameter]
         public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
 
-        public DateTime CurrentDate { get; set; } = DateTime.Now;
+        [Parameter]
+        public bool Use12Hours { get; set; }
 
-        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Now, DateTime.Now };
+        public DateTime CurrentDate { get; set; } = DateTime.Today;
+
+        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
 
         public bool IsRange { get; set; }
 
@@ -297,6 +300,11 @@ namespace AntDesign
         public override Task SetParametersAsync(ParameterView parameters)
         {
             _needRefresh = true;
+
+            if (!_timeFormatProvided || string.IsNullOrEmpty(ShowTimeFormat))
+            {
+                ShowTimeFormat = Use12Hours ? Locale.Lang.TimeFormat12Hour : Locale.Lang.TimeFormat;
+            }
 
             return base.SetParametersAsync(parameters);
         }
@@ -658,7 +666,7 @@ namespace AntDesign
                             DatePickerType.Date => GetTimeFormat(),
                             DatePickerType.Month => Locale.Lang.YearMonthFormat,
                             DatePickerType.Year => Locale.Lang.YearFormat,
-                            DatePickerType.Time => Locale.Lang.TimeFormat,
+                            DatePickerType.Time => Use12Hours ? Locale.Lang.TimeFormat12Hour : Locale.Lang.TimeFormat,
                             DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
                             DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
