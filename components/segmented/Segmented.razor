@@ -1,0 +1,21 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TValue
+
+<div class="@ClassMapper.Class" style="@Style" @ref="@Ref" id="@Id">
+  <div class="ant-segmented-group">
+    <CascadingValue Value="this" IsFixed>
+      @if (ChildContent != null)
+      {
+        @ChildContent
+      }
+      else if (Options?.Any() == true)
+      {
+        @foreach (var option in Options)
+        {
+          <SegmentedItem TValue="TValue" Label="@option.ToString()" Value="@option"  @key="option"></SegmentedItem>
+        }
+      }
+    </CascadingValue>
+  </div>
+</div>

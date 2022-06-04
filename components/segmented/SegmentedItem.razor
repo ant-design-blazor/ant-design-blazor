@@ -1,0 +1,8 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TValue
+
+<label class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+  <input class="ant-segmented-item-input" type="radio" checked="@Selected">
+  <div class="ant-segmented-item-label" title="@Label" @onclick="OnClick">@Label</div>
+</label>
