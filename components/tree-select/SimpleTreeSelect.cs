@@ -11,10 +11,7 @@ namespace AntDesign
 {
     public class SimpleTreeSelect<TItem> : TreeSelect<TItem> where TItem : class
     {
-
-
         protected IEnumerable<TItem> RootData => ChildrenMethodExpression?.Invoke(DataSource, RootValue);
-
 
         /// <summary>
         /// Specifies a method  to return a child node
@@ -22,24 +19,6 @@ namespace AntDesign
         [Parameter]
         public Func<IEnumerable<TItem>, string, IList<TItem>> ChildrenMethodExpression { get; set; }
 
-        protected override Func<TreeNode<TItem>, IList<TItem>> TreeNodeChildrenExpression => node => ChildrenMethodExpression(DataSource, TreeNodeKeyExpression(node));
-
-
-        protected override Dictionary<string, object> TreeAttributes
-        {
-            get
-            {
-                return new()
-                {
-                    { "DataSource", RootData },
-                    { "TitleExpression", TreeNodeTitleExpression },
-                    { "DefaultExpandAll", TreeDefaultExpandAll },
-                    { "KeyExpression", TreeNodeKeyExpression },
-                    { "ChildrenExpression", TreeNodeChildrenExpression },
-                    { "DisabledExpression", TreeNodeDisabledExpression },
-                    { "IsLeafExpression", TreeNodeIsLeafExpression }
-                };
-            }
-        }
+        //protected override Func<TItem, IEnumerable<TItem>> TreeNodeChildrenExpression => node => ChildrenMethodExpression(DataSource, TreeNodeKeyExpression(node));
     }
 }

@@ -616,7 +616,7 @@ namespace AntDesign
             get
             {
                 if (TreeComponent.ChildrenExpression != null)
-                    return TreeComponent.ChildrenExpression(this) ?? new List<TItem>();
+                    return TreeComponent.ChildrenExpression(this)?.ToList() ?? new List<TItem>();
                 else
                     return new List<TItem>();
             }
