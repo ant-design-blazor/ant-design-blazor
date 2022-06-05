@@ -41,7 +41,7 @@
       "yearFormat": "yyyy",
       "dateFormat": "yyyy-MM-dd",
       "dayFormat": "d",
-      "dateTimeFormat": "yyyy-MM-dd hh:mm:ss tt",
+      "dateTimeFormat": "yyyy-MM-dd HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Previous month (PageUp)",
       "nextMonth": "Next month (PageDown)",
