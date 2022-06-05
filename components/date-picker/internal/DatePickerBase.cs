@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -704,7 +704,7 @@ namespace AntDesign
                 };
             else
                 format = InternalFormat;
-            return value.ToString(format, CultureInfo.InvariantCulture);
+            return value.ToString(format, CultureInfo.CurrentCulture);
         }
 
         /// <summary>
