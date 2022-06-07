@@ -65,8 +65,6 @@ namespace AntDesign
         public string QuarterSelect { get; set; } = "Select quarter";
         public string Week { get; set; } = "Week";
         public string[] ShortWeekDays { get; set; } = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
-        public string AM { get; set; } = "AM";
-        public string PM { get; set; } = "PM";
         public string TimeFormat12Hour { get; set; } = "hh:mm:ss tt";
     }
 }

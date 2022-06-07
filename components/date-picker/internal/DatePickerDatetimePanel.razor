@@ -185,7 +185,7 @@
                             <div class="@(PrefixCls)-time-panel-cell-inner"
                              @onclick="e => {if (!disabled) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
                                  else OnSelectTime(DateTime.Today); }">
-                                @Locale.Lang.AM
+                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
                             </div>
                         </li>
 
@@ -193,7 +193,7 @@
                             <div class="@(PrefixCls)-time-panel-cell-inner"
                              @onclick="e => {if (!disabled) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
                                  else OnSelectTime(DateTime.Today); }">
-                                @Locale.Lang.PM
+                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator
                             </div>
                         </li>
                     }
