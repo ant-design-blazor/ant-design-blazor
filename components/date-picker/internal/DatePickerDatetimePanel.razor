@@ -174,7 +174,7 @@
             }
             @if (use12Hours)
             {
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative; overflow: hidden;">
                     @{
                         string isAmSelectedCls = isPM || isValueNull ? "" : $"{PrefixCls}-time-panel-cell-selected";
                         string isPmSelectedCls = isPM ? $"{PrefixCls}-time-panel-cell-selected" : "";
