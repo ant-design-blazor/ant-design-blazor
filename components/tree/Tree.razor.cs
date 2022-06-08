@@ -419,12 +419,6 @@ namespace AntDesign
 
         private void SearchNodes()
         {
-            if (string.IsNullOrWhiteSpace(_searchValue))
-            {
-                _allNodes.ForEach(m => { m.Expand(true); m.Matched = false; });
-                return;
-            }
-
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 

@@ -193,11 +193,7 @@ namespace AntDesign
         public void SetSelected(bool value)
         {
             if (Disabled) return;
-            if (!TreeComponent.Selectable && TreeComponent.Checkable)
-            {
-                SetChecked(!Checked);
-                return;
-            }
+
             if (_selected == value) return;
             _selected = value;
             if (value == true)
