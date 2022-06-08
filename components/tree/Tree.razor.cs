@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -94,7 +94,7 @@ namespace AntDesign
         private bool _hasSetShowLeafIcon;
 
         /// <summary>
-        /// Specific the Icon type of switcher 
+        /// Specific the Icon type of switcher
         /// </summary>
         [Parameter]
         public string SwitcherIcon { get; set; }
@@ -419,12 +419,6 @@ namespace AntDesign
 
         private void SearchNodes()
         {
-            if (string.IsNullOrWhiteSpace(_searchValue))
-            {
-                _allNodes.ForEach(m => { m.Expand(true); m.Matched = false; });
-                return;
-            }
-
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -618,6 +612,33 @@ namespace AntDesign
         {
             SetClassMapper();
             base.OnInitialized();
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            this.DefaultCheckedKeys?.ForEach(k =>
+            {
+                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetChecked(true);
+            });
+
+            this.DefaultSelectedKeys?.ForEach(k =>
+            {
+                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetSelected(true);
+            });
+            if (!this.DefaultExpandAll)
+            {
+                this.DefaultExpandedKeys?.ForEach(k =>
+                {
+                    var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.OpenPropagation();
+                });
+            }
+            return base.OnFirstAfterRenderAsync();
         }
 
         /// <summary>
