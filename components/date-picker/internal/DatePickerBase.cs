@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -684,7 +684,7 @@ namespace AntDesign
                 {
                     return $"{Locale.Lang.DateFormat} {ShowTimeFormat}";
                 }
-                return Locale.Lang.DateTimeFormat;
+                return Use12Hours ? Locale.Lang.DateTimeFormat12Hour : Locale.Lang.DateTimeFormat;
             }
             return Locale.Lang.DateFormat;
         }
