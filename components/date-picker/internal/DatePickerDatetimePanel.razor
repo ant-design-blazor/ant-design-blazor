@@ -183,7 +183,7 @@
 
                         <li class="@(PrefixCls)-time-panel-cell @isAmSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
-                             @onclick="e => {if (!disabled) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
+                             @onclick="e => {if (!disabled && (isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
                                  else OnSelectTime(DateTime.Today); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
                             </div>
@@ -191,8 +191,8 @@
 
                         <li class="@(PrefixCls)-time-panel-cell @isPmSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
-                             @onclick="e => {if (!disabled) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
-                                 else OnSelectTime(DateTime.Today); }">
+                             @onclick="e => {if (!disabled && (!isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
+                                 else OnSelectTime(DateTime.Today.AddHours(12)); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator
                             </div>
                         </li>
