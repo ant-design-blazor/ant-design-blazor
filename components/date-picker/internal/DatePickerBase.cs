@@ -274,6 +274,27 @@ namespace AntDesign
 
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
+        internal event EventHandler<bool> OverlayVisibleChanged;
+        private readonly object _eventLock = new();
+        event EventHandler<bool> IDatePicker.OverlayVisibleChanged
+        {
+            add
+            {
+                lock (_eventLock)
+                {
+                    OverlayVisibleChanged += value;
+                }
+            }
+
+            remove
+            {
+                lock (_eventLock)
+                {
+                    OverlayVisibleChanged -= value;
+                }
+            }
+        }
+
         protected override void OnInitialized()
         {
             // set default picker type
@@ -783,7 +804,7 @@ namespace AntDesign
             return null;
         }
 
-        public void InvokeStateHasChanged()
+        public new void InvokeStateHasChanged()
         {
             StateHasChanged();
         }
@@ -815,5 +836,7 @@ namespace AntDesign
             }
             return orderedValue;
         }
+
+        protected void InvokeInternalOverlayVisibleChanged(bool visible) => OverlayVisibleChanged?.Invoke(this, visible);
     }
 }

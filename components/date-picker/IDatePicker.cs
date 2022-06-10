@@ -8,6 +8,8 @@ namespace AntDesign
 
         internal DateTime? HoverDateTime { get; set; }
 
+        internal event EventHandler<bool> OverlayVisibleChanged;
+
         int GetOnFocusPickerIndex();
 
         void ChangePlaceholder(string placeholder, int index = 0);

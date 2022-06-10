@@ -568,6 +568,7 @@ namespace AntDesign
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
             _duringFocus = false;
+            InvokeInternalOverlayVisibleChanged(visible);
         }
     }
 }

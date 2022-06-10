@@ -78,6 +78,19 @@ namespace AntDesign
 
         public readonly string PrefixCls = "ant-picker-calendar";
 
+        event EventHandler<bool> IDatePicker.OverlayVisibleChanged
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

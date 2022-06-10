@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Internal
 {
-    public partial class DatePickerDatetimePanel<TValue> : DatePickerPanelBase<TValue>
+    public partial class DatePickerDatetimePanel<TValue> : DatePickerPanelBase<TValue>, IAsyncDisposable
     {
         [Parameter]
         public bool ShowToday { get; set; } = false;
@@ -29,6 +30,17 @@ namespace AntDesign.Internal
 
         [Parameter]
         public EventCallback OnOkClick { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> OnOpenChange { get; set; }
+
+        private Dictionary<int, ElementReference> _hours = new();
+        private Dictionary<int, ElementReference> _minutes = new();
+        private Dictionary<int, ElementReference> _seconds = new();
+
+        private ElementReference _hoursParent;
+        private ElementReference _minutesParent;
+        private ElementReference _secondsParent;
 
         private DatePickerDisabledTime GetDisabledTime()
         {
@@ -69,6 +81,40 @@ namespace AntDesign.Internal
             }
 
             return new DatePickerDisabledTime(disabledHours.ToArray(), disabledMinutes.ToArray(), disabledSeconds.ToArray());
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            DatePicker.OverlayVisibleChanged += DatePicker_OverlayVisibleChanged;
+        }
+
+        private async Task ScrollToSelectedHourAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
+                                                                              _hours[Value.Value.Hour],
+                                                                              _hoursParent);
+        private async Task ScrollToSelectedMinuteAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
+                                                                                _minutes[Value.Value.Minute],
+                                                                                _minutesParent);
+        private async Task ScrollToSelectedSecondAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
+                                                                                _seconds[Value.Value.Second],
+                                                                                _secondsParent);
+
+        private async Task ScrollToSelectedTimeAsync()
+        {
+            await ScrollToSelectedHourAsync();
+            await ScrollToSelectedMinuteAsync();
+            await ScrollToSelectedSecondAsync();
+        }
+
+        private void DatePicker_OverlayVisibleChanged(object sender, bool visible)
+        {
+            if (visible) _ = ScrollToSelectedTimeAsync();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            DatePicker.OverlayVisibleChanged -= DatePicker_OverlayVisibleChanged;
+            await Task.Yield();
         }
     }
 }
