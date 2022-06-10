@@ -190,9 +190,9 @@ namespace AntDesign
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
 
-            if (OnUnSelect.HasDelegate)
+            if (OnUnselect.HasDelegate)
             {
-                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+                OnUnselect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
             }
         }
 
@@ -355,6 +355,14 @@ namespace AntDesign
             }
         }
 
+        public void SelectAll()
+        {
+            foreach (var item in ChildNodes)
+            {
+                item.SetSelected(true);
+            }
+        }
+
         /// <summary>
         /// Specifies the keys of the default checked treeNodes
         /// </summary>
@@ -377,6 +385,7 @@ namespace AntDesign
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
+
             _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
 
             if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
@@ -483,7 +492,7 @@ namespace AntDesign
         /// Specifies a method  to return a child node
         /// </summary>
         [Parameter]
-        public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
+        public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
 
         /// <summary>
         /// Specifies a method to return a disabled node
@@ -530,7 +539,7 @@ namespace AntDesign
         public EventCallback<TreeEventArgs<TItem>> OnSelect { get; set; }
 
         [Parameter]
-        public EventCallback<TreeEventArgs<TItem>> OnUnSelect { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnUnselect { get; set; }
 
         /// <summary>
         /// Click the expansion tree node icon to call back

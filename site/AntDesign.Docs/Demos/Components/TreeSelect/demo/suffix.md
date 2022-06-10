@@ -1,23 +1,26 @@
 ---
-order: 1
+order: 12
+debug: true
 title:
-  zh-CN: 多选
-  en-US: Multiple Selection
+  zh-CN: 后缀图标
+  en-US: Suffix
 ---
 
 ## zh-CN
 
-多选的树选择。
+最简单的用法。
 
 ## en-US
 
-Multiple selection usage.
+The most basic usage.
 
 ```tsx
 import React, { useState } from 'react';
 import { TreeSelect } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 
 const { TreeNode } = TreeSelect;
+const icon = <SmileOutlined />;
 
 const App: React.FC = () => {
   const [value, setValue] = useState<string>();
@@ -30,12 +33,12 @@ const App: React.FC = () => {
   return (
     <TreeSelect
       showSearch
+      suffixIcon={icon}
       style={{ width: '100%' }}
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
       placeholder="Please select"
       allowClear
-      multiple
       treeDefaultExpandAll
       onChange={onChange}
     >
