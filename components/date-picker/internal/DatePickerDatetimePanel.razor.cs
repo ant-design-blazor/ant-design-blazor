@@ -111,6 +111,24 @@ namespace AntDesign.Internal
             if (visible) _ = ScrollToSelectedTimeAsync();
         }
 
+        protected override void OnSelectHour(DateTime date)
+        {
+            base.OnSelectHour(date);
+            _ = ScrollToSelectedHourAsync();
+        }
+
+        protected override void OnSelectMinute(DateTime date)
+        {
+            base.OnSelectMinute(date);
+            _ = ScrollToSelectedMinuteAsync();
+        }
+
+        protected override void OnSelectSecond(DateTime date)
+        {
+            base.OnSelectSecond(date);
+            _ = ScrollToSelectedSecondAsync();
+        }
+
         public async ValueTask DisposeAsync()
         {
             DatePicker.OverlayVisibleChanged -= DatePicker_OverlayVisibleChanged;

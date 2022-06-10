@@ -147,17 +147,17 @@ namespace AntDesign
             OnSelect?.Invoke(CombineNewShowDate(day: date.Day), PickerIndex);
         }
 
-        protected void OnSelectHour(DateTime date)
+        protected virtual void OnSelectHour(DateTime date)
         {
             OnSelect?.Invoke(CombineNewShowDate(hour: date.Hour), PickerIndex);
         }
 
-        protected void OnSelectMinute(DateTime date)
+        protected virtual void OnSelectMinute(DateTime date)
         {
             OnSelect?.Invoke(CombineNewShowDate(minute: date.Minute), PickerIndex);
         }
 
-        protected void OnSelectSecond(DateTime date)
+        protected virtual void OnSelectSecond(DateTime date)
         {
             OnSelect?.Invoke(CombineNewShowDate(second: date.Second), PickerIndex);
         }
