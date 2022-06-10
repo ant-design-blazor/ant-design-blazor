@@ -1,4 +1,4 @@
-﻿@namespace AntDesign.Internal
+@namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
@@ -71,23 +71,25 @@
             timeFormat = Format;
         }
 
+        var use12Hours = Use12Hours || timeFormat.ToLower().Contains("t");
+        var isPM = use12Hours && Value?.Hour >= 12;        
         DatePickerDisabledTime disabledTime = GetDisabledTime();
-		bool isValueNull = Value is null;
-		Func<int, int?, string> selected;
-		string localValue;
-		if (Value is null)
-		{
-			localValue = "";
-			selected = (_, _) => "";
-		}
-		else
-		{
-			localValue = Value.Value.ToString(timeFormat);
-			selected = (viewTime, valueTime) =>  viewTime == valueTime ? $"{PrefixCls}-time-panel-cell-selected" : "";
-		}		
+        bool isValueNull = Value is null;
+        Func<int, int?, string> selected;
+        string localValue;
+        if (Value is null)
+        {
+            localValue = "";
+            selected = (_, _) => "";
+        }
+        else
+        {
+            localValue = Value.Value.ToString(timeFormat);
+            selected = (viewTime, valueTime) => viewTime == valueTime ? $"{PrefixCls}-time-panel-cell-selected" : "";
+        }
     }
     <div class="@(PrefixCls)-time-panel">
-        @if(Picker == DatePickerType.Date)
+        @if (Picker == DatePickerType.Date)
         {
             <div class="@(PrefixCls)-header">
                 <div class="@(PrefixCls)-header-view">
@@ -99,20 +101,30 @@
         <div class="@(PrefixCls)-content">
             @if (timeFormat.ToLower().Contains("hh"))
             {
+                var selectFirstHour = Value is not null && disabledTime._disabledHours.Contains(Value.Value.Hour);
+                var hoursOffset = isPM ? 12 : 0;
                 <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int hour = 0; hour < 24; hour++)
+
+                    @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour++)
                     {
                         var viewTime = startTime;
-                        bool disabled = disabledTime._disabledHours.Contains(hour);
-                        string isSelectedCls = selected(viewTime.Hour, Value?.Hour);
+
+                        bool disabled = disabledTime._disabledHours.Contains(hour + hoursOffset);
+                        string isSelectedCls = selected(viewTime.Hour + hoursOffset, Value?.Hour);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => { if (!disabled) OnSelectHour(viewTime); }">
-                                @hour
+                         @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
+                                @(use12Hours && hour==0? 12 :  hour)
                             </div>
                         </li>
+
+                        if (!disabled && selectFirstHour)
+                        {
+                            OnSelectHour(viewTime.AddHours(hoursOffset));
+                            selectFirstHour = false;
+                        }
 
                         startTime = startTime.AddHours(1);
                     }
@@ -157,6 +169,33 @@
                         </li>
 
                         startTime = startTime.AddSeconds(1);
+                    }
+                </ul>
+            }
+            @if (use12Hours)
+            {
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative; overflow: hidden;">
+                    @{
+                        string isAmSelectedCls = isPM || isValueNull ? "" : $"{PrefixCls}-time-panel-cell-selected";
+                        string isPmSelectedCls = isPM ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        bool disabled = false;
+                        string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
+
+                        <li class="@(PrefixCls)-time-panel-cell @isAmSelectedCls @disabledCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
+                             @onclick="e => {if (!disabled && (isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
+                                 else OnSelectTime(DateTime.Today); }">
+                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
+                            </div>
+                        </li>
+
+                        <li class="@(PrefixCls)-time-panel-cell @isPmSelectedCls @disabledCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
+                             @onclick="e => {if (!disabled && (!isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
+                                 else OnSelectTime(DateTime.Today.AddHours(12)); }">
+                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator
+                            </div>
+                        </li>
                     }
                 </ul>
             }

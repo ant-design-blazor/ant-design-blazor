@@ -86,6 +86,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Parameter]
+        public bool Use12Hours { get; set; }
+
         protected Dictionary<string, object> GetAttributes()
         {
             return new Dictionary<string, object>()

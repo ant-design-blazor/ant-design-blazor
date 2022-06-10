@@ -271,6 +271,9 @@ namespace AntDesign
                 CurrentValue = DefaultValue;
             else
                 CurrentValue = default;
+
+            PickerValues[0] = _pickerValuesAfterInit;
+
             if (closeDropdown)
                 Close();
             if (OnClearClick.HasDelegate)

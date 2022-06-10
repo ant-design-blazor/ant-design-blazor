@@ -49,7 +49,7 @@
     {
         @if (DatePicker.IsShowTime)
         {
-            <DatePickerDatetimePanel TValue="TValue" IsShowTime="@DatePicker.IsShowTime" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
+            <DatePickerDatetimePanel TValue="TValue" IsShowTime="@DatePicker.IsShowTime" Use12Hours="DatePicker.Use12Hours" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
         }
         else
         {
@@ -78,6 +78,6 @@
     }
     else if (IsShowTimePanel())
     {
-        <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes" />
+        <DatePickerDatetimePanel TValue="TValue" Use12Hours="DatePicker.Use12Hours" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
     }
 </CascadingValue>
