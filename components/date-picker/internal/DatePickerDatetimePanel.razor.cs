@@ -172,24 +172,6 @@ namespace AntDesign.Internal
             }
         }
 
-        protected override void OnSelectHour(DateTime date)
-        {
-            base.OnSelectHour(date);
-            _ = ScrollToSelectedHourAsync();
-        }
-
-        protected override void OnSelectMinute(DateTime date)
-        {
-            base.OnSelectMinute(date);
-            _ = ScrollToSelectedMinuteAsync();
-        }
-
-        protected override void OnSelectSecond(DateTime date)
-        {
-            base.OnSelectSecond(date);
-            _ = ScrollToSelectedSecondAsync();
-        }
-
         private async Task InvokeSmoothScrollAsync(ElementReference element, ElementReference parent, int? duration)
                             => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? _defaultAnimationDuration);
 
