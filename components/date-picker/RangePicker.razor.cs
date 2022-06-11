@@ -155,7 +155,6 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
 
-                _duringManualInput = false;
                 StateHasChanged();
             }
         }
