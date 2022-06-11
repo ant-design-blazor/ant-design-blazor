@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -108,7 +108,7 @@ namespace AntDesign
                 {
                     PickerValues[0] = notNullValue;
                 });
-
+                _duringManualInput = false;
                 StateHasChanged();
             }
         }
