@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -41,6 +41,10 @@ namespace AntDesign.Internal
         private ElementReference _hoursParent;
         private ElementReference _minutesParent;
         private ElementReference _secondsParent;
+
+        private int? _selectedSecond;
+        private int? _selectedMinute;
+        private int? _selectedHour;
 
         private DatePickerDisabledTime GetDisabledTime()
         {
@@ -89,21 +93,78 @@ namespace AntDesign.Internal
             DatePicker.OverlayVisibleChanged += DatePicker_OverlayVisibleChanged;
         }
 
-        private async Task ScrollToSelectedHourAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
-                                                                              _hours[Value.Value.Hour],
-                                                                              _hoursParent);
-        private async Task ScrollToSelectedMinuteAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
-                                                                                _minutes[Value.Value.Minute],
-                                                                                _minutesParent);
-        private async Task ScrollToSelectedSecondAsync() => await JsInvokeAsync(JSInteropConstants.ScrollTo,
-                                                                                _seconds[Value.Value.Second],
-                                                                                _secondsParent);
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (!firstRender)
+            {
+                await ScrollToSelectedTimeIfChangedAsync();
+            }
+        }
+
+        private async Task ScrollToSelectedHourAsync()
+        {
+            _selectedHour = Value.Value.Hour;
+
+            var hoursKey = Use12Hours && _selectedHour == 0 ?
+                            12 : Use12Hours && _selectedHour > 12 ?
+                                _selectedHour.Value - 12 : _selectedHour.Value;
+
+            if (_hours.ContainsKey(hoursKey))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, _hours[hoursKey], _hoursParent);
+            }
+        }
+
+        private async Task ScrollToSelectedMinuteAsync()
+        {
+            _selectedMinute = Value.Value.Minute;
+
+            if (_minutes.ContainsKey(_selectedMinute.Value))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, _minutes[_selectedMinute.Value], _minutesParent);
+            }
+        }
+
+        private async Task ScrollToSelectedSecondAsync()
+        {
+            _selectedSecond = Value.Value.Second;
+
+            if (_seconds.ContainsKey(_selectedSecond.Value))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, _seconds[_selectedSecond.Value], _secondsParent);
+            }
+        }
 
         private async Task ScrollToSelectedTimeAsync()
         {
             await ScrollToSelectedHourAsync();
             await ScrollToSelectedMinuteAsync();
             await ScrollToSelectedSecondAsync();
+        }
+
+        private async Task ScrollToSelectedTimeIfChangedAsync()
+        {
+            if (Value is null)
+            {
+                return;
+            }
+
+            var currentValue = Value.Value;
+
+            if (currentValue.Hour != _selectedHour)
+            {
+                await ScrollToSelectedHourAsync();
+            }
+            if (currentValue.Minute != _selectedMinute)
+            {
+                await ScrollToSelectedMinuteAsync();
+            }
+            if (currentValue.Second != _selectedSecond)
+            {
+                await ScrollToSelectedSecondAsync();
+            }
         }
 
         private void DatePicker_OverlayVisibleChanged(object sender, bool visible)
