@@ -28,7 +28,7 @@ namespace AntDesign
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
+        public string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
@@ -64,6 +64,11 @@ namespace AntDesign
             var icon = IconStore.GetIcon(type, theme);
 
             return !string.IsNullOrEmpty(icon);
+        }
+
+        public async Task<string> GetTwotoneSvgIcon(string svgImg, string twotoneColor)
+        {
+            return await _js.InvokeAsync<string>(JSInteropConstants.IconComponentHelper.GenerateTwotoneSvgIcon, svgImg, twotoneColor);
         }
     }
 }

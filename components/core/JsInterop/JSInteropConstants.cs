@@ -67,6 +67,7 @@ namespace AntDesign
 
         #region icon
         public static string CreateIconFromfontCN => IconComponentHelper.CreateIconFromfontCN;
+        public static string GenerateTwotoneSvgIcon => IconComponentHelper.GenerateTwotoneSvgIcon;
         #endregion
 
         #region input
@@ -183,6 +184,7 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "iconHelper.";
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
+            public static string GenerateTwotoneSvgIcon => $"{FUNC_PREFIX}generateTwotoneSvgIcon";
 
         }
 
