@@ -46,6 +46,8 @@ namespace AntDesign.Internal
         private int? _selectedMinute;
         private int? _selectedHour;
 
+        private readonly int _defaultAnimationDuration = 300;
+
         private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
@@ -103,7 +105,7 @@ namespace AntDesign.Internal
             }
         }
 
-        private async Task ScrollToSelectedHourAsync()
+        private async Task ScrollToSelectedHourAsync(int? duration = null)
         {
             _selectedHour = Value.Value.Hour;
 
@@ -113,35 +115,28 @@ namespace AntDesign.Internal
 
             if (_hours.ContainsKey(hoursKey))
             {
-                await JsInvokeAsync(JSInteropConstants.ScrollTo, _hours[hoursKey], _hoursParent);
+                await InvokeSmoothScrollAsync(_hours[hoursKey], _hoursParent, duration);
             }
         }
 
-        private async Task ScrollToSelectedMinuteAsync()
+        private async Task ScrollToSelectedMinuteAsync(int? duration = null)
         {
             _selectedMinute = Value.Value.Minute;
 
             if (_minutes.ContainsKey(_selectedMinute.Value))
             {
-                await JsInvokeAsync(JSInteropConstants.ScrollTo, _minutes[_selectedMinute.Value], _minutesParent);
+                await InvokeSmoothScrollAsync(_minutes[_selectedMinute.Value], _minutesParent, duration);
             }
         }
 
-        private async Task ScrollToSelectedSecondAsync()
+        private async Task ScrollToSelectedSecondAsync(int? duration = null)
         {
             _selectedSecond = Value.Value.Second;
 
             if (_seconds.ContainsKey(_selectedSecond.Value))
             {
-                await JsInvokeAsync(JSInteropConstants.ScrollTo, _seconds[_selectedSecond.Value], _secondsParent);
+                await InvokeSmoothScrollAsync(_seconds[_selectedSecond.Value], _secondsParent, duration);
             }
-        }
-
-        private async Task ScrollToSelectedTimeAsync()
-        {
-            await ScrollToSelectedHourAsync();
-            await ScrollToSelectedMinuteAsync();
-            await ScrollToSelectedSecondAsync();
         }
 
         private async Task ScrollToSelectedTimeIfChangedAsync()
@@ -169,7 +164,12 @@ namespace AntDesign.Internal
 
         private void DatePicker_OverlayVisibleChanged(object sender, bool visible)
         {
-            if (visible) _ = ScrollToSelectedTimeAsync();
+            if (visible)
+            {
+                _ = ScrollToSelectedHourAsync(0);
+                _ = ScrollToSelectedMinuteAsync(0);
+                _ = ScrollToSelectedSecondAsync(0);
+            }
         }
 
         protected override void OnSelectHour(DateTime date)
@@ -189,6 +189,9 @@ namespace AntDesign.Internal
             base.OnSelectSecond(date);
             _ = ScrollToSelectedSecondAsync();
         }
+
+        private async Task InvokeSmoothScrollAsync(ElementReference element, ElementReference parent, int? duration)
+                            => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? _defaultAnimationDuration);
 
         public async ValueTask DisposeAsync()
         {

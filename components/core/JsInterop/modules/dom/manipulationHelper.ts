@@ -147,6 +147,45 @@ export class manipulationHelper {
     }    
   }  
 
+  static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number) {
+    const element = domInfoHelper.get(selector);
+    const start = parentElement.scrollTop;
+    var to = element.offsetTop;
+    const change = to - start;
+    const startDate = new Date().getTime();
+        
+    const animateScroll = () => {
+        const currentDate = new Date().getTime();
+        const currentTime = currentDate - startDate;
+
+        parentElement.scrollTop = manipulationHelper.easeInOutQuad(currentTime, start, change, duration);
+
+        if (currentTime < duration) {
+            requestAnimationFrame(animateScroll);
+        } else {
+            parentElement.scrollTop = to;
+        }
+    };
+    animateScroll();
+  }
+
+  static easeInOutQuad(
+        currentTime: number,
+        start: number,
+        change: number,
+        duration: number,
+    ): number {
+        let newCurrentTime = currentTime;
+        newCurrentTime /= duration / 2;
+
+        if (newCurrentTime < 1) {
+            return (change / 2) * newCurrentTime * newCurrentTime + start;
+        }
+
+        newCurrentTime -= 1;
+        return (-change / 2) * (newCurrentTime * (newCurrentTime - 2) - 1) + start;
+  }
+ 
   static slideTo(targetPageY) {
     const timer = setInterval(function () {
       const currentY = document.documentElement.scrollTop || document.body.scrollTop;

@@ -40,6 +40,7 @@ namespace AntDesign
         public static string Focus => DomMainpulationHelper.Focus;
         public static string Blur => DomMainpulationHelper.Blur;
         public static string ScrollTo => DomMainpulationHelper.ScrollTo;
+        public static string SmoothScrollTo => DomMainpulationHelper.SmoothScrollTo;
         public static string InvokeTabKey => DomMainpulationHelper.InvokeTabKey;
         public static string DisableBodyScroll => DomMainpulationHelper.DisableBodyScroll;
         public static string EnableBodyScroll => DomMainpulationHelper.EnableBodyScroll;
@@ -140,7 +141,8 @@ namespace AntDesign
 #endif
             public static string Focus => $"{FUNC_PREFIX}focus";
             public static string Blur => $"{FUNC_PREFIX}blur";
-            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
+            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo"; 
+            public static string SmoothScrollTo => $"{FUNC_PREFIX}smoothScrollTo";
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
