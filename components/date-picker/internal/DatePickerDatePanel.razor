@@ -78,26 +78,6 @@
     </DatePickerTemplate>
 </div>
 
-@if (RenderExtraFooter != null && !IsRange)
-{
-    <div class="@(PrefixCls)-footer">
-        <div class="@(PrefixCls)-footer-extra">
-            @RenderExtraFooter
-        </div>
-    </div>
-}
-
-@if (ShowToday && !IsRange && Picker != DatePickerType.Time)
-{
-    <div class="@(PrefixCls)-footer">
-        <a class="@(PrefixCls)-today-btn"
-           @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            @Locale.Lang.Today
-        </a>
-    </div>
-}
-
-
 @code {
     [Parameter]
     public bool IsWeek { get; set; } = false;

@@ -202,32 +202,3 @@
         </div>
     </div>
 </div>
-
-@if (RenderExtraFooter != null)
-{
-    <div class="@(PrefixCls)-footer">
-        <div class="@(PrefixCls)-footer-extra">
-            @RenderExtraFooter
-        </div>
-    </div>
-}
-
-<div class="@(PrefixCls)-footer">
-    <ul class="@(PrefixCls)-ranges">
-        @if (ShowToday)
-        {
-            <li class="@(PrefixCls)-now">
-                <a class="@(PrefixCls)-now-btn"
-                @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                    @Locale.Lang.Now
-                </a>
-            </li>            
-        }
-        <li class="@(PrefixCls)-ok">
-            <Button Type="@ButtonType.Primary"
-                       OnClick="OnOkClick">
-                @Locale.Lang.Ok
-            </Button>
-        </li>
-    </ul>
-</div>

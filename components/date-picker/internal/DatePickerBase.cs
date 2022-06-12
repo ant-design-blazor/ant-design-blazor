@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -111,7 +111,7 @@ namespace AntDesign
             }
             set
             {
-                if (!_isLocaleSetOutside && 
+                if (!_isLocaleSetOutside &&
                     (
                     (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
                     ||
@@ -129,6 +129,7 @@ namespace AntDesign
         protected OneOf<bool, string> _showTime = null;
 
         private bool _timeFormatProvided;
+
         [Parameter]
         public OneOf<bool, string> ShowTime
         {
@@ -206,8 +207,10 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
+
         [Parameter]
         public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
+
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
@@ -288,6 +291,7 @@ namespace AntDesign
         }
 
         protected bool _shouldRender = true;
+
         protected override bool ShouldRender()
         {
             if (!_shouldRender)
@@ -330,7 +334,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
@@ -636,6 +640,7 @@ namespace AntDesign
         }
 
         private int _htmlInputSize;
+
         protected int HtmlInputSize
         {
             get
@@ -653,6 +658,7 @@ namespace AntDesign
         }
 
         private string _internalFormat;
+
         private string InternalFormat
         {
             get
@@ -673,11 +679,11 @@ namespace AntDesign
                             DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
-
                 }
                 return _internalFormat;
             }
         }
+
         private string GetTimeFormat()
         {
             if (IsShowTime)

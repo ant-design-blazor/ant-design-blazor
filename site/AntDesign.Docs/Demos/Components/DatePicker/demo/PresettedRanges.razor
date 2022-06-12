@@ -1,11 +1,11 @@
 ﻿<div>
-   <RangePicker  TValue="DateTime?[]" Ranges="dayRanges" />
+   <RangePicker  TValue="DateTime?[]" Ranges="dayRanges"  ShowTime="true" />
 </div>
 <div>
 <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" Ranges="monthRanges" />
 </div>
 <div> 
-    <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year" Ranges="yearRanges" />
+    <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year" Ranges="yearRanges"/>
 </div>
 
 @code{
@@ -21,6 +21,6 @@
     };
     
     Dictionary<string,DateTime?[]> yearRanges = new Dictionary<string, DateTime?[]>() { 
-        { "ThisCentury",new DateTime?[] { new DateTime(2000,1,1), new DateTime(2099,DateTime.Now.Month,31)}}
+        { "ThisCentury",new DateTime?[] { new DateTime(2000,1,1), new DateTime(2099,12,31)}}
     };
 }
