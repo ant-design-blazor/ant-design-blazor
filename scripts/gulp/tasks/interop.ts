@@ -9,9 +9,9 @@ var buffer = require('vinyl-buffer');
 var gts = require("gulp-typescript");
 import { join } from 'path';
 
-var tsProject = gts.createProject('tsconfig.json');
-
 import { buildConfig } from '../../build-config';
+
+var tsProject = gts.createProject(join(buildConfig.componentsDir, 'tsconfig.json'));
 
 task('ts', function () {
     return browserify({
