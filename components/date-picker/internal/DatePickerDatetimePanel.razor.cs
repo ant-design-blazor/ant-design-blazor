@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -45,8 +45,6 @@ namespace AntDesign.Internal
         private int? _selectedSecond;
         private int? _selectedMinute;
         private int? _selectedHour;
-
-        private readonly int _defaultAnimationDuration = 300;
 
         private DatePickerDisabledTime GetDisabledTime()
         {
@@ -173,7 +171,7 @@ namespace AntDesign.Internal
         }
 
         private async Task InvokeSmoothScrollAsync(ElementReference element, ElementReference parent, int? duration)
-                            => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? _defaultAnimationDuration);
+                            => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? 100);
 
         public async ValueTask DisposeAsync()
         {
