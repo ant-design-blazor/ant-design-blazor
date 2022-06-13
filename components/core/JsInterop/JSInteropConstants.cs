@@ -67,7 +67,6 @@ namespace AntDesign
 
         #region icon
         public static string CreateIconFromfontCN => IconComponentHelper.CreateIconFromfontCN;
-        public static string GenerateTwotoneSvgIcon => IconComponentHelper.GenerateTwotoneSvgIcon;
         #endregion
 
         #region input
@@ -101,6 +100,7 @@ namespace AntDesign
 
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
         public static string Log => $"{FUNC_PREFIX}log";
+        public static string GenerateColor => $"{FUNC_PREFIX}generateColor";
 
         public static class DomInfoHelper
         {
