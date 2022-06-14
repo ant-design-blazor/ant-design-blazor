@@ -184,7 +184,6 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "iconHelper.";
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
-            public static string GenerateTwotoneSvgIcon => $"{FUNC_PREFIX}generateTwotoneSvgIcon";
 
         }
 
