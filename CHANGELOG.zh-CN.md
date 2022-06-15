@@ -21,7 +21,7 @@ timeline: true
   - 🔥 支持虚拟化[#2143](https://github.com/ant-design-blazor/ant-design-blazor/pull/2143) [@anranruye](https://github.com/anranruye)
   - 🔥 支持使用已有的 QueryModel 控制/恢复表格筛选排序状态[#2129](https://github.com/ant-design-blazor/ant-design-blazor/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)
   - 🆕 支持用 `ScrollBarWidth` 属性来设置滚动条的宽度。[#2451](https://github.com/ant-design-blazor/ant-design-blazor/pull/2451) [@ElderJames](https://github.com/ElderJames)
-  - 🆕 允许在定义 `PaginationTemplate`` 时使用组件内置逻辑。[#2220](https://github.com/ant-design-blazor/ant-design-blazor/pull/2220) [@anranruye](https://github.com/anranruye)
+  - 🆕 允许在定义 `PaginationTemplate` 时使用组件内置逻辑。[#2220](https://github.com/ant-design-blazor/ant-design-blazor/pull/2220) [@anranruye](https://github.com/anranruye)
   - 🛠 修改 Responsive 属性默认值为false，需要响应式样式时需要设为true。[#2419](https://github.com/ant-design-blazor/ant-design-blazor/pull/2419) [@ElderJames](https://github.com/ElderJames)
   - 🛠 使用 Small 大小的Pagination来适配紧凑型Table[#2246](https://github.com/ant-design-blazor/ant-design-blazor/pull/2246) [@anranruye](https://github.com/anranruye)
 

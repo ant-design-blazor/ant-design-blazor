@@ -16,26 +16,28 @@ timeline: true
 ---
 ### 0.11.0
 
-- TreeSelect
-  - 🐞 Fixed TreeSelect expressions and selection [#2507](https://github.com/ant-design/ant-design/pull/2507) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 Fixed binding default where TreeSelect component did not show selected items [#2134](https://github.com/ant-design/ant-design/pull/2134) [@gmij](https://github.com/gmij)
-- 🐞 Fixed incorrect checking during initialization. [#2506](https://github.com/ant-design/ant-design/pull/2506) [@ElderJames](https://github.com/ElderJames)
 - Table
-  - 🆕 support setting table scrollbar width using `ScrollBarWidth` parameter. [#2451](https://github.com/ant-design/ant-design/pull/2451) [@ElderJames](https://github.com/ElderJames)
-  - 🛠 make Responsive default to false   (with a breaking change). [#2419](https://github.com/ant-design/ant-design/pull/2419) [@ElderJames](https://github.com/ElderJames)
-  - 🆕 Support to control/restore table filter/sorter state using existing QueryModel [#2129](https://github.com/ant-design/ant-design/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)
-  - 🛠 Use Small size Pagination to fit compact Table [#2246](https://github.com/ant-design/ant-design/pull/2246) [@anranruye](https://github.com/anranruye)
-  - 🆕 support for Table virtualization [#2143](https://github.com/ant-design/ant-design/pull/2143) [@anranruye](https://github.com/anranruye)
-  - 🆕 support for using built-in logic when defining the PaginationTemplate. [#2220](https://github.com/ant-design/ant-design/pull/2220) [@anranruye](https://github.com/anranruye)
-- 🆕 Support for incorporating build-in InputFile [#2443](https://github.com/ant-design/ant-design/pull/2443) [@ElderJames](https://github.com/ElderJames)
-- 🆕 Add Feedback Icon when Invalid [#2418](https://github.com/ant-design/ant-design/pull/2418) [@bweissronin](https://github.com/bweissronin)
-- ⌨️ Supports trigger check when clicking label [#2296](https://github.com/ant-design/ant-design/pull/2296) [@bweissronin](https://github.com/bweissronin)
-- ⌨️ Added Alt Parameter to set the alt attribute that pairs with role="img" [#2302](https://github.com/ant-design/ant-design/pull/2302) [@bweissronin](https://github.com/bweissronin)
-- 🆕 Select search debounce. [#2275](https://github.com/ant-design/ant-design/pull/2275) [@tompru](https://github.com/tompru)
-- ⌨️ add AriaLabel Parameter [#2278](https://github.com/ant-design/ant-design/pull/2278) [@bweissronin](https://github.com/bweissronin)
-- 🐞 week selection issue when unable to click date selection. [#2463](https://github.com/ant-design/ant-design/pull/2463) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- 🆕 Component library added.net 6 target framework [#2484](https://github.com/ant-design/ant-design/pull/2484) [@ElderJames](https://github.com/ElderJames)
-- 📖 docs(faq): CSS isolation explanation. [#2158](https://github.com/ant-design/ant-design/pull/2158) [@dennisrahmen](https://github.com/dennisrahmen)
+  - 🔥 support for Table virtualization [#2143](https://github.com/ant-design-blazor/ant-design-blazor/pull/2143) [@anranruye](https://github.com/anranruye)
+  - 🔥 Support to control/restore table filter/sorter state using existing QueryModel [#2129](https://github.com/ant-design-blazor/ant-design-blazor/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)
+  - 🆕 support setting table scrollbar width using `ScrollBarWidth` parameter. [#2451](https://github.com/ant-design-blazor/ant-design-blazor/pull/2451) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 support for using built-in logic when defining the PaginationTemplate. [#2220](https://github.com/ant-design-blazor/ant-design-blazor/pull/2220) [@anranruye](https://github.com/anranruye)
+  - 🛠 make Responsive default to false   (with a breaking change). [#2419](https://github.com/ant-design-blazor/ant-design-blazor/pull/2419) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Use Small size Pagination to fit compact Table [#2246](https://github.com/ant-design-blazor/ant-design-blazor/pull/2246) [@anranruye](https://github.com/anranruye)
+
+- TreeSelect
+  - 🐞 Fixed TreeSelect expressions and selection [#2507](https://github.com/ant-design-blazor/ant-design-blazor/pull/2507) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed TreeSelect binding default where it did not show selected items [#2134](https://github.com/ant-design-blazor/ant-design-blazor/pull/2134) [@gmij](https://github.com/gmij)
+
+- 🆕 Add Upload support for incorporating build-in InputFile [#2443](https://github.com/ant-design-blazor/ant-design-blazor/pull/2443) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Select search debounce. [#2275](https://github.com/ant-design-blazor/ant-design-blazor/pull/2275) [@tompru](https://github.com/tompru)
+- 🆕 Component library added .net 6 target framework [#2484](https://github.com/ant-design-blazor/ant-design-blazor/pull/2484) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ Add Form Feedback Icon when Invalid [#2418](https://github.com/ant-design-blazor/ant-design-blazor/pull/2418) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ Add Checkbox supports trigger check when clicking label [#2296](https://github.com/ant-design-blazor/ant-design-blazor/pull/2296) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ Add Icon `Alt` Parameter to set the alt attribute that pairs with role="img" [#2302](https://github.com/ant-design-blazor/ant-design-blazor/pull/2302) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ Add Button `AriaLabel` Parameter [#2278](https://github.com/ant-design-blazor/ant-design-blazor/pull/2278) [@bweissronin](https://github.com/bweissronin)
+- 🐞 Fixed Tree incorrect checking during initialization. [#2506](https://github.com/ant-design-blazor/ant-design-blazor/pull/2506) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DatePicker that week selection issue when unable to click date selection. [#2463](https://github.com/ant-design-blazor/ant-design-blazor/pull/2463) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 📖 docs(faq): add CSS isolation explanation. [#2158](https://github.com/ant-design-blazor/ant-design-blazor/pull/2158) [@dennisrahmen](https://github.com/dennisrahmen)
 
 ### 0.10.7
 
