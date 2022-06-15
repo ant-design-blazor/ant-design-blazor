@@ -47,6 +47,18 @@ $ dotnet publish -c release -o dist
 $ dotnet add package AntDesign
 ```
 
+### 注册依赖
+
+在 `Startup.cs` 文件中注册 AntDesign 服务
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+  ...
+  services.AddAntDesign();
+}
+```
+
 ### 引入样式
 
 #### 使用样式与脚本
