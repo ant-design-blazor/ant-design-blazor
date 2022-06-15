@@ -76,7 +76,7 @@ title: Ant Design of Blazor
 - 安装模板
 
   ```bash
-  $ dotnet new --install AntDesign.Templates::0.1.0-*
+  $ dotnet new --install AntDesign.Templates
   ```
 
 - 从模板创建 Ant Design Blazor Pro 项目
@@ -98,7 +98,7 @@ title: Ant Design of Blazor
 - 进入应用的项目文件夹，安装 Nuget 包引用
 
   ```bash
-  $ dotnet add package AntDesign --version 0.1.0-*
+  $ dotnet add package AntDesign
   ```
 
 - 在项目中注册:

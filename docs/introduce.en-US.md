@@ -77,7 +77,7 @@ We have provided the `dotnet new` template to create a [Boilerplate](https://git
 - Install the template
 
   ```bash
-  $ dotnet new --install AntDesign.Templates::0.1.0-*
+  $ dotnet new --install AntDesign.Templates
   ```
 
 - Create the Boilerplate project with the template
@@ -101,7 +101,7 @@ Options for the template：
 - Go to the project folder of the application and install the Nuget package reference
 
   ```bash
-  $ dotnet add package AntDesign --version 0.1.0-*
+  $ dotnet add package AntDesign
   ```
 
 - Register the services
@@ -148,7 +148,7 @@ Options for the template：
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987) 5.0.100 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987) 6.0.x or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -161,17 +161,13 @@ Options for the template：
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
 
-  > Visual Studio 2019 is recommended for development.
+  > Visual Studio 2022 is recommended for development.
 
 ## 🔗 Links
 
 - [Ant Design Blazor Documentation](https://ant-design-blazor.github.io)
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
-
-## 🗺 Roadmap
-
-Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) to learn about our development plans for 2020.
 
 ## 🤝 Contributing
 
