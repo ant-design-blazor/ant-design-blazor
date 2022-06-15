@@ -23,7 +23,7 @@ function generateTheme(vars, fileName) {
       '@site-text-color': '@heading-color'
     }
   }).then(data => {
-    return fs.writeFile(path.join(__dirname, `../../site/AntDesign.Docs/wwwroot/css/${fileName}`), data.css);
+    return fs.outputFile(path.join(__dirname, `../../site/AntDesign.Docs/wwwroot/css/${fileName}`), data.css);
   }).catch(e => {
     console.log(e);
   });
