@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -802,11 +802,6 @@ namespace AntDesign
         public virtual DateTime? GetIndexValue(int index)
         {
             return null;
-        }
-
-        public new void InvokeStateHasChanged()
-        {
-            StateHasChanged();
         }
 
         protected TValue SortValue(TValue value)

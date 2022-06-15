@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -177,11 +177,6 @@ namespace AntDesign
         public int GetOnFocusPickerIndex()
         {
             return 0;
-        }
-
-        void IDatePicker.InvokeStateHasChanged()
-        {
-            StateHasChanged();
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)

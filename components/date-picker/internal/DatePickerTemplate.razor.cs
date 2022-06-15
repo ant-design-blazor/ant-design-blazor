@@ -91,11 +91,14 @@ namespace AntDesign.Internal
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
+            if (Value is not null)
+            {
+                return;
+            }
+
             if (IsRange)
             {
                 DatePicker.HoverDateTime = hoverDateTime;
-
-                DatePicker.InvokeStateHasChanged();
             }
 
             int focusIndex = DatePicker.GetOnFocusPickerIndex();
