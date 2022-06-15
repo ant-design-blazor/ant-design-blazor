@@ -17,6 +17,10 @@ timeline: true
 
 ### 0.11.0
 
+`2022-06-16`
+
+🌈守得云开见月明~
+
 - Table
   - 🔥 支持虚拟化[#2143](https://github.com/ant-design-blazor/ant-design-blazor/pull/2143) [@anranruye](https://github.com/anranruye)
   - 🔥 支持使用已有的 QueryModel 控制/恢复表格筛选排序状态[#2129](https://github.com/ant-design-blazor/ant-design-blazor/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)

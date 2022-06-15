@@ -16,6 +16,10 @@ timeline: true
 ---
 ### 0.11.0
 
+`2022-06-16`
+
+🌈Every cloud has a silver lining.
+
 - Table
   - 🔥 support for Table virtualization [#2143](https://github.com/ant-design-blazor/ant-design-blazor/pull/2143) [@anranruye](https://github.com/anranruye)
   - 🔥 Support to control/restore table filter/sorter state using existing QueryModel [#2129](https://github.com/ant-design-blazor/ant-design-blazor/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)
