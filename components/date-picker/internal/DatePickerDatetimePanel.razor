@@ -103,7 +103,8 @@
             {
                 var selectFirstHour = Value is not null && disabledTime._disabledHours.Contains(Value.Value.Hour);
                 var hoursOffset = isPM ? 12 : 0;
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
+
+                <ul @ref="@_hoursParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
 
                     @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour++)
                     {
@@ -112,14 +113,15 @@
                         bool disabled = disabledTime._disabledHours.Contains(hour + hoursOffset);
                         string isSelectedCls = selected(viewTime.Hour + hoursOffset, Value?.Hour);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
+                        var hourValue=use12Hours && hour==0? 12 :  hour;
 
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_hours[hourValue]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
                          @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
-                                @(use12Hours && hour==0? 12 :  hour)
+                                @hourValue
                             </div>
                         </li>
-
+                         
                         if (!disabled && selectFirstHour)
                         {
                             OnSelectHour(viewTime.AddHours(hoursOffset));
@@ -132,7 +134,7 @@
             }
             @if (timeFormat.ToLower().Contains("mm"))
             {
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
+                <ul @ref="@_minutesParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int minute = 0; minute < 60; minute++)
                     {
                         var viewTime = startTime;
@@ -140,7 +142,7 @@
                         string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
@@ -153,7 +155,7 @@
             }
             @if (timeFormat.ToLower().Contains("ss"))
             {
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
+                <ul @ref="_secondsParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int second = 0; second < 60; second++)
                     {
                         var viewTime = startTime;
@@ -161,7 +163,7 @@
 						string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
                             <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second

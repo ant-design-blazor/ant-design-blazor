@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -273,6 +273,27 @@ namespace AntDesign
         protected bool _openingOverlay;
 
         protected ClassMapper _panelClassMapper = new ClassMapper();
+
+        internal event EventHandler<bool> OverlayVisibleChanged;
+        private readonly object _eventLock = new();
+        event EventHandler<bool> IDatePicker.OverlayVisibleChanged
+        {
+            add
+            {
+                lock (_eventLock)
+                {
+                    OverlayVisibleChanged += value;
+                }
+            }
+
+            remove
+            {
+                lock (_eventLock)
+                {
+                    OverlayVisibleChanged -= value;
+                }
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -783,11 +804,6 @@ namespace AntDesign
             return null;
         }
 
-        public void InvokeStateHasChanged()
-        {
-            StateHasChanged();
-        }
-
         protected TValue SortValue(TValue value)
         {
             if (value == null)
@@ -815,5 +831,7 @@ namespace AntDesign
             }
             return orderedValue;
         }
+
+        protected void InvokeInternalOverlayVisibleChanged(bool visible) => OverlayVisibleChanged?.Invoke(this, visible);
     }
 }

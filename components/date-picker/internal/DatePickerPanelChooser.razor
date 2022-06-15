@@ -1,4 +1,4 @@
-﻿@namespace AntDesign.Internal
+@namespace AntDesign.Internal
 @typeparam TValue
 @inherits AntDomComponentBase
 
@@ -41,7 +41,9 @@
     dateTimeAttributes.Add("DisabledHours", DatePicker.DisabledHours);
     dateTimeAttributes.Add("DisabledMinutes", DatePicker.DisabledMinutes);
     dateTimeAttributes.Add("DisabledSeconds", DatePicker.DisabledSeconds);
-    dateTimeAttributes.Add("DisabledTime", DatePicker.DisabledTime);    
+    dateTimeAttributes.Add("DisabledTime", DatePicker.DisabledTime);
+    dateTimeAttributes.Add("Use12Hours", DatePicker.Use12Hours);
+    dateTimeAttributes.Add("IsShowTime", DatePicker.IsShowTime);
 }
 
 <CascadingValue Value=@DatePicker>
@@ -49,7 +51,7 @@
     {
         @if (DatePicker.IsShowTime)
         {
-            <DatePickerDatetimePanel TValue="TValue" IsShowTime="@DatePicker.IsShowTime" Use12Hours="DatePicker.Use12Hours" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
+            <DatePickerDatetimePanel TValue="TValue" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
         }
         else
         {
@@ -78,6 +80,6 @@
     }
     else if (IsShowTimePanel())
     {
-        <DatePickerDatetimePanel TValue="TValue" Use12Hours="DatePicker.Use12Hours" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
+        <DatePickerDatetimePanel TValue="TValue" OnOkClick="DatePicker.OnOkClick" @attributes="dateTimeAttributes" />
     }
 </CascadingValue>

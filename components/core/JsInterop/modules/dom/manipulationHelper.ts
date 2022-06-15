@@ -147,6 +147,29 @@ export class manipulationHelper {
     }    
   }  
 
+  static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number = 100) {
+    const element = domInfoHelper.get(selector);
+    var to = element.offsetTop;
+
+    if (duration <= 0) {
+        window.requestAnimationFrame(() => {
+            parentElement.scrollTop = to;
+        });
+        return;
+    }
+
+    const animateScroll = () => {
+        const tick = ((to - parentElement.scrollTop) / duration) * 10;
+        window.requestAnimationFrame(() => {
+            parentElement.scrollTop += tick;
+            if (parentElement.scrollTop === to) return;
+            duration -= 10;
+            animateScroll();
+        });
+    };
+    setTimeout(() => animateScroll(), 10);
+  }
+
   static slideTo(targetPageY) {
     const timer = setInterval(function () {
       const currentY = document.documentElement.scrollTop || document.body.scrollTop;

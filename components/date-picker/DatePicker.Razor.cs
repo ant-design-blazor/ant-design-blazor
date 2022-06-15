@@ -300,6 +300,7 @@ namespace AntDesign
         {
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
+            InvokeInternalOverlayVisibleChanged(visible);
         }
     }
 }
