@@ -73,6 +73,8 @@ namespace AntDesign
                 Spin = true;
             }
 
+            await SetupSvgImg();
+
             Button?.Icons.Add(this);
 
             ClassMapper.Add($"anticon")
