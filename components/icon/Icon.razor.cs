@@ -59,6 +59,8 @@ namespace AntDesign
 
         protected string _svgImg;
 
+        private bool _hasRendered;
+
         protected override void Dispose(bool disposing)
         {
             Button?.Icons.Remove(this);
@@ -73,6 +75,8 @@ namespace AntDesign
                 Spin = true;
             }
 
+            await SetupSvgImg();
+
             Button?.Icons.Add(this);
 
             ClassMapper.Add($"anticon")
@@ -81,10 +85,18 @@ namespace AntDesign
             await base.OnInitializedAsync();
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            await SetupSvgImg();
+            await base.OnParametersSetAsync();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                _hasRendered = true;
+
                 await SetupSvgImg();
             }
 
@@ -111,7 +123,7 @@ namespace AntDesign
             {
                 var svg = IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
                 _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-                if (Theme == IconThemeType.Twotone)
+                if (_hasRendered && Theme == IconThemeType.Twotone)
                 {
                     _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
                 }
