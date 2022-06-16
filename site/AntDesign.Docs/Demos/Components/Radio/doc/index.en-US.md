@@ -24,6 +24,7 @@ Radio/Radio.Button
 | Checked            | Specifies whether the radio is selected.           | boolean         |
 | DefaultChecked            | Specifies the initial state: whether or not the radio is selected.        | boolean         |-       |
 | Disabled |		Disable radio        | string        | -         |
+| RadioButton | Set to TRUE to style the radio as button group. | bool | false |
 | Value              | 	According to value for comparison, to determine whether the selected        | string        | -        |
 
 RadioGroup
