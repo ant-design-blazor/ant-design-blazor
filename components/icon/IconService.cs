@@ -21,7 +21,7 @@ namespace AntDesign
             _js = js;
         }
 
-        public static string GetIconImg(string type, string theme)
+        internal static string GetIconImg(string type, string theme)
         {
             var iconImg = IconStore.GetIcon(type, theme);
 
@@ -31,7 +31,7 @@ namespace AntDesign
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
+        internal static string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
@@ -75,7 +75,7 @@ namespace AntDesign
                 .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
                 .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
                 .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
-            
+
             var secondaryColors = await _js.InvokeAsync<string[]>(JSInteropConstants.GenerateColor, twotoneColor);
 
             var document = XDocument.Load(new StringReader(svgImg));

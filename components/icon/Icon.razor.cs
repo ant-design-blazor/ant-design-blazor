@@ -58,7 +58,6 @@ namespace AntDesign
         public IconService IconService { get; set; }
 
         protected string _svgImg;
-        private bool _shouldRender;
 
         protected override void Dispose(bool disposing)
         {
@@ -81,7 +80,6 @@ namespace AntDesign
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
-            _shouldRender = true;
             await base.OnInitializedAsync();
         }
 
@@ -91,7 +89,7 @@ namespace AntDesign
             {
                 await SetupSvgImg(true);
             }
-            _shouldRender = false;
+
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -115,11 +113,8 @@ namespace AntDesign
                 _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
             }
 
-            _shouldRender = true;
             await InvokeAsync(StateHasChanged);
         }
-
-        protected override bool ShouldRender() => _shouldRender;
 
         private async Task HandleOnClick(MouseEventArgs args)
         {
