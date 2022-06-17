@@ -51,15 +51,14 @@ namespace AntDesign
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Inject]
-        public IconService IconService { get; set; }
-
         [Parameter]
         public RenderFragment Component { get; set; }
 
-        protected string _svgImg;
+        [Inject]
+        public IconService IconService { get; set; }
 
-        private bool _hasRendered;
+        protected string _svgImg;
+        private bool _shouldRender;
 
         protected override void Dispose(bool disposing)
         {
@@ -82,28 +81,21 @@ namespace AntDesign
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
+            _shouldRender = true;
             await base.OnInitializedAsync();
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-            await SetupSvgImg();
-            await base.OnParametersSetAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                _hasRendered = true;
-
-                await SetupSvgImg();
+                await SetupSvgImg(true);
             }
-
+            _shouldRender = false;
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected virtual async Task SetupSvgImg()
+        protected virtual async Task SetupSvgImg(bool rendered = false)
         {
             if (Component != null)
             {
@@ -112,24 +104,22 @@ namespace AntDesign
 
             string svgClass = Spin ? "anticon-spin" : null;
 
-            if (!string.IsNullOrEmpty(IconFont))
-            {
-                var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
-                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+            var svg = !string.IsNullOrEmpty(IconFont) ?
+                $"<svg><use xlink:href=#{IconFont} /></svg>"
+                : IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
 
-                StateHasChanged();
-            }
-            else
+            _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+
+            if (rendered && Theme == IconThemeType.Twotone)
             {
-                var svg = IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-                if (_hasRendered && Theme == IconThemeType.Twotone)
-                {
-                    _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
-                }
-                await InvokeAsync(StateHasChanged);
+                _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
             }
+
+            _shouldRender = true;
+            await InvokeAsync(StateHasChanged);
         }
+
+        protected override bool ShouldRender() => _shouldRender;
 
         private async Task HandleOnClick(MouseEventArgs args)
         {
