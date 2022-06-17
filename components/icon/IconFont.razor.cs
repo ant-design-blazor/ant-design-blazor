@@ -1,17 +1,11 @@
-﻿using System.Threading.Tasks;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class IconFont : Icon
     {
-        protected override Task SetupSvgImg()
+        protected override void OnInitialized()
         {
-            var svg = $"<svg><use xlink:href=#{Type} /></svg>";
-            _svgImg = IconService.GetStyledSvg(svg, null, Width, Height, Fill, Rotate);
-
-            StateHasChanged();
-
-            return Task.CompletedTask;
+            IconFont = Type;
+            base.OnInitialized();
         }
     }
 }

@@ -95,7 +95,7 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected virtual async Task SetupSvgImg(bool rendered = false)
+        private async Task SetupSvgImg(bool rendered = false)
         {
             if (Component != null)
             {
