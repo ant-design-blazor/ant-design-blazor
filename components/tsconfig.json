@@ -4,6 +4,7 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
+    "moduleResolution": "node",
     "target": "es2015"
   },
   "files": [ "main.ts" ],

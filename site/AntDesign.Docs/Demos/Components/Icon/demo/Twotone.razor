@@ -1,7 +1,18 @@
 <div>
     <Icon Type="smile" Theme="twotone" Height="2em" Width="2em" />
-    <Icon Type="heart" Theme="twotone" TwotoneColor="#eb2f96" Height="2em" Width="2em" />
-    <Icon Type="check-circle" Theme="twotone" TwotoneColor="#52c41a" Height="2em" Width="2em" />
+    <Icon Type="heart" Theme="twotone" TwotoneColor="#eb2f96" Height="2em" Width="2em" AvoidPrerendering />
+    <Icon Type="check-circle" Theme="twotone" TwotoneColor="@color" Height="2em" Width="2em" OnClick="ChangeColor"/>
 </div>
+<br/>
 
+<Button OnClick="ChangeColor">Change Color</Button>
 
+@code{
+  string color = "#52c41a";
+  string[] colors = { "#f759ab", "#2f54eb", "#722ed1", "#1890ff", "#f5222d" };
+  int index = 0;
+  void ChangeColor()
+  {
+    color = colors[index++ % 5];
+  }
+}

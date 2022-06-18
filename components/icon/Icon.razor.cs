@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -7,8 +9,8 @@ namespace AntDesign
     public partial class Icon : AntDomComponentBase
     {
         [Parameter]
-        public string Alt {get; set;}
-            
+        public string Alt { get; set; }
+
         [Parameter]
         public bool Spin { get; set; }
 
@@ -25,7 +27,21 @@ namespace AntDesign
         public string Theme { get; set; } = IconThemeType.Outline;
 
         [Parameter]
-        public string TwotoneColor { get; set; }
+        public string TwotoneColor
+        {
+            get => _twotoneColor;
+            set
+            {
+                if (_twotoneColor != value)
+                {
+                    _twotoneColor = value;
+                    _twotoneColorChanged = true;
+                }
+            }
+        }
+
+        [Parameter]
+        public bool AvoidPrerendering { get; set; }
 
         [Parameter]
         public string IconFont { get; set; }
@@ -51,20 +67,17 @@ namespace AntDesign
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Inject]
-        public IconService IconService { get; set; }
-
         [Parameter]
         public RenderFragment Component { get; set; }
 
+        [Inject]
+        public IconService IconService { get; set; }
+
         protected string _svgImg;
+        private string _twotoneColor = "#1890ff";
+        private bool _twotoneColorChanged = false;
 
-        protected override void Dispose(bool disposing)
-        {
-            Button?.Icons.Remove(this);
-
-            base.Dispose(disposing);
-        }
+        private Dictionary<string, object> _attributes = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,37 +93,50 @@ namespace AntDesign
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
+            if (OnClick.HasDelegate)
+            {
+                _attributes.Add("onclick", (Delegate)HandleOnClick);
+            }
+
             await base.OnInitializedAsync();
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await SetupSvgImg();
-            await base.OnParametersSetAsync();
+            if (firstRender || _twotoneColorChanged)
+            {
+                await SetupSvgImg(true);
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected virtual async Task SetupSvgImg()
+        private async Task SetupSvgImg(bool rendered = false)
         {
             if (Component != null)
             {
                 return;
             }
 
+            if (!rendered && AvoidPrerendering && Theme == IconThemeType.Twotone)
+            {
+                return;
+            }
+
             string svgClass = Spin ? "anticon-spin" : null;
 
-            if (!string.IsNullOrEmpty(IconFont))
-            {
-                var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
-                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+            var svg = !string.IsNullOrEmpty(IconFont) ?
+                $"<svg><use xlink:href=#{IconFont} /></svg>"
+                : IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
 
-                StateHasChanged();
-            }
-            else
+            _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+
+            if (rendered && Theme == IconThemeType.Twotone)
             {
-                var svg = IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-                await InvokeAsync(StateHasChanged);
+                _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
             }
+
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task HandleOnClick(MouseEventArgs args)
@@ -119,6 +145,13 @@ namespace AntDesign
             {
                 await OnClick.InvokeAsync(args);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Button?.Icons.Remove(this);
+
+            base.Dispose(disposing);
         }
     }
 }
