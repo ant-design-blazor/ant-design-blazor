@@ -1,15 +1,18 @@
 @inject IconService iconService;
 
 <div class="icons-list">
-    <IconFont Type="icon-tuichu" />
-    <IconFont Type="icon-facebook" />
-    <IconFont Type="icon-twitter" />
+  <IconFont Type="icon-tuichu" />
+  <IconFont Type="icon-facebook" />
+  <IconFont Type="icon-twitter" />
 </div>
 
 @code
 {
-    protected override async Task OnInitializedAsync()
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
     {
-        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js");
+      await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js");
     }
+  }
 }
