@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -25,7 +27,18 @@ namespace AntDesign
         public string Theme { get; set; } = IconThemeType.Outline;
 
         [Parameter]
-        public string TwotoneColor { get; set; } = "#1890ff";
+        public string TwotoneColor
+        {
+            get => _twotoneColor;
+            set
+            {
+                if (_twotoneColor != value)
+                {
+                    _twotoneColor = value;
+                    _twotoneColorChanged = true;
+                }
+            }
+        }
 
         [Parameter]
         public string IconFont { get; set; }
@@ -58,13 +71,10 @@ namespace AntDesign
         public IconService IconService { get; set; }
 
         protected string _svgImg;
+        private string _twotoneColor = "#1890ff";
+        private bool _twotoneColorChanged = false;
 
-        protected override void Dispose(bool disposing)
-        {
-            Button?.Icons.Remove(this);
-
-            base.Dispose(disposing);
-        }
+        private Dictionary<string, object> _attributes = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,12 +90,17 @@ namespace AntDesign
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
+            if (OnClick.HasDelegate)
+            {
+                _attributes.Add("onclick", (Delegate)HandleOnClick);
+            }
+
             await base.OnInitializedAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (firstRender || _twotoneColorChanged)
             {
                 await SetupSvgImg(true);
             }
@@ -122,6 +137,13 @@ namespace AntDesign
             {
                 await OnClick.InvokeAsync(args);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Button?.Icons.Remove(this);
+
+            base.Dispose(disposing);
         }
     }
 }
