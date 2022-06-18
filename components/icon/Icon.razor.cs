@@ -41,6 +41,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public bool AvoidPrerendering { get; set; }
+
+        [Parameter]
         public string IconFont { get; set; }
 
         [Parameter]
@@ -111,6 +114,11 @@ namespace AntDesign
         private async Task SetupSvgImg(bool rendered = false)
         {
             if (Component != null)
+            {
+                return;
+            }
+
+            if (!rendered && AvoidPrerendering && Theme == IconThemeType.Twotone)
             {
                 return;
             }

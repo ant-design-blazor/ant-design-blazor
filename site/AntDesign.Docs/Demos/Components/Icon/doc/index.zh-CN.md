@@ -18,24 +18,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 
 ## API
 
-Common Icon
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| Alt | Alternative text for the icon | string | - |
+| Alt | 备用文本 | string | - |
+| AvoidPrerendering | 避免在预渲染时显示黑色图标 | bool | false |
 | ClassName | 设置图标的样式名 |string         | -         |
 | Style   | 设置图标的样式，例如 fontSize 和 color| Css propertities         |
 | Spin | 是否有旋转动画 | boolean         |-       |
 | Rotate |图标旋转角度（IE9 无效）| int  | -  |
 | TwoToneColor |仅适用双色图标。设置双色图标的主要颜色| string  | -  |
-
-We still have three different themes for icons, icon component name is the icon name suffixed by the theme name.
-
-Custom Icon
-
-| 参数             | 说明                                         | 类型          | 默认值    |
-| ---------------- | -------------------------------------------- | ------------- | --------- |
-| Style   | 设置图标的样式，例如 fontSize 和 color| CSSProperties         |
-| Spin | 是否有旋转动画 | boolean         |-       |
-| Rotate | 图标旋转角度（IE9 无效）| int  | -  |
 | Component |控制如何渲染图标，通常是一个渲染根标签为 <svg> 的 React 组件|   | -  |
