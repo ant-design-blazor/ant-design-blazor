@@ -1,7 +1,10 @@
 <div>
-    <AntDesign.InputNumber @bind-Value="myValue" Min="1" Max="10" DefaultValue="3"></AntDesign.InputNumber>
+    <AntDesign.InputNumber @bind-Value="myValue" Min="1" Max="10" DefaultValue="3" PlaceHolder="please input something"></AntDesign.InputNumber>
+    <AntDesign.InputNumber Style="width:200px" @bind-Value="nullableValue" Min="1" Max="10" PlaceHolder="please input something"></AntDesign.InputNumber>
 </div>
 
 @code{
     private double myValue { get; set; }
+
+    private double? nullableValue { get; set; }
 }
