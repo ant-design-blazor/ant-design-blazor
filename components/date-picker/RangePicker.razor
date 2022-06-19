@@ -20,10 +20,10 @@
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panels">
                     <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == 1 ? "display: none;": "")">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                     <div class="@_panelClassMapper.Class">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                 </div>
                 @if (RenderExtraFooter != null && !IsShowTime)

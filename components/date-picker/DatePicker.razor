@@ -17,7 +17,7 @@
         <Overlay>
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@_panelClassMapper.Class">
-                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
+                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date, index)" />
                 </div>
             </div>
         </Overlay>
