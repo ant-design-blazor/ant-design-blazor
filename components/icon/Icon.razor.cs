@@ -105,6 +105,8 @@ namespace AntDesign
         {
             if (firstRender || _twotoneColorChanged)
             {
+                _twotoneColorChanged = false;
+                
                 await SetupSvgImg(true);
             }
 
