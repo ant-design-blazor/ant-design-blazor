@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
@@ -488,6 +488,8 @@ namespace AntDesign
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+            
+            _dropDown.SetShouldRender(true);
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
