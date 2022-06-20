@@ -35,6 +35,7 @@
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(); }"
+                                 OnSuffixIconClick="OnSuffixIconClick"
                                  OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
                                  OnBlur="e => OnBlur(0)"

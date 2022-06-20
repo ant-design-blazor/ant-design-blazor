@@ -570,5 +570,11 @@ namespace AntDesign
             OnOpenChange.InvokeAsync(visible);
             InvokeInternalOverlayVisibleChanged(visible);
         }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick(0);
+        }
     }
 }

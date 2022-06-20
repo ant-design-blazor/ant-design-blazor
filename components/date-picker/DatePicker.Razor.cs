@@ -300,5 +300,11 @@ namespace AntDesign
             _openingOverlay = false;
             InvokeInternalOverlayVisibleChanged(visible);
         }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick();
+        }
     }
 }

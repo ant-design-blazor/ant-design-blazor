@@ -1,4 +1,4 @@
-﻿@namespace AntDesign.Internal
+@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
 @if (!IsRange)
@@ -24,7 +24,7 @@
                     <Icon type="close-circle" theme="fill" />
                 </span>
             }
-            <span class="@(PrefixCls)-suffix">
+            <span class="@(PrefixCls)-suffix" onclick="@OnSuffixIconClick">
 
                 @if (SuffixIcon != null)
                 {
@@ -67,8 +67,7 @@ else
                 <Icon type="close-circle" theme="fill" />
             </span>
         }
-        <span class="@(PrefixCls)-suffix">
-
+        <span class="@(PrefixCls)-suffix" onclick="@OnSuffixIconClick">
             @if (SuffixIcon != null)
             {
                 @SuffixIcon
@@ -149,6 +148,9 @@ else
 
     [Parameter]
     public EventCallback OnClickClear { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuffixIconClick { get; set; }
 
     public bool IsOnFocused { get; set; } = false;
 
