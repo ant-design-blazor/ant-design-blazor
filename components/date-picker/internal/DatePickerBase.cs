@@ -489,12 +489,12 @@ namespace AntDesign
 
         private async Task<bool> SwitchFocus(int index)
         {
-            if (index == 0 && !_pickerStatus[1].IsNewValueSelected && !_inputEnd.IsOnFocused && !IsDisabled(1))
+            if (index == 0 && (!_pickerStatus[1].IsNewValueSelected || Open) && !_inputEnd.IsOnFocused && !IsDisabled(1))
             {
                 await Blur(0);
                 await Focus(1);
             }
-            else if (index == 1 && !_pickerStatus[0].IsNewValueSelected && !_inputStart.IsOnFocused && !IsDisabled(0))
+            else if (index == 1 && (!_pickerStatus[0].IsNewValueSelected || Open) && !_inputStart.IsOnFocused && !IsDisabled(0))
             {
                 await Blur(1);
                 await Focus(0);
@@ -569,7 +569,6 @@ namespace AntDesign
 
         public void Close()
         {
-            Open = false;
             _duringManualInput = false;
             _dropDown?.Hide();
         }
@@ -854,8 +853,14 @@ namespace AntDesign
                     {
                         if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
                         {
-                            ChangeValue(_pickerStatus[0].OldValue.Value, 0);
-                            ChangeValue(_pickerStatus[1].OldValue.Value, 1);
+                            if (GetIndexValue(0) != _pickerStatus[0].OldValue)
+                            {
+                                ChangeValue(_pickerStatus[0].OldValue.Value, 0);
+                            }
+                            if (GetIndexValue(1) != _pickerStatus[1].OldValue)
+                            {
+                                ChangeValue(_pickerStatus[1].OldValue.Value, 1);
+                            }
                         }
                         else if (_pickerStatus[0].IsValueSelected || _pickerStatus[1].IsValueSelected)
                         {
@@ -888,9 +893,11 @@ namespace AntDesign
                         _pickerStatus[index].OldValue = GetIndexValue(index);
                     }
                 }
-
-            _pickerStatus[0].IsNewValueSelected = false;
-            _pickerStatus[1].IsNewValueSelected = false;
+            if (visible)
+            {
+                _pickerStatus[0].IsNewValueSelected = false;
+                _pickerStatus[1].IsNewValueSelected = false;
+            }
             OverlayVisibleChanged?.Invoke(this, visible);
         }
     }
