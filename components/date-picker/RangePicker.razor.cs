@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
@@ -143,7 +143,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
             {
                 array.SetValue(changeValue, index);
-
+                _cacheDuringInput = changeValue;
                 ChangePickerValue(changeValue, index);
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
@@ -488,7 +488,7 @@ namespace AntDesign
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
-            
+
             _dropDown.SetShouldRender(true);
         }
 

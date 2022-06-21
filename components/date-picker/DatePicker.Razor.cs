@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -100,6 +100,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
+                _cacheDuringInput = changeValue;
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
                     PickerValues[0] = notNullValue;
