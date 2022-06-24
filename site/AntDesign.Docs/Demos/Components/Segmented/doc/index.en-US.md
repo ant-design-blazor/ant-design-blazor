@@ -5,7 +5,7 @@ title: Segmented
 cover: https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg
 ---
 
-Segmented Controls. This component is available since `antd@4.20.0`.
+Segmented Controls. This component is available since `v0.12.0`.
 
 ## When To Use
 
@@ -14,14 +14,16 @@ Segmented Controls. This component is available since `antd@4.20.0`.
 
 ## API
 
-> This component is available since `antd@4.20.0`
+> This component is available since `v0.12.0`
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| block | Option to fit width to its parent\'s width | boolean | false |  |
-| defaultValue | Default selected value | string \| number |  |  |
-| disabled | Disable all segments | boolean | false |  |
-| onChange | The callback function that is triggered when the state changes | function(value: string \| number) |  |  |
-| options | Set children optional | string\[] \| number\[] \| Array<{ label: string value: string icon? ReactNode disabled?: boolean className?: string }> | [] |  |
-| size | The size of the Segmented. | `large` \| `middle` \| `small` | - |  |
-| value | Currently selected value | string \| number |  |  |
+| Block | Option to fit width to its parent\'s width | boolean | false |  |
+| DefaultValue | Default selected value | TValue |  |  |
+| Disabled | Disable all segments | boolean | false |  |
+| Labels | Use a string array as both label and value | string[] |  |  |
+| OnChange | The callback function that is triggered when the state changes | EventCallback<TValue> |  |  |
+| Options | Set children optional | SegmentedOption[] | [] |  |
+| Size | The size of the Segmented. | `large` \| `middle` \| `small` | - |  |
+| Value | Currently selected value | TValue |  |  |
+
