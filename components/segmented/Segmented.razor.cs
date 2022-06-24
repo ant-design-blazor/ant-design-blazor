@@ -180,11 +180,7 @@ namespace AntDesign
         {
             _items.ForEach(x => x.SetSelected(false));
 
-            await ThumbAnimation(item);
-
             _value = item.Value;
-
-            item.SetSelected(true);
 
             if (OnChange.HasDelegate)
             {
@@ -195,6 +191,10 @@ namespace AntDesign
             {
                 await ValueChanged.InvokeAsync(_value);
             }
+
+            await ThumbAnimation(item);
+
+            item.SetSelected(true);
         }
 
         private async Task GetItemElememt()
@@ -206,11 +206,6 @@ namespace AntDesign
         private async Task ThumbAnimation(SegmentedItem<TValue> item)
         {
             if (_itemRefs == null)
-            {
-                return;
-            }
-
-            if (item.Index == _activeIndex)
             {
                 return;
             }
