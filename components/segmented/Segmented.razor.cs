@@ -178,8 +178,7 @@ namespace AntDesign
 
         internal async void Select(SegmentedItem<TValue> item)
         {
-            _items.ForEach(x => x.SetSelected(false));
-
+            _items[_activeIndex].SetSelected(false);
             _value = item.Value;
 
             if (OnChange.HasDelegate)
@@ -194,6 +193,7 @@ namespace AntDesign
 
             await ThumbAnimation(item);
 
+            _items.ForEach(x => x.SetSelected(false));
             item.SetSelected(true);
         }
 
