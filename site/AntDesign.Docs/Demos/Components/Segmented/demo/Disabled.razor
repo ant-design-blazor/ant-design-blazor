@@ -1,5 +1,14 @@
-﻿<h3>Disabled</h3>
+﻿<Segmented TValue="string" Labels="@(new []{"Map", "Transit", "Satellite"})" Disabled />
+<br />
+<Segmented TValue="string" Options="@options" />
 
 @code {
 
+  SegmentedOption<string>[] options = {
+        new("Daily"),
+        new("Weekly",  "Weekly", true),
+        new("Monthly"),
+        new("Quarterly",  "Quarterly",  true ),
+        new("Yearly"),
+    };
 }

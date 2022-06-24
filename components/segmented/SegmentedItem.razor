@@ -3,6 +3,23 @@
 @typeparam TValue
 
 <label class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-  <input class="ant-segmented-item-input" type="radio" checked="@Selected">
-  <div class="ant-segmented-item-label" title="@Label" @onclick="OnClick">@Label</div>
+  <input class="ant-segmented-item-input" type="radio" checked="@_selected">
+  <div class="ant-segmented-item-label" title="@Label" @onclick="OnClick">
+    @if (ChildContent != null)
+    {
+      @ChildContent
+    }
+    else if (Icon != null)
+    {
+      <Icon Type="@Icon" />
+      if (Label != null)
+      {
+        <span>@Label</span>
+      }
+    }
+    else
+    {
+      @Label
+    }
+  </div>
 </label>

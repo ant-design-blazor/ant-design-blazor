@@ -19,10 +19,13 @@ namespace AntDesign
         public string Label { get; set; }
 
         [Parameter]
-        public bool Selected { get; set; }
+        public bool Disabled { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string Icon { get; set; }
 
         [CascadingParameter]
         private Segmented<TValue> Parent { get; set; }
@@ -31,12 +34,15 @@ namespace AntDesign
 
         internal int Width { get; set; }
 
+        private bool _selected;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             ClassMapper.Add(PrefixCls)
-                .If($"{PrefixCls}-selected", () => Selected)
+                .If($"{PrefixCls}-selected", () => _selected)
+                .If($"{PrefixCls}-disabled", () => Disabled)
                 ;
 
             Parent?.AddItem(this);
@@ -44,14 +50,18 @@ namespace AntDesign
 
         internal void SetSelected(bool selected)
         {
-            Selected = selected;
+            _selected = selected;
 
             StateHasChanged();
         }
 
-        private async Task OnClick()
+        private void OnClick()
         {
-            await Parent.Select(this);
+            if (Disabled)
+            {
+                return;
+            }
+            Parent.Select(this);
         }
 
         protected override void Dispose(bool disposing)
