@@ -1,15 +1,5 @@
-﻿@code
-{
-    bool collapsed;
-
-    void toggle()
-    {
-        collapsed = !collapsed;
-    }
-}
-
-<Layout>
-    <Sider Collapsible Collapsed=@collapsed NoTrigger OnCollapse="OnCollapse">
+﻿<Layout>
+    <Sider @bind-Collapsed=@collapsed NoTrigger OnCollapse="OnCollapse">
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"1"})>
             <MenuItem Key="1">
@@ -69,6 +59,12 @@
 
 
 @code{
+    bool collapsed;
+
+    void toggle()
+    {
+        collapsed = !collapsed;
+    }
 
     void OnCollapse(bool isCollapsed)
     {
