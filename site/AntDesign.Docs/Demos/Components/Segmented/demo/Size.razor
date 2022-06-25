@@ -1,0 +1,9 @@
+﻿<Segmented Size="SegmentedSize.Large" @bind-Value="value" Labels="@(new[]{"Daily", "Weekly", "Monthly", "Quarterly", "Yearly"})" />
+<br />
+<Segmented @bind-Value="value" Labels="@(new[]{"Daily", "Weekly", "Monthly", "Quarterly", "Yearly"})" />
+<br />
+<Segmented Size="SegmentedSize.Small" @bind-Value="value" Labels="@(new[]{"Daily", "Weekly", "Monthly", "Quarterly", "Yearly"})" />
+
+@code {
+  string value;
+}

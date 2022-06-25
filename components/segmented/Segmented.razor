@@ -1,0 +1,32 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TValue
+
+<div class="@ClassMapper.Class" style="@Style" @ref="@Ref" id="@Id">
+  <div class="ant-segmented-group">
+      @if (_sliding)
+      {
+          <div class="@_slidingCls" style="@_slidingStyle"></div>
+      }
+    <CascadingValue Value="this" IsFixed>
+      @if (ChildContent != null)
+      {
+        @ChildContent
+      }
+      else if (Options?.Any() == true)
+      {
+        @foreach (var option in Options)
+        {
+          <SegmentedItem TValue="TValue" Label="@option.Label" Value="@option.Value"  @key="option.Value" Disabled="@(option.Disabled || Disabled)"></SegmentedItem>
+        }
+      }
+      else if (Labels?.Any() == true)
+      {
+        @foreach (var label in Labels)
+        {
+          <SegmentedItem TValue="TValue" Label="@label.ToString()" Value="@label"  @key="label" Disabled="Disabled"></SegmentedItem>
+        }
+      }
+    </CascadingValue>
+  </div>
+</div>
