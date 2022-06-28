@@ -8,11 +8,17 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class ReuseTabsPageAttribute : Attribute
+    public class ShowForeverPageItem
     {
-        public string Title { get; set; }
-        public bool Ignore { get; set; }
-        public bool Closable { get; set; } = true;
+        public ShowForeverPageItem(string url, Type pageType)
+        {
+            this.Url = url;
+            this.PageType = pageType;
+        }
+
+        public string Url { get; set; }
+
+        public Type PageType { get; set; }
 
     }
 }

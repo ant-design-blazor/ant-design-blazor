@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -23,10 +25,30 @@ namespace AntDesign
         [Inject]
         public NavigationManager Navmgr { get; set; }
 
+        private ReuseTabsRouteView _routeView;
+
         [CascadingParameter(Name = "RouteView")]
-        public ReuseTabsRouteView RouteView { get; set; }
+        public ReuseTabsRouteView RouteView
+        {
+            get
+            {
+                return _routeView;
+            }
+            set
+            {
+                _routeView = value;
+
+                foreach (var item in ShowForeverPageItems)
+                {
+                    _routeView?.AddReuseTabsPageItem(item);
+                }
+            }
+        }
 
         private ReuseTabsPageItem[] Pages => RouteView?.Pages;
+
+        [Parameter]
+        public List<ShowForeverPageItem> ShowForeverPageItems { get; set; }
 
         private string CurrentUrl
         {
@@ -57,5 +79,24 @@ namespace AntDesign
             }
             StateHasChanged();
         }
+
+        //protected override Task OnInitializedAsync()
+        //{
+        //    foreach (var item in ShowForeverPageItems)
+        //    {
+        //        RouteView?.AddReuseTabsPageItem(item);
+        //    }
+
+        //    return base.OnInitializedAsync();
+        //}
+
+        //protected override Task OnAfterRenderAsync(bool firstRender)
+        //{
+
+
+        //    return base.OnAfterRenderAsync(firstRender);
+        //}
+
+
     }
 }

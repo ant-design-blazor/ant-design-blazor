@@ -68,7 +68,19 @@ namespace AntDesign
 
             builder.CloseComponent();
 
-            if (!_pageMap.ContainsKey(CurrentUrl))
+            //if (!_pageMap.ContainsKey(CurrentUrl))
+            //{
+            //    _pageMap[CurrentUrl] = new ReuseTabsPageItem
+            //    {
+            //        Body = body,
+            //        Url = CurrentUrl,
+            //        CreatedAt = DateTime.Now,
+            //        Ignore = false
+            //    };
+            //}
+
+            var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
+            if (reuseTabsPageItem == null)
             {
                 _pageMap[CurrentUrl] = new ReuseTabsPageItem
                 {
@@ -77,6 +89,12 @@ namespace AntDesign
                     CreatedAt = DateTime.Now,
                     Ignore = false
                 };
+
+                return;
+            }
+            if (reuseTabsPageItem.Body is null)
+            {
+                reuseTabsPageItem.Body = body;
             }
         }
 
@@ -122,5 +140,19 @@ namespace AntDesign
 
             pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
         }
+
+        public void AddReuseTabsPageItem(ShowForeverPageItem showForeverPageItem)
+        {
+            if (_pageMap.ContainsKey(showForeverPageItem.Url)) return;
+
+            var reuseTabsPageItem = new ReuseTabsPageItem();
+            this.GetPageInfo(reuseTabsPageItem, showForeverPageItem.PageType, showForeverPageItem.Url, null);
+            reuseTabsPageItem.CreatedAt = DateTime.Now;
+            _pageMap[showForeverPageItem.Url] = reuseTabsPageItem;
+        }
+
+
+
+
     }
 }

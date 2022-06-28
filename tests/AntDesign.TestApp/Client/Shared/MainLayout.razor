@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using AntDesign.TestApp.Client.Pages
+@inherits LayoutComponentBase
 
 <Layout Style="height: 100vh;">
 	<Sider  Collapsible Collapsed=@collapsed NoTrigger>
@@ -12,7 +13,7 @@
 		</Header>
 		<Content>
 			<div>
-				<ReuseTabs Draggable Size="TabSize.Small" />
+				<ReuseTabs Draggable Size="TabSize.Small" ShowForeverPageItems="ShowForeverPageItems" />
 			</div>
 		</Content>
 		<Footer>Footer</Footer>
@@ -27,4 +28,16 @@
     {
         collapsed = !collapsed;
     }
+
+    List<ShowForeverPageItem> ShowForeverPageItems = new List<ShowForeverPageItem>();
+
+    protected override Task OnInitializedAsync()
+    {
+        ShowForeverPageItems.Add(new ShowForeverPageItem("/fetchdata",typeof(FetchData)));
+
+
+
+        return base.OnInitializedAsync();
+    }
+
 }
