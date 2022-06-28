@@ -52,7 +52,7 @@
     "husky": "^4.2.3",
     "inquirer": "^7.1.0",
     "jquery": "^3.4.1",
-    "jsdom": "^16.0.0",
+    "jsdom": "^16.5.0",
     "lint-staged": "^10.2.11",
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
