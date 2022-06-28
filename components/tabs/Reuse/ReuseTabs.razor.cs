@@ -7,6 +7,9 @@ namespace AntDesign
 {
     public partial class ReuseTabs : AntDomComponentBase
     {
+        [Inject]
+        public NavigationManager Navmgr { get; set; }
+
         [Parameter]
         public string TabPaneClass { get; set; }
 
@@ -22,11 +25,7 @@ namespace AntDesign
         [Parameter]
         public ReuseTabsLocale Locale { get; set; } = LocaleProvider.CurrentLocale.ReuseTabs;
 
-        [Inject]
-        public NavigationManager Navmgr { get; set; }
-
         private ReuseTabsRouteView _routeView;
-
         [CascadingParameter(Name = "RouteView")]
         public ReuseTabsRouteView RouteView
         {
@@ -79,24 +78,6 @@ namespace AntDesign
             }
             StateHasChanged();
         }
-
-        //protected override Task OnInitializedAsync()
-        //{
-        //    foreach (var item in ShowForeverPageItems)
-        //    {
-        //        RouteView?.AddReuseTabsPageItem(item);
-        //    }
-
-        //    return base.OnInitializedAsync();
-        //}
-
-        //protected override Task OnAfterRenderAsync(bool firstRender)
-        //{
-
-
-        //    return base.OnAfterRenderAsync(firstRender);
-        //}
-
 
     }
 }

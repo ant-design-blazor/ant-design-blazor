@@ -2,22 +2,22 @@
 @inherits LayoutComponentBase
 
 <Layout Style="height: 100vh;">
-	<Sider  Collapsible Collapsed=@collapsed NoTrigger>
-		<div class="logo" />
-		<NavMenu />
-	</Sider>
-	<Layout>
-		<Header>
-			<LoginDisplay />
-			<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-		</Header>
-		<Content>
-			<div>
-				<ReuseTabs Draggable Size="TabSize.Small" ShowForeverPageItems="ShowForeverPageItems" />
-			</div>
-		</Content>
-		<Footer>Footer</Footer>
-	</Layout>
+    <Sider Collapsible Collapsed=@collapsed NoTrigger>
+        <div class="logo" />
+        <NavMenu />
+    </Sider>
+    <Layout>
+        <Header>
+            <LoginDisplay />
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </Header>
+        <Content>
+            <div>
+                <ReuseTabs Draggable Size="TabSize.Small" ShowForeverPageItems="ShowForeverPageItems" />
+            </div>
+        </Content>
+        <Footer>Footer</Footer>
+    </Layout>
 </Layout>
 
 @code
@@ -31,12 +31,14 @@
 
     List<ShowForeverPageItem> ShowForeverPageItems = new List<ShowForeverPageItem>();
 
+    public MainLayout()
+    {
+        ShowForeverPageItems.Add(new ShowForeverPageItem("/", typeof(AntDesign.TestApp.Client.Pages.Index)));
+        ShowForeverPageItems.Add(new ShowForeverPageItem("/test-tabs", typeof(TestTabs)));
+    }
+
     protected override Task OnInitializedAsync()
     {
-        ShowForeverPageItems.Add(new ShowForeverPageItem("/fetchdata",typeof(FetchData)));
-
-
-
         return base.OnInitializedAsync();
     }
 

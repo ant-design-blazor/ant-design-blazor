@@ -68,17 +68,6 @@ namespace AntDesign
 
             builder.CloseComponent();
 
-            //if (!_pageMap.ContainsKey(CurrentUrl))
-            //{
-            //    _pageMap[CurrentUrl] = new ReuseTabsPageItem
-            //    {
-            //        Body = body,
-            //        Url = CurrentUrl,
-            //        CreatedAt = DateTime.Now,
-            //        Ignore = false
-            //    };
-            //}
-
             var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
             if (reuseTabsPageItem == null)
             {
@@ -92,10 +81,9 @@ namespace AntDesign
 
                 return;
             }
-            if (reuseTabsPageItem.Body is null)
-            {
-                reuseTabsPageItem.Body = body;
-            }
+
+            if (reuseTabsPageItem.Body is null) reuseTabsPageItem.Body = body;
+
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)
@@ -143,12 +131,23 @@ namespace AntDesign
 
         public void AddReuseTabsPageItem(ShowForeverPageItem showForeverPageItem)
         {
-            if (_pageMap.ContainsKey(showForeverPageItem.Url)) return;
+            var url = string.Empty;
+            if (showForeverPageItem.Url.Contains(Navmgr.BaseUri))
+            {
+                url = showForeverPageItem.Url;
+            }
+            else
+            {
+                url = Navmgr.BaseUri + showForeverPageItem.Url.Substring(showForeverPageItem.Url.IndexOf('/') + 1, showForeverPageItem.Url.Length - 1);
+            }
+
+            if (_pageMap.ContainsKey(url)) return;
 
             var reuseTabsPageItem = new ReuseTabsPageItem();
-            this.GetPageInfo(reuseTabsPageItem, showForeverPageItem.PageType, showForeverPageItem.Url, null);
+            this.GetPageInfo(reuseTabsPageItem, showForeverPageItem.PageType, url, null);
             reuseTabsPageItem.CreatedAt = DateTime.Now;
-            _pageMap[showForeverPageItem.Url] = reuseTabsPageItem;
+            reuseTabsPageItem.Url = url;
+            _pageMap[url] = reuseTabsPageItem;
         }
 
 
