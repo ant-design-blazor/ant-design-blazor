@@ -13,7 +13,7 @@
         </Header>
         <Content>
             <div>
-                <ReuseTabs Draggable Size="TabSize.Small" ShowForeverPageItems="ShowForeverPageItems" />
+                <ReuseTabs Draggable Size="TabSize.Small" />
             </div>
         </Content>
         <Footer>Footer</Footer>
@@ -27,14 +27,6 @@
     void toggle()
     {
         collapsed = !collapsed;
-    }
-
-    List<ShowForeverPageItem> ShowForeverPageItems = new List<ShowForeverPageItem>();
-
-    public MainLayout()
-    {
-        ShowForeverPageItems.Add(new ShowForeverPageItem("/", typeof(AntDesign.TestApp.Client.Pages.Index)));
-        ShowForeverPageItems.Add(new ShowForeverPageItem("/test-tabs", typeof(TestTabs)));
     }
 
     protected override Task OnInitializedAsync()

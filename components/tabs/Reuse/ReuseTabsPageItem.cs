@@ -16,5 +16,7 @@ namespace AntDesign
         public bool Ignore { get; set; }
 
         public bool Closable { get; set; } = true;
+
+        public bool ShowForever { get; set; } = false;
     }
 }
