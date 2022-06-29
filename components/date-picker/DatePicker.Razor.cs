@@ -19,7 +19,6 @@ namespace AntDesign
             base.OnInitialized();
             ProcessDefaults();
             _pickerValuesAfterInit = PickerValues[0];
-
         }
 
         private void ProcessDefaults()
@@ -72,10 +71,7 @@ namespace AntDesign
             }
             await _dropDown.Show();
 
-            // clear status
-            _pickerStatus[0]._currentShowHadSelectValue = false;
-
-            if (!_inputStart.IsOnFocused && _pickerStatus[0]._hadSelectValue && !UseDefaultPickerValue[0])
+            if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
                 GetIfNotNull(Value, notNullValue =>
                 {
@@ -104,6 +100,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
+                _cacheDuringInput = changeValue;
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
                     PickerValues[0] = notNullValue;
@@ -124,7 +121,7 @@ namespace AntDesign
                 {
                     //reset picker to Value         
                     CurrentValue = _cacheDuringInput;
-                    _pickerStatus[0]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+                    _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
                     GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
                     {
                         PickerValues[0] = notNullValue;
@@ -134,7 +131,7 @@ namespace AntDesign
             }
 
             AutoFocus = false;
-            return;
+            await Task.Yield();
         }
 
         /// <summary>
@@ -213,7 +210,7 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (_pickerStatus[0]._hadSelectValue)
+            if (_pickerStatus[0].IsValueSelected)
             {
                 if (Value == null)
                 {
@@ -240,7 +237,7 @@ namespace AntDesign
 
             CurrentValue = THelper.ChangeType<TValue>(value);
 
-            _pickerStatus[0]._hadSelectValue = true;
+            _pickerStatus[0].IsValueSelected = true;
 
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
@@ -260,7 +257,7 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _pickerStatus[0]._hadSelectValue = true;
+            _pickerStatus[0].IsValueSelected = true;
         }
 
         public override void ClearValue(int index = 0, bool closeDropdown = true)
@@ -278,6 +275,8 @@ namespace AntDesign
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+
+            _dropDown.SetShouldRender(true);
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
@@ -301,6 +300,12 @@ namespace AntDesign
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
             InvokeInternalOverlayVisibleChanged(visible);
+        }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick();
         }
     }
 }

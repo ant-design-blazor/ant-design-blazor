@@ -46,6 +46,8 @@ namespace AntDesign.Internal
         private int? _selectedMinute;
         private int? _selectedHour;
 
+        private bool _isOkDisabled;
+
         private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
@@ -91,6 +93,7 @@ namespace AntDesign.Internal
         {
             base.OnInitialized();
             DatePicker.OverlayVisibleChanged += DatePicker_OverlayVisibleChanged;
+            _isOkDisabled = Value is null;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,6 +102,7 @@ namespace AntDesign.Internal
 
             if (!firstRender)
             {
+                _isOkDisabled = Value is null;
                 await ScrollToSelectedTimeIfChangedAsync();
             }
         }

@@ -47,7 +47,7 @@ namespace AntDesign
             {
                 var array = Value as Array;
 
-                if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
+                if (_pickerStatus[0].IsValueSelected && _inputEnd.IsOnFocused)
                 {
                     DateTime? value = null;
                     GetIfNotNull(Value, 0, notNullValue =>
@@ -60,7 +60,7 @@ namespace AntDesign
                         return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
                     }
                 }
-                if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
+                if (_pickerStatus[1].IsValueSelected && _inputStart.IsOnFocused)
                 {
                     DateTime? value = null;
                     GetIfNotNull(Value, 1, notNullValue =>
@@ -96,14 +96,10 @@ namespace AntDesign
             }
             await _dropDown.Show();
 
-            // clear status
-            _pickerStatus[0]._currentShowHadSelectValue = false;
-            _pickerStatus[1]._currentShowHadSelectValue = false;
-
             if (index == 0)
             {
                 // change start picker value
-                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                if (!_inputStart.IsOnFocused && _pickerStatus[index].IsValueSelected && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -116,7 +112,7 @@ namespace AntDesign
             else
             {
                 // change end picker value
-                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                if (!_inputEnd.IsOnFocused && _pickerStatus[index].IsValueSelected && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -147,7 +143,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
             {
                 array.SetValue(changeValue, index);
-
+                _cacheDuringInput = changeValue;
                 ChangePickerValue(changeValue, index);
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
@@ -337,13 +333,13 @@ namespace AntDesign
                     else
                         array.SetValue(_cacheDuringInput.GetValueOrDefault(), index);
 
-                    _pickerStatus[index]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+                    _pickerStatus[index].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
                     ChangePickerValue(_pickerValueCache, index);
                 }
                 _duringManualInput = false;
             }
+
             AutoFocus = false;
-            return;
         }
 
         protected override void OnInitialized()
@@ -373,8 +369,8 @@ namespace AntDesign
             {
                 UseDefaultPickerValue[0] = false;
                 UseDefaultPickerValue[1] = false;
-                _pickerStatus[0]._hadSelectValue = true;
-                _pickerStatus[1]._hadSelectValue = true;
+                _pickerStatus[0].IsValueSelected = true;
+                _pickerStatus[1].IsValueSelected = true;
             }
         }
 
@@ -430,12 +426,13 @@ namespace AntDesign
                 array.SetValue(arrayDefault.GetValue(oppositeIndex), oppositeIndex);
             }
 
-            _pickerStatus[index]._hadSelectValue = true;
-            _pickerStatus[index]._currentShowHadSelectValue = true;
+            _pickerStatus[index].IsValueSelected = true;
 
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
-                if (_pickerStatus[0]._currentShowHadSelectValue && _pickerStatus[1]._currentShowHadSelectValue)
+                _pickerStatus[index].IsNewValueSelected = true;
+
+                if (_pickerStatus[0].IsNewValueSelected && _pickerStatus[1].IsNewValueSelected)
                 {
                     Close();
                 }
@@ -469,7 +466,7 @@ namespace AntDesign
             int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
 
             string[] pickerHolders = new string[2];
-            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0]._initPicker, Locale);
+            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0].InitPicker, Locale);
 
             foreach (var i in indexToClear)
             {
@@ -483,13 +480,16 @@ namespace AntDesign
                     array.SetValue(default, i);
                 }
                 _placeholders[i] = pickerHolders[i];
-                _pickerStatus[i]._hadSelectValue = false;
+                _pickerStatus[i].IsValueSelected = false;
+                PickerValues[i] = _pickerValuesAfterInit[i];
             }
 
             if (closeDropdown)
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+
+            _dropDown.SetShouldRender(true);
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
@@ -565,10 +565,16 @@ namespace AntDesign
 
         private void OverlayVisibleChange(bool visible)
         {
-            OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
             _duringFocus = false;
+            OnOpenChange.InvokeAsync(visible);
             InvokeInternalOverlayVisibleChanged(visible);
+        }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick(0);
         }
     }
 }

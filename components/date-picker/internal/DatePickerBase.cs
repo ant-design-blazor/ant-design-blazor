@@ -111,7 +111,7 @@ namespace AntDesign
             }
             set
             {
-                if (!_isLocaleSetOutside && 
+                if (!_isLocaleSetOutside &&
                     (
                     (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
                     ||
@@ -261,7 +261,7 @@ namespace AntDesign
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
 
-        protected DatePickerStatus[] _pickerStatus
+        internal DatePickerStatus[] _pickerStatus
             = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
 
         protected Stack<string> _prePickerStack = new Stack<string>();
@@ -431,13 +431,12 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnSelect(DateTime date)
+        protected virtual async Task OnSelect(DateTime date, int index)
         {
-            int index = GetOnFocusPickerIndex();
             _duringManualInput = false;
 
             // InitPicker is the finally value
-            if (_picker == _pickerStatus[index]._initPicker)
+            if (_picker == _pickerStatus[index].InitPicker)
             {
                 ChangeValue(date, index);
 
@@ -461,12 +460,27 @@ namespace AntDesign
 
         public async Task OnOkClick()
         {
-            if (!IsRange)
+            var index = GetOnFocusPickerIndex();
+
+            _pickerStatus[index].IsNewValueSelected = true;
+
+            if (IsRange)
+            {
+                var otherIndex = Math.Abs(index - 1);
+
+                if (!_pickerStatus[otherIndex].IsNewValueSelected)
+                {
+                    var otherValue = GetIndexValue(otherIndex);
+                    _pickerStatus[otherIndex].IsNewValueSelected = otherValue is not null
+                                                                    && otherValue != _pickerStatus[otherIndex].OldValue;
+                }
+            }
+            else
             {
                 Close();
                 return;
             }
-            int index = GetOnFocusPickerIndex();
+
             if (!(await SwitchFocus(index)))
             {
                 Close();
@@ -475,12 +489,12 @@ namespace AntDesign
 
         private async Task<bool> SwitchFocus(int index)
         {
-            if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused && !IsDisabled(1))
+            if (index == 0 && (!_pickerStatus[1].IsNewValueSelected || Open) && !_inputEnd.IsOnFocused && !IsDisabled(1))
             {
                 await Blur(0);
                 await Focus(1);
             }
-            else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused && !IsDisabled(0))
+            else if (index == 1 && (!_pickerStatus[0].IsNewValueSelected || Open) && !_inputStart.IsOnFocused && !IsDisabled(0))
             {
                 await Blur(1);
                 await Focus(0);
@@ -493,19 +507,17 @@ namespace AntDesign
             return true;
         }
 
-        protected virtual async Task OnBlur(int index)
-        {
-        }
+        protected virtual async Task OnBlur(int index) => await Task.Yield();
 
         protected void InitPicker(string picker)
         {
-            if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker))
+            if (string.IsNullOrEmpty(_pickerStatus[0].InitPicker))
             {
-                _pickerStatus[0]._initPicker = picker;
+                _pickerStatus[0].InitPicker = picker;
             }
-            if (string.IsNullOrEmpty(_pickerStatus[1]._initPicker))
+            if (string.IsNullOrEmpty(_pickerStatus[1].InitPicker))
             {
-                _pickerStatus[1]._initPicker = picker;
+                _pickerStatus[1].InitPicker = picker;
             }
             if (IsRange)
             {
@@ -682,7 +694,7 @@ namespace AntDesign
                     if (!string.IsNullOrEmpty(Format))
                         _internalFormat = Format;
                     else
-                        _internalFormat = _pickerStatus[0]._initPicker switch
+                        _internalFormat = _pickerStatus[0].InitPicker switch
                         {
                             DatePickerType.Date => GetTimeFormat(),
                             DatePickerType.Month => Locale.Lang.YearMonthFormat,
@@ -718,7 +730,7 @@ namespace AntDesign
         {
             string format;
             if (string.IsNullOrEmpty(Format))
-                format = _pickerStatus[index]._initPicker switch
+                format = _pickerStatus[index].InitPicker switch
                 {
                     DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value, Locale.FirstDayOfWeek)}{Locale.Lang.Week}",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
@@ -742,11 +754,11 @@ namespace AntDesign
             PickerValues[index.Value] = date;
             if (IsRange)
             {
-                if (!UseDefaultPickerValue[1] && !_pickerStatus[1]._hadSelectValue && index == 0)
+                if (!UseDefaultPickerValue[1] && !_pickerStatus[1].IsValueSelected && index == 0)
                 {
                     PickerValues[1] = date;
                 }
-                else if (!UseDefaultPickerValue[0] && !_pickerStatus[0]._hadSelectValue && index == 1)
+                else if (!UseDefaultPickerValue[0] && !_pickerStatus[0].IsValueSelected && index == 1)
                 {
                     PickerValues[0] = date;
                 }
@@ -832,6 +844,61 @@ namespace AntDesign
             return orderedValue;
         }
 
-        protected void InvokeInternalOverlayVisibleChanged(bool visible) => OverlayVisibleChanged?.Invoke(this, visible);
+        protected void InvokeInternalOverlayVisibleChanged(bool visible)
+        {
+            if (IsShowTime || Picker == DatePickerType.Time)
+                if (IsRange)
+                {
+                    if (!visible && (!_pickerStatus[0].IsNewValueSelected || !_pickerStatus[1].IsNewValueSelected))
+                    {
+                        if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
+                        {
+                            if (GetIndexValue(0) != _pickerStatus[0].OldValue)
+                            {
+                                ChangeValue(_pickerStatus[0].OldValue.Value, 0);
+                            }
+                            if (GetIndexValue(1) != _pickerStatus[1].OldValue)
+                            {
+                                ChangeValue(_pickerStatus[1].OldValue.Value, 1);
+                            }
+                        }
+                        else if (_pickerStatus[0].IsValueSelected || _pickerStatus[1].IsValueSelected)
+                        {
+                            ClearValue(-1);
+                        }
+                    }
+                    else if (visible)
+                    {
+                        _pickerStatus[0].OldValue = GetIndexValue(0);
+                        _pickerStatus[1].OldValue = GetIndexValue(1);
+                    }
+                }
+                else
+                {
+                    var index = GetOnFocusPickerIndex();
+
+                    if (!_pickerStatus[index].IsNewValueSelected && !visible)
+                    {
+                        if (_pickerStatus[index].OldValue.HasValue)
+                        {
+                            ChangeValue(_pickerStatus[index].OldValue.Value, index);
+                        }
+                        else
+                        {
+                            ClearValue(index);
+                        }
+                    }
+                    else if (visible)
+                    {
+                        _pickerStatus[index].OldValue = GetIndexValue(index);
+                    }
+                }
+            if (visible)
+            {
+                _pickerStatus[0].IsNewValueSelected = false;
+                _pickerStatus[1].IsNewValueSelected = false;
+            }
+            OverlayVisibleChanged?.Invoke(this, visible);
+        }
     }
 }

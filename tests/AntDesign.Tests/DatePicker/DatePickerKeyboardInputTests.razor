@@ -28,7 +28,7 @@
 	}
 
 	[Fact]
-	public void DefaultValue_applied_to_value_on_blur()
+	public void DefaultValue_applied_to_value_on_blur_when_input_not_valid()
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -41,12 +41,36 @@
 		);
 		//Act
 		var input = cut.Find("input");
-		input.Input(defaultValue.AddDays(1).ToString("yyyy-MM-dd"));
+		input.Input("2022-90-1");
 		input.Blur();
 		//Assert
 		cut.Instance.Value.Should().Be(defaultValue);
 		value.Should().Be(defaultValue);
 		input.GetAttribute("value").Should().Be(defaultValueAsString);
+	}
+
+    [Fact]
+	public void Input_applied_to_value_on_blur_when_valid()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+		DateTime value = DateTime.MinValue;
+		DateTime defaultValue = new DateTime(2020,1,1);		
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        );
+        var newValue = defaultValue.AddDays(1);        
+		string newValueAsString = newValue.ToString("yyyy-MM-dd");
+
+        //Act
+        var input = cut.Find("input");      
+        input.Input(newValueAsString);
+		input.Blur();
+		//Assert
+		cut.Instance.Value.Should().Be(newValue);
+		value.Should().Be(newValue);
+		input.GetAttribute("value").Should().Be(newValueAsString);
 	}
 
 	[Fact]
