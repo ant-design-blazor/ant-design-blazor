@@ -166,7 +166,7 @@ Options for the template：
 - Clone to local development
 
   ```bash
-  $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
+  $ git clone https://github.com/ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
   $ dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
