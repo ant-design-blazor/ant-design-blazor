@@ -31,17 +31,18 @@ tasks can be achieved more efficiently within thesame context.
 | ChildContent  | Subcomponent                                                                                   | object         | -             |
 | MaskClosable  | Clicking on the mask (area outside the Drawer) to close the Drawer or not.                     | boolean        | true          |
 | MaskStyle     | Style for Drawer's mask element.                                                               | object         | -             |
+| Mask          | Whether to show mask or not.                                                                   | boolean        | true          |
 | Placement     | The placement of the Drawer, option could be `left` , `top`,`right`,`bottom`                   | string         | `right`       |
 | WrapClassName | The class name of the container of the Drawer dialog.                                          | string         | -             |
-| Width         | Width of the Drawer dialog, only when placement is 'left' or 'right'.                                                        |                | int           |
+| Width         | Width of the Drawer dialog, only when placement is 'left' or 'right'.                          |                | int           |
 | Height        | placement is top or bottom, height of the Drawer dialog.                                       | int            | 256           |
 | ZIndex        | The z-index of the Drawer.                                                                     | int            | -             |
 | OffsetX       | The the X coordinate offset(px), only when placement is `'left'` or `'right'`.                 | int            | 0             |
 | OffsetY       | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`.                 | int            | 0             |
 | Visible       | Whether the Drawer dialog is visible or not.                                                   | boolean        | -             |
 | Keyboard      | Whether support press esc to close                                                             | boolean        | true          |
-| OnClose       | Specify a callback that will be called when a user clicks mask, close button or Cancel button. | function(e)    | -             |
-| OnOpen        | Specify a callback that will be called before drawer displayed                                 | function(e)    | -             |
+| OnClose       | Specify a callback that will be called when a user clicks mask, close button or Cancel button. | EventCallback                        | -             |
+| OnOpen        | Specify a callback that will be called before drawer displayed                                 | EventCallback<DrawerOpenEventArgs>   | -             |
 
 ### DrawerService
 
