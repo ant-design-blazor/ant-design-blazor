@@ -33,7 +33,7 @@ tasks can be achieved more efficiently within thesame context.
 | MaskStyle     | Style for Drawer's mask element.                                                               | object         | -             |
 | Placement     | The placement of the Drawer, option could be `left` , `top`,`right`,`bottom`                   | string         | `right`       |
 | WrapClassName | The class name of the container of the Drawer dialog.                                          | string         | -             |
-| Width         | Width of the Drawer dialog.                                                                    |                | int           |
+| Width         | Width of the Drawer dialog, only when placement is 'left' or 'right'.                                                        |                | int           |
 | Height        | placement is top or bottom, height of the Drawer dialog.                                       | int            | 256           |
 | ZIndex        | The z-index of the Drawer.                                                                     | int            | -             |
 | OffsetX       | The the X coordinate offset(px), only when placement is `'left'` or `'right'`.                 | int            | 0             |
@@ -62,7 +62,7 @@ tasks can be achieved more efficiently within thesame context.
 | CloseOnNavigation | Whether to close the drawer when the navigation history changes                 | `boolean`                                | `true`        |
 | Keyboard          | Whether to support keyboard esc off                                             | `boolean`                                | `true`        |
 | MaskStyle         | Style for Drawer's mask element.                                                | `string`                                 | `{}`          |
-| BodyStyle         | Body style for modal body element. Such as height, padding etc.                 | `string`                                 | `{}`          |
+| BodyStyle         | Body style for Drawer body element. Such as height, padding etc.                 | `string`                                 | `{}`          |
 | Title             | The title for Drawer.                                                           | `OneOf<RenderFragment, string>`          | -             |
 | Width             | Width of the Drawer dialog.                                                     | `int`                                    | `256`         |
 | Height            | Height of the Drawer dialog, only when placement is `'top'` or `'bottom'`.      | `int`                                    | `256`         |

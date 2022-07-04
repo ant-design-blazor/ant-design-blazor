@@ -58,7 +58,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | CloseOnNavigation | 导航历史变化时是否关闭抽屉组件                          | `boolean`                                | `true`    |
 | Keyboard          | 是否支持键盘 esc 关闭                                   | `boolean`                                | `true`    |
 | MaskStyle         | 遮罩样式                                                | `string`                                 | `{}`      |
-| BodyStyle         | Modal body 样式                                         | `string`                                 | `{}`      |
+| BodyStyle         | Drawer body 样式                                         | `string`                                 | `{}`      |
 | Title             | 标题                                                    | `OneOf<RenderFragment, string>`          | -         |
 | Width             | 宽度                                                    | `int`                                    | `256`     |
 | Height            | 高度, 只在方向为 `'top'`或`'bottom'` 时生效             | `int`                                    | `256`     |
