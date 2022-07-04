@@ -115,7 +115,10 @@ namespace AntDesign
             }
         }
 
+        [Parameter] public EventCallback<DrawerOpenEventArgs> OnOpen { get; set; }
+
         [Parameter] public EventCallback OnClose { get; set; }
+
         [Parameter] public RenderFragment Handler { get; set; }
 
         #endregion
@@ -256,6 +259,19 @@ namespace AntDesign
             {
                 case ComponentStatus.Opening:
                     {
+                        if (OnOpen.HasDelegate)
+                        {
+                            var eventArgs = new DrawerOpenEventArgs();
+                            await OnOpen.InvokeAsync(eventArgs);
+                            if (eventArgs.Cancel)
+                            {
+                                this._isOpen = false;
+                                _status = ComponentStatus.Closed;
+                                StateHasChanged();
+                                return;
+                            }
+                        }
+
                         _status = ComponentStatus.Opened;
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))

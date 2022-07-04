@@ -37,7 +37,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | Visible       | Drawer 是否可见                                         | boolean        | -       |
 | Keyboard      | 是否支持键盘 esc 关闭                                   | boolean        | true    |
 | OnClose       | 点击遮罩层或右上角叉或取消按钮的回调                    | function(e)    | -       |
-| OnViewInit    | 抽屉显示之前回调事件                                    | function(e)    | -       |
+| OnOpen        | 抽屉显示之前回调事件                                    | function(e)    | -       |
 
 ### DrawerService
 

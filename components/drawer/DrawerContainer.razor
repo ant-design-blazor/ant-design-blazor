@@ -22,6 +22,7 @@
             OffsetX="@drawerConfig.OffsetX"
             OffsetY="@drawerConfig.OffsetY"
             Visible="@drawerConfig.Visible"
+            OnOpen="@((args) => drawerRef.OnOpen())"
             OnClose="@drawerRef.CloseAsync">
         @drawerConfig.ChildContent
     </Drawer>
