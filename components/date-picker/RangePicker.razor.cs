@@ -489,14 +489,13 @@ namespace AntDesign
                 }
                 _pickerStatus[i].IsValueSelected = false;
                 PickerValues[i] = _pickerValuesAfterInit[i];
+                ResetPlaceholder(i);
             }
 
             if (closeDropdown)
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
-
-            ResetPlaceholder(index);
 
             _dropDown.SetShouldRender(true);
         }
