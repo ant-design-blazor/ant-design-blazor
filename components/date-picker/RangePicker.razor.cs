@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -476,9 +476,6 @@ namespace AntDesign
             var array = CurrentValue as Array;
             int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
 
-            string[] pickerHolders = new string[2];
-            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0].InitPicker, Locale);
-
             foreach (var i in indexToClear)
             {
                 if (!IsNullable && DefaultValue != null)
@@ -490,7 +487,6 @@ namespace AntDesign
                 {
                     array.SetValue(default, i);
                 }
-                _placeholders[i] = pickerHolders[i];
                 _pickerStatus[i].IsValueSelected = false;
                 PickerValues[i] = _pickerValuesAfterInit[i];
             }
@@ -499,6 +495,8 @@ namespace AntDesign
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+
+            ResetPlaceholder(index);
 
             _dropDown.SetShouldRender(true);
         }

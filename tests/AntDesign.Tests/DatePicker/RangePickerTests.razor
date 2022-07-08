@@ -1,0 +1,52 @@
+﻿@using System.Globalization
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Renders_custom_placeholder()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        string[] placeholders = new[] { "This is awesome", "Yeah, it is." };
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+                    (@<RangePicker TValue="DateTime?[]" Placeholder="@(placeholders)" />);
+
+        //Assert
+        var inputs = cut.FindAll("input");
+
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            input.GetAttribute("placeholder").Should().Be(placeholders[i]);
+        }
+    }
+
+    [Fact]
+    public void Preserves_placeholder_after_clear()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        string[] placeholders = new[] { "This is awesome", "Yeah, it is." };
+        var valueAfterClear = new DateTime?[] { null, null };
+        var rangeValue = new DateTime?[] { new DateTime(2022, 6, 8), new DateTime(2022, 7, 8) };
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+                  (@<RangePicker @bind-Value="rangeValue" Placeholder="@(placeholders)"/>);
+
+        cut.Instance.ClearValue();
+
+        //Assert
+        cut.Instance.Value.Should().BeEquivalentTo(valueAfterClear);
+        var inputs = cut.FindAll("input");
+
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            input.GetAttribute("placeholder").Should().Be(placeholders[i]);
+        }
+    }
+}

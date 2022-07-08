@@ -188,6 +188,10 @@ namespace AntDesign
         {
         }
 
+        public void ResetPlaceholder(int rangePickerIndex = -1)
+        {
+        }
+
         public string Picker { get { return _picker; } }
     }
 }
