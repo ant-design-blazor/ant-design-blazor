@@ -102,6 +102,7 @@ namespace AntDesign
                     _hideDone = false;
                     _hasDestroy = false;
 
+                    await _dialog.CleanShowAnimationAsync();
                     if (OnAfterShow.HasDelegate)
                     {
                         await OnAfterShow.InvokeAsync(null);
