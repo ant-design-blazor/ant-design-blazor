@@ -249,7 +249,7 @@ namespace AntDesign
         /// </para>
         /// </summary>
         [Parameter]
-        public EventCallback<DrawerOpenEventArgs> OnOpen { get; set; }
+        public Func<Task> OnOpen { get; set; }
 
         /// <summary>
         /// <para>
@@ -403,20 +403,13 @@ namespace AntDesign
             {
                 case ComponentStatus.Opening:
                     {
-                        if (OnOpen.HasDelegate)
+                        _status = ComponentStatus.Opened;
+
+                        if (OnOpen != null)
                         {
-                            var eventArgs = new DrawerOpenEventArgs();
-                            await OnOpen.InvokeAsync(eventArgs);
-                            if (eventArgs.Cancel)
-                            {
-                                this._isOpen = false;
-                                _status = ComponentStatus.Closed;
-                                StateHasChanged();
-                                return;
-                            }
+                            await OnOpen.Invoke();
                         }
 
-                        _status = ComponentStatus.Opened;
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {

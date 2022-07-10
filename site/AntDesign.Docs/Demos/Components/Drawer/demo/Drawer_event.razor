@@ -15,7 +15,7 @@
 
     <SpaceItem>
         <div>
-            <Button Type="primary" @onclick="@OpenDrawer">OpenDrawer(@("Cancel:" + (openCounter % 2 == 0)))</Button>
+            <Button Type="primary" @onclick="@OpenDrawer">OpenDrawer</Button>
             <Drawer Closable="true"
                     Visible="@visible"
                     Placement="right"
@@ -75,7 +75,6 @@
 
 
     // #region use <Drawer></Drawer>
-    int openCounter = 0;
 
     bool visible = false;
 
@@ -84,14 +83,13 @@
         this.visible = true;
     }
 
-    void OnOpen(DrawerOpenEventArgs drawerOpenEventArgs)
+    async Task OnOpen()
     {
-        bool cancel = ((openCounter++) % 2) == 0;
-        Console.WriteLine("OnOpen in triggered, Cancel value: " + cancel);
-        drawerOpenEventArgs.Cancel = cancel;
-        if (cancel)
+        var confirmResult = await confirmService.Show("OnOpen event: Are you sure to close the drawer?", "Question", ConfirmButtons.YesNo);
+        if (confirmResult == ConfirmResult.Yes)
         {
             this.visible = false;
+            StateHasChanged();
         }
     }
 

@@ -37,8 +37,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | OffsetY       | Y 轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | int            | 0       |
 | Visible       | Drawer 是否可见                                         | boolean        | -       |
 | Keyboard      | 是否支持键盘 esc 关闭                                   | boolean        | true    |
-| OnClose       | 点击遮罩层或右上角叉或取消按钮的回调                       | EventCallback   | -       |
-| OnOpen        | 抽屉显示之前回调事件                                    | EventCallback<DrawerOpenEventArgs>    | -       |
+| OnClose       | 点击遮罩层或右上角叉或取消按钮的回调                    | EventCallback  | -       |
+| OnOpen        | 抽屉渲染之后回调事件                                    | Func<Task>   | -       |
 
 ### DrawerService
 

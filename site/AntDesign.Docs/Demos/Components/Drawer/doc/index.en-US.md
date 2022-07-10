@@ -41,8 +41,8 @@ tasks can be achieved more efficiently within thesame context.
 | OffsetY       | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`.                 | int            | 0             |
 | Visible       | Whether the Drawer dialog is visible or not.                                                   | boolean        | -             |
 | Keyboard      | Whether support press esc to close                                                             | boolean        | true          |
-| OnClose       | Specify a callback that will be called when a user clicks mask, close button or Cancel button. | EventCallback                        | -             |
-| OnOpen        | Specify a callback that will be called before drawer displayed                                 | EventCallback<DrawerOpenEventArgs>   | -             |
+| OnClose       | Specify a callback that will be called when a user clicks mask, close button or Cancel button. | EventCallback    | -             |
+| OnOpen        | Specify a callback that will be called after drawer rendered                                   | Func<Task>    | -             |
 
 ### DrawerService
 
