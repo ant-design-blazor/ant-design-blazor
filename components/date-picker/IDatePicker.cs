@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace AntDesign
 {
@@ -10,6 +10,7 @@ namespace AntDesign
         internal event EventHandler<bool> OverlayVisibleChanged;
         int GetOnFocusPickerIndex();
         void ChangePlaceholder(string placeholder, int index = 0);
+        void ResetPlaceholder(int index = -1);
         string GetFormatValue(DateTime value, int index);
         void ChangePickerType(string type);
         void ChangePickerType(string type, int index);

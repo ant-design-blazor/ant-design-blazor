@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -11,6 +12,7 @@ namespace AntDesign
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
         private TValue _value;
+        private TValue _lastValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -25,10 +27,19 @@ namespace AntDesign
             set
             {
                 TValue orderedValue = SortValue(value);
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(orderedValue, Value);
+
+                var hasChanged = _lastValue is null || (IsNullable ? !Enumerable.SequenceEqual(orderedValue as DateTime?[], _lastValue as DateTime?[]) :
+                                                            !Enumerable.SequenceEqual(orderedValue as DateTime[], _lastValue as DateTime[]));
                 if (hasChanged)
                 {
                     _value = orderedValue;
+
+                    _lastValue ??= CreateInstance();
+                    Array.Copy(orderedValue as Array, _lastValue as Array, 2);
+
+                    GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
+                    GetIfNotNull(_value, 1, (notNullValue) => PickerValues[1] = notNullValue);
+
                     OnValueChange(orderedValue);
                 }
             }
@@ -465,9 +476,6 @@ namespace AntDesign
             var array = CurrentValue as Array;
             int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
 
-            string[] pickerHolders = new string[2];
-            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0].InitPicker, Locale);
-
             foreach (var i in indexToClear)
             {
                 if (!IsNullable && DefaultValue != null)
@@ -479,9 +487,9 @@ namespace AntDesign
                 {
                     array.SetValue(default, i);
                 }
-                _placeholders[i] = pickerHolders[i];
                 _pickerStatus[i].IsValueSelected = false;
                 PickerValues[i] = _pickerValuesAfterInit[i];
+                ResetPlaceholder(i);
             }
 
             if (closeDropdown)

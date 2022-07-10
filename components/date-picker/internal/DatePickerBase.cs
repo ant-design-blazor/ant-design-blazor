@@ -302,6 +302,12 @@ namespace AntDesign
             {
                 Picker = DatePickerType.Date;
             }
+
+            if (_placeholder.Value is null)
+            {
+                _placeholder = IsRange ? new string[] { } : string.Empty;
+            }
+
             this.SetClass();
 
             base.OnInitialized();
@@ -521,10 +527,6 @@ namespace AntDesign
             }
             if (IsRange)
             {
-                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, Locale);
-                _placeholders[0] = first;
-                _placeholders[1] = second;
-
                 DateTime now = DateTime.Now;
                 PickerValues[1] = picker switch
                 {
@@ -537,12 +539,8 @@ namespace AntDesign
                     _ => now,
                 };
             }
-            else
-            {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
-                _placeholders[0] = first;
-                _placeholders[1] = first;
-            }
+
+            ResetPlaceholder();
         }
 
         protected bool IsDisabled(int? index = null)
@@ -665,6 +663,31 @@ namespace AntDesign
             _placeholders[index] = placeholder;
 
             StateHasChanged();
+        }
+
+        public void ResetPlaceholder(int index = -1)
+        {
+            _placeholder.Switch(single =>
+            {
+                var placeholder = string.IsNullOrEmpty(single) ? DatePickerPlaceholder.GetPlaceholderByType(Picker, Locale) : single;
+                _placeholders[0] = placeholder;
+                _placeholders[1] = placeholder;
+
+            }, arr =>
+            {
+                var rangePickerIndex = index >= 0 ? index : GetOnFocusPickerIndex();
+
+                var placeholder = arr.Length > rangePickerIndex ? arr[rangePickerIndex] : null;
+
+                if (placeholder is null)
+                {
+                    var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, Locale);
+
+                    placeholder = rangePickerIndex == 0 ? startPlaceholder : endPlaceholder;
+                }
+
+                _placeholders[rangePickerIndex] = placeholder;
+            });
         }
 
         private int _htmlInputSize;

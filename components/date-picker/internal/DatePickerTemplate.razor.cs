@@ -114,29 +114,7 @@ namespace AntDesign.Internal
                 DatePicker.HoverDateTime = null;
             }
 
-            string placeholder;
-
-            if (IsRange)
-            {
-                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, Locale);
-
-                if (DatePicker.GetOnFocusPickerIndex() == 0)
-                {
-                    placeholder = startPlaceholder;
-                }
-                else
-                {
-                    placeholder = endPlaceholder;
-                }
-            }
-            else
-            {
-                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker, Locale);
-            }
-
-            int focusIndex = DatePicker.GetOnFocusPickerIndex();
-
-            DatePicker.ChangePlaceholder(placeholder, focusIndex);
+            DatePicker.ResetPlaceholder();
         }
 
         private bool IsDateInRange(DateTime currentColDate)

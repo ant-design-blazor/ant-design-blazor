@@ -65,7 +65,7 @@ namespace AntDesign
             //Reset Picker to default in case it the picker value was changed
             //but no value was selected (for example when a user clicks next 
             //month but does not select any value)
-            if (UseDefaultPickerValue[0] && DefaultPickerValue != null)
+            if (!_pickerStatus[0].IsValueSelected && UseDefaultPickerValue[0] && DefaultPickerValue != null)
             {
                 PickerValues[0] = _pickerValuesAfterInit;
             }
@@ -101,12 +101,6 @@ namespace AntDesign
             {
                 CurrentValue = changeValue;
                 _cacheDuringInput = changeValue;
-                GetIfNotNull(changeValue, (notNullValue) =>
-                {
-                    PickerValues[0] = notNullValue;
-                });
-
-                StateHasChanged();
             }
         }
 
@@ -121,11 +115,6 @@ namespace AntDesign
                 {
                     //reset picker to Value         
                     CurrentValue = _cacheDuringInput;
-                    _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
-                    GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
-                    {
-                        PickerValues[0] = notNullValue;
-                    });
                 }
                 _duringManualInput = false;
             }
@@ -184,10 +173,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
-                GetIfNotNull(changeValue, (notNullValue) =>
-                {
-                    PickerValues[0] = notNullValue;
-                });
+
                 if (OnChange.HasDelegate)
                 {
                     await OnChange.InvokeAsync(new DateTimeChangedEventArgs
@@ -237,8 +223,6 @@ namespace AntDesign
 
             CurrentValue = THelper.ChangeType<TValue>(value);
 
-            _pickerStatus[0].IsValueSelected = true;
-
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
@@ -257,7 +241,12 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _pickerStatus[0].IsValueSelected = true;
+
+            _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+
+            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+
+            _dropDown?.SetShouldRender(true);
         }
 
         public override void ClearValue(int index = 0, bool closeDropdown = true)
