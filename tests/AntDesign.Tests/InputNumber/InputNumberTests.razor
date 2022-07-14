@@ -1,25 +1,44 @@
 ﻿@using System.Text.RegularExpressions
-@inherits AntDesignTestBase	
+@inherits AntDesignTestBase
 @code {
 
-	[Fact]
-	public void InputNumber_formatter_parser_change_value()
-	{
-		//Arrange
+    [Fact]
+    public void InputNumber_formatter_parser_change_value()
+    {
+        //Arrange
 #pragma warning disable CS0618 // Type or member is obsolete
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
 #pragma warning restore CS0618 // Type or member is obsolete
-		AntDesign.InputNumber<double>? input = null;
-		Func<double, string> formatter = v => "$ " + v.ToString("n0");
-		Func<string, string> parser = v => Regex.Replace(v, @"\$\s?|(,*)", "");
+        AntDesign.InputNumber<double>? input = null;
+        Func<double, string> formatter = v => "$ " + v.ToString("n0");
+        Func<string, string> parser = v => Regex.Replace(v, @"\$\s?|(,*)", "");
 
-		var cut = Render<AntDesign.InputNumber<double>>(
-	@<AntDesign.InputNumber @ref="@input" Formatter="formatter" Parser="parser" DefaultValue="1000d"/>
-	);
-		//Act
-		cut.Find("input").Change("$ 10");
-		//Assert           
-		cut.Instance.Value.Should().Be(10);
-	}
+        var cut = Render<AntDesign.InputNumber<double>>(
+	@<AntDesign.InputNumber @ref="@input" Formatter="formatter" Parser="parser" DefaultValue="1000d" />
+        );
+        //Act
+        cut.Find("input").Change("$ 10");
+        //Assert
+        cut.Instance.Value.Should().Be(10);
+    }
 
+    [Fact]
+    public void InputNumber_value_display_check_when_step_notation_is_scientific()
+    {
+        //Arrange
+#pragma warning disable CS0618 // Type or member is obsolete
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
+        AntDesign.InputNumber<double>? input = null;
+
+        var cut = Render<AntDesign.InputNumber<double>>(
+        @<AntDesign.InputNumber @ref="@input" Step="0.00001" />
+    );
+        //Act
+        var inputElement = cut.Find("input");
+        inputElement.KeyDown(Key.Up);
+        //Assert
+        string decimalSeparator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+        inputElement.GetAttribute("value").Should().Be($"0{decimalSeparator}00001");
+    }
 }
