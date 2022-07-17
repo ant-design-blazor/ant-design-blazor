@@ -22,6 +22,23 @@ namespace AntDesign
         /// <summary>
         /// default Dialog close icon
         /// </summary>
+        internal static readonly RenderFragment DefaultMaxIcon = (builder) =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, "Type", "fullscreen");
+            builder.AddAttribute(2, "Theme", "outline");
+            builder.CloseComponent();
+        };
+        internal static readonly RenderFragment DefaultRestoreIcon = (builder) =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, "Type", "fullscreen-exit");
+            builder.AddAttribute(2, "Theme", "outline");
+            builder.CloseComponent();
+        };
+        /// <summary>
+        /// default Dialog close icon
+        /// </summary>
         internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
         {
             builder.OpenComponent<Icon>(0);

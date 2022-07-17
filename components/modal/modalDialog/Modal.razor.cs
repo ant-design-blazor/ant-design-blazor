@@ -227,6 +227,12 @@ namespace AntDesign
         [Parameter]
         public string MaxBodyHeight { get; set; } = null;
 
+        /// <summary>
+        /// show modal maximize button
+        /// </summary>
+        [Parameter]
+        public bool Maximizable { get; set; } = false;
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -304,7 +310,8 @@ namespace AntDesign
 
                 CancelButtonProps = CancelButtonProps,
                 Rtl = Rtl,
-                MaxBodyHeight = MaxBodyHeight
+                MaxBodyHeight = MaxBodyHeight,
+                Maximizable = Maximizable,
             };
 
             return options;

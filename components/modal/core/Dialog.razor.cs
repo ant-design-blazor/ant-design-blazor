@@ -87,22 +87,46 @@ namespace AntDesign
         {
             if (_modalStyle == null)
             {
-                var style = $"{Config.GetWidth()};";
+                _modalStyle = CalcModalStyle();
+            }
+            return _modalStyle;
+        }
 
+        private string CalcModalStyle()
+        {
+            string style;
+            if (_modalStatus == ModalStatus.Default)
+            {
+                style = $"{Config.GetWidth()};";
                 if (Config.Draggable)
                 {
                     string left = $"margin: 0; padding-bottom:0;";
                     style += left;
                 }
-                _modalStyle = style;
+            }
+            else
+            {
+                style = "margin: 0; padding: 0 ; top: 0;";
             }
 
-            if (!string.IsNullOrWhiteSpace(Style))
+            if (string.IsNullOrWhiteSpace(Style))
             {
-                return _modalStyle + Style + ";";
+                return style;
             }
-            return _modalStyle;
+            return style + Style + ";";
         }
+
+
+        private string _contentStyle = "";
+        private string CalcContentStyle()
+        {
+            return _modalStatus switch
+            {
+                ModalStatus.Max => "width: 100vw; height: 100vh;",
+                _ => ""
+            };
+        }
+
 
         private string GetBodyStyle()
         {
@@ -238,6 +262,28 @@ namespace AntDesign
             }
         }
 
+        private ModalStatus _modalStatus = ModalStatus.Default;
+
+        /// <summary>
+        /// closer(X) click event
+        /// </summary>
+        /// <returns></returns>
+        private Task OnMaxBtnClick()
+        {
+            if (_modalStatus == ModalStatus.Default)
+            {
+                _modalStatus = ModalStatus.Max;
+            }
+            else
+            {
+                _modalStatus = ModalStatus.Default;
+            }
+            _wrapStyle = CalcWrapStyle();
+            _modalStyle = CalcModalStyle();
+            _contentStyle = CalcContentStyle();
+            return Task.CompletedTask;
+        }
+
         #region control show and hide class name and style
 
         /// <summary>
@@ -248,27 +294,34 @@ namespace AntDesign
         {
             if (!_hasShow && Visible)
             {
-                if (Config.Draggable)
-                {
-                    _wrapStyle = "display:flex;justify-content: center;";
-                    if (Config.Centered)
-                    {
-                        _wrapStyle += "align-items: center;";
-                    }
-                    else
-                    {
-                        _wrapStyle += "align-items: flex-start;";
-                    }
-                }
-                else
-                {
-                    _wrapStyle = "";
-                }
+                _hasShow = true;
+                _wrapStyle = CalcWrapStyle();
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
                 _modalAnimationClsName = ModalAnimation.ModalEnter;
-                _hasShow = true;
             }
+        }
+
+        private string CalcWrapStyle()
+        {
+            string style;
+            if (_modalStatus == ModalStatus.Default && Config.Draggable)
+            {
+                style = "display:flex;justify-content: center;";
+                if (Config.Centered)
+                {
+                    style += "align-items: center;";
+                }
+                else
+                {
+                    style += "align-items: flex-start;";
+                }
+            }
+            else
+            {
+                style = "";
+            }
+            return style;
         }
 
         /// <summary>
@@ -382,7 +435,7 @@ namespace AntDesign
                 }
 
                 // enable drag and drop
-                if (Config.Draggable && !_doDraggable)
+                if (_modalStatus != ModalStatus.Max && Config.Draggable && !_doDraggable)
                 {
                     _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
@@ -398,7 +451,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                 }
                 // disable drag and drop
-                if (Config.Draggable && _doDraggable)
+                if (_modalStatus != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
                     _doDraggable = false;
                     await JsInvokeAsync(JSInteropConstants.DisableDraggable, _dialogHeader);

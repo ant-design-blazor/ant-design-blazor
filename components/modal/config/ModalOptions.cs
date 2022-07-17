@@ -121,6 +121,11 @@ namespace AntDesign
         /// </summary>
         public RenderFragment Content { get; set; } = null;
 
+        /// <summary>
+        /// show modal maximize button
+        /// </summary>
+        public bool Maximizable { get; set; } = false;
+
         #region internal
 
         internal async Task DefaultOnCancelOrOk(MouseEventArgs e)

@@ -46,6 +46,7 @@ When requiring users to interact with the application, but without jumping to a 
 | Draggable | Is it allowed to drag Modal through its Header（if true, at least one of Title and TitleTemplate must have a value） | bool | false |
 | DragInViewport | If Draggable is true, and is it only allowed drag Modal in the viewport | bool | true |
 | MaxBodyHeight | Modal content max height | string? | null |
+| Maximizable       | Whether to display the maximize button | bool   | false |
 
 #### Note
 

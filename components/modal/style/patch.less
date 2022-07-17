@@ -1,0 +1,36 @@
+﻿@import './index.less';
+
+.ant-modal-max {
+    position: absolute;
+    top: 0;
+    right: @modal-header-close-size;
+    z-index: 10;
+    padding: 0;
+    color: rgba(0,0,0,.45);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    background: 0 0;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: color .3s;
+
+    &-x {
+        display: block;
+        width: @modal-header-close-size;
+        height: @modal-header-close-size;
+        font-size: @font-size-lg;
+        font-style: normal;
+        line-height: @modal-header-close-size;
+        text-align: center;
+        text-transform: none;
+        text-rendering: auto;
+    }
+
+    &:focus,
+    &:hover {
+        color: @icon-color-hover;
+        text-decoration: none;
+    }
+}

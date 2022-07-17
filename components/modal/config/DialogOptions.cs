@@ -84,6 +84,11 @@ namespace AntDesign
         /// </summary>
         public string MaxBodyHeight { get; set; } = null;
 
+        /// <summary>
+        /// show modal maximize button
+        /// </summary>
+        public bool Maximizable { get; set; } = false;
+
         #region internal
 
 

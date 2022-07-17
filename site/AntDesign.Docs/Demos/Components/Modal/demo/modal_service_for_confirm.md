@@ -12,7 +12,6 @@ title:
 模板代码：ConfirmTemplateDemo.razor
 
 ``` c#
-
 @inherits FeedbackComponent<string, string>
 
 <div>
