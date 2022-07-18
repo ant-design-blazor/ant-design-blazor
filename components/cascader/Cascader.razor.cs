@@ -121,6 +121,7 @@ namespace AntDesign
         {
             base.OnValueChange(value);
             RefreshNodeValue(value);
+            RefreshDisplayText();
         }
 
         /// <summary>
