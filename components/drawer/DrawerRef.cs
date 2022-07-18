@@ -50,8 +50,6 @@ namespace AntDesign
         public override async Task OpenAsync()
         {
             await _service.OpenAsync(this);
-            if (OnOpen != null)
-                await OnOpen.Invoke();
         }
 
         /// <summary>

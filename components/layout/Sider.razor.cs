@@ -45,6 +45,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public EventCallback<bool> CollapsedChanged { get; set; }
+
+        [Parameter]
         public EventCallback<bool> OnCollapse { get; set; }
 
         [Parameter]
@@ -132,6 +135,11 @@ namespace AntDesign
             {
                 OnCollapse.InvokeAsync(_isCollapsed);
             }
+
+            if (CollapsedChanged.HasDelegate)
+            {
+                CollapsedChanged.InvokeAsync(_isCollapsed);
+            }
         }
 
         private void OptimizeSize(decimal windowWidth)
@@ -164,6 +172,11 @@ namespace AntDesign
                 if (OnCollapse.HasDelegate)
                 {
                     OnCollapse.InvokeAsync(_isCollapsed);
+                }
+
+                if (CollapsedChanged.HasDelegate)
+                {
+                    CollapsedChanged.InvokeAsync(_isCollapsed);
                 }
             }
 

@@ -35,7 +35,7 @@ namespace AntDesign
             {
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
-                var stepStr = _step.ToString();
+                var stepStr = Convert.ToDecimal(_step).ToString(nfi);
                 if (string.IsNullOrEmpty(_format))
                 {
                     _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));
@@ -240,7 +240,6 @@ namespace AntDesign
             MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo));
             var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
             _toStringFunc = lambdaToString.Compile();
-
 
             SetClass();
 

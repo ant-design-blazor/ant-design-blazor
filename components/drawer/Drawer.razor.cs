@@ -25,15 +25,58 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// <para>
+        /// 是否显示右上角的关闭按钮
+        /// </para>
+        /// <para>
+        /// Whether a close (x) button is visible on top right of the Drawer dialog or not.
+        /// </para>
+        /// </summary>
         [Parameter]
         public bool Closable { get; set; } = true;
 
+        /// <summary>
+        /// <para>
+        /// 点击蒙层是否允许关闭
+        /// </para>
+        /// <para>
+        /// Clicking on the mask (area outside the Drawer) to close the Drawer or not.
+        /// </para>
+        /// </summary>
         [Parameter]
         public bool MaskClosable { get; set; } = true;
 
+        /// <summary>
+        /// <para>
+        /// 是否显示蒙层
+        /// </para>
+        /// <para>
+        /// Whether to show mask or not.
+        /// </para>
+        /// </summary>
         [Parameter]
         public bool Mask { get; set; } = true;
 
+        /// <summary>
+        /// <para>
+        /// 蒙层样式
+        /// </para>
+        /// <para>
+        /// Style for Drawer's mask element.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public string MaskStyle { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// 是否支持键盘 esc 关闭
+        /// </para>
+        /// <para>
+        /// Whether to support keyboard esc off
+        /// </para>
+        /// </summary>
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
@@ -43,6 +86,14 @@ namespace AntDesign
 
         private OneOf<RenderFragment, string> _title;
 
+        /// <summary>
+        /// <para>
+        /// 标题
+        /// </para>
+        /// <para>
+        /// The title for Drawer.
+        /// </para>
+        /// </summary>
         [Parameter]
         public OneOf<RenderFragment, string> Title
         {
@@ -63,20 +114,68 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// "left" | "right" | "top" | "bottom"
+        /// <para>
+        /// Drawer 的位置，字符串, "left" | "right" | "top" | "bottom"
+        /// </para>
+        /// <para>
+        /// The placement of the Drawer, option could be left, top, right, bottom
+        /// </para>
         /// </summary>
-        [Parameter] public string Placement { get; set; } = "right";
+        [Parameter]
+        public string Placement { get; set; } = "right";
 
-        [Parameter] public string MaskStyle { get; set; }
+        /// <summary>
+        /// <para>
+        /// Drawer body 样式
+        /// </para>
+        /// <para>
+        /// Body style for modal body element. Such as height, padding etc.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public string BodyStyle { get; set; }
 
-        [Parameter] public string BodyStyle { get; set; }
+        /// <summary>
+        /// <para>
+        /// Drawer对话框外层容器的类名
+        /// </para>
+        /// <para>
+        /// The class name of the container of the Drawer dialog.                       
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public string WrapClassName { get; set; }
 
-        [Parameter] public string WrapClassName { get; set; }
+        /// <summary>
+        /// <para>
+        /// 宽度，仅当 <see cref="Placement"/> 为 "left" 或 "right" 时生效
+        /// </para>
+        /// <para>
+        /// Width of the Drawer dialog, only when placement is 'left' or 'right'.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public int Width { get; set; } = 256;
 
-        [Parameter] public int Width { get; set; } = 256;
+        /// <summary>
+        /// <para>
+        /// 高度，仅当 <see cref="Placement"/> 为 "top" 或 "bottom" 时生效
+        /// </para>
+        /// <para>
+        /// Height of the Drawer dialog, only when placement is 'top' or 'bottom'.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public int Height { get; set; } = 256;
 
-        [Parameter] public int Height { get; set; } = 256;
-
+        /// <summary>
+        /// <para>
+        /// 设置 Drawer 的 z-index
+        /// </para>
+        /// <para>
+        /// The z-index of the Drawer.
+        /// </para>
+        /// </summary>
         [Parameter]
         public int ZIndex
         {
@@ -93,10 +192,36 @@ namespace AntDesign
 
         private string InnerZIndexStyle => (_status.IsOpen() || _status == ComponentStatus.Closing) ? _zIndexStyle : "z-index:-9999;";
 
-        [Parameter] public int OffsetX { get; set; } = 0;
+        /// <summary>
+        /// <para>
+        /// X 轴方向的偏移量，只在方向为 'left'或'right' 时生效.
+        /// </para>
+        /// <para>
+        /// The the X coordinate offset(px), only when placement is 'left' or 'right'.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public int OffsetX { get; set; } = 0;
 
-        [Parameter] public int OffsetY { get; set; } = 0;
+        /// <summary>
+        /// <para>
+        /// Y 轴方向的偏移量，只在方向为 'top'或'bottom' 时生效
+        /// </para>
+        /// <para>
+        /// The the Y coordinate offset(px), only when placement is 'top' or 'bottom'.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public int OffsetY { get; set; } = 0;
 
+        /// <summary>
+        /// <para>
+        /// Drawer 是否可见
+        /// </para>
+        /// <para>
+        /// Whether the Drawer dialog is visible or not.
+        /// </para>
+        /// </summary>
         [Parameter]
         public bool Visible
         {
@@ -115,16 +240,38 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public EventCallback OnClose { get; set; }
-        [Parameter] public RenderFragment Handler { get; set; }
+        /// <summary>
+        /// <para>
+        /// 在 Drawer 打开前的回调事件
+        /// </para>
+        /// <para>
+        /// Specify a callback that will be called before drawer displayed
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public Func<Task> OnOpen { get; set; }
 
-        #endregion
+        /// <summary>
+        /// <para>
+        /// 在 关闭 前的回调事件，应当在 OnClose 将 <see cref="Visible"/> 设置为false
+        /// </para>
+        /// <para>
+        /// Specify a callback that will be called when a user clicks mask, close button or Cancel button.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClose { get; set; }
+
+        [Parameter]
+        public RenderFragment Handler { get; set; }
 
         private OneOf<RenderFragment, string> _content;
 
         private string ContentString { get; set; }
 
         private RenderFragment ContentTemplate { get; set; }
+
+        #endregion
 
         private ComponentStatus _status;
         private bool _hasInvokeClosed;
@@ -257,6 +404,12 @@ namespace AntDesign
                 case ComponentStatus.Opening:
                     {
                         _status = ComponentStatus.Opened;
+
+                        if (OnOpen != null)
+                        {
+                            await OnOpen.Invoke();
+                        }
+
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {

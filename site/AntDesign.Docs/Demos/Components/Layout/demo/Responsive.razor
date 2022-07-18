@@ -1,12 +1,8 @@
 ﻿<Layout>
     <Sider Breakpoint="@BreakpointType.Lg"
            CollapsedWidth="64"
-           OnBreakpoint="@(broken => {
-            Console.WriteLine($"OnBreakpoint:{broken}");
-        })"
-           OnCollapse="@(collapsed => {
-            Console.WriteLine($"collapsed:{collapsed}");
-        })">
+           @bind-Collapsed=@collapsed
+         >
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
             <MenuItem Key="1">
@@ -37,6 +33,10 @@
         <Footer Style="text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
 </Layout>
+
+@code{
+    bool collapsed;
+}
 
 <style>
     #components-layout-demo-responsive .logo {
