@@ -22,7 +22,7 @@ namespace AntDesign
         /// <summary>
         /// default Dialog close icon
         /// </summary>
-        internal static readonly RenderFragment DefaultMaxIcon = (builder) =>
+        internal static readonly RenderFragment DefaultMaximizeIcon = (builder) =>
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "fullscreen");

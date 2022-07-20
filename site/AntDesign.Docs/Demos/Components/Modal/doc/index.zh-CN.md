@@ -50,6 +50,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | DragInViewport | 如果 Draggable 为 true，是否仅在视窗内拖动Modal | bool | true |
 | MaxBodyHeight | Modal 内容的最大高度 | string? | null |
 | Maximizable | 是否显示最大化按钮 | bool | false |
+| MaximizeBtnIcon | Modal在正常状态下的最大化按钮icon | RenderFragment | fullscreen       |
+| RestoreBtnIcon  | Modal在最大化状态下的还原按钮icon | RenderFragment | fullscreen-exit  |
+
 
 #### 注意
 

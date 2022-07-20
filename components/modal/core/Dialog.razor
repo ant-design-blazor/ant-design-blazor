@@ -34,7 +34,14 @@
                         <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max") @onclick="@OnMaxBtnClick">
                             <span class=@($"{Config.PrefixCls}-max-x")>
                                 <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-icon")>
-                                    @DialogOptions.DefaultMaxIcon
+                                    @if(_modalStatus == ModalStatus.Default)
+                                    {
+                                        @(Config.MaximizeBtnIcon)
+                                    }
+                                    else
+                                    {
+                                        @(Config.RestoreBtnIcon)
+                                    }
                                 </span>
                             </span>
                         </button>

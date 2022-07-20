@@ -89,6 +89,16 @@ namespace AntDesign
         /// </summary>
         public bool Maximizable { get; set; } = false;
 
+        /// <summary>
+        /// The icon of the maximize button when the modal is in normal state
+        /// </summary>
+        public RenderFragment MaximizeBtnIcon { get; set; } = DefaultMaximizeIcon;
+
+        /// <summary>
+        /// The icon of the maximize button when the modal is maximized
+        /// </summary>
+        public RenderFragment RestoreBtnIcon { get; set; } = DefaultRestoreIcon;
+
         #region internal
 
 
