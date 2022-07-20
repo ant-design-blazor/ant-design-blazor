@@ -590,19 +590,6 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
-        private void UpdateCheckStateDefault(bool? halfChecked = null)
-        {
-            if (halfChecked == true)
-            {
-                //If the child node is indeterminate, the parent node must is indeterminate.
-                this.Checked = false;
-                this.Indeterminate = true;
-            }
-            else if (HasChildNodes == true && !DisableCheckbox)
-            {
-                //Determines the selection status of the current node
-                bool hasChecked = false;
-                bool hasUnchecked = false;
 
                 foreach (var item in ChildNodes)
                 {
@@ -938,9 +925,9 @@ namespace AntDesign
             {
                 _defaultBinding = true;
                 if (this.Checked)
-                    this.SetCheckedDefault(true);
-                this.SetCheckedDefault(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);
-                this.SetSelectedDefault(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
+                    this.SetChecked(true);
+                this.SetChecked(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);           
+                this.SetSelected(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
                 if (!TreeComponent.DefaultExpandAll)
                 {
                     if (this.Expanded)
