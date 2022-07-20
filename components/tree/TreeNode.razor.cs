@@ -212,6 +212,23 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        public void SetSelectedDefault(bool value)
+        {
+            if (Disabled) return;
+            if (_selected == value) return;
+            _selected = value;
+            if (value == true)
+            {
+                if (TreeComponent.Multiple == false) TreeComponent.DeselectAll();
+                TreeComponent.SelectedNodeAdd(this);
+            }
+            else
+            {
+                TreeComponent.SelectedNodeRemove(this);
+            }
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Whether the load state is asynchronous (affects the display of the expansion icon)
         /// </summary>
@@ -923,7 +940,7 @@ namespace AntDesign
                 if (this.Checked)
                     this.SetCheckedDefault(true);
                 this.SetCheckedDefault(TreeComponent?.DefaultCheckedKeys?.Any(k => k == Key) ?? false);
-                this.SetSelected(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
+                this.SetSelectedDefault(TreeComponent?.DefaultSelectedKeys?.Any(k => k == Key) ?? false);
                 if (!TreeComponent.DefaultExpandAll)
                 {
                     if (this.Expanded)
