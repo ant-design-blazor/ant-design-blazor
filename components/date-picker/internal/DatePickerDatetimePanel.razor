@@ -32,21 +32,20 @@
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
-                        @attributes="GetAttributes()"
-                        MaxRow="6"
-                        MaxCol="7"
-                        ViewStartDate="startDate"
-                        ShowFooter="@ShowToday"
-                        IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
-                        IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                        IsSelected="date => DateHelper.IsSameDay(date, Value)"
-                        GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
-                        OnValueSelect="OnSelectDate"
-                        GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
-                        SkipDays="skipDays">
+                            @attributes="GetAttributes()"
+                            MaxRow="6"
+                            MaxCol="7"
+                            ViewStartDate="startDate"
+                            ShowFooter="@ShowToday"
+                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                            IsSelected="date => DateHelper.IsSameDay(date, Value)"
+                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
+                            OnValueSelect="OnSelectDate"
+                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
+                            SkipDays="skipDays">
             <RenderPickerHeader>
-                <DatePickerHeader TValue="TValue"
-                              @attributes="GetAttributes()" />
+                <DatePickerHeader TValue="TValue" @attributes="GetAttributes()" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
@@ -116,8 +115,7 @@
                         var hourValue=use12Hours && hour==0? 12 :  hour;
 
                         <li @ref="@_hours[hourValue]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                         @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
+                                <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
                                 @hourValue
                             </div>
                         </li>
@@ -143,8 +141,7 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                         @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
+                            <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
                         </li>
@@ -164,8 +161,7 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                         @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
+                            <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>
                         </li>
@@ -184,16 +180,14 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isAmSelectedCls @disabledCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                             @onclick="e => {if (!disabled && (isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
+                            <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => {if (!disabled && (isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
                                  else OnSelectTime(DateTime.Today); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
                             </div>
                         </li>
 
                         <li class="@(PrefixCls)-time-panel-cell @isPmSelectedCls @disabledCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                             @onclick="e => {if (!disabled && (!isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
+                            <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => {if (!disabled && (!isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
                                  else OnSelectTime(DateTime.Today.AddHours(12)); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator
                             </div>
