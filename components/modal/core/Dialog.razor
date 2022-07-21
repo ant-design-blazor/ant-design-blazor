@@ -18,7 +18,7 @@
                  style="@GetStyle()"
                  >
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class=@($"{Config.PrefixCls}-content") id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") style="@_contentStyle">
+                <div class=@($"{Config.PrefixCls}-content") id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
                     @if (Config.Closable)
                     {
                         <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@OnCloserClick">
@@ -31,9 +31,9 @@
                     }
                     @if (Config.Maximizable)
                     {
-                        <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max") @onclick="@OnMaxBtnClick">
-                            <span class=@($"{Config.PrefixCls}-max-x")>
-                                <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-icon")>
+                        <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@OnMaxBtnClick">
+                            <span class=@($"{Config.PrefixCls}-max-btn-x")>
+                                <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
                                     @if(_modalStatus == ModalStatus.Default)
                                     {
                                         @(Config.MaximizeBtnIcon)

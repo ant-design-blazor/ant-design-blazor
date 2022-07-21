@@ -1,4 +1,22 @@
 ﻿.ant-modal-max {
+    display: flex;
+    flex-direction: column;
+
+    & > .ant-modal-content {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+
+        & > .ant-modal-body {
+            flex-grow: 1;
+            overflow: auto;
+        }
+    }
+}
+
+
+.ant-modal-max-btn {
     position: absolute;
     top: 0;
     right: @modal-header-close-size;

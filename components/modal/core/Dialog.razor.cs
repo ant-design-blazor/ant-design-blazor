@@ -117,17 +117,6 @@ namespace AntDesign
         }
 
 
-        private string _contentStyle = "";
-        private string CalcContentStyle()
-        {
-            return _modalStatus switch
-            {
-                ModalStatus.Max => "width: 100vw; height: 100vh;",
-                _ => ""
-            };
-        }
-
-
         private string GetBodyStyle()
         {
             var style = Config.BodyStyle;
@@ -280,7 +269,6 @@ namespace AntDesign
             }
             _wrapStyle = CalcWrapStyle();
             _modalStyle = CalcModalStyle();
-            _contentStyle = CalcContentStyle();
             return Task.CompletedTask;
         }
 
@@ -376,7 +364,8 @@ namespace AntDesign
         private string GetModalClsName()
         {
             var clsName = Config.ClassName;
-            return clsName + _modalAnimationClsName;
+            return clsName + _modalAnimationClsName 
+                + (_modalStatus == ModalStatus.Max ? " ant-modal-max" : "");
         }
 
         #endregion
