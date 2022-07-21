@@ -26,30 +26,28 @@
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                 </div>
-                @if (Ranges != null&&Ranges.Count>0 && !IsShowTime)
+                @if (ShowFooter)
                 {
-                    <div class="@(PrefixCls)-footer">
-                        <div class="@(PrefixCls)-footer-extra">
-                            <Space Wrap>
-                                @foreach (var range in Ranges)
-                                {
-                                    <SpaceItem>
-                                        <div @onmouseout="()=>OnRangeItemOut(range.Value)"@onmouseover="()=>OnRangeItemOver(range.Value)">
-                                            <Tag OnClick="()=>OnRangeItemClicked(range.Value)" PresetColor="@PresetColor.Blue">@range.Key</Tag>
-                                        </div>
-                                    </SpaceItem>
-                                }
-                            </Space>
-                        </div>
-                    </div>
-                }
-                @if (RenderExtraFooter != null && !IsShowTime)
-                {
-                    <div class="@(PrefixCls)-footer">
-                        <div class="@(PrefixCls)-footer-extra">
-                            @RenderExtraFooter
-                        </div>
-                    </div>
+                  <div class="@(PrefixCls)-footer">
+                    @if (RenderExtraFooter != null)
+                    {
+                      <div class="@(PrefixCls)-footer-extra">
+                        @RenderExtraFooter
+                      </div>
+                    }
+
+                    @if (ShowRanges)
+                    {
+                      <ul class="@(PrefixCls)-ranges">
+                        @foreach (var range in Ranges)
+                        {
+                          <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
+                            <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  </div>
                 }
             </div>
         </Overlay>

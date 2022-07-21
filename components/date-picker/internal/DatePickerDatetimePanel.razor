@@ -204,48 +204,54 @@
         </div>
     </div>
 </div>
-
-@if (RenderExtraFooter != null)
+@if (ShowFooter)
 {
-    <div class="@(PrefixCls)-footer">
-        <div class="@(PrefixCls)-footer-extra">
-            @RenderExtraFooter
-        </div>
-    </div>
-}
+  <div class="@(PrefixCls)-footer">
 
-<div class="@(PrefixCls)-footer">
-    <ul class="@(PrefixCls)-ranges">
+    @if (RenderExtraFooter != null)
+    {
+      <div class="@(PrefixCls)-footer-extra">
+        @RenderExtraFooter
+      </div>
+    }
+
+    @if (ShowRanges)
+    {
+      <ul class="@(PrefixCls)-ranges">
         @if (Ranges != null)
         {
-                    <Space Wrap>
-                        @foreach (var range in Ranges)
-                        {
-                            <SpaceItem>
-                                <div @onmouseout="()=>RangeItemOut(range.Value)" @onmouseover="()=>RangeItemOver(range.Value)">
-                                    <Tag OnClick="()=>RangeItemClicked(range.Value)" PresetColor="@PresetColor.Blue">@range.Key</Tag>
-                                </div>
-                            </SpaceItem>
-                        }
-                    </Space>
+          @foreach (var range in Ranges)
+          {
+            <li class="ant-picker-preset" @onmouseout="()=>HandleRangeItemOut(range.Value)" @onmouseover="()=>HandleRangeItemOver(range.Value)">
+              <span class="ant-tag ant-tag-blue" @onclick="()=>HandleRangeItemClicked(range.Value)">@range.Key</span>
+            </li>
+          }
         }
-        else
+
+        @if (IsShowTime)
         {
-            @if (ShowToday)
-            {
-                <li class="@(PrefixCls)-now">
-                    <a class="@(PrefixCls)-now-btn"
-               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                        @Locale.Lang.Now
-                    </a>
-                </li>
-            }
-        }
-        <li class="@(PrefixCls)-ok">
-            <Button Type="@ButtonType.Primary" Disabled="_isOkDisabled"
-                    OnClick="OnOkClick">
-                @Locale.Lang.Ok
+          @if (Ranges == null)
+          {
+            <li class="@(PrefixCls)-now">
+              <a class="@(PrefixCls)-now-btn" @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+                @Locale.Lang.Now
+              </a>
+            </li>
+          }
+          <li class="@(PrefixCls)-ok">
+            <Button Type="@ButtonType.Primary" Disabled="_isOkDisabled" Size="small" OnClick="OnOkClick">
+              @Locale.Lang.Ok
             </Button>
-        </li>
-    </ul>
-</div>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (!IsShowTime && ShowToday)
+    {
+      <a class="@(PrefixCls)-today-btn" @onclick="e => { OnSelectTime(DateTime.Today); Close(); }">
+        @Locale.Lang.Today
+      </a>
+    }
+  </div>
+}

@@ -14,7 +14,7 @@ namespace AntDesign
     {
         private TValue _value;
         private TValue _lastValue;
-		private TValue _swpValue;
+        private TValue _swpValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -23,7 +23,7 @@ namespace AntDesign
         /// @bind-Value="model.PropertyName"
         /// </example>
         [Parameter]
-        public sealed override TValue Value
+        public override sealed TValue Value
         {
             get { return _value; }
             set
@@ -51,6 +51,10 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
+
+        private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
+
+        private bool ShowRanges => Ranges != null;
 
         public RangePicker()
         {
@@ -182,7 +186,7 @@ namespace AntDesign
             {
                 if (_duringManualInput)
                 {
-                    //A scenario when there are a lot of controls; 
+                    //A scenario when there are a lot of controls;
                     //It may happen that incorrect values were entered into one of the input
                     //followed by ENTER key. This event may be fired before input manages
                     //to get the value. Here we ensure that input will get that value.
@@ -267,6 +271,7 @@ namespace AntDesign
             }
             return false;
         }
+
         private async Task<bool> ValidateRange(int index, DateTime newDate, Array array)
         {
             if (index == 0 && array.GetValue(1) is not null && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
@@ -319,8 +324,8 @@ namespace AntDesign
 
         protected override async Task OnBlur(int index)
         {
-            //Await for Focus event - if it is going to happen, it will be 
-            //right after OnBlur. Best way to achieve that is to wait. 
+            //Await for Focus event - if it is going to happen, it will be
+            //right after OnBlur. Best way to achieve that is to wait.
             //Task.Yield() does not work here.
             await Task.Delay(1);
             if (_duringFocus)
@@ -449,7 +454,7 @@ namespace AntDesign
                 {
                     Close();
                 }
-                // if the other DatePickerInput is disabled, then close picker panel 
+                // if the other DatePickerInput is disabled, then close picker panel
                 else if (IsDisabled(Math.Abs(index - 1)))
                 {
                     Close();

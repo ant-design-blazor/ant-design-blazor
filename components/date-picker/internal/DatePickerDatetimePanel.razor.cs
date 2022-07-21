@@ -8,12 +8,14 @@ namespace AntDesign.Internal
     public partial class DatePickerDatetimePanel<TValue> : DatePickerPanelBase<TValue>, IAsyncDisposable
     {
         [Parameter]
-        public bool ShowToday { get; set; } = false;
+        public bool ShowToday { get; set; } = true;
 
         [Parameter]
         public string ShowTimeFormat { get; set; }
+
         [Parameter]
         public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
+
         [Parameter]
         public string Format { get; set; }
 
@@ -31,16 +33,22 @@ namespace AntDesign.Internal
 
         [Parameter]
         public EventCallback OnOkClick { get; set; }
-        
+
         [Parameter]
-        public  EventCallback<DateTime?[]> OnRangeItemOver { get; set; }
+        public EventCallback<DateTime?[]> OnRangeItemOver { get; set; }
+
         [Parameter]
         public EventCallback<DateTime?[]> OnRangeItemOut { get; set; }
+
         [Parameter]
         public EventCallback<DateTime?[]> OnRangeItemClicked { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
+
+        private bool ShowFooter => RenderExtraFooter != null || ShowRanges || ShowToday;
+
+        private bool ShowRanges => IsShowTime || Ranges != null;
 
         private Dictionary<int, ElementReference> _hours = new();
         private Dictionary<int, ElementReference> _minutes = new();
@@ -56,27 +64,31 @@ namespace AntDesign.Internal
 
         private bool _isOkDisabled;
 
- 		private void RangeItemOver(DateTime?[] rangeitem)
+        private void HandleRangeItemOver(DateTime?[] rangeitem)
         {
-            if(OnRangeItemOver.HasDelegate)
+            if (OnRangeItemOver.HasDelegate)
             {
                 OnRangeItemOver.InvokeAsync(rangeitem);
             }
         }
-        private void RangeItemOut(DateTime?[] rangeitem)
+
+        private void HandleRangeItemOut(DateTime?[] rangeitem)
         {
             if (OnRangeItemOut.HasDelegate)
             {
                 OnRangeItemOut.InvokeAsync(rangeitem);
             }
         }
-        private void RangeItemClicked(DateTime?[] rangeitem)
+
+        private void HandleRangeItemClicked(DateTime?[] rangeitem)
         {
             if (OnRangeItemClicked.HasDelegate)
             {
                 OnRangeItemClicked.InvokeAsync(rangeitem);
             }
-        }        private DatePickerDisabledTime GetDisabledTime()
+        }
+
+        private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
             List<int> disabledMinutes = new List<int>();
