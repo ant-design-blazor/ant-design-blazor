@@ -49,6 +49,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Draggable | 是否允许通过 Modal的 Header 拖动 Modal（如果为true，Title 和 TitleTemplate 至少有一个必须有值） | bool | false |
 | DragInViewport | 如果 Draggable 为 true，是否仅在视窗内拖动Modal | bool | true |
 | MaxBodyHeight | Modal 内容的最大高度 | string? | null |
+| Maximizable | 是否显示最大化按钮 | bool | false |
+| MaximizeBtnIcon | Modal在正常状态下的最大化按钮icon | RenderFragment | fullscreen       |
+| RestoreBtnIcon  | Modal在最大化状态下的还原按钮icon | RenderFragment | fullscreen-exit  |
+
 
 #### 注意
 
