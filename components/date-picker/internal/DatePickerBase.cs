@@ -274,6 +274,9 @@ namespace AntDesign
 
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
+        private static readonly int[] _hours = Enumerable.Range(0, 24).ToArray();
+        private static readonly int[] _minutesSeconds = Enumerable.Range(0, 60).ToArray();
+
         internal event EventHandler<bool> OverlayVisibleChanged;
         private readonly object _eventLock = new();
         event EventHandler<bool> IDatePicker.OverlayVisibleChanged
@@ -429,6 +432,8 @@ namespace AntDesign
             _needRefresh = true;
             _inputStart.IsOnFocused = inputStartFocus;
             _inputEnd.IsOnFocused = inputEndFocus;
+
+            SetDisabledTime();
         }
 
         protected virtual Task PickerClicked()
@@ -462,6 +467,8 @@ namespace AntDesign
             }
 
             ChangePickerValue(date, index);
+
+            SetDisabledTime();
         }
 
         public async Task OnOkClick()
@@ -510,6 +517,9 @@ namespace AntDesign
                 await Focus(index); //keep focus on current input
                 return false;
             }
+
+            SetDisabledTime();
+
             return true;
         }
 
@@ -922,6 +932,37 @@ namespace AntDesign
                 _pickerStatus[1].IsNewValueSelected = false;
             }
             OverlayVisibleChanged?.Invoke(this, visible);
+        }
+
+        protected void SetDisabledTime()
+        {
+            if (!IsRange || !IsShowTime)
+            {
+                return;
+            }
+
+            var endValue = GetIndexValue(1);
+            var startValue = GetIndexValue(0);
+            var isSameDate = startValue?.Date == endValue?.Date;
+
+            if (_inputStart.IsOnFocused)
+            {
+                DisabledHours = dateTime => isSameDate ?
+                   _hours.Where(h => h > endValue?.Hour).ToArray() : Array.Empty<int>();
+                DisabledMinutes = dateTime => isSameDate && startValue?.Hour == endValue?.Hour ?
+                   _minutesSeconds.Where(m => m > endValue?.Minute).ToArray() : Array.Empty<int>();
+                DisabledSeconds = dateTime => isSameDate && startValue?.Hour == endValue?.Hour && startValue?.Minute == endValue?.Minute ?
+                   _minutesSeconds.Where(s => s > endValue?.Second).ToArray() : Array.Empty<int>();
+            }
+            else if (_inputEnd.IsOnFocused)
+            {
+                DisabledHours = dateTime => isSameDate ?
+                   _hours.Where(h => h < startValue?.Hour).ToArray() : Array.Empty<int>();
+                DisabledMinutes = dateTime => isSameDate && startValue?.Hour == endValue?.Hour ?
+                   _minutesSeconds.Where(m => m < startValue?.Minute).ToArray() : Array.Empty<int>();
+                DisabledSeconds = dateTime => isSameDate && startValue?.Hour == endValue?.Hour && startValue?.Minute == endValue?.Minute ?
+                   _minutesSeconds.Where(s => s < startValue?.Second).ToArray() : Array.Empty<int>();
+            }
         }
     }
 }
