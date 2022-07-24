@@ -122,4 +122,82 @@
             cut.Instance.DisabledSeconds.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
         }
     }
+
+    [Fact]
+    public void Ignores_keyboard_input_when_start_is_later_than_end()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var range = new DateTime[]
+        {
+            new DateTime(2022, 6, 8, 20, 20, 0),
+            new DateTime(2022, 6, 8, 20, 20, 30)
+        };
+         
+        var expectedStart = range[0];
+        var expectedEnd = range[1];
+
+        var format = "yyyy-MM-dd HH:mm:ss";
+        string startValueAsString = expectedStart.ToString(format);
+        string endValueAsString = expectedEnd.ToString(format);
+
+        string keyboardInput = "2022-06-08 20:25:35";
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
+ 
+        //Act
+        var input = cut.FindAll("input");
+        input[0].Input(keyboardInput);
+        input[0].KeyDown("ENTER");
+
+        //Assert
+        cut.Instance.Value[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+
+        cut.Instance.Value[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+    }
+
+    [Fact]
+    public void Ignores_keyboard_input_when_end_is_earlier_than_start()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var range = new DateTime[]
+       {
+            new DateTime(2022, 6, 8, 20, 20, 0),
+            new DateTime(2022, 6, 8, 20, 20, 30)
+       };
+
+        var expectedStart = range[0];
+        var expectedEnd = range[1];
+
+        var format = "yyyy-MM-dd HH:mm:ss";
+        string startValueAsString = expectedStart.ToString(format);
+        string endValueAsString = expectedEnd.ToString(format);
+
+        string keyboardInput = "2022-06-07 12:25:35";
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
+
+        //Act
+        var input = cut.FindAll("input");
+        input[1].Input(keyboardInput);
+        input[1].KeyDown("ENTER");
+
+        //Assert
+        cut.Instance.Value[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+
+        cut.Instance.Value[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+    }
 }

@@ -166,7 +166,8 @@ namespace AntDesign
                 _cacheDuringInput = array.GetValue(index) as DateTime?;
                 _pickerValueCache = PickerValues[index];
             }
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false)
+                && IsValidRange(changeValue, index, array))
             {
                 array.SetValue(changeValue, index);
                 _cacheDuringInput = changeValue;
@@ -598,6 +599,16 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick(0);
+        }
+
+        private bool IsValidRange(DateTime newValue, int newValueIndex, Array rangeValues)
+        {
+            return newValueIndex switch
+            {
+                0 when newValue > (rangeValues.GetValue(1) as DateTime?) => false,
+                1 when newValue < (rangeValues.GetValue(0) as DateTime?) => false,
+                _ => true
+            };
         }
     }
 }
