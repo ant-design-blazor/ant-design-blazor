@@ -64,34 +64,49 @@ namespace AntDesign
             {
                 var array = Value as Array;
 
+                int? index = null;
+
                 if (_pickerStatus[0].IsValueSelected && _inputEnd.IsOnFocused)
                 {
-                    DateTime? value = null;
-                    GetIfNotNull(Value, 0, notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
-
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                    index = 0;
                 }
-                if (_pickerStatus[1].IsValueSelected && _inputStart.IsOnFocused)
+                else if (_pickerStatus[1].IsValueSelected && _inputStart.IsOnFocused)
                 {
-                    DateTime? value = null;
-                    GetIfNotNull(Value, 1, notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
-
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) > DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                    index = 1;
                 }
 
-                return false;
+                if (index is null)
+                {
+                    return false;
+                }
+
+                DateTime? value = null;
+
+                GetIfNotNull(Value, index.Value, notNullValue =>
+                {
+                    value = notNullValue;
+                });
+
+                if (value is null)
+                {
+                    return false;
+                }
+
+                var date1 = date.Date;
+                var date2 = ((DateTime)value).Date;
+
+                if (Picker == DatePickerType.Week)
+                {
+                    var date1Week = DateHelper.GetWeekOfYear(date1, Locale.FirstDayOfWeek);
+                    var date2Week = DateHelper.GetWeekOfYear(date2, Locale.FirstDayOfWeek);
+                    return index == 0 ? date1Week < date2Week : date1Week > date2Week;
+                }
+                else
+                {
+                    var formattedDate1 = DateHelper.FormatDateByPicker(date1, Picker);
+                    var formattedDate2 = DateHelper.FormatDateByPicker(date2, Picker);
+                    return index == 0 ? formattedDate1 < formattedDate2 : formattedDate1 > formattedDate2;
+                }
             };
         }
 
@@ -157,7 +172,8 @@ namespace AntDesign
                 _cacheDuringInput = array.GetValue(index) as DateTime?;
                 _pickerValueCache = PickerValues[index];
             }
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false)
+                && IsValidRange(changeValue, index, array))
             {
                 array.SetValue(changeValue, index);
                 _cacheDuringInput = changeValue;
@@ -590,6 +606,16 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick(0);
+        }
+
+        private bool IsValidRange(DateTime newValue, int newValueIndex, Array rangeValues)
+        {
+            return newValueIndex switch
+            {
+                0 when newValue > (rangeValues.GetValue(1) as DateTime?) => false,
+                1 when newValue < (rangeValues.GetValue(0) as DateTime?) => false,
+                _ => true
+            };
         }
     }
 }

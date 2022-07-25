@@ -402,9 +402,7 @@ namespace AntDesign.Internal
         {
             string disabledCls = "";
 
-            var nextStartDate = GetNextStartDate(currentColDate);
-
-            if (DisabledDate?.Invoke(DateHelper.AddDaysSafely(nextStartDate, -1)) == true)
+            if (DisabledDate?.Invoke(currentColDate) == true)
             {
                 disabledCls = $"{PrefixCls}-cell-disabled";
             }
@@ -450,21 +448,6 @@ namespace AntDesign.Internal
                 DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, 1),
                 DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, 3),
                 _ => dateTime,
-            };
-        }
-
-        private DateTime GetNextStartDate(DateTime currentDateTime)
-        {
-            return Picker switch
-            {
-                DatePickerType.Decade => DateHelper.GetNextStartDateOfDecade(currentDateTime),
-                DatePickerType.Year => DateHelper.GetNextStartDateOfYear(currentDateTime),
-                DatePickerType.Quarter => DateHelper.GetNextStartDateOfQuarter(currentDateTime),
-                DatePickerType.Month => DateHelper.GetNextStartDateOfMonth(currentDateTime),
-                DatePickerType.Week => DateHelper.GetNextStartDateOfDay(currentDateTime),
-                DatePickerType.Date => DateHelper.GetNextStartDateOfDay(currentDateTime),
-                DatePickerType.Time => DateHelper.GetNextStartDateOfDay(currentDateTime),
-                _ => currentDateTime,
             };
         }
 

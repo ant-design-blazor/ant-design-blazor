@@ -35,7 +35,7 @@
 
         //Act
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-                  (@<RangePicker @bind-Value="rangeValue" Placeholder="@(placeholders)"/>);
+                  (@<RangePicker @bind-Value="rangeValue" Placeholder="@(placeholders)" />);
 
         cut.Instance.ClearValue();
 
@@ -48,5 +48,156 @@
             var input = inputs[i];
             input.GetAttribute("placeholder").Should().Be(placeholders[i]);
         }
+    }
+
+    [Fact]
+    public async Task Sets_disabled_time_when_range_dates_are_the_same()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var startValue = new DateTime(2022, 6, 8, 20, 20, 0);
+        var endValue = new DateTime(2022, 6, 8, 20, 20, 30);
+        var rangeValue = new DateTime?[] { startValue, endValue };
+
+        var expectedDisabledStartHours = new int[] { 21, 22, 23 };
+        var expectedDisabledStartMinutes = Enumerable.Range(21, 39).ToArray();
+        var expectedDisabledStartSeconds = Enumerable.Range(31, 29).ToArray();
+
+        var expectedDisabledEndHours = Enumerable.Range(0, 20);
+        var expectedDisabledEndMinutes = Enumerable.Range(0, 20).ToArray();
+        var expectedDisabledEndSeconds = Enumerable.Range(31, 29).ToArray();
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+                  (@<RangePicker @bind-Value="rangeValue" ShowTime="true" />);
+
+        var inputs = cut.FindAll("input").ToList();
+
+        //Assert
+
+        await inputs[0].ClickAsync(new MouseEventArgs());
+        cut.Instance.DisabledHours.Invoke(startValue).Should().BeEquivalentTo(expectedDisabledStartHours);
+        cut.Instance.DisabledMinutes.Invoke(startValue).Should().BeEquivalentTo(expectedDisabledStartMinutes);
+        cut.Instance.DisabledSeconds.Invoke(startValue).Should().BeEquivalentTo(expectedDisabledStartSeconds);
+
+        await inputs[1].ClickAsync(new MouseEventArgs());
+        cut.Instance.DisabledHours.Invoke(endValue).Should().BeEquivalentTo(expectedDisabledEndHours);
+        cut.Instance.DisabledMinutes.Invoke(endValue).Should().BeEquivalentTo(expectedDisabledEndMinutes);
+        cut.Instance.DisabledSeconds.Invoke(endValue).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Sets_empty_disabled_time_when_range_dates_are_not_the_same()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var rangeValue = new DateTime?[]
+        {
+            new DateTime(2022, 6, 8, 20, 20, 0),
+            new DateTime(2022, 6, 9, 20, 20, 30)
+        };
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+                  (@<RangePicker @bind-Value="rangeValue" ShowTime="true" /> );
+
+        var inputs = cut.FindAll("input").ToList();
+
+        //Assert
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            await inputs[i].ClickAsync(new MouseEventArgs());
+            cut.Instance.DisabledHours.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
+            cut.Instance.DisabledMinutes.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
+            cut.Instance.DisabledSeconds.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
+        }
+    }
+
+    [Fact]
+    public void Ignores_keyboard_input_when_start_is_later_than_end()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var range = new DateTime[]
+        {
+            new DateTime(2022, 6, 8, 20, 20, 0),
+            new DateTime(2022, 6, 8, 20, 20, 30)
+        };
+         
+        var expectedStart = range[0];
+        var expectedEnd = range[1];
+
+        var format = "yyyy-MM-dd HH:mm:ss";
+        string startValueAsString = expectedStart.ToString(format);
+        string endValueAsString = expectedEnd.ToString(format);
+
+        string keyboardInput = "2022-06-08 20:25:35";
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
+ 
+        //Act
+        var input = cut.FindAll("input");
+        input[0].Input(keyboardInput);
+        input[0].KeyDown("ENTER");
+
+        //Assert
+        cut.Instance.Value[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+
+        cut.Instance.Value[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+    }
+
+    [Fact]
+    public void Ignores_keyboard_input_when_end_is_earlier_than_start()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var range = new DateTime[]
+       {
+            new DateTime(2022, 6, 8, 20, 20, 0),
+            new DateTime(2022, 6, 8, 20, 20, 30)
+       };
+
+        var expectedStart = range[0];
+        var expectedEnd = range[1];
+
+        var format = "yyyy-MM-dd HH:mm:ss";
+        string startValueAsString = expectedStart.ToString(format);
+        string endValueAsString = expectedEnd.ToString(format);
+
+        string keyboardInput = "2022-06-07 12:25:35";
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
+
+        //Act
+        var input = cut.FindAll("input");
+        input[1].Input(keyboardInput);
+        input[1].KeyDown("ENTER");
+
+        //Assert
+        cut.Instance.Value[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+
+        cut.Instance.Value[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
     }
 }
