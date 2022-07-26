@@ -49,9 +49,13 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach (string weekDay in Locale.Lang.ShortWeekDays)
+                    @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
                     {
-                        <th>@weekDay</th>
+                        <th>@(Locale.Lang.ShortWeekDays[i])</th>
+                    }
+                    @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
+                    {
+                        <th>@(Locale.Lang.ShortWeekDays[i])</th>
                     }
                 </tr>
             </RenderTableHeader>

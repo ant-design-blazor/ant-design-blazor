@@ -37,7 +37,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | disabledDate | specify the date that cannot be selected | (currentDate: moment) => boolean | - |  |
 | dropdownClassName | to customize the className of the popup calendar | string | - |  |
 | getPopupContainer | to set the container of the floating layer, while the default is to create a `div` element in `body` | function(trigger) | - |  |
-| locale（TODO） | localization configuration | object | [default](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json) |  |
+| locale | Localization configuration. Note: do not change the order of days in the ShortWeekDays array. The wrong order will result in the incorrect day headers. | object | [default](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/locales/en-US.json) |  |
 | mode（TODO） | picker panel mode（[Cannot select year or month anymore?](/docs/react/faq#When-set-mode-to-DatePicker/RangePicker,-cannot-select-year-or-month-anymore?) | `time` \| `date` \| `month` \| `year` \| `decade` | - |  |
 | open | open state of picker | boolean | - |  |
 | picker | Set picker type | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
