@@ -629,7 +629,7 @@ namespace AntDesign
             {
                 var node = this._allNodes.FirstOrDefault(x => x.Key == k);
                 if (node != null)
-                    node.SetChecked(true);
+                    node.SetCheckedDefault(true);
             });
 
             this.DefaultSelectedKeys?.ForEach(k =>

@@ -455,6 +455,24 @@ namespace AntDesign
                 TreeComponent.AddOrRemoveCheckNode(this);
             StateHasChanged();
         }
+        /// <summary>
+        /// Set the checkbox state when ini
+        /// </summary>
+        /// <param name="check"></param>
+        public void SetCheckedDefault(bool check)
+        {
+            if (TreeComponent.CheckStrictly)
+            {
+                this.Checked = check;
+            }
+            else
+            {
+                SetChildCheckedDefault(this, check);
+                if (ParentNode != null)
+                    ParentNode.UpdateCheckStateDefault();
+            }
+            StateHasChanged();
+        }
 
         /// <summary>
         /// Sets the checkbox status of child nodes
@@ -471,6 +489,20 @@ namespace AntDesign
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
         }
+        /// <summary>
+        /// Sets the checkbox status of child nodes whern bind default
+        /// </summary>
+        /// <param name="subnode"></param>
+        /// <param name="check"></param>
+        private void SetChildCheckedDefault(TreeNode<TItem> subnode, bool check)
+        {
+            this.Checked = check;
+            this.Indeterminate = false;
+            TreeComponent.AddOrRemoveCheckNode(this);
+            if (subnode.HasChildNodes)
+                foreach (var child in subnode.ChildNodes)
+                    child?.SetChildCheckedDefault(child, check);
+        }        
 
         /// <summary>
         /// Update check status
@@ -531,6 +563,66 @@ namespace AntDesign
 
             if (ParentNode != null)
                 ParentNode.UpdateCheckState(this.Indeterminate);
+
+            if (ParentNode == null)
+                StateHasChanged();
+        }
+        /// <summary>
+        /// Update check status when bind default
+        /// </summary>
+        /// <param name="halfChecked"></param>
+        private void UpdateCheckStateDefault(bool? halfChecked = null)
+        {
+            if (halfChecked == true)
+            {
+                //If the child node is indeterminate, the parent node must is indeterminate.
+                this.Checked = false;
+                this.Indeterminate = true;
+            }
+            else if (HasChildNodes == true && !DisableCheckbox)
+            {
+                //Determines the selection status of the current node
+                bool hasChecked = false;
+                bool hasUnchecked = false;
+
+                foreach (var item in ChildNodes)
+                {
+                    if (item.Indeterminate)
+                    {
+                        hasChecked = true;
+                        hasUnchecked = true;
+                        break;
+                    }
+                    else if (item.Checked)
+                    {
+                        hasChecked = true;
+                    }
+                    else if (!item.Checked)
+                    {
+                        hasUnchecked = true;
+                    }
+                }
+
+                if (hasChecked && !hasUnchecked)
+                {
+                    this.Checked = true;
+                    this.Indeterminate = false;
+                }
+                else if (!hasChecked && hasUnchecked)
+                {
+                    this.Checked = false;
+                    this.Indeterminate = false;
+                }
+                else if (hasChecked && hasUnchecked)
+                {
+                    this.Checked = false;
+                    this.Indeterminate = true;
+                }
+            }
+            TreeComponent.AddOrRemoveCheckNode(this);
+
+            if (ParentNode != null)
+                ParentNode.UpdateCheckStateDefault(this.Indeterminate);
 
             if (ParentNode == null)
                 StateHasChanged();
