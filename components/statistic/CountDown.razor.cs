@@ -10,6 +10,23 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; } = "hh:mm:ss";
 
+
+        public override DateTime Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                if (base.Value != value)
+                {
+                    base.Value = value;
+                    Reset();
+                }
+            }
+        }
+
         [Parameter]
         public EventCallback OnFinish { get; set; }
 
@@ -22,7 +39,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
+            SetTimer();
+        }
+        private void SetTimer()
+        {
             _countDown = Value - DateTime.Now;
             _timer = new Timer(StartCountDownForTimeSpan);
             _timer.Change(0, REFRESH_INTERVAL);
@@ -40,8 +60,17 @@ namespace AntDesign
                     InvokeAsync(() => OnFinish.InvokeAsync(o));
                 }
             }
-
             InvokeStateHasChanged();
+        }
+
+        public void Reset()
+        {
+            //避免初始化时调用Reset
+            if(_timer!=null)
+            {
+                _timer.Dispose();
+                SetTimer();
+            }
         }
     }
 }
