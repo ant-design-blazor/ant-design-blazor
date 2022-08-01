@@ -48,7 +48,12 @@ namespace AntDesign
                 if (_pending.Value != value.Value)
                 {
                     _pending = value;
-
+                    if (value.Value == null)
+                    {
+                        _pendingItem = null;
+                        SetItems();
+                        return;
+                    }
                     _pendingItem = _pending.Value == null ? null : new TimelineItem()
                     {
                         Class = "ant-timeline-item-pending"
