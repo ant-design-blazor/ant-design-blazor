@@ -333,6 +333,7 @@ namespace AntDesign
         {
             if (CurrentValueAsString != args?.Value?.ToString())
             {
+                CurrentValueAsString = args?.Value?.ToString();
                 if (OnChange.HasDelegate)
                 {
                     await OnChange.InvokeAsync(Value);
