@@ -796,7 +796,7 @@ namespace AntDesign
                 };
             else
                 format = InternalFormat;
-            return value.ToString(format, CultureInfo.CurrentCulture);
+            return value.ToString(format, CultureInfo);
         }
 
         /// <summary>

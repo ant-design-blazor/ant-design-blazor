@@ -61,8 +61,11 @@
             showCount = 10;
         }
 
+        var startYearTitle = new DateTime(startYear, 1, 1).ToString(Locale.Lang.YearFormat, CultureInfo);
+        var endYearTitle = new DateTime(startYear + showCount, 1, 1).ToString(Locale.Lang.YearFormat, CultureInfo);
+
         <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
-            @(startYear)-@(startYear + showCount)
+            @(startYearTitle)-@(endYearTitle)
         </button>
     }
     @if (Picker.IsIn(DatePickerType.Decade))
