@@ -46,7 +46,7 @@ namespace AntDesign
             ReuseTabsService.OnClosePage += RemovePage;
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
-            ReuseTabsService.OnCloseCurrent += RemoveCurrent;            
+            ReuseTabsService.OnCloseCurrent += RemoveCurrent;
         }
 
         protected override void Dispose(bool disposing)
@@ -64,7 +64,7 @@ namespace AntDesign
         private void RemovePage(string key)
         {
             var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-            if (reuseTabsPageItem != null && reuseTabsPageItem.ShowForever)
+            if (reuseTabsPageItem?.Pin == true)
             {
                 return;
             }
@@ -75,7 +75,7 @@ namespace AntDesign
 
         private void RemoveOther(string key)
         {
-            foreach (var item in Pages.Where(x => x.Closable && x.Url != key && !x.ShowForever))
+            foreach (var item in Pages.Where(x => x.Closable && x.Url != key && !x.Pin))
             {
                 this.RouteView?.RemovePage(item.Url);
             }
@@ -84,7 +84,7 @@ namespace AntDesign
 
         private void RemoveAll()
         {
-            foreach (var item in Pages.Where(x => x.Closable && !x.ShowForever))
+            foreach (var item in Pages.Where(x => x.Closable && !x.Pin))
             {
                 this.RouteView?.RemovePage(item.Url);
             }
@@ -100,6 +100,5 @@ namespace AntDesign
         {
             return RouteView?.GetNewKeyByUrl(url);
         }
-
     }
 }

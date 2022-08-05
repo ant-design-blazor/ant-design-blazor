@@ -17,6 +17,6 @@ namespace AntDesign
 
         public bool Closable { get; set; } = true;
 
-        public bool ShowForever { get; set; } = false;
+        public bool Pin { get; set; } = false;
     }
 }

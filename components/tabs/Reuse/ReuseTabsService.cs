@@ -12,9 +12,13 @@ namespace AntDesign
     public partial class ReuseTabsService
     {
         internal event Action<string> OnClosePage;
+
         internal event Action<string> OnCloseOther;
+
         internal event Action OnCloseAll;
+
         internal event Action OnCloseCurrent;
+
         internal event Func<string, string> GetNewKeyByUrl;
 
         public void ClosePage(string key)
@@ -36,6 +40,5 @@ namespace AntDesign
         {
             OnCloseCurrent?.Invoke();
         }
-
     }
 }

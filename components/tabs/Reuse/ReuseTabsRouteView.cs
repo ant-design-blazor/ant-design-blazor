@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Text.RegularExpressions;
 
 namespace AntDesign
@@ -33,6 +32,7 @@ namespace AntDesign
         {
             _pageMap.Remove(key);
         }
+
         public void RemovePageWithRegex(string pattern)
         {
             foreach (var key in _pageMap.Keys)
@@ -90,7 +90,6 @@ namespace AntDesign
             }
 
             if (reuseTabsPageItem.Body is null) reuseTabsPageItem.Body = body;
-
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)
@@ -131,7 +130,7 @@ namespace AntDesign
                 pageItem.Title ??= attr.Title?.ToRenderFragment();
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
-                pageItem.ShowForever = attr.ShowForever;
+                pageItem.Pin = attr.Pin;
             }
 
             pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
@@ -156,35 +155,16 @@ namespace AntDesign
         /// <returns></returns>
         protected IEnumerable<Assembly> GetAllAssembly()
         {
-
             IEnumerable<Assembly> assemblies = new List<Assembly>();
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly == null) return assemblies;
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
 
-            #region 将所有 dll 文件 重新载入 防止有未扫描到的 程序集
             var paths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
                 .Where(w => w.EndsWith(".dll") && !w.Contains(nameof(Microsoft)))
                 .Select(w => w)
              ;
-            foreach (var item in paths)
-            {
-                if (File.Exists(item))
-                {
-                    try
-                    {
-                        Assembly.Load(AssemblyLoadContext.GetAssemblyName(item));
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-            }
-            //assemblies = AssemblyLoadContext.Default.Assemblies.Union(assemblies);
-
-            #endregion
 
             return assemblies;
         }
@@ -199,18 +179,14 @@ namespace AntDesign
             foreach (var item in list)
             {
                 var allClass = item.ExportedTypes
-                    .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>() != null)
-                    .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>().ShowForever)
-                    ;
+                    .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
                     var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
                     var reuseTabsPageAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
                     this.AddReuseTabsPageItem(routeAttribute.Template, pageType);
-
                 }
-
             }
         }
 
@@ -223,7 +199,5 @@ namespace AntDesign
 
             return "/" + url;
         }
-
-
     }
 }
