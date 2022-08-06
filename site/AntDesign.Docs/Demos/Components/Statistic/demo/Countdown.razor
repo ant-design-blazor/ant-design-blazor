@@ -8,6 +8,8 @@
     <Col Span="24">
         <CountDown Title="Day Level" Value="@deadline" Format="dd 天  h 小时 m 分钟 s 秒" />
     </Col>
+    <br/>
+    <Button OnClick="OnReset">Reset Value</Button>
 </Row>
 
 @code
@@ -17,5 +19,10 @@
     void OnFinish()
     {
         Console.WriteLine("finished!");
+    }
+
+    void OnReset()
+    {
+        deadline = DateTime.Now.AddMinutes(10);
     }
 }

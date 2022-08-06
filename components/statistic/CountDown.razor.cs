@@ -10,7 +10,6 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; } = "hh:mm:ss";
 
-
         public override DateTime Value
         {
             get
@@ -30,9 +29,12 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnFinish { get; set; }
 
+        [Parameter]
+        public int RefreshInterval { get; set; } = REFRESH_INTERVAL;
+
         private Timer _timer;
 
-        private const int REFRESH_INTERVAL = 1000 / 30;
+        private const int REFRESH_INTERVAL = 1000 / 10;
 
         private TimeSpan _countDown = TimeSpan.Zero;
 
@@ -41,16 +43,17 @@ namespace AntDesign
             base.OnInitialized();
             SetTimer();
         }
+
         private void SetTimer()
         {
             _countDown = Value - DateTime.Now;
             _timer = new Timer(StartCountDownForTimeSpan);
-            _timer.Change(0, REFRESH_INTERVAL);
+            _timer.Change(0, RefreshInterval);
         }
 
         private void StartCountDownForTimeSpan(object o)
         {
-            _countDown = _countDown.Add(TimeSpan.FromMilliseconds(-REFRESH_INTERVAL));
+            _countDown = _countDown.Add(TimeSpan.FromMilliseconds(-RefreshInterval));
             if (_countDown.Ticks <= 0)
             {
                 _countDown = TimeSpan.Zero;
@@ -66,15 +69,16 @@ namespace AntDesign
         public void Reset()
         {
             //避免初始化时调用Reset
-            if(_timer!=null)
+            if (_timer != null)
             {
                 _timer.Dispose();
                 SetTimer();
             }
         }
+
         protected override void Dispose(bool disposing)
         {
-            _timer.Dispose();
+            _timer?.Dispose();
             base.Dispose(disposing);
         }
     }

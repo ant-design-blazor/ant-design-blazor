@@ -32,7 +32,7 @@ namespace AntDesign
         /// <summary>
         /// 数值内容
         /// </summary>
-        [Parameter] public virtual  T Value { get; set; }
+        [Parameter] public virtual T Value { get; set; }
 
         /// <summary>
         /// 设置数值的样式
