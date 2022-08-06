@@ -1,0 +1,34 @@
+﻿@page "/test-tabs"
+@attribute [ReuseTabsPage(Title = "TestTabs",Pin = true)]
+@inject ReuseTabsService _reuseTabsService
+
+<h3>TestTabs</h3>
+
+<Button OnClick="ClosePage">关闭Counter1</Button>
+<Button OnClick="CloseOther">关闭其他</Button>
+<Button OnClick="CloseAll">关闭所有</Button>
+<Button OnClick="CloseCurrent">关闭当前</Button>
+
+@code {
+    void ClosePage()
+    {
+        _reuseTabsService.ClosePage("/counter/1");
+    }
+
+    void CloseOther()
+    {
+        _reuseTabsService.CloseOther("/test-tabs");
+    }
+
+    void CloseAll()
+    {
+        _reuseTabsService.CloseAll();
+    }
+
+    void CloseCurrent()
+    {
+        _reuseTabsService.CloseCurrent();
+    }
+
+
+}
