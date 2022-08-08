@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -65,6 +66,8 @@ namespace AntDesign.Internal
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
+        [Inject]
+        public ICustomHttpHeaders CustomHttpHeaders { get; set; }
         private ElementReference _file;
         private ElementReference _btn;
 
@@ -151,6 +154,11 @@ namespace AntDesign.Internal
                 await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
                 await InvokeAsync(StateHasChanged);
+                //如果用户没有设置Headers字段，则从IOC取
+                if (Headers?.Count <= 0)
+                {
+                    Headers = await CustomHttpHeaders.GetCustomHeaders();
+                }
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", Method);
                 index++;
             }
