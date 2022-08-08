@@ -1,4 +1,6 @@
-<Select DataSource="@_persons" 
+<Select TItem="Person"
+        TItemValue="int?"
+        DataSource="@_persons" 
         @bind-Value="@_selectedValue"
         LabelName="@nameof(Person.Name)" 
         ValueName="@nameof(Person.Id)" 
@@ -6,7 +8,7 @@
         Style="width: 200px"
         DefaultValue="2"
         Placeholder="Select a person"
-        DefaultActiveFirstItem
+        DefaultActiveFirstOption
         IgnoreItemChanges="false"
         OnSelectedItemChanged="OnSelectedItemChangedHandler"
         AllowClear>

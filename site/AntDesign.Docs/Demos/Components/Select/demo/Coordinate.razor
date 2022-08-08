@@ -1,4 +1,6 @@
-<Select DataSource="@_provinces"
+<Select TItem="Province"
+        TItemValue="int?"
+        DataSource="@_provinces"
         @bind-Value="@_selectedProvince"
         ValueName="@nameof(Province.Id)"
         LabelName="@nameof(Province.Name)"

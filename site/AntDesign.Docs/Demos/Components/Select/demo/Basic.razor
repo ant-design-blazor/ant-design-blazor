@@ -1,4 +1,6 @@
-<Select DataSource="@_list"
+<Select TItem="Person"
+        TItemValue="string"
+        DataSource="@_list"
 		@bind-Value="@_selectedValue1"
 		DefaultValue="@("lucy")"
 		ValueName="@nameof(Person.Value)"
@@ -36,7 +38,9 @@
 		Placeholder="Choose"
 		AllowClear>
 </Select>
-<Select DataSource="@_personNames"
+<Select TItem="string"
+        TItemValue="string"
+        DataSource="@_personNames"
         @bind-Value="@_selectedValue5"
         Style="width: 120px;"
         Placeholder="Choose"
