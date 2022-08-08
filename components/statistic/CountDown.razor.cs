@@ -30,7 +30,6 @@ namespace AntDesign
         private void StartCountDownForTimeSpan(object o)
         {
             _countDown = Value - DateTime.Now;
-            _countDown = _countDown.Add(TimeSpan.FromMilliseconds(-RefreshInterval));
             if (_countDown.Ticks <= 0)
             {
                 _countDown = TimeSpan.Zero;
