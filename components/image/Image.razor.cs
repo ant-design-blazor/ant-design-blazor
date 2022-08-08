@@ -41,16 +41,24 @@ namespace AntDesign
                     _isError = false;
                     _src = value;
 
-                    if (string.IsNullOrWhiteSpace(PreviewSrc))
+                    if (!_isPreviewSrcSet)
                     {
-                        PreviewSrc = _src;
+                        _previewSrc = _src;
                     }
                 }
             }
         }
 
         [Parameter]
-        public string PreviewSrc { get; set; }
+        public string PreviewSrc
+        {
+            get => _previewSrc;
+            set
+            {
+                _previewSrc = value;
+                _isPreviewSrcSet = true;
+            }
+        }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
@@ -69,6 +77,8 @@ namespace AntDesign
         private bool _loaded;
         private string _src;
         private ImageRef _imageRef;
+        private bool _isPreviewSrcSet;
+        private string _previewSrc;
 
         protected override void OnInitialized()
         {
