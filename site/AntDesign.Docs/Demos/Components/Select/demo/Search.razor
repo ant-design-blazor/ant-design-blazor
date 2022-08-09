@@ -1,9 +1,11 @@
-<Select DataSource="@_persons"
+<Select TItem="Person"
+    TItemValue="string"
+    DataSource="@_persons"
         @bind-Value="@_selectedValue"
         LabelName="@nameof(Person.Name)"
         ValueName="@nameof(Person.Value)"
         Placeholder="Select a person"
-        DefaultActiveFirstItem="false"
+        DefaultActiveFirstOption="false"
         EnableSearch
         OnBlur="OnBlur"
         OnFocus="OnFocus"

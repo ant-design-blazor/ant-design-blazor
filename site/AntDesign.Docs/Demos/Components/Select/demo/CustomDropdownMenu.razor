@@ -1,4 +1,6 @@
-<Select DataSource="@_list"
+<Select TItem="Person"
+        TItemValue="int?"
+        DataSource="@_list"
         @bind-Value="@_selectedValue"
         ValueName="@nameof(Person.Id)"
         LabelName="@nameof(Person.Name)"
