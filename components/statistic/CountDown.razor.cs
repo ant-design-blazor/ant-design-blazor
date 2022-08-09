@@ -22,15 +22,14 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            _countDown = Value - DateTime.Now;
+        
             _timer = new Timer(StartCountDownForTimeSpan);
             _timer.Change(0, REFRESH_INTERVAL);
         }
 
         private void StartCountDownForTimeSpan(object o)
         {
-            _countDown = _countDown.Add(TimeSpan.FromMilliseconds(-REFRESH_INTERVAL));
+            _countDown = Value - DateTime.Now;
             if (_countDown.Ticks <= 0)
             {
                 _countDown = TimeSpan.Zero;
