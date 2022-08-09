@@ -1,99 +1,112 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+@using AntDesign.Core.Component.ResizeObserver
+
+<ResizeObserver RefBack="RefBack" OnResize="OnResize">
+  <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
 
     @PageHeaderBreadcrumb
 
     <div class="ant-page-header-heading">
-        <div class="ant-page-header-heading-left">
-            <!--back-->
-            @if (BackIconTemplate != null || BackIcon.Value != null || OnBack.HasDelegate)
-            {
-                <div @onclick="OnBackClick" class="ant-page-header-back">
-                    <div role="button" tabindex="0" class="ant-page-header-back-button">
-                        @if (BackIconTemplate != null)
-                        {
-                            @BackIconTemplate
-                        }
-                        else if (BackIcon.IsT1)
-                        {
-                            <Icon Type="@BackIcon.AsT1" Theme="outline" />
-                        }
-                        else
-                        {
-                            <Icon Type="arrow-left" Theme="outline" />
-                        }
-                    </div>
-                </div>
-            }
-
-            <!--avatar-->
-            @PageHeaderAvatar
-
-            <!--title-->
-            @if (TitleTemplate != null || Title != null)
-            {
-
-                <span class="ant-page-header-heading-title">
-                    @if (TitleTemplate != null)@TitleTemplate else @Title
-                </span>
-            }
-            else
-            {
-                if (PageHeaderTitle != null)
-                {
-                    <div class="ant-page-header-heading-title">
-                        @PageHeaderTitle
-                    </div>
-                }
-            }
-
-            <!--subtitle-->
-            @if (SubtitleTemplate != null || Subtitle != null)
-            {
-
-                <span class="ant-page-header-heading-sub-title">
-                    @if (SubtitleTemplate != null)@SubtitleTemplate else @Subtitle
-                </span>
-            }
-            else
-            {
-                if (PageHeaderSubtitle != null)
-                {
-                    <div class="ant-page-header-heading-sub-title">
-                        @PageHeaderSubtitle
-                    </div>
-                }
-
-            }
-            @if (PageHeaderTags != null)
-            {
-                <div class="ant-page-header-heading-tags">
-                    @PageHeaderTags
-                </div>
-            }
-        </div>
-
-        @if (PageHeaderExtra != null)
+      <div class="ant-page-header-heading-left">
+        <!--back-->
+        @if (BackIconTemplate != null || BackIcon.Value != null || OnBack.HasDelegate)
         {
-            <div class="ant-page-header-heading-extra">
-                @PageHeaderExtra
+          <div @onclick="OnBackClick" class="ant-page-header-back">
+            <div role="button" tabindex="0" class="ant-page-header-back-button">
+              @if (BackIconTemplate != null)
+              {
+                @BackIconTemplate
+              }
+              else if (BackIcon.IsT1)
+              {
+                <Icon Type="@BackIcon.AsT1" Theme="outline" />
+              }
+              else
+              {
+                <Icon Type="arrow-left" Theme="outline" />
+              }
             </div>
+          </div>
         }
+
+        <!--avatar-->
+        @PageHeaderAvatar
+
+        <!--title-->
+        @if (TitleTemplate != null || Title != null)
+        {
+
+          <span class="ant-page-header-heading-title">
+            @if (TitleTemplate != null)
+              @TitleTemplate
+            else
+              @Title
+
+            </span>
+        }
+        else
+        {
+          if (PageHeaderTitle != null)
+          {
+            <div class="ant-page-header-heading-title">
+              @PageHeaderTitle
+            </div>
+          }
+        }
+
+        <!--subtitle-->
+        @if (SubtitleTemplate != null || Subtitle != null)
+        {
+
+          <span class="ant-page-header-heading-sub-title">
+            @if (SubtitleTemplate != null)
+              @SubtitleTemplate
+            else
+              @Subtitle
+
+            </span>
+        }
+        else
+        {
+          if (PageHeaderSubtitle != null)
+          {
+            <div class="ant-page-header-heading-sub-title">
+              @PageHeaderSubtitle
+            </div>
+          }
+
+        }
+        @if (PageHeaderTags != null)
+        {
+          <div class="ant-page-header-heading-tags">
+            @PageHeaderTags
+          </div>
+        }
+      </div>
+
+      @if (PageHeaderExtra != null)
+      {
+        <div class="ant-page-header-heading-extra">
+          @PageHeaderExtra
+        </div>
+      }
     </div>
     @if (PageHeaderContent != null)
     {
-        <div class="ant-page-header-content">
-            @PageHeaderContent
-        </div>
+      <div class="ant-page-header-content">
+        @PageHeaderContent
+      </div>
     }
 
     @if (PageHeaderFooter != null)
     {
-        <div class="ant-page-header-footer">
-            @PageHeaderFooter
-        </div>
+      <div class="ant-page-header-footer">
+        @PageHeaderFooter
+      </div>
     }
 
-</div>
+  </div>
+
+</ResizeObserver>

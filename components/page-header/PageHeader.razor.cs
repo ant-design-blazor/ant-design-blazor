@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
@@ -6,8 +7,6 @@ namespace AntDesign
 {
     public partial class PageHeader
     {
-        #region Parameters
-
         [Parameter]
         public bool Ghost { get; set; }
 
@@ -56,12 +55,13 @@ namespace AntDesign
         [Parameter]
         public RenderFragment PageHeaderExtra { get; set; }
 
-        #endregion Parameters
+        private bool _isCompact = false;
 
         private void SetClassMap()
         {
             ClassMapper
                 .Add("ant-page-header")
+                .If("ant-page-header-compact", () => _isCompact)
                 .If("has-footer", () => PageHeaderFooter != null)
                 .If("ant-page-header-ghost", () => this.Ghost)
                 .If("has-breadcrumb", () => PageHeaderBreadcrumb != null)
@@ -72,6 +72,11 @@ namespace AntDesign
         {
             base.OnInitialized();
             SetClassMap();
+        }
+
+        private void OnResize(DomRect domRect)
+        {
+            _isCompact = domRect.Width < 768;
         }
 
         private async void OnBackClick(MouseEventArgs eventArgs)
