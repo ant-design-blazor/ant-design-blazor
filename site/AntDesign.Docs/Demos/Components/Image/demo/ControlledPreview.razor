@@ -1,0 +1,13 @@
+﻿<Button Type="primary" OnClick="()=>visible=true">
+  show image preview
+</Button>
+
+<Image Width="200"
+       Style=" display: none;"
+       Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/blur,r_50,s_50/quality,q_1/resize,m_mfit,h_200,w_200"
+       PreviewSrc="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+       @bind-PreviewVisible="visible"
+  />
+  @code {
+    bool visible = false;
+  }

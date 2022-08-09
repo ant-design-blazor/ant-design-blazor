@@ -27,7 +27,22 @@ namespace AntDesign
         public bool Preview { get; set; } = true;
 
         [Parameter]
-        public bool PreviewVisible { get; set; } = true;
+        public bool PreviewVisible
+        {
+            get => _previewVisible;
+            set
+            {
+                if (_previewVisible != value)
+                {
+                    _previewVisible = value;
+
+                    if (_previewVisible)
+                    {
+                        ShowPreview();
+                    }
+                }
+            }
+        }
 
         [Parameter]
         public string Src
@@ -61,6 +76,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public EventCallback<bool> PreviewVisibleChanged { get; set; }
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
@@ -79,6 +97,8 @@ namespace AntDesign
         private ImageRef _imageRef;
         private bool _isPreviewSrcSet;
         private string _previewSrc;
+
+        private bool _previewVisible = true;
 
         protected override void OnInitialized()
         {
@@ -124,21 +144,39 @@ namespace AntDesign
             _loaded = false;
         }
 
-        private void OnPreview(MouseEventArgs e)
+        private void OnMaskClick(MouseEventArgs e)
         {
-            if (PreviewVisible)
+            if (_previewVisible)
             {
-                var images = Group?.Images ?? new List<Image>() { this };
-                var index = images.IndexOf(this);
-
-                _imageRef = ImageService.OpenImages(images);
-
-                _imageRef.SwitchTo(index);
+                ShowPreview();
             }
 
             if (OnClick.HasDelegate)
             {
                 OnClick.InvokeAsync(e);
+            }
+        }
+
+        public void ShowPreview()
+        {
+            var images = Group?.Images ?? new List<Image>() { this };
+            var index = images.IndexOf(this);
+
+            _imageRef = ImageService.OpenImages(images);
+            _imageRef.OnClosed += OnPreviewClose;
+            _imageRef.SwitchTo(index);
+
+            if (PreviewVisibleChanged.HasDelegate)
+            {
+                PreviewVisibleChanged.InvokeAsync(true);
+            }
+        }
+
+        public void OnPreviewClose()
+        {
+            if (PreviewVisibleChanged.HasDelegate)
+            {
+                PreviewVisibleChanged.InvokeAsync(false);
             }
         }
 
