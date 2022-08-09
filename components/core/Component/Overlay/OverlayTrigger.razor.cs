@@ -276,7 +276,11 @@ namespace AntDesign.Internal
                     DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
+
+                    if (IsContainTrigger(TriggerType.ContextMenu))
+                    {
+                        DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
