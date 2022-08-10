@@ -49,10 +49,10 @@ namespace AntDesign
         public bool Dot { get; set; }
 
         /// <summary>
-        /// Set offset of the badge dot, like[x, y]
+        /// Set offset of the badge dot, like (left, top)
         /// </summary>
         [Parameter]
-        public ValueTuple<int, int> Offset { get; set; }
+        public (int Left, int Top) Offset { get; set; }
 
         /// <summary>
         /// Max count to show
@@ -120,7 +120,7 @@ namespace AntDesign
 
         private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
 
-        private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
+        private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
         private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
 
@@ -245,7 +245,7 @@ namespace AntDesign
             return digits;
         }
 
-        private readonly static string[] _badgeStatusTypes =
+        private static readonly string[] _badgeStatusTypes =
         {
             "success",
             "processing",
