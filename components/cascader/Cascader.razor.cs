@@ -179,13 +179,16 @@ namespace AntDesign
         /// <summary>
         /// 清除已选择项
         /// </summary>
-        private void ClearSelected()
+        private async Task ClearSelected()
         {
             _selectedNodes.Clear();
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
             SetValue(string.Empty);
             _dropdownOpened = false;
+            
+            _searchValue = string.Empty;
+            await this.FocusAsync(_inputRef);
         }
 
         /// <summary>
