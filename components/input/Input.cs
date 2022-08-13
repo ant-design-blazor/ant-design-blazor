@@ -333,6 +333,7 @@ namespace AntDesign
         {
             if (CurrentValueAsString != args?.Value?.ToString())
             {
+                CurrentValueAsString = args?.Value?.ToString();
                 if (OnChange.HasDelegate)
                 {
                     await OnChange.InvokeAsync(Value);
@@ -636,11 +637,12 @@ namespace AntDesign
                 }
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
-                if (!IgnoreOnChangeAndBlur)
-                {
+                //2022-8-3 去掉if后，search也能正常工作
+                //if (!IgnoreOnChangeAndBlur)
+                //{
                     builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
                     builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
-                }
+                //}
 
                 builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
                 builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
