@@ -27,7 +27,6 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
-
         [Parameter]
         public TData Field
         {
@@ -140,9 +139,9 @@ namespace AntDesign
 
         private SortDirection _sortDirection;
 
-        public Func<RowData, TData> GetValue { get; private set; }
+        protected Func<RowData, TData> GetValue { get; private set; }
 
-        public LambdaExpression GetFieldExpression { get; private set; }
+        protected LambdaExpression GetFieldExpression { get; set; }
 
         void IFieldColumn.ClearSorter()
         {
