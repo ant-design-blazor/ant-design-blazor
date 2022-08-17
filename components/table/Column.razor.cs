@@ -139,7 +139,7 @@ namespace AntDesign
 
         private SortDirection _sortDirection;
 
-        protected Func<RowData, TData> GetValue { get; private set; }
+        protected Func<RowData, TData> GetValue { get; set; }
 
         protected LambdaExpression GetFieldExpression { get; set; }
 

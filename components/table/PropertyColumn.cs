@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -28,10 +29,13 @@ namespace AntDesign
                         throw new ArgumentException("'Field' parameter must be child member");
                     }
 
-                    var paramExp = Expression.Parameter(ItemType);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
-                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+                    GetFieldExpression = Expression.Lambda(memberExp);
                 }
+            }
+            else if (IsBody)
+            {
+                var compliedProperty = Property.Compile();
+                GetValue = rowData => compliedProperty.Invoke(((RowData<TItem>)rowData).Data);
             }
             base.OnInitialized();
         }
