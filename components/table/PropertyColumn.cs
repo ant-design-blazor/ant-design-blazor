@@ -24,12 +24,7 @@ namespace AntDesign
             {
                 if (Property != null)
                 {
-                    if (Property.Body is not MemberExpression memberExp)
-                    {
-                        throw new ArgumentException("'Field' parameter must be child member");
-                    }
-
-                    GetFieldExpression = Expression.Lambda(memberExp);
+                    GetFieldExpression = Expression.Lambda(Property.Body);
                 }
             }
             else if (IsBody)
