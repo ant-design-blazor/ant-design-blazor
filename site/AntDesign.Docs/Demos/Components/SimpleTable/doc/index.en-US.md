@@ -6,7 +6,7 @@ title: SimpleTable
 cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 ---
 
-Keep only the simple style in 'Table', so that you can flexibly use '<thead>', '<tbody>', '<tr>', '<th>', '<td>' and other HTML elements to build by yourself.
+Keep only the simple style in 'Table', so that you can flexibly use `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` and other HTML elements to build by yourself.
 
 ## When To Use
 
@@ -14,7 +14,7 @@ Keep only the simple style in 'Table', so that you can flexibly use '<thead>', '
 
 ## How To Use
 
-To use `<thead>`,`<tbody>`,`<tr>`,`<th>`,`<td>` native tag such as to build and form the structure of the meter.
+To use native tag such as `<thead>`,`<tbody>`,`<tr>`,`<th>`,`<td>` to build and form the structure of the meter.
 
 
 ## API
