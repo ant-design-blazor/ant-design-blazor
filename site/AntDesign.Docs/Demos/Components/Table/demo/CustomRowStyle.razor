@@ -2,10 +2,10 @@
 @using AntDesign.TableModels
 
 <Table TItem="Data" DataSource="@data" OnRow="OnRow" RowClassName="@(x => x.Data.RowClass)">
-    <Column @bind-Field="@context.Name">
+    <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Score"></Column>
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Score"></PropertyColumn>
 </Table>
 
 <style>

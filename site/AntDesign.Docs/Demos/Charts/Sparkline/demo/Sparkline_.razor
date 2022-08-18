@@ -1,7 +1,7 @@
 @using AntDesign.Charts
 
 <Table DataSource="datas">
-    <AntDesign.Column @bind-Field="@context.id"></AntDesign.Column>
+    <PropertyColumn Property="c=>c.id"></PropertyColumn>
     <AntDesign.Column TData="string">
         <TinyColumn Data="@context.trend" Config="trendConfig"></TinyColumn>
     </AntDesign.Column>
