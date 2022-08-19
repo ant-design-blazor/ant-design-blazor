@@ -39,11 +39,17 @@ namespace AntDesign
             return JsonSerializer.Deserialize<TResponseModel>(this.Response, options);
         }
 
+        public static string[] ImageExtensions { get; set; } = new[] { ".jpg", ".png", ".gif", ".ico", ".jfif", ".jpeg", ".bmp", ".tga", ".svg", ".tif", ".webp" };
+
         public bool IsPicture()
         {
-            string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico",".jfif",".jpeg",".bmp",".tga",".svg",".tif" };
-            Ext = FileName.Substring(FileName.LastIndexOf('.'));
-            return imageTypes.Any(imageType => imageType.Equals(Ext, StringComparison.InvariantCultureIgnoreCase));
+            if (string.IsNullOrEmpty(Ext))
+            {
+                var lastIndex = FileName.LastIndexOf('.');
+                if (lastIndex < 0) return false;
+                Ext = FileName[lastIndex..];
+            }
+            return ImageExtensions.Any(imageExt => imageExt.Equals(Ext, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
