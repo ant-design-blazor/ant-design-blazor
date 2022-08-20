@@ -209,6 +209,7 @@
                          Page="@key"
                          Active="@(_current == key)"
                          ShowTitle="ShowTitle"
+                         Class=""
                          ItemRender="@ItemRender"/>
                     );
             }
@@ -239,7 +240,7 @@
                          Page="@right"
                          Active="@(_current == right)"
                          ShowTitle="ShowTitle"
-                         Class="@($"{PrefixCls}-item-after-jump-prev")"
+                         Class="@($"{PrefixCls}-item-before-jump-next")"
                          ItemRender="@ItemRender"/>;
                 pagerList.AddLast(jumpNext);
             }
