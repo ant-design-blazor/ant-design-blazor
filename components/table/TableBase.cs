@@ -21,8 +21,8 @@ namespace AntDesign
         [Parameter]
         public bool Bordered { get; set; }
 
-        [Parameter]
-        public bool FixedHeader { get; set; }
+        //[Parameter]
+        //public bool FixedHeader { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -31,11 +31,13 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         protected readonly ClassMapper WrapperClassMapper = new ClassMapper();
+
         protected override void OnInitialized()
         {
             string prefixCls = "ant-table";
             ClassMapper.Add(prefixCls)
-                .If($"{prefixCls}-fixed-header", () => FixedHeader)
+                .Add($"{prefixCls}-simple")
+                //.If($"{prefixCls}-fixed-header", () => FixedHeader)
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)

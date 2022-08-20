@@ -1,7 +1,7 @@
 ﻿Loading: <Switch @bind-Value="_loading" />
 Bordered: <Switch @bind-Value="_bordered"></Switch>
-
-<SimpleTable Loading=_loading Bordered=_bordered Responsive=_responsive  >
+<br/>
+<SimpleTable Loading=_loading Bordered=_bordered Responsive=_responsive >
   <thead>
     <tr>
       <th>Date</th>
@@ -26,8 +26,8 @@ Bordered: <Switch @bind-Value="_bordered"></Switch>
 @code {
   private WeatherForecast[] forecasts;
   private bool _loading, _bordered, _responsive, _fixedHeader;
-  TableSize _size = null;
-  private TableSize[] _tableSizes = { null, TableSize.Small, TableSize.Middle };
+  TableSize _size = TableSize.Default;
+  private TableSize[] _tableSizes = { TableSize.Default, TableSize.Small, TableSize.Middle };
 
   protected override async Task OnInitializedAsync()
   {
