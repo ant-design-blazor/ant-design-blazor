@@ -1,20 +1,20 @@
 @using System.ComponentModel
 
 <Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
-    <Column @bind-Field="@context.Name">
-        <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Money" Style="text-align: right"></Column>
-    <Column @bind-Field="@context.Address"></Column>
+  <PropertyColumn Property="c=>c.Name">
+    <a>@context.Name</a>
+  </PropertyColumn>
+  <PropertyColumn Property="c=>c.Money" Style="text-align: right"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Address"></PropertyColumn>
 </Table>
 
-@code{
+@code {
 
-    string title = "Header";
-    string footer = "Footer";
+  string title = "Header";
+  string footer = "Footer";
 
-    Data[] data =
-    {
+  Data[] data =
+  {
         new Data()
         {
             Key = "1",
@@ -36,20 +36,20 @@
             Money = "￥120,000.00",
             Address = "Sidney No. 1 Lake Park",
         }
-    };
+  };
 
-    public class Data
-    {
-        [DisplayName("Key")]
-        public string Key { get; set; }
+  public class Data
+  {
+    [DisplayName("Key")]
+    public string Key { get; set; }
 
-        [DisplayName("Name")]
-        public string Name { get; set; }
+    [DisplayName("Name")]
+    public string Name { get; set; }
 
-        [DisplayName("Money")]
-        public string Money { get; set; }
+    [DisplayName("Money")]
+    public string Money { get; set; }
 
-        [DisplayName("Address")]
-        public string Address { get; set; }
-    }
+    [DisplayName("Address")]
+    public string Address { get; set; }
+  }
 }

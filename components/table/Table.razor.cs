@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+#if NET6_0
+    [CascadingTypeParameter(nameof(TItem))]
+#endif
+
     public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
@@ -510,7 +514,7 @@ namespace AntDesign
             }
         }
 
-        class DataItemWithParent<T>
+        private class DataItemWithParent<T>
         {
             public T Data { get; set; }
 

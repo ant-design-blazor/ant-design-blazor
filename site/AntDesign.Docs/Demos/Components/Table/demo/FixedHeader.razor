@@ -1,8 +1,8 @@
 ﻿<Table DataSource="data" ScrollY="240px" PageSize="50">
     <Selection />
-    <Column @bind-Field="@context.Name" Width="150" />
-    <Column @bind-Field="@context.Age"  Width="150" />
-    <Column @bind-Field="@context.Address" />
+    <PropertyColumn Property="c=>c.Name" Width="150" />
+    <PropertyColumn Property="c=>c.Age"  Width="150" />
+    <PropertyColumn Property="c=>c.Address" />
 </Table>
 
 @code {

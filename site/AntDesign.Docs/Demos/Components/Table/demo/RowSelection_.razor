@@ -18,11 +18,11 @@
 
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowSelectable="@(x => x.Name!="Disabled User")">
         <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
-        <Column @bind-Field="@context.Name">
+        <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
-        </Column>
-        <Column @bind-Field="@context.Age" />
-        <Column @bind-Field="@context.Address" />
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age" />
+        <PropertyColumn Property="c=>c.Address" />
     </Table>
 </div>
 
