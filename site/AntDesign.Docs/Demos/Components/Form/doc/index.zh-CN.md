@@ -15,7 +15,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 - 需要对输入的数据类型进行校验时。
 
 ## API
-### From
+### Form
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | Layout | 表单布局 | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
@@ -32,7 +32,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | OnFinish | 提交事件 | EventCallback\<EditContext\> | - |
 | OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
 | ValidateOnChange | 是否在更改时校验 | bool | false |
-### FromItem
+### FormItem
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | Label | **label** 标签的文本 | string | input组件的Display或者DisplayName特性 |
