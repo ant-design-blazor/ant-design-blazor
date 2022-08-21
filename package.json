@@ -57,7 +57,7 @@
     "husky": "^4.2.3",
     "inquirer": "^7.1.0",
     "jquery": "^3.4.1",
-    "jsdom": "^16.0.0",
+    "jsdom": "^16.5.0",
     "less": "^4.1.0",
     "less-plugin-clean-css": "^1.5.1",
     "less-plugin-npm-import": "^2.1.0",

@@ -14,6 +14,39 @@ timeline: true
 - 主版本号：含有破坏性更新和新特性，不在发布周期内。
 
 ---
+
+### 0.11.0
+
+`2022-06-16`
+
+🌈守得云开见月明~
+
+- Table
+  - 🔥 支持虚拟化[#2143](https://github.com/ant-design-blazor/ant-design-blazor/pull/2143) [@anranruye](https://github.com/anranruye)
+  - 🔥 支持使用已有的 QueryModel 控制/恢复表格筛选排序状态[#2129](https://github.com/ant-design-blazor/ant-design-blazor/pull/2129) [@AnaNikolasevic](https://github.com/AnaNikolasevic)
+  - 🆕 支持用 `ScrollBarWidth` 属性来设置滚动条的宽度。[#2451](https://github.com/ant-design-blazor/ant-design-blazor/pull/2451) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 允许在定义 `PaginationTemplate` 时使用组件内置逻辑。[#2220](https://github.com/ant-design-blazor/ant-design-blazor/pull/2220) [@anranruye](https://github.com/anranruye)
+  - 🛠 修改 Responsive 属性默认值为false，需要响应式样式时需要设为true。[#2419](https://github.com/ant-design-blazor/ant-design-blazor/pull/2419) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 使用 Small 大小的Pagination来适配紧凑型Table[#2246](https://github.com/ant-design-blazor/ant-design-blazor/pull/2246) [@anranruye](https://github.com/anranruye)
+
+- 🆕 增加 Upload 支持结合原生 InputFile 组件。[#2443](https://github.com/ant-design-blazor/ant-design-blazor/pull/2443) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 Select 搜索框防抖延时绑定。[#2275](https://github.com/ant-design-blazor/ant-design-blazor/pull/2275) [@tompru](https://github.com/tompru)
+- 🆕 组件库增加 .NET 6 目标框架。[#2484](https://github.com/ant-design-blazor/ant-design-blazor/pull/2484) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 修复表达式和选择功能。[#2507](https://github.com/ant-design-blazor/ant-design-blazor/pull/2507) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复绑定默认值时，没有显示选中项。[#2134](https://github.com/ant-design-blazor/ant-design-blazor/pull/2134) [@gmij](https://github.com/gmij)
+
+- 🐞 修复 DatePicker 点击日期时，不能选中周的问题[#2463](https://github.com/ant-design-blazor/ant-design-blazor/pull/2463) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 修复 Tree 初始化时 checkbox 不能正常选中的问题。[#2506](https://github.com/ant-design-blazor/ant-design-blazor/pull/2506) [@ElderJames](https://github.com/ElderJames)
+
+- ⌨️ 增加 Form 支持当验证失败时显示Feedback图标。[#2418](https://github.com/ant-design-blazor/ant-design-blazor/pull/2418) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ 增加 Checkbox 支持点击标签时触发勾选[#2296](https://github.com/ant-design-blazor/ant-design-blazor/pull/2296) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ 增加 Icon Alt 属性，与原来的`role="img"` 搭配[#2302](https://github.com/ant-design-blazor/ant-design-blazor/pull/2302) [@bweissronin](https://github.com/bweissronin)
+- ⌨️ 增加 Button AriaLabel 属性[#2278](https://github.com/ant-design-blazor/ant-design-blazor/pull/2278) [@bweissronin](https://github.com/bweissronin)
+- 📖 常用问答增加 CSS 隔离的组件样式修改方式[#2158](https://github.com/ant-design-blazor/ant-design-blazor/pull/2158) [@dennisrahmen](https://github.com/dennisrahmen)
+
 ### 0.10.7
 
 `2022-05-22`

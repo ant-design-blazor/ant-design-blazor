@@ -8,7 +8,7 @@ Following the Ant Design specification, we developed a Blazor Components library
 <div class="pic-plus">
   <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
   <span>+</span>
-  <img height="150" src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/docs/assets/blazor.svg">
+  <img height="150" src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/docs/assets/blazor.svg">
 </div>
 
 <style>
@@ -49,7 +49,7 @@ WebAssembly static hosting examples:
 - Run directly on [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987) / [WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) / [Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) and other Blazor Hybrid workloads.
 - Run directly on [Electron](http://electron.atom.io/) and other Web standards-based environments.
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                                                                 Edge 16 / IE 11†                                                                                                 |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
 
@@ -77,7 +77,7 @@ We have provided the `dotnet new` template to create a [Boilerplate](https://git
 - Install the template
 
   ```bash
-  $ dotnet new --install AntDesign.Templates::0.1.0-*
+  $ dotnet new --install AntDesign.Templates
   ```
 
 - Create the Boilerplate project with the template
@@ -101,7 +101,7 @@ Options for the template：
 - Go to the project folder of the application and install the Nuget package reference
 
   ```bash
-  $ dotnet add package AntDesign --version 0.1.0-*
+  $ dotnet add package AntDesign
   ```
 
 - Register the services
@@ -148,7 +148,7 @@ Options for the template：
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987) 5.0.100 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987) 6.0.x or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -161,17 +161,13 @@ Options for the template：
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
 
-  > Visual Studio 2019 is recommended for development.
+  > Visual Studio 2022 is recommended for development.
 
 ## 🔗 Links
 
 - [Ant Design Blazor Documentation](https://ant-design-blazor.github.io)
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
-
-## 🗺 Roadmap
-
-Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) to learn about our development plans for 2020.
 
 ## 🤝 Contributing
 

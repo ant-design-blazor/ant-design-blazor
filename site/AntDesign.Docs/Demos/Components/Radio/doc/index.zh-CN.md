@@ -24,6 +24,7 @@ Radio/Radio.Button
 | Checked            | 指定当前是否选中           | boolean         |
 | DefaultChecked            | 初始是否选中          | boolean         |-       |
 | Disabled |	禁用 Radio        | string        | -         |
+| RadioButton | 设置为 TRUE 以将radio风格设置为按钮组 | bool | false |
 | Value              | 根据 value 进行比较，判断是否选中        | string        | -        |
 
 RadioGroup

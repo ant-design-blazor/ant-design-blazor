@@ -737,8 +737,8 @@ namespace AntDesign
                     {
                         if (!updateSelectOption.IsSelected)
                         {
-                            updateSelectOption.IsSelected = isSelected;
-                            SelectedOptionItems.Add(updateSelectOption);
+                            //updateSelectOption.IsSelected = isSelected;
+                            //SelectedOptionItems.Add(updateSelectOption);
                         }
                         processedSelectedCount--;
                     }

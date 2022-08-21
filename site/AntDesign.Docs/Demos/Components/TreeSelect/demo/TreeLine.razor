@@ -1,10 +1,12 @@
-<TreeSelect TItem="string"
+﻿<TreeSelect TItem="string"
+            EnableSearch
 			Style="width:100%;"
-			@bind-Values="values"
+			@bind-Value="value"
             DropdownStyle="max-height:400px;overflow:auto;"
 			Placeholder="Please select"
 			AllowClear
 			Multiple
+            TreeLine
 			TreeDefaultExpandAll>
 	<TreeNode TItem="string" Key="parent 1" Title="parent 1">
 		<TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0">
@@ -21,10 +23,7 @@
 	</TreeNode>
 </TreeSelect>
 
-@JsonSerializer.Serialize(values);
-
 @code {
 
-	private IEnumerable<string> values=new[]{"leaf1","leaf2"};
-  
+  private string value;
 }

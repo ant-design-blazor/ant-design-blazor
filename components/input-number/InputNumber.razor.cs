@@ -30,7 +30,7 @@ namespace AntDesign
             {
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
-                var stepStr = _step.ToString();
+                var stepStr = Convert.ToDecimal(_step).ToString(nfi);
                 if (string.IsNullOrEmpty(_format))
                 {
                     _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));

@@ -313,6 +313,21 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// clear ant-model enter class, which will disable user-select.
+        /// more details see style/mixins/modal-mask.less
+        /// </summary>
+        /// <returns></returns>
+        internal async Task CleanShowAnimationAsync()
+        {
+            var animationTimeMs = 300;
+            await Task.Delay(animationTimeMs);
+            _maskAnimationClsName = "";
+            _modalAnimationClsName = "";
+            await InvokeStateHasChangedAsync();
+        }
+
+
+        /// <summary>
         /// Hide Dialog through animation
         /// </summary>
         /// <returns></returns>

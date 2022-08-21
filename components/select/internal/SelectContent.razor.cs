@@ -18,7 +18,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SelectContent<TItemValue, TItem> : IDisposable
+    public partial class SelectContent<TItemValue, TItem> : AntDomComponentBase
     {
         [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
@@ -64,20 +64,8 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
-        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
         [Parameter] public int SearchDebounceMilliseconds { get; set; }
-        [Inject] protected IJSRuntime Js { get; set; }
         [Inject] private IDomEventListener DomEventListener { get; set; }
-
-        protected ElementReference Ref
-        {
-            get { return _ref; }
-            set
-            {
-                _ref = value;
-                RefBack?.Set(value);
-            }
-        }
 
         private const char Ellipse = (char)0x2026;
         private const int ItemMargin = 4; //taken from each tag item
@@ -450,9 +438,7 @@ namespace AntDesign.Select.Internal
         //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
         private async void OnBlurInternal(JsonElement e) => await OnBlur.InvokeAsync(new());
 
-        public bool IsDisposed { get; private set; }
-
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!_isReloading)
             {
@@ -466,22 +452,6 @@ namespace AntDesign.Select.Internal
                 });
             }
             DomEventListener?.Dispose();
-
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~SelectContent()
-        {
-            // Finalizer calls Dispose(false)
-            Dispose(false);
         }
     }
 }

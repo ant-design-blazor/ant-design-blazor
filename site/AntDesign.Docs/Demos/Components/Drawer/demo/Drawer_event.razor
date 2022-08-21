@@ -1,17 +1,41 @@
 ﻿@inject DrawerService DrawerService
 @inject ConfirmService confirmService
 
-<Input @bind-Value="@value" />
-<br />
-<br />
-<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+<Space Direction="DirectionVHType.Vertical">
+    <SpaceItem>
+        <Space>
+            <SpaceItem>
+                <Input @bind-Value="@value" />
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+            </SpaceItem>
+        </Space>
+    </SpaceItem>
+
+    <SpaceItem>
+        <div>
+            <Button Type="primary" @onclick="@OpenDrawer">OpenDrawer</Button>
+            <Drawer Closable="true"
+                    Visible="@visible"
+                    Placement="right"
+                    Title='("Basic Drawer")'
+                    OnOpen="@OnOpen"
+                    OnClose="@CloseDrawer">
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Drawer>
+        </div>
+    </SpaceItem>
+</Space>
+
 
 @code{
 
+    // #region use component
     private string value = "blazor";
 
-
-    // use component
     private async Task OpenComponent()
     {
         var options = new DrawerOptions()
@@ -24,13 +48,13 @@
 
         drawerRef.OnOpen = () =>
         {
-            Console.WriteLine("OnAfterOpen");
+            Console.WriteLine("drawerRef OnOpen");
             return Task.CompletedTask;
         };
 
         drawerRef.OnClosing = async handle =>
          {
-             Console.WriteLine("OnAfterClosing:");
+             Console.WriteLine("drawerRef OnClosing");
 
              if (await confirmService.Show("Drawer to close?", "Confirm?", ConfirmButtons.YesNo) == ConfirmResult.No)
              {
@@ -40,11 +64,38 @@
 
         drawerRef.OnClosed = async result =>
         {
-            Console.WriteLine("OnAfterClosed:" + result);
+            Console.WriteLine("drawerRef OnClosed, value:" + result);
             if (result != null)
                 value = result;
             await InvokeAsync(StateHasChanged);
         };
 
     }
+    //# endregion
+
+
+    // #region use <Drawer></Drawer>
+
+    bool visible = false;
+
+    void OpenDrawer()
+    {
+        this.visible = true;
+    }
+
+    async Task OnOpen()
+    {
+        var confirmResult = await confirmService.Show("OnOpen event: Are you sure to close the drawer?", "Question", ConfirmButtons.YesNo);
+        if (confirmResult == ConfirmResult.Yes)
+        {
+            this.visible = false;
+            StateHasChanged();
+        }
+    }
+
+    void CloseDrawer()
+    {
+        this.visible = false;
+    }
+    // #endregion
 }

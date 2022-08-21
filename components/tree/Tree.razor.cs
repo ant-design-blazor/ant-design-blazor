@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -94,7 +94,7 @@ namespace AntDesign
         private bool _hasSetShowLeafIcon;
 
         /// <summary>
-        /// Specific the Icon type of switcher 
+        /// Specific the Icon type of switcher
         /// </summary>
         [Parameter]
         public string SwitcherIcon { get; set; }
@@ -190,9 +190,9 @@ namespace AntDesign
             if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNode.NodeId);
 
-            if (OnUnSelect.HasDelegate)
+            if (OnUnselect.HasDelegate)
             {
-                OnUnSelect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
+                OnUnselect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
             }
         }
 
@@ -355,6 +355,14 @@ namespace AntDesign
             }
         }
 
+        public void SelectAll()
+        {
+            foreach (var item in ChildNodes)
+            {
+                item.SetSelected(true);
+            }
+        }
+
         /// <summary>
         /// Specifies the keys of the default checked treeNodes
         /// </summary>
@@ -377,6 +385,7 @@ namespace AntDesign
                 _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
+
             _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
 
             if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
@@ -419,12 +428,6 @@ namespace AntDesign
 
         private void SearchNodes()
         {
-            if (string.IsNullOrWhiteSpace(_searchValue))
-            {
-                _allNodes.ForEach(m => { m.Expand(true); m.Matched = false; });
-                return;
-            }
-
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -489,7 +492,7 @@ namespace AntDesign
         /// Specifies a method  to return a child node
         /// </summary>
         [Parameter]
-        public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
+        public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
 
         /// <summary>
         /// Specifies a method to return a disabled node
@@ -536,7 +539,7 @@ namespace AntDesign
         public EventCallback<TreeEventArgs<TItem>> OnSelect { get; set; }
 
         [Parameter]
-        public EventCallback<TreeEventArgs<TItem>> OnUnSelect { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnUnselect { get; set; }
 
         /// <summary>
         /// Click the expansion tree node icon to call back
@@ -618,6 +621,33 @@ namespace AntDesign
         {
             SetClassMapper();
             base.OnInitialized();
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            this.DefaultCheckedKeys?.ForEach(k =>
+            {
+                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetCheckedDefault(true);
+            });
+
+            this.DefaultSelectedKeys?.ForEach(k =>
+            {
+                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetSelected(true);
+            });
+            if (!this.DefaultExpandAll)
+            {
+                this.DefaultExpandedKeys?.ForEach(k =>
+                {
+                    var node = this._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.OpenPropagation();
+                });
+            }
+            return base.OnFirstAfterRenderAsync();
         }
 
         /// <summary>

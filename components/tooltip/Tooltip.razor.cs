@@ -20,6 +20,9 @@ namespace AntDesign
         [Parameter]
         public double MouseLeaveDelay { get; set; } = 0.1;
 
+        [Parameter]
+        public int TabIndex { get; set; } = 0;
+
         public Tooltip()
         {
             PrefixCls = "ant-tooltip";

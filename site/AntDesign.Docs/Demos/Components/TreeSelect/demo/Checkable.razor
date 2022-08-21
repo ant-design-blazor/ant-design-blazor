@@ -1,10 +1,11 @@
-<TreeSelect TItem="Data"
+﻿<TreeSelect TItem="Data"
             Style="width:100%;"
             DataSource="treeData"
             @bind-Value="@value"
             Placeholder="Please select"
             AllowClear
             Multiple
+            TreeCheckable
             TreeDefaultExpandAll
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
@@ -21,25 +22,38 @@
         new()
         {
             Title = "Node1",
-            Key = "0-0",
+            Key="0-0",
             Children = new Data[]
             {
                 new()
                 {
                     Title = "Child Node1",
-                    Key = "0-0-1",
+                    Key="0-0-0",
                 },
-                new()
-                {
-                    Title = "Child Node2",
-                    Key = "0-0-2",
-                }
             }
         },
         new()
         {
             Title = "Node2",
-            Key = "0-1",
+            Key="0-1",
+            Children = new Data[]
+            {
+                new()
+                {
+                    Title ="Child Node3",
+                    Key="0-1-0"
+                },
+                new()
+                {
+                    Title ="Child Node4",
+                    Key="0-1-1",
+                },
+                new()
+                {
+                    Title ="Child Node5",
+                    Key="0-1-2",
+                }
+            }
         }
   };
 

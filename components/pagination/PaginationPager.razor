@@ -46,7 +46,6 @@
         var prefixCls = $"{RootPrefixCls}-item";
         ClassMapper.Add(prefixCls).Add($"{prefixCls}-{Page}")
                    .If($"{prefixCls}-active", () => Active)
-                   .If(Class, () => !string.IsNullOrWhiteSpace(Class))
                    .If($"{prefixCls}-disabled", () => Page == 0);
 
         base.OnInitialized();

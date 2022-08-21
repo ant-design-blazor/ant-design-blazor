@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-#endregion
+#endregion using block
 
 namespace AntDesign
 {
@@ -34,7 +34,6 @@ namespace AntDesign
         internal ElementReference _inputRef;
         protected bool _isInitialized;
 
-
         protected bool _isPrimitive;
 
         /// <summary>
@@ -50,7 +49,6 @@ namespace AntDesign
         protected string _prevSearchValue = string.Empty;
         protected string _searchValue = string.Empty;
 
-
         protected SelectContent<TItemValue, TItem> _selectContent;
 
         protected IEnumerable<TItemValue> _selectedValues;
@@ -58,77 +56,93 @@ namespace AntDesign
         protected Action<TItem, string> _setLabel;
 
         protected Action<TItem, TItemValue> _setValue;
+
         /// <summary>
-        /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default 
-        /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>, 
+        /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default
+        /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
         /// unless used with <see cref="ValueOnClear"/>.
         /// </summary>
         [Parameter] public bool AllowClear { get; set; }
+
         /// <summary>
         /// Whether the current search will be cleared on selecting an item.
         /// </summary>
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
+
         /// <summary>
         /// Whether the Select component is disabled.
         /// </summary>
         [Parameter] public bool Disabled { get; set; }
+
         /// <summary>
         /// Set mode of Select - default | multiple | tags
         /// </summary>
         [Parameter] public string Mode { get; set; } = "default";
+
         /// <summary>
         /// Indicates whether the search function is active or not. Always true for mode tags.
         /// </summary>
         [Parameter] public bool EnableSearch { get; set; }
+
         /// <summary>
-        /// Delays the processing of the search input event until the user has stopped 
+        /// Delays the processing of the search input event until the user has stopped
         /// typing for a predetermined amount of time
         /// </summary>
         [Parameter]
         public int SearchDebounceMilliseconds { get; set; }
+
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
         [Parameter] public bool Loading { get; set; }
+
         /// <summary>
         /// Controlled open state of dropdown.
         /// </summary>
         [Parameter] public bool Open { get; set; }
+
         /// <summary>
         /// Placeholder of select.
         /// </summary>
         [Parameter] public string Placeholder { get; set; }
+
         /// <summary>
         /// Called when focus.
         /// </summary>
         [Parameter] public EventCallback OnFocus { get; set; }
 
         /// <summary>
-        /// The name of the property to be used as a group indicator. 
-        /// If the value is set, the entries are displayed in groups. 
+        /// The name of the property to be used as a group indicator.
+        /// If the value is set, the entries are displayed in groups.
         /// Use additional SortByGroup and SortByLabel.
         /// </summary>
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
+
         /// <summary>
         /// Sort items by label value. None | Ascending | Descending
         /// </summary>
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
+
         /// <summary>
         /// Hides the selected items when they are selected.
         /// </summary>
         [Parameter] public bool HideSelected { get; set; }
+
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
         [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
+
         /// <summary>
         /// The custom suffix icon.
         /// </summary>
         [Parameter] public RenderFragment SuffixIcon { get; set; }
+
         /// <summary>
         /// The custom prefix icon.
         /// </summary>
@@ -136,6 +150,7 @@ namespace AntDesign
 
         protected IEnumerable<TItemValue> _defaultValues;
         protected bool _defaultValuesHasItems;
+
         /// <summary>
         /// Used when Mode =  multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.
         /// </summary>
@@ -177,6 +192,7 @@ namespace AntDesign
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+
         /// <summary>
         /// Called when the selected item changes.
         /// </summary>
@@ -187,8 +203,9 @@ namespace AntDesign
         /// </summary>
         [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
-        internal virtual SelectMode SelectMode => Mode.ToSelectMode();
+        [Parameter] public string Status { get; set; }
 
+        internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
         /// <summary>
         ///     Currently active (highlighted) option.
@@ -262,7 +279,6 @@ namespace AntDesign
         [Parameter]
         public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
             label => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
-
 
         /// <summary>
         ///     Determines if SelectOptions has any selected items
@@ -351,7 +367,7 @@ namespace AntDesign
         [Parameter] public int MaxTagTextLength { get; set; }
 
         /// <summary>
-        /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON) 
+        /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON)
         /// e.g. { "value": TItemValue, "label": "Label value" }
         /// </summary>
         [Parameter]
@@ -383,6 +399,7 @@ namespace AntDesign
 
         private bool _hasValueOnClear;
         private TItemValue _valueOnClear;
+
         /// <summary>
         /// When Clear button is pressed, Value will be set to
         /// whatever is set in ValueOnClear
@@ -404,14 +421,12 @@ namespace AntDesign
         /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
         protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
 
-
         /// <summary>
         ///     The Method is called every time if the value of the @bind-Values was changed by the two-way binding.
         /// </summary>
         protected async Task OnValuesChangeAsync(IEnumerable<TItemValue> values)
         {
-            if (
-                !_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
+            if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
             {
                 return;
             }
@@ -670,7 +685,6 @@ namespace AntDesign
             }
         }
 
-
         /// <summary>
         ///     The method is called every time if the user select/de-select a item by mouse or keyboard.
         ///     Don't change the IsSelected property outside of this function.
@@ -827,7 +841,6 @@ namespace AntDesign
             _prevSearchValue = string.Empty;
         }
 
-
         /// <summary>
         ///     Method is called via EventCallBack after the user clicked on the Clear icon inside the Input element.
         ///     Set the IsSelected and IsHidden properties for all items to False. It updates the overlay position if
@@ -943,8 +956,6 @@ namespace AntDesign
             {
                 Focused = true;
 
-                SetClassMap();
-
                 await FocusAsync(_inputRef);
 
                 await OnFocus.InvokeAsync(Focused);
@@ -961,7 +972,6 @@ namespace AntDesign
                 await _dropDown.GetOverlayComponent().UpdatePosition();
             }
         }
-
 
         internal async Task OnArrowClick(MouseEventArgs args)
         {
@@ -984,7 +994,6 @@ namespace AntDesign
         {
             _ = ClearSelectedAsync();
         }
-
 
         /// <summary>
         ///     Clears the selectValue(s) property and send the null(default) value back through the two-way binding.

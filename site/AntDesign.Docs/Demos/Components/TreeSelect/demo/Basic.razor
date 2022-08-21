@@ -3,14 +3,13 @@
 			@bind-Value="value"
 			Placeholder="Please select"
 			AllowClear
-			TreeDefaultExpandAll
-			OnChange="OnChange">
+			TreeDefaultExpandAll>
 	<TreeNode TItem="string" Key="parent 1" Title="parent 1">
-		<TreeNode TItem="string" Key="parent 1-0" title="parent 1-0">
-			<TreeNode TItem="string" Key="leaf1" title="leaf1" />
-			<TreeNode TItem="string" Key="leaf2" title="leaf2" />
+		<TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0">
+			<TreeNode TItem="string" Key="leaf1" Title="leaf1" />
+			<TreeNode TItem="string" Key="leaf2" Title="leaf2" />
 		</TreeNode>
-		<TreeNode TItem="string" Key="parent 1-1" title="parent 1-1">
+		<TreeNode TItem="string" Key="parent 1-1" Title="parent 1-1">
 			<TreeNode TItem="string" Key="leaf3">
 				<TitleTemplate>
 					<b Style="color:#08c;">leaf3</b>
@@ -22,10 +21,5 @@
 
 
 @code {
-	private string value;
-
-	public void OnChange()
-	{
-
-	}
+	private string value="leaf3";
 }

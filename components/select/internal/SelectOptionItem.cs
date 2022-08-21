@@ -28,6 +28,7 @@ namespace AntDesign.Select.Internal
         public Guid InternalId { get; set; } = Guid.NewGuid();
 
         private TItemValue _value;
+
         public TItemValue Value
         {
             get => _value;
@@ -38,6 +39,7 @@ namespace AntDesign.Select.Internal
         }
 
         private TItem _item;
+
         public TItem Item
         {
             get => _item;
@@ -74,6 +76,8 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        public RenderFragment LabelTemplate { get; set; }
+
         private string _groupName = string.Empty;
 
         public string GroupName
@@ -102,6 +106,7 @@ namespace AntDesign.Select.Internal
         }
 
         private bool _isSelected;
+
         public bool IsSelected
         {
             get => _isSelected;
@@ -118,6 +123,7 @@ namespace AntDesign.Select.Internal
         }
 
         private bool _isActive;
+
         public bool IsActive
         {
             get => _isActive;
@@ -134,6 +140,7 @@ namespace AntDesign.Select.Internal
         }
 
         private bool _isDisabled;
+
         public bool IsDisabled
         {
             get => _isDisabled;
@@ -150,6 +157,7 @@ namespace AntDesign.Select.Internal
         }
 
         private bool _isHidden;
+
         public bool IsHidden
         {
             get => _isHidden;
@@ -164,7 +172,6 @@ namespace AntDesign.Select.Internal
                 }
             }
         }
-
 
         public bool IsAddedTag { get; set; }
 

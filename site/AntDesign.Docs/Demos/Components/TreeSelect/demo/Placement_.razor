@@ -1,0 +1,33 @@
+﻿<RadioGroup @bind-Value="_placement">
+  <Radio RadioButton Value="Placement.TopLeft">topLeft</Radio>
+  <Radio RadioButton Value="Placement.TopRight">topRight</Radio>
+  <Radio RadioButton Value="Placement.BottomLeft">bottomLeft</Radio>
+  <Radio RadioButton Value="Placement.BottomRight">bottomRight</Radio>
+</RadioGroup>
+<br />
+<br />
+<TreeSelect TItem="string"
+            Style="width:100%;"
+            DropdownStyle="max-height:400px;overflow:auto;"
+            Placeholder="Please select"
+            AllowClear
+            Multiple
+            TreeDefaultExpandAll>
+  <TreeNode TItem="string" Value="parent 1" Title="parent 1">
+    <TreeNode TItem="string" Value="parent 1-0" Title="parent 1-0">
+      <TreeNode TItem="string" Value="leaf1" Title="leaf1" />
+      <TreeNode TItem="string" Value="leaf2" Title="leaf2" />
+    </TreeNode>
+    <TreeNode TItem="string" Value="parent 1-1" Title="parent 1-1">
+      <TreeNode TItem="string" Value="leaf3">
+        <TitleTemplate>
+          <b style=" color: #08c;">leaf3</b>
+        </TitleTemplate>
+      </TreeNode>
+    </TreeNode>
+  </TreeNode>
+</TreeSelect>
+
+@code {
+  Placement _placement;
+}
