@@ -118,32 +118,39 @@ export class infoHelper {
   }
 
   static getMaxZIndex(): number {
-    return [...document.querySelectorAll("*")].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
-  }  
+    return Array.from(document.querySelectorAll("*")).reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
+  }
 
   static isFixedPosition(element) {
     let node = this.get(element);
     while (node && node.nodeName.toLowerCase() !== 'body') {
-        if (window.getComputedStyle(node).getPropertyValue('position').toLowerCase() === 'fixed')
-            { return true; }
-        node = node.parentNode;
+      if (window.getComputedStyle(node).getPropertyValue('position').toLowerCase() === 'fixed') { return true; }
+      node = node.parentNode;
     }
     return false;
   }
-  
+
   static findAncestorWithZIndex(element: HTMLElement): number {
     let node = this.get(element);
     let zIndexAsString: string;
     let zIndex: number;
     while (node && node.nodeName.toLowerCase() !== 'body') {
-        zIndexAsString = window.getComputedStyle(node).zIndex;
-        zIndex = Number.parseInt(zIndexAsString);
-        if (!Number.isNaN(zIndex)) {
-           return zIndex;
-        }
-        node = node.parentNode;
+      zIndexAsString = window.getComputedStyle(node).zIndex;
+      zIndex = Number.parseInt(zIndexAsString);
+      if (!Number.isNaN(zIndex)) {
+        return zIndex;
+      }
+      node = node.parentNode;
     }
     return null;
   }
 
+  static getElementsInfo(elements: any[]): any {
+    let infos = {};
+    elements.forEach(el => {
+      infos[el.id] = this.getInfo(el);
+    })
+
+    return infos;
+  }
 }

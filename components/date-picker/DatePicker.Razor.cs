@@ -19,7 +19,6 @@ namespace AntDesign
             base.OnInitialized();
             ProcessDefaults();
             _pickerValuesAfterInit = PickerValues[0];
-
         }
 
         private void ProcessDefaults()
@@ -66,16 +65,13 @@ namespace AntDesign
             //Reset Picker to default in case it the picker value was changed
             //but no value was selected (for example when a user clicks next 
             //month but does not select any value)
-            if (UseDefaultPickerValue[0] && DefaultPickerValue != null)
+            if (!_pickerStatus[0].IsValueSelected && UseDefaultPickerValue[0] && DefaultPickerValue != null)
             {
                 PickerValues[0] = _pickerValuesAfterInit;
             }
             await _dropDown.Show();
 
-            // clear status
-            _pickerStatus[0]._currentShowHadSelectValue = false;
-
-            if (!_inputStart.IsOnFocused && _pickerStatus[0]._hadSelectValue && !UseDefaultPickerValue[0])
+            if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
                 GetIfNotNull(Value, notNullValue =>
                 {
@@ -104,12 +100,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
-                GetIfNotNull(changeValue, (notNullValue) =>
-                {
-                    PickerValues[0] = notNullValue;
-                });
-
-                StateHasChanged();
+                _cacheDuringInput = changeValue;
             }
         }
 
@@ -124,17 +115,12 @@ namespace AntDesign
                 {
                     //reset picker to Value         
                     CurrentValue = _cacheDuringInput;
-                    _pickerStatus[0]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
-                    GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
-                    {
-                        PickerValues[0] = notNullValue;
-                    });
                 }
                 _duringManualInput = false;
             }
 
             AutoFocus = false;
-            return;
+            await Task.Yield();
         }
 
         /// <summary>
@@ -187,10 +173,7 @@ namespace AntDesign
             if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
-                GetIfNotNull(changeValue, (notNullValue) =>
-                {
-                    PickerValues[0] = notNullValue;
-                });
+
                 if (OnChange.HasDelegate)
                 {
                     await OnChange.InvokeAsync(new DateTimeChangedEventArgs
@@ -213,7 +196,7 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (_pickerStatus[0]._hadSelectValue)
+            if (_pickerStatus[0].IsValueSelected)
             {
                 if (Value == null)
                 {
@@ -240,8 +223,6 @@ namespace AntDesign
 
             CurrentValue = THelper.ChangeType<TValue>(value);
 
-            _pickerStatus[0]._hadSelectValue = true;
-
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
@@ -260,7 +241,12 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _pickerStatus[0]._hadSelectValue = true;
+
+            _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+
+            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+
+            _dropDown?.SetShouldRender(true);
         }
 
         public override void ClearValue(int index = 0, bool closeDropdown = true)
@@ -271,10 +257,15 @@ namespace AntDesign
                 CurrentValue = DefaultValue;
             else
                 CurrentValue = default;
+
+            PickerValues[0] = _pickerValuesAfterInit;
+
             if (closeDropdown)
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+
+            _dropDown.SetShouldRender(true);
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
@@ -297,6 +288,13 @@ namespace AntDesign
         {
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
+            InvokeInternalOverlayVisibleChanged(visible);
+        }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick();
         }
     }
 }

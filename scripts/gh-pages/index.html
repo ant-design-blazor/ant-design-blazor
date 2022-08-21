@@ -12,7 +12,7 @@
     <link rel="icon" href="logo.png" type="image/x-icon" />
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
     <link rel="stylesheet" href="https://unpkg.com/@docsearch/css@3.0.0/dist/style.css" crossorigin />
-    <link href="_content/AntDesign.Docs/css/docs.default.css?v={version}" rel="stylesheet" />
+    <link href="_content/AntDesign.Docs/css/default.css?v={version}" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less" />
     <link rel="stylesheet" type="text/css" href="./css/toast.css" />
@@ -100,31 +100,31 @@
                     animation: antSpinMove 1s infinite linear alternate;
                 }
 
-                .ant-spin-dot-item:nth-child(1) {
-                    top: 0;
-                    left: 0;
-                }
+                    .ant-spin-dot-item:nth-child(1) {
+                        top: 0;
+                        left: 0;
+                    }
 
-                .ant-spin-dot-item:nth-child(2) {
-                    top: 0;
-                    right: 0;
-                    -webkit-animation-delay: 0.4s;
-                    animation-delay: 0.4s;
-                }
+                    .ant-spin-dot-item:nth-child(2) {
+                        top: 0;
+                        right: 0;
+                        -webkit-animation-delay: 0.4s;
+                        animation-delay: 0.4s;
+                    }
 
-                .ant-spin-dot-item:nth-child(3) {
-                    right: 0;
-                    bottom: 0;
-                    -webkit-animation-delay: 0.8s;
-                    animation-delay: 0.8s;
-                }
+                    .ant-spin-dot-item:nth-child(3) {
+                        right: 0;
+                        bottom: 0;
+                        -webkit-animation-delay: 0.8s;
+                        animation-delay: 0.8s;
+                    }
 
-                .ant-spin-dot-item:nth-child(4) {
-                    bottom: 0;
-                    left: 0;
-                    -webkit-animation-delay: 1.2s;
-                    animation-delay: 1.2s;
-                }
+                    .ant-spin-dot-item:nth-child(4) {
+                        bottom: 0;
+                        left: 0;
+                        -webkit-animation-delay: 1.2s;
+                        animation-delay: 1.2s;
+                    }
 
                 .ant-spin-dot-spin {
                     -webkit-transform: rotate(45deg);
@@ -140,13 +140,12 @@
                     height: 32px;
                 }
 
-                .ant-spin-lg .ant-spin-dot i {
-                    width: 14px;
-                    height: 14px;
-                }
+                    .ant-spin-lg .ant-spin-dot i {
+                        width: 14px;
+                        height: 14px;
+                    }
 
-                @media all and (-ms-high-contrast: none),
-                (-ms-high-contrast: active) {
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
                     .ant-spin-blur {
                         background: #fff;
                         opacity: 0.5;
@@ -179,8 +178,7 @@
                     }
                 }
             </style>
-            <div
-                style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
                 <img src="logo.png" alt="logo" width="256">
                 <div class="page-loading-warp">
                     <div class="ant-spin ant-spin-lg ant-spin-spinning">
@@ -199,9 +197,7 @@
         </div>
     </app>
     <div id="toast-zh" class="toast ">文档已更新，请点击 <a class="reload" onclick="reload()">此处</a> 更新。</div>
-    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload"
-            onclick="reload()">here</a> to update.
-    </div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload" onclick="reload()">here</a> to update.</div>
 
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
@@ -256,21 +252,21 @@
                 }).then(() => ref.invokeMethodAsync('OnColorChanged'))
         }
 
-        fetch("/version.json?t=" + new Date().getTime())
-            .then(response => response.json())
-            .then(data => {
-                console.log('Latest version is:' + data.version);
-                if (data.version != '{version}') {
-                    showUpdateBar();
-                }
-            });
+        //fetch("/version.json?t=" + new Date().getTime())
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        console.log('Latest version is:' + data.version);
+        //        if (data.version != '{version}') {
+        //            showUpdateBar();
+        //        }
+        //    });
     </script>
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
+            referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js" crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
+            referrerpolicy="no-referrer"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
     <script>
         let newWorker;
@@ -305,7 +301,6 @@
         if ('serviceWorker' in navigator) {
             // The click event on the pop up notification
 
-
             navigator.serviceWorker.register('/service-worker.js').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
@@ -334,8 +329,6 @@
                 refreshing = true;
             });
         }
-
     </script>
 </body>
-
 </html>

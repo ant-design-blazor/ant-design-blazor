@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -12,13 +13,18 @@ namespace AntDesign
     {
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = new();
 
+        public ReuseTabsRouteView() : base()
+        {
+            this.ScanReuseTabsPageAttribute();
+        }
+
         [Inject]
         public NavigationManager Navmgr { get; set; }
 
         [Parameter]
         public RenderFragment<RenderFragment> ChildContent { get; set; }
 
-        private string CurrentUrl => Navmgr.Uri;
+        public string CurrentUrl => this.GetNewKeyByUrl(Navmgr.ToBaseRelativePath(Navmgr.Uri));
 
         internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
 
@@ -26,6 +32,7 @@ namespace AntDesign
         {
             _pageMap.Remove(key);
         }
+
         public void RemovePageWithRegex(string pattern)
         {
             foreach (var key in _pageMap.Keys)
@@ -46,7 +53,7 @@ namespace AntDesign
         {
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
 
-            var body = CreateBody(RouteData, Navmgr.Uri);
+            var body = CreateBody(RouteData, CurrentUrl);
 
             builder.OpenComponent<CascadingValue<ReuseTabsRouteView>>(0);
             builder.AddAttribute(1, "Name", "RouteView");
@@ -68,7 +75,8 @@ namespace AntDesign
 
             builder.CloseComponent();
 
-            if (!_pageMap.ContainsKey(CurrentUrl))
+            var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
+            if (reuseTabsPageItem == null)
             {
                 _pageMap[CurrentUrl] = new ReuseTabsPageItem
                 {
@@ -77,7 +85,11 @@ namespace AntDesign
                     CreatedAt = DateTime.Now,
                     Ignore = false
                 };
+
+                return;
             }
+
+            if (reuseTabsPageItem.Body is null) reuseTabsPageItem.Body = body;
         }
 
         private RenderFragment CreateBody(RouteData routeData, string url)
@@ -118,9 +130,74 @@ namespace AntDesign
                 pageItem.Title ??= attr.Title?.ToRenderFragment();
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
+                pageItem.Pin = attr.Pin;
             }
 
             pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
+        }
+
+        public void AddReuseTabsPageItem(string url, Type pageType)
+        {
+            url = this.GetNewKeyByUrl(url);
+
+            if (_pageMap.ContainsKey(url)) return;
+
+            var reuseTabsPageItem = new ReuseTabsPageItem();
+            this.GetPageInfo(reuseTabsPageItem, pageType, url, null);
+            reuseTabsPageItem.CreatedAt = DateTime.Now;
+            reuseTabsPageItem.Url = url;
+            _pageMap[url] = reuseTabsPageItem;
+        }
+
+        /// <summary>
+        /// 获取所有程序集
+        /// </summary>
+        /// <returns></returns>
+        protected IEnumerable<Assembly> GetAllAssembly()
+        {
+            IEnumerable<Assembly> assemblies = new List<Assembly>();
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly == null) return assemblies;
+            var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
+            assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
+
+            var paths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
+                .Where(w => w.EndsWith(".dll") && !w.Contains(nameof(Microsoft)))
+                .Select(w => w)
+             ;
+
+            return assemblies;
+        }
+
+        /// <summary>
+        /// 扫描 ReuseTabsPageAttribute 特性
+        /// </summary>
+        private void ScanReuseTabsPageAttribute()
+        {
+            var list = GetAllAssembly();
+
+            foreach (var item in list)
+            {
+                var allClass = item.ExportedTypes
+                    .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
+                foreach (var pageType in allClass)
+                {
+                    var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
+                    var reuseTabsPageAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
+
+                    this.AddReuseTabsPageItem(routeAttribute.Template, pageType);
+                }
+            }
+        }
+
+        public string GetNewKeyByUrl(string url)
+        {
+            if (url.StartsWith("/"))
+            {
+                return url;
+            }
+
+            return "/" + url;
         }
     }
 }

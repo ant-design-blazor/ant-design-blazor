@@ -86,9 +86,10 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
-        protected Dictionary<string, object> GetAttributes()
-        {
-            return new Dictionary<string, object>()
+        [Parameter]
+        public bool Use12Hours { get; set; }
+
+        protected Dictionary<string, object> GetAttributes() => new Dictionary<string, object>()
             {
                 { "PrefixCls", PrefixCls },
                 { "Picker", Picker },
@@ -112,67 +113,30 @@ namespace AntDesign
                 { "IsShowHeader", IsShowHeader },
                 { "IsShowTime", IsShowTime },
             };
-        }
 
-        protected void OnSelectTime(DateTime date)
-        {
-            OnSelect?.Invoke(date, PickerIndex);
-        }
+        protected void OnSelectTime(DateTime date) => OnSelect?.Invoke(date, GetPickerIndex());
 
-        protected void OnSelectDate(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(year: date.Year, month: date.Month, day: date.Day), PickerIndex);
-        }
+        protected void OnSelectDate(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: date.Year, month: date.Month, day: date.Day), GetPickerIndex());
 
-        protected void OnSelectYear(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(year: date.Year), PickerIndex);
-        }
+        protected void OnSelectYear(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: date.Year), GetPickerIndex());
 
-        protected void OnSelectQuarter(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(month: date.Month), PickerIndex);
-        }
+        protected void OnSelectQuarter(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: date.Month), GetPickerIndex());
 
-        protected void OnSelectMonth(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(month: date.Month), PickerIndex);
-        }
+        protected void OnSelectMonth(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: date.Month), GetPickerIndex());
 
-        protected void OnSelectDay(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(day: date.Day), PickerIndex);
-        }
+        protected void OnSelectDay(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(day: date.Day), GetPickerIndex());
 
-        protected void OnSelectHour(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(hour: date.Hour), PickerIndex);
-        }
+        protected void OnSelectHour(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(hour: date.Hour), GetPickerIndex());
 
-        protected void OnSelectMinute(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(minute: date.Minute), PickerIndex);
-        }
+        protected void OnSelectMinute(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(minute: date.Minute), GetPickerIndex());
 
-        protected void OnSelectSecond(DateTime date)
-        {
-            OnSelect?.Invoke(CombineNewShowDate(second: date.Second), PickerIndex);
-        }
+        protected void OnSelectSecond(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(second: date.Second), GetPickerIndex());
 
-        protected void OnSelectShowYear(DateTime date)
-        {
-            ChangePickerValue(CombineNewShowDate(year: date.Year), PickerIndex);
-        }
+        protected void OnSelectShowYear(DateTime date) => ChangePickerValue(CombineNewShowDate(year: date.Year), GetPickerIndex());
 
-        protected void OnSelectShowMonth(DateTime date)
-        {
-            ChangePickerValue(CombineNewShowDate(month: date.Month), PickerIndex);
-        }
+        protected void OnSelectShowMonth(DateTime date) => ChangePickerValue(CombineNewShowDate(month: date.Month), GetPickerIndex());
 
-        protected void OnSelectShowDay(DateTime date)
-        {
-            ChangePickerValue(CombineNewShowDate(day: date.Day), PickerIndex);
-        }
+        protected void OnSelectShowDay(DateTime date) => ChangePickerValue(CombineNewShowDate(day: date.Day), GetPickerIndex());
 
         protected DateTime CombineNewShowDate(
             int? year = null,
@@ -180,9 +144,7 @@ namespace AntDesign
             int? day = null,
             int? hour = null,
             int? minute = null,
-            int? second = null)
-        {
-            return DateHelper.CombineNewDate(
+            int? second = null) => DateHelper.CombineNewDate(
                 PickerValue,
                 year,
                 month,
@@ -191,7 +153,6 @@ namespace AntDesign
                 minute,
                 second
                 );
-        }
 
         protected void ChangePickerYearValue(int interval)
         {
@@ -223,19 +184,13 @@ namespace AntDesign
             ChangePickerValue(DateHelper.AddMonthsSafely(baseDate, interval), null);
         }
 
-        protected void Close()
-        {
-            ClosePanel?.Invoke();
-        }
+        protected void Close() => ClosePanel?.Invoke();
 
         protected DateTime PickerValue { get => GetIndexPickerValue(PickerIndex); }
 
         protected DateTime? Value { get => GetIndexValue(PickerIndex); }
 
-        public void PopUpPicker(string type)
-        {
-            ChangePickerType(type, PickerIndex);
-        }
+        public void PopUpPicker(string type) => ChangePickerType(type, PickerIndex);
 
         protected override void OnInitialized()
         {
@@ -244,5 +199,7 @@ namespace AntDesign
             ClassMapper.Add($"{PrefixCls}-panel")
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
+
+        private int GetPickerIndex() => IsRange && !IsShowTime ? DatePicker.GetOnFocusPickerIndex() : PickerIndex;
     }
 }

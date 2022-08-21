@@ -227,6 +227,24 @@ namespace AntDesign
         [Parameter]
         public string MaxBodyHeight { get; set; } = null;
 
+        /// <summary>
+        /// show modal maximize button
+        /// </summary>
+        [Parameter]
+        public bool Maximizable { get; set; } = false;
+
+        /// <summary>
+        /// The icon of the maximize button when the modal is in normal state
+        /// </summary>
+        [Parameter]
+        public RenderFragment MaximizeBtnIcon { get; set; } = DialogOptions.DefaultMaximizeIcon;
+
+        /// <summary>
+        /// The icon of the maximize button when the modal is maximized
+        /// </summary>
+        [Parameter]
+        public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -304,7 +322,10 @@ namespace AntDesign
 
                 CancelButtonProps = CancelButtonProps,
                 Rtl = Rtl,
-                MaxBodyHeight = MaxBodyHeight
+                MaxBodyHeight = MaxBodyHeight,
+                Maximizable = Maximizable,
+                MaximizeBtnIcon = MaximizeBtnIcon,
+                RestoreBtnIcon = RestoreBtnIcon,
             };
 
             return options;

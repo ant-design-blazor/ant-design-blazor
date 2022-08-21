@@ -1,10 +1,17 @@
-﻿namespace AntDesign
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+
+namespace AntDesign
 {
     public enum Placement
     {
         TopLeft,
+        [Obsolete("Please use 'Placement.Top' instead.")]
         TopCenter,
-        Top,
+        Top = 2,
         TopRight,
         Left,
         LeftTop,
@@ -13,15 +20,15 @@
         RightTop,
         RightBottom,
         BottomLeft,
+        [Obsolete("Please use 'Placement.Bottom' instead.")]
         BottomCenter,
-        Bottom,
+        Bottom = 12,
         BottomRight
     }
 
-    public sealed class PlacementType : EnumValue<PlacementType>
+    internal sealed class PlacementType : EnumValue<PlacementType>
     {
         public static readonly PlacementType TopLeft = new PlacementType("topLeft", "down", "33% 100%", 0, Placement.TopLeft);
-        public static readonly PlacementType TopCenter = new PlacementType("topCenter", "down", "50% 100%", 1, Placement.TopCenter);
         public static readonly PlacementType Top = new PlacementType("top", "down", "50% 100%", 1, Placement.Top);
         public static readonly PlacementType TopRight = new PlacementType("topRight", "down", "66% 100%", 2, Placement.TopRight);
 
@@ -34,14 +41,13 @@
         public static readonly PlacementType RightBottom = new PlacementType("rightBottom", "up", "0 66%", 8, Placement.RightBottom);
 
         public static readonly PlacementType BottomLeft = new PlacementType("bottomLeft", "up", "33% 0", 9, Placement.BottomLeft);
-        public static readonly PlacementType BottomCenter = new PlacementType("bottomCenter", "up", "50% 0", 10, Placement.BottomCenter);
         public static readonly PlacementType Bottom = new PlacementType("bottom", "up", "50% 0", 10, Placement.Bottom);
         public static readonly PlacementType BottomRight = new PlacementType("bottomRight", "up", "66% 0", 11, Placement.BottomRight);
 
         public static PlacementType Create(Placement placement) => placement switch
         {
             Placement.TopLeft => PlacementType.TopLeft,
-            Placement.TopCenter => PlacementType.TopCenter,
+            Placement.TopCenter => PlacementType.Top,
             Placement.Top => PlacementType.Top,
             Placement.TopRight => PlacementType.TopRight,
             Placement.Left => PlacementType.Left,
@@ -51,7 +57,7 @@
             Placement.RightTop => PlacementType.RightTop,
             Placement.RightBottom => PlacementType.RightBottom,
             Placement.BottomLeft => PlacementType.BottomLeft,
-            Placement.BottomCenter => PlacementType.BottomCenter,
+            Placement.BottomCenter => PlacementType.Bottom,
             Placement.Bottom => PlacementType.Bottom,
             Placement.BottomRight => PlacementType.BottomRight,
             _ => PlacementType.BottomLeft
@@ -72,7 +78,6 @@
         internal PlacementType GetReverseType()
         {
             if (this == TopLeft) return BottomLeft;
-            if (this == TopCenter) return BottomCenter;
             if (this == Top) return Bottom;
             if (this == TopRight) return BottomRight;
 
@@ -85,7 +90,6 @@
             if (this == RightBottom) return LeftBottom;
 
             if (this == BottomLeft) return TopLeft;
-            if (this == BottomCenter) return TopCenter;
             if (this == Bottom) return Top;
             if (this == BottomRight) return TopRight;
 
@@ -94,7 +98,7 @@
 
         internal PlacementDirection GetDirection()
         {
-            if (this.IsIn(TopLeft, TopCenter, Top, TopRight))
+            if (this.IsIn(TopLeft, Top, TopRight))
             {
                 return PlacementDirection.Top;
             }
@@ -109,7 +113,7 @@
                 return PlacementDirection.Right;
             }
 
-            if (this.IsIn(BottomLeft, BottomCenter, Bottom, BottomRight))
+            if (this.IsIn(BottomLeft, Bottom, BottomRight))
             {
                 return PlacementDirection.Bottom;
             }

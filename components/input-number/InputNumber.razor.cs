@@ -13,16 +13,11 @@ namespace AntDesign
 {
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
-        private string _format;
-        protected const string PrefixCls = "ant-input-number";
-
         [Parameter]
         public Func<TValue, string> Formatter { get; set; }
 
         [Parameter]
         public Func<string, string> Parser { get; set; }
-
-        private TValue _step;
 
         [Parameter]
         public TValue Step
@@ -50,8 +45,6 @@ namespace AntDesign
             }
         }
 
-        private int? _decimalPlaces;
-
         [Parameter]
         public TValue DefaultValue
         {
@@ -78,16 +71,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
-        private readonly bool _isNullable;
-        private bool _hasDefaultValue;
-
-        private readonly Func<TValue, TValue, TValue> _increaseFunc;
-        private readonly Func<TValue, TValue, TValue> _decreaseFunc;
-        private readonly Func<TValue, TValue, bool> _greaterThanFunc;
-        private readonly Func<TValue, TValue, bool> _equalToFunc;
-        private Func<TValue, string, string> _toStringFunc;
-        private readonly Func<TValue, int, TValue> _roundFunc;
-        private Func<string, TValue, TValue> _parseFunc;
+        [Parameter]
+        public string PlaceHolder { get; set; }
 
         private static readonly Type _surfaceType = typeof(TValue);
 
@@ -156,14 +141,31 @@ namespace AntDesign
         };
 
         private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
-        private string _inputString;
-        private bool _focused;
 
+        private readonly bool _isNullable;
         private readonly int _interval = 200;
+
+        private readonly Func<TValue, TValue, TValue> _increaseFunc;
+        private readonly Func<TValue, TValue, TValue> _decreaseFunc;
+        private readonly Func<TValue, TValue, bool> _greaterThanFunc;
+        private readonly Func<TValue, TValue, bool> _equalToFunc;
+        private readonly Func<TValue, int, TValue> _roundFunc;
+
         private CancellationTokenSource _increaseTokenSource;
         private CancellationTokenSource _decreaseTokenSource;
+
+        private Func<string, TValue, TValue> _parseFunc;
+        private Func<TValue, string, string> _toStringFunc;
+
+        private string _inputString;
+        private bool _focused;
+        private string _format;
+        private bool _hasDefaultValue;
+        private int? _decimalPlaces;
+        private TValue _step;
         private TValue _defaultValue;
 
+        private string _prefixCls = "ant-input-number";
         private string _inputNumberMode = "numeric";
 
         public InputNumber()
@@ -286,13 +288,13 @@ namespace AntDesign
 
         private void SetClass()
         {
-            ClassMapper.Clear()
-                .Add(PrefixCls)
-                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
-                .If($"{PrefixCls}-focused", () => _focused)
-                .If($"{PrefixCls}-disabled", () => this.Disabled)
-                .If($"{PrefixCls}-rtl", () => RTL);
+            ClassMapper
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{_prefixCls}-focused", () => _focused)
+                .If($"{_prefixCls}-disabled", () => this.Disabled)
+                .If($"{_prefixCls}-rtl", () => RTL);
         }
 
         #region Value Increase and Decrease Methods

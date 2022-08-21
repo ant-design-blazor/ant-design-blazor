@@ -24,7 +24,7 @@
                         IsInView="date => IsInView(date, startDate)"
                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
-                        GetColTitle='date => date.ToString(Locale.Lang.YearFormat, CultureInfo)'
+                        GetColTitle="date => date.ToString(Locale.Lang.YearFormat, CultureInfo)"
                         OnValueSelect="date => OnSelectYear(date)"
                         GetNextColValue="date => DateHelper.AddYearsSafely(date, 1)">
         <RenderPickerHeader>
@@ -38,7 +38,7 @@
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
             @{yearIndex++;}
-            @currentColDate.Year
+            @currentColDate.ToString(Locale.Lang.YearFormat, CultureInfo)
         </RenderColValue>
     </DatePickerTemplate>
 </div>

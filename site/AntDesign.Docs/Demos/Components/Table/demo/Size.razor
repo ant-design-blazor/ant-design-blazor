@@ -1,12 +1,12 @@
 @using System.ComponentModel
 <p>Middle size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
-    <Column @bind-Field="@context.Name">
+    <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Age"></Column>
-    <Column @bind-Field="@context.Address"></Column>
-    <Column @bind-Field="@context.Tags">
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Tags">
         @foreach (var tag in context.Tags)
         {
             var color = tag.Length > 5 ? "geekblue" : "green";
@@ -16,7 +16,7 @@
             }
             <Tag Color="@color">@tag</Tag>
         }
-    </Column>
+    </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>
@@ -30,12 +30,12 @@
 </Table>
 <p>Small size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
-    <Column @bind-Field="@context.Name">
+    <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Age"></Column>
-    <Column @bind-Field="@context.Address"></Column>
-    <Column @bind-Field="@context.Tags">
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Tags">
         @foreach (var tag in context.Tags)
         {
             var color = tag.Length > 5 ? "geekblue" : "green";
@@ -45,7 +45,7 @@
             }
             <Tag Color="@color">@tag</Tag>
         }
-    </Column>
+    </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>

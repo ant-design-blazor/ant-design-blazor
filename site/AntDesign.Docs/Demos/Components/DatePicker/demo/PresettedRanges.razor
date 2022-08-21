@@ -1,3 +1,26 @@
 ﻿<div>
-    TODO
+   <RangePicker  TValue="DateTime?[]" Ranges="dayRanges" ShowTime="true" />
 </div>
+<div>
+  <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" Ranges="monthRanges" />
+</div>
+<div> 
+    <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year" Ranges="yearRanges" />
+</div>
+
+@code{
+    Dictionary<string,DateTime?[]> dayRanges = new Dictionary<string, DateTime?[]>() { 
+        { "NextWeek",new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(7) }},
+        { "ThisMonth",new DateTime?[] { new DateTime(DateTime.Now.Year,DateTime.Now.Month,1), new DateTime(DateTime.Now.Year,DateTime.Now.Month,1).AddMonths(1).AddDays(-1) }},
+        { "LastThreeDays",new DateTime?[] { DateTime.Now.AddDays(-3), DateTime.Now }},
+    };
+    
+    Dictionary<string,DateTime?[]> monthRanges = new Dictionary<string, DateTime?[]>() { 
+        { "FirstHalfYear",new DateTime?[] { new DateTime(DateTime.Now.Year,1,1), new DateTime(DateTime.Now.Year,6,30)}},
+        { "SecondHalfYear",new DateTime?[] { new DateTime(DateTime.Now.Year,7,1), new DateTime(DateTime.Now.Year,12,31)}}        
+    };
+    
+    Dictionary<string,DateTime?[]> yearRanges = new Dictionary<string, DateTime?[]>() { 
+        { "ThisCentury",new DateTime?[] { new DateTime(2000,1,1), new DateTime(2099,DateTime.Now.Month,31)}}
+    };
+}

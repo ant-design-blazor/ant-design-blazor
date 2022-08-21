@@ -1,5 +1,13 @@
-﻿.disabled {
-  color: rgba(0,0,0,.25);
-  cursor: not-allowed;
-  pointer-events: none;
+.@{dropdown-prefix-cls} {
+  &-menu {
+    &-item,
+    &-submenu-title {
+      .@{dropdown-prefix-cls}-menu-submenu-arrow {
+        .@{dropdown-prefix-cls}-rtl & {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
 }
+  

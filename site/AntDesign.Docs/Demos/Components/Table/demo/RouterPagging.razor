@@ -12,11 +12,11 @@
         PageIndex="@_pageIndex"
         PageSize="@_pageSize"
         OnPageIndexChange="PageIndexChanged">
-        <Column @bind-Field="@context.Id"/>
-        <Column @bind-Field="@context.Date" Format="yyyy-MM-dd"/>
-        <Column @bind-Field="@context.TemperatureC"/>
-        <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
-        <Column @bind-Field="@context.Summary"/>
+        <PropertyColumn Property="c=>c.Id"/>
+        <PropertyColumn Property="c=>c.Date" Format="yyyy-MM-dd"/>
+        <PropertyColumn Property="c=>c.TemperatureC"/>
+        <PropertyColumn Title="Temp. (F)" Field="@context.TemperatureF"/>
+        <PropertyColumn Property="c=>c.Summary"/>
     </Table>
 
     <br/>

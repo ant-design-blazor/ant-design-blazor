@@ -109,7 +109,7 @@ namespace AntDesign
         /// <summary>
         /// Called when focus.
         /// </summary>
-        [Parameter] public Action OnFocus { get; set; }
+        [Parameter] public EventCallback OnFocus { get; set; }
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
@@ -186,7 +186,7 @@ namespace AntDesign
         /// <summary>
         /// Called when the user clears the selection.
         /// </summary>
-        [Parameter] public Action OnClearSelected { get; set; }
+        [Parameter] public EventCallback OnClearSelected { get; set; }
 
         internal bool IsResponsive { get; set; }
 
@@ -196,17 +196,12 @@ namespace AntDesign
         /// <summary>
         /// Called when the selected item changes.
         /// </summary>
-        [Parameter] public Action<TItem> OnSelectedItemChanged { get; set; }
+        [Parameter] public EventCallback<TItem> OnSelectedItemChanged { get; set; }
 
         /// <summary>
         /// Called when the selected items changes.
         /// </summary>
-        [Parameter] public Action<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
-
-        /// <summary>
-        /// Used for rendering select options manually.
-        /// </summary>
-        [Parameter] public RenderFragment SelectOptions { get; set; }
+        [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
         [Parameter] public string Status { get; set; }
 
@@ -350,6 +345,11 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Used for rendering select options manually.
+        /// </summary>
+        [Parameter] public RenderFragment SelectOptions { get; set; }
+
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new();
 
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
@@ -439,7 +439,7 @@ namespace AntDesign
             if (values == null)
             {
                 await ValuesChanged.InvokeAsync(default);
-                OnSelectedItemsChanged?.Invoke(default);
+                await OnSelectedItemsChanged.InvokeAsync(default);
                 return;
             }
 
@@ -455,7 +455,7 @@ namespace AntDesign
                 await UpdateOverlayPositionAsync();
             }
 
-            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
+            await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
             await ValuesChanged.InvokeAsync(Values);
         }
 
@@ -657,7 +657,7 @@ namespace AntDesign
         {
             if (selectOptionItem == null)
             {
-                OnSelectedItemsChanged?.Invoke(default);
+                OnSelectedItemsChanged.InvokeAsync(default);
             }
             else
             {
@@ -672,11 +672,11 @@ namespace AntDesign
 
                     var json = JsonSerializer.Serialize(valueLabel);
 
-                    OnSelectedItemChanged?.Invoke((TItem)Convert.ChangeType(json, typeof(TItem)));
+                    OnSelectedItemChanged.InvokeAsync((TItem)Convert.ChangeType(json, typeof(TItem)));
                 }
                 else
                 {
-                    OnSelectedItemChanged?.Invoke(selectOptionItem.Item);
+                    OnSelectedItemChanged.InvokeAsync(selectOptionItem.Item);
                 }
                 if (TypeDefaultExistsAsSelectOption && IsOptionEqualToNoValue(selectOptionItem))
                 {
@@ -856,7 +856,7 @@ namespace AntDesign
             {
                 await ClearMultipleMode();
             }
-            OnClearSelected?.Invoke();
+            await OnClearSelected.InvokeAsync(_);
         }
 
         private async Task ClearMultipleMode()
@@ -958,7 +958,7 @@ namespace AntDesign
 
                 await FocusAsync(_inputRef);
 
-                OnFocus?.Invoke();
+                await OnFocus.InvokeAsync(Focused);
             }
         }
 
@@ -1002,12 +1002,12 @@ namespace AntDesign
         {
             if (SelectMode == SelectMode.Default)
             {
-                OnSelectedItemChanged?.Invoke(default);
+                await OnSelectedItemChanged.InvokeAsync(default);
                 await ValueChanged.InvokeAsync(default);
             }
             else
             {
-                OnSelectedItemsChanged?.Invoke(default);
+                await OnSelectedItemsChanged.InvokeAsync(default);
                 await ValuesChanged.InvokeAsync(default);
             }
         }

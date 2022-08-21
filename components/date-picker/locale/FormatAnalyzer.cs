@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AntDesign.core.Extensions;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Datepicker.Locale
 {
@@ -15,6 +14,7 @@ namespace AntDesign.Datepicker.Locale
         private int _hourLength;
         private int _minuteLength;
         private int _secondLength;
+        private int _amPmDesignatorLength;
         private int _formatLength;
 
         private List<string> _separators = new();
@@ -34,7 +34,8 @@ namespace AntDesign.Datepicker.Locale
             Hour,
             Day,
             Month,
-            Year
+            Year,
+            AmPmDesignator
         }
 
         public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale)
@@ -68,7 +69,7 @@ namespace AntDesign.Datepicker.Locale
                         _ => throw new ArgumentException("Character not covered")
                     };
                 }
-                else if (format[i].IsIn('h', 'H', 'm', 's'))
+                else if (format[i].IsIn('h', 'H', 'm', 's', 't'))
                 {
                     inDate = false;
                     isLastSeparator = false;
@@ -78,6 +79,7 @@ namespace AntDesign.Datepicker.Locale
                         'H' => Increment(ref _hourLength, ref partialOrder, DateTimePartialType.Hour),
                         'm' => Increment(ref _minuteLength, ref partialOrder, DateTimePartialType.Minute),
                         's' => Increment(ref _secondLength, ref partialOrder, DateTimePartialType.Second),
+                        't' => Increment(ref _amPmDesignatorLength, ref partialOrder, DateTimePartialType.AmPmDesignator),
                         _ => throw new ArgumentException("Character not covered")
                     };
                 }
@@ -91,7 +93,7 @@ namespace AntDesign.Datepicker.Locale
                     }
                     else
                     {
-                        _separators[_separators.Count-1] += format[i];
+                        _separators[_separators.Count - 1] += format[i];
                     }
                     isLastSeparator = true;
                 }
@@ -139,29 +141,52 @@ namespace AntDesign.Datepicker.Locale
                     DateTimePartialType.Hour => (minLen: _hourLength, maxLen: 2),
                     DateTimePartialType.Minute => (minLen: _minuteLength, maxLen: 2),
                     DateTimePartialType.Second => (minLen: _secondLength, maxLen: 2),
+                    DateTimePartialType.AmPmDesignator => (minLen: _amPmDesignatorLength, maxLen: 2),
                     _ => throw new ArgumentException("Partial not covered")
                 };
                 //check width of the partial
                 if (!(borders.minLen <= partial.Length && partial.Length <= borders.maxLen))
                     return false;
-                //check if partial is pars-able and grater than 0                
-                if (int.TryParse(partial, out parsed))
+
+                if (_partialsOrder[i] == DateTimePartialType.AmPmDesignator)
                 {
-                    if ((parsed <= 0 && _partialsOrder[i] >= DateTimePartialType.Day)
-                        || (parsed < 0 && _partialsOrder[i] < DateTimePartialType.Day))
+                    if (CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator.StartsWith(partial,
+                                                                                          StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _parsedMap[_partialsOrder[i]] = 0;
+                    }
+                    else if (CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator.StartsWith(partial,
+                                                                                              StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _parsedMap[_partialsOrder[i]] = 1;
+                    }
+                    else
+                    {
                         return false;
+                    }
                 }
                 else
                 {
-                    return false;
-                }
-                //check if all characters in partial are digits (exclude for example partial = "201 ")
-                if (partial.Count(c => char.IsDigit(c)) != partial.Length)
-                    return false;
+                    //check if partial is pars-able and grater than 0                
+                    if (int.TryParse(partial, out parsed))
+                    {
+                        if ((parsed <= 0 && _partialsOrder[i] >= DateTimePartialType.Day)
+                            || (parsed < 0 && _partialsOrder[i] < DateTimePartialType.Day))
+                            return false;
+                    }
+                    else
+                    {
+                        return false;
+                    }
 
-                if (endingPosition < forEvaluation.Length)
-                    startPosition = endingPosition + _separators[i + _separatorPrefixOffset].Length;
-                _parsedMap[_partialsOrder[i]] = parsed;
+                    //check if all characters in partial are digits (exclude for example partial = "201 ")
+                    if (partial.Count(c => char.IsDigit(c)) != partial.Length)
+                        return false;
+
+                    if (endingPosition < forEvaluation.Length)
+                        startPosition = endingPosition + _separators[i + _separatorPrefixOffset].Length;
+                    _parsedMap[_partialsOrder[i]] = parsed;
+                }
             }
             return true;
         }
@@ -294,6 +319,8 @@ namespace AntDesign.Datepicker.Locale
         {
             result = default;
             int year = 1, month = 1, day = 1, hour = 0, minute = 0, second = 0;
+            var use12hours = _parsedMap.ContainsKey(DateTimePartialType.AmPmDesignator);
+
             foreach (var item in _parsedMap)
             {
                 switch (item.Key)
@@ -316,6 +343,8 @@ namespace AntDesign.Datepicker.Locale
                     case DateTimePartialType.Hour:
                         if (item.Value < 0 || item.Value > 23)
                             return false;
+                        if (use12hours && item.Value > 12)
+                            return false;
                         hour = item.Value;
                         break;
                     case DateTimePartialType.Minute:
@@ -327,6 +356,12 @@ namespace AntDesign.Datepicker.Locale
                         if (item.Value < 0 || item.Value > 59)
                             return false;
                         second = item.Value;
+                        break;
+                    case DateTimePartialType.AmPmDesignator:
+                        if (item.Value == 1)
+                            hour += hour == 12 ? 0 : 12;
+                        else if (hour == 12)
+                            hour = 0;
                         break;
                 }
             }

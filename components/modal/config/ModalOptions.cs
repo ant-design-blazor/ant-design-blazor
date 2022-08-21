@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -120,6 +118,21 @@ namespace AntDesign
         /// ChildContent
         /// </summary>
         public RenderFragment Content { get; set; } = null;
+
+        /// <summary>
+        /// show modal maximize button
+        /// </summary>
+        public bool Maximizable { get; set; } = false;
+
+        /// <summary>
+        /// The icon of the maximize button when the modal is in normal state
+        /// </summary>
+        public RenderFragment MaximizeBtnIcon { get; set; } = DialogOptions.DefaultMaximizeIcon;
+
+        /// <summary>
+        /// The icon of the maximize button when the modal is maximized
+        /// </summary>
+        public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
 
         #region internal
 

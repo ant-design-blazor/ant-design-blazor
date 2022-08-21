@@ -36,7 +36,7 @@ namespace AntDesign
         [Parameter]
         public OneOf<string, (string LeftButton, string RightButton)> ButtonsClass
         {
-            get =>_buttonsClass; 
+            get => _buttonsClass;
             set
             {
                 _buttonsClass = value;
@@ -54,7 +54,7 @@ namespace AntDesign
 
         /// <summary>
         /// Allows to set each button's style either to the same string
-        /// or separately. 
+        /// or separately.
         /// </summary>
         [Parameter]
         public OneOf<string, (string LeftButton, string RightButton)> ButtonsStyle
@@ -104,6 +104,7 @@ namespace AntDesign
         }
 
         private string _icon = "ellipsis";
+
         /// <summary>
         /// Icon that will be rendered in the right
         /// button.
@@ -120,7 +121,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Indicates if loading icon is going to be included. 
+        /// Indicates if loading icon is going to be included.
         /// If set to true, then dropdown will not be active.
         /// </summary>
         [Parameter]
@@ -135,6 +136,7 @@ namespace AntDesign
         }
 
         private string _size = AntSizeLDSType.Default;
+
         /// <summary>
         /// Button size.
         /// </summary>
@@ -189,16 +191,15 @@ namespace AntDesign
             Placement = Placement.BottomRight;
             base.OnInitialized();
             ClassMapper.If($"{prefixCls}-block", () => Block);
-
         }
 
         /// <summary>
-        /// Force overlay trigger to be attached to wrapping element of 
-        /// the right button. Right button has to be wrapped, 
+        /// Force overlay trigger to be attached to wrapping element of
+        /// the right button. Right button has to be wrapped,
         /// because overlay will be looking for first child
         /// element of the overlay trigger to calculate the overlay position.
         /// If the right button was the trigger, then its first child
-        /// would be the icon/ellipsis and the overlay would have been 
+        /// would be the icon/ellipsis and the overlay would have been
         /// rendered too high.
         /// </summary>
         /// <param name="firstRender"></param>

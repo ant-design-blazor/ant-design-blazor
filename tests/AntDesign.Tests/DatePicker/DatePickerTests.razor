@@ -65,6 +65,7 @@
 	[Theory]
 	[InlineData("en-US", "2020-04-05")]	
 	[InlineData("en-GB", "5/4/2020")]
+    [InlineData("th-TH", "5/4/2563")]
 	public void Culture_is_applied(string culture, string expected)
 	{
 		//Arrange
@@ -96,4 +97,38 @@
 		//Assert
 		input.GetAttribute("value").Should().Be("2020/04/05");
 	}
+
+    [Fact]
+    public void Renders_custom_placeholder()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        string placeholder = "This is awesome";
+
+        //Act
+        var cut = Render<AntDesign.DatePicker<DateTime?>>
+        (@<DatePicker TValue="DateTime?" Placeholder="@(placeholder)" />);
+
+        //Assert
+        var input = cut.Find("input");
+        input.GetAttribute("placeholder").Should().Be(placeholder);
+    }
+
+    [Fact]
+    public void Preserves_placeholder_after_clear()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        string placeholder = "This is awesome";
+        DateTime? value = new DateTime(2022, 7, 8);
+
+        //Act
+        var cut = Render<AntDesign.DatePicker<DateTime?>>
+        (@<DatePicker @bind-Value="@value" Placeholder="@(placeholder)" />);
+        cut.Instance.ClearValue();
+
+        //Assert
+        var input = cut.Find("input");
+        input.GetAttribute("placeholder").Should().Be(placeholder);
+    }
 }

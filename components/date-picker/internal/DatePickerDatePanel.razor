@@ -1,4 +1,4 @@
-﻿@namespace AntDesign.Internal
+@namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
@@ -58,15 +58,19 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in Locale.Lang.ShortWeekDays)
-                {                    
-                    <th>@(weekDay)</th>
+                @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
+                {
+                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
+                }
+                @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
+                {
+                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
                 }
             </tr>
         </RenderTableHeader>
         <RenderFirstCol>
             @if (IsWeek)
-            {				
+            {
                 <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
                     @DateHelper.GetWeekOfYear(context, Locale.FirstDayOfWeek)
                 </td>

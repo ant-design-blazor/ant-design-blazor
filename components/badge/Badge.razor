@@ -26,12 +26,21 @@
         {
             <span class="ant-badge-status-text">@Text</span>
         }
-        if (_showSup)
+
+        if (_finalShowSup)
         {
             <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@Count">
                 @if (!Dot && !HasStatusOrColor)
                 {
-                    @if (Count <= OverflowCount)
+                    @if (_showOverflowCount)
+                    {
+                        @($"{OverflowCount}+")
+                    }
+                    else if (_count == 0 && ShowZero)
+                    {
+                        @("0")
+                    }
+                    else
                     {
                         @for (int i = 0; i < _maxNumberArray.Length; i++)
                         {
@@ -47,10 +56,6 @@
                                 </span>
                             }
                         }
-                    }
-                    else
-                    {
-                        @($"{OverflowCount}+")
                     }
                 }
             </sup>

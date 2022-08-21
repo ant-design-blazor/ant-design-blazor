@@ -1,8 +1,10 @@
-﻿<Select DataSource="@_items"
+﻿<Select TItem="Item"
+        TItemValue="string"
+        DataSource="@_items"
         @bind-Value="@_selectedValue"
         ValueName="@nameof(Item.Value)"
         LabelName="@nameof(Item.Name)"
-        DefaultActiveFirstItem
+        DefaultActiveFirstOption
 		Style="width: 200px;"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
     <ItemTemplate>

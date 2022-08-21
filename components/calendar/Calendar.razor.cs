@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -77,6 +77,19 @@ namespace AntDesign
         protected Stack<string> _prePickerStack = new Stack<string>();
 
         public readonly string PrefixCls = "ant-picker-calendar";
+
+        event EventHandler<bool> IDatePicker.OverlayVisibleChanged
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -166,17 +179,16 @@ namespace AntDesign
             return 0;
         }
 
-        void IDatePicker.InvokeStateHasChanged()
-        {
-            StateHasChanged();
-        }
-
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
             return value.ToString(CultureInfo);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)
+        {
+        }
+
+        public void ResetPlaceholder(int rangePickerIndex = -1)
         {
         }
 

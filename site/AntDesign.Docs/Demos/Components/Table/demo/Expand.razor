@@ -3,9 +3,9 @@
 
 <Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
 	<RowTemplate>
-		<Column @bind-Field="@context.Name" />
-		<Column @bind-Field="@context.Age" />
-		<Column @bind-Field="@context.Address" />
+		<PropertyColumn Property="c=>c.Name" />
+		<PropertyColumn Property="c=>c.Age" />
+		<PropertyColumn Property="c=>c.Address" />
 		<ActionColumn Title="Action" Width="200">
 			<CellRender Context="cellData">
 				<a @onclick="@(()=> {cellData.RowData.Expanded=!cellData.RowData.Expanded;} )">

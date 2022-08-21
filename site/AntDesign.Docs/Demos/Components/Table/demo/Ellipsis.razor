@@ -1,12 +1,12 @@
 ﻿<Table DataSource="data">
-    <Column @bind-Field="@context.Name" Width="150">
+    <PropertyColumn Property="c=>c.Name" Width="150">
         <a>@context.Name</a>
-    </Column>
-    <Column @bind-Field="@context.Age" Width="80" />
-    <Column @bind-Field="@context.Address" Ellipsis />
-    <Column @bind-Field="@context.Address" Ellipsis Title="Long Column Long Column Long Column" />
-    <Column @bind-Field="@context.Address" Ellipsis Title="Long Column Long Column" />
-    <Column @bind-Field="@context.Address" Ellipsis Title="Long Column" />
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age" Width="80" />
+    <PropertyColumn Property="c=>c.Address" Ellipsis />
+    <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column Long Column Long Column" />
+    <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column Long Column" />
+    <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column" />
 </Table>
 
 @code {

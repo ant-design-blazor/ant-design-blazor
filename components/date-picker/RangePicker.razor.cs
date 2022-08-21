@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,6 +13,8 @@ namespace AntDesign
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
         private TValue _value;
+        private TValue _lastValue;
+        private TValue _swpValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -19,16 +23,25 @@ namespace AntDesign
         /// @bind-Value="model.PropertyName"
         /// </example>
         [Parameter]
-        public sealed override TValue Value
+        public override sealed TValue Value
         {
             get { return _value; }
             set
             {
                 TValue orderedValue = SortValue(value);
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(orderedValue, Value);
+
+                var hasChanged = _lastValue is null || (IsNullable ? !Enumerable.SequenceEqual(orderedValue as DateTime?[], _lastValue as DateTime?[]) :
+                                                            !Enumerable.SequenceEqual(orderedValue as DateTime[], _lastValue as DateTime[]));
                 if (hasChanged)
                 {
                     _value = orderedValue;
+
+                    _lastValue ??= CreateInstance();
+                    Array.Copy(orderedValue as Array, _lastValue as Array, 2);
+
+                    GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
+                    GetIfNotNull(_value, 1, (notNullValue) => PickerValues[1] = notNullValue);
+
                     OnValueChange(orderedValue);
                 }
             }
@@ -39,6 +52,10 @@ namespace AntDesign
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
 
+        private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
+
+        private bool ShowRanges => Ranges != null;
+
         public RangePicker()
         {
             IsRange = true;
@@ -47,34 +64,49 @@ namespace AntDesign
             {
                 var array = Value as Array;
 
-                if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
-                {
-                    DateTime? value = null;
-                    GetIfNotNull(Value, 0, notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
+                int? index = null;
 
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                if (_pickerStatus[0].IsValueSelected && _inputEnd.IsOnFocused)
+                {
+                    index = 0;
                 }
-                if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
+                else if (_pickerStatus[1].IsValueSelected && _inputStart.IsOnFocused)
                 {
-                    DateTime? value = null;
-                    GetIfNotNull(Value, 1, notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
-
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) > DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                    index = 1;
                 }
 
-                return false;
+                if (index is null)
+                {
+                    return false;
+                }
+
+                DateTime? value = null;
+
+                GetIfNotNull(Value, index.Value, notNullValue =>
+                {
+                    value = notNullValue;
+                });
+
+                if (value is null)
+                {
+                    return false;
+                }
+
+                var date1 = date.Date;
+                var date2 = ((DateTime)value).Date;
+
+                if (Picker == DatePickerType.Week)
+                {
+                    var date1Week = DateHelper.GetWeekOfYear(date1, Locale.FirstDayOfWeek);
+                    var date2Week = DateHelper.GetWeekOfYear(date2, Locale.FirstDayOfWeek);
+                    return index == 0 ? date1Week < date2Week : date1Week > date2Week;
+                }
+                else
+                {
+                    var formattedDate1 = DateHelper.FormatDateByPicker(date1, Picker);
+                    var formattedDate2 = DateHelper.FormatDateByPicker(date2, Picker);
+                    return index == 0 ? formattedDate1 < formattedDate2 : formattedDate1 > formattedDate2;
+                }
             };
         }
 
@@ -96,14 +128,10 @@ namespace AntDesign
             }
             await _dropDown.Show();
 
-            // clear status
-            _pickerStatus[0]._currentShowHadSelectValue = false;
-            _pickerStatus[1]._currentShowHadSelectValue = false;
-
             if (index == 0)
             {
                 // change start picker value
-                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                if (!_inputStart.IsOnFocused && _pickerStatus[index].IsValueSelected && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -116,7 +144,7 @@ namespace AntDesign
             else
             {
                 // change end picker value
-                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                if (!_inputEnd.IsOnFocused && _pickerStatus[index].IsValueSelected && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -144,10 +172,11 @@ namespace AntDesign
                 _cacheDuringInput = array.GetValue(index) as DateTime?;
                 _pickerValueCache = PickerValues[index];
             }
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false)
+                && IsValidRange(changeValue, index, array))
             {
                 array.SetValue(changeValue, index);
-
+                _cacheDuringInput = changeValue;
                 ChangePickerValue(changeValue, index);
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
@@ -173,7 +202,7 @@ namespace AntDesign
             {
                 if (_duringManualInput)
                 {
-                    //A scenario when there are a lot of controls; 
+                    //A scenario when there are a lot of controls;
                     //It may happen that incorrect values were entered into one of the input
                     //followed by ENTER key. This event may be fired before input manages
                     //to get the value. Here we ensure that input will get that value.
@@ -258,6 +287,7 @@ namespace AntDesign
             }
             return false;
         }
+
         private async Task<bool> ValidateRange(int index, DateTime newDate, Array array)
         {
             if (index == 0 && array.GetValue(1) is not null && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
@@ -310,8 +340,8 @@ namespace AntDesign
 
         protected override async Task OnBlur(int index)
         {
-            //Await for Focus event - if it is going to happen, it will be 
-            //right after OnBlur. Best way to achieve that is to wait. 
+            //Await for Focus event - if it is going to happen, it will be
+            //right after OnBlur. Best way to achieve that is to wait.
             //Task.Yield() does not work here.
             await Task.Delay(1);
             if (_duringFocus)
@@ -337,13 +367,13 @@ namespace AntDesign
                     else
                         array.SetValue(_cacheDuringInput.GetValueOrDefault(), index);
 
-                    _pickerStatus[index]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+                    _pickerStatus[index].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
                     ChangePickerValue(_pickerValueCache, index);
                 }
                 _duringManualInput = false;
             }
+
             AutoFocus = false;
-            return;
         }
 
         protected override void OnInitialized()
@@ -373,8 +403,8 @@ namespace AntDesign
             {
                 UseDefaultPickerValue[0] = false;
                 UseDefaultPickerValue[1] = false;
-                _pickerStatus[0]._hadSelectValue = true;
-                _pickerStatus[1]._hadSelectValue = true;
+                _pickerStatus[0].IsValueSelected = true;
+                _pickerStatus[1].IsValueSelected = true;
             }
         }
 
@@ -430,16 +460,17 @@ namespace AntDesign
                 array.SetValue(arrayDefault.GetValue(oppositeIndex), oppositeIndex);
             }
 
-            _pickerStatus[index]._hadSelectValue = true;
-            _pickerStatus[index]._currentShowHadSelectValue = true;
+            _pickerStatus[index].IsValueSelected = true;
 
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
-                if (_pickerStatus[0]._currentShowHadSelectValue && _pickerStatus[1]._currentShowHadSelectValue)
+                _pickerStatus[index].IsNewValueSelected = true;
+
+                if (_pickerStatus[0].IsNewValueSelected && _pickerStatus[1].IsNewValueSelected)
                 {
                     Close();
                 }
-                // if the other DatePickerInput is disabled, then close picker panel 
+                // if the other DatePickerInput is disabled, then close picker panel
                 else if (IsDisabled(Math.Abs(index - 1)))
                 {
                     Close();
@@ -468,9 +499,6 @@ namespace AntDesign
             var array = CurrentValue as Array;
             int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
 
-            string[] pickerHolders = new string[2];
-            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0]._initPicker, Locale);
-
             foreach (var i in indexToClear)
             {
                 if (!IsNullable && DefaultValue != null)
@@ -482,14 +510,17 @@ namespace AntDesign
                 {
                     array.SetValue(default, i);
                 }
-                _placeholders[i] = pickerHolders[i];
-                _pickerStatus[i]._hadSelectValue = false;
+                _pickerStatus[i].IsValueSelected = false;
+                PickerValues[i] = _pickerValuesAfterInit[i];
+                ResetPlaceholder(i);
             }
 
             if (closeDropdown)
                 Close();
             if (OnClearClick.HasDelegate)
                 OnClearClick.InvokeAsync(null);
+
+            _dropDown.SetShouldRender(true);
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
@@ -565,9 +596,26 @@ namespace AntDesign
 
         private void OverlayVisibleChange(bool visible)
         {
-            OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
             _duringFocus = false;
+            OnOpenChange.InvokeAsync(visible);
+            InvokeInternalOverlayVisibleChanged(visible);
+        }
+
+        private async Task OnSuffixIconClick()
+        {
+            await Focus();
+            await OnInputClick(0);
+        }
+
+        private bool IsValidRange(DateTime newValue, int newValueIndex, Array rangeValues)
+        {
+            return newValueIndex switch
+            {
+                0 when newValue > (rangeValues.GetValue(1) as DateTime?) => false,
+                1 when newValue < (rangeValues.GetValue(0) as DateTime?) => false,
+                _ => true
+            };
         }
     }
 }

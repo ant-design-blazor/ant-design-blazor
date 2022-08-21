@@ -1,9 +1,10 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@inject NavigationManager _navigationManager
 
 @if (Pages == null)
 {
-    
+
 }
 else
 {
@@ -23,7 +24,7 @@ else
                         <MenuItem OnClick="RemoveAll">@Locale.CloseAllTabs</MenuItem>
                         <MenuItem OnClick="@(()=>{ RemoveOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
                         @*         <MenuDivider />
-                            <MenuItem>@Locale.PinTab</MenuItem>*@
+                <MenuItem>@Locale.PinTab</MenuItem>*@
                     </Menu>
                 </TabContextMenu>
             </TabPane>

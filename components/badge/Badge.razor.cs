@@ -28,13 +28,16 @@ namespace AntDesign
             get => _count;
             set
             {
-                if (_count != value)
+                if (_count == value)
                 {
-                    _count = value;
-                    if (_count != null)
-                    {
-                        this._countArray = DigitsFromInteger(Count.Value);
-                    }
+                    return;
+                }
+
+                _count = value;
+
+                if (_count > 0)
+                {
+                    this._countArray = DigitsFromInteger(_count.Value);
                 }
             }
         }
@@ -49,10 +52,10 @@ namespace AntDesign
         public bool Dot { get; set; }
 
         /// <summary>
-        /// Set offset of the badge dot, like[x, y]
+        /// Set offset of the badge dot, like (left, top)
         /// </summary>
         [Parameter]
-        public ValueTuple<int, int> Offset { get; set; }
+        public (int Left, int Top) Offset { get; set; }
 
         /// <summary>
         /// Max count to show
@@ -63,10 +66,12 @@ namespace AntDesign
             get => _overflowCount;
             set
             {
-                if (_overflowCount != value)
+                if (_overflowCount == value)
                 {
-                    _overflowCount = value;
+                    return;
                 }
+
+                _overflowCount = value;
 
                 if (_overflowCount > 0)
                 {
@@ -120,11 +125,11 @@ namespace AntDesign
 
         private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
 
-        private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
+        private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
         private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
 
-        private bool ShowSup => (this.Dot && (!this.Count.HasValue || (this.Count > 0 || this.Count == 0 && this.ShowZero)))
+        private bool RealShowSup => (this.Dot && (!this.Count.HasValue || (this.Count > 0 || this.Count == 0 && this.ShowZero)))
                                 || this.Count > 0
                                 || (this.Count == 0 && this.ShowZero);
 
@@ -132,9 +137,10 @@ namespace AntDesign
 
         private bool _dotLeave;
 
-        private bool _showSup;
+        private bool _finalShowSup;
         private int? _count;
         private int _overflowCount = 99;
+        private bool _showOverflowCount = false;
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -158,7 +164,7 @@ namespace AntDesign
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
                 .If($"{prefixName}-zoom-leave {prefixName}-zoom-leave-active", () => _dotLeave)
-                .If($"{prefixName}-count-overflow", () => Count > OverflowCount)
+                .If($"{prefixName}-count-overflow", () => _showOverflowCount)
                 ;
         }
 
@@ -169,7 +175,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _showSup = ShowSup;
+            _finalShowSup = RealShowSup;
 
             GenerateMaxNumberArray();
 
@@ -178,15 +184,27 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var showSupBefore = ShowSup;
+            var showSupBefore = RealShowSup;
             var beforeDot = Dot;
             var delayDot = false;
+            var beforeCount = _count;
+
             await base.SetParametersAsync(parameters);
 
-            if (showSupBefore == ShowSup)
+            // if count is changing to 0 and it was overflow, hold the overflow display.
+            if (_count == 0 && beforeCount > _overflowCount)
+            {
+                _showOverflowCount = true;
+            }
+            else
+            {
+                _showOverflowCount = _count > _overflowCount;
+            }
+
+            if (showSupBefore == RealShowSup)
                 return;
 
-            if (ShowSup)
+            if (RealShowSup)
             {
                 _dotEnter = true;
 
@@ -195,7 +213,7 @@ namespace AntDesign
                     Dot = true;
                 }
 
-                _showSup = true;
+                _finalShowSup = true;
 
                 await Task.Delay(200);
                 _dotEnter = false;
@@ -212,7 +230,7 @@ namespace AntDesign
 
                 await Task.Delay(200);
                 _dotLeave = false;
-                _showSup = false;
+                _finalShowSup = false;
 
                 if (delayDot)
                 {
@@ -245,7 +263,7 @@ namespace AntDesign
             return digits;
         }
 
-        private readonly static string[] _badgeStatusTypes =
+        private static readonly string[] _badgeStatusTypes =
         {
             "success",
             "processing",

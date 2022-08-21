@@ -18,7 +18,7 @@ namespace AntDesign.Docs.Shared
 
         private async Task ChangeTheme(string theme)
         {
-            _themeFileUrl = $"_content/AntDesign.Docs/css/docs.{theme}.css";
+            _themeFileUrl = $"_content/AntDesign.Docs/css/{theme}.css";
 
             await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "body", new Dictionary<string, string>
             {

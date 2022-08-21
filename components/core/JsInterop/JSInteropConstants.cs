@@ -7,26 +7,31 @@ namespace AntDesign
         private const string FUNC_PREFIX = "AntDesign.interop.";
 
         #region domInfo
+
         public static string GetWindow = DomInfoHelper.GetWindow;
         public static string GetDomInfo => DomInfoHelper.GetInfo;
         public static string GetBoundingClientRect => DomInfoHelper.GetBoundingClientRect;
         public static string GetFirstChildDomInfo => DomInfoHelper.GetFirstChildDomInfo;
+        public static string GetElementsDomInfo => DomInfoHelper.GetElementsDomInfo;
         public static string GetActiveElement => DomInfoHelper.GetActiveElement;
         public static string GetScroll => DomInfoHelper.GetScroll;
         public static string HasFocus => DomInfoHelper.HasFocus;
         public static string GetInnerText => DomInfoHelper.GetInnerText;
         public static string GetMaxZIndex => DomInfoHelper.GetMaxZIndex;
 
-        #endregion
+        #endregion domInfo
 
         #region styleManipulation
+
         public static string AddClsToFirstChild => StyleHelper.AddClsToFirstChild;
         public static string RemoveClsFromFirstChild => StyleHelper.RemoveClsFromFirstChild;
         public static string MatchMedia => StyleHelper.MatchMedia;
         public static string GetStyle => StyleHelper.GetStyle;
-        #endregion
+
+        #endregion styleManipulation
 
         #region domManipulation
+
         public static string AddElementToBody => DomMainpulationHelper.AddElementToBody;
         public static string DelElementFromBody => DomMainpulationHelper.DelElementFromBody;
         public static string AddElementTo => DomMainpulationHelper.AddElementTo;
@@ -36,76 +41,99 @@ namespace AntDesign
         public static string CopyElement => DomMainpulationHelper.CopyElement;
 #if NET5_0_OR_GREATER
         [Obsolete("It will be removed in the future, because Blazor already has a native implementation.")]
-#endif 
+#endif
         public static string Focus => DomMainpulationHelper.Focus;
         public static string Blur => DomMainpulationHelper.Blur;
         public static string ScrollTo => DomMainpulationHelper.ScrollTo;
+        public static string SmoothScrollTo => DomMainpulationHelper.SmoothScrollTo;
         public static string InvokeTabKey => DomMainpulationHelper.InvokeTabKey;
         public static string DisableBodyScroll => DomMainpulationHelper.DisableBodyScroll;
         public static string EnableBodyScroll => DomMainpulationHelper.EnableBodyScroll;
-        #endregion
+
+        #endregion domManipulation
 
         #region upload
+
         public static string AddFileClickEventListener => UploadComponentHelper.AddFileClickEventListener;
         public static string RemoveFileClickEventListener => UploadComponentHelper.RemoveFileClickEventListener;
         public static string ClearFile => UploadComponentHelper.ClearFile;
         public static string UploadFile => UploadComponentHelper.UploadFile;
         public static string GetFileInfo => UploadComponentHelper.GetFileInfo;
-        #endregion
 
-        #region event        
+        #endregion upload
+
+        #region event
+
         public static string TriggerEvent => EventHelper.TriggerEvent;
         public static string AddDomEventListener => EventHelper.AddDomEventListener;
         public static string AddDomEventListenerToFirstChild => EventHelper.AddDomEventListenerToFirstChild;
         public static string AddPreventKeys => EventHelper.AddPreventKeys;
         public static string RemovePreventKeys => EventHelper.RemovePreventKeys;
-        #endregion
+
+        #endregion event
 
         #region backtop
+
         public static string BackTop => BackTopComponentHelper.BackTop;
-        #endregion
+
+        #endregion backtop
 
         #region icon
+
         public static string CreateIconFromfontCN => IconComponentHelper.CreateIconFromfontCN;
-        #endregion
+
+        #endregion icon
 
         #region input
+
         public static string RegisterResizeTextArea => InputComponentHelper.RegisterResizeTextArea;
         public static string DisposeResizeTextArea => InputComponentHelper.DisposeResizeTextArea;
         public static string SetSelectionStart => InputComponentHelper.SetSelectionStart;
-        #endregion
+
+        #endregion input
 
         #region mentions
+
         public static string GetCursorXY => MentionsComponentHelper.GetCursorXY;
-        #endregion
+
+        #endregion mentions
 
         #region modal
+
         public static string FocusDialog => ModalComponentHelper.FocusDialog;
         public static string DestroyAllDialog => ModalComponentHelper.DestroyAllDialog;
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";
         public static string DisableDraggable => $"{FUNC_PREFIX}disableDraggable";
         public static string ResetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
-        #endregion
+
+        #endregion modal
 
         #region overlay
+
         public static string AddPreventEnterOnOverlayVisible => OverlayComponentHelper.AddPreventEnterOnOverlayVisible;
         public static string RemovePreventEnterOnOverlayVisible => OverlayComponentHelper.RemovePreventEnterOnOverlayVisible;
         //public static string AddOverlayToContainer => OverlayComponentHelper.AddOverlayToContainer;
-        #endregion
+
+        #endregion overlay
 
         #region table
+
         public static string BindTableScroll => TableComponentHelper.BindTableScroll;
         public static string UnbindTableScroll => TableComponentHelper.UnbindTableScroll;
-        #endregion
+
+        #endregion table
 
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
         public static string Log => $"{FUNC_PREFIX}log";
+        public static string GenerateColor => $"{FUNC_PREFIX}generateColor";
 
         public static class DomInfoHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "domInfoHelper.";
             public static string GetWindow = $"{FUNC_PREFIX}getWindow";
             public static string GetInfo => $"{FUNC_PREFIX}getInfo";
+
+            public static string GetElementsDomInfo => $"{FUNC_PREFIX}getElementsInfo";
             public static string GetBoundingClientRect => $"{FUNC_PREFIX}getBoundingClientRect";
             public static string GetFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
             public static string GetActiveElement => $"{FUNC_PREFIX}getActiveElement";
@@ -140,7 +168,8 @@ namespace AntDesign
 #endif
             public static string Focus => $"{FUNC_PREFIX}focus";
             public static string Blur => $"{FUNC_PREFIX}blur";
-            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
+            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo"; 
+            public static string SmoothScrollTo => $"{FUNC_PREFIX}smoothScrollTo";
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
@@ -161,6 +190,7 @@ namespace AntDesign
         public static class ObserverConstants
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "observable.";
+
             public static class Resize
             {
                 private const string FUNC_PREFIX = ObserverConstants.FUNC_PREFIX + "resize.";
@@ -183,7 +213,6 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "iconHelper.";
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
-
         }
 
         public static class InputComponentHelper
@@ -200,7 +229,6 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "mentionsHelper.";
             public static string GetCursorXY => $"{FUNC_PREFIX}getCursorXY";
-
         }
 
         public static class ModalComponentHelper

@@ -1,0 +1,10 @@
+﻿<Segmented TValue="string" Labels=@(new[]{"Map", "Transit", "Satellite"}) Value=@_value OnChange=@setValue />
+
+@code {
+  string _value;
+
+  void setValue(string value)
+  {
+    _value = value;
+  }
+}

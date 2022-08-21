@@ -20,19 +20,34 @@
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panels">
                     <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == 1 ? "display: none;": "")">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                     <div class="@_panelClassMapper.Class">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                 </div>
-                @if (RenderExtraFooter != null && !IsShowTime)
+                @if (ShowFooter)
                 {
-                    <div class="@(PrefixCls)-footer">
-                        <div class="@(PrefixCls)-footer-extra">
-                            @RenderExtraFooter
-                        </div>
-                    </div>
+                  <div class="@(PrefixCls)-footer">
+                    @if (RenderExtraFooter != null)
+                    {
+                      <div class="@(PrefixCls)-footer-extra">
+                        @RenderExtraFooter
+                      </div>
+                    }
+
+                    @if (ShowRanges)
+                    {
+                      <ul class="@(PrefixCls)-ranges">
+                        @foreach (var range in Ranges)
+                        {
+                          <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
+                            <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  </div>
                 }
             </div>
         </Overlay>
@@ -49,7 +64,7 @@
                                  Placeholder="@_placeholders[0]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await OnInputClick(0); }"
+                                 OnClick="async e => await OnInputClick(0)"
                                  OnInput="e => OnInput(e, 0)"
                                  OnKeyDown="e => OnKeyDown(e, 0)"
                                  Onfocus="() => OnFocus(0)"
@@ -75,7 +90,8 @@
                                  Placeholder="@_placeholders[1]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await OnInputClick(1); }"
+                                 OnClick="async e => await OnInputClick(1)"
+                                 OnSuffixIconClick="OnSuffixIconClick"
                                  OnInput="e => OnInput(e, 1)"
                                  OnKeyDown="e => OnKeyDown(e, 1)"
                                  Onfocus="() => OnFocus(1)"
