@@ -11,7 +11,7 @@ namespace AntDesign.Docs.Shared
         private static string _colorHex = "#1890ff";
 
         [Inject] private IJSRuntime JS { get; set; }
-        [Inject] private MessageService Message { get; set; }
+        [Inject] private IMessageService Message { get; set; }
 
         [Inject] private ILanguageService Language { get; set; }
 

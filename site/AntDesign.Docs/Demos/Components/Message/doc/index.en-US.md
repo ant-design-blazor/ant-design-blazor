@@ -16,14 +16,14 @@ Display global messages as feedback in response to user operations.
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
 
-This components provides some static methods, with usage and arguments as following:
+This components provides some methods, with usage and arguments as following:
 
-- `MessageService.Success(content, [duration], onClose)`
-- `MessageService.Error(content, [duration], onClose)`
-- `MessageService.Info(content, [duration], onClose)`
-- `MessageService.Warning(content, [duration], onClose)`
-- `MessageService.Warn(content, [duration], onClose)` // alias of warning
-- `MessageService.Loading(content, [duration], onClose)`
+- `IMessageService.Success(content, [duration], onClose)`
+- `IMessageService.Error(content, [duration], onClose)`
+- `IMessageService.Info(content, [duration], onClose)`
+- `IMessageService.Warning(content, [duration], onClose)`
+- `IMessageService.Warn(content, [duration], onClose)` // alias of warning
+- `IMessageService.Loading(content, [duration], onClose)`
 
 | Argument | Description | Type | Default |
 | --- | --- | --- | --- |
@@ -33,20 +33,20 @@ This components provides some static methods, with usage and arguments as follow
 
 `afterClose` can be called in thenable interface:
 
-- `MessageService.[level](content, [duration]).ContinueWith(afterClose)`
-- `MessageService.[level](content, [duration], onClose).ContinueWith(afterClose)`
+- `IMessageService.[level](content, [duration]).ContinueWith(afterClose)`
+- `IMessageService.[level](content, [duration], onClose).ContinueWith(afterClose)`
 
-where `level` refers one static methods of `Message`. The result of `ContinueWith` method will be a Task.
+where `level` refers a method of `IMessageService`. The result of `ContinueWith` method will be a Task.
 
 Supports passing parameters wrapped in an object:
 
-- `MessageService.Open(config:MessageConfig)`
-- `MessageService.Success(config:MessageConfig)`
-- `MessageService.Error(config:MessageConfig)`
-- `MessageService.Info(config:MessageConfig)`
-- `MessageService.Warning(config:MessageConfig)`
-- `MessageService.Warn(config:MessageConfig)` // alias of warning
-- `MessageService.Loading(config:MessageConfig)`
+- `IMessageService.Open(config:MessageConfig)`
+- `IMessageService.Success(config:MessageConfig)`
+- `IMessageService.Error(config:MessageConfig)`
+- `IMessageService.Info(config:MessageConfig)`
+- `IMessageService.Warning(config:MessageConfig)`
+- `IMessageService.Warn(config:MessageConfig)` // alias of warning
+- `IMessageService.Loading(config:MessageConfig)`
 
 The properties of config are as follows:
 
@@ -62,12 +62,14 @@ The properties of config are as follows:
 
 Methods for global configuration and destruction are also provided:
 
-- `MessageService.Config(options:MessageGlobalConfig)`
-- `MessageService.Destroy()`
+- `IMessageService.Config(options:MessageGlobalConfig)`
+- `IMessageService.Destroy()`
 
 #### message.config
 
 ```c#
+@inject IMessageService MessageService;
+
 MessageService.Config(new MessageGlobalConfig{
   Top: 100,
   Duration: 2,

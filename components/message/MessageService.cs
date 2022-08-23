@@ -11,7 +11,7 @@ namespace AntDesign
     /// <summary>
     /// Message Service
     /// </summary>
-    public class MessageService
+    public class MessageService: IMessageService
     {
         internal event Action<MessageGlobalConfig> OnConfig;
         internal event Func<MessageConfig, Task> OnOpening;
