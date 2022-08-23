@@ -98,6 +98,7 @@ namespace AntDesign
             string prefixCls = "ant-cascader";
 
             ClassMapper
+                .Add("ant-select ant-cascader ant-select-single ant-select-allow-clear ant-select-show-arrow")
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
                 .If($"{prefixCls}-picker-show-search", () => ShowSearch)
@@ -186,7 +187,7 @@ namespace AntDesign
             _displayText = string.Empty;
             SetValue(string.Empty);
             _dropdownOpened = false;
-            
+
             _searchValue = string.Empty;
             await this.FocusAsync(_inputRef);
         }
