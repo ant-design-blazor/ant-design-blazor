@@ -159,29 +159,10 @@ namespace AntDesign
             {
                 _dropdownOpened = false;
                 _renderNodes = _selectedNodes;
+                _searchValue = string.Empty;
             }
 
             _focused = false;
-        }
-
-        /// <summary>
-        /// 输入框鼠标移入
-        /// </summary>
-        private void InputOnMouseOver()
-        {
-            if (!AllowClear) return;
-
-            _showClearIcon = !string.IsNullOrWhiteSpace(Value) || !string.IsNullOrEmpty(_searchValue);
-        }
-
-        /// <summary>
-        /// 输入框鼠标移出
-        /// </summary>
-        private void InputOnMouseOut()
-        {
-            if (!AllowClear) return;
-
-            _showClearIcon = false;
         }
 
         /// <summary>
