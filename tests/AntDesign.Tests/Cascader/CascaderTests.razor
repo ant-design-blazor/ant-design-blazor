@@ -3,21 +3,13 @@
 @code{
 
     [Theory]
-    [InlineData(AntSizeLDSType.Large)]
-    [InlineData(AntSizeLDSType.Small)]
-    public void Renders_with_each_size(string size)
+    [InlineData(AntSizeLDSType.Large,"lg")]
+    [InlineData(AntSizeLDSType.Small,"sm")]
+    public void Renders_with_each_size(string size,string cls)
     {
-        var _sizeMap = new Dictionary<string, string>()
-        {
-            ["large"] = "lg",
-            ["small"] = "sm"
-        };
-
         var cut = Context.Render(@<AntDesign.Cascader Size="@size" />);
-        var spanNode = cut.Nodes.QuerySelector($".ant-cascader-picker.ant-cascader-picker-{size}");
-        var inputNode = cut.Nodes.QuerySelector($".ant-input.ant-cascader-input.ant-input-{_sizeMap[size]}");
+        var spanNode = cut.Nodes.QuerySelector($".ant-select-{cls}");
 
         Assert.NotNull(spanNode);
-        Assert.NotNull(inputNode);
     }
 }
