@@ -17,28 +17,43 @@
            @onclick="InputOnToggle">
         <div class="ant-select-selector">
           <span class="ant-select-selection-search">
-            <input type="search" autocomplete="off" class="" role="combobox" aria-haspopup="listbox" aria-owns="rc_select_1_list" aria-autocomplete="list" aria-controls="rc_select_1_list" readonly="" unselectable="on" value="" style="opacity: 0;" id="rc_select_1" aria-expanded="false">
             <input @ref="_inputRef"
                    autocomplete="off"
-                   tabindex="-1"
-                   placeholder="@(string.IsNullOrWhiteSpace(_displayText)?_placeHolder:"")"
-                   class="@_inputClassMapper.Class ant-select-selection-search-input"
+                   class="ant-select-selection-search-input"
                    readonly="@(!ShowSearch)"
-                   type="text"
+                   role="combobox"
+                   aria-haspopup="listbox"
+                   type="search"
                    value="@_searchValue"
                    unselectable="on"
-                   style="opacity: 0;"
+                   aria-expanded="false"
                    @oninput="OnSearchInput"
                    @onkeyup="OnSearchKeyUp">
           </span>
-          <span class="ant-select-selection-item" title="@_displayText">@_displayText</span>
+          @if (string.IsNullOrEmpty(_displayText)&& string.IsNullOrEmpty(_searchValue))
+          {
+            <span class="ant-select-selection-placeholder">@_placeHolder</span>
+          }
+          else
+          {
+            <span class="ant-select-selection-item" title="@_displayText">@_displayText</span>
+          }
         </div>
         <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
-          <span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix">
-            <svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-          </span>
+          @if (ShowSearch && _dropdownOpened)
+          {
+            <span role="img" aria-label="search" class="anticon anticon-search ant-select-suffix">
+              <svg viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg>
+            </span>
+          }
+          else
+          {
+            <span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix">
+              <svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
+            </span>
+          }
         </span>
-        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;">
+        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="ClearSelected" @onclick:stopPropagation>
           <span role="img" aria-label="close-circle" class="anticon anticon-close-circle">
             <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
           </span>
@@ -51,7 +66,7 @@
           <div class="ant-cascader-menus">
             @if (!ShowSearch || string.IsNullOrWhiteSpace(_searchValue))
             {
-              <ul class="@_menuClassMapper.Class" >
+              <ul class="@_menuClassMapper.Class">
                 @menuList((_nodelist, this))
               </ul>
               @foreach (CascaderNode node in _renderNodes)
@@ -80,63 +95,66 @@
 @code {
   RenderFragment<(IEnumerable<CascaderNode> nodes, Cascader cascader)> menuList = context =>@<Template>
 
-      @if (context.nodes?.Any() != true)
-      {
-        <div class="ant-empty ant-empty-normal ant-empty-small">
-          <div class="ant-empty-image">
-            <svg class="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse class="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7"></ellipse><g class="ant-empty-img-simple-g" fill-rule="nonzero"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g></svg>
-          </div>
-          <div class="ant-empty-description">@context.cascader.NotFoundContent</div>
-        </div>
-        return;
-      }
-
-      @foreach (CascaderNode node in context.nodes)
-      {
-        var cascader = context.cascader;
-        bool isActive = cascader._renderNodes.Where(n => n == node).Any();
-        string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
-        string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
-        var events = new Dictionary<string, object>
+          @if (context.nodes?.Any() != true)
           {
-            ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
-            ["onmouseover"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnMouseOver(node))
-          };
-
-        <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @disabledClass" title="@node.Label" role="menuitem" @attributes="events">
-          @node.Label
-          @if (node.HasChildren)
-          {
-            <span class="ant-cascader-menu-item-expand-icon">
-              <Icon Type="right" />
-            </span>
+            <div class="ant-empty ant-empty-normal ant-empty-small">
+              <div class="ant-empty-image">
+                <svg class="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse class="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7"></ellipse><g class="ant-empty-img-simple-g" fill-rule="nonzero"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g></svg>
+              </div>
+              <div class="ant-empty-description">@context.cascader.NotFoundContent</div>
+            </div>
+            return;
           }
-        </li>
-      }
-    </Template>;
+
+          @foreach (CascaderNode node in context.nodes)
+          {
+            var cascader = context.cascader;
+            bool isActive = cascader._renderNodes.Where(n => n == node).Any();
+            string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
+            string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
+            var events = new Dictionary<string, object>
+                {
+                  ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+                  ["onmouseover"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnMouseOver(node))
+                };
+            <li class="ant-cascader-menu-item ant-cascader-menu-item-expand  @activeClass @disabledClass" role="menuitemcheckbox" title="@node.Label" aria-checked="false" data-path-key="@node.Label" @attributes="events">
+              <div class="ant-cascader-menu-item-content">
+                @node.Label
+              </div>
+              @if (node.HasChildren)
+              {
+                <div class="ant-cascader-menu-item-expand-icon">
+                  <span role="img" aria-label="right" class="anticon anticon-right">
+                    <svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg>
+                  </span>
+                </div>
+              }
+            </li>
+          }
+        </Template>;
 
   RenderFragment<Cascader> searchList = cascader =>@<Template>
-      @if (cascader._matchList?.Any() != true)
-      {
-        <div class="ant-empty ant-empty-normal ant-empty-small">
-          <div class="ant-empty-image">
-            <svg class="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse class="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7"></ellipse><g class="ant-empty-img-simple-g" fill-rule="nonzero"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g></svg>
-          </div>
-          <div class="ant-empty-description">@cascader.NotFoundContent</div>
-        </div>
-        return;
-      }
-      @foreach (var node in cascader._matchList)
-      {
-        bool isActive = cascader._renderNodes.Where(n => n == node).Any();
-        string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
-        string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
-        var events = new Dictionary<string, object>
+          @if (cascader._matchList?.Any() != true)
           {
-            ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
-          };
-        var label = node.Label.Replace(cascader._searchValue, $"<span class=\"ant-cascader-menu-item-keyword\">{cascader._searchValue}</span>");
-        <li class="ant-cascader-menu-item @activeClass @disabledClass" title="@node.Label" role="menuitem" @attributes="events">@((MarkupString)label)</li>
-      }
-    </Template>;
+            <div class="ant-empty ant-empty-normal ant-empty-small">
+              <div class="ant-empty-image">
+                <svg class="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse class="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7"></ellipse><g class="ant-empty-img-simple-g" fill-rule="nonzero"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g></svg>
+              </div>
+              <div class="ant-empty-description">@cascader.NotFoundContent</div>
+            </div>
+            return;
+          }
+          @foreach (var node in cascader._matchList)
+          {
+            bool isActive = cascader._renderNodes.Where(n => n == node).Any();
+            string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
+            string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
+            var events = new Dictionary<string, object>
+                {
+                  ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+                };
+            var label = node.Label.Replace(cascader._searchValue, $"<span class=\"ant-cascader-menu-item-keyword\">{cascader._searchValue}</span>");
+            <li class="ant-cascader-menu-item @activeClass @disabledClass" title="@node.Label" role="menuitem" @attributes="events">@((MarkupString)label)</li>
+          }
+        </Template>;
 }
