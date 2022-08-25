@@ -32,11 +32,23 @@
 
         @foreach (var message in _validationMessages)
         {
-            <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-{(_isValid ? "default" : "error")}")>
-                <div role="alert">
-                    @message
+            if (_isValid)
+            {
+                <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-default")>
+                    <div role="alert">
+                        @message
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class=@($"{_prefixCls}-explain-error")>
+                    <div role="alert">
+                        @message
+                    </div>
+                </div>
+            }
+
         }
     </AntDesign.Col>
 </Row>

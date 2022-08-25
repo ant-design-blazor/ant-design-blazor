@@ -56,7 +56,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-password-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-password-rtl", () => RTL);
 
-            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");            
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
             if (VisibilityToggle)
             {
                 Suffix = new RenderFragment((builder) =>
