@@ -286,6 +286,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
+                .If($"{PrefixCls}-status-error", () => ValidationMessages.Length > 0)
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
@@ -319,6 +320,11 @@ namespace AntDesign
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-sm");
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
+            }
+
+            if (ValidationMessages.Length > 0)
+            {
+                AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-status-error");
             }
         }
 
@@ -465,7 +471,7 @@ namespace AntDesign
                 if (_debounceTimer != null)
                 {
                     await _debounceTimer.DisposeAsync();
-                    
+
                     _debounceTimer = null;
                 }
             }
@@ -640,8 +646,8 @@ namespace AntDesign
                 //2022-8-3 去掉if后，search也能正常工作
                 //if (!IgnoreOnChangeAndBlur)
                 //{
-                    builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                    builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 //}
 
                 builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
