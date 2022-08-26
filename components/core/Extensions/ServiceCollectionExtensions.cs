@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<NotificationService>();
             services.TryAddScoped<MessageService>();
+            services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();

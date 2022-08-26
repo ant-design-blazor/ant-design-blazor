@@ -17,14 +17,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
 
-组件提供了一些静态方法，使用方式和参数如下：
+该组件提供了一些方法，用法和参数如下：
 
-- `MessageService.Success(content, [duration], onClose)`
-- `MessageService.Error(content, [duration], onClose)`
-- `MessageService.Info(content, [duration], onClose)`
-- `MessageService.Warning(content, [duration], onClose)`
-- `MessageService.Warn(content, [duration], onClose)` // alias of warning
-- `MessageService.Loading(content, [duration], onClose)`
+- `IMessageService.Success(content, [duration], onClose)`
+- `IMessageService.Error(content, [duration], onClose)`
+- `IMessageService.Info(content, [duration], onClose)`
+- `IMessageService.Warning(content, [duration], onClose)`
+- `IMessageService.Warn(content, [duration], onClose)` // alias of warning
+- `IMessageService.Loading(content, [duration], onClose)`
 
 | 参数     | 说明                                          | 类型                      | 默认值 |
 | -------- | --------------------------------------------- | ------------------------- | ------ |
@@ -34,20 +34,20 @@ cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 
 组件同时提供 ContinueWith 接口。
 
-- `MessageService.[level](content, [duration]).ContinueWith(afterClose)`
-- `MessageService.[level](content, [duration], onClose).ContinueWith(afterClose)`
+- `IMessageService.[level](content, [duration]).ContinueWith(afterClose)`
+- `IMessageService.[level](content, [duration], onClose).ContinueWith(afterClose)`
 
-其中`MessageService.[level]` 是组件已经提供的静态方法。`ContinueWith` 接口返回值是 Task。
+其中 `[level]` 是组件已经提供的方法。 `ContinueWith` 接口的返回值为Task。
 
 也可以对象的形式传递参数：
 
-- `MessageService.Open(config:MessageConfig)`
-- `MessageService.Success(config:MessageConfig)`
-- `MessageService.Error(config:MessageConfig)`
-- `MessageService.Info(config:MessageConfig)`
-- `MessageService.Warning(config:MessageConfig)`
-- `MessageService.Warn(config:MessageConfig)` // alias of warning
-- `MessageService.Loading(config:MessageConfig)`
+- `IMessageService.Open(config:MessageConfig)`
+- `IMessageService.Success(config:MessageConfig)`
+- `IMessageService.Error(config:MessageConfig)`
+- `IMessageService.Info(config:MessageConfig)`
+- `IMessageService.Warning(config:MessageConfig)`
+- `IMessageService.Warn(config:MessageConfig)` // alias of warning
+- `IMessageService.Loading(config:MessageConfig)`
 
 `config` 对象属性如下：
 
@@ -63,12 +63,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 
 还提供了全局配置和全局销毁方法：
 
-- `MessageService.Config(options:MessageGlobalConfig)`
-- `MessageService.Destroy()`
+- `IMessageService.Config(options:MessageGlobalConfig)`
+- `IMessageService.Destroy()`
 
-#### MessageService.Config
+#### IMessageService.Config
 
 ```c#
+@inject IMessageService MessageService;
+
 MessageService.Config(new MessageGlobalConfig{
   Top: 100,
   Duration: 2,
