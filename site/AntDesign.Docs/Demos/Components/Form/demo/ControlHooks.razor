@@ -1,14 +1,28 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Form @ref="form" 
-      Model="@model" 
-      OnFinish="OnFinish" 
+<Form @ref="form"
+      Model="@model"
+      OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
       WrapperColSpan="16">
     <FormItem Label="Note">
         <Input @bind-Value="@context.Note" />
+    </FormItem>
+    <FormItem Label="Gender">
+        <Select @bind-Value="@context.Gender"
+                TItemValue="string"
+                TItem="string"
+                DefaultActiveFirstOption="false"
+                Placeholder="Select an option and the input above will be changed"
+                OnSelectedItemChanged="OnGenderChanged">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("Male")" Label="Male" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Female")" Label="Female" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Other")" Label="Other" />
+            </SelectOptions>
+        </Select>
     </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
@@ -29,6 +43,8 @@
     {
         [Required]
         public string Note { get; set; }
+        [Required]
+        public string Gender { get; set; }
     }
 
     private Model model = new Model();
@@ -36,7 +52,8 @@
 
     private void OnFill(MouseEventArgs args)
     {
-        model.Note = "Hello world!";
+        model.Note = "Hello Sir!";
+        model.Gender = "Male";
 
         Console.WriteLine($"form ref:{form}");
     }
@@ -54,5 +71,23 @@
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnGenderChanged(string gender)
+    {
+        switch (gender)
+        {
+            case "Male":
+                form.Model.Note = "Hello Sir!";
+                break;
+            case "Female":
+                form.Model.Note = "Hello Madam!";
+                break;
+            case "Other":
+                form.Model.Note = "Hello there!";
+                break;
+            default:
+                break;
+        }
     }
 }

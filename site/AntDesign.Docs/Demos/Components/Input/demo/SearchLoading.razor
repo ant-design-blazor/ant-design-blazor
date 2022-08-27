@@ -8,7 +8,7 @@
     <Search Placeholder="input search text" Size="@InputSize.Large" EnterButton="@("Search")" @bind-Value="@txtValue" OnSearch="OnSearch"/>
 </div>
 
-@inject MessageService message;
+@inject IMessageService message;
 
 @code{
     private string txtValue { get; set; }
