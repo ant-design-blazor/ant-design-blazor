@@ -765,7 +765,8 @@ namespace AntDesign
                 .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
-                .If($"{ClassPrefix}-rtl", () => RTL);
+                .If($"{ClassPrefix}-rtl", () => RTL)
+                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0);
         }
 
         /// <summary>
