@@ -14,6 +14,7 @@ ports:
     onOpen: open-browser
   - port: 5001
     visibility: public
+    onOpen: ignore
   - port: 30000-60000
     visibility: public
     onOpen: ignore
