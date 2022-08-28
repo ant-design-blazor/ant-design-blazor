@@ -154,7 +154,15 @@ WebAssembly 静态托管页面示例
   <Button Type="primary">Hello World!</Button>
   ```
 
-## ⌨️ 本地开发
+## ⌨️ 开发
+
+### Gitpod
+
+点击下方按钮，免费创建一个新的工作区用于开发。
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#[<your-repository-url](https://github.com/ant-design-blazor/ant-design-blazor)>)
+
+### 本地
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/6.0?WT.mc_id=DT-MVP-5003987) 6.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
