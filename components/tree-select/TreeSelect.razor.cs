@@ -381,6 +381,7 @@ namespace AntDesign
                 .If("ant-select-focused", () => Open || Focused)
                 .If("ant-select-status-error", () => Status == "error")
                 .If("ant-select-status-warning", () => Status == "warning")
+                .If($"{classPrefix}-status-error", () => ValidationMessages.Length > 0)
                 ;
         }
 

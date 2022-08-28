@@ -130,6 +130,7 @@ namespace AntDesign
         protected OneOf<bool, string> _showTime = null;
 
         private bool _timeFormatProvided;
+
         [Parameter]
         public OneOf<bool, string> ShowTime
         {
@@ -207,8 +208,10 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
+
         [Parameter]
         public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
+
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
@@ -280,7 +283,9 @@ namespace AntDesign
         private static readonly int[] _minutesSeconds = Enumerable.Range(0, 60).ToArray();
 
         internal event EventHandler<bool> OverlayVisibleChanged;
+
         private readonly object _eventLock = new();
+
         event EventHandler<bool> IDatePicker.OverlayVisibleChanged
         {
             add
@@ -319,6 +324,7 @@ namespace AntDesign
         }
 
         protected bool _shouldRender = true;
+
         protected override bool ShouldRender()
         {
             if (!_shouldRender)
@@ -352,6 +358,7 @@ namespace AntDesign
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
+                .If($"{PrefixCls}-status-error", () => ValidationMessages.Length > 0)
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
@@ -361,7 +368,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
@@ -501,6 +508,7 @@ namespace AntDesign
                 Close();
             }
         }
+
         public async Task OnRangeItemOver(DateTime?[] range)
         {
             if (IsRange)
@@ -509,6 +517,7 @@ namespace AntDesign
                 Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             }
         }
+
         public async Task OnRangeItemOut(DateTime?[] range)
         {
             if (IsRange)
@@ -516,6 +525,7 @@ namespace AntDesign
                 Value = _swpValue;
             }
         }
+
         public async Task OnRangeItemClicked(DateTime?[] range)
         {
             _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
@@ -707,7 +717,6 @@ namespace AntDesign
                 var placeholder = string.IsNullOrEmpty(single) ? DatePickerPlaceholder.GetPlaceholderByType(Picker, Locale) : single;
                 _placeholders[0] = placeholder;
                 _placeholders[1] = placeholder;
-
             }, arr =>
             {
                 var rangePickerIndex = index >= 0 ? index : GetOnFocusPickerIndex();
@@ -726,6 +735,7 @@ namespace AntDesign
         }
 
         private int _htmlInputSize;
+
         protected int HtmlInputSize
         {
             get
@@ -743,6 +753,7 @@ namespace AntDesign
         }
 
         private string _internalFormat;
+
         private string InternalFormat
         {
             get
@@ -763,11 +774,11 @@ namespace AntDesign
                             DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
-
                 }
                 return _internalFormat;
             }
         }
+
         private string GetTimeFormat()
         {
             if (IsShowTime)
