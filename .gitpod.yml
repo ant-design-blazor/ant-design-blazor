@@ -6,7 +6,14 @@ tasks:
   - init: |
       npm install
     command: |
+      dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
       npm run start
 ports:
   - port: 5000
+    visibility: public
+    onOpen: open-browser
   - port: 5001
+    visibility: public
+  - port: 30000-60000
+    visibility: public
+    onOpen: ignore
