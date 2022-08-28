@@ -5,7 +5,8 @@ image: gitpod/workspace-dotnet
 tasks:
   - init: |
       npm install
-    command: npm run start
+    command: |
+      npm run start
 ports:
+  - port: 5000
   - port: 5001
-    onOpen: open-browser
