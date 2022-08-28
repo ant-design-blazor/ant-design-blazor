@@ -160,7 +160,7 @@ WebAssembly 静态托管页面示例
 
 点击下方按钮，免费创建一个新的工作区用于开发。
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#[<your-repository-url](https://github.com/ant-design-blazor/ant-design-blazor)>)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ant-design-blazor/ant-design-blazor)
 
 ### 本地
 

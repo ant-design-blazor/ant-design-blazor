@@ -165,7 +165,7 @@ Options for the template：
 
 Click the button below to start a new workspace for development for free.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#[<your-repository-url](https://github.com/ant-design-blazor/ant-design-blazor)>)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ant-design-blazor/ant-design-blazor)
 
 ### Local
 
