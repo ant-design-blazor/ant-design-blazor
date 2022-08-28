@@ -107,6 +107,7 @@ namespace AntDesign
                 .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
                 .If($"ant-select-lg", () => Size == "large")
                 .If($"ant-select-sm", () => Size == "small")
+                .If("ant-select-status-error", () => ValidationMessages.Length > 0)
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper
