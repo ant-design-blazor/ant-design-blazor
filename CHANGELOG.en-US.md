@@ -15,9 +15,9 @@ timeline: true
 
 ---
 
-### 0.12.1
+### 0.12.0
 
-`2022-08-28`
+`2022-08-29`
 
 - 🔥 Sync ant-design v4.20.7 styles. [#2497](https://github.com/ant-design-blazor/ant-design-blazor/pull/2497) [@ElderJames](https://github.com/ElderJames)
 - 🔥 Add segmented component. [#2503](https://github.com/ant-design-blazor/ant-design-blazor/pull/2503) [@ElderJames](https://github.com/ElderJames)
@@ -86,8 +86,7 @@ timeline: true
 - 🐞 Fix Tree that the coexistence of Disable and Checked attributes of TreeNode does not take effect. [#2583](https://github.com/ant-design-blazor/ant-design-blazor/pull/2583) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
 - 🐞 Fix Layout that add two-way binding for Sider Collapsed parameter。 [#2536](https://github.com/ant-design-blazor/ant-design-blazor/pull/2536) [@ElderJames](https://github.com/ElderJames)
 
-
-
+Note that since the last synchronization with V4.16.9 of antd, the original script could not be compiled due to the modification of the antd style file. Until this update span is large, there may be problems with the style. If found, please submit an issue.
 
 ### 0.11.0
 

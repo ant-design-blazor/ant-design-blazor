@@ -15,9 +15,9 @@ timeline: true
 
 ---
 
-### 0.12.1
+### 0.12.0
 
-`2022-08-28`
+`2022-08-29`
 
 - 🔥 同步 ant-design v4.20.7 样式，支持利用 CSS 变量修改主题。[#2497](https://github.com/ant-design-blazor/ant-design-blazor/pull/2497) [@ElderJames](https://github.com/ElderJames)
 - 🔥 增加 Segmented 组件，同步 antd 4.20。[#2503](https://github.com/ant-design-blazor/ant-design-blazor/pull/2503) [@ElderJames](https://github.com/ElderJames)
@@ -87,7 +87,6 @@ timeline: true
 - 🐞 修复 Input 将数据粘贴到输入框时 OnChange 事件会调用两次的错误(#2591)。[#2592](https://github.com/ant-design-blazor/ant-design-blazor/pull/2592) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
 
 注意，由于上一次同步了v4.16.9 后，antd样式文件的调整导致原脚本无法编译，直到此次更新跨度较大，可能会出现样式的问题。如果发现，敬请提交issue告知。
-
 
 ### 0.11.0
 
