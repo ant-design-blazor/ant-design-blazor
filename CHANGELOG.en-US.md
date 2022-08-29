@@ -19,62 +19,75 @@ timeline: true
 
 `2022-08-28`
 
-- Form
-  - 🐞 fix(module: form): fix error status for entry components. [#2647](https://github.com/ant-design/ant-design/pull/2647) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 fix(select): select was not highlighted when validation failed. [#2642](https://github.com/ant-design/ant-design/pull/2642) [@JamesGit-hash](https://github.com/JamesGit-hash)
-  - 🐞 fix(form): neither input nor validation message was highlighted when …. [#2639](https://github.com/ant-design/ant-design/pull/2639) [@JamesGit-hash](https://github.com/JamesGit-hash)
-- 🛠 Changed MessageCenter to be used through an interface IMessageCenter. Existing code will continue to function, but new code should inject IMessageCenter. [#2633](https://github.com/ant-design/ant-design/pull/2633) [@kooliokey](https://github.com/kooliokey)
-- Cascader
-  - 💄 fix(module: cascader): Style confusion caused by the latest antd style. [#2636](https://github.com/ant-design/ant-design/pull/2636) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 Fix bug that the cascade component cannot use allowclear to clear the content when searching    <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1334913971" data-permission-text="Title is private" data-url="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2607" data-hovercard-type="issue" data-hovercard-url="/ant-design-blazor/ant-design-blazor/issues/2607/hovercard" href="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2607">#2607</a>. [#2610](https://github.com/ant-design/ant-design/pull/2610) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- Select
-  - 🐞 fix(module: select):When ignoreitemchanges is false, deleting multiple selections will cause an exception <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1340368993" data-permission-text="Title is private" data-url="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2617" data-hovercard-type="issue" data-hovercard-url="/ant-design-blazor/ant-design-blazor/issues/2617/hovercard" href="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2617">#2617</a>. [#2620](https://github.com/ant-design/ant-design/pull/2620) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-  - 🛠 fix(module: select): change events from Action to EventCallback. [#2601](https://github.com/ant-design/ant-design/pull/2601) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fix: Pagination won't show certain current page block when window width is small after a specific sequence of operation. [#2616](https://github.com/ant-design/ant-design/pull/2616) [@fcxxzux](https://github.com/fcxxzux)
-- 🔥 feat(module: table): add property column. [#2624](https://github.com/ant-design/ant-design/pull/2624) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Uploading control image recognition supports user-defined modification of image file extension, adding webp format, and repairing that the filename does not exist. A subscript out of range exception is generated. [#2626](https://github.com/ant-design/ant-design/pull/2626) [@AigioL](https://github.com/AigioL)
-- 🐞 fix bug that OnChange will invoke twice when paste data to Input <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1324463032" data-permission-text="Title is private" data-url="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2591" data-hovercard-type="issue" data-hovercard-url="/ant-design-blazor/ant-design-blazor/issues/2591/hovercard" href="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2591">#2591</a>. [#2592](https://github.com/ant-design/ant-design/pull/2592) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- Badge
-  - 🐞 fix(module: badge): show/hide montion optimization. [#2609](https://github.com/ant-design/ant-design/pull/2609) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 fix(module: badge): offset didn't support negative numbers. [#2608](https://github.com/ant-design/ant-design/pull/2608) [@ElderJames](https://github.com/ElderJames)
-- 🆕 faet(module: PageHeader): support compact style. [#2606](https://github.com/ant-design/ant-design/pull/2606) [@ElderJames](https://github.com/ElderJames)
-- 🆕 feat: add ResizeObserver component. [#2605](https://github.com/ant-design/ant-design/pull/2605) [@ElderJames](https://github.com/ElderJames)
-- 🐞 fixed right-click trigger can't open browser native menu. [#2602](https://github.com/ant-design/ant-design/pull/2602) [@ElderJames](https://github.com/ElderJames)
-- Image
-  - 🆕 support controlled preview. [#2600](https://github.com/ant-design/ant-design/pull/2600) [@ElderJames](https://github.com/ElderJames)
-  - 🐞 an image which was setted after a fallback image can't display in preview. [#2599](https://github.com/ant-design/ant-design/pull/2599) [@ElderJames](https://github.com/ElderJames)
-- Statistic
-  - 🐞 Fix the bug that countdown will not refresh in the background. [#2598](https://github.com/ant-design/ant-design/pull/2598) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-  - 🐞 CountDown can auto refresh when set value. [#2587](https://github.com/ant-design/ant-design/pull/2587) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- 🆕 feat(module: reusetabs): support pinned tabs. [#2545](https://github.com/ant-design/ant-design/pull/2545) [@HaoZhiYing](https://github.com/HaoZhiYing)
-- 🐞 fix issue <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1119330236" data-permission-text="Title is private" data-url="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2271" data-hovercard-type="issue" data-hovercard-url="/ant-design-blazor/ant-design-blazor/issues/2271/hovercard" href="https://hub.fastgit.xyz/ant-design-blazor/ant-design-blazor/issues/2271">#2271</a>. [#2588](https://github.com/ant-design/ant-design/pull/2588) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- Datepicker
-  - 🐞 fix:(module: datepicker):  culture is not applied correctly to the year. [#2589](https://github.com/ant-design/ant-design/pull/2589) [@Alexbits](https://github.com/Alexbits)
-  - 🐞 fix:(module:datepicker): wrong day headers when FirstDayOfWeek!=Sunday. [#2571](https://github.com/ant-design/ant-design/pull/2571) [@Alexbits](https://github.com/Alexbits)
-  - 🆕 feat(module:datepicker): Scroll to selected time in DatePicker/TimePicker. [#2512](https://github.com/ant-design/ant-design/pull/2512) [@Alexbits](https://github.com/Alexbits)
-  - 🆕 feat(module: datepicker): add 12-hour time support. [#2501](https://github.com/ant-design/ant-design/pull/2501) [@Alexbits](https://github.com/Alexbits)
-- 🐞 Fix the problem that the coexistence of Disable and Checked attributes of TreeNode does not take effect. [#2583](https://github.com/ant-design/ant-design/pull/2583) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- 🐞 fix:(module:rangepicker): date selection. [#2570](https://github.com/ant-design/ant-design/pull/2570) [@Alexbits](https://github.com/Alexbits)
-- 🆕 Allow Modal to maximize within the browser. [#2573](https://github.com/ant-design/ant-design/pull/2573) [@zxyao145](https://github.com/zxyao145)
-- 🆕 新增 RangePicker 预设范围. [#2487](https://github.com/ant-design/ant-design/pull/2487) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
-- 🐞 Cascader display text does not refresh. [#2575](https://github.com/ant-design/ant-design/pull/2575) [@noctis0430](https://github.com/noctis0430)
-- 🐞 add two-way binding foCollapsed parameter。 [#2536](https://github.com/ant-design/ant-design/pull/2536) [@ElderJames](https://github.com/ElderJames)
-- 🔥 add segmented component. [#2503](https://github.com/ant-design/ant-design/pull/2503) [@ElderJames](https://github.com/ElderJames)
-- 🆕 add <code class="notranslate">PlaceHolder</code> parameter. [#2528](https://github.com/ant-design/ant-design/pull/2528) [@ElderJames](https://github.com/ElderJames)
+- 🔥 Sync ant-design v4.20.7 styles. [#2497](https://github.com/ant-design-blazor/ant-design-blazor/pull/2497) [@ElderJames](https://github.com/ElderJames)
+- 🔥 Add segmented component. [#2503](https://github.com/ant-design-blazor/ant-design-blazor/pull/2503) [@ElderJames](https://github.com/ElderJames)
+- 🔥 Add Table PropertyColumn. [#2624](https://github.com/ant-design-blazor/ant-design-blazor/pull/2624) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add ReuseTabs pinned tabs. [#2545](https://github.com/ant-design-blazor/ant-design-blazor/pull/2545) [@HaoZhiYing](https://github.com/HaoZhiYing)
+- 🆕 Add PageHeader responsive compact style. [#2606](https://github.com/ant-design-blazor/ant-design-blazor/pull/2606) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add ResizeObserver component. [#2605](https://github.com/ant-design-blazor/ant-design-blazor/pull/2605) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add List draggable item demo. [#2563](https://github.com/ant-design-blazor/ant-design-blazor/pull/2563) [@charset](https://github.com/charset)
+- 🆕 Add Tooltip TabIndex parameter. [#2567](https://github.com/ant-design-blazor/ant-design-blazor/pull/2567) [@lukblazewicz](https://github.com/lukblazewicz)
+- 🆕 Add Drawer OnOpen Event. [#2553](https://github.com/ant-design-blazor/ant-design-blazor/pull/2553) [@zxyao145](https://github.com/zxyao145)
+
 - Icon
-  - 🐞 docs: fix icon demo exception when prerendering. [#2527](https://github.com/ant-design/ant-design/pull/2527) [@ElderJames](https://github.com/ElderJames)
-  - 🔥 two-tone color icon implements. [#2513](https://github.com/ant-design/ant-design/pull/2513) [@rqx110](https://github.com/rqx110)
-- 🚫 Fix and create test to value display when step value notation is scientific. [#2547](https://github.com/ant-design/ant-design/pull/2547) [@petertorocsik](https://github.com/petertorocsik)
-- 🚫 add a draggable list item demo. [#2563](https://github.com/ant-design/ant-design/pull/2563) [@charset](https://github.com/charset)
-- 🚫 Tooltip: enable setting TabIndex via parameter. [#2567](https://github.com/ant-design/ant-design/pull/2567) [@lukblazewicz](https://github.com/lukblazewicz)
-- 🚫 add OnOpen Event for Drawer component. [#2553](https://github.com/ant-design/ant-design/pull/2553) [@zxyao145](https://github.com/zxyao145)
-- 🐞 fix(module: datepicker): value not updated when changed programmatically. [#2551](https://github.com/ant-design/ant-design/pull/2551) [@Alexbits](https://github.com/Alexbits)
-- 🐞 reset enter animation className. [#2561](https://github.com/ant-design/ant-design/pull/2561) [@zxyao145](https://github.com/zxyao145)
-- 🚫 The git clone link is not working. Newbies using this repo is getting discourage because of this. [#2548](https://github.com/ant-design/ant-design/pull/2548) [@jesorian](https://github.com/jesorian)
-- 🐞 fix/date picker ok button. [#2531](https://github.com/ant-design/ant-design/pull/2531) [@Alexbits](https://github.com/Alexbits)
-- 🐞 chore: fix Dependabot alert. [#2543](https://github.com/ant-design/ant-design/pull/2543) [@ElderJames](https://github.com/ElderJames)
-- 🐞 chore: fix build error in branch feature. [#2514](https://github.com/ant-design/ant-design/pull/2514) [@rqx110](https://github.com/rqx110)
-- 💄 chore: sync ant-design v4.20.7. [#2497](https://github.com/ant-design/ant-design/pull/2497) [@ElderJames](https://github.com/ElderJames)
+  - 🔥 Add Two-tone color icon implements. [#2513](https://github.com/ant-design-blazor/ant-design-blazor/pull/2513) [@rqx110](https://github.com/rqx110)
+  - 🐞 Fix icon demo exception when prerendering. [#2527](https://github.com/ant-design-blazor/ant-design-blazor/pull/2527) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🆕 Add Modal maximize within the browser. [#2573](https://github.com/ant-design-blazor/ant-design-blazor/pull/2573) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 Fix reset enter animation className. [#2561](https://github.com/ant-design-blazor/ant-design-blazor/pull/2561) [@zxyao145](https://github.com/zxyao145)
+
+- Datepicker
+  - 🆕 Add Scroll to selected time in DatePicker/TimePicker. [#2512](https://github.com/ant-design-blazor/ant-design-blazor/pull/2512) [@Alexbits](https://github.com/Alexbits)
+  - 🆕 Add 12-hour time support. [#2501](https://github.com/ant-design-blazor/ant-design-blazor/pull/2501) [@Alexbits](https://github.com/Alexbits)
+  - 🆕 Add preset range for RangePicker. [#2487](https://github.com/ant-design-blazor/ant-design-blazor/pull/2487) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 Fix culture is not applied correctly to the year. [#2589](https://github.com/ant-design-blazor/ant-design-blazor/pull/2589) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 Fix wrong day headers when FirstDayOfWeek!=Sunday. [#2571](https://github.com/ant-design-blazor/ant-design-blazor/pull/2571) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 Fix date selection. [#2570](https://github.com/ant-design-blazor/ant-design-blazor/pull/2570) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 Fix value not updated when changed programmatically. [#2551](https://github.com/ant-design-blazor/ant-design-blazor/pull/2551) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 Fix ok button issues for pickers. [#2531](https://github.com/ant-design-blazor/ant-design-blazor/pull/2531) [@Alexbits](https://github.com/Alexbits)    
+
+- Image
+  - 🆕 Add controlled preview support. [#2600](https://github.com/ant-design-blazor/ant-design-blazor/pull/2600) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix an image which was setted after a fallback image can't display in preview. [#2599](https://github.com/ant-design-blazor/ant-design-blazor/pull/2599) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🐞 Fix error status for entry components. [#2647](https://github.com/ant-design-blazor/ant-design-blazor/pull/2647) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix Select was not highlighted when validation failed. [#2642](https://github.com/ant-design-blazor/ant-design-blazor/pull/2642) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 Fix Input wrong sytle of error status. [#2639](https://github.com/ant-design-blazor/ant-design-blazor/pull/2639) [@JamesGit-hash](https://github.com/JamesGit-hash)
+
+- Cascader
+  - 💄 Fix style confusion caused by the latest antd style. [#2636](https://github.com/ant-design-blazor/ant-design-blazor/pull/2636) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix Cascader that cannot use `Allowclear` to clear the content when searching (#2607). [#2610](https://github.com/ant-design-blazor/ant-design-blazor/pull/2610) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 Fix Cascader display text does not refresh. [#2575](https://github.com/ant-design-blazor/ant-design-blazor/pull/2575) [@noctis0430](https://github.com/noctis0430)
+
+- Select
+  - 🐞 Fix when ignoreitemchanges is false, deleting multiple selections will cause an exception (#2617). [#2620](https://github.com/ant-design-blazor/ant-design-blazor/pull/2620) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🛠 Refactor some events from Action to EventCallback. [#2601](https://github.com/ant-design-blazor/ant-design-blazor/pull/2601) [@ElderJames](https://github.com/ElderJames)
+
+- Badge
+  - 🐞 Fix show/hide montion optimization. [#2609](https://github.com/ant-design-blazor/ant-design-blazor/pull/2609) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix offset didn't support negative numbers. [#2608](https://github.com/ant-design-blazor/ant-design-blazor/pull/2608) [@ElderJames](https://github.com/ElderJames)
+
+- Statistic
+  - 🐞 Fix CountDown that can't refresh in the background. [#2598](https://github.com/ant-design-blazor/ant-design-blazor/pull/2598) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 Fix CountDown can't refresh when set value. [#2587](https://github.com/ant-design-blazor/ant-design-blazor/pull/2587) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+
+- InputNumber
+  - 🆕 Add PlaceHolder parameter. [#2528](https://github.com/ant-design-blazor/ant-design-blazor/pull/2528) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix and create test to value display when step value notation is scientific. [#2547](https://github.com/ant-design-blazor/ant-design-blazor/pull/2547) [@petertorocsik](https://github.com/petertorocsik)
+
+- 🛠 Refactor Message Service, add `IMessageService` for more abstract. [#2633](https://github.com/ant-design-blazor/ant-design-blazor/pull/2633) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fix Pagination won't show certain current page block when window width is small after a specific sequence of operation. [#2616](https://github.com/ant-design-blazor/ant-design-blazor/pull/2616) [@fcxxzux](https://github.com/fcxxzux)
+- 🐞 Fix Upload image recognition supports user-defined modification of image file extension, adding webp format, and repairing that the filename does not exist. A subscript out of range exception is generated. [#2626](https://github.com/ant-design-blazor/ant-design-blazor/pull/2626) [@AigioL](https://github.com/AigioL)
+- 🐞 Fix Input that OnChange will invoke twice when paste data (#2591). [#2592](https://github.com/ant-design-blazor/ant-design-blazor/pull/2592) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 Fix Overlay trigger can't open browser native menu after it was right-click. [#2602](https://github.com/ant-design-blazor/ant-design-blazor/pull/2602) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fix TimeLine that the `Pending` could not be closed.(#2271). [#2588](https://github.com/ant-design-blazor/ant-design-blazor/pull/2588) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 Fix Tree that the coexistence of Disable and Checked attributes of TreeNode does not take effect. [#2583](https://github.com/ant-design-blazor/ant-design-blazor/pull/2583) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 Fix Layout that add two-way binding for Sider Collapsed parameter。 [#2536](https://github.com/ant-design-blazor/ant-design-blazor/pull/2536) [@ElderJames](https://github.com/ElderJames)
+
+
+
 
 ### 0.11.0
 
