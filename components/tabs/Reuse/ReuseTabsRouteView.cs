@@ -133,7 +133,7 @@ namespace AntDesign
                 pageItem.Pin = attr.Pin;
             }
 
-            pageItem.Title ??= new Uri(url).PathAndQuery.ToRenderFragment();
+            pageItem.Title ??= new Uri(url, UriKind.RelativeOrAbsolute).PathAndQuery.ToRenderFragment();
         }
 
         public void AddReuseTabsPageItem(string url, Type pageType)
