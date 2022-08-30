@@ -62,8 +62,8 @@ namespace AntDesign
         private void SetAvatarMap()
         {
             _spanClassMapper.Clear().If("ant-skeleton-avatar", () => true)
-                .If("ant-skeleton-avatar-square", () => Shape == SkeletonAvatarShape.Square)
-                .If("ant-skeleton-avatar-circle", () => Shape == SkeletonAvatarShape.Circle)
+                .If("ant-skeleton-avatar-square", () => Shape == AvatarShape.Square)
+                .If("ant-skeleton-avatar-circle", () => Shape == AvatarShape.Circle)
                 .If("ant-skeleton-avatar-lg", () => Size.AsT1 == SkeletonElementSize.Large)
                 .If("ant-skeleton-avatar-sm", () => Size.AsT1 == SkeletonElementSize.Small);
         }

@@ -115,7 +115,7 @@ namespace AntDesign
 
             if (AvatarShape == null)
             {
-                AvatarShape = SkeletonAvatarShape.Circle;
+                AvatarShape = AntDesign.AvatarShape.Circle;
             }
 
             if (AvatarSize.Value == null)
