@@ -15,6 +15,79 @@ timeline: true
 
 ---
 
+### 0.12.0
+
+`2022-08-29`
+
+- 🔥 同步 ant-design v4.20.7 样式，支持利用 CSS 变量修改主题。[#2497](https://github.com/ant-design-blazor/ant-design-blazor/pull/2497) [@ElderJames](https://github.com/ElderJames)
+- 🔥 增加 Segmented 组件，同步 antd 4.20。[#2503](https://github.com/ant-design-blazor/ant-design-blazor/pull/2503) [@ElderJames](https://github.com/ElderJames)
+- 🔥 增加 Table 的 PropertyColumn，支持多层级对象的绑定。[#2624](https://github.com/ant-design-blazor/ant-design-blazor/pull/2624) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 ReuseTabs 固定标签支持。[#2545](https://github.com/ant-design-blazor/ant-design-blazor/pull/2545) [@HaoZhiYing](https://github.com/HaoZhiYing)
+- 🆕 增加 PageHeader 响应式紧凑样式支持。[#2606](https://github.com/ant-design-blazor/ant-design-blazor/pull/2606) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 ResizeObserver 组件。[#2605](https://github.com/ant-design-blazor/ant-design-blazor/pull/2605) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 List 的拖拽 Demo。[#2563](https://github.com/ant-design-blazor/ant-design-blazor/pull/2563) [@charset](https://github.com/charset)
+- 🆕 增加 Tooltip 的 TabIndex 属性。[#2567](https://github.com/ant-design-blazor/ant-design-blazor/pull/2567) [@lukblazewicz](https://github.com/lukblazewicz)
+- 🆕 增加 Drawer 的 OnOpen 事件的支持。[#2553](https://github.com/ant-design-blazor/ant-design-blazor/pull/2553) [@zxyao145](https://github.com/zxyao145)
+
+- Icon
+  - 🔥 增加 双色图标实现。[#2513](https://github.com/ant-design-blazor/ant-design-blazor/pull/2513) [@rqx110](https://github.com/rqx110)
+  - 🐞 修复 预渲染时报错。[#2527](https://github.com/ant-design-blazor/ant-design-blazor/pull/2527) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🆕 增加 最大化支持。[#2573](https://github.com/ant-design-blazor/ant-design-blazor/pull/2573) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 动画闪烁，修复无法复制的问题。[#2561](https://github.com/ant-design-blazor/ant-design-blazor/pull/2561) [@zxyao145](https://github.com/zxyao145)
+
+  - Datepicker
+  - 🆕 增加 12 小时制支持。[#2501](https://github.com/ant-design-blazor/ant-design-blazor/pull/2501) [@Alexbits](https://github.com/Alexbits)
+  - 🆕 新增 RangePicker 预设范围。[#2487](https://github.com/ant-design-blazor/ant-design-blazor/pull/2487) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🆕 DatePicker/TimePicker 可以滚动到选中值。[#2512](https://github.com/ant-design-blazor/ant-design-blazor/pull/2512) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 显示年份时本地化没效果。[#2589](https://github.com/ant-design-blazor/ant-design-blazor/pull/2589) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 当 FirstDayOfWeek!=Sunday 时星期数错位问题。[#2571](https://github.com/ant-design-blazor/ant-design-blazor/pull/2571) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复一些 确认 按钮相关问题。[#2531](https://github.com/ant-design-blazor/ant-design-blazor/pull/2531) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 Datepicker 使用代码修改绑定值时，面板没有改变的问题。[#2551](https://github.com/ant-design-blazor/ant-design-blazor/pull/2551) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 日期选中的问题 。[#2570](https://github.com/ant-design-blazor/ant-design-blazor/pull/2570) [@Alexbits](https://github.com/Alexbits)
+
+- Image
+  - 🆕 支持可控预览。[#2600](https://github.com/ant-design-blazor/ant-design-blazor/pull/2600) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在回退图像后设置的图像无法在预览中显示。[#2599](https://github.com/ant-design-blazor/ant-design-blazor/pull/2599) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🐞 修复 AutoComplete、DatePicker、InputNumber 的验证错误样式。[#2647](https://github.com/ant-design-blazor/ant-design-blazor/pull/2647) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Select 验证错误样式[#2642](https://github.com/ant-design-blazor/ant-design-blazor/pull/2642) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 修复 Input 验证错误样式[#2639](https://github.com/ant-design-blazor/ant-design-blazor/pull/2639) [@JamesGit-hash](https://github.com/JamesGit-hash)
+
+- Cascader
+  - 💄 修复 最新样式导致的错乱。[#2636](https://github.com/ant-design-blazor/ant-design-blazor/pull/2636) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在搜索时无法使用 AllowClear 清除内容的问题(#2607)。[#2610](https://github.com/ant-design-blazor/ant-design-blazor/pull/2610) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 Cascader 显示文本不刷新。[#2575](https://github.com/ant-design-blazor/ant-design-blazor/pull/2575) [@noctis0430](https://github.com/noctis0430)
+  
+- Select
+  - 🐞 修复当ignoreitemchanges=false时，删除select的已选择标签会报错的问题(#2617)。[#2620](https://github.com/ant-design-blazor/ant-design-blazor/pull/2620) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🛠 事件从 Action 改为 EventCallback。[#2601](https://github.com/ant-design-blazor/ant-design-blazor/pull/2601) [@ElderJames](https://github.com/ElderJames)
+
+- Badge
+  - 🐞 显示隐藏动画的优化[#2609](https://github.com/ant-design-blazor/ant-design-blazor/pull/2609) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Offset 属性不支持负数的问题[#2608](https://github.com/ant-design-blazor/ant-design-blazor/pull/2608) [@ElderJames](https://github.com/ElderJames)
+
+- Statistic
+  - 🐞 修复 CountDown 在后台不会刷新的问题。[#2598](https://github.com/ant-design-blazor/ant-design-blazor/pull/2598) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 添加 CountDown 的 Reset 方法，并且重新设置绑定的 Value 后会自动刷新。[#2587](https://github.com/ant-design-blazor/ant-design-blazor/pull/2587) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+
+- InputNumber
+  - 🆕 增加 PlaceHolder 属性。[#2528](https://github.com/ant-design-blazor/ant-design-blazor/pull/2528) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Step 属性的值在某些文化里小数点不是 `.` 分割导致的显示异常。[#2547](https://github.com/ant-design-blazor/ant-design-blazor/pull/2547) [@petertorocsik](https://github.com/petertorocsik)
+  
+- 🛠 将 MessageService 更改为通过注入接口 IMessageService 使用。[#2633](https://github.com/ant-design-blazor/ant-design-blazor/pull/2633) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Tree TreeNode 的 Disable 和 Checked 属性共存时不生效的问题。[#2583](https://github.com/ant-design-blazor/ant-design-blazor/pull/2583) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 修复 TimeLine 的 Pending 无法关闭的问题。[#2588](https://github.com/ant-design-blazor/ant-design-blazor/pull/2588) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+- 🐞 Sider 增加 Collapsed 属性双向绑定.[#2536](https://github.com/ant-design-blazor/ant-design-blazor/pull/2536) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 的 Trigger 右键不能打开浏览器菜单的问题。[#2602](https://github.com/ant-design-blazor/ant-design-blazor/pull/2602) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Pagination 在较小的屏幕宽度下，特定操作后，不会显示当前选中页的问题。[#2616](https://github.com/ant-design-blazor/ant-design-blazor/pull/2616) [@fcxxzux](https://github.com/fcxxzux)
+- 🐞 修复 Upload 图片识别支持自定义修改图片文件扩展名，与添加 WebP 格式，修复 FileName 不存在 . 时产生下标越界异常。[#2626](https://github.com/ant-design-blazor/ant-design-blazor/pull/2626) [@AigioL](https://github.com/AigioL)
+- 🐞 修复 Input 将数据粘贴到输入框时 OnChange 事件会调用两次的错误(#2591)。[#2592](https://github.com/ant-design-blazor/ant-design-blazor/pull/2592) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+
+注意，由于上一次同步了v4.16.9 后，antd样式文件的调整导致原脚本无法编译，直到此次更新跨度较大，可能会出现样式的问题。如果发现，敬请提交issue告知。
+
 ### 0.11.0
 
 `2022-06-16`
