@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-Virtualization is currently not implemented.
+ Improve performance with virtualization when you have many options, .NET 5 or higher framework is required.
 
 ## en-US
 
-Virtualization is currently not implemented.
+Improve performance with virtualization when you have many options, .NET 5 or higher framework is required.
