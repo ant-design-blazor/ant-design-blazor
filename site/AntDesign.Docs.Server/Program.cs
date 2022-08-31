@@ -29,7 +29,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// disable UseHttpsRedirection to support open site in gitpod workspace, since there is a problem about https endpoint in Gitpod
+// app.UseHttpsRedirection();
 #if NET5_0_OR_GREATER
 app.UseBlazorPolyfill();
 #endif
