@@ -16,7 +16,7 @@ namespace AntDesign
             set
             {
                 _childContent = value;
-                _waitingCaclSize = true;
+                _waitingCalcSize = true;
             }
         }
 
@@ -35,7 +35,7 @@ namespace AntDesign
                 if (_text != value)
                 {
                     _text = value;
-                    _waitingCaclSize = true;
+                    _waitingCalcSize = true;
                 }
             }
         }
@@ -81,16 +81,13 @@ namespace AntDesign
 
         private string _text;
         private RenderFragment _childContent;
-        private bool _waitingCaclSize;
+        private bool _waitingCalcSize;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Group?.AddAvatar(this);
-
-            SetClassMap();
-            SetSizeStyle();
         }
 
         protected override void OnParametersSet()
@@ -99,14 +96,17 @@ namespace AntDesign
             _hasIcon = string.IsNullOrEmpty(Src) && !string.IsNullOrEmpty(Icon);
             _hasSrc = !string.IsNullOrEmpty(Src);
 
+            SetClassMap();
+            SetSizeStyle();
+
             base.OnParametersSet();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender || _waitingCaclSize)
+            if (firstRender || _waitingCalcSize)
             {
-                _waitingCaclSize = false;
+                _waitingCalcSize = false;
                 await CalcStringSize();
             }
 
@@ -128,7 +128,7 @@ namespace AntDesign
                 _hasText = true;
             }
 
-            _waitingCaclSize = true;
+            _waitingCalcSize = true;
         }
 
         private void SetClassMap()
@@ -149,7 +149,7 @@ namespace AntDesign
                 _sizeStyles = $"width:{size};height:{size};line-height:{size};";
                 if (_hasIcon)
                 {
-                    _sizeStyles += $"font-size:calc(${size} / 2);";
+                    _sizeStyles += $"font-size:calc({size} / 2);";
                 }
             }
         }
@@ -163,12 +163,11 @@ namespace AntDesign
 
             var childrenWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, TextEl))?.OffsetWidth ?? 0;
             var avatarWidth = (await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref))?.Width ?? 0;
-            var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
+            var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth 
+                ? (avatarWidth - 8) / childrenWidth 
+                : 1;
+
             _textStyles = $"transform: scale({new CssSizeLength(scale, true)}) translateX(-50%);";
-            if (decimal.TryParse(Size, out var pxSize))
-            {
-                _textStyles += $"lineHeight:{(CssSizeLength)pxSize};";
-            }
 
             StateHasChanged();
         }

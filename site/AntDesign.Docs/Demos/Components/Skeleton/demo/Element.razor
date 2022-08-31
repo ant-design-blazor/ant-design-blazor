@@ -40,8 +40,8 @@
     <Col Span="9">
     AvatarShape:
     <RadioGroup @bind-Value="@_avatarShape">
-        <Radio Value="@SkeletonAvatarShape.Circle">Circle</Radio>
-        <Radio Value="@SkeletonAvatarShape.Square">Square</Radio>
+        <Radio Value="@AvatarShape.Circle">Circle</Radio>
+        <Radio Value="@AvatarShape.Square">Square</Radio>
     </RadioGroup>
     </Col>
 </Row>
@@ -74,5 +74,5 @@
     string _avatarSize = SkeletonElementSize.Default;
     string _inputSize = SkeletonElementSize.Default;
     string _buttonShape = SkeletonButtonShape.Default;
-    string _avatarShape = SkeletonAvatarShape.Circle;
+    string _avatarShape = AvatarShape.Circle;
 }

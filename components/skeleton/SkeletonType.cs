@@ -12,12 +12,6 @@ namespace AntDesign
         public const string Small = "small";
     }
 
-    public static class SkeletonAvatarShape
-    {
-        public const string Square = "square";
-        public const string Circle = "circle";
-    }
-
     public static class SkeletonButtonShape
     {
         public const string Default = "default";
