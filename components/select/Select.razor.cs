@@ -33,6 +33,14 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
 
+#if NET5_0_OR_GREATER
+        /// <summary>
+        /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
+        /// </summary>
+        [Parameter]
+        public bool EnableVirtualization { get; set; }
+#endif
+
         private bool _dataSourceHasChanged = false;
         private IEnumerable<TItem> _dataSourceCopy;
         private IEnumerable<TItem> _dataSourceShallowCopy;
@@ -765,7 +773,8 @@ namespace AntDesign
                 .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
-                .If($"{ClassPrefix}-rtl", () => RTL);
+                .If($"{ClassPrefix}-rtl", () => RTL)
+                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0);
         }
 
         /// <summary>

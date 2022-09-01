@@ -98,10 +98,16 @@ namespace AntDesign
             string prefixCls = "ant-cascader";
 
             ClassMapper
+                .Add("ant-select ant-cascader ant-select-single ant-select-allow-clear ant-select-show-arrow")
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
-                .If($"{prefixCls}-picker-show-search", () => ShowSearch)
+                .If("ant-select-open", () => _dropdownOpened)
+                .If("ant-select-focused", () => _focused)
+                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
                 .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
+                .If($"ant-select-lg", () => Size == "large")
+                .If($"ant-select-sm", () => Size == "small")
+                .If("ant-select-status-error", () => ValidationMessages.Length > 0)
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper
@@ -141,6 +147,7 @@ namespace AntDesign
                 }
 
                 _dropdownOpened = true;
+                _focused = true;
             }
         }
 
@@ -153,27 +160,10 @@ namespace AntDesign
             {
                 _dropdownOpened = false;
                 _renderNodes = _selectedNodes;
+                _searchValue = string.Empty;
             }
-        }
 
-        /// <summary>
-        /// 输入框鼠标移入
-        /// </summary>
-        private void InputOnMouseOver()
-        {
-            if (!AllowClear) return;
-
-            _showClearIcon = !string.IsNullOrWhiteSpace(Value) || !string.IsNullOrEmpty(_searchValue);
-        }
-
-        /// <summary>
-        /// 输入框鼠标移出
-        /// </summary>
-        private void InputOnMouseOut()
-        {
-            if (!AllowClear) return;
-
-            _showClearIcon = false;
+            _focused = false;
         }
 
         /// <summary>
@@ -186,7 +176,7 @@ namespace AntDesign
             _displayText = string.Empty;
             SetValue(string.Empty);
             _dropdownOpened = false;
-            
+
             _searchValue = string.Empty;
             await this.FocusAsync(_inputRef);
         }

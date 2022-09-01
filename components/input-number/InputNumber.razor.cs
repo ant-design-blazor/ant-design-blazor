@@ -294,6 +294,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-focused", () => _focused)
                 .If($"{_prefixCls}-disabled", () => this.Disabled)
+                .If($"{_prefixCls}-status-error", () => ValidationMessages.Length > 0)
                 .If($"{_prefixCls}-rtl", () => RTL);
         }
 

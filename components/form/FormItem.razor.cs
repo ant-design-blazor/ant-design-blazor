@@ -111,8 +111,8 @@ namespace AntDesign
 
         [Parameter]
         public bool HasFeedback { get; set; }
-        
-        [Parameter] 
+
+        [Parameter]
         public bool ShowFeedbackOnError { get; set; }
 
         [Parameter]
@@ -171,7 +171,7 @@ namespace AntDesign
             {
                 _validationMessages = new[] { Help };
             }
-            
+
             if (ShowFeedbackOnError && ValidateStatus == FormValidateStatus.Default)
             {
                 ValidateStatus = FormValidateStatus.Error;
@@ -182,7 +182,7 @@ namespace AntDesign
         {
             this.ClassMapper
                 .Add(_prefixCls)
-                .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
+                .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => !_isValid)
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
