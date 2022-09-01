@@ -24,7 +24,18 @@ namespace AntDesign
         public string Shape { get; set; } = null;
 
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public string Size
+        {
+            get => _size;
+            set
+            {
+                if (_size != value)
+                {
+                    _size = value;
+                    SetSizeStyle();
+                }
+            }
+        }
 
         [Parameter]
         public string Text
@@ -82,12 +93,15 @@ namespace AntDesign
         private string _text;
         private RenderFragment _childContent;
         private bool _waitingCalcSize;
+        private string _size = AntSizeLDSType.Default;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Group?.AddAvatar(this);
+
+            SetClassMap();
         }
 
         protected override void OnParametersSet()
@@ -95,9 +109,6 @@ namespace AntDesign
             _hasText = string.IsNullOrEmpty(Src) && (!string.IsNullOrEmpty(_text) || _childContent != null);
             _hasIcon = string.IsNullOrEmpty(Src) && !string.IsNullOrEmpty(Icon);
             _hasSrc = !string.IsNullOrEmpty(Src);
-
-            SetClassMap();
-            SetSizeStyle();
 
             base.OnParametersSet();
         }
@@ -133,7 +144,7 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear()
+            ClassMapper
                 .Add(_prefixCls)
                 .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
                 .GetIf(() => $"{_prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
@@ -143,15 +154,10 @@ namespace AntDesign
 
         private void SetSizeStyle()
         {
-            if (decimal.TryParse(Size, out var pxSize))
-            {
-                string size = new CssSizeLength(pxSize).ToString();
-                _sizeStyles = $"width:{size};height:{size};line-height:{size};";
-                if (_hasIcon)
-                {
-                    _sizeStyles += $"font-size:calc({size} / 2);";
-                }
-            }
+            if (!CssSizeLength.TryParse(Size, out var cssSize)) return;
+
+            _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
+            _sizeStyles += $"font-size:calc({cssSize} / 2);";
         }
 
         private async Task CalcStringSize()
@@ -163,8 +169,8 @@ namespace AntDesign
 
             var childrenWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, TextEl))?.OffsetWidth ?? 0;
             var avatarWidth = (await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref))?.Width ?? 0;
-            var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth 
-                ? (avatarWidth - 8) / childrenWidth 
+            var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth
+                ? (avatarWidth - 8) / childrenWidth
                 : 1;
 
             _textStyles = $"transform: scale({new CssSizeLength(scale, true)}) translateX(-50%);";
