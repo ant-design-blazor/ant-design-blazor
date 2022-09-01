@@ -67,18 +67,7 @@
                                         @{
                                             @if (!IsGroupingEnabled)
                                             {
-                                                foreach (var selectOption in SortedSelectOptionItems)
-                                                {
-                                                    <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
-                                                        <CascadingValue Value="@selectOption.InternalId" Name="InternalId">
-                                                            <SelectOption
-                                                                @key="@selectOption.InternalId"
-                                                                TItemValue="TItemValue"
-                                                                TItem="TItem">
-                                                            </SelectOption>
-                                                        </CascadingValue>
-                                                    </CascadingValue>
-                                                }                                                                                               
+                                                @selectOptionsRender((this, SortedSelectOptionItems, ItemTemplate))                                                                                               
                                             }
                                             else
                                             {
@@ -145,3 +134,37 @@
         </div>
     </CascadingValue>
 </CascadingValue>
+
+@code
+{
+    static RenderFragment<(Select<TItemValue, TItem> select, IEnumerable<SelectOptionItem<TItemValue, TItem>> selectOptionItems, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
+        @<Template>
+@{ #if NET5_0_OR_GREATER }
+            @if(ctx.select.EnableVirtualization)
+            {
+                <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
+                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    ChildContent="optionRender(ctx.itemTemplate)"/>
+            }
+            else
+            {
+#endif 
+                <ForeachLoop 
+                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    ChildContent="optionRender(ctx.itemTemplate)"/>
+#if NET5_0_OR_GREATER 
+            }
+@{ #endif }
+        </Template>;
+
+    static Func<RenderFragment<TItem>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender = 
+        itemTemplate => option =>
+        @<CascadingValue Value=@itemTemplate Name="ItemTemplate">
+            <CascadingValue Value="@option.InternalId" Name="InternalId">
+                <SelectOption @key="@option.InternalId"
+                    TItemValue="TItemValue"
+                    TItem="TItem">
+                </SelectOption>
+            </CascadingValue>
+        </CascadingValue>;
+}
