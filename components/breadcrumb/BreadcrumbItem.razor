@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span @ref="Ref">
+<span @ref="Ref" onclick="@OnClick">
 
 	@if (Overlay != null)
 	{
@@ -37,20 +37,23 @@
 
 @code {
 
-	[Parameter]
-	public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 
-	[Parameter]
-	public RenderFragment Overlay { get; set; }
+    [Parameter]
+    public RenderFragment Overlay { get; set; }
 
-	[Parameter]
-	public string Href { get; set; }
+    [Parameter]
+    public string Href { get; set; }
 
-	[CascadingParameter]
-	public Breadcrumb BreadCrumb { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+    
+    [CascadingParameter]
+    public Breadcrumb BreadCrumb { get; set; }
 
-
-	private RenderFragment FormattedChildContent => Href is null ?
-		ChildContent :@<a href="@Href">@ChildContent</a>
+	private RenderFragment FormattedChildContent => Href is null 
+        ? ChildContent 
+        : @<a href="@Href">@ChildContent</a>
 	;
 }
