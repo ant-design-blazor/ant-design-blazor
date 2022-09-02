@@ -3,13 +3,16 @@
 <Breadcrumb>
 	<BreadcrumbItem>Home</BreadcrumbItem>
 	<BreadcrumbItem Href="">Application Center</BreadcrumbItem>
-    <BreadcrumbItem OnClick="@OnClickItem" Href="">Application List</BreadcrumbItem>
+    <BreadcrumbItem Id="BreadcrumbItem3" OnClick="@OnClickItem" Href="">Application List</BreadcrumbItem>
     <BreadcrumbItem>An Application</BreadcrumbItem>
     <BreadcrumbItem OnClick="@OnClickItem">A Page</BreadcrumbItem>
 </Breadcrumb>
 
 @code{
-    public void OnClickItem(MouseEventArgs args){
-        _message.Success("You clicked the breadcrumb item!");
+    public void OnClickItem(Tuple<MouseEventArgs, BreadcrumbItem> callbackArgs)
+    {
+        (MouseEventArgs args, BreadcrumbItem item) = callbackArgs;
+
+        _message.Success($"You clicked the breadcrumb item: {item.Id}");
     }
 }

@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span @ref="Ref" onclick="@OnClick">
+<span @ref="Ref" @onclick="@_onClick">
 
 	@if (Overlay != null)
 	{
@@ -36,7 +36,6 @@
 </span>
 
 @code {
-
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
@@ -47,10 +46,17 @@
     public string Href { get; set; }
 
     [Parameter]
-    public EventCallback<MouseEventArgs> OnClick { get; set; }
-    
+    public EventCallback<Tuple<MouseEventArgs, BreadcrumbItem>> OnClick { get; set; }
+
     [CascadingParameter]
     public Breadcrumb BreadCrumb { get; set; }
+
+    private async void _onClick(MouseEventArgs args)
+    {
+        if(OnClick.HasDelegate){
+            await OnClick.InvokeAsync(new Tuple<MouseEventArgs, BreadcrumbItem>(args, this));
+        }
+    }
 
     private RenderFragment FormattedChildContent => Href is null 
         ? ChildContent 

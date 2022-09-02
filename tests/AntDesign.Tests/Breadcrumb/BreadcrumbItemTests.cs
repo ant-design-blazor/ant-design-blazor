@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using FluentAssertions;
+using Microsoft.AspNetCore.Components.Web;
 using Xunit;
 
 namespace AntDesign.Tests.Breadcrumb
@@ -50,18 +51,18 @@ namespace AntDesign.Tests.Breadcrumb
         }
 
         [Fact]
-        public void ItShouldCallOnClickWhenProvidedAndClicked()
+        public void ItShouldCallOnClickWithItemReferenceWhenProvidedAndClicked()
         {
-            var onClickCalled = false;
+            BreadcrumbItem? onClickItem = null;
 
             var systemUnderTest = RenderComponent<BreadcrumbItem>(parameters => parameters
                 .Add(x => x.ChildContent, "Child Content")
-                .Add(x => x.OnClick, () => { onClickCalled = true; })
+                .Add(x => x.OnClick, (args) => { onClickItem = args.Item2; })
             );
 
             systemUnderTest.Find("span").Click();
 
-            onClickCalled.Should().BeTrue();
+            onClickItem.Should().Be(systemUnderTest.Instance);
         }
 
         [Fact]
