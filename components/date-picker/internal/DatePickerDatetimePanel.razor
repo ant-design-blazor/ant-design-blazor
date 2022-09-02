@@ -226,12 +226,12 @@
           }
         }
 
-        @if (IsShowTime)
+        @if (IsShowTime || Picker == DatePickerType.Time)
         {
-          @if (Ranges == null)
+          @if (ShowNow)
           {
             <li class="@(PrefixCls)-now">
-              <a class="@(PrefixCls)-now-btn" @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+              <a class="@(PrefixCls)-now-btn" @onclick="OnNowClick">
                 @Locale.Lang.Now
               </a>
             </li>
@@ -245,7 +245,7 @@
       </ul>
     }
 
-    @if (!IsShowTime && ShowToday)
+    @if (!IsShowTime && ShowToday && Picker != DatePickerType.Time)
     {
       <a class="@(PrefixCls)-today-btn" @onclick="e => { OnSelectTime(DateTime.Today); Close(); }">
         @Locale.Lang.Today

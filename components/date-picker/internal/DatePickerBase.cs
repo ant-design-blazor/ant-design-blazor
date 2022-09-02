@@ -1000,5 +1000,13 @@ namespace AntDesign
                    _minutesSeconds.Where(s => s < startValue?.Second).ToArray() : Array.Empty<int>();
             }
         }
+
+        internal async Task OnNowClick()
+        {
+            var pickerIndex = GetOnFocusPickerIndex();
+            await OnSelect(DateTime.Now, GetOnFocusPickerIndex());
+            _pickerStatus[pickerIndex].IsNewValueSelected = true;
+            Close();
+        }
     }
 }
