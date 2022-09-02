@@ -2,8 +2,10 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @ChildContent
-    </div>
+    <nav class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
+        <ol>
+            @ChildContent
+        </ol>
+    </nav>
 </CascadingValue>
 

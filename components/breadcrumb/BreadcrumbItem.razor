@@ -1,8 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span @ref="Ref" @onclick="@_onClick">
-
+<li @ref="Ref">
 	@if (Overlay != null)
 	{
 		<Dropdown Placement="@Placement.Bottom">
@@ -21,7 +20,7 @@
 	}
 	else
 	{
-		<span class="ant-breadcrumb-link">
+        <span class="ant-breadcrumb-link" @onclick="@_onClick">
 			@FormattedChildContent
 		</span>
 	}
@@ -32,8 +31,7 @@
 			@BreadCrumb.Separator
 		</span>
 	}
-
-</span>
+</li>
 
 @code {
     [Parameter]

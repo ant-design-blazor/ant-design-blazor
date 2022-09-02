@@ -14,11 +14,11 @@ namespace AntDesign.Tests.Breadcrumb
         {
             var systemUnderTest = RenderComponent<AntDesign.Breadcrumb>();
 
-            systemUnderTest.MarkupMatches("<div class=\"ant-breadcrumb\" id:ignore></div>");
+            systemUnderTest.MarkupMatches("<nav class=\"ant-breadcrumb\" id:ignore><ol></ol></nav>");
         }
 
         [Fact]
-        public void ItShouldRenderChildCOntent()
+        public void ItShouldRenderChildContent()
         {
             var systemUnderTest = RenderComponent<AntDesign.Breadcrumb>(p => p.AddChildContent("<span>Test</span>"));
 

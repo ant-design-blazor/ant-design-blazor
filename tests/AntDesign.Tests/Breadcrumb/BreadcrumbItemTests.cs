@@ -17,11 +17,11 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.ChildContent, "Child Content")
             );
 
-            systemUnderTest.MarkupMatches($@"<span>
+            systemUnderTest.MarkupMatches($@"<li>
                 <span class=""ant-breadcrumb-link"">
                     <a href=""{Href}"">Child Content</a>
                 </span>
-            </span>");
+            </li>");
         }
 
         [Fact]
@@ -31,9 +31,9 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.ChildContent, "Child Content")
             );
 
-            systemUnderTest.MarkupMatches($@"<span>
+            systemUnderTest.MarkupMatches($@"<li>
                 <span class=""ant-breadcrumb-link"">Child Content</span>
-            </span>");
+            </li>");
         }
 
         [Fact]
@@ -44,10 +44,10 @@ namespace AntDesign.Tests.Breadcrumb
                 .AddChildContent<BreadcrumbItem>(itemParameters => itemParameters.Add(x => x.ChildContent, "Link Item"))
             );
 
-            systemUnderTest.Find("div > span").MarkupMatches($@"<span>
+            systemUnderTest.Find("ol > li").MarkupMatches($@"<li>
                 <span class=""ant-breadcrumb-link"">Link Item</span>
 		        <span class=""ant-breadcrumb-separator"">-</span>
-            </span>");
+            </li>");
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.OnClick, (args) => { onClickItem = args.Item2; })
             );
 
-            systemUnderTest.Find("span").Click();
+            systemUnderTest.Find("li span.ant-breadcrumb-link").Click();
 
             onClickItem.Should().Be(systemUnderTest.Instance);
         }
@@ -75,7 +75,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.Overlay, "")
             );
 
-            systemUnderTest.MarkupMatches($@"<span>
+            systemUnderTest.MarkupMatches($@"<li>
                 <span class=""ant-breadcrumb-overlay-link"">
 	                <span class=""ant-breadcrumb-link"">Child Content</span>
                     <span role=""img"" class="" anticon anticon-down"" id:ignore>
@@ -84,7 +84,7 @@ namespace AntDesign.Tests.Breadcrumb
                       </svg>
                     </span>
                 </span>
-            </span>");
+            </li>");
         }
     }
 }
