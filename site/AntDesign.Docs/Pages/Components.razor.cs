@@ -40,7 +40,7 @@ namespace AntDesign.Docs.Pages
 
         private List<string> _filePaths;
 
-        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/blob/master/{_filePath}";
+        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
         protected override async Task OnInitializedAsync()
         {
