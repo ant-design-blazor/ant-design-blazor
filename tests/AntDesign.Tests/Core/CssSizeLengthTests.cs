@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OneOf.Types;
 using Xunit;
 
 namespace AntDesign.Tests.Core
@@ -76,6 +77,25 @@ namespace AntDesign.Tests.Core
             new object[] { 123456.7m, DataType.DecimalType, "123456.7px"},
             new object[] { 12345.67m, DataType.DecimalType, "12345.67px"},
             new object[] { 1234.567m, DataType.DecimalType, "1234.567px"},
+        };
+
+        [Theory]
+        [MemberData(nameof(Css_implicit_string_seeds))]
+        public void Css_tryprase_string(string value, string expected, bool expectedParsed)
+        {
+            var parsedResult = CssSizeLength.TryParse(value, out var result);
+            Assert.Equal(expected, result);
+            Assert.Equal(expectedParsed, parsedResult);
+        }
+
+        public static IEnumerable<object[]> Css_implicit_string_seeds => new List<object[]>
+        {
+            new object[] { "1234567",         "1234567px",        true  },
+            new object[] { "1234567px",       "1234567px",        true  },
+            new object[] { "1234567rem",      "1234567rem",       true  },
+            new object[] { "1234567%",        "1234567%",         true  },
+            new object[] { "large",           "large" ,           false },
+            new object[] { "calc(10px / 2 )", "calc( 10px / 2 )", true  },
         };
     }
 }

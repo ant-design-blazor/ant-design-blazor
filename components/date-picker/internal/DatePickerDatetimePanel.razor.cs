@@ -35,6 +35,9 @@ namespace AntDesign.Internal
         public EventCallback OnOkClick { get; set; }
 
         [Parameter]
+        public EventCallback OnNowClick { get; set; }
+
+        [Parameter]
         public EventCallback<DateTime?[]> OnRangeItemOver { get; set; }
 
         [Parameter]
@@ -47,7 +50,7 @@ namespace AntDesign.Internal
         public EventCallback<bool> OnOpenChange { get; set; }
 
         private bool ShowFooter => RenderExtraFooter != null || ShowRanges || ShowToday;
-
+        private bool ShowNow => !IsRange && (Ranges is null || Ranges.Count == 0) || Picker == DatePickerType.Time;
         private bool ShowRanges => IsShowTime || Ranges != null;
 
         private Dictionary<int, ElementReference> _hours = new();

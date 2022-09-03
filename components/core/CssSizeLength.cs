@@ -34,6 +34,7 @@ namespace AntDesign
 
         private readonly decimal? _value;
         private readonly string _stringValue;
+        private readonly bool _parsed;
 
         private readonly CssSizeLengthUnit _unit;
 
@@ -55,24 +56,34 @@ namespace AntDesign
             _value = value;
             _stringValue = null;
             _unit = unit;
+            _parsed = true;
         }
 
         private static CssSizeLengthUnit EvalUnitless(bool noUnit) => (noUnit ? CssSizeLengthUnit.NoUnit : CssSizeLengthUnit.Px);
 
-        public CssSizeLength(int value, bool noUnit = false) : this(value, EvalUnitless(noUnit)) { }
-        public CssSizeLength(double value, bool noUnit = false) : this(Convert.ToDecimal(value), EvalUnitless(noUnit)) { }
-        public CssSizeLength(decimal value, bool noUnit = false) : this(value, EvalUnitless(noUnit)) { }
+        public CssSizeLength(int value, bool noUnit = false) : this(value, EvalUnitless(noUnit))
+        {
+        }
+
+        public CssSizeLength(double value, bool noUnit = false) : this(Convert.ToDecimal(value), EvalUnitless(noUnit))
+        {
+        }
+
+        public CssSizeLength(decimal value, bool noUnit = false) : this(value, EvalUnitless(noUnit))
+        {
+        }
 
         public CssSizeLength(string value)
         {
             value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
             _stringValue = value;
+            _parsed = true;
 
             if (value.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
             {
                 _stringValue = value;
                 _value = null;
-                _unit = CssSizeLengthUnit.Calc;
+                _unit = CssSizeLengthUnit.NoUnit;
                 return;
             }
 
@@ -84,7 +95,11 @@ namespace AntDesign
 
             if (index == 0)
             {
-                throw new FormatException();
+                _stringValue = value;
+                _value = null;
+                _unit = CssSizeLengthUnit.Calc;
+                _parsed = false;
+                return;
             }
 
             _value = decimal.Parse(value.Substring(0, index), CultureInfo.InvariantCulture);
@@ -102,7 +117,7 @@ namespace AntDesign
                 _unit = unit switch
                 {
                     "%" => CssSizeLengthUnit.Percent,
-                    _ => throw new FormatException(),
+                    _ => CssSizeLengthUnit.NoUnit,
                 };
             }
         }
@@ -124,5 +139,11 @@ namespace AntDesign
         public static bool operator !=(CssSizeLength left, CssSizeLength right) => !(left == right);
 
         public bool Equals(CssSizeLength other) => other._value == _value && other._unit == _unit;
+
+        public static bool TryParse(string value, out CssSizeLength cssSizeLength)
+        {
+            cssSizeLength = new(value);
+            return cssSizeLength._parsed;
+        }
     }
 }
