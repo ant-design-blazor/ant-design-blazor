@@ -33,7 +33,7 @@ BreadcrumbItem
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | Href | 链接的目的地 | int         | -         |
 | Overlay   | 下拉菜单的内容 | int         |-         |
-| OnClick | 单击事件 | function(e)  |-       |
+| OnClick | 单击事件 | EventCallback<Tuple<MouseEventArgs, BreadcrumbItem>>  |-       |
 | DropdownProps |弹出下拉菜单的自定义配置 | string  | -  |
 
 
