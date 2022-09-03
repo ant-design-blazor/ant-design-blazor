@@ -1,10 +1,11 @@
-name: Build
+name: Sonar analyze
 on:
-  pull_request:
+  push:
     branches:
       - master
       - feature
-      
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   build:
     name: Build
