@@ -141,7 +141,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                                 Iframe = descriptionContent.Meta.Iframe,
                                 Code = code,
                                 Description = descriptionContent.Descriptions[title.Key],
-                                Name = descriptionFile?.Name.Replace(".md", ""),
+                                Name = demoType.Split('.').Last().Replace(".razor", ""),
                                 Style = descriptionContent.Style,
                                 Debug = descriptionContent.Meta.Debug,
                                 Docs = descriptionContent.Meta.Docs,
