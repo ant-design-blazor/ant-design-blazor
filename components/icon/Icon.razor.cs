@@ -29,19 +29,16 @@ namespace AntDesign
         [Parameter]
         public string TwotoneColor
         {
-            get => _twotoneColor;
+            get => _primaryColor;
             set
             {
-                if (_twotoneColor != value)
+                if (_primaryColor != value)
                 {
-                    _twotoneColor = value;
+                    _primaryColor = value;
                     _twotoneColorChanged = true;
                 }
             }
         }
-
-        [Parameter]
-        public bool AvoidPrerendering { get; set; }
 
         [Parameter]
         public string IconFont { get; set; }
@@ -73,8 +70,11 @@ namespace AntDesign
         [Inject]
         public IconService IconService { get; set; }
 
+        internal string SecondaryColor => _secondaryColor;
+
         protected string _svgImg;
-        private string _twotoneColor = "#1890ff";
+        private string _primaryColor = "#1890ff";
+        private string _secondaryColor = null;
         private bool _twotoneColorChanged = false;
 
         private Dictionary<string, object> _attributes = new();
@@ -85,8 +85,6 @@ namespace AntDesign
             {
                 Spin = true;
             }
-
-            await SetupSvgImg();
 
             Button?.Icons.Add(this);
 
@@ -101,44 +99,44 @@ namespace AntDesign
             await base.OnInitializedAsync();
         }
 
+        protected override void OnParametersSet()
+        {
+            SetupSvgImg();
+
+            base.OnParametersSet();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender || _twotoneColorChanged)
+            if (Theme == IconThemeType.Twotone)
             {
-                _twotoneColorChanged = false;
-                
-                await SetupSvgImg(true);
+                if (firstRender || _twotoneColorChanged)
+                {
+                    _twotoneColorChanged = false;
+                    await ChangeTwoToneColor();
+
+                    SetupSvgImg();
+
+                    await InvokeAsync(StateHasChanged);
+                }
             }
 
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async Task SetupSvgImg(bool rendered = false)
+        private void SetupSvgImg()
         {
             if (Component != null)
             {
                 return;
             }
 
-            if (!rendered && AvoidPrerendering && Theme == IconThemeType.Twotone)
-            {
-                return;
-            }
+            _svgImg = IconService.GetStyledSvg(this);
+        }
 
-            string svgClass = Spin ? "anticon-spin" : null;
-
-            var svg = !string.IsNullOrEmpty(IconFont) ?
-                $"<svg><use xlink:href=#{IconFont} /></svg>"
-                : IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-
-            _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-
-            if (rendered && Theme == IconThemeType.Twotone)
-            {
-                _svgImg = await IconService.GetTwotoneSvgIcon(_svgImg, TwotoneColor);
-            }
-
-            await InvokeAsync(StateHasChanged);
+        private async Task ChangeTwoToneColor()
+        {
+            _secondaryColor = await IconService.GetSecondaryColor(_primaryColor);
         }
 
         private async Task HandleOnClick(MouseEventArgs args)
