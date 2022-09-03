@@ -53,16 +53,16 @@ namespace AntDesign.Tests.Breadcrumb
         [Fact]
         public void ItShouldCallOnClickWithItemReferenceWhenProvidedAndClicked()
         {
-            BreadcrumbItem? onClickItem = null;
+            string value = "";
 
             var systemUnderTest = RenderComponent<BreadcrumbItem>(parameters => parameters
                 .Add(x => x.ChildContent, "Child Content")
-                .Add(x => x.OnClick, (args) => { onClickItem = args.Item2; })
+                .Add(x => x.OnClick, (args) => value = "clicked!")
             );
 
             systemUnderTest.Find("li span.ant-breadcrumb-link").Click();
 
-            onClickItem.Should().Be(systemUnderTest.Instance);
+            value.Should().Be("clicked!");
         }
 
         [Fact]
