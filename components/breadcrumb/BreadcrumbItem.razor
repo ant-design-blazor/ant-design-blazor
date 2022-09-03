@@ -7,7 +7,7 @@
 		<Dropdown Placement="@Placement.Bottom">
 			<Unbound>
 				<span @ref="context.Current" class="ant-breadcrumb-overlay-link">
-					<span class="ant-breadcrumb-link">
+                    <span class="ant-breadcrumb-link" @onclick="@HandleClick">
 						@FormattedChildContent
 					</span>
 					<Icon Type="down"></Icon>
@@ -20,7 +20,7 @@
 	}
 	else
 	{
-        <span class="ant-breadcrumb-link" @onclick="@_onClick">
+        <span class="ant-breadcrumb-link" @onclick="@HandleClick">
 			@FormattedChildContent
 		</span>
 	}
@@ -44,19 +44,18 @@
     public string Href { get; set; }
 
     [Parameter]
-    public EventCallback<Tuple<MouseEventArgs, BreadcrumbItem>> OnClick { get; set; }
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
 
     [CascadingParameter]
     public Breadcrumb BreadCrumb { get; set; }
 
-    private async void _onClick(MouseEventArgs args)
+    private async void HandleClick(MouseEventArgs args)
     {
-        if(OnClick.HasDelegate){
-            await OnClick.InvokeAsync(new Tuple<MouseEventArgs, BreadcrumbItem>(args, this));
+        if(OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync(args);
         }
     }
 
-    private RenderFragment FormattedChildContent => Href is null 
-        ? ChildContent 
-        : @<a href="@Href">@ChildContent</a>;
+    private RenderFragment FormattedChildContent => Href is null ? ChildContent :@<a href="@Href">@ChildContent</a>;
 }
