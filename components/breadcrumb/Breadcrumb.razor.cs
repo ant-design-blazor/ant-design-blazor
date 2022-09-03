@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -9,47 +7,30 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Not currently used. Planned for future development.
+        /// </summary>
         [Parameter]
         public bool AutoGenerate { get; set; } = false;
 
         [Parameter]
         public string Separator { get; set; } = "/";
 
+        /// <summary>
+        /// Not currently used. Planned for future development.
+        /// </summary>
         [Parameter]
         public string RouteLabel { get; set; } = "breadcrumb";
 
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
-
-        private readonly BreadcrumbOption[] _breadcrumbs = Array.Empty<BreadcrumbOption>();
-
-        private void Navigate(string url)
-        {
-            NavigationManager.NavigateTo(url);
-        }
-
         protected override void OnInitialized()
         {
-            string prefixCls = "ant-breadcrumb";
+            var prefixCls = "ant-breadcrumb";
 
-            this.ClassMapper
+            ClassMapper
                 .Add(prefixCls)
                 .If($"{prefixCls}-rtl", () => RTL);
 
             base.OnInitialized();
         }
-
-        private void RegisterRouterChange()
-        {
-        }
-    }
-
-    public class BreadcrumbOption
-    {
-        public string Label { get; set; }
-
-        public Dictionary<string, object> Params { get; set; }
-
-        public Uri Url { get; set; }
     }
 }
