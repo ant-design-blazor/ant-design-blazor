@@ -70,14 +70,12 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
-        public IDictionary<string, string[]> GetAllIcons()
-        {
-            return IconStore.GetAllIconNames();
-        }
+        public static IDictionary<string, string[]> GetAllIcons()
+            => IconStore.AllIconsByTheme.Value;
 
-        public bool IconExists(string theme = "", string type = "")
+        public static bool IconExists(string iconTheme = "", string iconName = "")
         {
-            var icon = IconStore.GetIcon(type, theme);
+            var icon = IconStore.GetIcon(iconName, iconTheme);
 
             return !string.IsNullOrEmpty(icon);
         }
