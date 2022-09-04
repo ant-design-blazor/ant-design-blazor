@@ -108,17 +108,14 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Theme == IconThemeType.Twotone)
+            if (Theme == IconThemeType.Twotone && (firstRender || _twotoneColorChanged))
             {
-                if (firstRender || _twotoneColorChanged)
-                {
-                    _twotoneColorChanged = false;
-                    await ChangeTwoToneColor();
+                _twotoneColorChanged = false;
+                await ChangeTwoToneColor();
 
-                    SetupSvgImg();
+                SetupSvgImg();
 
-                    await InvokeAsync(StateHasChanged);
-                }
+                await InvokeAsync(StateHasChanged);
             }
 
             await base.OnAfterRenderAsync(firstRender);
