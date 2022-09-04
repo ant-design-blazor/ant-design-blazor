@@ -59,7 +59,7 @@ else if (IsPane)
      id="@($"rc-tabs-{Id}-panel-{Key}")"
      role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
      aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-     style="@(_isActive || Parent.Animated ? "" : "display: none;")">
+     style="@(_isActive  ? "" : "visibility: hidden; height: 0px; overflow-y: hidden;")">
         @if (_isActive || _hasRendered || ForceRender)
         {
             _hasRendered = true;
