@@ -1,9 +1,5 @@
 name: Sonar analyze
 on:
-  push:
-    branches:
-      - master
-      - feature
   workflow_run:
     workflows: ["Preview Build"]
     types:
