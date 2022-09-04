@@ -54,31 +54,7 @@ namespace AntDesign
 
             if (icon.Theme == IconThemeType.Twotone)
             {
-                if (string.IsNullOrWhiteSpace(icon.SecondaryColor))
-                {
-                    return iconSvg.Replace("fill=\"#333\"", $"fill=\"{icon.TwotoneColor}\"");
-                }
-
-                iconSvg = iconSvg.Replace("fill=\"#333\"", "fill=\"primaryColor\"")
-               .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
-               .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
-               .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
-
-                var document = XDocument.Load(new StringReader(iconSvg));
-                var svgRoot = document.Root;
-                foreach (var path in svgRoot.Nodes().OfType<XElement>())
-                {
-                    if (path.Attribute("fill")?.Value == "secondaryColor")
-                    {
-                        path.SetAttributeValue("fill", icon.SecondaryColor);
-                    }
-                    else
-                    {
-                        path.SetAttributeValue("fill", icon.TwotoneColor);
-                    }
-                }
-
-                return svgRoot.ToString();
+                return GetTwoToneIconSvg(iconSvg, icon.TwotoneColor, icon.SecondaryColor);
             }
 
             return iconSvg;
@@ -110,6 +86,35 @@ namespace AntDesign
         {
             var secondaryColors = await _js.InvokeAsync<string[]>(JSInteropConstants.GenerateColor, primaryColor);
             return secondaryColors[0];
+        }
+
+        private static string GetTwoToneIconSvg(string iconSvg, string primaryColor, string secondaryColor)
+        {
+            if (string.IsNullOrWhiteSpace(secondaryColor))
+            {
+                return iconSvg.Replace("fill=\"#333\"", $"fill=\"{primaryColor}\"");
+            }
+
+            iconSvg = iconSvg.Replace("fill=\"#333\"", "fill=\"primaryColor\"")
+           .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
+           .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
+           .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
+
+            var document = XDocument.Load(new StringReader(iconSvg));
+            var svgRoot = document.Root;
+            foreach (var path in svgRoot.Nodes().OfType<XElement>())
+            {
+                if (path.Attribute("fill")?.Value == "secondaryColor")
+                {
+                    path.SetAttributeValue("fill", secondaryColor);
+                }
+                else
+                {
+                    path.SetAttributeValue("fill", primaryColor);
+                }
+            }
+
+            return svgRoot.ToString();
         }
     }
 }
