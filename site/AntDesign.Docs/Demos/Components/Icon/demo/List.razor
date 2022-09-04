@@ -93,7 +93,7 @@ else
             itemIcons.IconNames = new List<string>();
             foreach (var item in categorys.IconNames)
             {
-                var isExist = IconService.IconExists(currentTheme, item);
+                var isExist = AntDesign.IconService.IconExists(currentTheme, item);
 
                 if (isExist)
                 {
