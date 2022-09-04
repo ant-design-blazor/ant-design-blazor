@@ -1,11 +1,9 @@
 name: Sonar analyze
 on:
-  push:
-    branches:
-      - master
-      - feature
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["Preview Start"]
+    types:
+      - completed
 jobs:
   build:
     name: Build
