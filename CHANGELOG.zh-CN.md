@@ -15,6 +15,25 @@ timeline: true
 
 ---
 
+### 0.12.1
+
+`2022.09.04`
+
+- Tabs
+  - 🐞 修复 Tabs 切换动效内容溢出问题[#2671](https://github.com/ant-design-blazor/ant-design-blazor/pull/2671) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 ReuseTabs 的 invaild uri 异常[#2663](https://github.com/ant-design-blazor/ant-design-blazor/pull/2663) [@ElderJames](https://github.com/ElderJames)
+
+- Icon
+  - 📖 修复 Icon文档遗漏的 ZoomOut Outline 图标[#2667](https://github.com/ant-design-blazor/ant-design-blazor/pull/2667) [@kooliokey](https://github.com/kooliokey)
+  - 🐞 修复 Icon 的状态更新，以及双色图标预渲染优化[#2666](https://github.com/ant-design-blazor/ant-design-blazor/pull/2666) [@ElderJames](https://github.com/ElderJames)
+  
+- 🐞 修复 Collapse 失效的 HTML 结构[#2668](https://github.com/ant-design-blazor/ant-design-blazor/pull/2668) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Breadcrumb 未同步HTML导致的样式问题，BreadcrumbItem增加OnClick事件[#2655](https://github.com/ant-design-blazor/ant-design-blazor/pull/2655) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 TimePicker 会重置Value 的问题和错误的按钮[#2660](https://github.com/ant-design-blazor/ant-design-blazor/pull/2660) [@Alexbits](https://github.com/Alexbits)
+- 📖 修复 DatePicker 文档异常[#2659](https://github.com/ant-design-blazor/ant-design-blazor/pull/2659) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Avatar 让 Size 属性支持各种长度单位。[#2653](https://github.com/ant-design-blazor/ant-design-blazor/pull/2653) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复文档 无效的编辑URL[#2661](https://github.com/ant-design-blazor/ant-design-blazor/pull/2661) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.12.0
 
 `2022-08-29`

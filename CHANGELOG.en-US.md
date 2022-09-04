@@ -15,6 +15,25 @@ timeline: true
 
 ---
 
+### 0.12.1
+
+`2022.09.04`
+
+- Tabs
+  - 🐞 Fix tabs content overflow at animated mode. [#2671](https://github.com/ant-design-blazor/ant-design-blazor/pull/2671) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fix reusetabs invaild uri exception. [#2663](https://github.com/ant-design-blazor/ant-design-blazor/pull/2663) [@ElderJames](https://github.com/ElderJames)
+
+- Icon
+  - 📖 Fix Icon that add missing ZoomOut outline icon. [#2667](https://github.com/ant-design-blazor/ant-design-blazor/pull/2667) [@kooliokey](https://github.com/kooliokey)
+  - 🐞 Fix Icon that state can't update & optimize the  first rendering for two-tone icon. [#2666](https://github.com/ant-design-blazor/ant-design-blazor/pull/2666) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fix collapse outdated html structures. [#2668](https://github.com/ant-design-blazor/ant-design-blazor/pull/2668) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fix Breadcrumb that add OnClick parameter to BreadcrumbItem. Markup of Breadcrumb updated to match Ant.Design React. This could break custom CSS targeting this component's resulting markup. [#2655](https://github.com/ant-design-blazor/ant-design-blazor/pull/2655) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fix Datepicker that timepicker value would resets to default. [#2660](https://github.com/ant-design-blazor/ant-design-blazor/pull/2660) [@Alexbits](https://github.com/Alexbits)
+- 📖 Fix the presetted ranges demo of datepicker which would casuse …. [#2659](https://github.com/ant-design-blazor/ant-design-blazor/pull/2659) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fix Avatar that make size parameter support more length unit. [#2653](https://github.com/ant-design-blazor/ant-design-blazor/pull/2653) [@ElderJames](https://github.com/ElderJames)
+- 📖 Fix demo & document edit url. [#2661](https://github.com/ant-design-blazor/ant-design-blazor/pull/2661) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.12.0
 
 `2022-08-29`
