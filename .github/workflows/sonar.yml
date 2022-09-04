@@ -1,7 +1,7 @@
 name: Sonar analyze
 on:
   workflow_run:
-    workflows: ["Preview Build"]
+    workflows: ["Preview Start"]
     types:
       - completed
 jobs:
