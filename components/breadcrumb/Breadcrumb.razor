@@ -2,17 +2,10 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @ChildContent
-        @if (AutoGenerate)
-        {
-            foreach (var breadcrumb in _breadcrumbs)
-            {
-                <BreadcrumbItem>
-                    <a href="@breadcrumb.Url" @onclick="(e)=>Navigate(breadcrumb.Url.ToString())">@breadcrumb.Label</a>
-                </BreadcrumbItem>
-            }
-        }
-    </div>
+    <nav class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
+        <ol>
+            @ChildContent
+        </ol>
+    </nav>
 </CascadingValue>
 

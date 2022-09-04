@@ -1,6 +1,16 @@
+@inject IMessageService _message;
+
 <Breadcrumb>
 	<BreadcrumbItem>Home</BreadcrumbItem>
 	<BreadcrumbItem Href="">Application Center</BreadcrumbItem>
-	<BreadcrumbItem Href="">Application List</BreadcrumbItem>
-	<BreadcrumbItem>An Application</BreadcrumbItem>
+    <BreadcrumbItem OnClick="@OnClickItem" Href="">Application List</BreadcrumbItem>
+    <BreadcrumbItem>An Application</BreadcrumbItem>
+    <BreadcrumbItem OnClick="@OnClickItem">A Page</BreadcrumbItem>
 </Breadcrumb>
+
+@code{
+    public void OnClickItem(MouseEventArgs args)
+    {
+        _message.Success($"You clicked the breadcrumb.");
+    }
+}
