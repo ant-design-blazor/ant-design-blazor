@@ -4,8 +4,10 @@ on:
     branches:
       - master
       - feature
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["Preview Build"]
+    types:
+      - completed
 jobs:
   build:
     name: Build
