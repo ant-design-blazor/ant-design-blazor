@@ -33,6 +33,6 @@ BreadcrumbItem
 | --- | --- | --- | --- |
 | Href | Target of hyperlink | int         | -         |
 | Overlay   | The dropdown menu| int         |-         |
-| OnClick | Set the handler to handle click event | EventCallback<Tuple<MouseEventArgs, BreadcrumbItem>>         |-       |
+| OnClick | Set the handler to handle click event | EventCallback<BreadcrumbItem>         |-       |
 | DropdownProps |The dropdown props| string  | -  |
 
