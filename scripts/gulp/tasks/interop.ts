@@ -11,13 +11,13 @@ import { join } from 'path';
 
 import { buildConfig } from '../../build-config';
 
-var tsProject = gts.createProject(join(buildConfig.componentsDir, 'tsconfig.json'));
+var tsProject = gts.createProject(join(buildConfig.componentsDir, './core/JsInterop/tsconfig.json'));
 
 task('ts', function () {
     return browserify({
         basedir: '.',
         debug: true,
-        entries: [join(buildConfig.componentsDir, './main.ts')],
+        entries: [join(buildConfig.componentsDir, './core/JsInterop/main.ts')],
         cache: {},
         packageCache: {},
     })
@@ -40,4 +40,4 @@ task("tsSplit", function () {
         .js.pipe(dest('wwwroot/js/split'));
 });
 
-task('library:scripts', parallel('ts', 'tsSplit'));
+task('library:scripts', parallel('ts', 'tsSplit', 'less-src'));

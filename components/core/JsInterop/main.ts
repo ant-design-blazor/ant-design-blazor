@@ -1,4 +1,4 @@
-﻿import * as interop from "./core/JsInterop/interop";
+﻿import * as interop from "./interop";
 
 declare global {
   interface Window {

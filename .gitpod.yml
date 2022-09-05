@@ -6,8 +6,8 @@ tasks:
   - init: |
       npm install
     command: |
-      dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
-      npm run start
+      dotnet build ./site/AntDesign.Docs.Build
+      dotnet run -p ./site/AntDesign.Docs.Server -f net6
 ports:
   - port: 5000
     visibility: public
