@@ -77,7 +77,7 @@
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
-    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/{ComponentName}/demo/{Demo.Name}.razor";
+    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,7 +86,8 @@
         Component = demoService.GetShowCase(Demo.Type);
 
 #if DEBUG
-        DebugIcon =@<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
+        DebugIcon =
+    @<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
             <Icon Type="bug" />
         </a>;
 #endif

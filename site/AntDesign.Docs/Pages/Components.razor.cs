@@ -98,7 +98,7 @@ namespace AntDesign.Docs.Pages
                 foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue) ?? Array.Empty<DemoItem>())
                 {
                     _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Name}.md");
-                    _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Type[(item.Type.LastIndexOf('.') + 1)..]}.razor");
+                    _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
                 }
                 StateHasChanged();
             }
