@@ -170,8 +170,6 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
-        private IFieldColumn[] _fieldColumns;
-
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
@@ -230,8 +228,6 @@ namespace AntDesign
                 return;
             }
 
-            _fieldColumns = ColumnContext.HeaderColumns.Where(x => x is IFieldColumn field && field.FieldName is not null).Cast<IFieldColumn>().ToArray();
-
             ReloadAndInvokeChange();
             _hasInitialized = true;
         }
@@ -272,14 +268,14 @@ namespace AntDesign
 
                 foreach (var sorter in queryModel.SortModel)
                 {
-                    var fieldColumn = _fieldColumns[sorter.ColumnIndex];
-                    fieldColumn.SetSortModel(sorter);
+                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetSortModel(sorter);
                 }
 
                 foreach (var filter in queryModel.FilterModel)
                 {
-                    var fieldColumn = _fieldColumns[filter.ColumnIndex];
-                    fieldColumn.SetFilterModel(filter);
+                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetFilterModel(filter);
                 }
 
                 this.ReloadAndInvokeChange();
