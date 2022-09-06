@@ -28,15 +28,20 @@ namespace AntDesign
             get { return _value; }
             set
             {
+                if (value is null && _lastValue is null)
+                {
+                    return;
+                }
+
                 TValue orderedValue = SortValue(value);
 
-                var hasChanged = _lastValue is null || (IsNullable ? !Enumerable.SequenceEqual(orderedValue as DateTime?[], _lastValue as DateTime?[]) :
+                var hasChanged = (_lastValue is null) || (IsNullable ? !Enumerable.SequenceEqual(orderedValue as DateTime?[], _lastValue as DateTime?[]) :
                                                             !Enumerable.SequenceEqual(orderedValue as DateTime[], _lastValue as DateTime[]));
                 if (hasChanged)
                 {
                     _value = orderedValue;
-
                     _lastValue ??= CreateInstance();
+
                     Array.Copy(orderedValue as Array, _lastValue as Array, 2);
 
                     GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
