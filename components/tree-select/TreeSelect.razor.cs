@@ -40,6 +40,8 @@ namespace AntDesign
 
         [Parameter] public Action OnMouseLeave { get; set; }
 
+        [Parameter] public Action OnBlur { get; set; }
+
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
@@ -53,9 +55,14 @@ namespace AntDesign
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
+        
+        [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
-        [Parameter]
-        public string RootValue { get; set; } = "0";
+        [Parameter] public string MatchedStyle { get; set; } = string.Empty;
+
+        [Parameter] public string MatchedClass {get; set; }
+        
+        [Parameter] public string RootValue { get; set; } = "0";
 
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
 
@@ -106,6 +113,8 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
+
+        private const string ClassPrefix = "ant-select";
 
         private bool IsMultiple => Multiple || TreeCheckable;
 
@@ -246,6 +255,20 @@ namespace AntDesign
 
         protected async void OnInputAsync(ChangeEventArgs e)
         {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (!IsSearchEnabled)
+            {
+                return;
+            }
+
+            if (!_dropDown.IsOverlayShow())
+            {
+                await _dropDown.Show();
+            }
+
+            _prevSearchValue = _searchValue;
+            _searchValue = e.Value?.ToString();
+            StateHasChanged();
         }
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs e)
@@ -254,10 +277,26 @@ namespace AntDesign
 
         protected async Task OnInputFocusAsync(FocusEventArgs _)
         {
+            await SetInputFocusAsync();
         }
 
         protected async Task OnInputBlurAsync(FocusEventArgs _)
         {
+            await SetInputBlurAsync();
+        }
+
+        protected async Task SetInputBlurAsync()
+        {
+            if (Focused)
+            {
+                Focused = false;
+
+                SetClassMap();
+
+                await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
+
+                OnBlur?.Invoke();
+            }
         }
 
         private async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -265,6 +304,12 @@ namespace AntDesign
             if (visible)
             {
                 await SetDropdownStyleAsync();
+
+                await SetInputFocusAsync();
+            }
+            else
+            {
+                OnOverlayHide();
             }
         }
 
@@ -364,24 +409,23 @@ namespace AntDesign
 
         protected override void SetClassMap()
         {
-            var classPrefix = "ant-select";
             ClassMapper
-                .Add(classPrefix)
                 .Add("ant-tree-select")
-                .If("ant-select-lg", () => Size == "large")
-                .If("ant-select-sm", () => Size == "small")
-                .If("ant-select-rtl", () => RTL)
-                .If("ant-select-disabled", () => Disabled)
-                .If("ant-select-single", () => SelectMode == SelectMode.Default)
-                .If("ant-select-multiple", () => SelectMode != SelectMode.Default)
-                .If("ant-select-show-arrow", () => !IsMultiple)
-                .If("ant-select-show-search", () => !IsMultiple)
-                .If("ant-select-allow-clear", () => AllowClear)
-                .If("ant-select-open", () => Open)
-                .If("ant-select-focused", () => Open || Focused)
-                .If("ant-select-status-error", () => Status == "error")
-                .If("ant-select-status-warning", () => Status == "warning")
-                .If($"{classPrefix}-status-error", () => ValidationMessages.Length > 0)
+                .Add($"{ClassPrefix}")
+                .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
+                .If($"{ClassPrefix}-focused", () => Focused)
+                .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
+                .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
+                .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
+                .If($"{ClassPrefix}-lg", () => Size == AntSizeLDSType.Large)
+                .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
+                .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
+                .If($"{ClassPrefix}-loading", () => Loading)
+                .If($"{ClassPrefix}-disabled", () => Disabled)
+                .If($"{ClassPrefix}-rtl", () => RTL)
+                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0)
+                .If($"{ClassPrefix}-status-warning", () => Status == "warning")
+                .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
         }
 

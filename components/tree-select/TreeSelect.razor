@@ -45,6 +45,10 @@
                         ChildrenExpression="ChildrenExpression"
                         DisabledExpression="DisabledExpression"
                         DefaultExpandAll="TreeDefaultExpandAll"
+                        SearchExpression="SearchExpression"
+                        MatchedStyle="@MatchedStyle"
+                        MatchedClass="@MatchedClass"
+                        SearchValue="@_searchValue"
                   >
                     <Nodes>
                       @if (IsTemplatedNodes)
@@ -66,8 +70,9 @@
             <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
               <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                 <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                  <SelectContent Prefix="ant-select"
+                  <SelectContent Prefix="@ClassPrefix"
                                  RefBack="@context"
+                                 @ref="_selectContent"
                                  TItemValue="string"
                                  TItem="TItem"
                                  SearchValue="@_searchValue"
