@@ -53,11 +53,11 @@ namespace AntDesign.TableModels
             _sortDirection = sortDirection;
         }
 
-        IOrderedQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
+        IQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
         {
             if (_sortDirection == SortDirection.None)
             {
-                return source as IOrderedQueryable<TItem>;
+                return source;
             }
 
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
