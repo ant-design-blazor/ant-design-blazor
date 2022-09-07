@@ -33,7 +33,7 @@ Layout uses a 24 grid layout to define the width of each "box", but does not rig
 
 ## API
 
-Row
+GridRow
 
 | Property   | Description     |  	Type          | Default   |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
@@ -42,7 +42,7 @@ Row
 | justify | horizontal arrangement of the flex layout:`start` `end` `center` `space-around` `space-between` | string | start |
 | type | layout mode, optional `flex`， browser support | string | - |
 
-Col
+GridCol
 
 | Property   | Description  | Type          | Default    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |

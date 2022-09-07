@@ -1,6 +1,6 @@
 ﻿namespace AntDesign
 {
-    public class GridCol : Col
+    public class GridRow : Row
     {
     }
 }

@@ -29,7 +29,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 
 ## API
 
-Row
+GridRow
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
@@ -38,7 +38,7 @@ Row
 | justify | flex 布局下的水平排列方式：`start` `end` `center` `space-around` `space-between` | string | start |
 | type | 布局模式，可选 `flex`，现代浏览器 下有效 | string | - |
 
-Col
+GridCol
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
