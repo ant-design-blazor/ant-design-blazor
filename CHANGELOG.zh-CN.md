@@ -15,9 +15,20 @@ timeline: true
 
 ---
 
+### 0.12.2
+
+`2022-09-08`
+
+- Table
+  - 🐞 修复 使用 EF Core 作为数据源时，排序报错[#2687](https://github.com/ant-design-blazor/ant-design-blazor/pull/2687) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 修复 当 ActionColumn 放在数据列左边时的报错[#2683](https://github.com/ant-design-blazor/ant-design-blazor/pull/2683) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Tabs 没有 Animated 时，TabPane 样式问题[#2677](https://github.com/ant-design-blazor/ant-design-blazor/pull/2677) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Datepicker 给 RagePicker 的 Value 赋值 null 时的异常[#2688](https://github.com/ant-design-blazor/ant-design-blazor/pull/2688) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.12.1
 
-`2022.09.04`
+`2022-09-04`
 
 - Tabs
   - 🐞 修复 Tabs 切换动效内容溢出问题[#2671](https://github.com/ant-design-blazor/ant-design-blazor/pull/2671) [@ElderJames](https://github.com/ElderJames)

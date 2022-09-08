@@ -15,9 +15,20 @@ timeline: true
 
 ---
 
+### 0.12.2
+
+`2022-09-08`
+
+- Table
+  - 🐞 Fixed Converting IQueryable to IOrderedQueryable returned null. [#2687](https://github.com/ant-design-blazor/ant-design-blazor/pull/2687) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 Fixed the exception cause by reload data with state and the table has an ActionColumn. [#2683](https://github.com/ant-design-blazor/ant-design-blazor/pull/2683) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs panel  display incorrectly without animated [#2677](https://github.com/ant-design-blazor/ant-design-blazor/pull/2677) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DatePicker that an exception is caused when passes the value as null to RangePicker [#2688](https://github.com/ant-design-blazor/ant-design-blazor/pull/2688) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.12.1
 
-`2022.09.04`
+`2022-09-04`
 
 - Tabs
   - 🐞 Fix tabs content overflow at animated mode. [#2671](https://github.com/ant-design-blazor/ant-design-blazor/pull/2671) [@ElderJames](https://github.com/ElderJames)
