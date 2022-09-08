@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 0.12.2
+
+`2022-09-08`
+
+- Table
+  - 🐞 Fixed Converting IQueryable to IOrderedQueryable returned null. [#2687](https://github.com/ant-design-blazor/ant-design-blazor/pull/2687) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 fixed the exception cause by reload data with state and the table has an ActionColumn. [#2683](https://github.com/ant-design-blazor/ant-design-blazor/pull/2683) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fixed Tabs panel  display incorrectly without animated [#2677](https://github.com/ant-design-blazor/ant-design-blazor/pull/2677) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.12.1
 
 `2022.09.04`
