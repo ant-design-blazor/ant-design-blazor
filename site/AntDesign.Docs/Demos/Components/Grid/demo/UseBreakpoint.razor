@@ -1,4 +1,4 @@
-﻿<Row OnBreakpoint="HandleBreakpoint">
+﻿<GridRow OnBreakpoint="HandleBreakpoint">
     Current break point: 
     @foreach (var type in types)
     {
@@ -7,7 +7,7 @@
             <Tag PresetColor="@PresetColor.Blue">@type</Tag>
         }
     }
-</Row>
+</GridRow>
 
 @code{
 

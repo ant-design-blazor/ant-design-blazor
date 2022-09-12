@@ -1,104 +1,104 @@
 ﻿<div>
-	<span>Horizontal Gutter (px): </span>
-	<div style="width: 50%;">
-		<Slider Min="0"
-				Max="@(gutters.Keys.Count - 1)"
-				@bind-Value="@gutterKey"
-				Marks=@(gutters.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
-				Step="null"
-				TipFormatter="@(value => gutters[(int)value].ToString())" />
-	</div>
-	<span>Vertical Gutter (px): </span>
-	<div style="width: 50%;">
-		<Slider Min="0"
-				Max="@(vgutters.Keys.Count - 1)"
-				@bind-Value="@vgutterKey"
-				Marks=@(vgutters.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
-				Step="null"
-				TipFormatter="@(value => vgutters[(int)value].ToString())" />
-	</div>
-	<span>Column Count:</span>
-	<div style="width: 50%;">
-		<Slider Min="0"
-				Max="@(colCounts.Keys.Count - 1)"
-				@bind-Value="@colCountKey"
-				Marks=@(colCounts.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
-				Step="null"
-				TipFormatter="@(value => colCounts[(int)value].ToString())" />
-	</div>
-	<Row Gutter="(gutters[gutterKey], vgutters[vgutterKey])">
-		@cols()
-		@cols()
-	</Row>
-	Another Row:
-	<Row Gutter="(gutters[gutterKey], vgutters[vgutterKey])">@cols()</Row>
-	<pre class="demo-code">@($"<Row Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}\n{colCode}</Row>")</pre>
-	<pre class="demo-code">@($"<Row Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}</Row>")</pre>
+    <span>Horizontal Gutter (px): </span>
+    <div style="width: 50%;">
+        <Slider Min="0"
+                Max="@(gutters.Keys.Count - 1)"
+                @bind-Value="@gutterKey"
+                Marks=@(gutters.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
+                Step="null"
+                TipFormatter="@(value => gutters[(int)value].ToString())" />
+    </div>
+    <span>Vertical Gutter (px): </span>
+    <div style="width: 50%;">
+        <Slider Min="0"
+                Max="@(vgutters.Keys.Count - 1)"
+                @bind-Value="@vgutterKey"
+                Marks=@(vgutters.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
+                Step="null"
+                TipFormatter="@(value => vgutters[(int)value].ToString())" />
+    </div>
+    <span>Column Count:</span>
+    <div style="width: 50%;">
+        <Slider Min="0"
+                Max="@(colCounts.Keys.Count - 1)"
+                @bind-Value="@colCountKey"
+                Marks=@(colCounts.Select(x=>new SliderMark(x.Key,x.Value.ToString())).ToArray())
+                Step="null"
+                TipFormatter="@(value => colCounts[(int)value].ToString())" />
+    </div>
+    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">
+        @cols()
+        @cols()
+    </GridRow>
+    Another GridRow:
+    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">@cols()</GridRow>
+    <pre class="demo-code">@($"<GridRow Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}\n{colCode}</GridRow>")</pre>
+    <pre class="demo-code">@($"<GridRow Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}</GridRow>")</pre>
 </div>
 
 
 @code {
 
-	Dictionary<double, int> gutters = new();
-	Dictionary<double, int> vgutters = new();
-	Dictionary<double, int> colCounts = new();
+    Dictionary<double, int> gutters = new();
+    Dictionary<double, int> vgutters = new();
+    Dictionary<double, int> colCounts = new();
 
-	double gutterKey = 1;
-	double vgutterKey = 1;
-	double colCountKey = 2;
-	string colCode => string.Join("", Enumerable.Range(0, colCounts[colCountKey]).Select(x => $"  <Col Span=\"{24 / colCounts[colCountKey]}\" />\n"));
+    double gutterKey = 1;
+    double vgutterKey = 1;
+    double colCountKey = 2;
+    string colCode => string.Join("", Enumerable.Range(0, colCounts[colCountKey]).Select(x => $"  <GridCol Span=\"{24 / colCounts[colCountKey]}\" />\n"));
 
-	protected override void OnInitialized()
-	{
-		new[] { 8, 16, 24, 32, 40, 48 }.ForEach((value, i) => gutters[i] = value);
-		new[] { 8, 16, 24, 32, 40, 48 }.ForEach((value, i) => vgutters[i] = value);
-		new[] { 2, 3, 4, 6, 8, 12 }.ForEach((value, i) => colCounts[i] = value);
-	}
+    protected override void OnInitialized()
+    {
+        new[] { 8, 16, 24, 32, 40, 48 }.ForEach((value, i) => gutters[i] = value);
+        new[] { 8, 16, 24, 32, 40, 48 }.ForEach((value, i) => vgutters[i] = value);
+        new[] { 2, 3, 4, 6, 8, 12 }.ForEach((value, i) => colCounts[i] = value);
+    }
 
-	RenderFragment cols()
-	{
-		var colCount = colCounts[colCountKey];
+    RenderFragment cols()
+    {
+        var colCount = colCounts[colCountKey];
 
-		return
-		@<Template>
-			@for (var i = 0; i < colCount; i++)
-			{
-				<AntDesign.Col @key="@(i.ToString())" Span="@(24 / colCount)">
-					<div>Column</div>
-				</AntDesign.Col>
-			}
-		</Template>
-	;
-	}
+        return
+    @<Template>
+        @for (var i = 0; i < colCount; i++)
+        {
+                <GridCol @key="@(i.ToString())" Span="@(24 / colCount)">
+                    <div>Column</div>
+                </GridCol>
+        }
+        </Template>
+    ;
+    }
 }
 
 <style>
 
-	#components-grid-demo-playground [class~='ant-col'] {
-		background: transparent;
-		border: 0;
-	}
+    #components-grid-demo-playground [class~='ant-col'] {
+        background: transparent;
+        border: 0;
+    }
 
-		#components-grid-demo-playground [class~='ant-col'] > div {
-			height: 120px;
-			font-size: 14px;
-			line-height: 120px;
-			background: #0092ff;
-			border-radius: 4px;
-		}
+        #components-grid-demo-playground [class~='ant-col'] > div {
+            height: 120px;
+            font-size: 14px;
+            line-height: 120px;
+            background: #0092ff;
+            border-radius: 4px;
+        }
 
-	#components-grid-demo-playground pre {
-		padding: 8px 16px;
-		font-size: 13px;
-		background: #f9f9f9;
-		border-radius: 6px;
-	}
+    #components-grid-demo-playground pre {
+        padding: 8px 16px;
+        font-size: 13px;
+        background: #f9f9f9;
+        border-radius: 6px;
+    }
 
-		#components-grid-demo-playground pre.demo-code {
-			direction: ltr;
-		}
+        #components-grid-demo-playground pre.demo-code {
+            direction: ltr;
+        }
 
-	#components-grid-demo-playground .ant-col {
-		padding: 0;
-	}
+    #components-grid-demo-playground .ant-col {
+        padding: 0;
+    }
 </style>
