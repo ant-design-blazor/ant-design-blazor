@@ -157,6 +157,7 @@ namespace AntDesign
             {
                 _optionsChanged = false;
                 await GetItemElememt();
+                ChangeValue(_value);
             }
 
             await base.OnAfterRenderAsync(firstRender);

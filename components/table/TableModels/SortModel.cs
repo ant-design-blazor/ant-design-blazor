@@ -62,13 +62,27 @@ namespace AntDesign.TableModels
 
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
 
-            if (_sortDirection == SortDirection.Ascending)
+            if (source is IOrderedQueryable<TItem> orderedSource)
             {
-                return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
+                if (_sortDirection == SortDirection.Ascending)
+                {
+                    return _comparer == null ? orderedSource.ThenBy(lambda) : orderedSource.ThenBy(lambda, this);
+                }
+                else
+                {
+                    return _comparer == null ? orderedSource.ThenByDescending(lambda) : orderedSource.ThenByDescending(lambda, this);
+                }
             }
             else
             {
-                return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
+                if (_sortDirection == SortDirection.Ascending)
+                {
+                    return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
+                }
+                else
+                {
+                    return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
+                }
             }
         }
 
