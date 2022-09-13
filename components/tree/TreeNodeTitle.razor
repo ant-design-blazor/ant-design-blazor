@@ -41,10 +41,13 @@
                 }
                 else if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
-                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
-
+                    int index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+                    var start = SelfNode.Title.Substring(0, index);
+                    var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+                    var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+                    var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
                     <span>
-                       @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
+                       @((MarkupString)value)
                     </span>
                 }
                 else
@@ -98,10 +101,13 @@ else
             <span class="ant-tree-title">
                 @if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
-                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
-                    var regex = new Regex(TreeComponent.SearchValue);
+                    int index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+                    var start = SelfNode.Title.Substring(0, index);
+                    var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+                    var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+                    var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
                     <span>
-                        @((MarkupString)regex.Replace(SelfNode.Title,value,1))
+                       @((MarkupString)value)
                     </span>
                 }
                 else
