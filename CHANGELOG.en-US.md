@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.12.3
+
+`2022-09-13`
+
+🥮Happy Mid-Autumn Festival!
+
+- 🐞 Fixed TreeSelect that support Searching [#2686](https://github.com/ant-design-blazor/ant-design-blazor/pull/2686) [@Magehernan](https://github.com/Magehernan)
+- 🆕 Add Grid alias GridRow for Row to be consistent with GridCol. [#2690](https://github.com/ant-design-blazor/ant-design-blazor/pull/2690) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 Fixed Message that exception casue by Invariant Globalization setting. [#2697](https://github.com/ant-design-blazor/ant-design-blazor/pull/2697) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Segmentd default value binding incorrectly with options. [#2699](https://github.com/ant-design-blazor/ant-design-blazor/pull/2699) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table multiple sort doesn't work with EFCore [#2701](https://github.com/ant-design-blazor/ant-design-blazor/pull/2701) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 📖 Added demos for exception handling, respectively in Alert, Result and Notification. [#2706](https://github.com/ant-design-blazor/ant-design-blazor/pull/2706) [#2703](https://github.com/ant-design-blazor/ant-design-blazor/pull/2703) [@ElderJames](https://github.com/ElderJames)
 ### 0.12.2
 
 `2022-09-08`
