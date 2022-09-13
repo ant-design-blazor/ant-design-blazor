@@ -133,10 +133,29 @@ namespace AntDesign
             //Reset Picker to default in case the picker value was changed
             //but no value was selected (for example when a user clicks next
             //month but does not select any value)
-            if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
+
+            var currentValue = GetIndexValue(index);
+
+            if (currentValue is not null)
+            {
+                if (IsShowTime)
+                {
+                    PickerValues[index] = currentValue.Value;
+                }
+                else
+                {
+                    PickerValues[index] = index == 0 ? currentValue.Value : GetClosingDate(currentValue.Value, -1);
+                }
+            }
+            else if (UseDefaultPickerValue[index] && DefaultPickerValue is not null)
+            {
+                PickerValues[index] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
+            }
+            else
             {
                 PickerValues[index] = _pickerValuesAfterInit[index];
             }
+
             await _dropDown.Show();
 
             if (index == 0)

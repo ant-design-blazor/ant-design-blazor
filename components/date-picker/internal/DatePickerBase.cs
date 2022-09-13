@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -475,7 +475,10 @@ namespace AntDesign
                 _picker = _prePickerStack.Pop();
             }
 
-            ChangePickerValue(date, index);
+            if (!IsRange || IsShowTime)
+            {
+                ChangePickerValue(date, index);
+            }
 
             SetDisabledTime();
         }
@@ -570,21 +573,6 @@ namespace AntDesign
             {
                 _pickerStatus[1].InitPicker = picker;
             }
-            if (IsRange)
-            {
-                DateTime now = DateTime.Now;
-                PickerValues[1] = picker switch
-                {
-                    DatePickerType.Date => now.AddMonths(1),
-                    DatePickerType.Week => now.AddMonths(1),
-                    DatePickerType.Month => now.AddYears(1),
-                    DatePickerType.Decade => now.AddYears(1),
-                    DatePickerType.Quarter => now.AddYears(1),
-                    DatePickerType.Year => now.AddYears(10),
-                    _ => now,
-                };
-            }
-
             ResetPlaceholder();
         }
 
@@ -682,25 +670,29 @@ namespace AntDesign
         public DateTime GetIndexPickerValue(int index)
         {
             int tempIndex = GetOnFocusPickerIndex();
-            if (index == 0)
+
+            var pickerValue = PickerValues[tempIndex];
+
+            if (index == 0 || IsShowTime || Picker == DatePickerType.Time)
             {
-                return PickerValues[tempIndex];
+                return pickerValue;
             }
             else
             {
                 //First picker panel will show the value, second panel shows next
                 //expected value that depends on Picker type
-                return Picker switch
-                {
-                    DatePickerType.Date => (IsShowTime ? PickerValues[tempIndex] : PickerValues[tempIndex].AddMonths(1)),
-                    DatePickerType.Week => PickerValues[tempIndex].AddMonths(1),
-                    DatePickerType.Month => PickerValues[tempIndex].AddYears(1),
-                    DatePickerType.Decade => PickerValues[tempIndex].AddYears(1),
-                    DatePickerType.Quarter => PickerValues[tempIndex].AddYears(1),
-                    DatePickerType.Year => PickerValues[tempIndex].AddYears(10),
-                    _ => DateTime.Now,
-                };
+                return GetClosingDate(pickerValue);
             }
+        }
+
+        internal DateTime GetClosingDate(DateTime pickerValue, int offset = 1)
+        {
+            return Picker switch
+            {
+                DatePickerType.Year => pickerValue.AddYears(offset * 10),
+                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
+                _ => pickerValue.AddMonths(offset),
+            };
         }
 
         public void ChangePlaceholder(string placeholder, int index = 0)
