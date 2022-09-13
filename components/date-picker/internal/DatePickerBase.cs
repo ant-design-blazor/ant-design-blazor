@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -921,6 +921,8 @@ namespace AntDesign
                     {
                         ClearValue(-1);
                     }
+
+                    AutoFocus = false;
                 }
                 else if (visible)
                 {
