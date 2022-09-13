@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 0.12.3
+
+`2022-09-13`
+
+🥮中秋节快乐！
+
+- 🐞 修复 TreeSelect 的查询支持[#2686](https://github.com/ant-design/ant-design/pull/2686) [@Magehernan](https://github.com/Magehernan)
+- 🆕 增加 Grid 的 `GridRow` 别名，文档更新使用 `GridRow` 和 `GridCol`[#2690](https://github.com/ant-design/ant-design/pull/2690) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 Message 在 Invariant Globalization 模式下报错问题[#2697](https://github.com/ant-design/ant-design/pull/2697) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmentd 的默认值回显[#2699](https://github.com/ant-design/ant-design/pull/2699) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 的多重排序在EFCore上不生效的问题[#2701](https://github.com/ant-design/ant-design/pull/2701) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+
+
 ### 0.12.2
 
 `2022-09-08`
