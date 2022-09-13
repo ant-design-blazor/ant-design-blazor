@@ -409,8 +409,11 @@ namespace AntDesign
             get => _searchValue;
             set
             {
-                _searchValue = value;
-                SearchNodes();
+                if (value != _searchValue)
+                {
+                    _searchValue = value;
+                    SearchNodes();
+                }
             }
         }
 
@@ -437,7 +440,7 @@ namespace AntDesign
             }
             else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                searchDatas = allList.Where(x => x.Title.Contains(_searchValue)).ToList();
+                searchDatas = allList.Where(x => x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
 
             if (searchDatas != null && searchDatas.Any())
