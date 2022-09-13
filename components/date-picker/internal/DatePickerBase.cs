@@ -907,53 +907,52 @@ namespace AntDesign
 
         protected void InvokeInternalOverlayVisibleChanged(bool visible)
         {
-            if (IsShowTime || Picker == DatePickerType.Time)
-                if (IsRange)
+            if (IsRange)
+            {
+                if (!visible && (!_pickerStatus[0].IsNewValueSelected || !_pickerStatus[1].IsNewValueSelected))
                 {
-                    if (!visible && (!_pickerStatus[0].IsNewValueSelected || !_pickerStatus[1].IsNewValueSelected))
+                    if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
                     {
-                        if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
+                        if (GetIndexValue(0) != _pickerStatus[0].OldValue)
                         {
-                            if (GetIndexValue(0) != _pickerStatus[0].OldValue)
-                            {
-                                ChangeValue(_pickerStatus[0].OldValue.Value, 0);
-                            }
-                            if (GetIndexValue(1) != _pickerStatus[1].OldValue)
-                            {
-                                ChangeValue(_pickerStatus[1].OldValue.Value, 1);
-                            }
+                            ChangeValue(_pickerStatus[0].OldValue.Value, 0);
                         }
-                        else if (_pickerStatus[0].IsValueSelected || _pickerStatus[1].IsValueSelected)
+                        if (GetIndexValue(1) != _pickerStatus[1].OldValue)
                         {
-                            ClearValue(-1);
+                            ChangeValue(_pickerStatus[1].OldValue.Value, 1);
                         }
                     }
-                    else if (visible)
+                    else if (_pickerStatus[0].IsValueSelected || _pickerStatus[1].IsValueSelected)
                     {
-                        _pickerStatus[0].OldValue = GetIndexValue(0);
-                        _pickerStatus[1].OldValue = GetIndexValue(1);
+                        ClearValue(-1);
                     }
                 }
-                else
+                else if (visible)
                 {
-                    var index = GetOnFocusPickerIndex();
+                    _pickerStatus[0].OldValue = GetIndexValue(0);
+                    _pickerStatus[1].OldValue = GetIndexValue(1);
+                }
+            }
+            else if (IsShowTime || Picker == DatePickerType.Time)
+            {
+                var index = GetOnFocusPickerIndex();
 
-                    if (!_pickerStatus[index].IsNewValueSelected && !visible)
+                if (!_pickerStatus[index].IsNewValueSelected && !visible)
+                {
+                    if (_pickerStatus[index].OldValue.HasValue)
                     {
-                        if (_pickerStatus[index].OldValue.HasValue)
-                        {
-                            ChangeValue(_pickerStatus[index].OldValue.Value, index);
-                        }
-                        else
-                        {
-                            ClearValue(index);
-                        }
+                        ChangeValue(_pickerStatus[index].OldValue.Value, index);
                     }
-                    else if (visible)
+                    else
                     {
-                        _pickerStatus[index].OldValue = GetIndexValue(index);
+                        ClearValue(index);
                     }
                 }
+                else if (visible)
+                {
+                    _pickerStatus[index].OldValue = GetIndexValue(index);
+                }
+            }
             if (visible)
             {
                 _pickerStatus[0].IsNewValueSelected = false;
