@@ -12,6 +12,7 @@ namespace AntDesign
         public AutoCompleteInput()
         {
             AutoComplete = false;
+            Type = "search";
         }
 
         [CascadingParameter]
