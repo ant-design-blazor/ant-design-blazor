@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -905,11 +905,14 @@ namespace AntDesign
                 {
                     if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
                     {
-                        if (GetIndexValue(0) != _pickerStatus[0].OldValue)
+                        var startDate = GetIndexValue(0);
+                        var endDate = GetIndexValue(1);
+
+                        if (startDate is not null && startDate != _pickerStatus[0].OldValue)
                         {
                             ChangeValue(_pickerStatus[0].OldValue.Value, 0);
                         }
-                        if (GetIndexValue(1) != _pickerStatus[1].OldValue)
+                        if (endDate is not null && endDate != _pickerStatus[1].OldValue)
                         {
                             ChangeValue(_pickerStatus[1].OldValue.Value, 1);
                         }
