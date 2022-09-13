@@ -65,7 +65,7 @@ namespace AntDesign
 
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 
-        private bool ShowRanges => Ranges != null;
+        private bool ShowRanges => Ranges?.Count > 0;
 
         public RangePicker()
         {

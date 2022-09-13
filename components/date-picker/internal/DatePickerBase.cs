@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -512,30 +512,22 @@ namespace AntDesign
             }
         }
 
-        public async Task OnRangeItemOver(DateTime?[] range)
+        internal void OnRangeItemOver(DateTime?[] range)
         {
-            if (IsRange)
-            {
-                _swpValue = Value;
-                Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
-            }
+            _swpValue = Value;
+            Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
         }
 
-        public async Task OnRangeItemOut(DateTime?[] range)
-        {
-            if (IsRange)
-            {
-                Value = _swpValue;
-            }
-        }
+        internal void OnRangeItemOut(DateTime?[] range) => Value = _swpValue;
 
-        public async Task OnRangeItemClicked(DateTime?[] range)
+        internal void OnRangeItemClicked(DateTime?[] range)
         {
             _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             ChangeValue((DateTime)range[0], 0);
             ChangeValue((DateTime)range[1], 1);
+            _pickerStatus[0].IsNewValueSelected = true;
+            _pickerStatus[1].IsNewValueSelected = true;
             Close();
-            return;
         }
 
         private async Task<bool> SwitchFocus(int index)
