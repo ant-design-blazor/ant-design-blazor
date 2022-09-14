@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.12.4
+
+`2022-09-14`
+
+- 🐞 修复 Table 排序引起的异常。[#2710](https://github.com/ant-design-blazor/ant-design-blazor/pull/2710) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 AutoComplete 自动弹出浏览器的输入记忆的问题。[#2708](https://github.com/ant-design-blazor/ant-design-blazor/pull/2708) [@lyj0309](https://github.com/lyj0309)
+- 🐞 修复 RangePicker 几个问题[#2707](https://github.com/ant-design-blazor/ant-design-blazor/pull/2707) [@Alexbits](https://github.com/Alexbits)：
+  - 修复 RTL 模式第二个面板不弹出的问题
+  - 修复 预设范围在开启了时间输入时会被重置的问题
+  - 修复 停止输入后没有保持焦点的问题
+  - 修复 某个输入框有焦点时不能清除值的问题
+
 ### 0.12.3
 
 `2022-09-13`

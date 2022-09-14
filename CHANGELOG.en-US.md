@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.12.4
+
+`2022-09-14`
+
+- 🐞 Fixed Table exceptions caused by  sort. [#2710](https://github.com/ant-design-blazor/ant-design-blazor/pull/2710) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 Fixed AutoComplete that void browser's autocomplete popup.[#2708](https://github.com/ant-design-blazor/ant-design-blazor/pull/2708) [@lyj0309](https://github.com/lyj0309)
+- 🐞 Fixed DatePicker that several issues with RangePicker [#2707](https://github.com/ant-design-blazor/ant-design-blazor/pull/2707) [@Alexbits](https://github.com/Alexbits):
+- RangePicker end panel not shown in RTL mode
+- RangePicker range preset value resets when time input is enabled
+- RangePicker keeps focus when input canceled
+- RangePicker cannot clear value when one of the inputs has a focus
+
 ### 0.12.3
 
 `2022-09-13`
@@ -27,6 +39,7 @@ timeline: true
 - 🐞 Fixed Segmentd default value binding incorrectly with options. [#2699](https://github.com/ant-design-blazor/ant-design-blazor/pull/2699) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Table multiple sort doesn't work with EFCore [#2701](https://github.com/ant-design-blazor/ant-design-blazor/pull/2701) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
 - 📖 Added demos for exception handling, respectively in Alert, Result and Notification. [#2706](https://github.com/ant-design-blazor/ant-design-blazor/pull/2706) [#2703](https://github.com/ant-design-blazor/ant-design-blazor/pull/2703) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.12.2
 
 `2022-09-08`
