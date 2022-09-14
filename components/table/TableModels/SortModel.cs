@@ -62,8 +62,9 @@ namespace AntDesign.TableModels
 
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
 
-            if (source is IOrderedQueryable<TItem> orderedSource)
+            if (source.Expression.Type == typeof(IOrderedQueryable<TItem>))
             {
+                var orderedSource = source as IOrderedQueryable<TItem>;
                 if (_sortDirection == SortDirection.Ascending)
                 {
                     return _comparer == null ? orderedSource.ThenBy(lambda) : orderedSource.ThenBy(lambda, this);
