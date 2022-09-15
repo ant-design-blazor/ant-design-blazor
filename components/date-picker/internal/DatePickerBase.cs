@@ -777,7 +777,7 @@ namespace AntDesign
         }
 
         private FormatAnalyzer _formatAnalyzer;
-        internal FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale, CultureInfo);
+        protected FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale, CultureInfo);
 
         public string GetFormatValue(DateTime value, int index)
         {
