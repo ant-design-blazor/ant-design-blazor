@@ -599,7 +599,7 @@ namespace AntDesign
                 }
             }
 
-            if (_isInitialized && SelectOptions == null)
+            if (_isInitialized && SelectOptions == null && !_optionsHasInitialized)
             {
                 CreateDeleteSelectOptions();
                 _optionsHasInitialized = true;
