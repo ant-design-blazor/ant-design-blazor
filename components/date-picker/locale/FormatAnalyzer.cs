@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,6 +25,7 @@ namespace AntDesign.Datepicker.Locale
         private int _startPosition;
         private int _separatorPrefixOffset;
         private readonly DatePickerLocale _locale;
+        private readonly CultureInfo _cultureInfo;
 
         public enum DateTimePartialType
         {
@@ -38,15 +39,15 @@ namespace AntDesign.Datepicker.Locale
             AmPmDesignator
         }
 
-        public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale)
+        public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
         {
             _formatLength = format.Length;
             _analyzerType = analyzerType;
             _locale = locale;
+            _cultureInfo = cultureInfo;
             //Quarter and Week have individual appoaches, so no need to analyze format
             //if (!(_analyzerType == DatePickerType.Quarter || _analyzerType == DatePickerType.Week))
             AnalyzeFormat(format);
-            _format = format;
         }
 
         private void AnalyzeFormat(string format)
@@ -210,7 +211,7 @@ namespace AntDesign.Datepicker.Locale
                 && quarter > 0 && quarter <= 4)
             {
                 //pick first day/month of the quarter
-                return (true, new DateTime(year, quarter * 3 - 2, 1));
+                return (true, new DateTime(year, quarter * 3 - 2, 1, _cultureInfo.Calendar));
             }
 
             return (false, default);
@@ -236,7 +237,7 @@ namespace AntDesign.Datepicker.Locale
                 return (false, default);
 
             //pick first day of the week
-            var resultDate = new DateTime(year, 1, 1).AddDays(week * 7 - 7);
+            var resultDate = new DateTime(year, 1, 1, _cultureInfo.Calendar).AddDays(week * 7 - 7);
             if (week > 1)
             {
                 int mondayOffset = (7 + (resultDate.DayOfWeek - DayOfWeek.Monday)) % 7;
@@ -267,7 +268,6 @@ namespace AntDesign.Datepicker.Locale
         }
 
         Func<string, (bool, DateTime)> _converter;
-        private readonly string _format;
 
         private Func<string, (bool, DateTime)> Converter
         {
@@ -367,7 +367,7 @@ namespace AntDesign.Datepicker.Locale
             }
             if (DateTime.DaysInMonth(year, month) < day)
                 return false;
-            result = new DateTime(year, month, day, hour, minute, second);
+            result = new DateTime(year, month, day, hour, minute, second, 0, _cultureInfo.Calendar, DateTimeKind.Local);
             return true;
         }
 
@@ -375,7 +375,7 @@ namespace AntDesign.Datepicker.Locale
         {
             if (IsFullString(pickerString))
             {
-                return (true, new DateTime(_parsedMap[DateTimePartialType.Year], 1, 1));
+                return (true, new DateTime(_parsedMap[DateTimePartialType.Year], 1, 1, _cultureInfo.Calendar));
             }
             return (false, default);
         }
