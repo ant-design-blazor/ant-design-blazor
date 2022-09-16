@@ -19,7 +19,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg
 | 参数  | 说明     | 类型                               | 默认值 |
 | ----- | -------- | ---------------------------------- | ------ |
 | Title | 提示文字 | string | string.Empty |
-| TitleTemplate | TODO: Translate | RenderFragment | - |
+| TitleTemplate | 标题模板 | RenderFragment | - |
 
 ### 共同的 API
 
