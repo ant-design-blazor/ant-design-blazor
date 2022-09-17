@@ -13,7 +13,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
+    public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
@@ -553,7 +553,7 @@ namespace AntDesign
             return true;
         }
 
-        protected virtual async Task OnBlur(int index) => await Task.Yield();
+        protected abstract Task OnBlur(int index);
 
         protected void InitPicker(string picker)
         {
@@ -856,18 +856,11 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        public virtual void ChangeValue(DateTime value, int index = 0)
-        {
-        }
+        public abstract void ChangeValue(DateTime value, int index = 0);
 
-        public virtual void ClearValue(int index = 0, bool closeDropdown = true)
-        {
-        }
+        public abstract void ClearValue(int index = 0, bool closeDropdown = true);
 
-        public virtual DateTime? GetIndexValue(int index)
-        {
-            return null;
-        }
+        public abstract DateTime? GetIndexValue(int index);
 
         protected TValue SortValue(TValue value)
         {
