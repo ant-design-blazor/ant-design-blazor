@@ -39,7 +39,7 @@
                             ShowFooter="@ShowToday"
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                            IsSelected="date => DateHelper.IsSameDay(date, Value)"
+                            IsSelected="date => DateHelper.IsSameDay(date, Value) || IsRange && DateHelper.IsSameDay(date, GetIndexValue(Math.Abs(PickerIndex-1)))"
                             GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
