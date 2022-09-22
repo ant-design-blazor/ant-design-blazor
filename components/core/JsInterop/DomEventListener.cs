@@ -12,8 +12,8 @@ namespace AntDesign.JsInterop
 {
     public class DomEventListener : IDomEventListener
     {
-        private Dictionary<string, IDisposable> _exclusiveDotNetObjectStore = new();
-        private Dictionary<string, IDisposable> _sharedDotNetObjectStore = new();
+        private Dictionary<DomEventKey, IDisposable> _exclusiveDotNetObjectStore = new();
+        private Dictionary<DomEventKey, IDisposable> _sharedDotNetObjectStore = new();
         private bool? _isResizeObserverSupported = null;
 
         private readonly IJSRuntime _jsRuntime;
@@ -28,14 +28,14 @@ namespace AntDesign.JsInterop
             _id = Guid.NewGuid().ToString();
         }
 
-        private string FormatKey(object dom, string eventName)
+        private DomEventKey FormatKey(object dom, string eventName)
         {
             var selector = dom is ElementReference eleRef ? eleRef.GetSelector() : dom.ToString();
             if (selector.IsIn("window", "document"))
             {
-                return $"DEL-{selector}-{eventName}";
+                return new DomEventKey(selector, eventName, "");
             }
-            return $"DEL-{selector}-{eventName}-{_id}";
+            return new DomEventKey(selector, eventName, _id);
         }
 
         private (string dom, string eventName) ParseKey(string key)
@@ -63,8 +63,7 @@ namespace AntDesign.JsInterop
             var key = FormatKey(dom, eventName);
             if (_exclusiveDotNetObjectStore.TryGetValue(key, out IDisposable dotNetObject))
             {
-                var paresedKey = ParseKey(key);
-                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, dom, eventName, dotNetObject);
             }
             _exclusiveDotNetObjectStore.Remove(key);
         }
@@ -73,8 +72,7 @@ namespace AntDesign.JsInterop
         {
             foreach (var (key, dotNetObject) in _exclusiveDotNetObjectStore)
             {
-                var paresedKey = ParseKey(key);
-                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
             }
             _exclusiveDotNetObjectStore.Clear();
         }
@@ -83,7 +81,7 @@ namespace AntDesign.JsInterop
 
         public virtual void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
         {
-            string key = FormatKey(dom, eventName);
+            var key = FormatKey(dom, eventName);
             if (!_domEventSubscriptionsStore.ContainsKey(key))
             {
                 _domEventSubscriptionsStore[key] = new List<DomEventSubscription>();
@@ -107,7 +105,7 @@ namespace AntDesign.JsInterop
 
         public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
         {
-            string key = FormatKey(dom, eventName);
+            var key = FormatKey(dom, eventName);
             if (_domEventSubscriptionsStore.ContainsKey(key))
             {
                 var subscription = _domEventSubscriptionsStore[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
@@ -125,15 +123,15 @@ namespace AntDesign.JsInterop
             while (find)
             {
                 var (key, subscription) = _domEventSubscriptionsStore.FindDomEventSubscription(_id);
-                if (!string.IsNullOrEmpty(key) && subscription != null)
+                if (key != null && subscription != null)
                 {
                     _domEventSubscriptionsStore[key].Remove(subscription);
 
                     if (_domEventSubscriptionsStore[key].Count == 0 && _sharedDotNetObjectStore.ContainsKey(key))
                     {
                         var dotNetObject = _sharedDotNetObjectStore[key];
-                        var paresedKey = ParseKey(key);
-                        _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
+
+                        _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
                     }
                 }
                 else
@@ -147,7 +145,7 @@ namespace AntDesign.JsInterop
 
         public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
         {
-            string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
             if (!(await IsResizeObserverSupported()))
             {
                 Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
@@ -175,7 +173,7 @@ namespace AntDesign.JsInterop
 
         public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
         {
-            string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
             if (_domEventSubscriptionsStore.ContainsKey(key))
             {
                 var subscription = _domEventSubscriptionsStore[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
@@ -190,7 +188,7 @@ namespace AntDesign.JsInterop
 
         public async ValueTask DisposeResizeObserver(ElementReference dom)
         {
-            string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
             if (await IsResizeObserverSupported())
             {
                 await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key);
@@ -200,7 +198,7 @@ namespace AntDesign.JsInterop
 
         public async ValueTask DisconnectResizeObserver(ElementReference dom)
         {
-            string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
             if (await IsResizeObserverSupported())
             {
                 await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key);

@@ -23,8 +23,9 @@ namespace AntDesign.Core.Extensions
             {
                 return null;
             }
-#endif
 
+            return $"[_bl_{elementReference.Id}]";
+#endif
             return $"[_bl_{elementReference.Id}]";
         }
     }
