@@ -80,7 +80,7 @@
         bool isValueNull = Value is null;
         Func<int, int?, string> selected;
         string localValue;
-        if (Value is null)
+        if (isValueNull)
         {
             localValue = "";
             selected = (_, _) => "";
