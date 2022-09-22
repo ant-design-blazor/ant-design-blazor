@@ -12,7 +12,8 @@ namespace AntDesign.JsInterop
 {
     public class DomEventListener : IDomEventListener
     {
-        private Dictionary<string, IDisposable> _dotNetObjectStore = new();
+        private Dictionary<string, IDisposable> _exclusiveDotNetObjectStore = new();
+        private Dictionary<string, IDisposable> _sharedDotNetObjectStore = new();
         private bool? _isResizeObserverSupported = null;
 
         private readonly IJSRuntime _jsRuntime;
@@ -29,18 +30,24 @@ namespace AntDesign.JsInterop
 
         private string FormatKey(object dom, string eventName)
         {
-            var selector = dom is ElementReference eleRef ? eleRef.Id : dom.ToString();
+            var selector = dom is ElementReference eleRef ? eleRef.GetSelector() : dom.ToString();
             if (selector.IsIn("window", "document"))
             {
                 return $"DEL-{selector}-{eventName}";
             }
-            return $"DEL-{_id}-{selector}-{eventName}";
+            return $"DEL-{selector}-{eventName}-{_id}";
+        }
+
+        private (string dom, string eventName) ParseKey(string key)
+        {
+            var keyParts = key.Split('-');
+            return (keyParts[1], keyParts[2]);
         }
 
         public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
         {
             var key = FormatKey(dom, eventName);
-            if (_dotNetObjectStore.ContainsKey(key))
+            if (_exclusiveDotNetObjectStore.ContainsKey(key))
                 return;
 
             var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
@@ -48,26 +55,28 @@ namespace AntDesign.JsInterop
                 callback(p);
             }));
             _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
-            _dotNetObjectStore.Add(key, dotNetObject);
+            _exclusiveDotNetObjectStore.Add(key, dotNetObject);
         }
 
         public void RemoveExclusive(object dom, string eventName)
         {
             var key = FormatKey(dom, eventName);
-            if (_dotNetObjectStore.TryGetValue(key, out IDisposable value))
+            if (_exclusiveDotNetObjectStore.TryGetValue(key, out IDisposable dotNetObject))
             {
-                value?.Dispose();
+                var paresedKey = ParseKey(key);
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
             }
-            _dotNetObjectStore.Remove(key);
+            _exclusiveDotNetObjectStore.Remove(key);
         }
 
         public void DisposeExclusive()
         {
-            foreach (var (k, v) in _dotNetObjectStore)
+            foreach (var (key, dotNetObject) in _exclusiveDotNetObjectStore)
             {
-                v?.Dispose();
+                var paresedKey = ParseKey(key);
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
             }
-            _dotNetObjectStore.Clear();
+            _exclusiveDotNetObjectStore.Clear();
         }
 
         #region SharedEventListerner
@@ -89,7 +98,9 @@ namespace AntDesign.JsInterop
                     }
                 }));
 
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
+                _sharedDotNetObjectStore.Add(key, dotNetObject);
+
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
             _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(T), _id));
         }
@@ -117,6 +128,13 @@ namespace AntDesign.JsInterop
                 if (!string.IsNullOrEmpty(key) && subscription != null)
                 {
                     _domEventSubscriptionsStore[key].Remove(subscription);
+
+                    if (_domEventSubscriptionsStore[key].Count == 0 && _sharedDotNetObjectStore.ContainsKey(key))
+                    {
+                        var dotNetObject = _sharedDotNetObjectStore[key];
+                        var paresedKey = ParseKey(key);
+                        _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, paresedKey.dom, paresedKey.eventName, dotNetObject);
+                    }
                 }
                 else
                     find = false;
@@ -166,6 +184,8 @@ namespace AntDesign.JsInterop
                     _domEventSubscriptionsStore[key].Remove(subscription);
                 }
             }
+
+            await Task.CompletedTask;
         }
 
         public async ValueTask DisposeResizeObserver(ElementReference dom)
@@ -218,7 +238,7 @@ namespace AntDesign.JsInterop
         private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, bool preventDefault, Action<T> callback)
         {
             var key = FormatKey(dom, eventName);
-            if (!_dotNetObjectStore.ContainsKey(key))
+            if (!_exclusiveDotNetObjectStore.ContainsKey(key))
             {
                 var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
@@ -226,7 +246,7 @@ namespace AntDesign.JsInterop
                 }));
 
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, dotNetObject);
-                _dotNetObjectStore.Add(key, dotNetObject);
+                _exclusiveDotNetObjectStore.Add(key, dotNetObject);
             }
         }
 
