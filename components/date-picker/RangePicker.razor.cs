@@ -134,13 +134,21 @@ namespace AntDesign
 
             if (currentValue is not null)
             {
-                if (IsShowTime)
+                if (index == 0 || IsShowTime)
                 {
                     PickerValues[index] = currentValue.Value;
                 }
                 else
                 {
-                    PickerValues[index] = index == 0 ? currentValue.Value : GetClosingDate(currentValue.Value, -1);
+                    var otherValue = GetIndexValue(Math.Abs(index - 1));
+
+                    PickerValues[index] = Picker switch
+                    {
+                        DatePickerType.Year when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Week or DatePickerType.Date when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Quarter or DatePickerType.Month when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
+                        _ => GetClosingDate(currentValue.Value, -1)
+                    };
                 }
             }
             else if (UseDefaultPickerValue[index] && DefaultPickerValue is not null)
