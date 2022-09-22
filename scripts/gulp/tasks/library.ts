@@ -43,7 +43,11 @@ task('library:copy-libs-js', () => {
 });
 
 task('library:copy-libs-less', () => {
-  return src([join(buildConfig.publishDir, '**/*.less')])
+  // Copy all the non-empty less files, excluding the src folder which would duplicate some files.  
+  return src([
+      join(buildConfig.publishDir, '**/*.less'),
+      '!' + join(buildConfig.publishDir, 'src', '**/*.less')
+    ])
     .pipe(gulpFilter(includeNonEmptyFiles))
     .pipe(dest(join(buildConfig.componentsDir, 'wwwroot/less')));
 });
