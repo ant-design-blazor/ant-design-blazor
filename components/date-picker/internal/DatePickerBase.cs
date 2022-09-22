@@ -715,7 +715,7 @@ namespace AntDesign
             {
                 DatePickerType.Year => pickerValue.AddYears(offset * 10),
                 DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
-                _ => pickerValue.AddMonths(offset),
+                _ => pickerValue.AddMonths(offset)
             };
         }
 
