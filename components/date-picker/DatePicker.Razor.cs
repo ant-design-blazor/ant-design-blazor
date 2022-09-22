@@ -80,7 +80,7 @@ namespace AntDesign
             }
         }
 
-        private TValue _cacheDuringInput;
+        private DateTime? _cacheDuringInput;
 
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
@@ -95,12 +95,16 @@ namespace AntDesign
             if (!_duringManualInput)
             {
                 _duringManualInput = true;
-                _cacheDuringInput = Value;
+                _cacheDuringInput = GetIndexValue(0);
             }
+
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
-                CurrentValue = changeValue;
-                _cacheDuringInput = changeValue;
+                GetIfNotNull(changeValue, parsed =>
+                {
+                    _pickerStatus[0].SelectedValue = parsed;
+                    ChangePickerValue(parsed, index);
+                });
             }
         }
 
@@ -111,14 +115,14 @@ namespace AntDesign
 
             if (_duringManualInput)
             {
-                if (!Value.Equals(_cacheDuringInput))
+                if (Value is null && _pickerStatus[0].SelectedValue is not null ||
+                    !Convert.ToDateTime(Value, CultureInfo).Equals(_pickerStatus[0].SelectedValue))
                 {
-                    //reset picker to Value         
-                    CurrentValue = _cacheDuringInput;
+                    _pickerStatus[0].SelectedValue = null;
+                    ChangePickerValue(_cacheDuringInput ?? _pickerValuesAfterInit);
                 }
                 _duringManualInput = false;
             }
-
             AutoFocus = false;
             await Task.Yield();
         }
@@ -131,58 +135,58 @@ namespace AntDesign
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
+
             if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
                 _duringManualInput = false;
-                if (string.IsNullOrWhiteSpace(_inputStart.Value))
-                    ClearValue();
-                else
-                    await TryApplyInputValue();
 
                 if (key == "ESCAPE" && _dropDown.IsOverlayShow())
                 {
                     Close();
                     await Js.FocusAsync(_inputStart.Ref);
-                    return;
                 }
-                if (key == "ENTER")
+                else if (key == "ENTER")
                 {
-                    //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
-                    await Task.Yield();
-                    await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
-                }
-                Close();
-                AutoFocus = false;
-                return;
-            }
-
-            if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
-            {
-                await _dropDown.Show();
-                return;
-            }
-            if (key == "ARROWUP" && _dropDown.IsOverlayShow())
-            {
-                Close();
-                return;
-            }
-        }
-
-        private async Task TryApplyInputValue()
-        {
-            if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
-            {
-                CurrentValue = changeValue;
-
-                if (OnChange.HasDelegate)
-                {
-                    await OnChange.InvokeAsync(new DateTimeChangedEventArgs
+                    if (string.IsNullOrEmpty(_inputStart.Value))
                     {
-                        Date = Convert.ToDateTime(changeValue, this.CultureInfo),
-                        DateString = GetInputValue(0)
-                    });
+                        if (!_dropDown.IsOverlayShow())
+                            await _dropDown.Show();
+                    }
+                    else if (HasTimeInput && _pickerStatus[0].SelectedValue is not null)
+                    {
+                        await OnOkClick();
+                    }
+                    else if (_pickerStatus[0].SelectedValue is not null)
+                    {
+                        await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
+                    }
+                    else
+                    {
+                        if (!_dropDown.IsOverlayShow())
+                            await _dropDown.Show();
+                        else
+                            Close();
+                    }
+
+                }
+                else if (key == "TAB")
+                {
+                    Close();
+                    AutoFocus = false;
                 }
             }
+            else if (key == "ARROWDOWN")
+            {
+                if (!_dropDown.IsOverlayShow())
+                    await _dropDown.Show();
+            }
+            else if (key == "ARROWUP")
+            {
+                if (_dropDown.IsOverlayShow())
+                    Close();
+            }
+            else if (!_dropDown.IsOverlayShow())
+                await _dropDown.Show();
         }
 
         /// <summary>
@@ -196,6 +200,12 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
+
+            if (_pickerStatus[index].SelectedValue is not null)
+            {
+                return _pickerStatus[index].SelectedValue;
+            }
+
             if (_pickerStatus[0].IsValueSelected)
             {
                 if (Value == null)
@@ -213,28 +223,29 @@ namespace AntDesign
             return null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0)
+        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
+
             UseDefaultPickerValue[0] = false;
 
-            CurrentValue = THelper.ChangeType<TValue>(value);
-
-            if (!IsShowTime && Picker != DatePickerType.Time)
+            if (closeDropdown && !IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
             }
 
-            if (OnChange.HasDelegate)
+            var currentValue = CurrentValue is not null ?
+                Convert.ToDateTime(CurrentValue, CultureInfo)
+                : (DateTime?)null;
+
+            if (currentValue != value)
             {
-                OnChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = value,
-                    DateString = GetInputValue(0)
-                });
+                CurrentValue = THelper.ChangeType<TValue>(value);
+
+                _ = InvokeOnChange();
             }
         }
 
@@ -266,6 +277,13 @@ namespace AntDesign
                 OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
+
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            {
+                Date = GetIndexValue(0),
+                DateString = GetInputValue(0)
+            });
+
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
@@ -295,6 +313,15 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick();
+        }
+
+        private async Task InvokeOnChange()
+        {
+            await OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            {
+                Date = GetIndexValue(0),
+                DateString = GetInputValue(0)
+            });
         }
     }
 }
