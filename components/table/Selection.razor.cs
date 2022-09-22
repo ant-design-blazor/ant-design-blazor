@@ -29,7 +29,7 @@ namespace AntDesign
 
         //private int[] _selectedIndexes;
 
-        private void OnCkeckedChange(bool selected)
+        private void OnCheckedChange(bool selected)
         {
             if (IsHeader)
             {
