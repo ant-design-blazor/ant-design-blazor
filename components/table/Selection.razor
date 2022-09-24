@@ -30,7 +30,7 @@ else if (IsHeader && HeaderColSpan != 0)
 	<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
 		@if (Type == "checkbox")
 		{
-			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" />
+			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
 		}
 	</th>
 }
