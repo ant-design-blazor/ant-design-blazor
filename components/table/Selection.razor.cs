@@ -29,6 +29,8 @@ namespace AntDesign
 
         //private int[] _selectedIndexes;
 
+        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+
         private void OnCheckedChange(bool selected)
         {
             if (IsHeader)

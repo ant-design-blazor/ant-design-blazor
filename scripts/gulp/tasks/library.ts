@@ -11,6 +11,8 @@ import { buildConfig } from '../../build-config';
 import { compile as compileLess } from '../../build/compile-styles';
 import { generateLessVars } from '../../build/generate-less-vars';
 import { copyStylesToSrc } from '../../build/migration-styles';
+import { includeNonEmptyFiles } from '../util/task-helpers';
+const gulpFilter = require('gulp-filter');
 
 task('library:mkdir-dir', done => {
   mkdirsSync(buildConfig.publishDir);
@@ -40,12 +42,22 @@ task('library:copy-libs-js', () => {
   return src([join(buildConfig.publishDir, '*.js*')]).pipe(dest(join(buildConfig.componentsDir, 'wwwroot/js')));
 });
 
+task('library:copy-libs-less', () => {
+  // Copy all the non-empty less files, excluding the src folder which would duplicate some files.  
+  return src([
+      join(buildConfig.publishDir, '**/*.less'),
+      '!' + join(buildConfig.publishDir, 'src', '**/*.less')
+    ])
+    .pipe(gulpFilter(includeNonEmptyFiles))
+    .pipe(dest(join(buildConfig.componentsDir, 'wwwroot/less')));
+});
+
 task(
   'build:library',
   series(
     'clean',
     'library:mkdir-dir',
     parallel('library:scripts', 'library:compile-less'),
-    parallel('library:copy-libs-css', 'library:copy-libs-js'),
+    parallel('library:copy-libs-css', 'library:copy-libs-js', 'library:copy-libs-less'),
   )
 );
