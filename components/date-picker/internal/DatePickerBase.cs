@@ -458,8 +458,9 @@ namespace AntDesign
         {
             _duringManualInput = false;
 
-            // InitPicker is the finally value
-            if (_picker == _pickerStatus[index].InitPicker)
+            var isInitialPickerType = _picker == _pickerStatus[index].InitPicker;
+
+            if (isInitialPickerType)
             {
                 _pickerStatus[index].SelectedValue = date;
 
@@ -503,7 +504,7 @@ namespace AntDesign
                 _picker = _prePickerStack.Pop();
             }
 
-            if (!IsRange || IsShowTime)
+            if (!isInitialPickerType || !IsRange || IsShowTime)
             {
                 ChangePickerValue(date, index);
             }
