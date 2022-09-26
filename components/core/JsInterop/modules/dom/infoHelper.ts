@@ -12,7 +12,9 @@ export class infoHelper {
     if (!element) {
       element = document.body;
     } else if (typeof element === 'string') {
-      if (element === 'document') {
+      if (element === 'window') {
+          return window;
+      } else if (element === 'document') {
         return document;
       }
       element = document.querySelector(element!)
