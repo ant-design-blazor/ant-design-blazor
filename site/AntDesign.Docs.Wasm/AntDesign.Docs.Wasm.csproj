@@ -34,6 +34,10 @@
     <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" />
+  </ItemGroup>
+
   <Target Name="CopyDocs" BeforeTargets="Build">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
   </Target>
