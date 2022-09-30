@@ -39,14 +39,14 @@
 
     SalesItem[] data3;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
-        await chart1.ChangeData(data1);
-
-        data3 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+            await chart1.ChangeData(data1);
+            data3 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+        }
     }
 
     #region 示例1
