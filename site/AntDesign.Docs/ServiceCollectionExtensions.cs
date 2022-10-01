@@ -11,10 +11,10 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
             services.AddAntDesign();
-            services.AddSingleton<RouteManager>();
+            services.AddScoped<RouteManager>();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
-            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
+            services.AddScoped<ILanguageService>(_ => new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
             return services;
