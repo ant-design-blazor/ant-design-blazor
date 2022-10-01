@@ -34,6 +34,10 @@
     <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
   </ItemGroup>
 
+  <PropertyGroup>
+    <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US/;/zh-CN/</BlazorWasmPrerenderingUrlPathToExplicitFetch>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" />
   </ItemGroup>
