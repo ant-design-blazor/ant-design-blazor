@@ -42,12 +42,21 @@ namespace AntDesign.Docs.Pages
 
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
-        protected override async Task OnInitializedAsync()
+        private bool _firstRendered;
+
+        protected override void OnInitialized()
         {
             LanguageService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
+        }
 
-            await HandleNavigate();
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _firstRendered = true;
+                await HandleNavigate();
+            }
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo args)
@@ -73,6 +82,8 @@ namespace AntDesign.Docs.Pages
 
         private async Task HandleNavigate()
         {
+            if (!_firstRendered) return;
+
             var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName.Substring(fullPageName.IndexOf('/') + 1) : fullPageName;
             fullPageName = fullPageName.IndexOf('#') > 0 ? fullPageName.Substring(0, fullPageName.IndexOf('#')) : fullPageName;
