@@ -14,6 +14,9 @@ namespace AntDesign
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
         [Parameter]
+        public int Precision { get; set; } = 0;
+
+        [Parameter]
         public Func<TValue, string> Formatter { get; set; }
 
         [Parameter]
@@ -454,7 +457,15 @@ namespace AntDesign
             }
             else
             {
-                CurrentValue = _decimalPlaces.HasValue ? _roundFunc(value, _decimalPlaces.Value) : value;
+                if (Precision > 0 || _decimalPlaces > 0)
+                {
+                    var round = Precision > 0 ? Precision : _decimalPlaces.Value;
+                    CurrentValue = _roundFunc(value, round);
+                }
+                else
+                {
+                    CurrentValue = value;
+                }
             }
             if (OnChange.HasDelegate)
             {
@@ -482,6 +493,12 @@ namespace AntDesign
             if (Formatter != null)
             {
                 return Formatter(Value);
+            }
+
+            if (Precision > 0 || _decimalPlaces > 0)
+            {
+                var nN = "n" + (Precision > 0 ? Precision : _decimalPlaces.Value);
+                return _toStringFunc(value, nN);
             }
 
             if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
