@@ -61,6 +61,7 @@ namespace AntDesign
                 Footer = null,
 
                 ClassName = confirmOptions.ClassName,
+                Closable = false
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
