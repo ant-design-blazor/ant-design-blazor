@@ -15,6 +15,26 @@ timeline: true
 
 ---
 
+### 0.12.5
+
+`2022-10-09`
+
+- Datepicker
+  - 🐞 修复一系列问题，使 Datepicker 和 RangePicker 的行为更接近 antd。[#2741](https://github.com/ant-design-blazor/ant-design-blazor/pull/2741) [@Alexbits](https://github.com/Alexbits)
+    - 修复 OnChange 事件传入旧值的问题。
+    - 修复 RangePicker 的头部无法切换年份。
+    - 修复 RangePicker 当开始和结束都在同一周期时，选择面板的显示问题。
+    - 修复 RangePicker 周选择模式时，结束日期不高亮显示的问题。
+    - 修复 RangePicker 在带有时间的日期选择器中输入结束日期时，开始日期不会高亮显示的问题。
+    - 其他一些小修复和重构
+  - 🐞 修复 手动输入时间时，CultureInfo 格式不识别导致无法绑定的问题。[#2715](https://github.com/ant-design-blazor/ant-design-blazor/pull/2715) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 底层 当组件 Dispose 时移除JS事件监听器。[#2738](https://github.com/ant-design-blazor/ant-design-blazor/pull/2738) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 的 Disabled 属性在使用了 RadioOption 作为 options 的 RadioGroup 中不起作用的问题。[#2744](https://github.com/ant-design-blazor/ant-design-blazor/pull/2744) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 当所有selection都为Disabled=true，则头部的全选 Selection 也变为 Disable 状态。[#2737](https://github.com/ant-design-blazor/ant-design-blazor/pull/2737) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- ⚡️ 修复 Selec 内部 CreateDeleteSelectOptions 方法的循环调用。[#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 修复 Modal 当使用 Title 时，Maximizable 设置不生效。[#2750](https://github.com/ant-design-blazor/ant-design-blazor/pull/2750) [@zxyao145](https://github.com/zxyao145)
+- 🛠 修复 Gulp 脚本，使LESS文件打包到NUGET包中。[#2730](https://github.com/ant-design-blazor/ant-design-blazor/pull/2730) [@paulsuart](https://github.com/paulsuart)
+
 ### 0.12.4
 
 `2022-09-14`
