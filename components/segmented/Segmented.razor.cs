@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
@@ -19,7 +18,18 @@ namespace AntDesign
         public TValue DefaultValue { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled == value)
+                    return;
+
+                _disabled = value;
+                _items.ForEach(item => item.MarkStateHasChanged());
+            }
+        }
 
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
@@ -65,11 +75,15 @@ namespace AntDesign
             get => _value;
             set
             {
-                if (value != null && !value.Equals(_value))
-                {
-                    _value = value;
-                    ChangeValue(_value);
-                }
+                if (_value is null && value is null)
+                    return;
+
+                if (_value?.Equals(value) == true)
+                    return;
+
+                _value = value;
+                _valueSet = true;
+                ChangeValue(_value);
             }
         }
 
@@ -101,6 +115,8 @@ namespace AntDesign
         private bool _firstRendered;
 
         private TValue _value;
+        private bool _valueSet;
+        private bool _disabled;
 
         protected override void OnInitialized()
         {
@@ -134,9 +150,14 @@ namespace AntDesign
                 _optionsChanged = true;
             }
 
-            if (_value == null && _optionValues?.Any() == true)
+            if (!_valueSet && _optionValues?.Any() == true)
             {
                 _value = _optionValues[0];
+                _valueSet = true;
+            }
+
+            if (_valueSet)
+            {
                 ChangeValue(_value);
             }
         }
@@ -165,11 +186,6 @@ namespace AntDesign
 
         private void ChangeValue(TValue value)
         {
-            if (Disabled)
-            {
-                return;
-            }
-
             var item = _items.FirstOrDefault(x => x.Value.Equals(value));
             if (item != null)
             {
