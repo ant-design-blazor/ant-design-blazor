@@ -15,6 +15,30 @@ timeline: true
 
 ---
 
+### 0.12.5
+
+`2022-10-09`
+
+- Datepicker
+  - 🐞 Fixed correct culture not applied when manual input. [#2715](https://github.com/ant-design-blazor/ant-design-blazor/pull/2715) [@Alexbits](https://github.com/Alexbits)
+ - 🐞 Fixed a series of issues to make Datepicker and RangePicker behave more like antd. [#2741](https://github.com/ant-design-blazor/ant-design-blazor/pull/2741) [@Alexbits](https://github.com/Alexbits)
+    - Fixed an issue with the OnChange event passing in an old value.
+    - Fixed RangePicker head not switching year.
+    - Fixed RangePicker selection panel display problem when both start and end in the same period.
+    - Fixed an issue where the end date was not highlighted when the RangePicker was selected in week mode.
+    - The start date is not highlighted during the end date input in the date picker with the time.
+    - Other minor fixes and refactorings
+
+- Modal
+  - 🐞 Fixed maximizable not work when using Title. [#2750](https://github.com/ant-design-blazor/ant-design-blazor/pull/2750) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 Fixed Confirm dialog closeable. [#2776](https://github.com/ant-design-blazor/ant-design-blazor/pull/2776) [@zxyao145](https://github.com/zxyao145)
+
+- 🐞 Fixed Core that remove the event listener when the component is disposed. [#2738](https://github.com/ant-design-blazor/ant-design-blazor/pull/2738) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Radio that the disabled parameter for RadioGroup with <code class="notranslate">RadioOption&lt;TValue&gt;</code> options doesn't work. [#2744](https://github.com/ant-design-blazor/ant-design-blazor/pull/2744) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table that set value for table header checkbox Disabled attribute. [#2737](https://github.com/ant-design-blazor/ant-design-blazor/pull/2737) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- ⚡️ Fixed Select that remove redundant CreateDeleteSelectOptions() calls in render cycles. [#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🛠  Fixed gulp pipeline to include less files so they end up in /staticwebassets/less in the nuget package. [#2730](https://github.com/ant-design-blazor/ant-design-blazor/pull/2730) [@paulsuart](https://github.com/paulsuart)
+
 ### 0.12.4
 
 `2022-09-14`
