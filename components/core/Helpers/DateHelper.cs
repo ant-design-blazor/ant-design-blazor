@@ -268,5 +268,15 @@ namespace AntDesign
 
             return currentDate.AddDays(value);
         }
+
+        public static bool IsSameDecade(DateTime? date, DateTime? compareDate)
+        {
+            if (date is null || compareDate is null)
+                return false;
+
+            var num1 = Math.Floor(date.Value.Year / 10d);
+            var num2 = Math.Floor(compareDate.Value.Year / 10d);
+            return num1 == num2;
+        }
     }
 }

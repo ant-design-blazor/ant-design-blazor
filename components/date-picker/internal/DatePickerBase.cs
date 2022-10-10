@@ -13,7 +13,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
+    public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
@@ -256,7 +256,7 @@ namespace AntDesign
 
         protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
 
-        public bool IsRange { get; set; }
+        public bool IsRange { get; protected set; }
 
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
@@ -285,6 +285,8 @@ namespace AntDesign
         internal event EventHandler<bool> OverlayVisibleChanged;
 
         private readonly object _eventLock = new();
+
+        protected bool HasTimeInput => IsShowTime || Picker == DatePickerType.Time;
 
         event EventHandler<bool> IDatePicker.OverlayVisibleChanged
         {
@@ -421,6 +423,7 @@ namespace AntDesign
         protected string GetInputValue(int index = 0)
         {
             DateTime? tryGetValue = GetIndexValue(index);
+
             if (tryGetValue == null)
             {
                 return "";
@@ -451,23 +454,49 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnSelect(DateTime date, int index)
+        protected virtual async Task OnSelect(DateTime date, int index, bool switchFocus = true, bool closeDropdown = true)
         {
             _duringManualInput = false;
 
-            // InitPicker is the finally value
-            if (_picker == _pickerStatus[index].InitPicker)
+            var isInitialPickerType = _picker == _pickerStatus[index].InitPicker;
+
+            if (isInitialPickerType)
             {
-                ChangeValue(date, index);
+                _pickerStatus[index].SelectedValue = date;
+
+                if (IsRange)
+                {
+                    var otherIndex = Math.Abs(index - 1);
+
+                    if (!HasTimeInput)
+                    {
+                        if (GetIndexValue(otherIndex) is not null)
+                        {
+                            if (_pickerStatus[otherIndex].SelectedValue is not null)
+                            {
+                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, closeDropdown);
+                            }
+
+                            ChangeValue(date, index, closeDropdown);
+                        }
+                    }
+                }
+                else if (!HasTimeInput)
+                {
+                    ChangeValue(date, index, closeDropdown);
+                }
 
                 // auto focus the other input
-                if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
+                if (switchFocus)
                 {
-                    await SwitchFocus(index);
-                }
-                else
-                {
-                    await Focus(index);
+                    if (IsRange && !HasTimeInput)
+                    {
+                        await SwitchFocus(index);
+                    }
+                    else
+                    {
+                        await Focus(index);
+                    }
                 }
             }
             else
@@ -475,7 +504,7 @@ namespace AntDesign
                 _picker = _prePickerStack.Pop();
             }
 
-            if (!IsRange || IsShowTime)
+            if (!isInitialPickerType || !IsRange || IsShowTime)
             {
                 ChangePickerValue(date, index);
             }
@@ -487,27 +516,33 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            _pickerStatus[index].IsNewValueSelected = true;
-
             if (IsRange)
             {
                 var otherIndex = Math.Abs(index - 1);
+                var otherValue = GetIndexValue(otherIndex);
 
-                if (!_pickerStatus[otherIndex].IsNewValueSelected)
+                if (_pickerStatus[index].SelectedValue is not null && otherValue is not null)
                 {
-                    var otherValue = GetIndexValue(otherIndex);
-                    _pickerStatus[otherIndex].IsNewValueSelected = otherValue is not null
-                                                                    && otherValue != _pickerStatus[otherIndex].OldValue;
+                    if (_pickerStatus[otherIndex].SelectedValue is not null)
+                    {
+                        ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex);
+                    }
+
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
+
+                if (!(await SwitchFocus(index)))
+                {
+                    Close();
                 }
             }
             else
             {
-                Close();
-                return;
-            }
+                if (HasTimeInput && _pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
 
-            if (!(await SwitchFocus(index)))
-            {
                 Close();
             }
         }
@@ -525,19 +560,17 @@ namespace AntDesign
             _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             ChangeValue((DateTime)range[0], 0);
             ChangeValue((DateTime)range[1], 1);
-            _pickerStatus[0].IsNewValueSelected = true;
-            _pickerStatus[1].IsNewValueSelected = true;
             Close();
         }
 
-        private async Task<bool> SwitchFocus(int index)
+        protected async Task<bool> SwitchFocus(int index)
         {
-            if (index == 0 && (!_pickerStatus[1].IsNewValueSelected || Open) && !_inputEnd.IsOnFocused && !IsDisabled(1))
+            if (index == 0 && (_pickerStatus[1].SelectedValue is null || Open) && !_inputEnd.IsOnFocused && !IsDisabled(1))
             {
                 await Blur(0);
                 await Focus(1);
             }
-            else if (index == 1 && (!_pickerStatus[0].IsNewValueSelected || Open) && !_inputStart.IsOnFocused && !IsDisabled(0))
+            else if (index == 1 && (_pickerStatus[0].SelectedValue is null || Open) && !_inputStart.IsOnFocused && !IsDisabled(0))
             {
                 await Blur(1);
                 await Focus(0);
@@ -553,7 +586,7 @@ namespace AntDesign
             return true;
         }
 
-        protected virtual async Task OnBlur(int index) => await Task.Yield();
+        protected abstract Task OnBlur(int index);
 
         protected void InitPicker(string picker)
         {
@@ -665,7 +698,7 @@ namespace AntDesign
 
             var pickerValue = PickerValues[tempIndex];
 
-            if (index == 0 || IsShowTime || Picker == DatePickerType.Time)
+            if (index == 0 || HasTimeInput)
             {
                 return pickerValue;
             }
@@ -683,7 +716,7 @@ namespace AntDesign
             {
                 DatePickerType.Year => pickerValue.AddYears(offset * 10),
                 DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
-                _ => pickerValue.AddMonths(offset),
+                _ => pickerValue.AddMonths(offset)
             };
         }
 
@@ -694,7 +727,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void ResetPlaceholder(int index = -1)
+        public void ResetPlaceholder(int rangePickerIndex = -1)
         {
             _placeholder.Switch(single =>
             {
@@ -703,18 +736,19 @@ namespace AntDesign
                 _placeholders[1] = placeholder;
             }, arr =>
             {
-                var rangePickerIndex = index >= 0 ? index : GetOnFocusPickerIndex();
+                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, Locale);
 
-                var placeholder = arr.Length > rangePickerIndex ? arr[rangePickerIndex] : null;
-
-                if (placeholder is null)
+                if (rangePickerIndex >= 0)
                 {
-                    var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, Locale);
-
-                    placeholder = rangePickerIndex == 0 ? startPlaceholder : endPlaceholder;
+                    var placeholder = arr.Length > rangePickerIndex ? arr[rangePickerIndex] : null;
+                    placeholder ??= rangePickerIndex == 0 ? startPlaceholder : endPlaceholder;
+                    _placeholders[rangePickerIndex] = placeholder;
                 }
-
-                _placeholders[rangePickerIndex] = placeholder;
+                else
+                {
+                    _placeholders[0] = arr.Length > 0 ? arr[0] : startPlaceholder;
+                    _placeholders[1] = arr.Length > 1 ? arr[1] : endPlaceholder;
+                }
             });
         }
 
@@ -856,18 +890,11 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        public virtual void ChangeValue(DateTime value, int index = 0)
-        {
-        }
+        public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
-        public virtual void ClearValue(int index = 0, bool closeDropdown = true)
-        {
-        }
+        public abstract void ClearValue(int index = 0, bool closeDropdown = true);
 
-        public virtual DateTime? GetIndexValue(int index)
-        {
-            return null;
-        }
+        public abstract DateTime? GetIndexValue(int index);
 
         protected TValue SortValue(TValue value)
         {
@@ -899,62 +926,21 @@ namespace AntDesign
 
         protected void InvokeInternalOverlayVisibleChanged(bool visible)
         {
+            var index = GetOnFocusPickerIndex();
+
+            _pickerStatus[index].SelectedValue = null;
+
             if (IsRange)
             {
-                if (!visible && (!_pickerStatus[0].IsNewValueSelected || !_pickerStatus[1].IsNewValueSelected))
-                {
-                    if (_pickerStatus[0].OldValue.HasValue && _pickerStatus[1].OldValue.HasValue)
-                    {
-                        var startDate = GetIndexValue(0);
-                        var endDate = GetIndexValue(1);
+                var otherIndex = Math.Abs(index - 1);
+                _pickerStatus[otherIndex].SelectedValue = null;
 
-                        if (startDate is not null && startDate != _pickerStatus[0].OldValue)
-                        {
-                            ChangeValue(_pickerStatus[0].OldValue.Value, 0);
-                        }
-                        if (endDate is not null && endDate != _pickerStatus[1].OldValue)
-                        {
-                            ChangeValue(_pickerStatus[1].OldValue.Value, 1);
-                        }
-                    }
-                    else if (_pickerStatus[0].IsValueSelected || _pickerStatus[1].IsValueSelected)
-                    {
-                        ClearValue(-1);
-                    }
-
-                    AutoFocus = false;
-                }
-                else if (visible)
+                if (!visible)
                 {
-                    _pickerStatus[0].OldValue = GetIndexValue(0);
-                    _pickerStatus[1].OldValue = GetIndexValue(1);
+                    ResetPlaceholder();
                 }
             }
-            else if (IsShowTime || Picker == DatePickerType.Time)
-            {
-                var index = GetOnFocusPickerIndex();
 
-                if (!_pickerStatus[index].IsNewValueSelected && !visible)
-                {
-                    if (_pickerStatus[index].OldValue.HasValue)
-                    {
-                        ChangeValue(_pickerStatus[index].OldValue.Value, index);
-                    }
-                    else
-                    {
-                        ClearValue(index);
-                    }
-                }
-                else if (visible)
-                {
-                    _pickerStatus[index].OldValue = GetIndexValue(index);
-                }
-            }
-            if (visible)
-            {
-                _pickerStatus[0].IsNewValueSelected = false;
-                _pickerStatus[1].IsNewValueSelected = false;
-            }
             OverlayVisibleChanged?.Invoke(this, visible);
         }
 
@@ -989,11 +975,9 @@ namespace AntDesign
             }
         }
 
-        internal async Task OnNowClick()
+        internal void OnNowClick()
         {
-            var pickerIndex = GetOnFocusPickerIndex();
-            await OnSelect(DateTime.Now, GetOnFocusPickerIndex());
-            _pickerStatus[pickerIndex].IsNewValueSelected = true;
+            ChangeValue(DateTime.Now, GetOnFocusPickerIndex());
             Close();
         }
     }
