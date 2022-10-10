@@ -36,7 +36,7 @@ timeline: true
 - 🐞 修复 底层 当组件 Dispose 时移除JS事件监听器。[#2738](https://github.com/ant-design-blazor/ant-design-blazor/pull/2738) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Radio 的 Disabled 属性在使用了 RadioOption 作为 options 的 RadioGroup 中不起作用的问题。[#2744](https://github.com/ant-design-blazor/ant-design-blazor/pull/2744) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Table 当所有selection都为Disabled=true，则头部的全选 Selection 也变为 Disable 状态。[#2737](https://github.com/ant-design-blazor/ant-design-blazor/pull/2737) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
-- ⚡️ 修复 Selec 内部 CreateDeleteSelectOptions 方法的循环调用。[#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
+- ⚡️ 修复 Select 内部 CreateDeleteSelectOptions 方法的循环调用。[#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
 - 🛠 修复 Gulp 脚本，使LESS文件打包到NUGET包中。[#2730](https://github.com/ant-design-blazor/ant-design-blazor/pull/2730) [@paulsuart](https://github.com/paulsuart)
 
 ### 0.12.4
