@@ -15,10 +15,6 @@ export function cleanTask(glob: string | string[]): gulp.TaskFunction {
   return () => gulp.src(glob, { read: false, allowEmpty: true }).pipe(gulpClean(null));
 }
 
-export function includeNonEmptyFiles(file: any): boolean {
-  return file.stat && file.stat.size;
-}
-
 export function execTask(binPath: string, args: string[], env = {}): gulp.TaskFunction {
   return (done: (err?: Error | null) => void) => {
     // https://github.com/angular/angular-cli/issues/10922
