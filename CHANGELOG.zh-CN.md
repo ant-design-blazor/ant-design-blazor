@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.12.6
+
+`2022-10-11`
+
+- 🐞 修复 JS事件监听器注册问题。[#2783](https://github.com/ant-design-blazor/ant-design-blazor/pull/2783) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmented 的 Disabled 参数对项不起作用，也不能动态切换的问题。[#2778](https://github.com/ant-design-blazor/ant-design-blazor/pull/2778) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复打包时 patch.less 空文件缺失。[#2779](https://github.com/ant-design-blazor/ant-design-blazor/pull/2779) [@paulsuart](https://github.com/paulsuart)
+
 ### 0.12.5
 
 `2022-10-09`
