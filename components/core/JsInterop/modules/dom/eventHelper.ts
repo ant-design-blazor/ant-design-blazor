@@ -40,7 +40,7 @@ export class eventHelper {
     }
 
     dom[`i_${key}`] = invoker;
-    (dom as HTMLElement).addEventListener(eventName, dom[`e_${eventName}`]);
+    (dom as HTMLElement).addEventListener(eventName, dom[`e_${key}`]);
   }
 
   static addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
