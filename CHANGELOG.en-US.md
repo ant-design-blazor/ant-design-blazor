@@ -15,6 +15,15 @@ timeline: true
 
 ---
 
+### 0.12.6
+
+`2022-10-11`
+
+- 🐞 Fixed JS event listener registration. [#2783](https://github.com/ant-design-blazor/ant-design-blazor/pull/2783) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Segmented that the Disabled parameter does not work on items and cannot be dynamically toggled. [#2778](https://github.com/ant-design-blazor/ant-design-blazor/pull/2778) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Removing the gulp task to exclude empty files. [#2779](https://github.com/ant-design-blazor/ant-design-blazor/pull/2779) [@paulsuart](https://github.com/paulsuart)
+
+
 ### 0.12.5
 
 `2022-10-09`
