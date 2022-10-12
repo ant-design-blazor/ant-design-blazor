@@ -526,6 +526,8 @@ namespace AntDesign.Internal
             _placement = placement;
         }
 
+        internal virtual string GetArrowClass() => "";
+
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
