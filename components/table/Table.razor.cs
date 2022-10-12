@@ -636,7 +636,14 @@ namespace AntDesign
             {
                 if (ScrollY != null || ScrollX != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                    try
+                    {
+                        await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                    }
+                    catch (JSDisconnectedException ex)
+                    {
+                        continue;
+                    }
                 }
             }
             DomEventListener?.Dispose();
