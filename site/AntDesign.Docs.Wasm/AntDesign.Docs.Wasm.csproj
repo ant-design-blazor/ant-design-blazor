@@ -35,11 +35,12 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
     <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US/;/zh-CN/</BlazorWasmPrerenderingUrlPathToExplicitFetch>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" />
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyDocs" BeforeTargets="Build">
