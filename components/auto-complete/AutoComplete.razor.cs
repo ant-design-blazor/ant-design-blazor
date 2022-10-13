@@ -368,7 +368,7 @@ namespace AntDesign
                 }
             }
 
-            if (_overlayTrigger != null && ShowPanel)
+            if (_overlayTrigger != null)
             {
                 // if options count == 0 then close overlay
                 if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
