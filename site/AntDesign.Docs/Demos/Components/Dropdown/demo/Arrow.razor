@@ -1,0 +1,56 @@
+﻿<div>
+    <Dropdown Overlay=@menu Placement="Placement.BottomLeft" Arrow>
+        <Button>bottomLeft</Button>
+    </Dropdown>
+    <Dropdown Overlay=@menu Placement="Placement.Bottom" Arrow>
+        <Button>bottom</Button>
+    </Dropdown>
+    <Dropdown Overlay=@menu Placement="Placement.BottomRight" Arrow>
+        <Button>bottomRight</Button>
+    </Dropdown>
+    <br />
+    <Dropdown Overlay=@menu Placement="Placement.TopLeft" Arrow>
+        <Button>topLeft</Button>
+    </Dropdown>
+    <Dropdown Overlay=@menu Placement="Placement.Top" Arrow>
+        <Button>top</Button>
+    </Dropdown>
+    <Dropdown Overlay=@menu Placement="Placement.TopRight" Arrow>
+        <Button>topRight</Button>
+    </Dropdown>
+</div>
+
+@code {
+    RenderFragment menu =
+        @<Menu>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                1st menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+                2nd menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                3rd menu item
+            </a>
+        </MenuItem>
+    </Menu> ;
+}
+
+
+<style>
+    #components-dropdown-demo-arrow .ant-btn {
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+    .ant-row-rtl #components-dropdown-demo-arrow .ant-btn {
+        margin-right: 0;
+        margin-bottom: 8px;
+        margin-left: 8px;
+    }
+</style>

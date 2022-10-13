@@ -8,6 +8,12 @@ namespace AntDesign
 {
     public partial class Dropdown : OverlayTrigger
     {
+        [Parameter]
+        public bool Arrow { get; set; }
+
+        [Parameter]
+        public bool ArrowPointAtCenter { get; set; }
+
         internal Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender { get; set; }
         internal bool Block { get; set; }
 
@@ -49,6 +55,7 @@ namespace AntDesign
 
             StateHasChanged();
         }
+
         protected void ChangeButtonClass(string leftButton, string rightButton)
         {
             _buttonClassLeft = leftButton;
@@ -62,7 +69,6 @@ namespace AntDesign
             _buttonStyleRight = rightButton;
             StateHasChanged();
         }
-
 
         protected void ChangeButtonSize(string size)
         {
@@ -113,5 +119,12 @@ namespace AntDesign
             }
         }
 
+        internal override string GetArrowClass()
+        {
+            if (Arrow || ArrowPointAtCenter)
+                return $"{PrefixCls}-show-arrow";
+
+            return "";
+        }
     }
 }
