@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OneOf.Types;
 using Xunit;
 
 namespace AntDesign.Tests.Core

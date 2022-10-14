@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace AntDesign
 {
@@ -75,26 +75,18 @@ namespace AntDesign
 
         public CssSizeLength(string value)
         {
-            value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
-            _stringValue = value;
-            _parsed = true;
-
-            if (value.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
+#if NET6_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(value);
+#else
+            if (value == null)
             {
-                _stringValue = value;
-                _value = null;
-                _unit = CssSizeLengthUnit.NoUnit;
-                return;
+                throw new ArgumentNullException(nameof(value));
             }
-
-            var index = value
-                .Select((c, i) => ((char c, int i)?)(c, i))
-                .FirstOrDefault(x => !(x.Value.c == '.' || x.Value.c >= '0' && x.Value.c <= '9'))
-                ?.i
-                ?? value.Length;
-
-            if (index == 0)
+#endif
+            value = value.Trim().ToLowerInvariant();
+            if (value.Length < 1)
             {
+                // Should it throw an ArgumentException?
                 _stringValue = value;
                 _value = null;
                 _unit = CssSizeLengthUnit.Calc;
@@ -102,33 +94,35 @@ namespace AntDesign
                 return;
             }
 
-            _value = decimal.Parse(value.Substring(0, index), CultureInfo.InvariantCulture);
+            _stringValue = value;
+            _parsed = true;
 
-            if (index == value.Length)
+            if (TryResolveByPrefix(value, out var unit))
             {
-                _unit = CssSizeLengthUnit.Px;
-                _stringValue = null;
+                if (unit == CssSizeLengthUnit.Calc)
+                {
+                    _parsed = false;
+                }
+                _value = null;
+                _unit = unit;
                 return;
             }
 
-            var unit = value.Substring(index).Trim();
-            if (!Enum.TryParse(unit, ignoreCase: true, out _unit))
+            _value = ResolveBySuffix(value, out unit);
+            if (unit == CssSizeLengthUnit.Px && IsNumberOrDot(value[^1]))
             {
-                _unit = unit switch
-                {
-                    "%" => CssSizeLengthUnit.Percent,
-                    _ => CssSizeLengthUnit.NoUnit,
-                };
+                _stringValue = null;
             }
+            _unit = unit;
         }
 
-        public static implicit operator CssSizeLength(int value) => new CssSizeLength(value);
+        public static implicit operator CssSizeLength(int value) => new(value);
 
-        public static implicit operator CssSizeLength(double value) => new CssSizeLength(value);
+        public static implicit operator CssSizeLength(double value) => new(value);
 
-        public static implicit operator CssSizeLength(decimal value) => new CssSizeLength(value);
+        public static implicit operator CssSizeLength(decimal value) => new(value);
 
-        public static implicit operator CssSizeLength(string value) => new CssSizeLength(value);
+        public static implicit operator CssSizeLength(string value) => new(value);
 
         public override bool Equals(object obj) => obj is CssSizeLength other && Equals(other);
 
@@ -145,5 +139,66 @@ namespace AntDesign
             cssSizeLength = new(value);
             return cssSizeLength._parsed;
         }
+
+        private static bool TryResolveByPrefix(string trimmedValue, out CssSizeLengthUnit unit)
+        {
+            if (trimmedValue.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
+            {
+                unit = CssSizeLengthUnit.NoUnit;
+                return true;
+            }
+
+            if (!IsNumberOrDot(trimmedValue[0]))
+            {
+                unit = CssSizeLengthUnit.Calc;
+                return true;
+            }
+
+            unit = default;
+            return false;
+        }
+
+        private static decimal ResolveBySuffix(string trimmedValue, out CssSizeLengthUnit unit)
+        {
+            // Notice: before this method, we've made sure that at least the first char is number or dot.
+            // So all the logics below are based on this promise.
+            // Also, we don't need to handle all kinds of input ("1@1", "1@1%", "1 px", ".1.1" for example).
+            // Let `decimal.Parse` decides whether throws a format exception if the input is out of expect.
+
+            if (trimmedValue[^1] == '%')
+            {
+                unit = CssSizeLengthUnit.Percent;
+                return decimal.Parse(trimmedValue.AsSpan(0, trimmedValue.Length - 1), provider: CultureInfo.InvariantCulture);
+            }
+
+            if (IsNumberOrDot(trimmedValue[^1]))
+            {
+                unit = CssSizeLengthUnit.Px;
+                return decimal.Parse(trimmedValue, provider: CultureInfo.InvariantCulture);
+            }
+
+            var index = trimmedValue.Length - 2;
+            while (index >= 0)
+            {
+                if (IsNumberOrDot(trimmedValue[index]))
+                {
+                    break;
+                }
+                index--;
+            }
+
+#if NET6_0_OR_GREATER
+            if (!Enum.TryParse(trimmedValue.AsSpan(index + 1), ignoreCase: true, out unit))
+#else
+            if (!Enum.TryParse(trimmedValue[(index + 1)..], ignoreCase: true, out unit))
+#endif
+            {
+                unit = CssSizeLengthUnit.NoUnit;
+            }
+            return decimal.Parse(trimmedValue.AsSpan(0, index + 1), provider: CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsNumberOrDot(char c) => (c >= '0' && c <= '9') || c == '.';
     }
 }
