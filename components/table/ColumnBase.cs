@@ -197,8 +197,9 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            cssStyleBuilder.AddStyle("position", "sticky");
-            cssStyleBuilder.AddStyle(Fixed, $"{(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")}");
+            cssStyleBuilder
+                .AddStyle("position", "sticky")
+                .AddStyle(Fixed, $"{(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths)})" : "0px")}");
 
             return cssStyleBuilder.Build();
         }
