@@ -136,7 +136,7 @@ namespace AntDesign
 
         #region internal
 
-        internal async Task DefaultOnCancelOrOk(MouseEventArgs e)
+        public async Task DefaultOnCancelOrOk(MouseEventArgs e)
         {
             await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }
