@@ -16,10 +16,11 @@ namespace AntDesign.Tests.Core.Helpers
             var cssStyle = builder
                 .AddStyle("font-size", "10px")
                 .AddStyle("color: red")
+                .AddStyle("margin: 1px; ")
                 .AddStyle("background-color: white;")
                 .Build();
 
-            Assert.Equal("font-size: 10px; color: red; background-color: white; ", cssStyle);
+            Assert.Equal("font-size: 10px; color: red; margin: 1px; background-color: white; ", cssStyle);
         }
     }
 }
