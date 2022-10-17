@@ -95,6 +95,7 @@ namespace AntDesign.Tests.Core
             new object[] { "1234567%",        "1234567%",         true  },
             new object[] { "large",           "large" ,           false },
             new object[] { "calc(10px / 2 )", "calc( 10px / 2 )", true  },
+            new object[] { "1234567abc",      "1234567abc",       false },
         };
     }
 }
