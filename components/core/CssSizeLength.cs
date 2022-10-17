@@ -99,7 +99,7 @@ namespace AntDesign
 
             if (TryResolveByPrefix(value, out var unit))
             {
-                if (unit == CssSizeLengthUnit.Calc)
+                if (unit == CssSizeLengthUnit.NoUnit)
                 {
                     _parsed = false;
                 }
@@ -109,9 +109,19 @@ namespace AntDesign
             }
 
             _value = ResolveBySuffix(value, out unit);
-            if (unit == CssSizeLengthUnit.Px && IsNumberOrDot(value[^1]))
+
+            switch (unit)
             {
-                _stringValue = null;
+                case CssSizeLengthUnit.NoUnit:
+                    _parsed = false;
+                    break;
+
+                case CssSizeLengthUnit.Px:
+                    if (IsNumberOrDot(value[^1]))
+                    {
+                        _stringValue = null;
+                    }
+                    break;
             }
             _unit = unit;
         }
@@ -144,13 +154,13 @@ namespace AntDesign
         {
             if (trimmedValue.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
             {
-                unit = CssSizeLengthUnit.NoUnit;
+                unit = CssSizeLengthUnit.Calc;
                 return true;
             }
 
             if (!IsNumberOrDot(trimmedValue[0]))
             {
-                unit = CssSizeLengthUnit.Calc;
+                unit = CssSizeLengthUnit.NoUnit;
                 return true;
             }
 
