@@ -27,6 +27,7 @@ tasks can be achieved more efficiently within thesame context.
 | ------------- | ---------------------------------------------------------------------------------------------- | -------------- | ------------- |
 | Title         | the title for drawer                                                                           | string or slot | -             |
 | BodyStyle     | Style of the drawer content part                                                               | object         | -             |
+| HeaderStyle   | Style of the header content part                                                               | object         | -             |
 | Closable      | Whether a close (x) button is visible on top right of the Drawer dialog or not.                | boolean        | true          |
 | ChildContent  | Subcomponent                                                                                   | object         | -             |
 | MaskClosable  | Clicking on the mask (area outside the Drawer) to close the Drawer or not.                     | boolean        | true          |
