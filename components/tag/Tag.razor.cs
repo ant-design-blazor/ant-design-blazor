@@ -51,7 +51,9 @@ namespace AntDesign
             {
                 if (_color != value)
                 {
-                    _color = value;
+                    _color = string.IsNullOrWhiteSpace(value) 
+                        ? "default" 
+                        : value;
                     _isPresetColor = IsPresetColor(_color);
                     _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
                 }
@@ -59,6 +61,7 @@ namespace AntDesign
         }
 
         [Parameter]
+        [Obsolete($"Use {nameof(Color)} instead by passing the string of the enum value")]
         public PresetColor? PresetColor
         {
             get
@@ -85,6 +88,7 @@ namespace AntDesign
         public string Icon { get; set; }
 
         [Parameter]
+        [Obsolete("Parameter is not used and does not affect functionality")]
         public bool NoAnimation { get; set; }
 
         /// <summary>
@@ -112,11 +116,10 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; } = true;
 
-
-        private bool _isPresetColor;
+        private bool _isPresetColor = true;
         private bool _isCustomColor;
         private bool _closed;
-        private string _color;
+        private string _color = "default";
         private string _style;
 
         protected override void OnParametersSet()
@@ -133,15 +136,11 @@ namespace AntDesign
 
         private static bool IsPresetColor(string color)
         {
-            if (string.IsNullOrEmpty(color))
-            {
-                return false;
-            }
-
-            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
-            return result;
+            return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
         }
+
         private string _prefix = "ant-tag";
+        
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)
@@ -157,7 +156,7 @@ namespace AntDesign
 
         private string GetStyle()
         {
-            StringBuilder styleBuilder = new StringBuilder();
+            var styleBuilder = new StringBuilder();
 
             styleBuilder.Append(Style);
 
