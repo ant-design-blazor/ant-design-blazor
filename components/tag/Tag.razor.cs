@@ -53,7 +53,7 @@ namespace AntDesign
                 {
                     _color = string.IsNullOrWhiteSpace(value) 
                         ? "default" 
-                        : value;
+                        : value.ToLowerInvariant();
                     _isPresetColor = IsPresetColor(_color);
                     _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
                 }
