@@ -6,27 +6,25 @@ namespace AntDesign
 {
     public class ClassMapper
     {
-        public string Class => AsString();
+        private readonly Dictionary<Func<string>, Func<bool>> _map = new();
 
-        internal string OriginalClass { get; set; }
-
-        public string AsString()
+        public ClassMapper() : this(string.Empty)
         {
-            return string.Join(" ", _map.Where(i => i.Value()).Select(i => i.Key()));
         }
 
-        public override string ToString()
+        public ClassMapper(string originalClass)
         {
-            return AsString();
+            OriginalClass = originalClass;
+            _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
         }
 
-        private readonly Dictionary<Func<string>, Func<bool>> _map = new Dictionary<Func<string>, Func<bool>>();
+        public string Class => ToString();
 
-        public ClassMapper Add(string name)
-        {
-            _map.Add(() => name, () => true);
-            return this;
-        }
+        public string OriginalClass { get; internal set; }
+
+        public override string ToString() => string.Join(' ', _map.Where(i => i.Value()).Select(i => i.Key()));
+
+        public ClassMapper Add(string name) => Get(() => name);
 
         public ClassMapper Get(Func<string> funcName)
         {
@@ -40,11 +38,7 @@ namespace AntDesign
             return this;
         }
 
-        public ClassMapper If(string name, Func<bool> func)
-        {
-            _map.Add(() => name, func);
-            return this;
-        }
+        public ClassMapper If(string name, Func<bool> func) => GetIf(() => name, func);
 
         public ClassMapper Clear()
         {
