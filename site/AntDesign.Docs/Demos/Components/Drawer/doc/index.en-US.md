@@ -27,6 +27,7 @@ tasks can be achieved more efficiently within thesame context.
 | ------------- | ---------------------------------------------------------------------------------------------- | -------------- | ------------- |
 | Title         | the title for drawer                                                                           | string or slot | -             |
 | BodyStyle     | Style of the drawer content part                                                               | object         | -             |
+| HeaderStyle   | Style of the header content part                                                               | object         | -             |
 | Closable      | Whether a close (x) button is visible on top right of the Drawer dialog or not.                | boolean        | true          |
 | ChildContent  | Subcomponent                                                                                   | object         | -             |
 | MaskClosable  | Clicking on the mask (area outside the Drawer) to close the Drawer or not.                     | boolean        | true          |
@@ -63,7 +64,8 @@ tasks can be achieved more efficiently within thesame context.
 | CloseOnNavigation | Whether to close the drawer when the navigation history changes                 | `boolean`                                | `true`        |
 | Keyboard          | Whether to support keyboard esc off                                             | `boolean`                                | `true`        |
 | MaskStyle         | Style for Drawer's mask element.                                                | `string`                                 | `{}`          |
-| BodyStyle         | Body style for Drawer body element. Such as height, padding etc.                 | `string`                                 | `{}`          |
+| BodyStyle         | Body style for Drawer body element. Such as height, padding etc.                | `string`                                 | `{}`          |
+| HeaderStyle       | Header style for Drawer header element. Such as height, padding etc.            | `string`                                 | `{}`          |
 | Title             | The title for Drawer.                                                           | `OneOf<RenderFragment, string>`          | -             |
 | Width             | Width of the Drawer dialog.                                                     | `int`                                    | `256`         |
 | Height            | Height of the Drawer dialog, only when placement is `'top'` or `'bottom'`.      | `int`                                    | `256`         |
