@@ -22,7 +22,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | 参数          | 说明                                                    | 类型           | 默认值  |
 | ------------- | ------------------------------------------------------- | -------------- | ------- |
 | Title         | 标题                                                    | string or slot | -       |
-| BodyStyle     | 可用于设置 Drawer 内容部分的样式                          | object         | -       |
+| BodyStyle     | 可用于设置 Drawer 内容部分的样式                          | string         | -       |
+| HeaderStyle   | 可用于设置 Drawer 标题部分的样式                          | string         | -        |
 | Closable      | 是否显示右上角的关闭按钮                                | boolean        | true    |
 | ChildContent  | 抽屉元素之间的子组件                                    | object         | -       |
 | MaskClosable  | 点击蒙层是否允许关闭                                    | boolean        | true    |
@@ -60,6 +61,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | Keyboard          | 是否支持键盘 esc 关闭                                   | `boolean`                                | `true`    |
 | MaskStyle         | 遮罩样式                                                | `string`                                 | `{}`      |
 | BodyStyle         | Drawer body 样式                                         | `string`                                 | `{}`      |
+| HeaderStyle       | 可用于设置 Drawer 标题部分的样式                          | `string`         | -        |
 | Title             | 标题                                                    | `OneOf<RenderFragment, string>`          | -         |
 | Width             | 宽度                                                    | `int`                                    | `256`     |
 | Height            | 高度, 只在方向为 `'top'`或`'bottom'` 时生效             | `int`                                    | `256`     |
