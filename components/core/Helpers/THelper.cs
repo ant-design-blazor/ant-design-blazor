@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace AntDesign
 {
-    internal static class THelper
+    public static class THelper
     {
         public static T ChangeType<T>(object value)
         {

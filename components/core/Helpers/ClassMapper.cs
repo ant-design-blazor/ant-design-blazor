@@ -22,6 +22,9 @@ namespace AntDesign
 
         public string OriginalClass { get; internal set; }
 
+        [Obsolete("Use ToString() instead")]
+        public string AsString() => ToString();
+
         public override string ToString() => string.Join(' ', _map.Where(i => i.Value()).Select(i => i.Key()));
 
         public ClassMapper Add(string name) => Get(() => name);

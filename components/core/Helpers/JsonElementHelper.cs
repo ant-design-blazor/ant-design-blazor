@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace AntDesign.Core.Helpers
 {
-    internal static class JsonElementHelper<TValue>
+    public static class JsonElementHelper<TValue>
     {
         private static readonly Type _columnDataType;
 
