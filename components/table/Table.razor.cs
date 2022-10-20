@@ -357,6 +357,47 @@ namespace AntDesign
             }
         }
 
+        public void ReloadData(QueryModel queryModel, bool reserveDataSource)
+        {
+            Dictionary<TItem, RowData<TItem>> dataSourceCache = new();
+            if (reserveDataSource)
+            {
+                foreach (var (key, value) in _dataSourceCache)
+                {
+                    dataSourceCache[key] = value;
+                }
+            }
+            
+            ResetData();
+
+            if (queryModel is not null)
+            {
+                ChangePageIndex(queryModel.PageIndex);
+                ChangePageSize(queryModel.PageSize);
+
+                FlushCache();
+
+                foreach (var sorter in queryModel.SortModel)
+                {
+                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetSortModel(sorter);
+                }
+
+                foreach (var filter in queryModel.FilterModel)
+                {
+                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetFilterModel(filter);
+                }
+
+                if (reserveDataSource)
+                {
+                    this._dataSourceCache = dataSourceCache;
+                }
+
+                this.ReloadAndInvokeChange();
+            }
+        }
+
         public void ResetData()
         {
             ChangePageIndex(1);
