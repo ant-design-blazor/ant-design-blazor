@@ -8,6 +8,7 @@ using AntDesign.Core.HashCodes;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
 namespace AntDesign
 {
@@ -161,6 +162,9 @@ namespace AntDesign
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
+
+        [Inject]
+        private ILogger<Table<TItem>> Logger { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -632,21 +636,21 @@ namespace AntDesign
 
         public async ValueTask DisposeAsync()
         {
-            if (!_isReloading)
+            try
             {
-                if (ScrollY != null || ScrollX != null)
+                if (!_isReloading)
                 {
-                    try
+                    if (ScrollY != null || ScrollX != null)
                     {
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                     }
-                    catch (JSDisconnectedException ex)
-                    {
-                        continue;
-                    }
                 }
+                DomEventListener?.Dispose();
             }
-            DomEventListener?.Dispose();
+            catch (Exception ex)
+            {
+                Logger.LogError("AntDesign: an exception was thrown at Table `DisposeAsync` method.", ex);
+            }
         }
 
         bool ITable.RowExpandable(RowData rowData)
