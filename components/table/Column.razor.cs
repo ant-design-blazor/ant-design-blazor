@@ -152,7 +152,7 @@ namespace AntDesign
             }
         }
 
-        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
+        private static readonly EventCallbackFactory _callbackFactory = new();
 
         private bool _filterOpened;
 
@@ -454,9 +454,9 @@ namespace AntDesign
         {
             foreach (var filter in filterModel.Filters)
             {
-                if (filter.Value is JsonElement)
+                if (filter.Value is JsonElement jsonElement)
                 {
-                    filter.Value = JsonElementHelper<TData>.GetValue((JsonElement)filter.Value);
+                    filter.Value = JsonElementHelper<TData>.GetValue(jsonElement);
                 }
             }
 
