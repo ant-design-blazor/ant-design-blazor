@@ -15,13 +15,13 @@ namespace AntDesign
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>
-        /// Customize Badge dot color
+        /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
         public string Color { get; set; }
 
         /// <summary>
-        /// Set badge color to a preset color
+        /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
         public PresetColor? PresetColor { get; set; }
@@ -56,7 +56,7 @@ namespace AntDesign
         public RenderFragment CountTemplate { get; set; }
 
         /// <summary>
-        /// Whether to display a red dot instead of count
+        /// Whether to display a dot instead of count
         /// </summary>
         [Parameter]
         public bool Dot { get; set; }
@@ -97,19 +97,19 @@ namespace AntDesign
         public bool ShowZero { get; set; } = false;
 
         /// <summary>
-        /// Set Badge as a status dot
+        /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
         public string Status { get; set; }
 
         /// <summary>
-        /// If status is set, text sets the display text of the status dot
+        /// The display text next to the status dot
         /// </summary>
         [Parameter]
         public string Text { get; set; }
 
         /// <summary>
-        /// Text to show when hovering over the badge
+        /// Text to show when hovering over the badge. Defaults to the value of Count
         /// </summary>
         [Parameter]
         public string Title { get; set; }

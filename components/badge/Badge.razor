@@ -22,17 +22,17 @@
     }
     else
     {
-        if (!string.IsNullOrEmpty(Text))
+        @if (!string.IsNullOrEmpty(Text))
         {
             <span class="ant-badge-status-text">@Text</span>
         }
 
-        if (_finalShowSup)
+        @if (_finalShowSup)
         {
-            <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@Count">
-                if (!Dot && !HasStatusOrColor)
+            <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@(string.IsNullOrWhiteSpace(Title) ? Count.ToString() : Title)">
+                @if (!Dot && !HasStatusOrColor)
                 {
-                    if (_showOverflowCount)
+                    @if (_showOverflowCount)
                     {
                         @($"{OverflowCount}+")
                     }

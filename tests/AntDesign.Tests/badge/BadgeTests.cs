@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Linq;
 using Bunit;
+using FluentAssertions;
 using Xunit;
 
 namespace AntDesign.Tests.Badge
@@ -43,6 +45,40 @@ namespace AntDesign.Tests.Badge
                     </span>
                 </sup>
             </span>");
+        }
+
+        [Fact]
+        public void ItShouldDisplayCustomTitleForCountBadge()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
+                .Add(x => x.Count, 25)
+                .Add(x => x.Title, "Test Title"));
+
+            systemUnderTest.Find("sup").Attributes.Single(x => x.Name == "title").Value.Should().BeEquivalentTo("Test Title");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData(null)]
+        public void ItShouldDisplayCountForTitleWhenInvalidParameterValuePassed(string value)
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
+                .Add(x => x.Count, 25)
+                .Add(x => x.Title, value));
+
+            systemUnderTest.Find("sup").Attributes.Single(x => x.Name == "title").Value.Should().BeEquivalentTo("25");
+        }
+
+        [Fact]
+        public void ItShouldDisplayCustomTitleForDotBadge()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
+                .Add(x => x.Count, 25)
+                .Add(x => x.Dot, true)
+                .Add(x => x.Title, "Test Title"));
+
+            systemUnderTest.Find("sup").Attributes.Single(x => x.Name == "title").Value.Should().BeEquivalentTo("Test Title");
         }
 
         [Fact]
