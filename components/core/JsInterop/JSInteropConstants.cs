@@ -62,6 +62,12 @@ namespace AntDesign
 
         #endregion upload
 
+        #region download
+
+        public static string TriggerFileDownload => DownloadComponentHelper.TriggerFileDownload;
+
+        #endregion download
+
         #region event
 
         public static string TriggerEvent => EventHelper.TriggerEvent;
@@ -266,6 +272,12 @@ namespace AntDesign
             public static string ClearFile => $"{FUNC_PREFIX}clearFile";
             public static string UploadFile => $"{FUNC_PREFIX}uploadFile";
             public static string GetFileInfo => $"{FUNC_PREFIX}getFileInfo";
+        }
+
+        public static class DownloadComponentHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "downloadHelper.";
+            public static string TriggerFileDownload => $"{FUNC_PREFIX}triggerFileDownload";
         }
     }
 }
