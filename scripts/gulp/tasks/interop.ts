@@ -40,4 +40,4 @@ task("tsSplit", function () {
         .js.pipe(dest('wwwroot/js/split'));
 });
 
-task('library:scripts', parallel('ts', 'tsSplit', 'less-src'));
+task('library:scripts', parallel('ts', 'tsSplit'));
