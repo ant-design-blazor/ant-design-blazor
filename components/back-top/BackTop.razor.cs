@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -35,7 +36,7 @@ namespace AntDesign
         private bool _visible = false;
         private bool _hidden = false;
 
-        protected async Task OnClickHandle()
+        protected async Task OnClickHandler(MouseEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
@@ -43,7 +44,7 @@ namespace AntDesign
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
 
             if (OnClick.HasDelegate)
-                await OnClick.InvokeAsync(null);
+                await OnClick.InvokeAsync(e);
         }
 
         protected override void OnInitialized()

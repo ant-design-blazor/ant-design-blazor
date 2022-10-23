@@ -3,7 +3,7 @@
 
 @if (!_hidden)
 {
-    <div class="@ClassMapper.Class" @onclick="_ => OnClickHandle()" style="@Style">
+    <div class="@ClassMapper.Class" @onclick="OnClickHandler" style="@Style" @ref="Ref" id="@Id">
         <div>
             <div class="@BackTopContentClassMapper.Class">
                 @if (ChildContent != null)
