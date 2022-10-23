@@ -385,15 +385,6 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             SetClass();
-            if (string.IsNullOrEmpty(Placement) && Placement != _originalPlacement)
-            {
-                _originalPlacement = Placement;
-                _isPlacementFirstChange = false;
-                if (!_isPlacementFirstChange)
-                {
-                    TriggerPlacementChangeCycleOnce();
-                }
-            }
 
             _drawerStyle = "";
 
@@ -449,23 +440,6 @@ namespace AntDesign
         private Timer _timer;
         private int _zIndex = 1000;
         private string _zIndexStyle = "";
-
-        private void TriggerPlacementChangeCycleOnce()
-        {
-            PlacementChanging = true;
-            InvokeStateHasChanged();
-            _timer = new Timer()
-            {
-                AutoReset = false,
-                Interval = 300,
-            };
-            _timer.Elapsed += (_, args) =>
-            {
-                PlacementChanging = false;
-                InvokeStateHasChanged();
-            };
-            _timer.Start();
-        }
 
         /// <summary>
         /// trigger when mask is clicked
