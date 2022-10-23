@@ -42,8 +42,8 @@ tasks can be achieved more efficiently within thesame context.
 | Handler       | Content that renders as a sibling to the content of the Drawer                                 | RenderFragment | -             |
 | OnClose       | Specify a callback that will be called when a user clicks mask, close button or Cancel button. | EventCallback  | -             |
 | OnOpen        | Specify a callback that will be called after drawer rendered                                   | Func<Task>     | -             |
-| MaskStyle     | Style for Drawer's mask element.                                                               | object         | -             |
-| BodyStyle     | Style of the drawer content part                                                               | object         | -             |
+| MaskStyle     | Style for Drawer's mask element.                                                               | string         | -             |
+| BodyStyle     | Style of the drawer content part                                                               | string         | -             |
 | WrapClassName | The class name of the container of the Drawer dialog.                                          | string         | -             |
 
 ### DrawerService
