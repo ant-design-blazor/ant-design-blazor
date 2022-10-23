@@ -245,6 +245,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
 
+        /// <summary>
+        /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
+        /// </summary>
+        [Parameter]
+        public bool MaximizationOnInit { get; set; } = false;
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -326,6 +332,7 @@ namespace AntDesign
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
+                MaximizationOnInit = MaximizationOnInit
             };
 
             return options;

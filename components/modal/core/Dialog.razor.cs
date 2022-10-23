@@ -261,16 +261,23 @@ namespace AntDesign
         {
             if (_modalStatus == ModalStatus.Default)
             {
-                _modalStatus = ModalStatus.Max;
+                SetModalStatus(ModalStatus.Max);
             }
             else
             {
-                _modalStatus = ModalStatus.Default;
+                SetModalStatus(ModalStatus.Default);
             }
-            _wrapStyle = CalcWrapStyle();
-            _modalStyle = CalcModalStyle();
             return Task.CompletedTask;
         }
+
+
+        private void SetModalStatus(ModalStatus modalStatus)
+        {
+            _modalStatus = modalStatus;
+            _wrapStyle = CalcWrapStyle();
+            _modalStyle = CalcModalStyle();
+        }
+
 
         #region control show and hide class name and style
 
@@ -287,6 +294,11 @@ namespace AntDesign
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
                 _modalAnimationClsName = ModalAnimation.ModalEnter;
+
+                if (Config.MaximizationOnInit)
+                {
+                    SetModalStatus(ModalStatus.Max);
+                }
             }
         }
 

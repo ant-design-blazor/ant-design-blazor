@@ -52,6 +52,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Maximizable | 是否显示最大化按钮 | bool | false |
 | MaximizeBtnIcon | Modal在正常状态下的最大化按钮icon | RenderFragment | fullscreen       |
 | RestoreBtnIcon  | Modal在最大化状态下的还原按钮icon | RenderFragment | fullscreen-exit  |
+|MaximizationOnInit | Modal 在初始化时即为最大化状态 | bool | false |
 
 
 #### 注意
