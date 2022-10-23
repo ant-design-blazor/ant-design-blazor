@@ -188,7 +188,7 @@ namespace AntDesign
             set
             {
                 _zIndex = value;
-                if (_zIndex == 1000)
+                if (_zIndex == DefaultZIndez)
                     _zIndexStyle = "";
                 else
                     _zIndexStyle = $"z-index: {_zIndex};";
@@ -312,6 +312,7 @@ namespace AntDesign
         private const string Duration = "0.3s";
         private const string Ease = "cubic-bezier(0.78, 0.14, 0.15, 0.86)";
         private readonly string _transformTransition = $"transform {Duration} {Ease} 0s";
+        private const int DefaultZIndez = 1000;
 
         /// <summary>
         /// 设置 Drawer 是否隐藏，以及隐藏时候的位置 Offset
@@ -438,7 +439,7 @@ namespace AntDesign
         }
 
         private Timer _timer;
-        private int _zIndex = 1000;
+        private int _zIndex = DefaultZIndez;
         private string _zIndexStyle = "";
 
         /// <summary>
