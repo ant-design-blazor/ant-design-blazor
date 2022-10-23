@@ -4,7 +4,7 @@
     <div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @InnerZIndexStyle @Style" id="@Id">
         @if (Mask)
         {
-            <div class="ant-drawer-mask" @onclick="_=>MaskClick()" style="@MaskStyle"></div>
+            <div class="ant-drawer-mask" @onclick="MaskClick" style="@MaskStyle"></div>
         }
         <div class="ant-drawer-content-wrapper @WrapClassName " style="@WrapperStyle" id="@($"ant-drawer-wrap_{Id}")">
             <div class="ant-drawer-content">
@@ -39,7 +39,7 @@
                         {
                             @ContentTemplate
                         }
-                        @if (string.IsNullOrEmpty(ContentString))
+                        @if (!string.IsNullOrEmpty(ContentString))
                         {
                             @((MarkupString)ContentString)
                         }

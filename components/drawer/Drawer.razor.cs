@@ -1,8 +1,13 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -225,18 +230,18 @@ namespace AntDesign
         [Parameter]
         public bool Visible
         {
-            get => this._isOpen;
+            get => _isOpen;
             set
             {
-                if (this._isOpen && !value)
+                if (_isOpen && !value)
                 {
                     _status = ComponentStatus.Closing;
                 }
-                else if (!this._isOpen && value)
+                else if (!_isOpen && value)
                 {
                     _status = ComponentStatus.Opening;
                 }
-                this._isOpen = value;
+                _isOpen = value;
             }
         }
 
@@ -295,10 +300,10 @@ namespace AntDesign
 
                 return Placement switch
                 {
-                    "left" => $"translateX({this.OffsetX}px);",
-                    "right" => $"translateX(-{this.OffsetX}px);",
-                    "top" => $"translateY({this.OffsetY}px);",
-                    "bottom" => $"translateY(-{this.OffsetY}px);",
+                    "left" => $"translateX({OffsetX}px);",
+                    "right" => $"translateX(-{OffsetX}px);",
+                    "top" => $"translateY({OffsetY}px);",
+                    "bottom" => $"translateY(-{OffsetY}px);",
                     _ => null
                 };
             }
@@ -306,9 +311,7 @@ namespace AntDesign
 
         private const string Duration = "0.3s";
         private const string Ease = "cubic-bezier(0.78, 0.14, 0.15, 0.86)";
-        private string _widthTransition = "";
         private readonly string _transformTransition = $"transform {Duration} {Ease} 0s";
-        private string _heightTransition = "";
 
         /// <summary>
         /// 设置 Drawer 是否隐藏，以及隐藏时候的位置 Offset
@@ -322,7 +325,7 @@ namespace AntDesign
                     return null;
                 }
 
-                return this.Placement switch
+                return Placement switch
                 {
                     "left" => "translateX(-100%)",
                     "right" => "translateX(100%)",
@@ -333,11 +336,11 @@ namespace AntDesign
             }
         }
 
-        private bool IsLeftOrRight => Placement == "left" || this.Placement == "right";
+        private bool IsLeftOrRight => Placement == "left" || Placement == "right";
 
-        private string WidthPx => this.IsLeftOrRight ? StyleHelper.ToCssPixel(this.Width) : null;
+        private string WidthPx => IsLeftOrRight ? StyleHelper.ToCssPixel(Width) : null;
 
-        private string HeightPx => !this.IsLeftOrRight ? StyleHelper.ToCssPixel(this.Height) : null;
+        private string HeightPx => !IsLeftOrRight ? StyleHelper.ToCssPixel(Height) : null;
 
         private ClassMapper TitleClassMapper { get; set; } = new ClassMapper();
 
@@ -356,14 +359,14 @@ namespace AntDesign
         private void SetClass()
         {
             var prefixCls = "ant-drawer";
-            this.ClassMapper.Clear()
+            ClassMapper.Clear()
                 .Add(prefixCls)
                 .If($"{prefixCls}-open", () => _isOpen)
                 .If($"{prefixCls}-{Placement}", () => Placement.IsIn("top", "bottom", "right", "left"))
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
-            this.TitleClassMapper.Clear()
+            TitleClassMapper.Clear()
                 .If("ant-drawer-header", () => _title.Value != null)
                 .If("ant-drawer-header-no-title", () => _title.Value == null)
                 ;
@@ -371,24 +374,24 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            this._originalPlacement = Placement;
+            _originalPlacement = Placement;
 
             // TODO: remove
-            this.SetClass();
+            SetClass();
 
             base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
-            this.SetClass();
+            SetClass();
             if (string.IsNullOrEmpty(Placement) && Placement != _originalPlacement)
             {
-                this._originalPlacement = Placement;
+                _originalPlacement = Placement;
                 _isPlacementFirstChange = false;
                 if (!_isPlacementFirstChange)
                 {
-                    this.TriggerPlacementChangeCycleOnce();
+                    TriggerPlacementChangeCycleOnce();
                 }
             }
 
@@ -413,7 +416,7 @@ namespace AntDesign
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {
-                            _ = JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                            await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                         }
                         else if (!_renderInCurrentContainerRegex.IsMatch(Style))
                         {
@@ -423,7 +426,9 @@ namespace AntDesign
                         CalcDrawerStyle();
                         StateHasChanged();
                         await Task.Delay(3000);
-                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
+                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) 
+                            ? $"transform: {OffsetTransform};" 
+                            : string.Empty;
                         StateHasChanged();
                         break;
                     }
@@ -447,7 +452,7 @@ namespace AntDesign
 
         private void TriggerPlacementChangeCycleOnce()
         {
-            this.PlacementChanging = true;
+            PlacementChanging = true;
             InvokeStateHasChanged();
             _timer = new Timer()
             {
@@ -456,7 +461,7 @@ namespace AntDesign
             };
             _timer.Elapsed += (_, args) =>
             {
-                this.PlacementChanging = false;
+                PlacementChanging = false;
                 InvokeStateHasChanged();
             };
             _timer.Start();
@@ -466,9 +471,9 @@ namespace AntDesign
         /// trigger when mask is clicked
         /// </summary>
         /// <returns></returns>
-        private async Task MaskClick()
+        private async Task MaskClick(MouseEventArgs _)
         {
-            if (this.MaskClosable && this.Mask && this.OnClose.HasDelegate)
+            if (MaskClosable && Mask && OnClose.HasDelegate)
             {
                 await HandleClose();
             }
@@ -502,37 +507,16 @@ namespace AntDesign
             }
         }
 
-        private void CalcAnimation()
-        {
-            switch (this.Placement)
-            {
-                case "left":
-                case "right":
-                    _widthTransition = $"width 0s {Ease} {Duration}";
-                    break;
-
-                case "top":
-                case "bottom":
-                    _heightTransition = $"height 0s {Ease} {Duration}";
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
         private void CalcDrawerStyle()
         {
             string style = null;
             if (_status == ComponentStatus.Opened)
             {
-                CalcAnimation();
-                if (string.IsNullOrWhiteSpace(_heightTransition))
-                {
-                    _heightTransition += ",";
-                }
+                var widthHeightTransition = Placement is "left" or "right"
+                    ? $"width 0s {Ease} {Duration}"
+                    : $"height 0s {Ease} {Duration}";
 
-                style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
+                style = $"transition:{_transformTransition} {widthHeightTransition};";
             }
 
             if (!string.IsNullOrWhiteSpace(OffsetTransform))
