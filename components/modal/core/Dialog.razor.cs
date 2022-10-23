@@ -294,11 +294,6 @@ namespace AntDesign
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
                 _modalAnimationClsName = ModalAnimation.ModalEnter;
-
-                if (Config.MaximizationOnInit)
-                {
-                    SetModalStatus(ModalStatus.Max);
-                }
             }
         }
 
@@ -399,6 +394,8 @@ namespace AntDesign
 
         #region override
 
+        private bool _hasRendered = false;
+
         /// <summary>
         /// 
         /// </summary>
@@ -408,10 +405,14 @@ namespace AntDesign
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
+                if (!_hasRendered && Config.MaximizationOnInit)
+                {
+                    _hasRendered = true;
+                    SetModalStatus(ModalStatus.Max);
+                }
                 if (!_hasDestroy)
                 {
                     Show();
-                    //await InvokeStateHasChangedAsync();
                 }
                 else
                 {
