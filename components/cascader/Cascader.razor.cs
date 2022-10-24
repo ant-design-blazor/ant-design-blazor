@@ -32,6 +32,8 @@ namespace AntDesign
 
         [Parameter] public bool ShowSearch { get; set; }
 
+        [Parameter] public bool Disabled { get; set; }
+
         /// <summary>
         /// Please use SelectedNodesChanged instead.
         /// </summary>
@@ -107,6 +109,7 @@ namespace AntDesign
                 .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
                 .If($"ant-select-lg", () => Size == "large")
                 .If($"ant-select-sm", () => Size == "small")
+                .If($"ant-select-disabled", () => Disabled)
                 .If("ant-select-status-error", () => ValidationMessages.Length > 0)
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
@@ -135,6 +138,9 @@ namespace AntDesign
         /// </summary>
         private async Task InputOnToggle()
         {
+            if (Disabled)
+                return;
+
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
             if (!_dropdownOpened)
