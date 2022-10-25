@@ -16,6 +16,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 
 ## API
 
+### Common API
+
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | AddOnBefore | 带标签的 input，设置前置标签                               | RenderFragment        | -         |
@@ -24,8 +26,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | AllowComplete | 控制 Input HTML 元素的自动完成属性.     | boolean        | true         |
 | AutoFocus            | 自动聚焦.           | boolean         | false
 | Bordered | 是否有边框        | boolean         | true
+| ChangeOnInput        | 是否输入时变更 | boolean | false |
 | CultureInfo          | 文本格式化时区域本地化选项           | CultureInfo         | CultureInfo.CurrentCulture       |
-| DebounceMilliseconds | 延迟 KeyUp 事件的处理，直到用户停止输入一段预定的时间 | int        | 250         |
+| DebounceMilliseconds | 延迟 KeyUp 事件的处理，直到用户停止输入一段预定的时间， 只有在 `ChangeOnInput=true` 时有效 | int        | 250         |
 | DefaultValue |输入框默认内容                              | TValue        | -         |
 | Disabled |是否禁用状态，默认为 false                               | boolean        | false         |
 | InputElementSuffixClass |作为最后一个Css Class 添加到Input的类目中. | string        | -         | 0.9

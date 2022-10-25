@@ -25,8 +25,9 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | AllowComplete | Controls the autocomplete attribute of the input HTML element.     | boolean        | true         |
 | AutoFocus            | Focus on input element.           | boolean         | false
 | Bordered | Whether has border style         | boolean         | true
+| ChangeOnInput        | Whether to change on input | boolean | false |
 | CultureInfo          | What Culture will be used when converting string to value and value to string. Useful for InputNumber component.           | CultureInfo         | CultureInfo.CurrentCulture       |
-| DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
+| DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time. Only works if 'ChangeOnInput=true'. | int        | 250         |
 | DefaultValue |  	The initial input content                              | TValue        | -         |
 | Disabled | Whether the input is disabled.                               | boolean        | false     |
 | InputElementSuffixClass |Css class that will be  added to input element class as the last class entry. | string        | -         | 0.9
