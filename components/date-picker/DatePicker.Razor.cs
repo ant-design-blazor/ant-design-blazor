@@ -264,6 +264,7 @@ namespace AntDesign
                 Close();
 
             OnClear.InvokeAsync(null);
+            OnClearClick.InvokeAsync(null);
 
             OnChange.InvokeAsync(new DateTimeChangedEventArgs
             {

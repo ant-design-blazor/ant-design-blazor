@@ -215,6 +215,10 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Obsolete]
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         /// <summary>
         /// Called when  clear button clicked.
         /// </summary>

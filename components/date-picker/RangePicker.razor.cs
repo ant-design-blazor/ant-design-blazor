@@ -555,10 +555,8 @@ namespace AntDesign
                 InvokeOnChange();
             }
 
-            if (OnClear.HasDelegate)
-            {
-                OnClear.InvokeAsync(null);
-            }
+            OnClear.InvokeAsync(null);
+            OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
         }
