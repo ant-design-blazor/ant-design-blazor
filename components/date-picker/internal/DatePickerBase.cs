@@ -222,6 +222,9 @@ namespace AntDesign
         public EventCallback OnClearClick { get; set; }
 
         [Parameter]
+        public EventCallback OnOk { get; set; }
+
+        [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
@@ -510,6 +513,8 @@ namespace AntDesign
             {
                 Close();
             }
+
+            await OnOk.InvokeAsync(null);
         }
 
         internal void OnRangeItemOver(DateTime?[] range)
