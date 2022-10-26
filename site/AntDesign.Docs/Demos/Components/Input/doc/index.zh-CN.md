@@ -28,7 +28,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Bordered | 是否有边框        | boolean         | true
 | ChangeOnInput        | 是否输入时变更 | boolean | false |
 | CultureInfo          | 文本格式化时区域本地化选项           | CultureInfo         | CultureInfo.CurrentCulture       |
-| DebounceMilliseconds | 延迟 KeyUp 事件的处理，直到用户停止输入一段预定的时间， 只有在 `ChangeOnInput=true` 时有效 | int        | 250         |
+| DebounceMilliseconds | 延迟 KeyUp 事件的处理，直到用户停止输入一段预定的时间，设置后会开启 `ChangeOnInput` | int        | 250         |
 | DefaultValue |输入框默认内容                              | TValue        | -         |
 | Disabled |是否禁用状态，默认为 false                               | boolean        | false         |
 | InputElementSuffixClass |作为最后一个Css Class 添加到Input的类目中. | string        | -         | 0.9
