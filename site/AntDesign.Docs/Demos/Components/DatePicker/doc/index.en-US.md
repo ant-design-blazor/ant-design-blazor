@@ -73,7 +73,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | showToday | whether to show "Today" button | boolean | true |  |
 | value | to set date | [moment](http://momentjs.com/) | - |  |
 | onChange | a callback function, can be executed when the selected time is changing | function(date: moment, dateString: string) | - |  |
-| onOk（TODO） | callback when click ok button | function() | - |  |
+| onOk | callback when click ok button | function() | - |  |
 | onPanelChange | Callback function for panel changing | function(value, mode) | - |  |
 | Locale | Set custom localization. | `DatePickerLocale` | Locale for current Culture |  |
 | CultureInfo | Set's the `CultureInfo` used for generate localized headers, formatting and parsing. | `CultureInfo` | CultureInfo.DefaultThreadCurrentUICulture  |  |
