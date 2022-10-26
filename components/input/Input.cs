@@ -77,11 +77,25 @@ namespace AntDesign
         public bool Bordered { get; set; } = true;
 
         /// <summary>
+        /// Whether to change value on input
+        /// </summary>
+        [Parameter]
+        public bool ChangeOnInput { get; set; }
+
+        /// <summary>
         /// Delays the processing of the KeyUp event until the user has stopped
         /// typing for a predetermined amount of time
         /// </summary>
         [Parameter]
-        public int DebounceMilliseconds { get; set; } = 250;
+        public int DebounceMilliseconds
+        {
+            get => _debounceMilliseconds;
+            set
+            {
+                _debounceMilliseconds = value;
+                ChangeOnInput = value >= 0;
+            }
+        }
 
         /// <summary>
         /// The initial input content
@@ -202,9 +216,6 @@ namespace AntDesign
         [Parameter]
         public string WrapperStyle { get; set; }
 
-        [Parameter]
-        public bool ChangeOnInput { get; set; }
-
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
@@ -253,8 +264,7 @@ namespace AntDesign
         private Timer _debounceTimer;
         private bool _autoFocus;
         private bool _isInitialized;
-
-        private bool DebounceEnabled => ChangeOnInput;
+        private int _debounceMilliseconds = 250;
 
         protected bool IsFocused { get; set; }
 
@@ -337,25 +347,17 @@ namespace AntDesign
             SetClasses();
         }
 
-        protected virtual async Task OnChangeAsync(ChangeEventArgs args)
+        protected virtual Task OnChangeAsync(ChangeEventArgs args)
         {
-            //if (CurrentValueAsString != args?.Value?.ToString())
-            //{
-            //    CurrentValueAsString = args?.Value?.ToString();
-            //    if (OnChange.HasDelegate)
-            //    {
-            //        await OnChange.InvokeAsync(Value);
-            //    }
-            //}
-
-            await ChangeValue(true);
+            ChangeValue(true);
+            return Task.CompletedTask;
         }
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
             if (args?.Key == "Enter" && InputType != "textarea")
             {
-                await ChangeValue(true);
+                ChangeValue(true);
                 if (EnableOnPressEnter)
                 {
                     await OnPressEnter.InvokeAsync(args);
@@ -368,7 +370,7 @@ namespace AntDesign
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            await ChangeValue();
+            ChangeValue();
 
             if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
@@ -380,7 +382,7 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            await ChangeValue(true);
+            ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
@@ -394,8 +396,6 @@ namespace AntDesign
             {
                 _compositionInputting = false;
             }
-
-            //await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
@@ -459,14 +459,14 @@ namespace AntDesign
 
         protected void DebounceTimerIntervalOnTick(object state)
         {
-            InvokeAsync(async () => await ChangeValue(true));
+            InvokeAsync(() => ChangeValue(true));
         }
 
-        private async Task ChangeValue(bool force = false)
+        protected void ChangeValue(bool force = false)
         {
-            if (DebounceEnabled)
+            if (ChangeOnInput)
             {
-                if (!force)
+                if (_debounceMilliseconds > 0 && !force)
                 {
                     DebounceChangeValue();
                     return;
@@ -474,7 +474,7 @@ namespace AntDesign
 
                 if (_debounceTimer != null)
                 {
-                    await _debounceTimer.DisposeAsync();
+                    _debounceTimer.Dispose();
                     _debounceTimer = null;
                 }
             }
@@ -490,7 +490,7 @@ namespace AntDesign
                     CurrentValue = _inputValue;
                     if (OnChange.HasDelegate)
                     {
-                        await OnChange.InvokeAsync(Value);
+                        OnChange.InvokeAsync(Value);
                     }
                 }
             }
