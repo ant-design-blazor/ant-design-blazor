@@ -546,11 +546,31 @@ namespace AntDesign
             }
 
             if (closeDropdown)
+            {
                 Close();
-            if (OnClearClick.HasDelegate)
-                OnClearClick.InvokeAsync(null);
+            }
+
+            if (array.GetValue(0) is null && array.GetValue(1) is null)
+            {
+                InvokeOnChange();
+            }
+
+            if (OnClear.HasDelegate)
+            {
+                OnClear.InvokeAsync(null);
+            }
 
             _dropDown.SetShouldRender(true);
+        }
+
+        private void InvokeOnChange()
+        {
+            var array = Value as Array;
+            OnChange.InvokeAsync(new DateRangeChangedEventArgs
+            {
+                Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
+                DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
+            });
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)

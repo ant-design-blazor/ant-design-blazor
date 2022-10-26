@@ -63,7 +63,7 @@ namespace AntDesign
 
             AutoFocus = true;
             //Reset Picker to default in case it the picker value was changed
-            //but no value was selected (for example when a user clicks next 
+            //but no value was selected (for example when a user clicks next
             //month but does not select any value)
             if (!_pickerStatus[0].IsValueSelected && UseDefaultPickerValue[0] && DefaultPickerValue != null)
             {
@@ -113,7 +113,7 @@ namespace AntDesign
             {
                 if (!Value.Equals(_cacheDuringInput))
                 {
-                    //reset picker to Value         
+                    //reset picker to Value
                     CurrentValue = _cacheDuringInput;
                 }
                 _duringManualInput = false;
@@ -262,8 +262,14 @@ namespace AntDesign
 
             if (closeDropdown)
                 Close();
-            if (OnClearClick.HasDelegate)
-                OnClearClick.InvokeAsync(null);
+
+            OnClear.InvokeAsync(null);
+
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            {
+                Date = GetIndexValue(0),
+                DateString = GetInputValue(0)
+            });
 
             _dropDown.SetShouldRender(true);
         }
