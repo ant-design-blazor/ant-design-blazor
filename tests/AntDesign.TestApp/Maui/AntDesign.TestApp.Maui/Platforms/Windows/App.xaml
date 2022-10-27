@@ -1,0 +1,8 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="AntDesign.TestApp.Maui.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:AntDesign.TestApp.Maui.WinUI">
+
+</maui:MauiWinUIApplication>
