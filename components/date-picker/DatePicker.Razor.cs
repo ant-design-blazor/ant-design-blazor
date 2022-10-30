@@ -136,23 +136,23 @@ namespace AntDesign
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
 
-            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
+            var isEnter = key == "ENTER";
+            var isTab = key == "TAB";
+            var isEscape = key == "ESCAPE";
+            var isOverlayShown = _dropDown.IsOverlayShow();
+
+            if (isEnter || isTab || isEscape)
             {
                 _duringManualInput = false;
 
-                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                if (isEscape && isOverlayShown)
                 {
                     Close();
                     await Js.FocusAsync(_inputStart.Ref);
                 }
-                else if (key == "ENTER")
+                else if (isEnter || isTab)
                 {
-                    if (string.IsNullOrEmpty(_inputStart.Value))
-                    {
-                        if (!_dropDown.IsOverlayShow())
-                            await _dropDown.Show();
-                    }
-                    else if (HasTimeInput && _pickerStatus[0].SelectedValue is not null)
+                    if (HasTimeInput && _pickerStatus[0].SelectedValue is not null)
                     {
                         await OnOkClick();
                     }
@@ -160,33 +160,25 @@ namespace AntDesign
                     {
                         await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
                     }
-                    else
+                    else if (isOverlayShown)
                     {
-                        if (!_dropDown.IsOverlayShow())
-                            await _dropDown.Show();
-                        else
-                            Close();
+                        Close();
                     }
-
+                    else if (!isTab)
+                    {
+                        await _dropDown.Show();
+                    }
                 }
-                else if (key == "TAB")
-                {
-                    Close();
-                    AutoFocus = false;
-                }
-            }
-            else if (key == "ARROWDOWN")
-            {
-                if (!_dropDown.IsOverlayShow())
-                    await _dropDown.Show();
             }
             else if (key == "ARROWUP")
             {
-                if (_dropDown.IsOverlayShow())
+                if (isOverlayShown)
                     Close();
             }
-            else if (!_dropDown.IsOverlayShow())
+            else if (!isOverlayShown)
+            {
                 await _dropDown.Show();
+            }
         }
 
         /// <summary>
