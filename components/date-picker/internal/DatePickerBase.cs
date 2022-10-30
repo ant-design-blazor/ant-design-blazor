@@ -932,15 +932,15 @@ namespace AntDesign
 
             if (IsRange)
             {
-                if (visible)
-                    _pickerStatus[index].SelectedValue = GetIndexValue(index);
-
-                var otherIndex = Math.Abs(index - 1);
-                _pickerStatus[otherIndex].SelectedValue = null;
+                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
                     ResetPlaceholder();
+                }
+                else
+                {
+                    _pickerStatus[index].SelectedValue = GetIndexValue(index);
                 }
             }
 

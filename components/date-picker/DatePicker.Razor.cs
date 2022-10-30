@@ -80,8 +80,6 @@ namespace AntDesign
             }
         }
 
-        private DateTime? _cacheDuringInput;
-
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
@@ -95,7 +93,6 @@ namespace AntDesign
             if (!_duringManualInput)
             {
                 _duringManualInput = true;
-                _cacheDuringInput = GetIndexValue(0);
             }
 
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
@@ -112,18 +109,9 @@ namespace AntDesign
         {
             if (_openingOverlay)
                 return;
-
-            if (_duringManualInput)
-            {
-                if (Value is null && _pickerStatus[0].SelectedValue is not null ||
-                    !Convert.ToDateTime(Value, CultureInfo).Equals(_pickerStatus[0].SelectedValue))
-                {
-                    _pickerStatus[0].SelectedValue = null;
-                    ChangePickerValue(_cacheDuringInput ?? _pickerValuesAfterInit);
-                }
-                _duringManualInput = false;
-            }
             AutoFocus = false;
+            if (!_dropDown.IsOverlayShow())
+                _pickerStatus[0].SelectedValue = null;
             await Task.Yield();
         }
 

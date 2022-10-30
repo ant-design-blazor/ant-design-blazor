@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -66,9 +64,6 @@ namespace AntDesign
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 
         private bool ShowRanges => Ranges?.Count > 0;
-
-        private DateTime? _cacheDuringInput;
-        private DateTime _pickerValueCache;
 
         public RangePicker()
         {
@@ -205,12 +200,9 @@ namespace AntDesign
             if (!_duringManualInput)
             {
                 _duringManualInput = true;
-                _cacheDuringInput = GetIndexValue(index);
-                _pickerValueCache = PickerValues[index];
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false)
-                )
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
             {
                 _pickerStatus[index].SelectedValue = parsedValue;
                 ChangePickerValue(parsedValue, index);
@@ -335,20 +327,7 @@ namespace AntDesign
             {
                 return;
             }
-
-            if (_duringManualInput)
-            {
-                var array = Value as Array;
-
-                if (array.GetValue(index) is null && _pickerStatus[index].SelectedValue is not null ||
-                    !Convert.ToDateTime(array.GetValue(index), CultureInfo).Equals(_pickerStatus[index].SelectedValue))
-                {
-                    _pickerStatus[index].SelectedValue = null;
-                    ChangePickerValue(_cacheDuringInput ?? _pickerValuesAfterInit[index]);
-                }
-                _duringManualInput = false;
-            }
-
+            _duringManualInput = false;
             AutoFocus = false;
         }
 
