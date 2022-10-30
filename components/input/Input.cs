@@ -251,6 +251,7 @@ namespace AntDesign
         {
             CurrentValue = default;
             IsFocused = true;
+            _inputString = null;
             await this.FocusAsync(Ref);
             if (OnChange.HasDelegate)
                 await OnChange.InvokeAsync(Value);
@@ -259,7 +260,8 @@ namespace AntDesign
                 await Task.Delay(1);
         }
 
-        private TValue _inputValue;
+        private string _inputString;
+
         private bool _compositionInputting;
         private Timer _debounceTimer;
         private bool _autoFocus;
@@ -276,6 +278,8 @@ namespace AntDesign
             {
                 Value = DefaultValue;
             }
+
+            _inputString = Value?.ToString();
 
             SetClasses();
             _isInitialized = true;
@@ -434,7 +438,7 @@ namespace AntDesign
                 builder.AddAttribute(32, "Type", "close-circle");
                 builder.AddAttribute(33, "Theme", "fill");
                 builder.AddAttribute(34, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(_inputValue?.ToString() ?? ""))
+                if (string.IsNullOrEmpty(_inputString ?? ""))
                 {
                     builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
@@ -485,14 +489,7 @@ namespace AntDesign
 
             if (!_compositionInputting)
             {
-                if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
-                {
-                    CurrentValue = _inputValue;
-                    if (OnChange.HasDelegate)
-                    {
-                        OnChange.InvokeAsync(Value);
-                    }
-                }
+                CurrentValueAsString = _inputString;
             }
         }
 
@@ -530,7 +527,10 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _inputValue = value;
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(Value);
+            }
         }
 
         /// <summary>
@@ -542,10 +542,7 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            if (TryParseValueFromString(args?.Value.ToString(), out TValue value, out var error))
-            {
-                _inputValue = value;
-            }
+            _inputString = args?.Value.ToString();
 
             if (_allowClear && flag)
             {
@@ -640,7 +637,7 @@ namespace AntDesign
                 builder.AddAttribute(50, "Id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
-                builder.AddAttribute(61, "value", CurrentValue);
+                builder.AddAttribute(61, "value", CurrentValueAsString);
                 builder.AddAttribute(62, "disabled", needsDisabled);
                 builder.AddAttribute(63, "readonly", ReadOnly);
 
