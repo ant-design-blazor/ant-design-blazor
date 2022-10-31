@@ -95,7 +95,7 @@ namespace AntDesign
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
         /// <summary>
-        /// The size of the input box. Note: in the context of a form, 
+        /// The size of the input box. Note: in the context of a form,
         /// the `large` size is used. Available: `large` `default` `small`
         /// </summary>
         [Parameter]
@@ -197,13 +197,12 @@ namespace AntDesign
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
 
-
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
         /// </summary>
         protected AntInputComponentBase()
         {
-            _validationStateChangedHandler = (sender, eventArgs) => StateHasChanged();
+            _validationStateChangedHandler = (sender, eventArgs) => InvokeAsync(StateHasChanged);
         }
 
         /// <summary>
