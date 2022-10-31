@@ -215,11 +215,18 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Obsolete]
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         /// <summary>
         /// Called when  clear button clicked.
         /// </summary>
         [Parameter]
-        public EventCallback OnClearClick { get; set; }
+        public EventCallback OnClear { get; set; }
+
+        [Parameter]
+        public EventCallback OnOk { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
@@ -510,6 +517,8 @@ namespace AntDesign
             {
                 Close();
             }
+
+            await OnOk.InvokeAsync(null);
         }
 
         internal void OnRangeItemOver(DateTime?[] range)
