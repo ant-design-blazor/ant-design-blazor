@@ -313,7 +313,7 @@ namespace AntDesign
                     _validationMessages = new[] { Help };
                 }
 
-                StateHasChanged();
+                InvokeAsync(StateHasChanged);
             };
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
