@@ -94,4 +94,34 @@
         activeKey.Should().Be("tab2");
         paneElements[1].OuterHtml.Should().Contain("visibility: hidden; height: 0px; overflow-y: hidden;");
     }
+
+    [Fact]
+    public async Task Render_tab_bar_style_sets()
+    {
+        var activeKey = "tab1";
+        var style = "color:red";
+        var cut = Context.Render( 
+            @<Tabs Animated @bind-ActiveKey="activeKey" TabBarStyle="@style">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+        </Tabs>
+        );
+        var paneElements = cut.FindAll(".ant-tabs-nav");
+        paneElements[0].Attributes["style"]?.Value.Should().Be(style);
+    }
+
+    [Fact]
+    public async Task Render_tab_bar_class_sets()
+    {
+        var activeKey = "tab1";
+        var classList = "test1 test2";
+        var cut = Context.Render( 
+            @<Tabs Animated @bind-ActiveKey="activeKey" TabBarClass="@classList">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+        </Tabs>
+        );
+        var paneElements = cut.FindAll(".ant-tabs-nav");
+            paneElements[0].Attributes["class"]?.Value.Should().Be($"ant-tabs-nav {classList}");
+    }
 }
