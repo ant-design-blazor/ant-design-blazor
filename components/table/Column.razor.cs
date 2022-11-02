@@ -106,6 +106,8 @@ namespace AntDesign
                 _hasFiltersAttribute = true;
             }
         }
+        [Parameter]
+        public string RemoteFieldName { get; set; }
 
         [Parameter]
         public bool FilterMultiple { get; set; } = true;
@@ -193,9 +195,16 @@ namespace AntDesign
                     FieldName = DataIndex ?? member?.Name;
                 }
 
-                if (Sortable && GetFieldExpression != null)
+                if (Sortable)
                 {
-                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    if (GetFieldExpression != null)
+                    {
+                        SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    }
+                    else if (Table.RemoteDataSource)
+                    {
+                        SortModel = new SortModelRemote<TData>(this, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    }
                 }
             }
             else if (IsBody)
