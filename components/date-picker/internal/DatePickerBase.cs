@@ -108,10 +108,11 @@ namespace AntDesign
         {
             get
             {
-                return base.CultureInfo;
+                return _isCultureInfoOutside ? base.CultureInfo : _locale.GetCultureInfo();
             }
             set
             {
+                _isCultureInfoOutside = true;
                 if (!_isLocaleSetOutside &&
                     (
                     (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
@@ -274,6 +275,7 @@ namespace AntDesign
         protected bool _needRefresh;
         protected bool _duringManualInput;
         private bool _isLocaleSetOutside;
+        private bool _isCultureInfoOutside;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
         protected bool _openingOverlay;
 
@@ -994,6 +996,7 @@ namespace AntDesign
                 _ => true
             };
         }
+
         internal void OnNowClick()
         {
             ChangeValue(DateTime.Now, GetOnFocusPickerIndex());

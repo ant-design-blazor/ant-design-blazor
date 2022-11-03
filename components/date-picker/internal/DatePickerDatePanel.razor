@@ -1,4 +1,5 @@
 @namespace AntDesign.Internal
+@using AntDesign.Core.Extensions
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
@@ -58,13 +59,20 @@
                 {
                     <th></th>
                 }
-                @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
+@*                @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
                 {
                     <th>@(Locale.Lang.ShortWeekDays[i])</th>
                 }
                 @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
                 {
                     <th>@(Locale.Lang.ShortWeekDays[i])</th>
+                }
+*@
+                @foreach (var dayName in Locale.Lang.ShortWeekDays.Shift((int)Locale.FirstDayOfWeek))
+                {
+                    <th>
+                        @dayName
+                    </th>
                 }
             </tr>
         </RenderTableHeader>
