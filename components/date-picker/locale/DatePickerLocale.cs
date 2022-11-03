@@ -11,12 +11,11 @@ namespace AntDesign
         public DayOfWeek FirstDayOfWeek { get => _firstDayOfWeek ?? GetCultureInfo()?.DateTimeFormat.FirstDayOfWeek ?? DayOfWeek.Sunday; set => _firstDayOfWeek = value; }
 
         [JsonPropertyName("lang")]
-        [Obsolete("Use DateLocale instead.")]
-        internal DateLocale Lang { get; set; } = new();
-
-        public TimePickerLocale TimePickerLocale { get; set; } = new();
+        public DateLocale Lang { get; set; } = new();
 
         public DateLocale DateLocale { get => Lang; set => Lang = value; }
+
+        public TimePickerLocale TimePickerLocale { get; set; } = new();
 
         internal Func<CultureInfo> GetCultureInfo { get; set; } = () => null;
     }
