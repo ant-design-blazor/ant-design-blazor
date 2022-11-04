@@ -24,7 +24,7 @@ namespace AntDesign
     {
         private string[] _shortWeekDays;
 
-        private static string[] _defaultShortestNames = { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+        private static string[] _defaultShortestDayNames = { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
 
         internal Func<CultureInfo> GetCultureInfo { get; set; } = () => null;
         public string Placeholder { get; set; } = "Select date";
@@ -81,7 +81,7 @@ namespace AntDesign
 
         public string[] ShortWeekDays
         {
-            get => _shortWeekDays ?? GetCultureInfo()?.DateTimeFormat.AbbreviatedDayNames ?? _defaultShortestNames;
+            get => _shortWeekDays ?? GetCultureInfo()?.DateTimeFormat.ShortestDayNames ?? _defaultShortestDayNames;
             set => _shortWeekDays = value;
         }
 
