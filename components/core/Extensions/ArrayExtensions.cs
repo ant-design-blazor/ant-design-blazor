@@ -4,18 +4,28 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AntDesign.Core.Extensions
 {
     public static class ArrayExtensions
     {
-        public static T[] Shift<T>(this T[] array, int positions)
+        /// <summary>
+        /// scroll left the elements
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceArray"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public static T[] Scroll<T>(this T[] sourceArray, int offset)
         {
-            var copy = new T[array.Length];
-            Array.Copy(array, 0, copy, array.Length - positions, positions);
-            Array.Copy(array, positions, copy, 0, array.Length - positions);
-            return copy;
+            return offset switch
+            {
+                0 => sourceArray,
+                > 0 => sourceArray[offset..].Concat(sourceArray[..offset]).ToArray(),
+                < 0 => sourceArray[^-offset..].Concat(sourceArray[..^-offset]).ToArray()
+            };
         }
     }
 }

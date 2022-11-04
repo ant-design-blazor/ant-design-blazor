@@ -59,16 +59,8 @@
                 {
                     <th></th>
                 }
-@*                @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
-                {
-                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
-                }
-                @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
-                {
-                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
-                }
-*@
-                @foreach (var dayName in Locale.Lang.ShortWeekDays.Shift((int)Locale.FirstDayOfWeek))
+
+                @foreach (var dayName in Locale.Lang.ShortWeekDays.Scroll((int)Locale.FirstDayOfWeek))
                 {
                     <th>
                         @dayName

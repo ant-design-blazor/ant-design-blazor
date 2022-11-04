@@ -51,7 +51,7 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(var dayName in Locale.Lang.ShortWeekDays.Shift((int)Locale.FirstDayOfWeek))
+                    @foreach(var dayName in Locale.Lang.ShortWeekDays.Scroll((int)Locale.FirstDayOfWeek))
                     {
                         <th>
                             @dayName
