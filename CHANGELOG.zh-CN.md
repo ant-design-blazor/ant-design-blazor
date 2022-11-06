@@ -15,6 +15,29 @@ timeline: true
 
 ---
 
+### 0.12.7
+
+`2022-11-6`
+
+- 🐞 fix(module: upload): should get error raw response。[#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
+- 🐞 fix(module: datepicker): wrong day order and fallback to use globalization libaray when there is no day locale。[#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix:(module:datepicker): smoothScrollTo causes an infinite loop。[#2854](https://github.com/ant-design-blazor/ant-design-blazor/pull/2854) [@Alexbits](https://github.com/Alexbits)
+- 🐞 fix day order in calendar header for russian locale。[#2845](https://github.com/ant-design-blazor/ant-design-blazor/pull/2845) [@ocoka](https://github.com/ocoka)
+- 🐞 fix:(module: datepicker): tab key does not confirm the value。[#2847](https://github.com/ant-design-blazor/ant-design-blazor/pull/2847) [@Alexbits](https://github.com/Alexbits)
+- 💄 feat: #2372 Added support of tab bar css style and class。[#2844](https://github.com/ant-design-blazor/ant-design-blazor/pull/2844) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 BackTop 在隐藏时没有真正清除 dom。[#2831](https://github.com/ant-design-blazor/ant-design-blazor/pull/2831) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复如果内容是字符串而不是 RenderFragment，则内容不会在 Drawer 中呈现的错误。[#2833](https://github.com/ant-design-blazor/ant-design-blazor/pull/2833) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fix bug where Title parameter was not being rendered.。[#2830](https://github.com/ant-design-blazor/ant-design-blazor/pull/2830) [@kooliokey](https://github.com/kooliokey)
+- 🚫 增加核心模块的单元测试覆盖。[#2821](https://github.com/ant-design-blazor/ant-design-blazor/pull/2821) [@LeaFrock](https://github.com/LeaFrock)
+- 🚫 Slider accessibility updates with aria labels。[#2818](https://github.com/ant-design-blazor/ant-design-blazor/pull/2818) [@kooliokey](https://github.com/kooliokey)
+- 🚫 Update Table.razor.cs。[#2797](https://github.com/ant-design-blazor/ant-design-blazor/pull/2797) [@Kyojuro27](https://github.com/Kyojuro27)
+- 🐞 Fix bug with tag color change after render not always styling properly.。[#2816](https://github.com/ant-design-blazor/ant-design-blazor/pull/2816) [@kooliokey](https://github.com/kooliokey)
+- 🚫 优化<code class="notranslate">CssSizeLength</code> 和<code class="notranslate">CssStyleBuilder</code>。[#2803](https://github.com/ant-design-blazor/ant-design-blazor/pull/2803) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 fix(module: Cascader) AllowClear was not working when false。[#2792](https://github.com/ant-design-blazor/ant-design-blazor/pull/2792) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复搜索时弹列表有时候不显示。[#2793](https://github.com/ant-design-blazor/ant-design-blazor/pull/2793) [@lyj0309](https://github.com/lyj0309)
+- 💄 修复 Menu 子菜单展开图标的样式。[#2796](https://github.com/ant-design-blazor/ant-design-blazor/pull/2796) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复描述列表组件缺少的div元素。[#2798](https://github.com/ant-design-blazor/ant-design-blazor/pull/2798) [@Weilence](https://github.com/Weilence)
+
 ### 0.12.6
 
 `2022-10-11`
