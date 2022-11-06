@@ -19,7 +19,7 @@ timeline: true
 
 `2022-11-6`
 
-- 🐞 fix(module: upload): should get error raw response。[#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
+- 🐞 修复 Upload 返回错误时没有正确传出响应报文。[#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
 - 🐞 fix(module: datepicker): wrong day order and fallback to use globalization libaray when there is no day locale。[#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
 - 🐞 fix:(module:datepicker): smoothScrollTo causes an infinite loop。[#2854](https://github.com/ant-design-blazor/ant-design-blazor/pull/2854) [@Alexbits](https://github.com/Alexbits)
 - 🐞 fix day order in calendar header for russian locale。[#2845](https://github.com/ant-design-blazor/ant-design-blazor/pull/2845) [@ocoka](https://github.com/ocoka)
