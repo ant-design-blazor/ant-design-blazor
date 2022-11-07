@@ -15,6 +15,34 @@ timeline: true
 
 ---
 
+### 0.12.7
+
+`2022-11-6`
+
+
+- DatePicker
+  - 🐞 修复 部分语言文件的星期排序，缺失的语言使用 Globalization 替代。[#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 smoothScrollTo 方法导致无限循环的问题。[#2854](https://github.com/ant-design-blazor/ant-design-blazor/pull/2854) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 俄语 的星期排序[#2845](https://github.com/ant-design-blazor/ant-design-blazor/pull/2845) [@ocoka](https://github.com/ocoka)
+  - 🐞 修复 tab 键不确认值的问题。[#2847](https://github.com/ant-design-blazor/ant-design-blazor/pull/2847) [@Alexbits](https://github.com/Alexbits)
+
+- Core
+  - ✅ 增加核心模块的单元测试覆盖。[#2821](https://github.com/ant-design-blazor/ant-design-blazor/pull/2821) [@LeaFrock](https://github.com/LeaFrock)
+  - ⚡️ 优化 CssSizeLength 和CssStyleBuilder。[#2803](https://github.com/ant-design-blazor/ant-design-blazor/pull/2803) [@LeaFrock](https://github.com/LeaFrock)
+
+- 🐞 修复 `TabBarStyle` 和 `TabBarClass`。[#2844](https://github.com/ant-design-blazor/ant-design-blazor/pull/2844) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 BackTop 在隐藏时没有真正清除 dom。[#2831](https://github.com/ant-design-blazor/ant-design-blazor/pull/2831) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 如果 `Content` 是字符串而不是 RenderFragment，则内容不会渲染的错误。[#2833](https://github.com/ant-design-blazor/ant-design-blazor/pull/2833) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Title 属性没有渲染。[#2830](https://github.com/ant-design-blazor/ant-design-blazor/pull/2830) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Slider 可访问性 aria labels。[#2818](https://github.com/ant-design-blazor/ant-design-blazor/pull/2818) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Table 在页面切换时偶尔的异常[#2797](https://github.com/ant-design-blazor/ant-design-blazor/pull/2797) [@Kyojuro27](https://github.com/Kyojuro27)
+- 🐞 修复 Tag 渲染后标签颜色变化不总是正确更新样式。[#2816](https://github.com/ant-design-blazor/ant-design-blazor/pull/2816) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Cascader 当 `AllowClear` 属性为false时清除无效的问题。[#2792](https://github.com/ant-design-blazor/ant-design-blazor/pull/2792) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 AutoComplete 搜索时下拉列表有时候不显示。[#2793](https://github.com/ant-design-blazor/ant-design-blazor/pull/2793) [@lyj0309](https://github.com/lyj0309)
+- 🐞 修复 Menu 子菜单展开图标的样式。[#2796](https://github.com/ant-design-blazor/ant-design-blazor/pull/2796) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Descriptions  缺少的div元素。[#2798](https://github.com/ant-design-blazor/ant-design-blazor/pull/2798) [@Weilence](https://github.com/Weilence)
+- 🐞 修复 Upload 返回错误时没有正确传出响应报文。[#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
+
 ### 0.12.6
 
 `2022-10-11`
