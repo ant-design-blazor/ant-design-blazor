@@ -110,7 +110,7 @@ namespace AntDesign.Docs.Routing
         {
             return routeTemplate.Segments
                 .Where(s => s.IsParameter)
-                .Select(s => s.Value)
+                .Select(s => s.Value.TrimEnd('/'))
                 .ToArray();
         }
     }
