@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -67,9 +65,6 @@ namespace AntDesign
 
         private bool ShowRanges => Ranges?.Count > 0;
 
-        private DateTime? _cacheDuringInput;
-        private DateTime _pickerValueCache;
-
         public RangePicker()
         {
             IsRange = true;
@@ -88,6 +83,11 @@ namespace AntDesign
                 }
 
                 if (index is null)
+                {
+                    return false;
+                }
+
+                if (_pickerStatus[index.Value].SelectedValue is null)
                 {
                     return false;
                 }
@@ -200,12 +200,9 @@ namespace AntDesign
             if (!_duringManualInput)
             {
                 _duringManualInput = true;
-                _cacheDuringInput = GetIndexValue(index);
-                _pickerValueCache = PickerValues[index];
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false)
-                && IsValidRange(parsedValue, index))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
             {
                 _pickerStatus[index].SelectedValue = parsedValue;
                 ChangePickerValue(parsedValue, index);
@@ -222,7 +219,13 @@ namespace AntDesign
             if (e == null) throw new ArgumentNullException(nameof(e));
 
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
+
+            var isEnter = key == "ENTER";
+            var isTab = key == "TAB";
+            var isEscape = key == "ESCAPE";
+            var isOverlayShown = _dropDown.IsOverlayShow();
+
+            if (isEnter || isTab || isEscape)
             {
                 if (_duringManualInput)
                 {
@@ -235,14 +238,9 @@ namespace AntDesign
                 }
                 var input = (index == 0 ? _inputStart : _inputEnd);
 
-                if (key == "ENTER")
+                if (isEnter || isTab)
                 {
-                    if (string.IsNullOrEmpty(input.Value))
-                    {
-                        if (!_dropDown.IsOverlayShow())
-                            await _dropDown.Show();
-                    }
-                    else if (HasTimeInput && _pickerStatus[index].SelectedValue is not null)
+                    if (HasTimeInput && _pickerStatus[index].SelectedValue is not null)
                     {
                         await OnOkClick();
                     }
@@ -250,47 +248,43 @@ namespace AntDesign
                     {
                         await OnSelect(_pickerStatus[index].SelectedValue.Value, index);
                     }
-                    else
+                    else if (isOverlayShown)
                     {
-                        if (!_dropDown.IsOverlayShow())
-                            await _dropDown.Show();
-                        else
+                        if (_pickerStatus[index].SelectedValue is null && _pickerStatus[index].IsValueSelected)
                         {
-                            if (_pickerStatus[index].SelectedValue is null && _pickerStatus[index].IsValueSelected)
-                            {
-                                _pickerStatus[index].SelectedValue = GetIndexValue(index);
-                            }
-                            if (!await SwitchFocus(index))
-                                Close();
+                            _pickerStatus[index].SelectedValue = GetIndexValue(index);
                         }
+                        if (isTab || !await SwitchFocus(index))
+                        {
+                            Close();
+
+                            if (isTab && index == 1)
+                            {
+                                AutoFocus = false;
+                            }
+                        }
+
+                    }
+                    else if (!isTab)
+                    {
+                        await _dropDown.Show();
                     }
                 }
-                else if (key == "TAB" && index == 1)
-                {
-                    if (_dropDown.IsOverlayShow())
-                        Close();
-                    AutoFocus = false;
-                }
-                else if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                else if (isEscape && isOverlayShown)
                 {
                     Close();
                     await Js.FocusAsync(input.Ref);
                 }
             }
-            else if (key == "ARROWDOWN")
-            {
-                if (!_dropDown.IsOverlayShow())
-                    await _dropDown.Show();
-            }
             else if (key == "ARROWUP")
             {
-                if (_dropDown.IsOverlayShow())
+                if (isOverlayShown)
                 {
                     Close();
                     AutoFocus = true;
                 }
             }
-            else if (!_dropDown.IsOverlayShow())
+            else if (!isOverlayShown)
                 await _dropDown.Show();
         }
 
@@ -333,20 +327,7 @@ namespace AntDesign
             {
                 return;
             }
-
-            if (_duringManualInput)
-            {
-                var array = Value as Array;
-
-                if (array.GetValue(index) is null && _pickerStatus[index].SelectedValue is not null ||
-                    !Convert.ToDateTime(array.GetValue(index), CultureInfo).Equals(_pickerStatus[index].SelectedValue))
-                {
-                    _pickerStatus[index].SelectedValue = null;
-                    ChangePickerValue(_cacheDuringInput ?? _pickerValuesAfterInit[index]);
-                }
-                _duringManualInput = false;
-            }
-
+            _duringManualInput = false;
             AutoFocus = false;
         }
 
@@ -390,6 +371,21 @@ namespace AntDesign
         /// <returns></returns>
         public override DateTime? GetIndexValue(int index)
         {
+            if (_pickerStatus[index].SelectedValue is null)
+            {
+                var isFocused = index == 0 && _inputStart?.IsOnFocused == true ||
+                     index == 1 && _inputEnd?.IsOnFocused == true;
+
+                DateTime? currentValue;
+
+                if (isFocused && (currentValue = GetValue(index)) is not null
+                    && _pickerStatus[Math.Abs(index - 1)].SelectedValue is not null
+                    && !IsValidRange(currentValue.Value, index))
+                {
+                    return null;
+                }
+            }
+
             if (_pickerStatus[index].SelectedValue is not null)
             {
                 return _pickerStatus[index].SelectedValue;
@@ -397,21 +393,26 @@ namespace AntDesign
 
             if (Value != null)
             {
-                var array = Value as Array;
-                var indexValue = array.GetValue(index);
-
-                if (indexValue == null)
-                {
-                    return null;
-                }
-
-                return Convert.ToDateTime(indexValue, CultureInfo);
+                return GetValue(index);
             }
             else if (!IsTypedValueNull(DefaultValue, index, out var defaultValue))
             {
                 return defaultValue;
             }
             return null;
+        }
+
+        private DateTime? GetValue(int index)
+        {
+            var array = Value as Array;
+            var indexValue = array.GetValue(index);
+
+            if (indexValue == null)
+            {
+                return null;
+            }
+
+            return Convert.ToDateTime(indexValue, CultureInfo);
         }
 
         private static bool IsTypedValueNull(TValue value, int index, out DateTime? outValue)
@@ -613,16 +614,6 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick(0);
-        }
-
-        private bool IsValidRange(DateTime newValue, int newValueIndex)
-        {
-            return newValueIndex switch
-            {
-                0 when newValue > GetIndexValue(1) => false,
-                1 when newValue < GetIndexValue(0) => false,
-                _ => true
-            };
         }
     }
 }

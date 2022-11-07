@@ -6,10 +6,20 @@ namespace AntDesign.Locales
 {
     public class Locale
     {
-        [JsonPropertyName("locale")]
-        public string LocaleName { get; set; }
+        private CultureInfo _currentCulture;
 
-        public CultureInfo CurrentCulture => new CultureInfo(LocaleName);
+        internal void SetCultureInfo(string cultureName)
+        {
+            LocaleName = cultureName;
+            _currentCulture = new(cultureName);
+            this.DatePicker.GetCultureInfo = () => _currentCulture;
+            this.DatePicker.Lang.GetCultureInfo = () => _currentCulture;
+        }
+
+        [JsonPropertyName("locale")]
+        public string LocaleName { get; private set; }
+
+        public CultureInfo CurrentCulture => _currentCulture;
 
         public PaginationLocale Pagination { get; set; } = new();
 

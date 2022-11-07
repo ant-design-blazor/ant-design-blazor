@@ -2,16 +2,12 @@
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
     public partial class BackTop : AntDomComponentBase
     {
-        private bool _visible = false;
-
-        [Inject]
-        private IDomEventListener DomEventListener { get; set; }
-
         [Parameter]
         public string Icon { get; set; } = "vertical-align-top";
 
@@ -27,14 +23,20 @@ namespace AntDesign
         [Parameter]
         public string TargetSelector { get; set; }
 
+        [Parameter]
+        public EventCallback OnClick { get; set; }
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+
         protected ClassMapper BackTopContentClassMapper { get; set; } = new ClassMapper();
 
         protected ClassMapper BackTopIconClassMapper { get; set; } = new ClassMapper();
 
-        [Parameter]
-        public EventCallback OnClick { get; set; }
+        private bool _visible = false;
+        private bool _hidden = false;
 
-        protected async Task OnClickHandle()
+        protected async Task OnClickHandler(MouseEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
@@ -42,7 +44,7 @@ namespace AntDesign
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
 
             if (OnClick.HasDelegate)
-                await OnClick.InvokeAsync(null);
+                await OnClick.InvokeAsync(e);
         }
 
         protected override void OnInitialized()
@@ -51,7 +53,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
             {
@@ -82,7 +84,25 @@ namespace AntDesign
         {
             JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
             double offset = scrollInfo.GetProperty("y").GetDouble();
-            _visible = offset > VisibilityHeight;
+            var visible = offset > VisibilityHeight;
+
+            if (visible == _visible)
+                return;
+
+            _visible = visible;
+
+            StateHasChanged();
+
+            if (_visible)
+            {
+                _hidden = false;
+            }
+            else
+            {
+                await Task.Delay(300);
+                _hidden = true;
+            }
+
             StateHasChanged();
         }
 
