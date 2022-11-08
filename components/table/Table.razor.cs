@@ -238,10 +238,6 @@ namespace AntDesign
 
         public void ReloadData()
         {
-            if (HidePagination == true)
-            {
-                PageSize = DataSource.Count();
-            }
             ResetData();
 
             PageIndex = 1;
@@ -404,6 +400,11 @@ namespace AntDesign
                 }
 
                 _shouldRender = true;
+            }
+
+            if (HidePagination)
+            {
+                PageSize = _total;
             }
 
             if (!_preventRender)
