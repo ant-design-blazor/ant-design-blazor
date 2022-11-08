@@ -1,59 +1,47 @@
 ﻿@namespace AntDesign
 @using AntDesign.Internal
 @inherits AntDomComponentBase
+<CascadingValue Value='$"ant-mentions-dropdown"' Name="PrefixCls" IsFixed>
+    <OverlayTrigger @ref="_overlayTrigger"
+                    Trigger="new[] { Trigger.None }"
+                    OverlayLeaveCls=""
+                    OverlayEnterCls=""
+                    HiddenMode=true
+                    InlineFlexMode=false>
+        <Overlay>
 
+            @if (OriginalOptions.Count > 0)
+            {
+                <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical" role="menu" data-menu-list="true">
+                    @foreach (var item in ShowOptions)
+                    {
+                        var x = 1;
+                        <CascadingValue Value=this>
+                            <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
+                        </CascadingValue>
+                    }
+                </ul>
+            }
+            else
+            {
+                <CascadingValue Value=this>
+                    @ChildContent
+                </CascadingValue>
+            }
 
-<div class="@ClassMapper.Class">
-    <textarea @ref="@Ref"
-              @bind="@Value"
-              @attributes="@Attributes"
-              style="white-space: pre-wrap; @Style"
-              id="@Id"
-              rows="@Rows"
-              disabled="@Disable"
-              readonly="@Readonly"
-              placeholder="@Placeholder"
-              @onfocus="@Onfocus"
-              @onblur="@Onblur"
-              @onkeypress="@OnKeyPress"
-              @onkeydown="@OnKeyDown"
-              @onkeyup="@OnKeyUp" />
+        </Overlay>
 
-    <CascadingValue Value="this" IsFixed="@true">
-        @if (ShowSuggestions)
-        {
-            <div class="ant-mentions-measure" style="z-index:1050;">
-                <div>
-                    <div class="ant-mentions-dropdown" style="@DropdownStyle">
-                        <div class="ant-mentions-dropdown-menu" role="menu">
-                            @if (LstOriginalOptions.Count > 0)
-                            {
-                                @if (Loading)
-                                {
-                                    <MentionsOption Value="ANTD_SEARCHING" Disable="true">
-                                        <Spin Size="small"></Spin>
-                                    </MentionsOption>
-                                }
-                                else
-                                {
-
-                                    foreach (var item in LstOriginalOptions)
-                                    {
-
-                                        <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
-
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                @ChildContent
-                            }
-                        </div>
-                    </div>
-                </div>
+        <Unbound>
+            <div class="@ClassMapper.Class">
+                <textarea @ref="context.Current"
+                          @bind="@Value"
+                          @attributes="@Attributes"
+                          style="@Style"
+                          class="rc-textarea"
+                          placeholder="@Placeholder"
+                          @onkeydown="OnKeyDown"
+                          @oninput="OnInput" />
             </div>
-        }
-    </CascadingValue>
-
-</div>
+        </Unbound>
+    </OverlayTrigger>
+</CascadingValue>
