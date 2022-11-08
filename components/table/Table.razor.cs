@@ -402,6 +402,11 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            if (HidePagination)
+            {
+                PageSize = _total;
+            }
+
             if (!_preventRender)
             {
                 if (_outerSelectedRows != null)
