@@ -7,16 +7,9 @@ namespace AntDesign
     public partial class MentionsOption
     {
         [CascadingParameter] public Mentions Mentions { get; set; }
-
         [Parameter] public string Value { get; set; }
-
-        [Parameter] public bool Disable { get; set; }
-
         [Parameter] public RenderFragment ChildContent { get; set; }
-
-        public bool Selected { get; set; }
-
-        public bool Active { get; set; }
+        public bool Active => Mentions.ActiveOption == this;
 
         protected override void Dispose(bool disposing)
         {
@@ -27,43 +20,29 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             Mentions?.AddOption(this);
-
             SetClassMap();
-
             base.OnInitialized();
         }
 
         private void SetClassMap()
         {
             var prefixCls = "ant-mentions-dropdown-menu-item";
-            this.ClassMapper.Clear()
-                .Add(prefixCls)
-                .If($"{prefixCls}-disable", () => this.Disable)
-                .If($"{prefixCls}-selected", () => this.Selected)
-                .If($"{prefixCls}-active", () => this.Active)
-                ;
-
+            this.ClassMapper.Clear().Add(prefixCls).If("active", () => Active);
             InvokeStateHasChanged();
         }
 
-        internal void OnMouseEnter()
+        internal void OnMouseOver()
         {
-            this.Selected = true;
-        }
-
-        internal void OnMouseLeave()
-        {
-            this.Selected = false;
+            Mentions.ActiveOption = this;
         }
 
         internal async Task OnClick(MouseEventArgs args)
         {
             if (args.Button == 0)   //left click
             {
-                await Mentions.OnOptionClick(this);
+                await Mentions.ItemClick(this);
+                InvokeStateHasChanged();
             }
-
-            InvokeStateHasChanged();
         }
     }
 }
