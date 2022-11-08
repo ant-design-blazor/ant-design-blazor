@@ -158,7 +158,7 @@ namespace AntDesign
                 TreeComponent.DragItem.DragMoveInto(SelfNode);
 
             if (TreeComponent.OnDrop.HasDelegate)
-                TreeComponent.OnDrop.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
+                TreeComponent.OnDrop.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem, e, SelfNode.DragTargetBottom) { TargetNode = SelfNode });
         }
 
         /// <summary>
