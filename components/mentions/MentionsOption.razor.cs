@@ -9,13 +9,7 @@ namespace AntDesign
         [CascadingParameter] public Mentions Mentions { get; set; }
         [Parameter] public string Value { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
-        public bool Active => Mentions?.ActiveOption == this;
-
-        protected override void Dispose(bool disposing)
-        {
-        //    Mentions?.RemoveOption(this);
-            base.Dispose(disposing);
-        }
+        public bool Active => Mentions?.ActiveOptionValue == Value;
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,14 +27,14 @@ namespace AntDesign
 
         internal void OnMouseOver()
         {
-            Mentions.ActiveOption = this;
+           //Mentions.ActiveOptionValue = Value;
         }
 
         internal async Task OnClick(MouseEventArgs args)
         {
             if (args.Button == 0)   //left click
             {
-                await Mentions.ItemClick(this);
+                await Mentions.ItemClick(Value);
                 InvokeStateHasChanged();
             }
         }

@@ -19,7 +19,6 @@ namespace AntDesign
 {
     public partial class Mentions
     {
-
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public bool Disable { get; set; }
         [Parameter] public bool Focused { get; set; }
@@ -31,8 +30,8 @@ namespace AntDesign
         internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
         internal List<MentionsOption> ShowOptions { get; set; } = new List<MentionsOption>();
         private OverlayTrigger _overlayTrigger;
-        internal MentionsOption ActiveOption { get; set; }
-        internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x == ActiveOption);
+        internal string ActiveOptionValue { get; set; }
+        internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x.Value == ActiveOptionValue);
 
         private void SetClassMap()
         {
@@ -48,7 +47,8 @@ namespace AntDesign
 
         internal void UpdateOptions(List<MentionsOption> newoptions)
         {
-            ShowOptions = newoptions;
+            ShowOptions.Clear();
+            ShowOptions.AddRange(newoptions);
         }
 
         protected override void OnInitialized()
@@ -94,20 +94,20 @@ namespace AntDesign
         public void UpOption()
         {
             var index = Math.Max(0, ActiveOptionIndex - 1);
-            ActiveOption = ShowOptions[index];
+            ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
         [JSInvokable]
         public void NextOption()
         {
             var index = Math.Min(ActiveOptionIndex + 1, ShowOptions.Count - 1);
-            ActiveOption = ShowOptions[index];
+            ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
         [JSInvokable]
         public async Task EnterOption()
         {
-            await ItemClick(ShowOptions[ActiveOptionIndex]);
+            await ItemClick(ShowOptions[ActiveOptionIndex].Value);
             StateHasChanged();
         }
 
@@ -147,12 +147,12 @@ namespace AntDesign
             }
             if (showoverlay && !_overlayTrigger.IsOverlayShow())
             {
-                ActiveOption = ShowOptions.First();
+                ActiveOptionValue = ShowOptions.First().Value;
                 await ShowOverlay(false);
             }
             StateHasChanged();
         }
-        internal async Task ItemClick(MentionsOption item)
+        internal async Task ItemClick(string optionValue)
         {
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             var preText = Value.Substring(0, focusPosition);
@@ -160,9 +160,9 @@ namespace AntDesign
             preText = preText.Trim();
             var nextText = Value.Substring(focusPosition);
             nextText = nextText.Trim();
-            var option = " @" + item.Value + " ";
+            var option = " @" + Value + " ";
             Value = preText + option + nextText;
-            ActiveOption = item;
+            ActiveOptionValue = optionValue;
             await _overlayTrigger.Hide();
             await InvokeStateHasChangedAsync();
         }
