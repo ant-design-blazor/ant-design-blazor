@@ -1,0 +1,60 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+    public SegmentedTests()
+    {
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
+    }
+
+    [Fact]
+    public void Renders_basic_segmented()
+    {
+        var cut = Context.Render(@<Segmented Labels=@(new[]{"Daily", "Weekly"}) />);
+        cut.MarkupMatches(
+    @<div class=" ant-segmented" id:ignore >
+      <div class="ant-segmented-group">
+            <label class=" ant-segmented-item ant-segmented-item-selected" id:ignore>
+                <input class="ant-segmented-item-input" type="radio" checked="">
+                    <div class="ant-segmented-item-label" title="Daily" >
+                        Daily
+                    </div>
+                </label>
+                <label class=" ant-segmented-item" id:ignore>
+                <input class="ant-segmented-item-input" type="radio">
+          <div class="ant-segmented-item-label" title="Weekly" >
+            Weekly
+          </div>
+        </label>
+      </div>
+        </div>
+    );
+    }
+
+    [Fact]
+    public void Renders_segmented_with_options()
+    {
+        var _value = true;
+        var cut = Context.Render(
+        @<Segmented @bind-Value="_value">
+            <SegmentedItem Value="false" Label="False" />
+            <SegmentedItem Value="true" Label="True" />
+        </Segmented>);
+        cut.MarkupMatches(
+            @<div class=" ant-segmented" id:ignore>
+                <div class="ant-segmented-group">
+                    <label class=" ant-segmented-item" id:ignore>
+                        <input class="ant-segmented-item-input" type="radio">
+                        <div class="ant-segmented-item-label" title="False">
+                            False
+                        </div>
+                    </label>
+                    <label class=" ant-segmented-item ant-segmented-item-selected" id:ignore>
+                        <input class="ant-segmented-item-input" type="radio" checked="">
+                        <div class="ant-segmented-item-label" title="True">
+                            True
+                        </div>
+                    </label>
+                </div>
+            </div>);
+    }
+}
