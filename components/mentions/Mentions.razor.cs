@@ -115,7 +115,12 @@ namespace AntDesign
         {
             if (reset) UpdateOptions(OriginalOptions);
             var pos = await JS.InvokeAsync<double[]>(JSInteropConstants.GetCursorXY, _overlayTrigger.RefBack.Current);
-            await _overlayTrigger.Show((int)Math.Round(pos[0]), (int)Math.Round(pos[1]));
+            var x = (int)Math.Round(pos[0]);
+            var y = (int)Math.Round(pos[1]);
+            Console.WriteLine(x + "," + y);
+
+            //通过show方法显示pop层，最终css和传入的坐标不一致，目前显示错位
+            await _overlayTrigger.Show(x, y);
         }
         async void OnKeyDown(KeyboardEventArgs args)
         {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
