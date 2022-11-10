@@ -1,0 +1,100 @@
+﻿@inject IJSRuntime JSRuntime
+
+<Dropdown Style="" Placement="@Placement.BottomLeft">
+    <Overlay>
+        <Menu>
+            <MenuItem>
+                <a @onclick="UseLightTheme">默认主题</a>
+            </MenuItem>
+            <MenuItem>
+                <a @onclick="UseDarkTheme">暗黑主题</a>
+            </MenuItem>
+            <MenuItem>
+                <a @onclick="UseCompactTheme">紧凑主题</a>
+            </MenuItem>
+            <MenuItem>
+                <a @onclick="UseAliyunTheme">阿里云主题</a>
+            </MenuItem>
+        </Menu>
+
+    </Overlay>
+    <ChildContent>
+        <Button>
+            <Icon Type="skin" Theme="outline" />
+            主题
+        </Button>
+    </ChildContent>
+</Dropdown>
+
+@code {
+    [Parameter]
+    public GlobalThemeMode ThemeMode { get; set; } = GlobalThemeMode.Light;
+
+    [Parameter]
+    public string CssPath { get; set; } = "/_content/AntDesign/css/ant-design-blazor.css";
+
+    [Parameter]
+    public string CssLinkId { get; set; } = "antcss";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        UseCustomTheme();
+    }
+
+    public void UseCustomTheme()
+    {
+        if (string.IsNullOrWhiteSpace(CssLinkId)) throw new Exception("未指定Css样式的 CssLinkId");
+
+        switch (ThemeMode.Name)
+        {
+            case "Light":
+                UseLightTheme();
+                break;
+            case "Dark":
+                UseDarkTheme();
+                break;
+            case "Compact":
+                UseCompactTheme();
+                break;
+            case "Aliyun":
+                UseAliyunTheme();
+                break;
+            default:
+                if (string.IsNullOrWhiteSpace(CssPath)) throw new Exception("未指定自定义的 CssPath");
+                break;
+        }
+
+        var js = @$"document.getElementById(""{CssLinkId}"").setAttribute(""href"", ""{CssPath}"");";
+        JSRuntime.InvokeVoidAsync("eval", js).GetAwaiter();
+    }
+
+    public void UseLightTheme()
+    {
+        ThemeMode = GlobalThemeMode.Light;
+        CssPath = "/_content/AntDesign/css/ant-design-blazor.css";
+        UseCustomTheme();
+    }
+
+    public void UseDarkTheme()
+    {
+        ThemeMode = GlobalThemeMode.Dark;
+        CssPath = "/_content/AntDesign/css/ant-design-blazor.dark.css";
+        UseCustomTheme();
+    }
+
+    public void UseCompactTheme()
+    {
+        ThemeMode = GlobalThemeMode.Compact;
+        CssPath = "/_content/AntDesign/css/ant-design-blazor.compact.css";
+        UseCustomTheme();
+    }
+
+    public void UseAliyunTheme()
+    {
+        ThemeMode = GlobalThemeMode.Aliyun;
+        CssPath = "/_content/AntDesign/css/ant-design-blazor.aliyun.css";
+        UseCustomTheme();
+    }
+
+}
