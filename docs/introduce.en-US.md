@@ -30,7 +30,7 @@ Following the Ant Design specification, we developed a Blazor Components library
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
 - 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ .NET Standard 2.1/.NET 5 based, with direct reference to the rich .NET ecosystem.
+- ⚙️ .NET Standard 2.1 ~ .NET 7 based, with direct reference to the rich .NET ecosystem.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
@@ -41,8 +41,8 @@ WebAssembly static hosting examples:
 
 ## 🖥 Environment Support
 
-- .NET Core 3.1 / .NET 5 / .NET 6
-- Blazor WebAssembly 3.2 / .NET 5 / .NET 6 Release
+- .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7
+- Blazor WebAssembly 3.2 / .NET 5 / .NET 6 / .NET 7 Release
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) only)
@@ -148,7 +148,7 @@ Options for the template：
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987) 6.0.x or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/7.0?WT.mc_id=DT-MVP-5003987) 7.0.x or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
