@@ -21,7 +21,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-mentions-dropdown-menu-item";
-            this.ClassMapper.Clear().Add(prefixCls).If("ant-mentions-dropdown-menu-item-active", () => Active);
+            ClassMapper.Clear().Add(prefixCls).If("ant-mentions-dropdown-menu-item-active", () => Active);
             InvokeStateHasChanged();
         }
 

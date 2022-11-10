@@ -149,7 +149,12 @@ namespace AntDesign
                 return;
             }
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
-            if (focusPosition == 0) return;
+            if (focusPosition == 0)
+            {
+                await HideOverlay();
+                return;
+            };
+            var showPop = false;
             var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
             var lastIndex = v.LastIndexOf("@");
             if (lastIndex >= 0)
@@ -157,12 +162,17 @@ namespace AntDesign
                 var lastOption = v.Substring(lastIndex + 1);
                 ShowOptions.Clear();
                 ShowOptions.AddRange(OriginalOptions.Where(x => x.Value.Contains(lastOption, StringComparison.OrdinalIgnoreCase)).ToList());
-                if (ShowOptions.Count > 0)
-                {
-                    await ShowOverlay(false, true);
-                }
+                if (ShowOptions.Count > 0) showPop = true;
             }
-            StateHasChanged();
+
+            if (showPop)
+            {
+                await ShowOverlay(false, true);
+            }
+            else
+            {
+                await HideOverlay();
+            }
         }
         internal async Task ItemClick(string optionValue)
         {

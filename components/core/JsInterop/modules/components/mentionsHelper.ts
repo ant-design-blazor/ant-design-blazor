@@ -9,7 +9,7 @@
     public static setEditorKeyHandler = function (Mentions: any, textArea: HTMLTextAreaElement): void {
 
         textArea.onkeydown = async (ev): Promise<any> => {
-            //判断isPopShowFlag不能用异步方法
+            //判断isPopShow不能用异步方法
             if (!mentionsHelper.isPopShowFlag) return;
             if (ev.key == "ArrowUp") {
                 ev.preventDefault();
@@ -32,10 +32,9 @@
 
     public static getCursorXY = function (textArea: HTMLTextAreaElement) {
         let format = function (value) {
-            value = value.replace(/<|>|`|"|&/g, '?').replace(/\r\n|\r|\n/g, "<br/>");
-            if (/firefox/i.test(navigator.userAgent)) {
-                value = value.replace(/\s/g, '&nbsp;');
-            }
+            value = value.replace(/<|>|`|"|&/g, '?');
+            value = value.replace(/\r\n|\r|\n/g, "<br/>");
+            value = value.replace(/\s/g, '&nbsp;');
             return value;
         };
         let inputorValue = textArea.value;
