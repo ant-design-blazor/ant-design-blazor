@@ -3,15 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
 namespace AntDesign.Core.Helpers
 {
     public static class JsonElementHelper<TValue>
     {
-        static Type _columnDataType;
+        private static readonly Type _columnDataType;
 
         static JsonElementHelper()
         {
@@ -20,15 +18,15 @@ namespace AntDesign.Core.Helpers
 
         public static object GetValue(JsonElement jsonElement)
         {
-            if (_columnDataType == typeof(DateTime))
-                return jsonElement.GetDateTime();
-            else if (_columnDataType.IsEnum)
+            if (_columnDataType.IsEnum)
             {
                 if (jsonElement.ValueKind == JsonValueKind.Number)
                     return Enum.Parse(THelper.GetUnderlyingType<TValue>(), jsonElement.GetInt32().ToString());
                 else
                     return Enum.Parse(THelper.GetUnderlyingType<TValue>(), jsonElement.GetString());
             }
+            if (_columnDataType == typeof(DateTime))
+                return jsonElement.GetDateTime();
             else if (_columnDataType == typeof(byte))
                 return jsonElement.GetByte();
             else if (_columnDataType == typeof(decimal))
@@ -54,12 +52,7 @@ namespace AntDesign.Core.Helpers
             else if (_columnDataType == typeof(Guid))
                 return jsonElement.GetGuid();
             else if (_columnDataType == typeof(bool))
-            {
-                if (jsonElement.ValueKind == JsonValueKind.True)
-                    return true;
-                else
-                    return false;
-            }
+                return jsonElement.ValueKind == JsonValueKind.True;
             else
                 return jsonElement.GetString();
         }

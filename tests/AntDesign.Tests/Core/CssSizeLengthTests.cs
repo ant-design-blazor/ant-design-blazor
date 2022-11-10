@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OneOf.Types;
 using Xunit;
 
 namespace AntDesign.Tests.Core
@@ -81,21 +80,25 @@ namespace AntDesign.Tests.Core
 
         [Theory]
         [MemberData(nameof(Css_implicit_string_seeds))]
-        public void Css_tryprase_string(string value, string expected, bool expectedParsed)
+        public void Css_tryprase_string(string value, CssSizeLength expected, bool expectedParsed)
         {
             var parsedResult = CssSizeLength.TryParse(value, out var result);
-            Assert.Equal(expected, result);
             Assert.Equal(expectedParsed, parsedResult);
+            if (parsedResult)
+            {
+                Assert.Equal(expected, result);
+            }
         }
 
         public static IEnumerable<object[]> Css_implicit_string_seeds => new List<object[]>
         {
-            new object[] { "1234567",         "1234567px",        true  },
-            new object[] { "1234567px",       "1234567px",        true  },
-            new object[] { "1234567rem",      "1234567rem",       true  },
-            new object[] { "1234567%",        "1234567%",         true  },
-            new object[] { "large",           "large" ,           false },
-            new object[] { "calc(10px / 2 )", "calc( 10px / 2 )", true  },
+            new object[] { "1234567",         (CssSizeLength)"1234567px",        true  },
+            new object[] { "1234567px",       (CssSizeLength)"1234567px",        true  },
+            new object[] { "1234567rem",      (CssSizeLength)"1234567rem",       true  },
+            new object[] { "1234567%",        (CssSizeLength)"1234567%",         true  },
+            new object[] { "large",           (CssSizeLength)"large" ,           false },
+            new object[] { "calc( 10px / 2 )",(CssSizeLength)"calc( 10px / 2 )", true  },
+            new object[] { "1234567abc",      (CssSizeLength)"1234567abc",       false },
         };
     }
 }

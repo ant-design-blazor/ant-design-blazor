@@ -64,7 +64,7 @@
       "quarterSelect": "Выберите четверть",
       "week": "Неделя",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
+      "shortWeekDays": [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ]
     },
     "timePickerLocale": {
       "placeholder": "Выберите время",
