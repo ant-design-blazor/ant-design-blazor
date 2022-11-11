@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -86,7 +87,7 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
         [JSInvokable]
-        public void UpOption()
+        public void PrevOption()
         {
             var index = Math.Max(0, ActiveOptionIndex - 1);
             ActiveOptionValue = ShowOptions[index].Value;
@@ -179,12 +180,19 @@ namespace AntDesign
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             var preText = Value.Substring(0, focusPosition);
             preText = preText.LastIndexOf("@") >= 0 ? Value.Substring(0, preText.LastIndexOf("@")) : preText;
-            preText = preText.Trim(' ');
+            if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 2);
             var nextText = Value.Substring(focusPosition);
-            nextText = nextText.Trim(' ');
+            if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
             var option = " @" + optionValue + " ";
+          
             Value = preText + option + nextText;
-            ActiveOptionValue = optionValue;
+            await ValueChanged.InvokeAsync(Value);
+          
+            var pos = preText.Length + option.Length;
+            var js = $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionStart = {pos};";
+            js += $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionEnd = {pos}";
+            await JS.InvokeVoidAsync("eval", js);
+         
             await HideOverlay();
             await InvokeStateHasChangedAsync();
         }

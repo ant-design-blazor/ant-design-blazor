@@ -27,16 +27,15 @@
         </Overlay>
 
         <Unbound>
-            <div class="@ClassMapper.Class" style="white-space:normal;">
-                <textarea value="@Value"
+            @*！！！！！！！！！！！这里不能缩进换行代码！！！！！！！！！！！！！！！*@
+            <div class="@ClassMapper.Class"><textarea value="@Value"
                           @ref="context.Current"
                           @attributes="@Attributes"
                           @onkeydown="OnKeyDown"
                           @oninput="OnInput" style="@Style"
                           class="rc-textarea"
                           placeholder="@Placeholder"
-                          rows="@Rows" />
-            </div>
+                          rows="@Rows" /></div>
         </Unbound>
     </OverlayTrigger>
 </CascadingValue>

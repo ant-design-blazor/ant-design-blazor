@@ -13,7 +13,7 @@
             if (!mentionsHelper.isPopShowFlag) return;
             if (ev.key == "ArrowUp") {
                 ev.preventDefault();
-                await Mentions.invokeMethodAsync("UpOption");
+                await Mentions.invokeMethodAsync("PrevOption");
             } else if (ev.key == "ArrowDown") {
                 ev.preventDefault();
                 await Mentions.invokeMethodAsync("NextOption");
@@ -33,35 +33,27 @@
     public static getCursorXY = function (textArea: HTMLTextAreaElement) {
         let format = function (value) {
             value = value.replace(/<|>|`|"|&/g, '?');
-            value = value.replace(/\r\n|\r|\n/g, "<br/>");
-            value = value.replace(/\s/g, '&nbsp;');
             return value;
         };
         let inputorValue = textArea.value;
         let pos = textArea.selectionStart;
         let start_range = inputorValue.slice(0, pos);
+        if (start_range.length > 0) start_range = start_range.substring(0, start_range.length - 1);
         let end_range = inputorValue.slice(pos);
         let html = format(start_range);
-        html += "<span id='caret' style='position: relative; display: inline;'>@</span>";
+        html += "<span>@</span>";
         html += format(end_range);
 
         let div_mirror = document.createElement("div");
         div_mirror.className = "ant-mentions-measure"
-        div_mirror.style.position = "absolute";
-        div_mirror.style.left = "0";
-        div_mirror.style.top = "0";
-        div_mirror.style.zIndex = "-2000";
-        div_mirror.style.padding = document.defaultView.getComputedStyle(textArea, null).padding;
-        div_mirror.style.width = textArea.offsetWidth + "px";
-
         div_mirror.innerHTML = html;
         textArea.parentNode.append(div_mirror);
 
-        let flag: HTMLSpanElement = div_mirror.querySelector("#caret");
+        let flag: HTMLSpanElement = div_mirror.querySelector("span");
         //  let flagPos = flag.getBoundingClientRect();
         //  let textAreaPos = textArea.getBoundingClientRect();
         //  let bodyPos = document.body.getBoundingClientRect();
-        let left = flag.offsetLeft - textArea.scrollLeft;
+        let left = flag.offsetLeft - textArea.scrollLeft + 16;
         let top = flag.offsetTop - textArea.scrollTop + 16;
 
         div_mirror.remove();
