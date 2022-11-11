@@ -180,7 +180,7 @@ namespace AntDesign
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             var preText = Value.Substring(0, focusPosition);
             preText = preText.LastIndexOf("@") >= 0 ? Value.Substring(0, preText.LastIndexOf("@")) : preText;
-            if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 2);
+            if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 1);
             var nextText = Value.Substring(focusPosition);
             if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
             var option = " @" + optionValue + " ";
