@@ -1,6 +1,7 @@
 ﻿@namespace AntDesign
 @using AntDesign.Internal
-@inherits AntDomComponentBase
+@inherits AntInputComponentBase<string>
+
 <CascadingValue Value='$"ant-mentions-dropdown"' Name="PrefixCls" IsFixed>
     <OverlayTrigger @ref="_overlayTrigger"
                     Trigger="new[] { Trigger.None }"
@@ -32,7 +33,9 @@
                           @ref="context.Current"
                           @attributes="@Attributes"
                           @onkeydown="OnKeyDown"
-                          @oninput="OnInput" style="@Style"
+                          @onkeyup="OnKeyUpAsync"
+                          @oninput="OnInputAsync"
+                          style="@Style"
                           class="rc-textarea"
                           placeholder="@Placeholder"
                           rows="@Rows" /></div>

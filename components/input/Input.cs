@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,9 +27,6 @@ namespace AntDesign
         protected virtual bool IgnoreOnChangeAndBlur { get; }
 
         protected virtual bool EnableOnPressEnter => OnPressEnter.HasDelegate;
-
-        [Inject]
-        protected IDomEventListener DomEventListener { get; set; }
 
         /// <summary>
         /// The label text displayed before (on the left side of) the input field.
@@ -75,27 +70,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Bordered { get; set; } = true;
-
-        /// <summary>
-        /// Whether to change value on input
-        /// </summary>
-        [Parameter]
-        public bool ChangeOnInput { get; set; }
-
-        /// <summary>
-        /// Delays the processing of the KeyUp event until the user has stopped
-        /// typing for a predetermined amount of time
-        /// </summary>
-        [Parameter]
-        public int DebounceMilliseconds
-        {
-            get => _debounceMilliseconds;
-            set
-            {
-                _debounceMilliseconds = value;
-                ChangeOnInput = value >= 0;
-            }
-        }
 
         /// <summary>
         /// The initial input content
@@ -251,7 +225,7 @@ namespace AntDesign
         {
             CurrentValue = default;
             IsFocused = true;
-            _inputString = null;
+
             await this.FocusAsync(Ref);
             if (OnChange.HasDelegate)
                 await OnChange.InvokeAsync(Value);
@@ -260,13 +234,8 @@ namespace AntDesign
                 await Task.Delay(1);
         }
 
-        private string _inputString;
-
-        private bool _compositionInputting;
-        private Timer _debounceTimer;
         private bool _autoFocus;
         private bool _isInitialized;
-        private int _debounceMilliseconds = 250;
 
         protected bool IsFocused { get; set; }
 
@@ -351,17 +320,16 @@ namespace AntDesign
             SetClasses();
         }
 
-        protected virtual Task OnChangeAsync(ChangeEventArgs args)
+        protected virtual async Task OnChangeAsync(ChangeEventArgs args)
         {
-            ChangeValue(true);
-            return Task.CompletedTask;
+            await ChangeValue(true);
         }
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
             if (args?.Key == "Enter" && InputType != "textarea")
             {
-                ChangeValue(true);
+                await ChangeValue(true);
                 if (EnableOnPressEnter)
                 {
                     await OnPressEnter.InvokeAsync(args);
@@ -372,9 +340,9 @@ namespace AntDesign
 
         protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
 
-        protected async Task OnKeyUpAsync(KeyboardEventArgs args)
+        protected override async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            ChangeValue();
+            await base.OnKeyUpAsync(args);
 
             if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
@@ -386,7 +354,7 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            ChangeValue(true);
+            await ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
@@ -420,16 +388,6 @@ namespace AntDesign
             }
         }
 
-        internal virtual void OnCompositionStart(JsonElement e)
-        {
-            _compositionInputting = true;
-        }
-
-        internal virtual void OnCompositionEnd(JsonElement e)
-        {
-            _compositionInputting = false;
-        }
-
         private void ToggleClearBtn()
         {
             Suffix = (builder) =>
@@ -455,52 +413,12 @@ namespace AntDesign
             };
         }
 
-        protected void DebounceChangeValue()
-        {
-            _debounceTimer?.Dispose();
-            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
-        }
-
-        protected void DebounceTimerIntervalOnTick(object state)
-        {
-            InvokeAsync(() => ChangeValue(true));
-        }
-
-        protected void ChangeValue(bool force = false)
-        {
-            if (ChangeOnInput)
-            {
-                if (_debounceMilliseconds > 0 && !force)
-                {
-                    DebounceChangeValue();
-                    return;
-                }
-
-                if (_debounceTimer != null)
-                {
-                    _debounceTimer.Dispose();
-                    _debounceTimer = null;
-                }
-            }
-            else if (!force)
-            {
-                return;
-            }
-
-            if (!_compositionInputting)
-            {
-                CurrentValueAsString = _inputString;
-            }
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
             if (firstRender)
             {
-                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionstart", OnCompositionStart);
-                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionend", OnCompositionEnd);
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
@@ -514,7 +432,6 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.DisposeExclusive();
-            _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
         }
@@ -533,17 +450,11 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Invoked when user add/remove content
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        protected virtual async void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            _inputString = args?.Value.ToString();
-
+            await base.OnInputAsync(args);
             if (_allowClear && flag)
             {
                 ToggleClearBtn();

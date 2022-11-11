@@ -37,7 +37,6 @@ namespace AntDesign
             if (Component != null) await Component?.InputFocus(e);
 
             await base.OnFocusAsync(e);
-
         }
 
         protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
@@ -47,14 +46,12 @@ namespace AntDesign
             if (Component != null) await Component?.InputKeyDown(args);
         }
 
-
-        protected override async void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
-            base.OnInputAsync(args);
+            await base.OnInputAsync(args);
 
             if (Component != null) await Component?.InputInput(args);
         }
-
 
         #region IAutoCompleteInput
 
@@ -63,6 +60,6 @@ namespace AntDesign
             this.CurrentValue = (TValue)value;
         }
 
-        #endregion
+        #endregion IAutoCompleteInput
     }
 }

@@ -210,10 +210,10 @@ namespace AntDesign
         }
 
         /// <inheritdoc/>
-        protected override void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
             _isInputing = true;
-            base.OnInputAsync(args);
+            await base.OnInputAsync(args);
         }
 
         protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)

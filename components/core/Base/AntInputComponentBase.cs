@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -109,6 +113,21 @@ namespace AntDesign
         public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped
+        /// typing for a predetermined amount of time
+        /// </summary>
+        [Parameter]
+        public int DebounceMilliseconds
+        {
+            get => _debounceMilliseconds;
+            set
+            {
+                _debounceMilliseconds = value;
+                BindOnInput = value >= 0;
+            }
+        }
+
+        /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
         /// </summary>
         protected EditContext EditContext { get; set; }
@@ -196,6 +215,15 @@ namespace AntDesign
         private TValue _firstValue;
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
+        private Timer _debounceTimer;
+        private int _debounceMilliseconds = 250;
+        protected bool _compositionInputting;
+        protected string _inputString;
+
+        protected virtual bool BindOnInput { get; set; }
+
+        [Inject]
+        protected IDomEventListener DomEventListener { get; set; }
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -267,7 +295,10 @@ namespace AntDesign
         /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
         {
+            _inputString = CurrentValueAsString;
         }
+
+        protected virtual Task OnBindAsync() => Task.CompletedTask;
 
         protected override void OnInitialized()
         {
@@ -328,6 +359,16 @@ namespace AntDesign
             return base.SetParametersAsync(ParameterView.Empty);
         }
 
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionstart", OnCompositionStart);
+                DomEventListener.AddExclusive<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+            }
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (EditContext != null)
@@ -336,7 +377,7 @@ namespace AntDesign
             }
 
             Form?.RemoveControl(this);
-
+            _debounceTimer?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -350,6 +391,71 @@ namespace AntDesign
         void IControlValueAccessor.Reset()
         {
             ResetValue();
+        }
+
+        protected virtual async Task OnKeyUpAsync(KeyboardEventArgs args)
+        {
+            await ChangeValue();
+        }
+
+        /// <summary>
+        /// Invoked when user add/remove content
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        protected virtual Task OnInputAsync(ChangeEventArgs args)
+        {
+            _inputString = args?.Value.ToString();
+            return Task.CompletedTask;
+        }
+
+        internal virtual void OnCompositionStart(JsonElement e)
+        {
+            _compositionInputting = true;
+        }
+
+        internal virtual void OnCompositionEnd(JsonElement e)
+        {
+            _compositionInputting = false;
+        }
+
+        protected void DebounceChangeValue()
+        {
+            _debounceTimer?.Dispose();
+            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
+        }
+
+        protected void DebounceTimerIntervalOnTick(object state)
+        {
+            InvokeAsync(async () => await ChangeValue(true));
+        }
+
+        protected async Task ChangeValue(bool force = false)
+        {
+            if (BindOnInput)
+            {
+                if (_debounceMilliseconds > 0 && !force)
+                {
+                    DebounceChangeValue();
+                    return;
+                }
+
+                if (_debounceTimer != null)
+                {
+                    _debounceTimer.Dispose();
+                    _debounceTimer = null;
+                }
+            }
+            else if (!force)
+            {
+                return;
+            }
+
+            if (!_compositionInputting)
+            {
+                CurrentValueAsString = _inputString;
+                await OnBindAsync();
+            }
         }
     }
 }
