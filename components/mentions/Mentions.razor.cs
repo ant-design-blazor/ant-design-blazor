@@ -13,18 +13,23 @@ namespace AntDesign
     public partial class Mentions : AntInputComponentBase<string>
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
+
         [Parameter] public bool Disabled { get; set; }
+
         [Parameter] public int Rows { get; set; } = 1;
-        [Parameter] public Dictionary<string, object> Attributes { get; set; }
-        [Inject] public IJSRuntime JS { get; set; }
+
         [Parameter] public string Placeholder { get; set; }
 
-        internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
-        internal List<MentionsOption> ShowOptions { get; } = new List<MentionsOption>();
+        [Inject] private IJSRuntime JS { get; set; }
+
+        private List<MentionsOption> _originalOptions;
+        private List<MentionsOption> _showOptions;
 
         internal string ActiveOptionValue { get; set; }
-        internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x.Value == ActiveOptionValue);
 
+        internal int ActiveOptionIndex => _showOptions?.FindIndex(x => x.Value == ActiveOptionValue) ?? 0;
+
+        private Dictionary<string, object> _attributes;
         private OverlayTrigger _overlayTrigger;
         public bool _focused;
 
@@ -53,31 +58,19 @@ namespace AntDesign
         internal void AddOption(MentionsOption option)
         {
             if (option == null) return;
-            var opt = OriginalOptions.Find(x => x.Value == option.Value);
+            var opt = _originalOptions.Find(x => x.Value == option.Value);
             if (opt == null)
             {
-                OriginalOptions.Add(option);
+                _originalOptions.Add(option);
             }
-        }
-
-        public List<string> GetMentionNames()
-        {
-            var r = new List<string>();
-            var regex = new System.Text.RegularExpressions.Regex("@([^@\\s]+)\\s");
-            regex.Matches(Value).ToList().ForEach(m =>
-            {
-                var name = m.Groups[1].Value;
-                r.Add(name);
-            });
-            return r;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                ShowOptions.Clear();
-                ShowOptions.AddRange(OriginalOptions);
+                _showOptions.Clear();
+                _showOptions.AddRange(_originalOptions);
                 await JsInvokeAsync(JSInteropConstants.SetEditorKeyHandler, DotNetObjectReference.Create(this), _overlayTrigger.RefBack.Current);
             }
             await base.OnAfterRenderAsync(firstRender);
@@ -87,15 +80,15 @@ namespace AntDesign
         public void PrevOption()
         {
             var index = Math.Max(0, ActiveOptionIndex - 1);
-            ActiveOptionValue = ShowOptions[index].Value;
+            ActiveOptionValue = _showOptions[index].Value;
             StateHasChanged();
         }
 
         [JSInvokable]
         public void NextOption()
         {
-            var index = Math.Min(ActiveOptionIndex + 1, ShowOptions.Count - 1);
-            ActiveOptionValue = ShowOptions[index].Value;
+            var index = Math.Min(ActiveOptionIndex + 1, _showOptions.Count - 1);
+            ActiveOptionValue = _showOptions[index].Value;
             StateHasChanged();
         }
 
@@ -116,8 +109,8 @@ namespace AntDesign
         {
             if (resetOptions)
             {
-                ShowOptions.Clear();
-                ShowOptions.AddRange(OriginalOptions);
+                _showOptions.Clear();
+                _showOptions.AddRange(_originalOptions);
             }
 
             if (ActiveOptionIndex > 0)
@@ -127,7 +120,7 @@ namespace AntDesign
             }
 
             await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, true);
-            ActiveOptionValue = ShowOptions.First().Value;
+            ActiveOptionValue = _showOptions.First().Value;
             if (reCalcPosition)
             {
                 var pos = await JS.InvokeAsync<double[]>(JSInteropConstants.GetCursorXY, _overlayTrigger.RefBack.Current);
@@ -172,9 +165,9 @@ namespace AntDesign
             if (lastIndex >= 0)
             {
                 var lastOption = v.Substring(lastIndex + 1);
-                ShowOptions.Clear();
-                ShowOptions.AddRange(OriginalOptions.Where(x => x.Value.Contains(lastOption, StringComparison.OrdinalIgnoreCase)).ToList());
-                if (ShowOptions.Count > 0) showPop = true;
+                _showOptions.Clear();
+                _showOptions.AddRange(_originalOptions.Where(x => x.Value.Contains(lastOption, StringComparison.OrdinalIgnoreCase)).ToList());
+                if (_showOptions.Count > 0) showPop = true;
             }
 
             if (showPop)

@@ -11,10 +11,10 @@
                     InlineFlexMode=false>
         <Overlay>
             <CascadingValue Value=this>
-                @if (OriginalOptions.Count > 0)
+                @if (_originalOptions.Count > 0)
                 {
                     <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
-                        @foreach (var item in ShowOptions)
+                        @foreach (var item in _showOptions)
                         {
                             <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
                         }
@@ -29,9 +29,9 @@
 
         <Unbound>
             @*！！！！！！！！！！！这里不能缩进换行代码！！！！！！！！！！！！！！！*@
-            <div class="@ClassMapper.Class"><textarea value="@Value"
+            <div class="@ClassMapper.Class"><textarea value="@CurrentValueAsString"
                           @ref="context.Current"
-                          @attributes="@Attributes"
+                          @attributes="@_attributes"
                           @onkeydown="OnKeyDown"
                           @onkeyup="OnKeyUpAsync"
                           @oninput="OnInputAsync"
