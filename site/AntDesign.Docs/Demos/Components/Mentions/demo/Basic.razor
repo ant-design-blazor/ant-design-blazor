@@ -1,7 +1,11 @@
 ﻿<div>
-    <Mentions Placeholder="please enter @@">
+    <Mentions Placeholder="please enter @@" @bind-Value="value">
         <MentionsOption Value="afc163">afc163</MentionsOption>
         <MentionsOption Value="zombieJ">zombieJ</MentionsOption>
         <MentionsOption Value="yesmeck">yesmeck</MentionsOption>
     </Mentions>
 </div>
+
+@code {
+    string value { get; set; }
+}

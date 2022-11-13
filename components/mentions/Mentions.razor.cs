@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using OneOf;
 
@@ -15,32 +20,24 @@ namespace AntDesign
 {
     public partial class Mentions
     {
-        [Parameter] public bool AutoFocus { get; set; }
-        [Parameter] public bool Disable { get; set; }
-        [Parameter] public bool Readonly { get; set; }
-        [Parameter] public string Prefix { get; set; } = "@,#";   //“@，#”
-        [Parameter] public string Split { get; set; } = " ";
-        [Parameter] public string DefaultValue { get; set; }
-        [Parameter] public string Placeholder { get; set; }
-        [Parameter] public string Value { get; set; }
-        [Parameter] public string Placement { get; set; } = "bottom";
-        [Parameter] public int Rows { get; set; } = 1;
-        [Parameter] public bool Loading { get; set; } = false;
         [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public EventCallback<string> ValueChange { get; set; }
-        [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
-        [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
-        [Parameter] public EventCallback<EventArgs> OnSearch { get; set; }
+        [Parameter] public bool Disable { get; set; }
+        [Parameter] public int Rows { get; set; } = 3;
+        [Parameter] public bool Focused { get; set; }
+        [Parameter] public bool Readonly { get; set; }
+        [Parameter] public bool Loading { get; set; }
 
-        [Parameter] public RenderFragment NoFoundContent { get; set; }
 
-        public Dictionary<string, object> Attributes { get; set; }
-
-        internal List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
-
-        private string DropdownStyle { get; set; }
-        private bool Focused { get; set; }
-        private bool ShowSuggestions { get; set; }
+        [Parameter] public Dictionary<string, object> Attributes { get; set; }
+        [Inject] public IJSRuntime JS { get; set; }
+        [Parameter] public string Placeholder { get; set; }
+        [Parameter] public string Value { get; set; } = String.Empty;
+        [Parameter] public EventCallback<string> ValueChanged { get; set; }
+        internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
+        internal List<MentionsOption> ShowOptions { get; } = new List<MentionsOption>();
+        private OverlayTrigger _overlayTrigger;
+        internal string ActiveOptionValue { get; set; }
+        internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x.Value == ActiveOptionValue);
 
         private void SetClassMap()
         {
@@ -56,201 +53,148 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
             SetClassMap();
-            if (string.IsNullOrEmpty(Value))
-            {
-                Value = DefaultValue;
-            }
         }
 
-        internal bool FirstTime { get; set; } = true;
-
-        protected override Task OnFirstAfterRenderAsync()
-        {
-            base.OnFirstAfterRenderAsync();
-            FirstTime = false;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        ///  After Press keyUP, if a key  is prefix, to popup the suggestion
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private async Task OnKeyUp(KeyboardEventArgs args)
-        {
-            if (args == null) return;
-            if (Prefix.Contains(args.Key, StringComparison.Ordinal))
-            {
-                await SetDropdownStyle();
-                ShowSuggestions = Prefix.Contains(args.Key, StringComparison.Ordinal);
-                await InvokeStateHasChangedAsync();
-            }
-
-            if (!string.IsNullOrEmpty(Value))
-            {
-                var suggestions = this.Value.Split(Split);
-            }
-
-            await ValueChange.InvokeAsync(this.Value);
-        }
-
-        private async Task OnKeyDown(KeyboardEventArgs args)
-        {
-            await InvokeStateHasChangedAsync();
-        }
-
-        private DotNetObjectReference<Mentions> _reference;
-        private const string ReferenceName = "mentions";
-
-        protected async Task SetDropdownStyle()
-        {
-            if (_reference == null)
-            {
-                _reference = DotNetObjectReference.Create<Mentions>(this);
-            }
-            //get current dom element infomation
-            var domRect = await JsInvokeAsync<double[]>(JSInteropConstants.GetCursorXY, Ref, _reference);
-
-            var left = Math.Round(domRect[0]);
-            var top = Math.Round(domRect[1]);
-            //DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate({cursorPoint.x}px, {cursorPoint.y}0px);";
-            DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate(0px, 0px);";
-        }
-
-        /// <summary>
-        ///  open or close the list of Suggestion
-        /// </summary>
-        /// <param name="show"></param>
-        /// <returns></returns>
-        internal async Task ShowSuggestion(bool show)
-        {
-            ShowSuggestions = show;
-            await InvokeStateHasChangedAsync();
-        }
-
-        internal async Task GetSuggestion()
-        {
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="opt"></param>
-        /// <returns></returns>
-        internal async Task OnOptionClick(MentionsOption opt)
-        {
-            // update to status of  all of suggestion to un-selected state
-            foreach (var item in LstOriginalOptions)
-            {
-                item.Selected = false;
-            }
-
-            // when the suggestion clicked is not null and enable, then change the value of textarea.
-            if (opt != null && !opt.Disable)
-            {
-                if (string.IsNullOrEmpty(this.Value))
-                {
-                    this.Value = opt.Value + this.Split;
-                }
-                else
-                {
-                    this.Value = this.Value + opt.Value + this.Split;
-                }
-            }
-
-            ShowSuggestions = false;
-
-            await InvokeStateHasChangedAsync();
-        }
-
-        private void OnKeyPress(KeyboardEventArgs args)
-        {
-            if (args == null) return;
-            if (ValueChange.HasDelegate)
-                ValueChange.InvokeAsync(args.Code);
-
-            return;
-        }
-
-        protected override Task OnParametersSetAsync()
-        {
-            return base.OnParametersSetAsync();
-        }
-
-        /// <summary>
-        /// return a  new list of mentionsOption, when all item included the specificed text
-        /// </summary>
-        /// <param name="textValue"></param>
-        /// <returns></returns>
-        private List<MentionsOption> IsIncluded(string textValue)
-        {
-            if (string.IsNullOrEmpty(textValue))
-            {
-                return LstOriginalOptions;
-            }
-
-            List<MentionsOption> lst = new List<MentionsOption>();
-            foreach (var item in LstOriginalOptions)
-            {
-                if (item.Value.Contains(textValue, StringComparison.Ordinal))
-                {
-                    lst.Add(item);
-                }
-            }
-            return lst;
-        }
-
-        public void RemoveOption(MentionsOption option)
-        {
-            LstOriginalOptions.Remove(option);
-        }
-
-        public void AddOption(MentionsOption option)
+        internal void AddOption(MentionsOption option)
         {
             if (option == null) return;
-            var opt = LstOriginalOptions.Find(x => x.Value == option.Value);
+            var opt = OriginalOptions.Find(x => x.Value == option.Value);
             if (opt == null)
             {
-                LstOriginalOptions.Add(option);
+                OriginalOptions.Add(option);
             }
         }
-
-        internal async void Onfocus(FocusEventArgs args)
+        public List<string> GetMentionNames()
         {
-            if (args == null) return;
-
-            Focused = true;
-            if (OnFocus.HasDelegate)
-                await OnFocus.InvokeAsync(args);
-
-            await FocusAsync(Ref);
-            StateHasChanged();
+            var r = new List<string>();
+            var regex = new System.Text.RegularExpressions.Regex("@([^@\\s]+)\\s");
+            regex.Matches(Value).ToList().ForEach(m =>
+            {
+                var name = m.Groups[1].Value;
+                r.Add(name);
+            });
+            return r;
         }
-
-        internal async void Onblur(FocusEventArgs args)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (args == null) return;
-            Focused = false;
-            if (OnBlur.HasDelegate)
-                await OnBlur.InvokeAsync(args);
-            await JsInvokeAsync(JSInteropConstants.Blur, Ref);
-            StateHasChanged();
+            if (firstRender)
+            {
+                ShowOptions.Clear();
+                ShowOptions.AddRange(OriginalOptions);
+                await JsInvokeAsync(JSInteropConstants.SetEditorKeyHandler, DotNetObjectReference.Create(this), _overlayTrigger.RefBack.Current);
+            }
+            await base.OnAfterRenderAsync(firstRender);
         }
-
         [JSInvokable]
-        public void CloseMentionsDropDown()
+        public void PrevOption()
         {
-            ShowSuggestions = false;
+            var index = Math.Max(0, ActiveOptionIndex - 1);
+            ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
-
-        protected override void Dispose(bool disposing)
+        [JSInvokable]
+        public void NextOption()
         {
-            _reference = null;
-            _ = JsInvokeAsync(JSInteropConstants.DisposeObj, ReferenceName);
-            base.Dispose(disposing);
+            var index = Math.Min(ActiveOptionIndex + 1, ShowOptions.Count - 1);
+            ActiveOptionValue = ShowOptions[index].Value;
+            StateHasChanged();
+        }
+        [JSInvokable]
+        public async Task EnterOption()
+        {
+            await ItemClick(ActiveOptionValue);
+        }
+
+        async Task HideOverlay()
+        {
+            await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, false);
+            await _overlayTrigger.Hide();
+        }
+
+        async Task ShowOverlay(bool resetOptions, bool reCalcPosition)
+        {
+            await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, true);
+            if (resetOptions)
+            {
+                ShowOptions.Clear();
+                ShowOptions.AddRange(OriginalOptions);
+            }
+            ActiveOptionValue = ShowOptions.First().Value;
+            if (reCalcPosition)
+            {
+                var pos = await JS.InvokeAsync<double[]>(JSInteropConstants.GetCursorXY, _overlayTrigger.RefBack.Current);
+                var x = (int)Math.Round(pos[0]);
+                var y = (int)Math.Round(pos[1]);
+                await _overlayTrigger.Show(x, y);
+            }
+            else
+            {
+                await _overlayTrigger.Show();
+            }
+            await InvokeStateHasChangedAsync();
+        }
+        async void OnKeyDown(KeyboardEventArgs args)
+        {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
+            //开启浮窗的判断放在oninput里，不然会有问题
+            if (args.Key == "Escape") await HideOverlay();
+        }
+
+        async Task OnInput(ChangeEventArgs args)
+        {
+            Value = args.Value.ToString();
+            await ValueChanged.InvokeAsync(Value);
+            if (Value.EndsWith("@"))
+            {
+                await ShowOverlay(true, true);
+                return;
+            }
+            var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
+            if (focusPosition == 0)
+            {
+                await HideOverlay();
+                return;
+            };
+            var showPop = false;
+            var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
+            var lastIndex = v.LastIndexOf("@");
+            if (lastIndex >= 0)
+            {
+                var lastOption = v.Substring(lastIndex + 1);
+                ShowOptions.Clear();
+                ShowOptions.AddRange(OriginalOptions.Where(x => x.Value.Contains(lastOption, StringComparison.OrdinalIgnoreCase)).ToList());
+                if (ShowOptions.Count > 0) showPop = true;
+            }
+
+            if (showPop)
+            {
+                await ShowOverlay(false, true);
+            }
+            else
+            {
+                await HideOverlay();
+            }
+        }
+        internal async Task ItemClick(string optionValue)
+        {
+            var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
+            var preText = Value.Substring(0, focusPosition);
+            preText = preText.LastIndexOf("@") >= 0 ? Value.Substring(0, preText.LastIndexOf("@")) : preText;
+            if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 1);
+            var nextText = Value.Substring(focusPosition);
+            if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
+            var option = " @" + optionValue + " ";
+          
+            Value = preText + option + nextText;
+            await ValueChanged.InvokeAsync(Value);
+          
+            var pos = preText.Length + option.Length;
+            var js = $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionStart = {pos};";
+            js += $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionEnd = {pos}";
+            await JS.InvokeVoidAsync("eval", js);
+         
+            await HideOverlay();
+            await InvokeStateHasChangedAsync();
         }
     }
 }

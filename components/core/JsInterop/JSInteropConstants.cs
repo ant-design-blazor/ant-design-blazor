@@ -101,6 +101,10 @@ namespace AntDesign
         #region mentions
 
         public static string GetCursorXY => MentionsComponentHelper.GetCursorXY;
+        public static string SetEditorKeyHandler => MentionsComponentHelper.SetEditorKeyHandler;
+        public static string GetProp => MentionsComponentHelper.GetProp;
+        public static string SetPopShowFlag => MentionsComponentHelper.SetPopShowFlag;
+
 
         #endregion mentions
 
@@ -235,6 +239,9 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "mentionsHelper.";
             public static string GetCursorXY => $"{FUNC_PREFIX}getCursorXY";
+            public static string SetEditorKeyHandler => $"{FUNC_PREFIX}setEditorKeyHandler";
+            public static string GetProp => $"{FUNC_PREFIX}getProp";
+            public static string SetPopShowFlag => $"{FUNC_PREFIX}setPopShowFlag";
         }
 
         public static class ModalComponentHelper
