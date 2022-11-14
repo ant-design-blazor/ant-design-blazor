@@ -33,6 +33,8 @@ namespace AntDesign
 
         public string BodyStyle { get; set; }
 
+        public string HeaderStyle { get; set; }
+
         public string WrapClassName { get; set; }
 
         public int Width { get; set; } = 256;

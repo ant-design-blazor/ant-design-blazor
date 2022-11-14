@@ -18,6 +18,7 @@
         );
         //Act
         cut.Find("input").Change("$ 10");
+
         //Assert
         cut.Instance.Value.Should().Be(10);
     }
@@ -40,5 +41,31 @@
         //Assert
         string decimalSeparator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
         inputElement.GetAttribute("value").Should().Be($"0{decimalSeparator}00001");
+    }
+
+    [Theory]
+    [InlineData(2, "1", "1.00")]
+    [InlineData(2, "1.1", "1.10")]
+    [InlineData(2, "0.1234", "0.12")]
+    public void InputNumber_value_should_have_precision(int precision, string value, string expected)
+    {
+        //Arrange
+#pragma warning disable CS0618 // Type or member is obsolete
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
+        AntDesign.InputNumber<double>? input = null;
+
+        var bindValue = 0d;
+        var cut = Render<AntDesign.InputNumber<double>>(
+        @<AntDesign.InputNumber @ref="@input" Precision="@precision" @bind-Value="bindValue" />
+    );
+        //Act
+        var inputElement = cut.Find("input");
+        inputElement.Input(value);
+        inputElement.Blur();
+
+        //Assert
+        inputElement.GetAttribute("value").Should().Be($"{expected}");
+        bindValue.Should().Equals(double.Parse(expected));
     }
 }

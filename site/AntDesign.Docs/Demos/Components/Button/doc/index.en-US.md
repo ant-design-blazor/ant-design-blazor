@@ -49,3 +49,9 @@ And 4 other properties additionally.
 | NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
 
 
+### DownloadButton
+
+| Property | Description | Type | Default Value | Version 
+| --- | --- | --- | --- |
+| Url | The download url of a file    | string    | null         |
+| FileName | name of the file         | string    |         | 

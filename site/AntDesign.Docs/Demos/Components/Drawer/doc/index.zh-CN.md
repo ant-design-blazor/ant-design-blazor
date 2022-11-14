@@ -39,6 +39,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | OnClose | 指定当用户单击掩码、关闭按钮或取消按钮时将调用的回调。| 事件回调 | - |
 | OnOpen | 指定将在抽屉呈现后调用的回调 | 函数<任务> | - |
 | MaskStyle | 抽屉遮罩元素的样式。| 字符串 | - |
+| HeaderStyle   | 可用于设置 Drawer 标题部分的样式                          | string         | -        |
 | BodyStyle | 抽屉内容部分的样式| 字符串 | - |
 | WrapClassName | Drawer 对话框的容器的类名。| 字符串 | - |
 
@@ -62,6 +63,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | Keyboard          | 是否支持键盘 esc 关闭                                   | `boolean`                                | `true`    |
 | MaskStyle         | 遮罩样式                                                | `string`                                 | `{}`      |
 | BodyStyle         | Drawer body 样式                                         | `string`                                 | `{}`      |
+| HeaderStyle       | 可用于设置 Drawer 标题部分的样式                          | `string`         | -        |
 | Title             | 标题                                                    | `OneOf<RenderFragment, string>`          | -         |
 | Width             | 宽度                                                    | `int`                                    | `256`     |
 | Height            | 高度, 只在方向为 `'top'`或`'bottom'` 时生效             | `int`                                    | `256`     |

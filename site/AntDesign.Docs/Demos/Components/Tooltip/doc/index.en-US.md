@@ -24,7 +24,8 @@ There are 2 rendering approaches for `Tooltip`:
 
 | Property | Description                   | Type                               | Default |
 | -------- | ----------------------------- | ---------------------------------- | ------- |
-| Title    | The text shown in the tooltip | string\|RenderFragment | string.Empty      |
+| Title    | The text shown in the tooltip | string | string.Empty |
+| TitleTemplate | The content shown in the tooltip | RenderFragment | - |
 
 ### Common API
 

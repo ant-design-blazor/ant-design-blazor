@@ -25,6 +25,8 @@ There are 2 rendering approaches for `Dropdown`:
 
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
+| Arrow | Whether the dropdown arrow should be visible | boolean | false |  |
+| ArrowPointAtCenter | Whether the dropdown arrow should be visible and point at center | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChildContent | `Dropdown` trigger (link, button, etc)         | RenderFragment    | -         |
 | Class | Specifies one or more class names for an DOM element.         |  string   | -         |

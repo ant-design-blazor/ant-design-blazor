@@ -46,7 +46,7 @@ namespace AntDesign
         public RenderFragment AddOnAfter { get; set; }
 
         /// <summary>
-        /// Allow to remove input content with clear icon 
+        /// Allow to remove input content with clear icon
         /// </summary>
         [Parameter]
         public bool AllowClear { get; set; }
@@ -77,14 +77,28 @@ namespace AntDesign
         public bool Bordered { get; set; } = true;
 
         /// <summary>
-        /// Delays the processing of the KeyUp event until the user has stopped 
+        /// Whether to change value on input
+        /// </summary>
+        [Parameter]
+        public bool ChangeOnInput { get; set; }
+
+        /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped
         /// typing for a predetermined amount of time
         /// </summary>
         [Parameter]
-        public int DebounceMilliseconds { get; set; } = 250;
+        public int DebounceMilliseconds
+        {
+            get => _debounceMilliseconds;
+            set
+            {
+                _debounceMilliseconds = value;
+                ChangeOnInput = value >= 0;
+            }
+        }
 
         /// <summary>
-        /// The initial input content  
+        /// The initial input content
         /// </summary>
         [Parameter]
         public TValue DefaultValue { get; set; }
@@ -186,7 +200,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Suffix { get; set; }
 
-
         /// <summary>
         /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
         /// </summary>
@@ -194,10 +207,10 @@ namespace AntDesign
         public string Type { get; set; } = "text";
 
         /// <summary>
-        /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix 
+        /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix
         /// or has paramter set <seealso cref="AllowClear"/> or for components: <see cref="InputPassword"/>
-        /// and <see cref="Search"/>. In these cases, html span elements is used 
-        /// to wrap the html input element. 
+        /// and <see cref="Search"/>. In these cases, html span elements is used
+        /// to wrap the html input element.
         /// <seealso cref="WrapperStyle"/> is used on the span element.
         /// </summary>
         [Parameter]
@@ -228,7 +241,7 @@ namespace AntDesign
 
         /// <summary>
         /// Removes focus from input element.
-        /// </summary>       
+        /// </summary>
         public async Task Blur()
         {
             await BlurAsync(Ref);
@@ -238,6 +251,7 @@ namespace AntDesign
         {
             CurrentValue = default;
             IsFocused = true;
+            _inputString = null;
             await this.FocusAsync(Ref);
             if (OnChange.HasDelegate)
                 await OnChange.InvokeAsync(Value);
@@ -246,13 +260,13 @@ namespace AntDesign
                 await Task.Delay(1);
         }
 
-        private TValue _inputValue;
+        private string _inputString;
+
         private bool _compositionInputting;
         private Timer _debounceTimer;
         private bool _autoFocus;
         private bool _isInitialized;
-
-        private bool DebounceEnabled => DebounceMilliseconds != 0;
+        private int _debounceMilliseconds = 250;
 
         protected bool IsFocused { get; set; }
 
@@ -264,6 +278,8 @@ namespace AntDesign
             {
                 Value = DefaultValue;
             }
+
+            _inputString = Value?.ToString();
 
             SetClasses();
             _isInitialized = true;
@@ -335,23 +351,17 @@ namespace AntDesign
             SetClasses();
         }
 
-        protected virtual async Task OnChangeAsync(ChangeEventArgs args)
+        protected virtual Task OnChangeAsync(ChangeEventArgs args)
         {
-            if (CurrentValueAsString != args?.Value?.ToString())
-            {
-                CurrentValueAsString = args?.Value?.ToString();
-                if (OnChange.HasDelegate)
-                {
-                    await OnChange.InvokeAsync(Value);
-                }
-            }
+            ChangeValue(true);
+            return Task.CompletedTask;
         }
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
             if (args?.Key == "Enter" && InputType != "textarea")
             {
-                await ChangeValue(true);
+                ChangeValue(true);
                 if (EnableOnPressEnter)
                 {
                     await OnPressEnter.InvokeAsync(args);
@@ -364,7 +374,7 @@ namespace AntDesign
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            await ChangeValue();
+            ChangeValue();
 
             if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
@@ -376,7 +386,7 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            await ChangeValue(true);
+            ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
@@ -390,8 +400,6 @@ namespace AntDesign
             {
                 _compositionInputting = false;
             }
-
-            await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
@@ -430,7 +438,7 @@ namespace AntDesign
                 builder.AddAttribute(32, "Type", "close-circle");
                 builder.AddAttribute(33, "Theme", "fill");
                 builder.AddAttribute(34, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(_inputValue?.ToString() ?? ""))
+                if (string.IsNullOrEmpty(_inputString ?? ""))
                 {
                     builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
@@ -455,14 +463,14 @@ namespace AntDesign
 
         protected void DebounceTimerIntervalOnTick(object state)
         {
-            InvokeAsync(async () => await ChangeValue(true));
+            InvokeAsync(() => ChangeValue(true));
         }
 
-        private async Task ChangeValue(bool ignoreDebounce = false)
+        protected void ChangeValue(bool force = false)
         {
-            if (DebounceEnabled)
+            if (ChangeOnInput)
             {
-                if (!ignoreDebounce)
+                if (_debounceMilliseconds > 0 && !force)
                 {
                     DebounceChangeValue();
                     return;
@@ -470,22 +478,18 @@ namespace AntDesign
 
                 if (_debounceTimer != null)
                 {
-                    await _debounceTimer.DisposeAsync();
-
+                    _debounceTimer.Dispose();
                     _debounceTimer = null;
                 }
+            }
+            else if (!force)
+            {
+                return;
             }
 
             if (!_compositionInputting)
             {
-                if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
-                {
-                    CurrentValue = _inputValue;
-                    if (OnChange.HasDelegate)
-                    {
-                        await OnChange.InvokeAsync(Value);
-                    }
-                }
+                CurrentValueAsString = _inputString;
             }
         }
 
@@ -523,7 +527,10 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _inputValue = value;
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(Value);
+            }
         }
 
         /// <summary>
@@ -535,10 +542,7 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            if (TryParseValueFromString(args?.Value.ToString(), out TValue value, out var error))
-            {
-                _inputValue = value;
-            }
+            _inputString = args?.Value.ToString();
 
             if (_allowClear && flag)
             {
@@ -633,7 +637,7 @@ namespace AntDesign
                 builder.AddAttribute(50, "Id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
-                builder.AddAttribute(61, "value", CurrentValue);
+                builder.AddAttribute(61, "value", CurrentValueAsString);
                 builder.AddAttribute(62, "disabled", needsDisabled);
                 builder.AddAttribute(63, "readonly", ReadOnly);
 
@@ -653,6 +657,7 @@ namespace AntDesign
                 builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
                 builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
                 builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+
                 builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
 
                 //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
