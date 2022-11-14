@@ -14,27 +14,6 @@ namespace AntDesign
     {
         private const string IdPrefix = "Ant-Design-";
 
-        /// <summary>
-        /// default Dialog close icon
-        /// </summary>
-        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
-        {
-            builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
-            builder.CloseComponent();
-        };
-
-        /// <summary>
-        /// default modal footer
-        /// </summary>
-        internal static readonly RenderFragment DefaultFooter = (builder) =>
-        {
-            builder.OpenComponent<ModalFooter>(0);
-            builder.CloseComponent();
-        };
-
-
         #region Parameters
 
 #pragma warning disable 1591
