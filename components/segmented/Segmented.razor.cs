@@ -9,17 +9,39 @@ using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TValue))]
+#endif
+
     public partial class Segmented<TValue> : AntDomComponentBase
     {
         [Parameter]
-        public TValue DefaultValue { get; set; }
+        public TValue DefaultValue
+        {
+            get => _defaultValue;
+            set
+            {
+                _defaultValueSet = true;
+                _defaultValue = value;
+            }
+        }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled == value)
+                    return;
+
+                _disabled = value;
+                _items.ForEach(item => item.MarkStateHasChanged());
+            }
+        }
 
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
@@ -65,11 +87,15 @@ namespace AntDesign
             get => _value;
             set
             {
-                if (value != null && !value.Equals(_value))
-                {
-                    _value = value;
-                    ChangeValue(_value);
-                }
+                if (_value is null && value is null)
+                    return;
+
+                if (_value?.Equals(value) == true)
+                    return;
+
+                _value = value;
+                _valueSet = true;
+                ChangeValue(_value);
             }
         }
 
@@ -101,6 +127,10 @@ namespace AntDesign
         private bool _firstRendered;
 
         private TValue _value;
+        private bool _valueSet;
+        private bool _disabled;
+        private TValue _defaultValue;
+        private bool _defaultValueSet;
 
         protected override void OnInitialized()
         {
@@ -114,7 +144,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-rtl", () => RTL)
                 ;
 
-            if (DefaultValue != null)
+            if (_defaultValueSet)
             {
                 _value = DefaultValue;
                 ChangeValue(_value);
@@ -134,9 +164,14 @@ namespace AntDesign
                 _optionsChanged = true;
             }
 
-            if (_value == null && _optionValues?.Any() == true)
+            if (!_valueSet && _optionValues?.Any() == true)
             {
                 _value = _optionValues[0];
+                _valueSet = true;
+            }
+
+            if (_valueSet)
+            {
                 ChangeValue(_value);
             }
         }
@@ -156,28 +191,23 @@ namespace AntDesign
             if (_firstRendered && _optionsChanged)
             {
                 _optionsChanged = false;
+                ChangeValue(_value, true);
                 await GetItemElememt();
-                ChangeValue(_value);
             }
 
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private void ChangeValue(TValue value)
+        private void ChangeValue(TValue value, bool noAnimation = false)
         {
-            if (Disabled)
-            {
-                return;
-            }
-
             var item = _items.FirstOrDefault(x => x.Value.Equals(value));
             if (item != null)
             {
-                Select(item);
+                Select(item, noAnimation);
             }
         }
 
-        internal async void Select(SegmentedItem<TValue> item)
+        internal async void Select(SegmentedItem<TValue> item, bool noAnimation = false)
         {
             _items[_activeIndex].SetSelected(false);
             _value = item.Value;
@@ -192,8 +222,12 @@ namespace AntDesign
                 await ValueChanged.InvokeAsync(_value);
             }
 
-            await ThumbAnimation(item);
+            if (!noAnimation)
+            {
+                await ThumbAnimation(item);
+            }
 
+            _activeIndex = item.Index;
             _items.ForEach(x => x.SetSelected(false));
             item.SetSelected(true);
         }
@@ -214,7 +248,6 @@ namespace AntDesign
             _sliding = true;
             _slidingCls = "ant-segmented-thumb ant-segmented-thumb-motion ant-segmented-thumb-motion-appear ant-segmented-thumb-motion-appear-start";
             _slidingStyle = $"transform: translateX({_itemRefs[_items[_activeIndex].Id].OffsetLeft}px); width: {_itemRefs[_items[_activeIndex].Id].ClientWidth}px;";
-            _activeIndex = item.Index;
 
             StateHasChanged();
             await Task.Delay(100);

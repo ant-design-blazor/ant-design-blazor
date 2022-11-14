@@ -200,4 +200,53 @@
         cut.Instance.Value[1].Should().Be(expectedEnd);
         input[1].GetAttribute("value").Should().Be(endValueAsString);
     }
+
+    [Theory]
+    [InlineData("Enter", true)]
+    [InlineData("Tab", true)]
+    [InlineData("Enter", false)]
+    [InlineData("Tab", false)]
+    public async Task Key_applies_input_to_value(string key, bool showTime)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var range = new DateTime[]
+        {
+            new DateTime(2022, 1, 1, 0, 0, 0),
+            new DateTime(2022, 1, 1, 1, 0, 0)
+        };
+
+        var expectedStart = new DateTime(2022, 6, 8, 0, 0, 0);
+        var expectedEnd = new DateTime(2022, 6, 9, 0, 0, 0);
+
+        if (showTime)
+        {
+            expectedStart = expectedStart.AddHours(20).AddMinutes(30).AddSeconds(5);
+            expectedEnd = expectedEnd.AddHours(1).AddMinutes(50).AddSeconds(5);
+        }
+
+        var format = showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd";
+        string startValueAsString = expectedStart.ToString(format);
+        string endValueAsString = expectedEnd.ToString(format);
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="showTime" />  );
+
+        //Act
+        var input = cut.FindAll("input");
+        await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
+        await input[0].KeyDownAsync(new KeyboardEventArgs() { Key = key });
+        await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
+        await input[1].KeyDownAsync(new KeyboardEventArgs() { Key = key });
+
+        //Assert
+        input = cut.FindAll("input");
+        range[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+        range[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+	}
 }

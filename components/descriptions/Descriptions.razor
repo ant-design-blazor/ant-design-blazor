@@ -84,16 +84,18 @@
                                 @foreach (var item in row)
                                 {
                                     <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-                                            @if (item.item.TitleTemplate != null)
-                                            {
-                                                @item.item.TitleTemplate
-                                            }
-                                            else
-                                            {
-                                                @item.item.Title
-                                            }
-                                        </span>
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
+                                                @if (item.item.TitleTemplate != null)
+                                                {
+                                                    @item.item.TitleTemplate
+                                                }
+                                                else
+                                                {
+                                                    @item.item.Title
+                                                }
+                                            </span>
+                                        </div>
                                     </td>
                                 }
                             </tr>
@@ -101,9 +103,11 @@
                                 @foreach (var item in row)
                                 {
                                     <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                        <span class="ant-descriptions-item-content">
-                                            @item.item.ChildContent
-                                        </span>
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-content">
+                                                @item.item.ChildContent
+                                            </span>
+                                        </div>
                                     </td>
                                 }
                             </tr>

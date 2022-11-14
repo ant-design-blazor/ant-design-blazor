@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Internal
 {
@@ -294,12 +293,12 @@ namespace AntDesign.Internal
             {
                 if (endDate == null)
                 {
-                    cls.Append($"{PrefixCls}-cell-range-start-single");
+                    cls.Append($" {PrefixCls}-cell-range-start-single");
                 }
-
+                
                 if (startDate != endDate || currentDate > hoverDateTime)
                 {
-                    cls.Append($"{PrefixCls}-cell-range-start");
+                    cls.Append($" {PrefixCls}-cell-range-start");
                 }
 
                 if (currentDate > hoverDateTime)
@@ -337,7 +336,7 @@ namespace AntDesign.Internal
                 {
                     cls.Append($" {PrefixCls}-cell-range-end-single");
                 }
-
+                
                 if (startDate != endDate || currentDate < hoverDateTime)
                 {
                     cls.Append($" {PrefixCls}-cell-range-end");

@@ -21,25 +21,27 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 
 | 参数          | 说明                                                    | 类型           | 默认值  |
 | ------------- | ------------------------------------------------------- | -------------- | ------- |
-| Title         | 标题                                                    | string or slot | -       |
-| BodyStyle     | 可用于设置 Drawer 内容部分的样式                          | string         | -       |
+| Title | 抽屉的标题 | OneOf<RenderFragment, 字符串> | - |
+| Closable | 在抽屉对话框的右上角是否可见关闭 (x) 按钮。| 布尔值 | 真实 |
+| ChildContent | 子组件 | 渲染片段 | - |
+| Content | 抽屉的内容。当与 ChildContent 一起给出时，这显示在 ChildContent 上方。| OneOf<RenderFragment, 字符串> | - |
+| MaskClosable | 单击遮罩（抽屉外区域）将关闭或关闭抽屉。| 布尔值 | 真实 |
+| Mask | 是否显示面具。当为真时，抽屉周围的区域在可见时会变暗。| 布尔值 | 真实 |
+| Placement | 抽屉的位置，选项可以是`left`，`top`，`right`，`bottom` | 字符串 | `正确` |
+| Width | 抽屉的宽度。仅在放置为“左”或“右”时使用。| 整数 | 256 |
+| Height | 抽屉高度。仅在 Placement 为“top”或“bottom”时使用 | 整数 | 256 |
+| ZIndex | 抽屉的 z-index。| 整数 | 1000 |
+| OffsetX | X 坐标偏移量(px)。仅在放置为“左”或“右”时使用。| 整数 | 0 |
+| OffsetY | Y 坐标偏移量(px)。仅在放置为“顶部”或“底部”时使用。| 整数 | 0 |
+| Visible | 抽屉对话框是否可见。| 布尔值 | - |
+| Keyboard | 是否支持按esc关闭。**目前未实施** | 布尔值 | 真实 |
+| Handler | 呈现为抽屉内容的兄弟的内容 | 渲染片段 | - |
+| OnClose | 指定当用户单击掩码、关闭按钮或取消按钮时将调用的回调。| 事件回调 | - |
+| OnOpen | 指定将在抽屉呈现后调用的回调 | 函数<任务> | - |
+| MaskStyle | 抽屉遮罩元素的样式。| 字符串 | - |
 | HeaderStyle   | 可用于设置 Drawer 标题部分的样式                          | string         | -        |
-| Closable      | 是否显示右上角的关闭按钮                                | boolean        | true    |
-| ChildContent  | 抽屉元素之间的子组件                                    | object         | -       |
-| MaskClosable  | 点击蒙层是否允许关闭                                    | boolean        | true    |
-| MaskStyle     | 遮罩样式                                                | object         | -       |
-| Mask          | 是否展示遮罩                                            | boolean       | true    |
-| Placement     | 抽屉的方向,可选值为 `left` , `top`,`right`,`bottom`     | string         | right |
-| WrapClassName | 对话框外层容器的类名                                    | string         | -       |
-| Width         | 宽度                                                  | string\|int    | 256     |
-| Height        | 高度, 在 placement 为 top 或 bottom 时使用              |                | int     |
-| ZIndex        | 设置 Drawer 的 z-index                                 | int            | -       |
-| OffsetX       | X 轴方向的偏移量，只在方向为 `'left'`或`'right'` 时生效 | int            | 0       |
-| OffsetY       | Y 轴方向的偏移量，只在方向为 `'top'`或`'bottom'` 时生效 | int            | 0       |
-| Visible       | Drawer 是否可见                                         | boolean        | -       |
-| Keyboard      | 是否支持键盘 esc 关闭                                   | boolean        | true    |
-| OnClose       | 点击遮罩层或右上角叉或取消按钮的回调                    | EventCallback  | -       |
-| OnOpen        | 抽屉渲染之后回调事件                                    | Func<Task>   | -       |
+| BodyStyle | 抽屉内容部分的样式| 字符串 | - |
+| WrapClassName | Drawer 对话框的容器的类名。| 字符串 | - |
 
 ### DrawerService
 

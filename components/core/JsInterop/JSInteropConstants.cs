@@ -72,6 +72,7 @@ namespace AntDesign
 
         public static string TriggerEvent => EventHelper.TriggerEvent;
         public static string AddDomEventListener => EventHelper.AddDomEventListener;
+        public static string RemoveDomEventListener => EventHelper.RemoveDomEventListener;
         public static string AddDomEventListenerToFirstChild => EventHelper.AddDomEventListenerToFirstChild;
         public static string AddPreventKeys => EventHelper.AddPreventKeys;
         public static string RemovePreventKeys => EventHelper.RemovePreventKeys;
@@ -158,6 +159,7 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "eventHelper.";
             public static string TriggerEvent => $"{FUNC_PREFIX}triggerEvent";
             public static string AddDomEventListener => $"{FUNC_PREFIX}addDomEventListener";
+            public static string RemoveDomEventListener => $"{FUNC_PREFIX}removeDomEventListener";
             public static string AddDomEventListenerToFirstChild => $"{FUNC_PREFIX}addDomEventListenerToFirstChild";
             public static string AddPreventKeys => $"{FUNC_PREFIX}addPreventKeys";
             public static string RemovePreventKeys => $"{FUNC_PREFIX}removePreventKeys";
@@ -178,7 +180,7 @@ namespace AntDesign
 #endif
             public static string Focus => $"{FUNC_PREFIX}focus";
             public static string Blur => $"{FUNC_PREFIX}blur";
-            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo"; 
+            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
             public static string SmoothScrollTo => $"{FUNC_PREFIX}smoothScrollTo";
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";

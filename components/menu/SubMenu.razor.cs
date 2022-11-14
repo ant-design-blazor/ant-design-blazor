@@ -80,7 +80,7 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Get(() => $"{prefixCls}-{(Parent is null ? RootMenu?.InternalMode : MenuMode.Vertical)}")
+                    .Get(() => $"{prefixCls}-{RootMenu?.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => {

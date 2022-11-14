@@ -188,7 +188,7 @@ namespace AntDesign
 
         protected DateTime PickerValue { get => GetIndexPickerValue(PickerIndex); }
 
-        protected DateTime? Value { get => GetIndexValue(PickerIndex); }
+        protected DateTime? Value { get => GetIndexValue(GetPickerIndex()); }
 
         public void PopUpPicker(string type) => ChangePickerType(type, PickerIndex);
 

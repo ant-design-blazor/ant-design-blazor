@@ -72,7 +72,8 @@ export class uploadHelper {
       if (req.readyState === 4) {
         // #1655 Any 2xx response code is okay
         if (req.status < 200 || req.status > 299) {
-          instance.invokeMethodAsync(errorMethod, fileId, `{"status": ${req.status}}`);
+          // #2857 should get error raw response
+          instance.invokeMethodAsync(errorMethod, fileId, req.responseText);
           return;
         }
         instance.invokeMethodAsync(successMethod, fileId, req.responseText);

@@ -15,6 +15,67 @@ timeline: true
 
 ---
 
+
+### 0.12.7
+
+`2022-11-6`
+
+- DatePicker
+  - 🐞 Fixed wrong day order in some locales and fallback to use Globalization libaray when there is no day locale. [#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed `smoothScrollTo` causes an infinite loop. [#2854](https://github.com/ant-design-blazor/ant-design-blazor/pull/2854) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 fix day order in calendar header for russian locale. [#2845](https://github.com/ant-design-blazor/ant-design-blazor/pull/2845) [@ocoka](https://github.com/ocoka)
+  - 🐞 Fixed tab key does not confirm the value. [#2847](https://github.com/ant-design-blazor/ant-design-blazor/pull/2847) [@Alexbits](https://github.com/Alexbits)
+
+- Core
+  - ✅ Improve unit tests cover for Core module. [#2821](https://github.com/ant-design-blazor/ant-design-blazor/pull/2821) [@LeaFrock](https://github.com/LeaFrock)
+  - ⚡️ Optimize CssSizeLength and CssStyleBuilder. [#2803](https://github.com/ant-design-blazor/ant-design-blazor/pull/2803) [@LeaFrock](https://github.com/LeaFrock)
+
+- 🐞 Fixed Tabs support of tab bar css style and class. [#2844](https://github.com/ant-design-blazor/ant-design-blazor/pull/2844) [@ldsenow](https://github.com/ldsenow)
+- 🐞 Fixed BackTop doesn't remove the dom when visible is false. [#2831](https://github.com/ant-design-blazor/ant-design-blazor/pull/2831) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed bug where Content wouldn't render in Drawer if it was a string and not RenderFragment. [#2833](https://github.com/ant-design-blazor/ant-design-blazor/pull/2833) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fixed bug where Title parameter was not being rendered. [#2830](https://github.com/ant-design-blazor/ant-design-blazor/pull/2830) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fixed Slider accessibility updates with aria labels. [#2818](https://github.com/ant-design-blazor/ant-design-blazor/pull/2818) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fixed Table exception during page navigation [#2797](https://github.com/ant-design-blazor/ant-design-blazor/pull/2797) [@Kyojuro27](https://github.com/Kyojuro27)
+- 🐞 Fixed bug with tag color change after render not always styling properly. [#2816](https://github.com/ant-design-blazor/ant-design-blazor/pull/2816) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fixed Cascader AllowClear was not working when false. [#2792](https://github.com/ant-design-blazor/ant-design-blazor/pull/2792) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 Fixed AutoComplete search panel show. [#2793](https://github.com/ant-design-blazor/ant-design-blazor/pull/2793) [@lyj0309](https://github.com/lyj0309)
+- 💄 Fixed Menu that class name of the expand icon for submenu. [#2796](https://github.com/ant-design-blazor/ant-design-blazor/pull/2796) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix descriptions component miss div element. [#2798](https://github.com/ant-design-blazor/ant-design-blazor/pull/2798) [@Weilence](https://github.com/Weilence)
+- 🐞 Fixed Upload should get error raw response. [#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
+
+### 0.12.6
+
+`2022-10-11`
+
+- 🐞 Fixed JS event listener registration. [#2783](https://github.com/ant-design-blazor/ant-design-blazor/pull/2783) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Segmented that the Disabled parameter does not work on items and cannot be dynamically toggled. [#2778](https://github.com/ant-design-blazor/ant-design-blazor/pull/2778) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Removing the gulp task to exclude empty files. [#2779](https://github.com/ant-design-blazor/ant-design-blazor/pull/2779) [@paulsuart](https://github.com/paulsuart)
+
+
+### 0.12.5
+
+`2022-10-09`
+
+- Datepicker
+  - 🐞 Fixed correct culture not applied when manual input. [#2715](https://github.com/ant-design-blazor/ant-design-blazor/pull/2715) [@Alexbits](https://github.com/Alexbits)
+ - 🐞 Fixed a series of issues to make Datepicker and RangePicker behave more like antd. [#2741](https://github.com/ant-design-blazor/ant-design-blazor/pull/2741) [@Alexbits](https://github.com/Alexbits)
+    - Fixed an issue with the OnChange event passing in an old value.
+    - Fixed RangePicker head not switching year.
+    - Fixed RangePicker selection panel display problem when both start and end in the same period.
+    - Fixed an issue where the end date was not highlighted when the RangePicker was selected in week mode.
+    - The start date is not highlighted during the end date input in the date picker with the time.
+    - Other minor fixes and refactorings
+
+- Modal
+  - 🐞 Fixed maximizable not work when using Title. [#2750](https://github.com/ant-design-blazor/ant-design-blazor/pull/2750) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 Fixed Confirm dialog closeable. [#2776](https://github.com/ant-design-blazor/ant-design-blazor/pull/2776) [@zxyao145](https://github.com/zxyao145)
+
+- 🐞 Fixed Core that remove the event listener when the component is disposed. [#2738](https://github.com/ant-design-blazor/ant-design-blazor/pull/2738) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Radio that the disabled parameter for RadioGroup with <code class="notranslate">RadioOption&lt;TValue&gt;</code> options doesn't work. [#2744](https://github.com/ant-design-blazor/ant-design-blazor/pull/2744) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table that set value for table header checkbox Disabled attribute. [#2737](https://github.com/ant-design-blazor/ant-design-blazor/pull/2737) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- ⚡️ Fixed Select that remove redundant CreateDeleteSelectOptions() calls in render cycles. [#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🛠  Fixed gulp pipeline to include less files so they end up in /staticwebassets/less in the nuget package. [#2730](https://github.com/ant-design-blazor/ant-design-blazor/pull/2730) [@paulsuart](https://github.com/paulsuart)
+
 ### 0.12.4
 
 `2022-09-14`

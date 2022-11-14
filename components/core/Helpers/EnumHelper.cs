@@ -15,9 +15,9 @@ namespace AntDesign
     {
         private static readonly Func<T, T, T> _aggregateFunction;
 
-        private static IEnumerable<T> _valueList;
-        private static IEnumerable<(T Value, string Label)> _valueLabelList;
-        private static Type _enumType;
+        private static readonly IEnumerable<T> _valueList;
+        private static readonly IEnumerable<(T Value, string Label)> _valueLabelList;
+        private static readonly Type _enumType;
 
         static EnumHelper()
         {
@@ -27,22 +27,24 @@ namespace AntDesign
             _valueLabelList = _valueList.Select(value => (value, GetDisplayName(value)));
         }
 
-        // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
+        // There is no constraint or type check for type parameter T, be sure that T is an enumeration type
         public static object Combine(IEnumerable<T> enumValues)
         {
-            if (enumValues?.Count() > 0)
+            if (enumValues?.Any() == true)
             {
                 return enumValues.Aggregate(_aggregateFunction);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public static IEnumerable<T> Split(object enumValue)
         {
-            return enumValue?.ToString().Split(',').Select(x => (T)Enum.Parse(_enumType, x)) ?? Array.Empty<T>();
+            var str = enumValue?.ToString();
+            if (string.IsNullOrEmpty(str))
+            {
+                return Array.Empty<T>();
+            }
+            return str.Split(',').Select(x => (T)Enum.Parse(_enumType, x)).ToArray();
         }
 
         public static IEnumerable<T> GetValueList()

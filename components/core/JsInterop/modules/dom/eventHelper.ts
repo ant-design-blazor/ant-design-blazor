@@ -23,24 +23,24 @@ export class eventHelper {
         if (v instanceof Window) return 'Window';
         return v;
       }, ' ');
+
       setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
       if (preventDefault === true) {
         args.preventDefault();
       }
     };
 
-    if (element === 'window') {
-      if (eventName === 'resize') {
-        window.addEventListener(eventName, this.debounce(() => callback({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }), 200, false));
-      } else {
-        window.addEventListener(eventName, callback);
-      }
+    const dom = domInfoHelper.get(element);
+    const key = `${eventName}-${invoker._id}`;
+
+    if (eventName === 'resize') {
+      dom[`e_${key}`] = this.debounce(() => callback({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }), 200, false);
     } else {
-      const dom = domInfoHelper.get(element);
-      if (dom) {
-        (dom as HTMLElement).addEventListener(eventName, callback);
-      }
+      dom[`e_${key}`] = callback;
     }
+
+    dom[`i_${key}`] = invoker;
+    (dom as HTMLElement).addEventListener(eventName, dom[`e_${key}`]);
   }
 
   static addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
@@ -48,6 +48,16 @@ export class eventHelper {
 
     if (dom && dom.firstElementChild) {
       this.addDomEventListener(dom.firstElementChild, eventName, preventDefault, invoker);
+    }
+  }
+
+  static removeDomEventListener(element, eventName: string, invoker) {
+    const dom = domInfoHelper.get(element);
+    const key = `${eventName}-${invoker._id}`;
+
+    if (dom) {
+      dom.removeEventListener(eventName, dom[`e_${key}`]);
+      dom[`i_${key}`].dispose();
     }
   }
 
