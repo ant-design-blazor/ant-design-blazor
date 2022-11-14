@@ -261,16 +261,23 @@ namespace AntDesign
         {
             if (_modalStatus == ModalStatus.Default)
             {
-                _modalStatus = ModalStatus.Max;
+                SetModalStatus(ModalStatus.Max);
             }
             else
             {
-                _modalStatus = ModalStatus.Default;
+                SetModalStatus(ModalStatus.Default);
             }
-            _wrapStyle = CalcWrapStyle();
-            _modalStyle = CalcModalStyle();
             return Task.CompletedTask;
         }
+
+
+        private void SetModalStatus(ModalStatus modalStatus)
+        {
+            _modalStatus = modalStatus;
+            _wrapStyle = CalcWrapStyle();
+            _modalStyle = CalcModalStyle();
+        }
+
 
         #region control show and hide class name and style
 
@@ -387,6 +394,8 @@ namespace AntDesign
 
         #region override
 
+        private bool _hasRendered = false;
+
         /// <summary>
         /// 
         /// </summary>
@@ -396,10 +405,14 @@ namespace AntDesign
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
+                if (!_hasRendered && Config.DefaultMaximized)
+                {
+                    _hasRendered = true;
+                    SetModalStatus(ModalStatus.Max);
+                }
                 if (!_hasDestroy)
                 {
                     Show();
-                    //await InvokeStateHasChangedAsync();
                 }
                 else
                 {
