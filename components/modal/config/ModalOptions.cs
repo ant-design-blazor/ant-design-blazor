@@ -138,7 +138,7 @@ namespace AntDesign
         /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
         /// </summary>
         [Parameter]
-        public bool MaximizationOnInit { get; set; } = false;
+        public bool DefaultMaximized { get; set; } = false;
 
         #region internal
 

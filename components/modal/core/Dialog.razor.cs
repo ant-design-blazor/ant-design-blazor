@@ -405,7 +405,7 @@ namespace AntDesign
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
-                if (!_hasRendered && Config.MaximizationOnInit)
+                if (!_hasRendered && Config.DefaultMaximized)
                 {
                     _hasRendered = true;
                     SetModalStatus(ModalStatus.Max);

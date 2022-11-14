@@ -16,7 +16,7 @@ namespace AntDesign
         #region Parameter
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Parameter]
         public ModalRef ModalRef { get; set; }
@@ -24,7 +24,7 @@ namespace AntDesign
         /// <summary>
         /// Specify a function that will be called when modal is closed
         /// </summary>
-        [Parameter] 
+        [Parameter]
         public Func<Task> AfterClose { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace AntDesign
         public bool Centered { get; set; }
 
         /// <summary>
-        /// Whether a close (x) button is visible on top right of the modal dialog or not	
+        /// Whether a close (x) button is visible on top right of the modal dialog or not
         /// </summary>
         [Parameter]
         public bool Closable { get; set; } = true;
@@ -82,7 +82,7 @@ namespace AntDesign
         public bool DestroyOnClose { get; set; }
 
         /// <summary>
-        /// Footer content, set as Footer=null when you don't need default buttons	
+        /// Footer content, set as Footer=null when you don't need default buttons
         /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment>? Footer { get; set; } = DialogOptions.DefaultFooter;
@@ -94,7 +94,7 @@ namespace AntDesign
         public ElementReference? GetContainer { get; set; } = null;
 
         /// <summary>
-        /// Whether support press esc to close	
+        /// Whether support press esc to close
         /// </summary>
         [Parameter]
         public bool Keyboard { get; set; } = true;
@@ -106,13 +106,13 @@ namespace AntDesign
         public bool Mask { get; set; } = true;
 
         /// <summary>
-        /// Whether to close the modal dialog when the mask (area outside the modal) is clicked	
+        /// Whether to close the modal dialog when the mask (area outside the modal) is clicked
         /// </summary>
         [Parameter]
         public bool MaskClosable { get; set; } = true;
 
         /// <summary>
-        /// Style for modal's mask element	
+        /// Style for modal's mask element
         /// </summary>
         [Parameter]
         public string MaskStyle { get; set; }
@@ -143,10 +143,10 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TitleTemplate { get; set; } = null;
 
-        #endregion
+        #endregion title
 
         /// <summary>
-        /// Whether the modal dialog is visible or not	
+        /// Whether the modal dialog is visible or not
         /// </summary>
         [Parameter]
         public bool Visible { get; set; }
@@ -169,7 +169,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// The class name of the container of the modal dialog	
+        /// The class name of the container of the modal dialog
         /// </summary>
         [Parameter]
         public string WrapClassName { get; set; }
@@ -181,31 +181,31 @@ namespace AntDesign
         public int ZIndex { get; set; } = 1000;
 
         /// <summary>
-        /// Specify a function that will be called when a user clicks mask, close button on top right or Cancel button	
+        /// Specify a function that will be called when a user clicks mask, close button on top right or Cancel button
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnCancel { get; set; }
 
         /// <summary>
-        /// Specify a function that will be called when a user clicks the OK button	
+        /// Specify a function that will be called when a user clicks the OK button
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnOk { get; set; }
 
         /// <summary>
-        /// The OK button props	
+        /// The OK button props
         /// </summary>
         [Parameter]
         public ButtonProps OkButtonProps { get; set; }
 
         /// <summary>
-        /// The Cancel button props	
+        /// The Cancel button props
         /// </summary>
         [Parameter]
         public ButtonProps CancelButtonProps { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -249,7 +249,7 @@ namespace AntDesign
         /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
         /// </summary>
         [Parameter]
-        public bool MaximizationOnInit { get; set; } = false;
+        public bool DefaultMaximized { get; set; } = false;
 
         #endregion Parameter
 
@@ -332,7 +332,7 @@ namespace AntDesign
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
-                MaximizationOnInit = MaximizationOnInit
+                DefaultMaximized = DefaultMaximized
             };
 
             return options;
@@ -369,6 +369,6 @@ namespace AntDesign
             await InvokeAsync(StateHasChanged);
         }
 
-        #endregion
+        #endregion Sustainable Dialog
     }
 }

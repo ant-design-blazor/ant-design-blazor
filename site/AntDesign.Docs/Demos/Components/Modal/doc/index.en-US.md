@@ -49,7 +49,7 @@ When requiring users to interact with the application, but without jumping to a 
 | Maximizable       | Whether to display the maximize button | bool   | false |
 | MaximizeBtnIcon | The icon of the maximize button when the modal is in normal state    | RenderFragment | fullscreen       |
 | RestoreBtnIcon  | The icon of the maximize button when the modal is in maximized state | RenderFragment | fullscreen-exit  |
-| MaximizationOnInit | Modal is maximized at initialization | bool   | false |
+| DefaultMaximized | Modal is maximized at initialization | bool   | false |
 
 #### Note
 
