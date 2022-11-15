@@ -40,8 +40,8 @@ title: Ant Design of Blazor
 
 ## 🖥 支持环境
 
-- 兼容 .NET Core 3.1 / .NET 5 / .NET 6
-- 最新支持 Blazor WebAssembly 6.0 正式版
+- 兼容 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7
+- 最新支持 Blazor WebAssembly 7.0 正式版
 - 支持服务端双向绑定
 - 支持 WebAssembly 静态文件部署
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)）
@@ -145,7 +145,7 @@ title: Ant Design of Blazor
 
 ## 🔨 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0?WT.mc_id=DT-MVP-5003987) 5.0.100 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/7.0?WT.mc_id=DT-MVP-5003987) 7.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AntDesign
 {
-#if NET6_0
+#if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
@@ -400,6 +400,11 @@ namespace AntDesign
                 }
 
                 _shouldRender = true;
+            }
+
+            if (HidePagination)
+            {
+                PageSize = _total;
             }
 
             if (!_preventRender)

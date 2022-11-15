@@ -3,9 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace AntDesign
 {
@@ -24,7 +22,7 @@ namespace AntDesign
             {
                 if (value == null)
                 {
-                    return default(T);
+                    return default;
                 }
 
                 t = Nullable.GetUnderlyingType(t);
@@ -41,7 +39,7 @@ namespace AntDesign
 
         public static Type GetNullableType<T>()
         {
-            Type type = typeof(T);
+            var type = typeof(T);
             type = Nullable.GetUnderlyingType(type) ?? type;
             if (type.IsValueType)
                 return typeof(Nullable<>).MakeGenericType(type);
@@ -51,7 +49,7 @@ namespace AntDesign
 
         public static Type GetUnderlyingType<T>()
         {
-            Type type = typeof(T);
+            var type = typeof(T);
             Type targetType;
             if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
@@ -72,22 +70,21 @@ namespace AntDesign
                 return false;
             }
 
-            switch (Type.GetTypeCode(type))
+            return Type.GetTypeCode(type) switch
             {
-                case TypeCode.Byte:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.SByte:
-                case TypeCode.Single:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                    return true;
-            }
-            return false;
+                TypeCode.Byte
+                or TypeCode.Decimal
+                or TypeCode.Double
+                or TypeCode.Int16
+                or TypeCode.Int32
+                or TypeCode.Int64
+                or TypeCode.SByte
+                or TypeCode.Single
+                or TypeCode.UInt16
+                or TypeCode.UInt32
+                or TypeCode.UInt64 => true,
+                _ => false,
+            };
         }
     }
 }

@@ -108,10 +108,11 @@ namespace AntDesign
         {
             get
             {
-                return base.CultureInfo;
+                return _isCultureInfoOutside ? base.CultureInfo : _locale.GetCultureInfo();
             }
             set
             {
+                _isCultureInfoOutside = true;
                 if (!_isLocaleSetOutside &&
                     (
                     (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
@@ -215,11 +216,18 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Obsolete]
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         /// <summary>
         /// Called when  clear button clicked.
         /// </summary>
         [Parameter]
-        public EventCallback OnClearClick { get; set; }
+        public EventCallback OnClear { get; set; }
+
+        [Parameter]
+        public EventCallback OnOk { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
@@ -274,6 +282,7 @@ namespace AntDesign
         protected bool _needRefresh;
         protected bool _duringManualInput;
         private bool _isLocaleSetOutside;
+        private bool _isCultureInfoOutside;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
         protected bool _openingOverlay;
 
@@ -466,12 +475,12 @@ namespace AntDesign
 
                 if (IsRange)
                 {
-                    var otherIndex = Math.Abs(index - 1);
-
                     if (!HasTimeInput)
                     {
-                        if (GetIndexValue(otherIndex) is not null)
+                        if (IsValidRange(date, index))
                         {
+                            var otherIndex = Math.Abs(index - 1);
+
                             if (_pickerStatus[otherIndex].SelectedValue is not null)
                             {
                                 ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, closeDropdown);
@@ -521,7 +530,8 @@ namespace AntDesign
                 var otherIndex = Math.Abs(index - 1);
                 var otherValue = GetIndexValue(otherIndex);
 
-                if (_pickerStatus[index].SelectedValue is not null && otherValue is not null)
+                if (_pickerStatus[index].SelectedValue is not null && otherValue is not null
+                    && IsValidRange(_pickerStatus[index].SelectedValue.Value, index))
                 {
                     if (_pickerStatus[otherIndex].SelectedValue is not null)
                     {
@@ -545,6 +555,8 @@ namespace AntDesign
 
                 Close();
             }
+
+            await OnOk.InvokeAsync(null);
         }
 
         internal void OnRangeItemOver(DateTime?[] range)
@@ -577,7 +589,6 @@ namespace AntDesign
             }
             else
             {
-                await Focus(index); //keep focus on current input
                 return false;
             }
 
@@ -932,12 +943,15 @@ namespace AntDesign
 
             if (IsRange)
             {
-                var otherIndex = Math.Abs(index - 1);
-                _pickerStatus[otherIndex].SelectedValue = null;
+                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
                     ResetPlaceholder();
+                }
+                else
+                {
+                    _pickerStatus[index].SelectedValue = GetIndexValue(index);
                 }
             }
 
@@ -973,6 +987,23 @@ namespace AntDesign
                 DisabledSeconds = dateTime => isSameDate && startValue?.Hour == endValue?.Hour && startValue?.Minute == endValue?.Minute ?
                    _minutesSeconds.Where(s => s < startValue?.Second).ToArray() : Array.Empty<int>();
             }
+        }
+
+        protected bool IsValidRange(DateTime newValue, int newValueIndex)
+        {
+            var otherValue = GetIndexValue(Math.Abs(newValueIndex - 1));
+
+            if (otherValue is null)
+            {
+                return false;
+            }
+
+            return newValueIndex switch
+            {
+                0 when newValue > otherValue => false,
+                1 when newValue < otherValue => false,
+                _ => true
+            };
         }
 
         internal void OnNowClick()

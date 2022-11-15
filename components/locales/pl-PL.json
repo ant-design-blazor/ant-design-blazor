@@ -64,7 +64,7 @@
       "quarterSelect": "Wybierz kwartał",
       "week": "Tydzień",
       "monthFormat": "MMMM",
-      "shortWeekDays": [ "Pn", "Wt", "Śr", "Cz", "Pt", "So", "Nd" ]
+      "shortWeekDays": [ "Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "So" ]
     },
     "timePickerLocale": {
       "placeholder": "Wybierz godzinę"

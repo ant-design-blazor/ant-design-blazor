@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
 
 namespace AntDesign
 {
@@ -12,7 +9,7 @@ namespace AntDesign
         private const int DaysPerWeek = 7;
         private const int HoursPerDay = 24;
 
-        public static string FromNow(DateTime time )
+        public static string FromNow(DateTime time)
         {
             var timespan = DateTime.Now - time;
 

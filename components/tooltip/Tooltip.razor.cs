@@ -9,8 +9,9 @@ namespace AntDesign
     public partial class Tooltip : OverlayTrigger
     {
         [Parameter]
-        public OneOf<string, RenderFragment, MarkupString> Title { get; set; } = string.Empty;
-
+        public string Title { get; set; } = string.Empty;
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
         [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
 

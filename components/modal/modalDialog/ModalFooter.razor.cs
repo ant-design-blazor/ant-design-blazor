@@ -12,6 +12,16 @@ namespace AntDesign
     /// </summary>
     public partial class ModalFooter
     {
+        public static RenderFragment DefaultOkFooter = builder => {
+            builder.OpenComponent<ModalOkFooter>(0);
+            builder.CloseComponent();
+        };
+
+        public static RenderFragment DefaultCancelFooter = builder => {
+            builder.OpenComponent<ModalCancelFooter>(0);
+            builder.CloseComponent();
+        };
+
         /// <summary>
         /// 
         /// </summary>
