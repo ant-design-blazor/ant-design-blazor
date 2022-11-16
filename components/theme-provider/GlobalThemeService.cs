@@ -12,8 +12,8 @@ namespace AntDesign
         {
             _jS = js;
         }
-
-        public async Task UseCustomTheme(string cssLinkPath, string cssLinkId = "antcss")
+     
+        public async Task UseCustomTheme(string cssLinkPath, string cssLinkId)
         {
             if (string.IsNullOrWhiteSpace(cssLinkId)) throw new Exception("未指定Css样式的 CssLinkId");
             if (string.IsNullOrWhiteSpace(cssLinkPath)) throw new Exception("未指定Css样式的 链接");
@@ -22,23 +22,27 @@ namespace AntDesign
             await _jS.InvokeVoidAsync("eval", js);
         }
 
-        public async Task UseTheme(GlobalThemeMode themeMode, string cssLinkId = "antcss")
+        public async Task UseTheme(GlobalThemeMode themeMode)
         {
+            string css = "";
             switch (themeMode.Name.ToLower())
             {
                 case "light":
-                    await UseCustomTheme("/_content/AntDesign/css/ant-design-blazor.css", cssLinkId);
+                    css = "/_content/AntDesign/css/ant-design-blazor.css";
                     break;
                 case "dark":
-                    await UseCustomTheme("/_content/AntDesign/css/ant-design-blazor.dark.css", cssLinkId);
+                    css = "/_content/AntDesign/css/ant-design-blazor.dark.css";
                     break;
                 case "compact":
-                    await UseCustomTheme("/_content/AntDesign/css/ant-design-blazor.compact.css", cssLinkId);
+                    css = "/_content/AntDesign/css/ant-design-blazor.compact.css";
                     break;
                 case "aliyun":
-                    await UseCustomTheme("/_content/AntDesign/css/ant-design-blazor.aliyun.css", cssLinkId);
+                    css = "/_content/AntDesign/css/ant-design-blazor.aliyun.css";
                     break;
             }
+
+            var js = @$"Array.from(document.getElementsByTagName(""link"")).forEach((item) => {{ if (item.getAttribute(""href"").match(""_content/AntDesign/css/ant-design-blazor"") ) {{ item.setAttribute(""href"", ""{css}""); return; }} }})";
+            await _jS.InvokeVoidAsync("eval", js);
         }
 
     }
