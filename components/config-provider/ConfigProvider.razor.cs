@@ -20,15 +20,34 @@ namespace AntDesign
         }
 
         [Parameter]
+        public GlobalThemeMode GlobalThemeMode
+        {
+            get => _globalthememode;
+            set
+            {
+                if (_globalthememode != value)
+                {
+                    _globalthememode = value;
+                    _waiting_globalthememodeUpdate = true;
+                }
+            }
+        }
+
+        [Parameter]
         public FormConfig Form { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Inject] public ConfigService ConfigService { get; set; }
 
+        [Inject] public GlobalThemeService GlobalThemeService { get; set; }
+
         private string _direction;
 
+        public GlobalThemeMode _globalthememode;
+
         private bool _waitingDirectionUpdate;
+        private bool _waiting_globalthememodeUpdate;
         private bool _afterFirstRender;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -47,6 +66,12 @@ namespace AntDesign
                     _waitingDirectionUpdate = false;
                     await ChangeDirection(_direction);
                 }
+
+                if (_waiting_globalthememodeUpdate)
+                {
+                    _waitingDirectionUpdate = false;
+                    await ChangeDirection(_direction);
+                }
             }
         }
 
@@ -54,6 +79,13 @@ namespace AntDesign
         {
             _direction = direction?.ToUpperInvariant();
             await ConfigService.ChangeDirection(_direction);
+            await InvokeAsync(StateHasChanged);
+        }
+
+        public async Task ChangeGlobalTheme(GlobalThemeMode mode)
+        {
+            _globalthememode = mode;
+            await GlobalThemeService.UseTheme(mode);
             await InvokeAsync(StateHasChanged);
         }
     }
