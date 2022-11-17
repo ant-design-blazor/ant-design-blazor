@@ -24,24 +24,7 @@ namespace AntDesign
 
         public async Task UseTheme(GlobalThemeMode themeMode)
         {
-            string css = "";
-            switch (themeMode.Name.ToLower())
-            {
-                case "light":
-                    css = "/_content/AntDesign/css/ant-design-blazor.css";
-                    break;
-                case "dark":
-                    css = "/_content/AntDesign/css/ant-design-blazor.dark.css";
-                    break;
-                case "compact":
-                    css = "/_content/AntDesign/css/ant-design-blazor.compact.css";
-                    break;
-                case "aliyun":
-                    css = "/_content/AntDesign/css/ant-design-blazor.aliyun.css";
-                    break;
-            }
-
-            var js = @$"Array.from(document.getElementsByTagName(""link"")).forEach((item) => {{ if (item.getAttribute(""href"").match(""_content/AntDesign/css/ant-design-blazor"") ) {{ item.setAttribute(""href"", ""{css}""); return; }} }})";
+            var js = @$"Array.from(document.getElementsByTagName(""link"")).forEach((item) => {{ if (item.getAttribute(""href"").match(""_content/AntDesign/css/ant-design-blazor"") ) {{ item.setAttribute(""href"", ""{themeMode.Value}""); return; }} }})";
             await _jS.InvokeVoidAsync("eval", js);
         }
 
