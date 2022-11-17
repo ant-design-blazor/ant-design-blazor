@@ -1,6 +1,6 @@
 ﻿namespace AntDesign
 {
-    public sealed class GlobalThemeMode : EnumValue<GlobalThemeMode>
+    public sealed class GlobalThemeMode : EnumValue<GlobalThemeMode,string>
     {
         public static readonly GlobalThemeMode Light = new GlobalThemeMode(nameof(Light).ToLowerInvariant(), "/_content/AntDesign/css/ant-design-blazor.css");
         public static readonly GlobalThemeMode Dark = new GlobalThemeMode(nameof(Dark).ToLowerInvariant(), "/_content/AntDesign/css/ant-design-blazor.dark.css");
