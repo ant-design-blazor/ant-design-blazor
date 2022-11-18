@@ -44,7 +44,7 @@ namespace AntDesign
 
         private string _direction;
 
-        public GlobalThemeMode _globalthememode;
+        private GlobalThemeMode _globalthememode;
 
         private bool _waitingDirectionUpdate;
         private bool _waitingGlobalThemeModeUpdate;
