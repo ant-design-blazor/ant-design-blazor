@@ -28,7 +28,7 @@ namespace AntDesign
                 if (_globalthememode != value)
                 {
                     _globalthememode = value;
-                    _waiting_globalthememodeUpdate = true;
+                    _waitingGlobalThemeModeUpdate = true;
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace AntDesign
         public GlobalThemeMode _globalthememode;
 
         private bool _waitingDirectionUpdate;
-        private bool _waiting_globalthememodeUpdate;
+        private bool _waitingGlobalThemeModeUpdate;
         private bool _afterFirstRender;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -67,9 +67,9 @@ namespace AntDesign
                     await ChangeDirection(_direction);
                 }
 
-                if (_waiting_globalthememodeUpdate)
+                if (_waitingGlobalThemeModeUpdate)
                 {
-                    _waitingDirectionUpdate = false;
+                    _waitingGlobalThemeModeUpdate = false;
                     await ChangeDirection(_direction);
                 }
             }
