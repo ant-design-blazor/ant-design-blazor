@@ -22,12 +22,12 @@ namespace AntDesign
         [Parameter]
         public GlobalThemeMode GlobalThemeMode
         {
-            get => _globalthememode;
+            get => _globalThemeMode;
             set
             {
-                if (_globalthememode != value)
+                if (_globalThemeMode != value)
                 {
-                    _globalthememode = value;
+                    _globalThemeMode = value;
                     _waitingGlobalThemeModeUpdate = true;
                 }
             }
@@ -44,7 +44,7 @@ namespace AntDesign
 
         private string _direction;
 
-        private GlobalThemeMode _globalthememode;
+        private GlobalThemeMode _globalThemeMode;
 
         private bool _waitingDirectionUpdate;
         private bool _waitingGlobalThemeModeUpdate;
@@ -70,7 +70,7 @@ namespace AntDesign
                 if (_waitingGlobalThemeModeUpdate)
                 {
                     _waitingGlobalThemeModeUpdate = false;
-                    await ChangeGlobalTheme(_globalthememode);
+                    await ChangeGlobalTheme(_globalThemeMode);
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace AntDesign
 
         public async Task ChangeGlobalTheme(GlobalThemeMode mode)
         {
-            _globalthememode = mode;
+            _globalThemeMode = mode;
             await GlobalThemeService.UseTheme(mode);
             await InvokeAsync(StateHasChanged);
         }
