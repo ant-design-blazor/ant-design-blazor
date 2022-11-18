@@ -70,7 +70,7 @@ namespace AntDesign
                 if (_waitingGlobalThemeModeUpdate)
                 {
                     _waitingGlobalThemeModeUpdate = false;
-                    await ChangeDirection(_direction);
+                    await ChangeGlobalTheme(_globalthememode);
                 }
             }
         }
