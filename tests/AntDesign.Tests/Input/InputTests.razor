@@ -168,12 +168,12 @@
     }
 
     [Fact]
-    public async Task Input_with_changeOnInput()
+    public async Task Input_with_bindOnInput()
     {
         //Arrange
         string? value = null;
 
-        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value ChangeOnInput />);
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value BindOnInput />);
         //Act
         cut.Find("input").Input("newValue");
         cut.Find("input").KeyUp(String.Empty);
