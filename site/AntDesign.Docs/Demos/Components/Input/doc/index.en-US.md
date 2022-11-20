@@ -25,7 +25,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | AllowComplete | Controls the autocomplete attribute of the input HTML element.     | boolean        | true         |
 | AutoFocus            | Focus on input element.           | boolean         | false
 | Bordered | Whether has border style         | boolean         | true
-| BindOnInput        | Whether to change on input | boolean | false |
+| BindOnInput        | Whether to bind on input | boolean | false |
 | CultureInfo          | What Culture will be used when converting string to value and value to string. Useful for InputNumber component.           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time. The setting will enable 'BindOnInput'. | int        | 250         |
 | DefaultValue |  	The initial input content                              | TValue        | -         |
