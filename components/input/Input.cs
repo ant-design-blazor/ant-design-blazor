@@ -80,7 +80,7 @@ namespace AntDesign
         /// Whether to change value on input
         /// </summary>
         [Parameter]
-        public bool ChangeOnInput { get; set; }
+        public bool BindOnInput { get; set; }
 
         /// <summary>
         /// Delays the processing of the KeyUp event until the user has stopped
@@ -93,7 +93,7 @@ namespace AntDesign
             set
             {
                 _debounceMilliseconds = value;
-                ChangeOnInput = value >= 0;
+                BindOnInput = value >= 0;
             }
         }
 
@@ -468,7 +468,7 @@ namespace AntDesign
 
         protected void ChangeValue(bool force = false)
         {
-            if (ChangeOnInput)
+            if (BindOnInput)
             {
                 if (_debounceMilliseconds > 0 && !force)
                 {

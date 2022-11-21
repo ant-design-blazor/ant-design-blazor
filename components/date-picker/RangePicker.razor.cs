@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
@@ -106,7 +106,8 @@ namespace AntDesign
                 {
                     var date1Week = DateHelper.GetWeekOfYear(date1, Locale.FirstDayOfWeek);
                     var date2Week = DateHelper.GetWeekOfYear(date2, Locale.FirstDayOfWeek);
-                    return index == 0 ? date1Week < date2Week : date1Week > date2Week;
+                    return index == 0 ? date1Week < date2Week && date1.Year <= date2.Year
+                                        : date1.Year >= date2.Year && date1Week > date2Week;
                 }
                 else
                 {
