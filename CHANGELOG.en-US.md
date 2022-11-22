@@ -15,6 +15,41 @@ timeline: true
 
 ---
 
+### 0.13.0
+
+`2022-11-22`
+
+- 🔥 Add .NET 7 as target framework. [#2810](https://github.com/ant-design-blazor/ant-design-blazor/pull/2810) [@ElderJames](https://github.com/ElderJames)
+- 🔥 Refactor mentions, fixed positioning and hiding issues. [#2874](https://github.com/ant-design-blazor/ant-design-blazor/pull/2874) [@dingyanwu](https://github.com/dingyanwu)
+
+- Datepicker
+  - 🆕 Add OnOk event. [#2840](https://github.com/ant-design-blazor/ant-design-blazor/pull/2840) [@Alexbits](https://github.com/Alexbits)
+- Table
+  - 📖 Add OData query demo . [#2861](https://github.com/ant-design-blazor/ant-design-blazor/pull/2861) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add if HidePagination is true,set PagSize value is DataSource Count. [#2476](https://github.com/ant-design-blazor/ant-design-blazor/pull/2476) [@CareyYang](https://github.com/CareyYang)
+  - 🐞 Fixed RangePicker's Week selection mode where the week range was disabled across the year. [#2889](https://github.com/ant-design-blazor/ant-design-blazor/pull/2889) [@Alexbits](https://github.com/Alexbits)
+
+- Modal 
+  - 🆕 Add only one OK footer and onlt one Cancel footer. [#2812](https://github.com/ant-design-blazor/ant-design-blazor/pull/2812) [@zxyao145](https://github.com/zxyao145)
+  - 🆕 Add default maximization of Modal initialization. [#2834](https://github.com/ant-design-blazor/ant-design-blazor/pull/2834) [@zxyao145](https://github.com/zxyao145)
+
+- Input
+  - 🆕 Add input binding parameter BindOnInput, default binding event changed to onchange. [#2838](https://github.com/ant-design-blazor/ant-design-blazor/pull/2838) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed convert error status work incorrectly. [#2846](https://github.com/ant-design-blazor/ant-design-blazor/pull/2846) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Tree the `DropBelow` for Drag&drop event to flag whether to drop dragged node as a sibling (below) or as a child of target node. [#2864](https://github.com/ant-design-blazor/ant-design-blazor/pull/2864) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🆕 Add Cascader `Disabled` parameter. [#2835](https://github.com/ant-design-blazor/ant-design-blazor/pull/2835) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add DownloadButton. [#2819](https://github.com/ant-design-blazor/ant-design-blazor/pull/2819) [@LeaFrock](https://github.com/LeaFrock)
+- 🆕 Add Drawer `HeaderStyle` parameter. [#2809](https://github.com/ant-design-blazor/ant-design-blazor/pull/2809) [@danielbotn](https://github.com/danielbotn)
+- 💄 Add Dropdown `Arrow` parameter. [#2795](https://github.com/ant-design-blazor/ant-design-blazor/pull/2795) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add InputNumber `Precision` parameter. [#2774](https://github.com/ant-design-blazor/ant-design-blazor/pull/2774) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🆕 Add Tooltip component uses RenderFragment TitleTeplate instead OneOf Title. [#2711](https://github.com/ant-design-blazor/ant-design-blazor/pull/2711) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🆕 Add Select virtualization support. [#2654](https://github.com/ant-design-blazor/ant-design-blazor/pull/2654) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🌐 Fix cs-CZ locale wrong shortWeekDays for cs-CZ. [#2866](https://github.com/ant-design-blazor/ant-design-blazor/pull/2866) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Segmented binding value type causes an incorrect initialization selection. [#2869](https://github.com/ant-design-blazor/ant-design-blazor/pull/2869) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed docs demo anchor case. [#2826](https://github.com/ant-design-blazor/ant-design-blazor/pull/2826) [@kooliokey](https://github.com/kooliokey)
+- 🐞 Fixed Menu that the arrow of submenu has no animation effect when it is expanded and collapsed. [#2876](https://github.com/ant-design-blazor/ant-design-blazor/pull/2876) [@wangj90](https://github.com/wangj90)
+
 
 ### 0.12.7
 
