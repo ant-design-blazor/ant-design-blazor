@@ -15,10 +15,45 @@ timeline: true
 
 ---
 
+### 0.13.0
+
+`2022-11-22`
+
+- 🔥 新增 .NET 7 目标框架支持。[#2810](https://github.com/ant-design-blazor/ant-design-blazor/pull/2810) [@ElderJames](https://github.com/ElderJames)
+- 🔥 重构 Mentions 组件，修复定位和隐藏问题。[#2874](https://github.com/ant-design-blazor/ant-design-blazor/pull/2874) [@dingyanwu](https://github.com/dingyanwu)
+
+- DatePicker
+  - 🆕 新增 OnOk 事件。[#2840](https://github.com/ant-design-blazor/ant-design-blazor/pull/2840) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 星期选择模式中跨年选择星期范围时的禁用星期判断问题。[#2889](https://github.com/ant-design-blazor/ant-design-blazor/pull/2889) [@Alexbits](https://github.com/Alexbits)
+
+- Table
+  - 📖 新增 OData 查询示例。[#2861](https://github.com/ant-design-blazor/ant-design-blazor/pull/2861) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 如果设置了 `HidePagination=true`，PageSize 自动等于 DataSource 的数量。[#2476](https://github.com/ant-design-blazor/ant-design-blazor/pull/2476) [@CareyYang](https://github.com/CareyYang)
+
+- Modal
+  - 🆕 新增 内置仅有一个 OK 按钮的 Footer 和仅有一个 Cancel 按钮的 Footer。[#2812](https://github.com/ant-design-blazor/ant-design-blazor/pull/2812) [@zxyao145](https://github.com/zxyao145)
+  - 🆕 新增 初始化的时候最大化的支持。[#2834](https://github.com/ant-design-blazor/ant-design-blazor/pull/2834) [@zxyao145](https://github.com/zxyao145)
+
+- Input
+  - 🆕 新增 输入绑定属性 BindOnInput，默认绑定事件改为 onchange。[#2838](https://github.com/ant-design-blazor/ant-design-blazor/pull/2838) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 输入字符串类型转换错误的信息提示问题[#2846](https://github.com/ant-design-blazor/ant-design-blazor/pull/2846) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Tree 拖拽事件的属性 DropBelow 来标记拖拽后变为目标节点的兄弟节点或是子节点。[#2864](https://github.com/ant-design-blazor/ant-design-blazor/pull/2864) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🌐 修复 cs-CZ 多语言 shortWeekDays 星期排序。[#2866](https://github.com/ant-design-blazor/ant-design-blazor/pull/2866) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Cascader 禁用 Disabled 属性。[#2835](https://github.com/ant-design-blazor/ant-design-blazor/pull/2835) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Button 文件下载按钮 DownloadButton 组件。[#2819](https://github.com/ant-design-blazor/ant-design-blazor/pull/2819) [@LeaFrock](https://github.com/LeaFrock)
+- 🆕 新增 Drawer 的头部样式属性 HeaderStyle。[#2809](https://github.com/ant-design-blazor/ant-design-blazor/pull/2809) [@danielbotn](https://github.com/danielbotn)
+- 💄 新增 Dropdown 箭头样式。[#2795](https://github.com/ant-design-blazor/ant-design-blazor/pull/2795) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 InputNumber 精度属性 Precision。[#2774](https://github.com/ant-design-blazor/ant-design-blazor/pull/2774) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🆕 新增 Tooltip TitleTemplate属性，原 Title 属性改为 string 类型。[#2711](https://github.com/ant-design-blazor/ant-design-blazor/pull/2711) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🆕 新增 Select 虚拟化支持。[#2654](https://github.com/ant-design-blazor/ant-design-blazor/pull/2654) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 修复 Menu 二级菜单的箭头展开和折叠时没有动画效果的问题。[#2876](https://github.com/ant-design-blazor/ant-design-blazor/pull/2876) [@wangj90](https://github.com/wangj90)
+- 🐞 修复 Segmented 绑定值类型会导致初始化选中错误。[#2869](https://github.com/ant-design-blazor/ant-design-blazor/pull/2869) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复 文档生成的demo 锚点。[#2826](https://github.com/ant-design-blazor/ant-design-blazor/pull/2826) [@kooliokey](https://github.com/kooliokey)
+
 ### 0.12.7
 
 `2022-11-6`
-
 
 - DatePicker
   - 🐞 修复 部分语言文件的星期排序，缺失的语言使用 Globalization 替代。[#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
