@@ -4,24 +4,28 @@
 	public void Renders_basic_tag()
 	{
 		var cut = Context.Render(@<AntDesign.Tag>Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-default" id:ignore>Tag 1</span>);
 	}
 
 	[Fact]
 	public void Renders_basic_tag_invisible()
 	{
 		var cut = Context.Render(@<AntDesign.Tag Visible="false"> Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-hidden" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-default ant-tag-hidden" id:ignore>Tag 1</span>);
 	}
 
 	[Theory]
-	[InlineData("success")]
-	[InlineData("processing")]
-	[InlineData("error")]
-	public void Renders_predefined_tag(string color)
+	[InlineData("success", "ant-tag-success")]
+	[InlineData("processing", "ant-tag-processing")]
+	[InlineData("error", "ant-tag-error")]
+	[InlineData("MAGENTA", "ant-tag-magenta")]
+	[InlineData("blue-inverse", "ant-tag-blue-inverse")]
+	[InlineData("", "ant-tag-default")]
+	[InlineData(null, "ant-tag-default")]
+	public void Renders_predefined_tag(string color, string expectedClass)
 	{
 		var cut = Context.Render(@<AntDesign.Tag Color="@color">Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag @expectedClass" id:ignore>Tag 1</span>);
 	}
 
 	[Fact]
@@ -40,16 +44,42 @@
 		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClosing="onClosing">Tag 1</AntDesign.Tag>);
 		var icon = cut.Find("span.anticon");
 		icon.Click();
-		cut.MarkupMatches(
-			@<span class="ant-tag" id:ignore >Tag 1
-			      <span role="img" class="anticon anticon-close" id:ignore   tabindex="-1" >       
-					<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
-					  <path d:ignore></path>
-					</svg>
-				  </span>
-			</span>
-	);
-	}
+		cut.MarkupMatches(@<span class:ignore id:ignore >Tag 1
+            <span role="img" class="anticon anticon-close" id:ignore   tabindex="-1" >       
+                <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+                    <path d:ignore></path>
+                </svg>
+            </span>
+        </span>
+    );
+    }
+
+    [Fact]
+    public void OnClose_gets_called()
+    {
+        var called = false;
+
+        Action<MouseEventArgs> onClose = value => { called = true; };
+
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClose="onClose">Tag 1</AntDesign.Tag>);
+		var icon = cut.Find("span.anticon");
+		icon.Click();
+
+        called.Should().BeTrue();
+    }
+
+    [Fact]
+    public void OnClick_gets_called()
+    {
+        var called = false;
+
+        Action onClick = () => { called = true; };
+
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClick="onClick">Tag 1</AntDesign.Tag>);
+        cut.Find(".ant-tag").Click();
+
+        called.Should().BeTrue();
+    }
 
 	[Fact]
 	public void Click_on_close_does_not_invoke_OnClick()

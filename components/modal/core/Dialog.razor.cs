@@ -14,27 +14,6 @@ namespace AntDesign
     {
         private const string IdPrefix = "Ant-Design-";
 
-        /// <summary>
-        /// default Dialog close icon
-        /// </summary>
-        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
-        {
-            builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
-            builder.CloseComponent();
-        };
-
-        /// <summary>
-        /// default modal footer
-        /// </summary>
-        internal static readonly RenderFragment DefaultFooter = (builder) =>
-        {
-            builder.OpenComponent<ModalFooter>(0);
-            builder.CloseComponent();
-        };
-
-
         #region Parameters
 
 #pragma warning disable 1591
@@ -261,16 +240,23 @@ namespace AntDesign
         {
             if (_modalStatus == ModalStatus.Default)
             {
-                _modalStatus = ModalStatus.Max;
+                SetModalStatus(ModalStatus.Max);
             }
             else
             {
-                _modalStatus = ModalStatus.Default;
+                SetModalStatus(ModalStatus.Default);
             }
-            _wrapStyle = CalcWrapStyle();
-            _modalStyle = CalcModalStyle();
             return Task.CompletedTask;
         }
+
+
+        private void SetModalStatus(ModalStatus modalStatus)
+        {
+            _modalStatus = modalStatus;
+            _wrapStyle = CalcWrapStyle();
+            _modalStyle = CalcModalStyle();
+        }
+
 
         #region control show and hide class name and style
 
@@ -387,6 +373,8 @@ namespace AntDesign
 
         #region override
 
+        private bool _hasRendered = false;
+
         /// <summary>
         /// 
         /// </summary>
@@ -396,10 +384,14 @@ namespace AntDesign
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
+                if (!_hasRendered && Config.DefaultMaximized)
+                {
+                    _hasRendered = true;
+                    SetModalStatus(ModalStatus.Max);
+                }
                 if (!_hasDestroy)
                 {
                     Show();
-                    //await InvokeStateHasChangedAsync();
                 }
                 else
                 {

@@ -218,7 +218,7 @@ namespace AntDesign.Internal
         }
 
         private async Task InvokeSmoothScrollAsync(ElementReference element, ElementReference parent, int? duration)
-                            => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? 100);
+                            => await JsInvokeAsync(JSInteropConstants.SmoothScrollTo, element, parent, duration ?? 120);
 
         public async ValueTask DisposeAsync()
         {

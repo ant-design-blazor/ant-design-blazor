@@ -98,6 +98,12 @@ namespace AntDesign
         public string TabBarStyle { get; set; }
 
         /// <summary>
+        /// Tab bar css class
+        /// </summary>
+        [Parameter]
+        public string TabBarClass { get; set; }
+
+        /// <summary>
         /// Position of tabs
         /// </summary>
         [Parameter]
@@ -185,6 +191,7 @@ namespace AntDesign
         private readonly ClassMapper _inkClassMapper = new ClassMapper();
         private readonly ClassMapper _contentClassMapper = new ClassMapper();
         private readonly ClassMapper _tabsNavWarpPingClassMapper = new ClassMapper();
+        private readonly ClassMapper _tabBarClassMapper = new ClassMapper();
 
         private readonly List<TabPane> _panes = new List<TabPane>();
         private readonly List<TabPane> _tabs = new List<TabPane>();
@@ -236,6 +243,9 @@ namespace AntDesign
                 .If("ant-tabs-nav-wrap-ping-left", () => NavWrapPingLeft)
                 .If("ant-tabs-nav-wrap-ping-right", () => NavWrapPingRight);
 
+            _tabBarClassMapper
+                .Add($"{PrefixCls}-nav")
+                .If(TabBarClass, () => !string.IsNullOrWhiteSpace(TabBarClass));
         }
 
         protected override Task OnFirstAfterRenderAsync()

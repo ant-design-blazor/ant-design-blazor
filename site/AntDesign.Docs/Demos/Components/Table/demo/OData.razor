@@ -1,0 +1,66 @@
+﻿@using AntDesign.TableModels
+@using System.Text.Json.Serialization
+
+<Table TItem="Person" DataSource="_data" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" Total="_total"
+       Loading="_loading" OnChange="HandleTableChange" RemoteDataSource>
+    <PropertyColumn Property="c=>c.UserName" Sortable DefaultSortOrder="SortDirection.Ascending"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Gender" />
+    <PropertyColumn Property="c=>c.Emails.FirstOrDefault()" />
+</Table>
+
+@inject HttpClient HttpClient;
+@code {
+    bool _loading = false;
+    int _pageIndex = 1;
+    int _pageSize = 5;
+    int _total;
+    Person[] _data;
+
+    async Task HandleTableChange(QueryModel<Person> queryModel)
+    {
+        _loading = true;
+
+        var baseUrl = "https://services.odata.org/V4/(S(uvf1y321yx031rnxmcbqmlxw))/TripPinServiceRW";
+        var queryString = $"{baseUrl}/People?$count=true&$skip={queryModel.OffsetRecords}&$top={queryModel.PageSize}";
+
+        if (queryModel.SortModel.Any())
+        {
+            queryString += "&$orderby=" + string.Join(",", queryModel.SortModel.Where(x => x.Sort is not null).OrderBy(x => x.Priority).Select(x => $"{x.FieldName}{(x.Sort == "descend" ? " desc" : "")}"));
+
+        }
+
+        var query = await HttpClient.GetFromJsonAsync<PersonResponse>(queryString);
+
+        _data = query.Peoples;
+        _total = 10;
+
+        _loading = false;
+    }
+
+    public class PersonResponse
+    {
+        [JsonPropertyName("@odata.count")]
+        public int Count { get; set; }
+
+        [JsonPropertyName("value")]
+        public Person[] Peoples { get; set; }
+    }
+
+    public class Person
+    {
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string[] Emails { get; set; }
+ 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public PersonGender Gender { get; set; }
+    }
+
+    public enum PersonGender
+    {
+        Male = 0,
+        Female = 1,
+        Unknown = 2
+    }
+}

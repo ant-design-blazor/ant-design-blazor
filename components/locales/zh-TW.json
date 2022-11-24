@@ -42,7 +42,8 @@
       "nextDecade": "下一年代",
       "previousCentury": "上一世紀",
       "nextCentury": "下一世紀",
-      "monthFormat": "M月"
+      "monthFormat": "M月",
+      "shortWeekDays": [ "日", "一", "二", "三", "四", "五", "六" ]
     },
     "timePickerLocale": { "placeholder": "請選擇時間" }
   },

@@ -35,6 +35,11 @@ jobs:
         with:
           dotnet-version: 6.0.101
 
+      - name: Setup .NET 7.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.100
+
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -125,7 +130,7 @@ jobs:
         run: |
           npm install
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net7 -o cargo
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 

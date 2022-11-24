@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Internal
 {
@@ -120,7 +119,7 @@ namespace AntDesign.Internal
         private bool IsDateInRange(DateTime currentColDate)
         {
             if (!IsRange ||
-                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter))
+                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
             {
                 return false;
             }
@@ -131,6 +130,11 @@ namespace AntDesign.Internal
             if (startValue == null || endValue == null)
             {
                 return false;
+            }
+
+            if (Picker.IsIn(DatePickerType.Week))
+            {
+                startValue = startValue.Value.AddDays(6 - (int)startValue.Value.DayOfWeek);
             }
 
             DateTime currentDate = FormatDateByPicker(currentColDate);
@@ -294,12 +298,12 @@ namespace AntDesign.Internal
             {
                 if (endDate == null)
                 {
-                    cls.Append($"{PrefixCls}-cell-range-start-single");
+                    cls.Append($" {PrefixCls}-cell-range-start-single");
                 }
-
+                
                 if (startDate != endDate || currentDate > hoverDateTime)
                 {
-                    cls.Append($"{PrefixCls}-cell-range-start");
+                    cls.Append($" {PrefixCls}-cell-range-start");
                 }
 
                 if (currentDate > hoverDateTime)
@@ -337,7 +341,7 @@ namespace AntDesign.Internal
                 {
                     cls.Append($" {PrefixCls}-cell-range-end-single");
                 }
-
+                
                 if (startDate != endDate || currentDate < hoverDateTime)
                 {
                     cls.Append($" {PrefixCls}-cell-range-end");

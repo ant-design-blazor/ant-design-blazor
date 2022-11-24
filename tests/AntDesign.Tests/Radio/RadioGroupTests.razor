@@ -109,13 +109,38 @@
             @<RadioGroup @bind-Value=@value Disabled=@initGroupDisabled>
                     <Radio Value="1">A</Radio>
                     <Radio Value="2">B</Radio>
-    </RadioGroup>
+        </RadioGroup>
     );
         var members = radioGroup.FindComponents<Radio<int>>();
         //Act
 #pragma warning disable BL0005
         radioGroup.Instance.Disabled = !initGroupDisabled;
 #pragma warning restore BL0005
+        
+        radioGroup.Render();
+        //Assert
+        Assert.All(members, e => Assert.Equal(!initGroupDisabled, e.Instance.Disabled));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Sync_Disabled_basic_radioGroup_with_options(bool initGroupDisabled)
+    {
+        var options = new RadioOption<int>[] { new() { Value = 1, Label = "A" }, new() { Value = 1, Label = "A" } };
+        //Arrange
+        int value = 1;
+        IRenderedComponent<RadioGroup<int>> radioGroup = Render<RadioGroup<int>>(
+            @<RadioGroup Options="options" @bind-Value=@value Disabled=@initGroupDisabled />
+        );
+        var members = radioGroup.FindComponents<Radio<int>>();
+        //Act
+#pragma warning disable BL0005
+        radioGroup.Instance.Disabled = !initGroupDisabled;
+#pragma warning restore BL0005
+
+        radioGroup.Render();
+
         //Assert
         Assert.All(members, e => Assert.Equal(!initGroupDisabled, e.Instance.Disabled));
     }
@@ -132,14 +157,18 @@
                     <Radio Value="1" Disabled=true>A</Radio>
                     <Radio Value="2">B</Radio>
         </RadioGroup>
-        );
+    );
         var members = radioGroup.FindComponents<Radio<int>>();
         //Act
 #pragma warning disable BL0005
         radioGroup.Instance.Disabled = !initGroupDisabled;
 #pragma warning restore BL0005
+
+        radioGroup.Render();
+
         //Assert
         members[0].Instance.Disabled.Should().BeTrue();
         members[1].Instance.Disabled.Should().Be(!initGroupDisabled);
     }
+
 }
