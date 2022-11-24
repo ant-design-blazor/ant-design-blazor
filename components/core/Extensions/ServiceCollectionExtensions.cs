@@ -34,7 +34,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ConfirmService>();
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
-            services.TryAddScoped<GlobalThemeService>();
             services.TryAddSingleton<ReuseTabsService>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;

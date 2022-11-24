@@ -20,15 +20,15 @@ namespace AntDesign
         }
 
         [Parameter]
-        public GlobalThemeMode GlobalThemeMode
+        public GlobalTheme Theme
         {
-            get => _globalThemeMode;
+            get => _globalTheme;
             set
             {
-                if (_globalThemeMode != value)
+                if (_globalTheme != value)
                 {
-                    _globalThemeMode = value;
-                    _waitingGlobalThemeModeUpdate = true;
+                    _globalTheme = value;
+                    _waitingGlobalThemeUpdate = true;
                 }
             }
         }
@@ -38,16 +38,14 @@ namespace AntDesign
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Inject] public ConfigService ConfigService { get; set; }
-
-        [Inject] public GlobalThemeService GlobalThemeService { get; set; }
+        [Inject] private ConfigService ConfigService { get; set; }
 
         private string _direction;
 
-        private GlobalThemeMode _globalThemeMode;
+        private GlobalTheme _globalTheme;
 
         private bool _waitingDirectionUpdate;
-        private bool _waitingGlobalThemeModeUpdate;
+        private bool _waitingGlobalThemeUpdate;
         private bool _afterFirstRender;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -67,10 +65,10 @@ namespace AntDesign
                     await ChangeDirection(_direction);
                 }
 
-                if (_waitingGlobalThemeModeUpdate)
+                if (_waitingGlobalThemeUpdate)
                 {
-                    _waitingGlobalThemeModeUpdate = false;
-                    await ChangeGlobalTheme(_globalThemeMode);
+                    _waitingGlobalThemeUpdate = false;
+                    await ChangeGlobalTheme(_globalTheme);
                 }
             }
         }
@@ -82,10 +80,10 @@ namespace AntDesign
             await InvokeAsync(StateHasChanged);
         }
 
-        public async Task ChangeGlobalTheme(GlobalThemeMode mode)
+        public async Task ChangeGlobalTheme(GlobalTheme mode)
         {
-            _globalThemeMode = mode;
-            await GlobalThemeService.UseTheme(mode);
+            _globalTheme = mode;
+            await ConfigService.SetTheme(mode);
             await InvokeAsync(StateHasChanged);
         }
     }
