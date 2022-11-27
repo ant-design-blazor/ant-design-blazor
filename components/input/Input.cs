@@ -526,6 +526,7 @@ namespace AntDesign
 
         protected override void OnValueChange(TValue value)
         {
+            _inputString = CurrentValueAsString;
             base.OnValueChange(value);
             if (OnChange.HasDelegate)
             {
