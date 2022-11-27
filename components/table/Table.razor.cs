@@ -404,7 +404,7 @@ namespace AntDesign
 
             if (HidePagination)
             {
-                PageSize = _total;
+                _pageSize = _total;
             }
 
             if (!_preventRender)
