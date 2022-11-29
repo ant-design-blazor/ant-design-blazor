@@ -15,6 +15,13 @@ timeline: true
 
 ---
 
+### 0.13.1
+
+`2022-11-29`
+
+- 🐞 Fixed Input that when its value is changed in code, it would rollback on click. [#2906](https://github.com/ant-design-blazor/ant-design-blazor/pull/2906) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table infinite loop when HidePagination ant PageSize was set at same time. [#2905](https://github.com/ant-design-blazor/ant-design-blazor/pull/2905) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.13.0
 
 `2022-11-22`
