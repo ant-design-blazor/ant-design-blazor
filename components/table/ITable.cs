@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AntDesign.TableModels;
+﻿using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -20,6 +19,8 @@ namespace AntDesign
         void SelectAll();
 
         void UnselectAll();
+
+        internal bool RemoteDataSource { get; set; }
 
         internal TableLocale Locale { get; }
 

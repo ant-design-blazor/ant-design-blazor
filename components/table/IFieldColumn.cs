@@ -10,6 +10,8 @@ namespace AntDesign
 
         public string FieldName { get; }
 
+        public string RemoteFieldName { get; }
+
         public string Format { get; }
 
         public bool Sortable { get; }
