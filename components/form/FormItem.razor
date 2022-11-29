@@ -12,7 +12,13 @@
             }
             else
             {
-                <label class=@GetLabelClass() style="@LabelStyle">@(Label)</label>
+                <label class=@GetLabelClass() style="@LabelStyle">
+                    @Label
+                    @if (Form.RequiredMark == FormRequiredMark.Optional && !IsRequired)
+                    {
+                        <span class="ant-form-item-optional">(optional)</span>
+                    }
+                </label>
             }
         </AntDesign.Col>
     }

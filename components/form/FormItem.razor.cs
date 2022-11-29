@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -96,6 +98,10 @@ namespace AntDesign
         [Parameter]
         public bool NoStyle { get; set; } = false;
 
+        private bool _isRequiredByValidationRuleOrAttribute;
+
+        private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required;
+
         [Parameter]
         public bool Required { get; set; } = false;
 
@@ -122,12 +128,12 @@ namespace AntDesign
         public string Help { get; set; }
 
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
-            {
-                { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
-                { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
-                { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
-                { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
-            };
+        {
+            { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
+            { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
+            { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
+            { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
+        };
 
         private bool IsShowIcon => (HasFeedback && _iconMap.ContainsKey(ValidateStatus));
 
@@ -139,7 +145,7 @@ namespace AntDesign
 
         private bool _isValid = true;
 
-        private string _labelCls = "";
+        private string _labelCls = string.Empty;
 
         private IControlValueAccessor _control;
 
@@ -163,7 +169,6 @@ namespace AntDesign
             }
 
             SetClass();
-            SetRequiredCss();
 
             Form.AddFormItem(this);
 
@@ -180,7 +185,7 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            this.ClassMapper
+            ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => !_isValid)
                 .If($"{_prefixCls}-rtl", () => RTL)
@@ -196,9 +201,9 @@ namespace AntDesign
                 ;
         }
 
-        private void SetRequiredCss()
+        private void SetInternalIsRequired()
         {
-            bool isRequired = false;
+            var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
                 && _propertyReflector.RequiredAttribute != null)
@@ -212,10 +217,7 @@ namespace AntDesign
                 isRequired = true;
             }
 
-            if (isRequired)
-            {
-                _labelCls = $"{_prefixCls}-required";
-            }
+            _isRequiredByValidationRuleOrAttribute = isRequired;
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
@@ -268,10 +270,9 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
-        private string GetLabelClass()
-        {
-            return Required ? $"{_prefixCls}-required" : _labelCls;
-        }
+        private string GetLabelClass() => IsRequired && Form.RequiredMark == FormRequiredMark.Required
+            ? $"{_prefixCls}-required"
+            : _labelCls;
 
         protected override void Dispose(bool disposing)
         {
@@ -318,19 +319,16 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
-            if (control.ValueExpression is not null)
-                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
-            else
-                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
+            _propertyReflector = control.ValueExpression is null
+                ? PropertyReflector.Create(control.ValuesExpression)
+                : PropertyReflector.Create(control.ValueExpression);
 
-            if (_propertyReflector.RequiredAttribute != null)
-            {
-                _labelCls = $"{_prefixCls}-required";
-            }
             if (_propertyReflector.DisplayName != null)
             {
                 Label ??= _propertyReflector.DisplayName;
             }
+
+            SetInternalIsRequired();
         }
 
         ValidationResult[] IFormItem.ValidateField()
