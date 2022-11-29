@@ -15,6 +15,13 @@ timeline: true
 
 ---
 
+### 0.13.1
+
+`2022-11-29`
+
+- 🐞 修复 Input 在被从代码修改值时，再点击输入框会回退的问题。[#2906](https://github.com/ant-design-blazor/ant-design-blazor/pull/2906) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 同时设置 HidePagination 和PageSize 时导致的无限循环。[#2905](https://github.com/ant-design-blazor/ant-design-blazor/pull/2905) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.13.0
 
 `2022-11-22`
