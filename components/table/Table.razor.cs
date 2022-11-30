@@ -402,9 +402,9 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
-            if (HidePagination)
+            if (HidePagination && _dataSourceCount > 0)
             {
-                _pageSize = _total;
+                _pageSize = _dataSourceCount;
             }
 
             if (!_preventRender)
