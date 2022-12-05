@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;

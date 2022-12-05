@@ -236,7 +236,8 @@
         "range": "${label}数量须在${min}-${max}之间"
       },
       "pattern": { "mismatch": "${label}与模式不匹配${pattern}" }
-    }
+    },
+    "optionalFormItemLabel": "可选的"
   },
   "Image": {
     "preview": "预览"

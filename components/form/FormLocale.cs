@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign.Form.Locale
+﻿namespace AntDesign.Form.Locale
 {
     public class FormLocale
     {
         public DefaultValidateMessages DefaultValidateMessages { get; set; }
+
+        public string OptionalFormItemLabel { get; set; } = "optional";
     }
 
     public class DefaultValidateMessages

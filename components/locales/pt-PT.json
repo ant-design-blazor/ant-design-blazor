@@ -126,5 +126,8 @@
   },
   "Empty": {
     "description": "Sem resultados"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

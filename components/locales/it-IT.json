@@ -124,5 +124,8 @@
     "copy": "copia",
     "copied": "copia effettuata",
     "expand": "espandi"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

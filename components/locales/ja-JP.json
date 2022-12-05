@@ -123,5 +123,8 @@
   },
   "Empty": {
     "description": "データがありません"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

@@ -123,5 +123,8 @@
   },
   "Empty": {
     "description": "Даних немає"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

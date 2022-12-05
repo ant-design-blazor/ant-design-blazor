@@ -121,5 +121,8 @@
     "copied": "წარმატებით დაკოპირდა",
     "expand": "გახსნა"
   },
-  "PageHeader": { "back": "უკან" }
+  "PageHeader": { "back": "უკან" },
+  "Form": {
+    "optionalFormItemLabel": "optional"
+  }
 }

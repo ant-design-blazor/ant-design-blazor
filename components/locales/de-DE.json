@@ -162,5 +162,8 @@
     "copied": "Kopiert",
     "expand": "Erweitern"
   },
-  "PageHeader": { "back": "Zurück" }
+  "PageHeader": { "back": "Zurück" },
+  "Form": {
+    "optionalFormItemLabel": "optional"
+  }
 }

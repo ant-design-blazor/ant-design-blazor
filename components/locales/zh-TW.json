@@ -118,5 +118,8 @@
     "downloadFile": "下载文件"
   },
   "Empty": { "description": "無此資料" },
-  "PageHeader": { "back": "返回" }
+  "PageHeader": { "back": "返回" },
+  "Form": {
+    "optionalFormItemLabel": "optional"
+  }
 }

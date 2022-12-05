@@ -137,5 +137,8 @@
     "copy": "kopyala",
     "copied": "kopyalandı",
     "expand": "genişlet"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

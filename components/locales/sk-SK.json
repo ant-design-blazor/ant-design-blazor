@@ -142,5 +142,8 @@
   },
   "PageHeader": {
     "back": "Späť"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

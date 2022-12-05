@@ -241,7 +241,8 @@
         "range": "The amount of ${label} must be between ${min}-${max}"
       },
       "pattern": { "mismatch": "${label} does not match the pattern ${pattern}" }
-    }
+    },
+    "optionalFormItemLabel": "optional"
   },
   "Image": {
     "preview": "Preview"

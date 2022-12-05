@@ -16,7 +16,7 @@
                     @Label
                     @if (Form.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                     {
-                        <span class="ant-form-item-optional">(optional)</span>
+                        <span class="ant-form-item-optional">(@_locale.OptionalFormItemLabel)</span>
                     }
                 </label>
             }

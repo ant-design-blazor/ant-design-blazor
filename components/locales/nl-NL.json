@@ -235,7 +235,8 @@
         "range": "Het aantal van ${label} moet tussen ${min}-${max} liggen"
       },
       "pattern": { "mismatch": "${label} voldoet niet aan het patroon ${pattern}" }
-    }
+    },
+    "optionalFormItemLabel": "facultatief"
   },
   "Image": {
     "preview": "Preview"

@@ -155,5 +155,8 @@
     "previewFile": "Preview file",
     "downloadFile": "Download file"
   },
-  "Empty": { "description": "No data" }
+  "Empty": { "description": "No data" },
+  "Form": {
+    "optionalFormItemLabel": "optional"
+  }
 }

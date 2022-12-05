@@ -142,5 +142,8 @@
   },
   "PageHeader": {
     "back": "ย้อนกลับ"
+  },
+  "Form": {
+    "optionalFormItemLabel": "optional"
   }
 }

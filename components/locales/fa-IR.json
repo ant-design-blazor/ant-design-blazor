@@ -177,6 +177,7 @@
         "range": "مقدار ${label} باید بین ${min}-${max} باشد"
       },
       "pattern": { "mismatch": "الگوی ${label} با ${pattern} برابری نمی‌کند" }
-    }
+    },
+    "optionalFormItemLabel": "اختیاری"
   }
 }

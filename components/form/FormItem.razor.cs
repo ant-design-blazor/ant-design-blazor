@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using AntDesign.Core.Reflection;
+using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using AntDesign.Internal.Form.Validate;
@@ -126,6 +127,8 @@ namespace AntDesign
 
         [Parameter]
         public string Help { get; set; }
+
+        private readonly FormLocale _locale = LocaleProvider.CurrentLocale.Form;
 
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
