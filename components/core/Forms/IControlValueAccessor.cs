@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign.Forms
+﻿namespace AntDesign.Forms
 {
     public interface IControlValueAccessor
     {

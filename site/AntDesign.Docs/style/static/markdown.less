@@ -254,80 +254,116 @@
   clear: both;
 }
 
-.markdown.api-container {
-  table {
+table.api {
     display: block;
+    width: 100%;
     margin: 2em 0;
     overflow-x: auto;
     overflow-y: hidden;
     font-size: max(@font-size-base - 1px, 12px);
     font-family: @code-family;
-    line-height: @line-height-base;
+    line-height: 2.2em;
     border: 0;
     -webkit-overflow-scrolling: touch;
 
-    th,
-    td {
-      padding: 12px;
-      border-color: @border-color-split;
-      border-width: 1px 0;
+    th, td {
+        padding: 12px;
+        border-color: @border-color-split;
+        border-width: 1px 0;
 
-      &:first-child {
-        border-left: 1px solid @border-color-split;
-      }
+        &:first-child {
+            border-left: 1px solid @border-color-split;
+        }
 
-      &:last-child {
-        border-right: 1px solid @border-color-split;
-      }
+        &:last-child {
+            border-right: 1px solid @border-color-split;
+        }
     }
 
     th {
-      padding-top: 14px;
-      border-width: 1px 0 2px 0;
+        padding-top: 14px;
+        border-width: 1px 0 2px 0;
     }
 
     tbody tr {
-      transition: all 0.3s;
-      &:hover {
-        background: rgba(60, 90, 100, 0.04);
-      }
+        transition: all 0.3s;
+
+        &:hover {
+            background: rgba(60, 90, 100, 0.04);
+        }
     }
 
-    td {
-      &:first-child {
-        width: 18%;
-        color: @gray-8;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-      &:nth-child(2) {
-        width: 55%;
-      }
-      &:nth-child(3) {
-        width: 22%;
-        color: @magenta-7;
-        font-size: max(@font-size-base - 1px, 12px);
-      }
-      &:nth-child(4) {
-        width: 15%;
-        font-size: max(@font-size-base - 1px, 12px);
-      }
-      &:nth-child(5) {
-        width: 8%;
-        font-size: max(@font-size-base - 1px, 12px);
-      }
-      &:nth-last-child(3):first-child {
-        width: 38%;
-      }
-      &:nth-last-child(3):first-child ~ td:nth-last-child(2) {
-        width: 70%;
-      }
+    .ant-tag {
+        margin-right: 8px;
     }
-  }
 
-  hr {
-    margin: 12px 0;
-  }
+    &.properties-api {
+        td {
+            &.api-code-identifier {
+                width: 18%;
+                color: @gray-8;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            &.api-description {
+                width: 55%;
+            }
+
+            &.api-data-type {
+                width: 22%;
+                color: @magenta-7;
+                font-size: max(@font-size-base - 1px, 12px);
+            }
+
+            &.api-default {
+                width: 15%;
+                font-size: max(@font-size-base - 1px, 12px);
+            }
+        }
+    }
+
+    &.enum-api {
+        td {
+            &.api-code-identifier {
+                width: 20%;
+                color: @gray-8;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            &.api-description {
+                width: 80%;
+            }
+        }
+    }
+
+    &.methods-api {
+        td {
+            &.api-signature {
+                width: 40%;
+                color: @gray-8;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            &.api-description {
+                width: 38%;
+            }
+
+            &.api-data-type {
+                width: 22%;
+                color: @magenta-7;
+                font-size: max(@font-size-base - 1px, 12px);
+            }
+        }
+    }
+}
+
+.markdown.api-container {
+    hr {
+        margin: 12px 0;
+    }
 }
 
 @demo-grid-color: #0092ff;

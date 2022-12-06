@@ -1,5 +1,8 @@
-﻿using System.Collections;
-using System.Globalization;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -7,8 +10,15 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <para>Avatars can be used to represent people or objects. It supports images, icons, or letters.</para>
+    /// </summary>
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg")]
     public partial class Avatar : AntDomComponentBase
     {
+        /// <summary>
+        /// Content to display inside avatar shape. Takes priority over <see cref="Text"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent
         {
@@ -20,9 +30,17 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Shape of the avatar
+        /// </summary>
+        /// <default value="AvatarShape.Circle"/>
         [Parameter]
         public string Shape { get; set; } = null;
 
+        /// <summary>
+        /// Size of the avatar. See <see cref="AntSizeLDSType"/> for possible values.
+        /// </summary>
+        /// <default value="default"/>
         [Parameter]
         public string Size
         {
@@ -37,6 +55,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Text string to display in the avatar. Typical use is for displaying initials.
+        /// </summary>
         [Parameter]
         public string Text
         {
@@ -51,18 +72,33 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Image src for the avatar. If this fails to load, <see cref="Icon"/> and <see cref="ChildContent"/>/<see cref="Text"/> will continue to show.
+        /// </summary>
         [Parameter]
         public string Src { get; set; }
 
+        /// <summary>
+        /// A list of sources to use for different screen resolutions. Passed straight to the <c>img</c> tag.
+        /// </summary>
         [Parameter]
         public string SrcSet { get; set; }
 
+        /// <summary>
+        /// Alternate text for the image
+        /// </summary>
         [Parameter]
         public string Alt { get; set; }
 
+        /// <summary>
+        /// Icon to display
+        /// </summary>
         [Parameter]
         public string Icon { get; set; }
 
+        /// <summary>
+        /// Callback executed when image passed to <see cref="Src"/> fails to load
+        /// </summary>
         [Parameter]
         public EventCallback<ErrorEventArgs> OnError { get; set; }
 

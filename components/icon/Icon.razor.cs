@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -6,26 +10,50 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    Semantic vector graphics. Before use icons。
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg")]
     public partial class Icon : AntDomComponentBase
     {
+        /// <summary>
+        /// Alternative text for the icon
+        /// </summary>
         [Parameter]
         public string Alt { get; set; }
 
+        /// <summary>
+        /// Rotate icon with animation
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Spin { get; set; }
 
+        /// <summary>
+        /// Rotate by n degrees - does not work in IE9
+        /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int Rotate { get; set; } = 0;
 
+        /// <summary>
+        /// Icon name to show
+        /// </summary>
         [Parameter]
         public string Type { get; set; }
 
         /// <summary>
-        /// 'fill' | 'outline' | 'twotone';
+        /// Which theme of icon - 'fill' | 'outline' | 'twotone';
         /// </summary>
+        /// <default value="IconThemeType.Outline" />
         [Parameter]
         public string Theme { get; set; } = IconThemeType.Outline;
 
+        /// <summary>
+        /// Specify the primary color when using the TwoTone theme. Other themes ignore this parameter.
+        /// </summary>
         [Parameter]
         public string TwotoneColor
         {
@@ -43,27 +71,52 @@ namespace AntDesign
         [Parameter]
         public string IconFont { get; set; }
 
+        /// <summary>
+        /// Width of the icon
+        /// </summary>
+        /// <default value="1em" />
         [Parameter]
         public string Width { get; set; } = "1em";
 
+        /// <summary>
+        /// Height of the icon
+        /// </summary>
+        /// <default value="1em" />
         [Parameter]
         public string Height { get; set; } = "1em";
 
+        /// <summary>
+        /// Fill value for the icon's SVG
+        /// </summary>
+        /// <default value="currentColor" />
         [Parameter]
         public string Fill { get; set; } = "currentColor";
 
+        /// <summary>
+        /// Tabindex for the wrapping span
+        /// </summary>
         [Parameter]
         public string TabIndex { get; set; }
 
+        /// <summary>
+        /// Stop propagation of the click event on the icon
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool StopPropagation { get; set; }
 
         [CascadingParameter]
         public Button Button { get; set; }
 
+        /// <summary>
+        /// OnClick event for the icon
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        /// <summary>
+        /// The component to render as a custom icon
+        /// </summary>
         [Parameter]
         public RenderFragment Component { get; set; }
 
@@ -85,8 +138,6 @@ namespace AntDesign
             {
                 Spin = true;
             }
-
-            Button?.Icons.Add(this);
 
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
@@ -142,13 +193,6 @@ namespace AntDesign
             {
                 await OnClick.InvokeAsync(args);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            Button?.Icons.Remove(this);
-
-            base.Dispose(disposing);
         }
     }
 }

@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -24,6 +21,7 @@ namespace AntDesign
         /// <summary>
         /// Forced render of content in tabs, not lazy render after clicking on tabs
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ForceRender { get; set; } = false;
 
@@ -39,18 +37,31 @@ namespace AntDesign
         [Parameter]
         public string Tab { get; set; }
 
+        /// <summary>
+        /// Template of TabPane's head
+        /// </summary>
         [Parameter]
         public RenderFragment TabTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Template for customer context menu
+        /// </summary>
         [Parameter]
         public RenderFragment TabContextMenu { get; set; }
 
+        /// <summary>
+        /// If the tab is disabled
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// If the tab is closable
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Closable { get; set; } = true;
         internal bool IsActive => _isActive;

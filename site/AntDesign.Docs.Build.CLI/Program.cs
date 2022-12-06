@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net.Http;
 using AntDesign.Docs.Build.CLI.Command;
+using AntDesign.Docs.Build.CLI.Services.Translation;
 using AntDesign.Docs.Build.CLI.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,17 @@ namespace AntDesign.Docs.Build.CLI
             services.AddSingleton<IAppCommand, GenerateMenuJsonCommand>();
             services.AddSingleton<IAppCommand, GenerateDocsToHtmlCommand>();
             services.AddSingleton<IAppCommand, GenerateIconsToJsonCommand>();
+            services.AddHttpClient<Translate>(client =>
+            {
+                client.BaseAddress = new Uri($"https://translate.google.com");
+            });
+            services.AddSingleton<ITranslate>(provider =>
+            {
+                var translateClient = provider.GetRequiredService<Translate>();
+
+                return new TranslateCache(translateClient);
+            });
+
             return services.BuildServiceProvider();
         }
     }

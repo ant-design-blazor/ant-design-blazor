@@ -58,6 +58,9 @@ namespace AntDesign
 
         private readonly DateTime[] _pickerValuesAfterInit = new DateTime[2];
 
+        /// <summary>
+        /// Callback executed when range selected changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
 
