@@ -15,7 +15,15 @@ namespace AntDesign
         public ClassMapper(string originalClass)
         {
             OriginalClass = originalClass;
-            _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
+
+            if (string.IsNullOrEmpty(OriginalClass))
+            {
+                _map.Add(() => string.Empty, () => !string.IsNullOrEmpty(OriginalClass));
+            }
+            else
+            {
+                _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
+            }
         }
 
         public string Class => ToString();
