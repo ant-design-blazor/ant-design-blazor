@@ -249,4 +249,58 @@
         range[1].Should().Be(expectedEnd);
         input[1].GetAttribute("value").Should().Be(endValueAsString);
 	}
+
+    [Fact]
+    public void ItShouldUseCustomSuffixIcon()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var range = new DateTime[]
+    {
+            new DateTime(2022, 12, 5),
+            new DateTime(2022, 12, 8)
+    };
+
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>(
+            @<RangePicker TValue="DateTime[]" @bind-Value="range">
+                <SuffixIcon>
+                    <Icon Type="ant-design" />
+                </SuffixIcon>
+            </RangePicker>
+        );
+
+        cut.Find(".ant-picker-suffix").MarkupMatches(
+            @<span class="ant-picker-suffix">
+                <span role="img" class=" anticon anticon-ant-design" id:ignore>
+                    <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+                        <path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 0 0 0 76.4L474.6 944a54.14 54.14 0 0 0 76.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 0 0-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 1 0 212.6 0 106.3 106.2 0 1 0-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 0 0 0 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 0 0 0 68.6 48.7 48.7 0 0 0 68.7 0l121.8-121.7a53.93 53.93 0 0 0-.1-76.4z"></path>
+                    </svg>
+                </span>
+            </span>
+        );
+    }
+
+    [Fact]
+    public void ItShouldUseDefaultSuffixIcon_WhenNoCustomSuffix()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var range = new DateTime[]
+        {
+            new DateTime(2022, 12, 5),
+            new DateTime(2022, 12, 8)
+        };
+
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>(@<RangePicker TValue="DateTime[]" @bind-Value="range" />);
+
+        cut.Find(".ant-picker-suffix").MarkupMatches(
+        @<span class="ant-picker-suffix">
+            <span role="img" class=" anticon anticon-calendar" id:ignore>
+                <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+                    <path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path>
+                </svg>
+            </span>
+        </span>
+        );
+    }
 }

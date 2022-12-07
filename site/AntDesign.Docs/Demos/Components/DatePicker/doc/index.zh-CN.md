@@ -50,7 +50,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | popupStyle | 额外的弹出日历样式 | CSSProperties | {} |  |
 | size | 输入框大小，`large` 高度为 40px，`small` 为 24px，默认是 32px | `large` \| `middle` \| `small` | 无 |  |
 | bordered | 是否有边框 | Boolean | true |  |
-| suffixIcon | 自定义的选择框后缀图标 | ReactNode | - |  |
+| SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
 | style | 自定义输入框样式 | CSSProperties | {} |  |
 | onOpenChange | 弹出日历和关闭日历的回调 | function(open) | 无 |  |
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |

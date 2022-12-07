@@ -45,7 +45,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | popupStyle | to customize the style of the popup calendar | CSSProperties | {} |  |
 | size | determine the size of the input box, the height of `large` and `small`, are 40px and 24px respectively, while default size is 32px | `large` \| `middle` \| `small` | - |  |
 | bordered | whether has border style | Boolean | true |  |
-| suffixIcon | The custom suffix icon | ReactNode | - |  |
+| SuffixIcon | The custom suffix icon | RenderFragment | - |  |
 | style | to customize the style of the input box | CSSProperties | {} |  |
 | onOpenChange | a callback function, can be executed whether the popup calendar is popped up or closed | function(open) | - |  |
 | onPanelChange | callback when picker panel mode is changed | function(value, mode) | - |  |
