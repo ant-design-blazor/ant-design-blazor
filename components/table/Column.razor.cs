@@ -462,7 +462,7 @@ namespace AntDesign
 
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                foreach (var filter in _filters.Where(f => filterModel.Filters.Any(x => x.Value.Equals(f.Value))))
                 {
                     filter.Selected = true;
                 }
