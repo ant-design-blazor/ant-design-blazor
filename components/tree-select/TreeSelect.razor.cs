@@ -44,6 +44,8 @@ namespace AntDesign
 
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
+        [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
+
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
 
         [Parameter] public bool ShowArrowIcon { get; set; } = true;
