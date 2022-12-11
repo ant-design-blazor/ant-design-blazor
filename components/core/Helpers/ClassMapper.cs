@@ -15,6 +15,7 @@ namespace AntDesign
         public ClassMapper(string originalClass)
         {
             OriginalClass = originalClass;
+
             _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
         }
 
@@ -31,7 +32,7 @@ namespace AntDesign
 
         public ClassMapper Get(Func<string> funcName)
         {
-            _map.Add(funcName, () => true);
+            _map.Add(funcName, () => !string.IsNullOrEmpty(funcName()));
             return this;
         }
 
