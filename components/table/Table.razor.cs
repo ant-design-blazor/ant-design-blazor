@@ -36,7 +36,7 @@ namespace AntDesign
             {
                 _waitingDataSourceReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
-                _dataSource = value.ToList() ?? Enumerable.Empty<TItem>();
+                _dataSource = value ?? Enumerable.Empty<TItem>();
             }
         }
 
@@ -386,7 +386,7 @@ namespace AntDesign
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-                    _showItems = queryModel.CurrentPagedRecords(query);
+                    _showItems = queryModel.CurrentPagedRecords(query).ToList();
                 }
                 else
                 {
