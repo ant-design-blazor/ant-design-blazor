@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
@@ -65,11 +65,28 @@ namespace AntDesign
 
         private bool ShowRanges => Ranges?.Count > 0;
 
+        private readonly Func<DateTime, bool> _defaultDisabledDateCheck;
+
+        private Func<DateTime, bool> _disabledDate;
+
+        [Parameter]
+        public override Func<DateTime, bool> DisabledDate
+        {
+            get
+            {
+                return _disabledDate;
+            }
+            set
+            {
+                _disabledDate = (date) => (value is not null && value(date)) || _defaultDisabledDateCheck(date);
+            }
+        }
+
         public RangePicker()
         {
             IsRange = true;
 
-            DisabledDate = (date) =>
+            _defaultDisabledDateCheck = (date) =>
             {
                 int? index = null;
 
@@ -116,6 +133,7 @@ namespace AntDesign
                     return index == 0 ? formattedDate1 < formattedDate2 : formattedDate1 > formattedDate2;
                 }
             };
+            DisabledDate = null;
         }
 
         private async Task OnInputClick(int index)
