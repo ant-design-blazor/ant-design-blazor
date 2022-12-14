@@ -36,7 +36,7 @@ namespace AntDesign
             {
                 _waitingDataSourceReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
-                _dataSource = value ?? Enumerable.Empty<TItem>();
+                _dataSource = value.ToList() ?? Enumerable.Empty<TItem>();
             }
         }
 
