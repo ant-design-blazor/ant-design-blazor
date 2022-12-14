@@ -386,7 +386,7 @@ namespace AntDesign
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-                    _showItems = queryModel.CurrentPagedRecords(query);
+                    _showItems = queryModel.CurrentPagedRecords(query).ToList();
                 }
                 else
                 {
