@@ -164,6 +164,6 @@
   },
   "PageHeader": { "back": "Zurück" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

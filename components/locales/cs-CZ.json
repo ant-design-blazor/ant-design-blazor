@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Zpět" },
   "Form": {
+    "optional": "(nepovinné)",
     "defaultValidateMessages": {
       "default": "Chybně vyplněné pole ${label}",
       "required": "Prosím zadejte ${label}",
@@ -235,8 +236,7 @@
         "range": "Množství ${label} musí být mezi ${min}-${max}"
       },
       "pattern": { "mismatch": "${label} se neshoduje se vzorem ${pattern}" }
-    },
-    "optionalFormItemLabel": "volitelný"
+    }
   },
   "Image": {
     "preview": "Náhled"

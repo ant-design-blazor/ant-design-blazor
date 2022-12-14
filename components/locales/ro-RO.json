@@ -146,6 +146,6 @@
     "back": "înapoi"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(opțional)"
   }
 }

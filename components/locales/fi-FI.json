@@ -118,6 +118,6 @@
   },
   "Empty": { "description": "Ei kohteita" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

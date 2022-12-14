@@ -146,6 +146,6 @@
     "back": "பின் செல்லவும்"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

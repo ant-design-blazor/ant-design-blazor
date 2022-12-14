@@ -125,6 +125,6 @@
     "description": "Ingen data"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

@@ -145,6 +145,6 @@
     "downloadFile": "Muat turun fail"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

@@ -133,6 +133,7 @@
   },
   "PageHeader": { "back": "برگشت" },
   "Form": {
+    "optional": "(اختیاری)",
     "defaultValidateMessages": {
       "default": "خطا در ${label}",
       "required": "فیلد ${label} اجباریست",
@@ -177,7 +178,6 @@
         "range": "مقدار ${label} باید بین ${min}-${max} باشد"
       },
       "pattern": { "mismatch": "الگوی ${label} با ${pattern} برابری نمی‌کند" }
-    },
-    "optionalFormItemLabel": "اختیاری"
+    }
   }
 }

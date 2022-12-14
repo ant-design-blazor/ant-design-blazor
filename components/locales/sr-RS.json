@@ -124,6 +124,6 @@
     "description": "Nema podataka"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

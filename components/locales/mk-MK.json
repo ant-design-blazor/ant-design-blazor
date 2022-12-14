@@ -140,6 +140,6 @@
     "back": "Назад"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

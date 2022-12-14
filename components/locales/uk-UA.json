@@ -125,6 +125,6 @@
     "description": "Даних немає"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(опціонально)"
   }
 }

@@ -120,6 +120,6 @@
   "Empty": { "description": "無此資料" },
   "PageHeader": { "back": "返回" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "（可選）"
   }
 }

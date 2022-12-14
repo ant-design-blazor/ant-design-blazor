@@ -127,6 +127,6 @@
     "description": "Trống"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

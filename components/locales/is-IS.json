@@ -117,6 +117,6 @@
   },
   "Empty": { "description": "Engin gögn" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

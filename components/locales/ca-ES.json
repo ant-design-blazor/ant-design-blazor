@@ -123,6 +123,6 @@
     "description": "Sense dades"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(opcional)"
   }
 }

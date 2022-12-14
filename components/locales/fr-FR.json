@@ -145,6 +145,6 @@
     "expand": "développer"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optionnel)"
   }
 }

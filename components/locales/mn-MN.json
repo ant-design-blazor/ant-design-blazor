@@ -127,6 +127,6 @@
     "description": "Мэдээлэл байхгүй байна"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

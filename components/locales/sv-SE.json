@@ -129,6 +129,6 @@
     "downloadFile": "Nedladdning fil"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(valfritt)"
   }
 }

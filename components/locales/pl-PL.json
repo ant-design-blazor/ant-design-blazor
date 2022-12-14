@@ -173,6 +173,6 @@
     "description": "Brak danych"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(opcjonalne)"
   }
 }

@@ -197,6 +197,7 @@
   },
   "PageHeader": { "back": "Back" },
   "Form": {
+    "optional": "(optional)",
     "defaultValidateMessages": {
       "default": "Field validation error ${label}",
       "required": "Please enter ${label}",
@@ -241,8 +242,7 @@
         "range": "The amount of ${label} must be between ${min}-${max}"
       },
       "pattern": { "mismatch": "${label} does not match the pattern ${pattern}" }
-    },
-    "optionalFormItemLabel": "optional"
+    }
   },
   "Image": {
     "preview": "Preview"

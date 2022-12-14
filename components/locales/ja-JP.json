@@ -125,6 +125,6 @@
     "description": "データがありません"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

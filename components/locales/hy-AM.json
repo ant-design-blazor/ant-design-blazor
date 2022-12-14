@@ -132,6 +132,6 @@
   },
   "PageHeader": { "back": "Հետ" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

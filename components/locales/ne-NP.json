@@ -145,6 +145,6 @@
     "description": "डाटा छैन"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

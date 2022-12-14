@@ -144,6 +144,6 @@
     "back": "ย้อนกลับ"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(ไม่จำเป็น)"
   }
 }

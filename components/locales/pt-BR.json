@@ -131,6 +131,6 @@
     "expand": "expandir"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

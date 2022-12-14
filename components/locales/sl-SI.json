@@ -127,6 +127,6 @@
     "description": "Ni podatkov"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

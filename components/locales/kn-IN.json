@@ -124,6 +124,6 @@
     "downloadFile": "ಫೈಲ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

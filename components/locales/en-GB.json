@@ -157,6 +157,6 @@
   },
   "Empty": { "description": "No data" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

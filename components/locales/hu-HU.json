@@ -118,6 +118,6 @@
   },
   "Empty": { "description": "Nincs adat" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

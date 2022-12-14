@@ -117,6 +117,6 @@
   },
   "Empty": { "description": "Nav datu" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

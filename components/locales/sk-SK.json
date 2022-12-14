@@ -144,6 +144,6 @@
     "back": "Späť"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(nepovinné)"
   }
 }

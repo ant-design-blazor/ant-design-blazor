@@ -117,6 +117,6 @@
   },
   "Empty": { "description": "Andmed puuduvad" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(valikuline)"
   }
 }

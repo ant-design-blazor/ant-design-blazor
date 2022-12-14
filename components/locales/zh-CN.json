@@ -192,6 +192,7 @@
   },
   "PageHeader": { "back": "返回" },
   "Form": {
+    "optional": "（可选）",
     "defaultValidateMessages": {
       "default": "字段验证错误${label}",
       "required": "请输入${label}",
@@ -236,8 +237,7 @@
         "range": "${label}数量须在${min}-${max}之间"
       },
       "pattern": { "mismatch": "${label}与模式不匹配${pattern}" }
-    },
-    "optionalFormItemLabel": "可选的"
+    }
   },
   "Image": {
     "preview": "预览"

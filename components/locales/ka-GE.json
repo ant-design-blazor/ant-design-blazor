@@ -123,6 +123,6 @@
   },
   "PageHeader": { "back": "უკან" },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(არასავალდებულო)"
   }
 }

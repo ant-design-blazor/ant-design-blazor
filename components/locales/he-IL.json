@@ -149,6 +149,6 @@
     "back": "חזרה"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(optional)"
   }
 }

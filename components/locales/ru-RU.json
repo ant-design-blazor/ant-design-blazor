@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Назад" },
   "Form": {
+    "optional": "(необязательный)",
     "defaultValidateMessages": {
       "default": "Ошибка при проверке поля ${label}",
       "required": "Пожалуйста введите ${label}",
@@ -235,8 +236,7 @@
         "range": "Диапазон ${label} должнен быть между ${min}-${max}"
       },
       "pattern": { "mismatch": "${label} не соответствует шаблону ${pattern}" }
-    },
-    "optionalFormItemLabel": "необязательный"
+    }
   },
   "Image": {
     "preview": "Предпросмотр"

@@ -129,6 +129,6 @@
     "expand": "proširi"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(neobavezno)"
   }
 }

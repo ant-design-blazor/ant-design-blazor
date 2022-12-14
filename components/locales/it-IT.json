@@ -126,6 +126,6 @@
     "expand": "espandi"
   },
   "Form": {
-    "optionalFormItemLabel": "optional"
+    "optional": "(opzionale)"
   }
 }

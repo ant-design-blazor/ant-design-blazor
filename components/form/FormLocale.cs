@@ -4,7 +4,7 @@
     {
         public DefaultValidateMessages DefaultValidateMessages { get; set; }
 
-        public string OptionalFormItemLabel { get; set; } = "optional";
+        public string Optional { get; set; } = "(optional)";
     }
 
     public class DefaultValidateMessages
