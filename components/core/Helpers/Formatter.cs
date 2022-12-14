@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,7 +8,12 @@ using AntDesign.Core.Reflection;
 
 namespace AntDesign.Core.Helpers
 {
+#if NETSTANDARD2_1
+
     internal static class Formatter<T>
+#else
+    internal static class Formatter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>
+#endif
     {
         private static readonly Lazy<Func<T, string, string>> _formatFunc = new Lazy<Func<T, string, string>>(GetFormatLambda, true);
 
