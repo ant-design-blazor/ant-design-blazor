@@ -1,7 +1,7 @@
 ﻿---
 order: 24
 title:
-  zh-CN: 
+  zh-CN: 自定义后缀图标
   en-US: Custom Suffix Icon
 ---
 
