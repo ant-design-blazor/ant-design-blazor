@@ -129,5 +129,8 @@
     "copy": "copiar",
     "copied": "copiado",
     "expand": "expandir"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

@@ -32,6 +32,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | OnFinish | 提交事件 | EventCallback\<EditContext\> | - |
 | OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
 | ValidateOnChange | 是否在更改时校验 | bool | false |
+| RequiredMark | 更改必填/可选字段标签在表单上的显示方式。 | FormRequiredMark | FormRequiredMark.Required |
 ### FormItem
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
