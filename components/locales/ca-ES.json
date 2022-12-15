@@ -121,5 +121,8 @@
   },
   "Empty": {
     "description": "Sense dades"
+  },
+  "Form": {
+    "optional": "(opcional)"
   }
 }

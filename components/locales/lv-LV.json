@@ -115,5 +115,8 @@
     "previewFile": "Priekšskatiet failu",
     "downloadFile": "Lejupielādēt failu"
   },
-  "Empty": { "description": "Nav datu" }
+  "Empty": { "description": "Nav datu" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

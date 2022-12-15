@@ -115,5 +115,8 @@
     "previewFile": "Forskoða skrá",
     "downloadFile": "Hlaða niður skrá"
   },
-  "Empty": { "description": "Engin gögn" }
+  "Empty": { "description": "Engin gögn" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }
