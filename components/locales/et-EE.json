@@ -115,5 +115,8 @@
     "previewFile": "Faili eelvaade",
     "downloadFile": "Laadige fail alla"
   },
-  "Empty": { "description": "Andmed puuduvad" }
+  "Empty": { "description": "Andmed puuduvad" },
+  "Form": {
+    "optional": "(valikuline)"
+  }
 }

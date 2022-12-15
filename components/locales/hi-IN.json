@@ -122,5 +122,8 @@
     "uploadError": "अपलोड में त्रुटि",
     "previewFile": "फ़ाइल पूर्वावलोकन",
     "downloadFile": "फ़ाइल डाउनलोड करें"
+  },
+  "Form": {
+    "optional": "(ऐच्छिक)"
   }
 }

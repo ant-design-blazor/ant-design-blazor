@@ -127,5 +127,8 @@
     "uploadError": "Uppladdningsfel",
     "previewFile": "Förhandsgranska filen",
     "downloadFile": "Nedladdning fil"
+  },
+  "Form": {
+    "optional": "(valfritt)"
   }
 }

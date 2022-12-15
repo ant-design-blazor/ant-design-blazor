@@ -115,5 +115,8 @@
     "previewFile": "Pelê pêşbibîne",
     "downloadFile": "Pelê dakêşin"
   },
-  "Empty": { "description": "Agahî tune" }
+  "Empty": { "description": "Agahî tune" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

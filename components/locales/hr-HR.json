@@ -127,5 +127,8 @@
     "copy": "kopiraj",
     "copied": "kopiranje uspješno",
     "expand": "proširi"
+  },
+  "Form": {
+    "optional": "(neobavezno)"
   }
 }
