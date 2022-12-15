@@ -184,6 +184,8 @@ namespace AntDesign
             {
                 ValidateStatus = FormValidateStatus.Error;
             }
+
+            SetInternalIsRequired();
         }
 
         protected void SetClass()
