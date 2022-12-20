@@ -116,5 +116,8 @@
     "previewFile": "Esikatsele tiedostoa",
     "downloadFile": "Lataa tiedosto"
   },
-  "Empty": { "description": "Ei kohteita" }
+  "Empty": { "description": "Ei kohteita" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

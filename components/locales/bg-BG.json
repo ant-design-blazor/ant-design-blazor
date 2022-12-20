@@ -115,5 +115,8 @@
     "previewFile": "Преглед",
     "downloadFile": "Свали файл"
   },
-  "Empty": { "description": "Няма данни" }
+  "Empty": { "description": "Няма данни" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

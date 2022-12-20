@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -15,6 +15,18 @@ namespace AntDesign
     public partial class Form<TModel> : AntDomComponentBase, IForm
     {
         private readonly string _prefixCls = "ant-form";
+
+        /// <summary>
+        /// Change how required/optional field labels are displayed on the form.
+        /// 
+        /// <list type="bullet">
+        ///     <item>Required - Will mark required fields</item>
+        ///     <item>Optional - Will mark optional fields</item>
+        ///     <item>None - Will mark no fields, regardless of required/optional</item>
+        /// </list>
+        /// </summary>
+        [Parameter]
+        public FormRequiredMark RequiredMark { get; set; } = FormRequiredMark.Required;
 
         [Parameter]
         public string Layout { get; set; } = FormLayout.Horizontal;
