@@ -313,13 +313,15 @@ namespace AntDesign
             {
                 return;
             }
-            await SetFocus();
-            var num = _increaseFunc(Value, _step);
-            await ChangeValueAsync(num);
 
             _increaseTokenSource?.Cancel();
             _increaseTokenSource = new CancellationTokenSource();
+
             _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
+
+            await SetFocus();
+            var num = _increaseFunc(Value, _step);
+            await ChangeValueAsync(num);
         }
 
         private void IncreaseUp() => _increaseTokenSource?.Cancel();
