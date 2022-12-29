@@ -9,7 +9,7 @@ namespace AntDesign
     /// <summary>
     /// AntNotification Service
     /// </summary>
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
         internal event Action<NotificationGlobalConfig> OnConfiging;
         internal event Func<NotificationConfig, Task> OnNoticing;
