@@ -88,17 +88,6 @@ namespace AntDesign
             }
         }
 
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            // Avoid changes in tab as we modify the properties used for display when drag and drop occurs
-            if (IsTab && _hasRendered)
-            {
-                return;
-            }
-
-            await base.SetParametersAsync(parameters);
-        }
-
         private void SetClass()
         {
             ClassMapper
