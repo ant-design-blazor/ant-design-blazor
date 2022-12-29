@@ -15,7 +15,12 @@ A table displays rows of data.
 
 ## How To Use
 
-Specify `dataSource` of Table as an array of data.
+Specify `dataSource` of Table as an array of data, the `OnChange` event and its incoming query state can be paged and filtered.
+
+### Two data column types
+
+- **PropertyColumn** inherits from Column and is bound with 'Property="c=> c.User.Name "' to support cascading access.  If used below .NET 6, need to specify the type of 'TItem', 'TProp'.
+- **Column** bound with `@bind-Field="context.UserName"`, but does not support cascading access to class attributes (for example, `context.User.Name`), but it can be bound with `DataIndex="'User.Name'"`.
 
 
 ## API

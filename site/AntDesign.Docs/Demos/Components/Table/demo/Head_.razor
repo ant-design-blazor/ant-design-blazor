@@ -1,4 +1,15 @@
 ﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
+    <TitleTemplate>
+        <GridRow>
+            <GridCol Span="4">
+                <Title Level="3">Table Title</Title>
+            </GridCol>
+            <GridCol Span="8" Offset="12">
+                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
+      <RowTemplate>
     <PropertyColumn
             Property="c=>c.Name"
             SorterCompare="@((a,b)=> a.Length - b.Length)"
@@ -16,11 +27,15 @@
             Filters="addressFilters"
             FilterMultiple="false"
             OnFilter="(value,address)=>address.StartsWith(value)" />
+    </RowTemplate>
 </Table>
 
 @using AntDesign.TableModels;
 @using System.Text.Json;
 @code {
+    string searchString;
+    IEnumerable<Data> dataSource;
+    ITable _table;
 
     class Data
     {
@@ -57,6 +72,9 @@
     void OnChange(QueryModel<Data> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
+
+        dataSource = query.ExecuteQuery(data.AsQueryable())
+            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     void OnRowClick(RowData<Data> row)
