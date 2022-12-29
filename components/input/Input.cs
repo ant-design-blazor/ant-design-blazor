@@ -513,7 +513,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.DisposeExclusive();
+            DomEventListener?.DisposeExclusive();
             _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
