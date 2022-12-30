@@ -70,10 +70,11 @@ namespace AntDesign
             get { return _value; }
             set
             {
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, _value);
                 if (hasChanged)
                 {
                     _value = value;
+
                     OnValueChange(value);
                 }
             }
@@ -132,6 +133,8 @@ namespace AntDesign
                     Value = value;
 
                     ValueChanged.InvokeAsync(value);
+
+                    OnCurrentValueChange(value);
 
                     if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
                     {
@@ -266,6 +269,14 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
+        {
+        }
+
+        /// <summary>
+        /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual void OnCurrentValueChange(TValue value)
         {
         }
 
