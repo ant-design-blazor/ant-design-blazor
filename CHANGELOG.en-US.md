@@ -15,6 +15,35 @@ timeline: true
 
 ---
 
+### 0.13.2
+
+`2022-12-31`
+
+- Table
+  - 📖 Docs add a search box in the filter & sorter demo to enable custom filtering. [#2955](https://github.com/ant-design-blazor/ant-design-blazor/pull/2955) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed Selection Component Hidden Property not working. [#2945](https://github.com/ant-design-blazor/ant-design-blazor/pull/2945) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 Fixed `Hidden` parameter for ActionColumn doesn't work. [#2946](https://github.com/ant-design-blazor/ant-design-blazor/pull/2946) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed IQueryable or IEnumerable using AsNoTracking will cause select data duplication bug. [#2944](https://github.com/ant-design-blazor/ant-design-blazor/pull/2944) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 Fxied can't restore the query state of filters which value is enum type. [#2941](https://github.com/ant-design-blazor/ant-design-blazor/pull/2941) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed Infinite loop when HidePagination and PageSize were set at the same time and datasource is empty. [#2919](https://github.com/ant-design-blazor/ant-design-blazor/pull/2919) [@ElderJames](https://github.com/ElderJames)
+
+- DatePicker
+  - 🆕 Use SuffixIcon passed to RangePicker to allow for a custom suffix icon. [#2935](https://github.com/ant-design-blazor/ant-design-blazor/pull/2935) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 Fixed Exception on input with time when Value is null. [#2920](https://github.com/ant-design-blazor/ant-design-blazor/pull/2920) [@Alexbits](https://github.com/Alexbits)
+
+- Input
+  - 🐞 Fixed the `OnChange` event would be triggered three times and the clear button would not be displayed with the `Suffix` template. [#2970](https://github.com/ant-design-blazor/ant-design-blazor/pull/2970) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed null reference exception on dispose. [#2966](https://github.com/ant-design-blazor/ant-design-blazor/pull/2966) [@dracan](https://github.com/dracan)
+
+- 🆕 Add TreeSelect TitleTemplate for tree nodes. [#2940](https://github.com/ant-design-blazor/ant-design-blazor/pull/2940) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 🆕 Add RequiredMark to Form to allow displaying indicators next to required, optional or no fields. [#2930](https://github.com/ant-design-blazor/ant-design-blazor/pull/2930) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 Fixed Tabs some issues with dynamic rendering. [#2967](https://github.com/ant-design-blazor/ant-design-blazor/pull/2967) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor Notification that add an interface INotificationService. It is backwards compatible, but new code should inject INotificationService. [#2948](https://github.com/ant-design-blazor/ant-design-blazor/pull/2948) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 Fixed InputNumber triggering a constant Increase/Decrease in certain scenarios. [#2953](https://github.com/ant-design-blazor/ant-design-blazor/pull/2953) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Statistic CountDown format incorrectly when publish with trimming. [#2943](https://github.com/ant-design-blazor/ant-design-blazor/pull/2943) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed `ClassMapper` would get twice css classes. [#2934](https://github.com/ant-design-blazor/ant-design-blazor/pull/2934) [@berkerdong](https://github.com/berkerdong)
+- 🐞 Fixed built-in System.Text.Json for netstandard2.1 target to avoid compatibility exceptions. [#2922](https://github.com/ant-design-blazor/ant-design-blazor/pull/2922) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.13.1
 
 `2022-11-29`

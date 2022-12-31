@@ -15,6 +15,40 @@ timeline: true
 
 ---
 
+
+### 0.13.2
+
+`2022-12-31`
+
+- Table
+  - 📖 文档 查询和排序的 demo 中加入额外的查询框，并实现联合搜索。[#2955](https://github.com/ant-design-blazor/ant-design-blazor/pull/2955) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Selection 列 Hidden 属性不起作用的问题。[#2945](https://github.com/ant-design-blazor/ant-design-blazor/pull/2945) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 Table 的 ActionColumn 的 Hidden 属性不起作用的问题。[#2946](https://github.com/ant-design-blazor/ant-design-blazor/pull/2946) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当用了 AsNoTracking 的 IQueryable 作为 DataSource 时导致选中项重复的问题[#2944](https://github.com/ant-design-blazor/ant-design-blazor/pull/2944) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 不能恢复枚举类型的 Filter 的查询状态。[#2941](https://github.com/ant-design-blazor/ant-design-blazor/pull/2941) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当同时设置了 HidePagination 和 PageSize 且 DataSource 为空时导致无限循环。[#2919](https://github.com/ant-design-blazor/ant-design-blazor/pull/2919) [@ElderJames](https://github.com/ElderJames)
+
+- DatePicker
+  - 🆕 新增 RangePicker 的 SuffixIcon 属性以允许自定义后缀图标。[#2935](https://github.com/ant-design-blazor/ant-design-blazor/pull/2935) [@wss-javeney](https://github.com/wss-javeney)
+  - 🐞 修复 DatePicker 在启用时间选择且 Value 为 null 时，点击 input 框出现异常的问题[#2920](https://github.com/ant-design-blazor/ant-design-blazor/pull/2920) [@Alexbits](https://github.com/Alexbits)
+
+- Input
+  - 🐞 修复 `OnChange` 事件会被触发三次，以及清除按钮不能跟 `Suffix` 同时显示的问题。[#2970](https://github.com/ant-design-blazor/ant-design-blazor/pull/2970) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复在 Dispose 时的偶尔的 null 引用异常.[#2966](https://github.com/ant-design-blazor/ant-design-blazor/pull/2966) [@dracan](https://github.com/dracan)
+
+
+- 🆕 新增 TreeSelect 支持给节点设置 TitleTemplate[#2940](https://github.com/ant-design-blazor/ant-design-blazor/pull/2940) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 🆕 新增 Form 的 RequiredMark 属性以允许在必填、可选或无的字段旁边显示指示符。[#2930](https://github.com/ant-design-blazor/ant-design-blazor/pull/2930) [@wss-kroche](https://github.com/wss-kroche)
+
+- 🐞 修复 Tabs  的一些关于动态渲染的问题。[#2967](https://github.com/ant-design-blazor/ant-design-blazor/pull/2967) [@ElderJames](https://github.com/ElderJames)
+
+- 🛠 重构 Notification 的 `NotificationService` 增加了 `INotificationService` 接口。[#2948](https://github.com/ant-design-blazor/ant-design-blazor/pull/2948) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 修复 InputNumber 在某些场景下不停触发 递增/递减 的问题。[#2953](https://github.com/ant-design-blazor/ant-design-blazor/pull/2953) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复  Statistic 的 CountDown 再裁剪发布时格式化无效的问题。[#2943](https://github.com/ant-design-blazor/ant-design-blazor/pull/2943) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ClassMapper 的 css classes 出现两次。[#2934](https://github.com/ant-design-blazor/ant-design-blazor/pull/2934) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 System.Text.Json 旧版本的bug，给 netstandard2.1 目标内置7.0版本[#2922](https://github.com/ant-design-blazor/ant-design-blazor/pull/2922) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.13.1
 
 `2022-11-29`
