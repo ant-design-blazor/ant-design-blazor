@@ -427,15 +427,15 @@ namespace AntDesign
             return builder =>
             {
                 builder.OpenElement(31, "span");
-                builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon {(Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix" : "")}");
+                builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
+                    (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
+                    (string.IsNullOrEmpty(_inputString) ? $"{PrefixCls}-clear-icon-hidden " : ""));
 
                 builder.OpenComponent<Icon>(33);
                 builder.AddAttribute(34, "Type", "close-circle");
                 builder.AddAttribute(35, "Theme", "fill");
 
-                builder.AddAttribute(36, "Style", string.IsNullOrEmpty(_inputString ?? "") ? "visibility: hidden;" : "visibility: visible;");
-
-                builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
+                builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
                     await Clear();
                 }));
@@ -662,7 +662,7 @@ namespace AntDesign
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
-                if (Suffix != null)
+                if (Suffix != null || AllowClear)
                 {
                     _hasAffixWrapper = true;
                     // suffix
