@@ -594,11 +594,6 @@ namespace AntDesign
                     builder.CloseElement();
                 }
 
-                builder.OpenElement(34, "div");
-                builder.AddContent(25, $"_inputString:{_inputString} Value:{Value} CurrentValue:{CurrentValue} CurrentValueAsString:{CurrentValueAsString}");
-
-                builder.CloseElement();
-
                 // input
                 builder.OpenElement(41, "input");
                 builder.AddAttribute(42, "class", ClassMapper.Class);
