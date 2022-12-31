@@ -29,7 +29,7 @@ timeline: true
 
 - DatePicker
   - 🆕 Use SuffixIcon passed to RangePicker to allow for a custom suffix icon. [#2935](https://github.com/ant-design-blazor/ant-design-blazor/pull/2935) [@wss-javeney](https://github.com/wss-javeney)
-- 🐞 Fixed Exception on input with time when Value is null. [#2920](https://github.com/ant-design-blazor/ant-design-blazor/pull/2920) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 Fixed Exception on input with time when Value is null. [#2920](https://github.com/ant-design-blazor/ant-design-blazor/pull/2920) [@Alexbits](https://github.com/Alexbits)
 
 - Input
   - 🐞 Fixed the `OnChange` event would be triggered three times and the clear button would not be displayed with the `Suffix` template. [#2970](https://github.com/ant-design-blazor/ant-design-blazor/pull/2970) [@ElderJames](https://github.com/ElderJames)
