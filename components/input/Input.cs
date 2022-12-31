@@ -16,7 +16,6 @@ namespace AntDesign
     {
         protected const string PrefixCls = "ant-input";
 
-        private bool _allowClear;
         protected string AffixWrapperClass { get; set; } = $"{PrefixCls}-affix-wrapper";
         private bool _hasAffixWrapper;
         protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
@@ -320,13 +319,6 @@ namespace AntDesign
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
 
-            if (AllowClear)
-            {
-                _allowClear = true;
-                //ClearIconClass = $"{PrefixCls}-clear-icon";
-                ToggleClearBtn();
-            }
-
             if (Size == InputSize.Large)
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-lg");
@@ -430,28 +422,25 @@ namespace AntDesign
             _compositionInputting = false;
         }
 
-        private void ToggleClearBtn()
+        private RenderFragment ToggleClearBtn()
         {
-            Suffix = (builder) =>
+            return builder =>
             {
-                builder.OpenComponent<Icon>(31);
-                builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(33, "Theme", "fill");
-                builder.AddAttribute(34, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(_inputString ?? ""))
-                {
-                    builder.AddAttribute(35, "Style", "visibility: hidden;");
-                }
-                else
-                {
-                    builder.AddAttribute(36, "Style", "visibility: visible;");
-                }
-                builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
+                builder.OpenElement(31, "span");
+                builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
+                    (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
+                    (string.IsNullOrEmpty(_inputString) ? $"{PrefixCls}-clear-icon-hidden " : ""));
+
+                builder.OpenComponent<Icon>(33);
+                builder.AddAttribute(34, "Type", "close-circle");
+                builder.AddAttribute(35, "Theme", "fill");
+
+                builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
                     await Clear();
-                    ToggleClearBtn();
                 }));
                 builder.CloseComponent();
+                builder.CloseElement();
             };
         }
 
@@ -519,19 +508,20 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        protected virtual string GetClearIconCls()
-        {
-            return $"{PrefixCls}-clear-icon";
-        }
-
         protected override void OnValueChange(TValue value)
         {
             _inputString = CurrentValueAsString;
             base.OnValueChange(value);
+        }
+
+        protected override void OnCurrentValueChange(TValue value)
+        {
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(Value);
             }
+
+            base.OnCurrentValueChange(value);
         }
 
         /// <summary>
@@ -541,14 +531,7 @@ namespace AntDesign
         /// <returns></returns>
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
-            bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
-
             _inputString = args?.Value.ToString();
-
-            if (_allowClear && flag)
-            {
-                ToggleClearBtn();
-            }
 
             if (OnInput.HasDelegate)
             {
@@ -610,6 +593,11 @@ namespace AntDesign
                     builder.AddContent(33, Prefix);
                     builder.CloseElement();
                 }
+
+                builder.OpenElement(34, "div");
+                builder.AddContent(25, $"_inputString:{_inputString} Value:{Value} CurrentValue:{CurrentValue} CurrentValueAsString:{CurrentValueAsString}");
+
+                builder.CloseElement();
 
                 // input
                 builder.OpenElement(41, "input");
@@ -674,13 +662,17 @@ namespace AntDesign
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
-                if (Suffix != null)
+                if (Suffix != null || AllowClear)
                 {
                     _hasAffixWrapper = true;
                     // suffix
                     builder.OpenElement(91, "span");
                     builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
-                    builder.AddContent(93, Suffix);
+                    if (AllowClear)
+                    {
+                        builder.AddContent(93, ToggleClearBtn());
+                    }
+                    builder.AddContent(94, Suffix);
                     builder.CloseElement();
                 }
 

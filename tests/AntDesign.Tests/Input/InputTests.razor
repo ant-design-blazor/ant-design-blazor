@@ -99,13 +99,23 @@
 		//Arrange
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input TValue="string" AllowClear/>);
-		//Act
-		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: hidden");
-		cut.Find("input").Input("test");		
+        //Act
+        bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
+        cut.Find("input").Input("test");		
 		//Assert  
 		isClearButtonHidden.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: visible");
-	}
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeFalse();
+    }
+
+    [Fact]
+	public void Input_show_clearButton_with_suffix()
+	{
+		//Arrange
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input TValue="string" AllowClear ><Suffix>suffix</Suffix></AntDesign.Input>);
+        //Assert
+         cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-has-suffix").Should().BeTrue();
+    }
 
 	[Fact]
 	public void Input_hide_clearButton_when_input_reset()
@@ -116,11 +126,11 @@
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input @ref="@input" Value="@("test")" AllowClear/>);
 		//Act
-		bool isClearButtonVisible = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: visible");
+		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
 		cut.Find("input").Input("");		
 		//Assert  
-		isClearButtonVisible.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
+		isClearButtonHidden.Should().BeFalse();
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeTrue();
 	}
 
     [Fact]
