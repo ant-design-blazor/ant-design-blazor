@@ -77,6 +77,9 @@ namespace AntDesign
             get => _align;
             set
             {
+                if (_align == value)
+                    return;
+
                 _align = value;
                 _fixedStyle = CalcFixedStyle();
             }
@@ -161,11 +164,6 @@ namespace AntDesign
 
         private string CalcFixedStyle()
         {
-            if (Fixed == null)
-            {
-                Fixed = Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
-            }
-
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
             {
@@ -180,12 +178,14 @@ namespace AntDesign
                     cssStyleBuilder.AddStyle("text-align", alignment);
             }
 
-            if (Fixed == null || Context == null)
+            if (Context == null)
             {
                 return cssStyleBuilder.Build();
             }
 
             var fixedWidths = Array.Empty<string>();
+
+            Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
 
             if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
             {
@@ -207,19 +207,12 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            string fixedWidth;
-            if (fixedWidths.Length > 1)
+            var fixedWidth = fixedWidths.Length switch
             {
-                fixedWidth = $"calc({string.Join(" + ", fixedWidths)})";
-            }
-            else if (fixedWidths.Length == 1)
-            {
-                fixedWidth = fixedWidths[0];
-            }
-            else
-            {
-                fixedWidth = "0px";
-            }
+                > 1 => $"calc({string.Join(" + ", fixedWidths)})",
+                1 => fixedWidths[0],
+                _ => "0px"
+            };
 
             cssStyleBuilder
                 .AddStyle("position", "sticky")
