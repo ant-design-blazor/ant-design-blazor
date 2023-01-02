@@ -125,20 +125,25 @@
 {
     RenderFragment<Table<TItem>> header = table =>
   @<Template>
-                @{
+       @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
         <thead class="ant-table-thead">
             <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                <CascadingValue Value="table" TValue="ITable" Name="AntDesign.TableRow.Table">
-                    <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
-                        <TableRow TItem="TItem">
-                            @table.ChildContent(_fieldModel)
-                            @if (table.ScrollY != null)
+                <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                    <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
+                        <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
+                            @if (table.HeaderTemplate != null)
                             {
-                                <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+                                @table.HeaderTemplate(_fieldModel)
                             }
-                        </TableRow>
+                            else
+                            {
+                                <TableRow>
+                                    @table.ChildContent(_fieldModel)
+                                </TableRow>
+                            }
+                        </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
@@ -241,9 +246,16 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                            <TableRow @key="currentRowData.Data" TItem="TItem">
-                                @table.ChildContent(currentRowData.Data)
-                            </TableRow>
+                            @if (table.RowTemplate != null)
+                            {
+                                @table.RowTemplate(currentRowData)
+                            }
+                            else
+                            {
+                                <TableRow @key="currentRowData.Data">
+                                    @table.ChildContent(currentRowData.Data)
+                                </TableRow>
+                            }
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
