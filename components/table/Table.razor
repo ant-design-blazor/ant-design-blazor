@@ -125,7 +125,7 @@
 {
     RenderFragment<Table<TItem>> header = table =>
   @<Template>
-                @{
+       @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
         <thead class="ant-table-thead">
@@ -246,9 +246,9 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                            @if (table.ItemTemplate != null)
+                            @if (table.RowTemplate != null)
                             {
-                                @table.ItemTemplate(currentRowData)
+                                @table.RowTemplate(currentRowData)
                             }
                             else
                             {

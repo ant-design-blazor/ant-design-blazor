@@ -44,13 +44,10 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> RowTemplate { get; set; }
+        public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> Columns { get; set; }
-
-        [Parameter]
-        public RenderFragment<RowData<TItem>> ItemTemplate { get; set; }
+        public RenderFragment<TItem> ColumnDefinitions { get; set; }
 
         [Parameter]
         public RenderFragment<TItem> HeaderTemplate { get; set; }
@@ -103,7 +100,7 @@ namespace AntDesign
         public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
-        public TableSize Size { get; set; }
+        public TableSize Size { get; set; } = TableSize.Default;
 
         [Parameter]
         public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
@@ -212,7 +209,7 @@ namespace AntDesign
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
-        bool ITable.HasItemTemplate => ItemTemplate != null;
+        bool ITable.HasRowTemplate => RowTemplate != null;
 
         TableLocale ITable.Locale => this.Locale;
 
@@ -481,14 +478,9 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (RowTemplate != null)
+            if (ColumnDefinitions != null)
             {
-                ChildContent = RowTemplate;
-            }
-
-            if (Columns != null)
-            {
-                ChildContent = Columns;
+                ChildContent = ColumnDefinitions;
             }
 
             this.ColumnContext = new ColumnContext(this);

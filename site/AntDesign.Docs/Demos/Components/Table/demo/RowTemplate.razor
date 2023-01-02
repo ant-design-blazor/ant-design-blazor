@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@data" Bordered Size="TableSize.Middle" ScrollX="1350" ScrollY="600">
-    <Columns>
+<Table DataSource="@data" Bordered Size="TableSize.Small" ScrollX="1350" ScrollY="600">
+    <ColumnDefinitions>
         <ColumnDefinition Width="100" Fixed="left" />
         <ColumnDefinition Width="200" />
         <ColumnDefinition Width="200" />
@@ -9,7 +9,7 @@
         <ColumnDefinition Width="200" />
         <ColumnDefinition />
         <ColumnDefinition Width="80" Fixed="right" />
-    </Columns>
+    </ColumnDefinitions>
     <HeaderTemplate>
         <TableRow>
             <SimpleTableHeader RowSpan="2">Avatar</SimpleTableHeader>
@@ -25,7 +25,7 @@
             <SimpleTableHeader ColSpan="3">Company Address</SimpleTableHeader>
         </TableRow>
     </HeaderTemplate>
-    <ItemTemplate>
+    <RowTemplate>
         <TableRow>
             <TableCell RowSpan="2"><Avatar Size="64" Icon="user" /></TableCell>
             <TableCell>@context.Data.Name</TableCell>
@@ -39,7 +39,7 @@
             <TableCell ColSpan="2">@context.Data.CompanyName</TableCell>
             <TableCell ColSpan="3">@context.Data.CompanyAddress</TableCell>
         </TableRow>
-    </ItemTemplate>
+    </RowTemplate>
 </Table>
 
 @code{

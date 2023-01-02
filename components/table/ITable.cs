@@ -49,7 +49,7 @@ namespace AntDesign
 
         internal bool HasHeaderTemplate { get; }
 
-        internal bool HasItemTemplate { get; }
+        internal bool HasRowTemplate { get; }
 
         internal void SelectionChanged();
 

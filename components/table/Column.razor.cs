@@ -200,7 +200,7 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                if (!Table.HasItemTemplate)
+                if (!Table.HasRowTemplate)
                 {
                     SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
                 }
