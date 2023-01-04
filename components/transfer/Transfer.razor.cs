@@ -93,6 +93,31 @@ namespace AntDesign
                 .Add(PrefixName)
                 .If($"{PrefixName}-rtl", () => RTL);
 
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var needRefresh = false;
+            if (parameters.TryGetValue(nameof(TargetKeys), out string[] newTargetKeys))
+            {
+                needRefresh |= TargetKeys != newTargetKeys;
+            }
+
+            if (parameters.TryGetValue(nameof(SelectedKeys), out string[] newSelectedKeys))
+            {
+                needRefresh |= SelectedKeys != newSelectedKeys;
+            }
+
+            await base.SetParametersAsync(parameters);
+
+            if (needRefresh)
+            {
+                RefreshKeys();
+            }
+        }
+
+        private void RefreshKeys()
+        {
             _targetKeys = TargetKeys.ToList();
             var selectedKeys = SelectedKeys.ToList();
             _sourceSelectedKeys = selectedKeys.Where(key => !_targetKeys.Contains(key)).ToList();
