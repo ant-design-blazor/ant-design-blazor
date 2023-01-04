@@ -236,7 +236,7 @@ namespace AntDesign
         public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
 
         [Parameter]
-        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+        public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         [Parameter]
         public Func<DateTime, int[]> DisabledHours { get; set; } = null;
