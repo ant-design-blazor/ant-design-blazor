@@ -687,6 +687,8 @@ namespace AntDesign
             DomEventListener.DisposeExclusive();
 
             _panes.Clear();
+            _tabs.Clear();
+            _invisibleTabs.Clear();
 
             base.Dispose(disposing);
         }
