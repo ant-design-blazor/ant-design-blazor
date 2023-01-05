@@ -19,7 +19,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
         /// </summary>
@@ -133,7 +132,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnClose { get; set; }
 
-
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
@@ -156,7 +154,6 @@ namespace AntDesign
         public Card Card { get; set; }
 
         #endregion Parameters
-
 
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
@@ -339,7 +336,6 @@ namespace AntDesign
                 tab.Close();
                 pane.Close();
 
-
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
@@ -398,7 +394,7 @@ namespace AntDesign
             if (tab == null || tabPane == null)
                 return;
 
-            if (tabPane.Disabled)
+            if (_activeKey != null && tabPane.Disabled)
             {
                 return;
             }
