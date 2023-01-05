@@ -57,7 +57,7 @@ export class eventHelper {
 
     if (dom) {
       dom.removeEventListener(eventName, dom[`e_${key}`]);
-      dom[`i_${key}`].dispose();
+      //dom[`i_${key}`].dispose();
     }
   }
 
