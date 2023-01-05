@@ -748,10 +748,7 @@ namespace AntDesign
                     {
                         SelectOptionItems.Remove(selectOption);
                         SelectedOptionItems.Remove(selectOption);
-                        if (selectOption.IsAddedTag && SelectOptions != null)
-                        {
-                            AddedTags.Remove(selectOption);
-                        }
+                        AddedTags.Remove(selectOption);
                     }
 
                     if (IsResponsive)

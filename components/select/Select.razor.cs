@@ -476,24 +476,6 @@ namespace AntDesign
                 return;
             }
 
-            // clear DataSource
-            if (DataSource?.Any() == false && SelectOptionItems.Any())
-            {
-                SelectOptionItems.Clear();
-                SelectedOptionItems.Clear();
-
-                Value = default;
-
-                _datasource = DataSource;
-                _dataSourceShallowCopy = new List<TItem>();
-                _dataSourceCopy = new List<TItem>();
-                TypeDefaultExistsAsSelectOption = false;
-
-                OnDataSourceChanged?.Invoke();
-
-                return;
-            }
-
             // DataSource maybe changed
             if (DataSource != null)
             {
@@ -647,12 +629,11 @@ namespace AntDesign
             if (SelectOptionItems.Any())
             {
                 // Delete items from SelectOptions if it is no longer in the datastore
-                for (var i = SelectOptionItems.Count - 1; i >= 0; i--)
+                foreach (var selectOption in SelectOptionItems)
                 {
-                    var selectOption = SelectOptionItems.ElementAt(i);
                     if (!selectOption.IsAddedTag)
                     {
-                        var exists = _datasource.Where(x => x.Equals(selectOption.Item)).FirstOrDefault();
+                        var exists = _datasource.FirstOrDefault(x => x.Equals(selectOption.Item));
 
                         if (exists is null)
                         {
@@ -749,6 +730,21 @@ namespace AntDesign
                             //SelectedOptionItems.Add(updateSelectOption);
                         }
                         processedSelectedCount--;
+                    }
+                }
+            }
+
+            // add the tag options back in if they were removed since they are separate from the datasource
+            foreach (var tag in AddedTags)
+            {
+                if (!SelectOptionItems.Contains(tag))
+                {
+                    SelectOptionItems.Add(tag);
+
+                    if (tag.IsSelected)
+                    {
+                        processedSelectedCount--;
+                        SelectedOptionItems.Add(tag);
                     }
                 }
             }
