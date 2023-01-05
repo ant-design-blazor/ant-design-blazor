@@ -349,6 +349,10 @@ namespace AntDesign
 
         internal void RemovePane(TabPane tab)
         {
+            // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
+            if (IsDisposed)
+                return;
+
             if (tab.IsTab)
             {
                 var index = _tabs.IndexOf(tab);
@@ -681,6 +685,11 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.DisposeExclusive();
+
+            _panes.Clear();
+            _tabs.Clear();
+            _invisibleTabs.Clear();
+
             base.Dispose(disposing);
         }
     }
