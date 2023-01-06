@@ -708,7 +708,7 @@ namespace AntDesign
                     SelectedOptionItems.Add(selectOption);
                 }
                 selectOption.IsSelected = true;
-                await ValueChanged.InvokeAsync(selectOption.Value);
+                CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
             }
             else
