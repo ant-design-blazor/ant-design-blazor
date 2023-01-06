@@ -7,13 +7,15 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public  interface IAutoCompleteRef
+    public interface IAutoCompleteRef
     {
         void SetInputComponent(IAutoCompleteInput input);
 
         Task InputFocus(FocusEventArgs e);
 
         Task InputInput(ChangeEventArgs args);
+
+        Task InputValueChange(string value);
 
         Task InputKeyDown(KeyboardEventArgs args);
 
@@ -27,8 +29,8 @@ namespace AntDesign
 
         Func<object, object, bool> CompareWith { get; set; }
 
-        object SelectedValue { get;  set; }
+        object SelectedValue { get; set; }
 
-        object ActiveValue { get;  set; }
+        object ActiveValue { get; set; }
     }
 }

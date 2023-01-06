@@ -529,7 +529,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected virtual async void OnInputAsync(ChangeEventArgs args)
+        protected virtual async Task OnInputAsync(ChangeEventArgs args)
         {
             _inputString = args?.Value.ToString();
 

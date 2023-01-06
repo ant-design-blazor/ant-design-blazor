@@ -27,6 +27,9 @@ namespace AntDesign
         [Parameter]
         public bool Backfill { get; set; } = false;
 
+        [Parameter]
+        public int DebounceMilliseconds { get; set; } = 250;
+
         /// <summary>
         /// 列表对象集合
         /// List object collection
@@ -164,7 +167,7 @@ namespace AntDesign
         public object ActiveValue { get; set; }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
         [Parameter]
@@ -184,19 +187,26 @@ namespace AntDesign
 
         #region 子控件触发事件 / Child controls trigger events
 
-        public async Task InputFocus(FocusEventArgs e)
+        public Task InputFocus(FocusEventArgs e)
         {
             if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
+
+            return Task.CompletedTask;
         }
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            SelectedValue = args?.Value;
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
-            StateHasChanged();
+        }
+
+        public Task InputValueChange(string value)
+        {
+            SelectedValue = value;
+            ResetActiveItem();
+            return Task.CompletedTask;
         }
 
         public async Task InputKeyDown(KeyboardEventArgs args)
@@ -360,7 +370,7 @@ namespace AntDesign
                 }
                 else if (DefaultActiveFirstOption == true && items.Count > 0)
                 {
-                    this.ActiveValue = items.FirstOrDefault().Value;
+                    this.ActiveValue = items.FirstOrDefault()?.Value.ToString();
                 }
                 else
                 {
