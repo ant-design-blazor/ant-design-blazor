@@ -57,13 +57,13 @@ namespace AntDesign
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
-        
+
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         [Parameter] public string MatchedStyle { get; set; } = string.Empty;
 
-        [Parameter] public string MatchedClass {get; set; }
-        
+        [Parameter] public string MatchedClass { get; set; }
+
         [Parameter] public string RootValue { get; set; } = "0";
 
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
@@ -365,11 +365,14 @@ namespace AntDesign
                 return;
             }
 
-            // Deselect in Multiple mode
-            var node = SelectOptionItems.Where(o => o.Value == args.Node.Key).FirstOrDefault();
-            if (node != null)
+            if (Multiple)
             {
-                await SetValueAsync(node);
+                // Deselect in Multiple mode
+                var node = SelectOptionItems.Where(o => o.Value == args.Node.Key).FirstOrDefault();
+                if (node != null)
+                {
+                    await SetValueAsync(node);
+                }
             }
         }
 

@@ -708,7 +708,7 @@ namespace AntDesign
                     SelectedOptionItems.Add(selectOption);
                 }
                 selectOption.IsSelected = true;
-                await ValueChanged.InvokeAsync(selectOption.Value);
+                CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
             }
             else
@@ -906,7 +906,7 @@ namespace AntDesign
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
-                Value = default;
+                CurrentValue = default;
                 await ClearSelectedAsync();
             }
             else if (_hasValueOnClear)
@@ -914,7 +914,6 @@ namespace AntDesign
                 var selectOption = SelectOptionItems.Where(o => EqualityComparer<TItemValue>.Default.Equals(o.Value, _valueOnClear)).FirstOrDefault();
                 if (selectOption != null)
                 {
-                    Value = selectOption.Value;
                     await SetValueAsync(selectOption);
                 }
                 else
@@ -924,8 +923,7 @@ namespace AntDesign
 
                     ActiveOption = SelectOptionItems.FirstOrDefault();
                     SelectedOptionItems.Clear();
-                    Value = _valueOnClear;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _valueOnClear;
                 }
             }
             else
@@ -935,8 +933,7 @@ namespace AntDesign
                     SelectedOptionItems[0].IsSelected = false;
                     SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
                     SelectedOptionItems[0].IsSelected = true;
-                    Value = _selectOptionEqualToTypeDefault.Value;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
                 {
