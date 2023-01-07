@@ -312,9 +312,13 @@ namespace AntDesign
                 Attributes?.Add("maxlength", MaxLength);
             }
 
+            if (AllowClear)
+            {
+                AffixWrapperClass += $" {PrefixCls}-affix-wrapper-input-with-clear-btn";
+            }
+
             if (Disabled)
             {
-                // TODO: disable element
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-disabled");
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
@@ -550,7 +554,6 @@ namespace AntDesign
                 if (AddOnBefore != null || AddOnAfter != null)
                 {
                     container = "groupWrapper";
-                    _hasAffixWrapper = true;
                     builder.OpenElement(1, "span");
                     builder.AddAttribute(2, "class", GroupWrapperClass);
                     builder.AddAttribute(3, "style", WrapperStyle);
@@ -560,7 +563,6 @@ namespace AntDesign
 
                 if (AddOnBefore != null)
                 {
-                    _hasAffixWrapper = true;
                     // addOnBefore
                     builder.OpenElement(11, "span");
                     builder.AddAttribute(12, "class", $"{PrefixCls}-group-addon");
@@ -568,15 +570,19 @@ namespace AntDesign
                     builder.CloseElement();
                 }
 
-                if (Prefix != null || Suffix != null)
+                if (Prefix != null || Suffix != null || AllowClear)
                 {
                     _hasAffixWrapper = true;
+                }
+
+                if (_hasAffixWrapper)
+                {
                     builder.OpenElement(21, "span");
                     builder.AddAttribute(22, "class", AffixWrapperClass);
                     if (container == "input")
                     {
                         container = "affixWrapper";
-                        builder.AddAttribute(3, "style", WrapperStyle);
+                        builder.AddAttribute(23, "style", WrapperStyle);
                     }
                     if (WrapperRefBack != null)
                     {
@@ -586,7 +592,6 @@ namespace AntDesign
 
                 if (Prefix != null)
                 {
-                    _hasAffixWrapper = true;
                     // prefix
                     builder.OpenElement(31, "span");
                     builder.AddAttribute(32, "class", $"{PrefixCls}-prefix");
@@ -618,7 +623,7 @@ namespace AntDesign
                     }
                 }
 
-                builder.AddAttribute(50, "Id", Id);
+                builder.AddAttribute(50, "id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValueAsString);
@@ -659,7 +664,6 @@ namespace AntDesign
 
                 if (Suffix != null || AllowClear)
                 {
-                    _hasAffixWrapper = true;
                     // suffix
                     builder.OpenElement(91, "span");
                     builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
@@ -671,14 +675,13 @@ namespace AntDesign
                     builder.CloseElement();
                 }
 
-                if (Prefix != null || Suffix != null)
+                if (_hasAffixWrapper)
                 {
                     builder.CloseElement();
                 }
 
                 if (AddOnAfter != null)
                 {
-                    _hasAffixWrapper = true;
                     // addOnAfter
                     builder.OpenElement(100, "span");
                     builder.AddAttribute(101, "class", $"{PrefixCls}-group-addon");
