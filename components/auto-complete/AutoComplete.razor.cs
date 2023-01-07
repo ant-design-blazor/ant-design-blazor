@@ -180,6 +180,8 @@ namespace AntDesign
 
         private IAutoCompleteInput _inputComponent;
 
+        private IList<AutoCompleteDataItem<TOption>> _filteredOptions;
+
         public void SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
@@ -244,7 +246,7 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            ResetActiveItem();
+            UpdateFilteredOptions();
         }
 
         protected override async Task OnFirstAfterRenderAsync()
@@ -356,10 +358,16 @@ namespace AntDesign
                 _inputComponent.SetValue(this.ActiveValue);
         }
 
+        public void UpdateFilteredOptions()
+        {
+            _filteredOptions = GetOptionItems();
+            _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+        }
+
         private void ResetActiveItem()
         {
-            var items = GetOptionItems();
-            _isOptionsZero = items.Count == 0 && Options != null;
+            var items = _filteredOptions;
+
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {
                 // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
