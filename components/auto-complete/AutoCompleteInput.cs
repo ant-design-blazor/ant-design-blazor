@@ -13,6 +13,7 @@ namespace AntDesign
         {
             AutoComplete = false;
             Type = "search";
+            BindOnInput = true;
         }
 
         [CascadingParameter]
