@@ -933,7 +933,7 @@ namespace AntDesign
                     SelectedOptionItems[0].IsSelected = false;
                     SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
                     SelectedOptionItems[0].IsSelected = true;
-                    CurrentValue = _selectOptionEqualToTypeDefault.Value;\
+                    CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
                 {
