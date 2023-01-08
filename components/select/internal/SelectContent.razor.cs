@@ -33,8 +33,6 @@ namespace AntDesign.Select.Internal
             set
             {
                 _prefix = value;
-                if (_isInitialized)
-                    SetInputWidth();
             }
         }
 
@@ -90,6 +88,7 @@ namespace AntDesign.Select.Internal
         private Guid _internalId = Guid.NewGuid();
         private bool _refocus;
         private Timer _debounceTimer;
+        private string _inputString;
 
         protected override void OnInitialized()
         {
@@ -166,7 +165,7 @@ namespace AntDesign.Select.Internal
                 _overflowElement = entry;
 
             //distance between items is margin-inline-left=4px
-            decimal accumulatedWidth = _prefixElement.Width + _suffixElement.Width + (4 + (SearchValue?.Length ?? 0) * 8);
+            decimal accumulatedWidth = _prefixElement.Width + _suffixElement.Width + (4 + (_inputString?.Length ?? 0) * 8);
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
@@ -229,6 +228,9 @@ namespace AntDesign.Select.Internal
 
         private async Task OnInputChange(ChangeEventArgs e)
         {
+            _inputString = e.Value.ToString();
+            SetInputWidth();
+
             if (SearchDebounceMilliseconds == 0)
             {
                 await OnInput.InvokeAsync(e);
@@ -276,12 +278,12 @@ namespace AntDesign.Select.Internal
             }
             if (ParentSelect.SelectMode != SelectMode.Default)
             {
-                if (!string.IsNullOrWhiteSpace(SearchValue))
+                if (!string.IsNullOrWhiteSpace(_inputString))
                 {
-                    _inputWidth = $"{_inputWidth}width: {4 + SearchValue.Length * 8}px;";
-                    if (ParentSelect.IsResponsive && _lastInputWidth != SearchValue.Length)
+                    _inputWidth = $"{_inputWidth}width: {4 + _inputString.Length * 8}px;";
+                    if (ParentSelect.IsResponsive && _lastInputWidth != _inputString.Length)
                     {
-                        _lastInputWidth = SearchValue.Length;
+                        _lastInputWidth = _inputString.Length;
                         InvokeAsync(async () => await CalculateResponsiveTags());
                     }
                 }
