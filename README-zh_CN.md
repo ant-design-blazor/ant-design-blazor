@@ -10,7 +10,7 @@
 
 一套基于 Ant Design 和 Blazor 的企业级组件库
 
-![Build](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/ant-design-blazor/ant-design-blazor/nightly-build.yml?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
