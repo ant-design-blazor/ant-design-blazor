@@ -15,6 +15,28 @@ timeline: true
 
 ---
 
+### 0.13.3
+
+`2023-01-09`
+
+- Select
+  - 🐞 修复 标签模式在数据源为空时不保留选中项的问题。[#2986](https://github.com/ant-design-blazor/ant-design-blazor/pull/2986) [@wss-javeney](https://github.com/wss-javeney)
+  - 🐞 修复 Select 下拉列表的边界调整模式为InView。[#2995](https://github.com/ant-design-blazor/ant-design-blazor/pull/2995) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Select 的搜索框字符被隐藏的问题。[#2994](https://github.com/ant-design-blazor/ant-design-blazor/pull/2994) [@ElderJames](https://github.com/ElderJames)
+
+- AutoComplete
+  - 🐞 修复 下拉列表会在页面刷新时自动打开。[#2992](https://github.com/ant-design-blazor/ant-design-blazor/pull/2992) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 输入框的拼写会话和防抖。[#2988](https://github.com/ant-design-blazor/ant-design-blazor/pull/2988) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 修复 当第一个 TabPane 设置了 Disabled 后，首次渲染异常的问题。[#2982](https://github.com/ant-design-blazor/ant-design-blazor/pull/2982) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 关闭异常，阻止在 disposed 后还触发渲染器。[#2981](https://github.com/ant-design-blazor/ant-design-blazor/pull/2981) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 关闭异常，移除了js 中对引用对象的 Dispose 调用。[#2980](https://github.com/ant-design-blazor/ant-design-blazor/pull/2980) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Transfer 在 SelectedKeys 或 TargetKeys 改变时刷新数据。[#2977](https://github.com/ant-design-blazor/ant-design-blazor/pull/2977) [@Magehernan](https://github.com/Magehernan)
+- 🐞 修复  TreeSelect 当绑定了默认值后，不能正确修改值的问题。[#2990](https://github.com/ant-design-blazor/ant-design-blazor/pull/2990) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input Search 组件设置了清除按钮的样式。[#2991](https://github.com/ant-design-blazor/ant-design-blazor/pull/2991) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 RangePicker 自定义禁用日期逻辑叠加默认禁用日期判断。[#2947](https://github.com/ant-design-blazor/ant-design-blazor/pull/2947) [@wss-kroche](https://github.com/wss-kroche)
 
 ### 0.13.2
 

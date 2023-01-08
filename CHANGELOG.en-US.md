@@ -15,6 +15,29 @@ timeline: true
 
 ---
 
+### 0.13.3
+
+`2023-01-09`
+
+- Select
+  - 🐞 Fixed tags mode will retain tag options when datasource is empty. [#2986](https://github.com/ant-design-blazor/ant-design-blazor/pull/2986) [@wss-javeney](https://github.com/wss-javeney)
+  - 🐞 Fixed dropdown boundary adjust mode defult to InView. [#2995](https://github.com/ant-design-blazor/ant-design-blazor/pull/2995) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed search input visual width adjustment issue. [#2994](https://github.com/ant-design-blazor/ant-design-blazor/pull/2994) [@ElderJames](https://github.com/ElderJames)
+  
+- AutoComplete
+  - 🐞 Fixed dropdown would open when page was render. [#2992](https://github.com/ant-design-blazor/ant-design-blazor/pull/2992) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the composition session and debounce  for input. [#2988](https://github.com/ant-design-blazor/ant-design-blazor/pull/2988) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 Fixed exception at first rendering when the first TabPane is set Disabled. [#2982](https://github.com/ant-design-blazor/ant-design-blazor/pull/2982) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed active pane after tabs is dispsed. [#2981](https://github.com/ant-design-blazor/ant-design-blazor/pull/2981) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed close exception, remove dispose call after event listener is removed. [#2980](https://github.com/ant-design-blazor/ant-design-blazor/pull/2980) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Transfer refresh data on change SelectedKeys or TargetKeys parameters. [#2977](https://github.com/ant-design-blazor/ant-design-blazor/pull/2977) [@Magehernan](https://github.com/Magehernan)
+- 🐞 Fixed TreeSelect value bind incorrectly when default value was set. [#2990](https://github.com/ant-design-blazor/ant-design-blazor/pull/2990) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input Search wrong style with clear button. [#2991](https://github.com/ant-design-blazor/ant-design-blazor/pull/2991) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed RangePicker disabled date logic to always apply default logic even when custom is provided. This keeps ranges in the proper order even with custom disabled logic. [#2947](https://github.com/ant-design-blazor/ant-design-blazor/pull/2947) [@wss-kroche](https://github.com/wss-kroche)
+
 ### 0.13.2
 
 `2022-12-31`
