@@ -58,6 +58,12 @@ namespace AntDesign
         protected Action<TItem, TItemValue> _setValue;
 
         /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
+        /// <summary>
         /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default
         /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
         /// unless used with <see cref="ValueOnClear"/>.

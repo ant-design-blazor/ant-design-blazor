@@ -23,12 +23,6 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
-        /// </summary>
-        [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
-
-        /// <summary>
         /// Toggle the border style.
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
