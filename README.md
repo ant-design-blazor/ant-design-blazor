@@ -10,7 +10,7 @@
 
 A rich set of enterprise-class UI components based on Ant Design and Blazor.
 
-![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/ant-design-blazor/ant-design-blazor/nightly-build.yml?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
@@ -136,7 +136,7 @@ Options for the template：
 
 - To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.
 
-  ```
+  ```diff
   <Router AppAssembly="@typeof(MainLayout).Assembly">
       <Found Context="routeData">
           <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -148,7 +148,7 @@ Options for the template：
       </NotFound>
   </Router>
 
-  <AntContainer />   <-- add this component ✨
+  +  <AntContainer />   <-- add this component ✨
   ```
 
 - Finally, it can be referenced in the `.razor` component!
@@ -199,14 +199,6 @@ Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/is
 
 If you would like to contribute, feel free to create a [Pull Request](https://github.com/ant-design-blazor/ant-design-blazor/pulls), or give us [Bug Report](https://github.com/ant-design-blazor/ant-design-blazor/issues/new).
 
-### Contributors
-
-This project exists thanks to all the people who contribute.
-
-<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor" />
-</a>
-
 ## 💕 Donation
 
 This project is an MIT-licensed open source project. In order to achieve better and sustainable development of the project, we expect to gain more backers. We will use the proceeds for community operations and promotion. You can support us in any of the following ways:
@@ -229,6 +221,15 @@ If you encounter any problems in the process, feel free to ask for help via foll
     <summary>Scan QR Code with DingTalk</summary>
     <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/docs/assets/dingtalk.jpg" width="300">
   </details>
+
+## Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor&max=1000&columns=15&anon=1" />
+</a>
+
 
 ## Code of Conduct
 

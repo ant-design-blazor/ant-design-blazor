@@ -10,7 +10,7 @@
 
 一套基于 Ant Design 和 Blazor 的企业级组件库
 
-![Build](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/ant-design-blazor/ant-design-blazor/nightly-build.yml?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
@@ -131,7 +131,7 @@ WebAssembly 静态托管页面示例
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
 
-  ```
+  ```diff
   <Router AppAssembly="@typeof(MainLayout).Assembly">
       <Found Context="routeData">
           <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -143,7 +143,7 @@ WebAssembly 静态托管页面示例
       </NotFound>
   </Router>
 
-  <AntContainer />   <-- 在这里添加 ✨
+  + <AntContainer />   <-- 在这里添加 ✨
   ```
 
 - 最后就可以在`.razor`组件中引用啦！
@@ -195,14 +195,6 @@ WebAssembly 静态托管页面示例
 
 如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ant-design-blazor/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ant-design-blazor/ant-design-blazor/issues/new) 。
 
-### 贡献者
-
-感谢所有为本项目做出过贡献的朋友。
-
-<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor" />
-</a>
-
 ## 💕 支持本项目
 
 本项目以 MIT 协议开源，为了能得到够更好的且可持续的发展，我们期望获得更多的支持者，我们将把所得款项用于社区活动和推广。你可以通过如下任何一种方式支持我们:
@@ -224,6 +216,14 @@ WebAssembly 静态托管页面示例
   <img src="/docs/assets/dingtalk.jpg" width="200">
 
 - 另外，我还创立了面向中文开发者的 Blazor 中文社区，高手如云，只讨论技术，无卖课广告。可以加我微信（JamesYeungMVP）拉进微信群，另外也有一个 QQ 群 1012762441。广告勿扰。
+
+## 贡献者
+
+感谢所有为本项目做出过贡献的朋友。
+
+<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor&max=1000&columns=15&anon=1" />
+</a>
 
 ## 行为准则
 
