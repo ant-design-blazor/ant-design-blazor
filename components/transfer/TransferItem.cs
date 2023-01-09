@@ -2,7 +2,7 @@
 
 namespace AntDesign
 {
-    public class TransferItem
+    public record struct TransferItem
     {
         public string Key { get; set; } = "";
 
@@ -10,9 +10,13 @@ namespace AntDesign
 
         public string Description { get; set; } = "";
 
-        public bool Disabled { get; set; }
+        public bool Disabled { get; set; } = false;
 
         private readonly IDictionary<string, object> _properties = new Dictionary<string, object>();
+
+        public TransferItem()
+        {
+        }
 
         public object this[string index]
         {
