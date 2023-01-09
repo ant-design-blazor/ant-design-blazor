@@ -394,7 +394,9 @@ namespace AntDesign
             if (tab == null || tabPane == null)
                 return;
 
-            if (_activeKey != null && tabPane.Disabled)
+            // Even if a TabPane is disabled, it is allowed to be activated at initial load time (at initial load time, _activeTab is null)
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/2732
+            if (_activeTab != null && tabPane.Disabled)
             {
                 return;
             }
