@@ -22,6 +22,16 @@
 		await InvokeAsync(StateHasChanged);
 
 		await Task.Delay(500);
+
+		_data[1].Children = new Data[]
+		{
+			new() {
+				Key = "21",
+				Name = "Jim Green",
+				Age = 42,
+				Address = "London No. 1 Lake Park",
+			},
+		};
 	}
 
 	Data[] data =
@@ -33,7 +43,7 @@
 			Gender = Gender.Male,
 			Address = "New York No. 1 Lake Park",
 		},
-		new() {
+				new() {
 			Key = "2",
 			Name = "Joe",
 			Age = 32,
@@ -41,53 +51,55 @@
 			Address = "Sidney No. 1 Lake Park",
 		},
 		new() {
-			Key = "11",
+					Key = "11",
 			Name = "Jim",
-			Age = 42,
+					Age = 42,
 			Gender = Gender.Male,
-			Address = "London No. 1 Lake Park",
-		},
-		new() {
-			Key= "12",
+					Address = "London No. 1 Lake Park",
+				},
+				new() {
+					Key= "12",
 			Name= "John",
-			Age=30,
+					Age=30,
 			Gender = Gender.Female,
-			Address= "New York No. 3 Lake Park",
+					Address= "New York No. 3 Lake Park",
 		},
-		new() {
-			Key= "121",
+						  new() {
+							  Key= "121",
 			Name= "Jimmy",
-			Age= 16,
+							  Age= 16,
 			Gender = Gender.Male,
-			Address= "New York No. 3 Lake Park",
-		},
-		new() {
-			Key= "13",
+							  Address= "New York No. 3 Lake Park",
+						},
+				}
+				},
+				new() {
+					Key= "13",
 			Name= "Jim",
-			Age= 72,
+					Age= 72,
 			Gender = Gender.Female,
 			Address= "London No. 1 Lake Park"
 		},
-		new() {
-			Key= "131",
+						new() {
+							Key= "131",
 			Name= "Jim",
-			Age= 42,
+							Age= 42,
 			Gender = Gender.Male,
 			Address= "London No. 2 Lake Park"
 		},
-		new() {
-			Key= "1311",
+								new() {
+									Key= "1311",
 			Name= "Jim",
-			Age= 25,
+									Age= 25,
 			Gender = Gender.Female,
-			Address= "London No. 3 Lake Park",
-		},
-		new() {
-			Key= "1312",
+									Address= "London No. 3 Lake Park",
+								},
+								new() {
+								   Key= "1312",
 			Name= "Jimmy",
-			Age= 18,
+								   Age= 18,
 			Gender = Gender.Male,
-			Address= "London No. 4 Lake Park",
+								   Address= "London No. 4 Lake Park",
 		}
 	};
 
@@ -113,5 +125,7 @@
 
 		[DisplayName("Address")]
 		public string Address { get; set; }
+
+		public Data[] Children { get; set; }
 	}
 }
