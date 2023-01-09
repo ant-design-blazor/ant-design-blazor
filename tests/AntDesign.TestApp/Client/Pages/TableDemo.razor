@@ -22,6 +22,16 @@
 		await InvokeAsync(StateHasChanged);
 
 		await Task.Delay(500);
+
+		_data[1].Children = new Data[]
+		{
+			new() {
+				Key = "21",
+				Name = "Jim Green",
+				Age = 42,
+				Address = "London No. 1 Lake Park",
+			},
+		};
 	}
 
 	Data[] data =
@@ -115,5 +125,7 @@
 
 		[DisplayName("Address")]
 		public string Address { get; set; }
+
+		public Data[] Children { get; set; }
 	}
 }
