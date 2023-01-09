@@ -92,7 +92,6 @@ namespace AntDesign
             ClassMapper
                 .Add(PrefixName)
                 .If($"{PrefixName}-rtl", () => RTL);
-
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -106,6 +105,11 @@ namespace AntDesign
             if (parameters.TryGetValue(nameof(SelectedKeys), out string[] newSelectedKeys))
             {
                 needRefresh |= SelectedKeys != newSelectedKeys;
+            }
+
+            if (parameters.TryGetValue(nameof(DataSource), out IList<TransferItem> dataSource))
+            {
+                needRefresh |= DataSource == null || dataSource == null || DataSource.SequenceEqual(dataSource);
             }
 
             await base.SetParametersAsync(parameters);
