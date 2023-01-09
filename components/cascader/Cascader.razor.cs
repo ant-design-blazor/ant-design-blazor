@@ -16,7 +16,7 @@ namespace AntDesign
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>
-        [Parameter] public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
+        [Parameter] public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         [Parameter] public bool ChangeOnSelect { get; set; }
 
