@@ -555,11 +555,6 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
-            if (_renderedActivePane == _activePane)
-            {
-                return;
-            }
-
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
