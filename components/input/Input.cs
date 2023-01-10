@@ -356,6 +356,13 @@ namespace AntDesign
             SetClasses();
         }
 
+        internal override void UpdateStyles()
+        {
+            base.UpdateStyles();
+            SetClasses();
+            StateHasChanged();
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

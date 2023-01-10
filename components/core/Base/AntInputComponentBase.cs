@@ -356,6 +356,10 @@ namespace AntDesign
             this.ValidationMessages = validationMessages;
         }
 
+        internal virtual void UpdateStyles()
+        {
+        }
+
         internal virtual void ResetValue()
         {
             _isNotifyFieldChanged = false;

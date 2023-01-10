@@ -128,8 +128,13 @@ namespace AntDesign
             get => _validateStatus;
             set
             {
-                _validateStatus = value;
                 _originalValidateStatus ??= value;
+
+                if (_validateStatus != value)
+                {
+                    _validateStatus = value;
+                    _vaildateStatusChanged?.Invoke();
+                }
             }
         }
 
@@ -166,6 +171,14 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
+        private FieldIdentifier _fieldIdentifier;
+        private PropertyInfo _fieldPropertyInfo;
+
+        private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+        private FormValidateStatus _validateStatus;
+        private FormValidateStatus? _originalValidateStatus;
+        private Action _vaildateStatusChanged;
+
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
             builder.OpenElement(1, "span");
@@ -178,13 +191,6 @@ namespace AntDesign
             builder.CloseElement();
         }
         : null;
-
-        private FieldIdentifier _fieldIdentifier;
-        private PropertyInfo _fieldPropertyInfo;
-
-        private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
-        private FormValidateStatus _validateStatus;
-        private FormValidateStatus? _originalValidateStatus;
 
         protected override void OnInitialized()
         {
@@ -318,6 +324,8 @@ namespace AntDesign
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;
+
+            _vaildateStatusChanged = () => control.UpdateStyles();
 
             if (control.FieldIdentifier.Model == null)
             {
