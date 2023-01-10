@@ -405,7 +405,7 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(ValueName));
             }
 
-            SetClassMap();
+            //SetClassMap();
 
             if (string.IsNullOrWhiteSpace(Style))
                 Style = DefaultWidth;
@@ -749,7 +749,7 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
-            ClassMapper.Clear()
+            ClassMapper
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
@@ -764,7 +764,8 @@ namespace AntDesign
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
-                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0);
+
+                ;
         }
 
         /// <summary>
@@ -1792,7 +1793,7 @@ namespace AntDesign
             {
                 Focused = false;
 
-                SetClassMap();
+                //SetClassMap();
 
                 await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
 

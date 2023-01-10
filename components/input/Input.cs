@@ -301,7 +301,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
-                .If($"{PrefixCls}-status-error", () => ValidationMessages.Length > 0)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
@@ -334,16 +334,36 @@ namespace AntDesign
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
             }
 
-            if (ValidationMessages.Length > 0)
+            //if (ValidationMessages.Length > 0)
+            //{
+            //    AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-status-error");
+            //}
+
+            if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
             {
-                AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-status-error");
+                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLower()}";
             }
+
+            if (FormItem is { HasFeedback: true })
+            {
+                AffixWrapperClass += " ant-input-affix-wrapper-has-feedback";
+            }
+        }
+
+        internal override void OnValidated(string[] validationMessages)
+        {
+            base.OnValidated(validationMessages);
+            SetClasses();
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
 
+            if (Form?.ValidateOnChange == true)
+            {
+                BindOnInput = true;
+            }
             SetClasses();
         }
 
@@ -426,27 +446,26 @@ namespace AntDesign
             _compositionInputting = false;
         }
 
-        private RenderFragment ToggleClearBtn()
+        protected RenderFragment ClearIcon => builder =>
         {
-            return builder =>
+            builder.OpenElement(31, "span");
+            builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
+                (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
+                (string.IsNullOrEmpty(_inputString) ? $"{PrefixCls}-clear-icon-hidden " : ""));
+
+            builder.OpenComponent<Icon>(33);
+
+            builder.AddAttribute(34, "Type", "close-circle");
+            builder.AddAttribute(35, "Theme", "fill");
+
+            builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
             {
-                builder.OpenElement(31, "span");
-                builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
-                    (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
-                    (string.IsNullOrEmpty(_inputString) ? $"{PrefixCls}-clear-icon-hidden " : ""));
+                await Clear();
+            }));
 
-                builder.OpenComponent<Icon>(33);
-                builder.AddAttribute(34, "Type", "close-circle");
-                builder.AddAttribute(35, "Theme", "fill");
-
-                builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
-                {
-                    await Clear();
-                }));
-                builder.CloseComponent();
-                builder.CloseElement();
-            };
-        }
+            builder.CloseComponent();
+            builder.CloseElement();
+        };
 
         protected void DebounceChangeValue()
         {
@@ -570,7 +589,7 @@ namespace AntDesign
                     builder.CloseElement();
                 }
 
-                if (Prefix != null || Suffix != null || AllowClear)
+                if (Prefix != null || Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
                 {
                     _hasAffixWrapper = true;
                 }
@@ -662,16 +681,24 @@ namespace AntDesign
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
-                if (Suffix != null || AllowClear)
+                if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
                 {
                     // suffix
                     builder.OpenElement(91, "span");
                     builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
+
                     if (AllowClear)
                     {
-                        builder.AddContent(93, ToggleClearBtn());
+                        builder.AddContent(93, ClearIcon);
                     }
+
                     builder.AddContent(94, Suffix);
+
+                    if (FormItem?.FeedbackIcon != null)
+                    {
+                        builder.AddContent(95, FormItem.FeedbackIcon);
+                    }
+
                     builder.CloseElement();
                 }
 
