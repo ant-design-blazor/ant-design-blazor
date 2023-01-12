@@ -1,4 +1,4 @@
-using AntDesign.TestApp.Server.Data;
+﻿using AntDesign.TestApp.Server.Data;
 using AntDesign.TestApp.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +48,10 @@ namespace AntDesign.TestApp.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var factory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            var db = factory.CreateScope().ServiceProvider.GetService<ApplicationDbContext>();
+            db.Database.EnsureCreated();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
