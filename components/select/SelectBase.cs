@@ -1012,6 +1012,19 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Unhide all select options, except any that are selected in the case that <see cref="HideSelected"/> is true
+        /// </summary>
+        protected void UnhideSelectOptions()
+        {
+            var hiddenOptions = SelectOptionItems.Where(x => x.IsHidden);
+
+            foreach (var option in hiddenOptions)
+            {
+                option.IsHidden = HideSelected && option.IsSelected;
+            }
+        }
+
         protected abstract void SetClassMap();
     }
 }
