@@ -24,12 +24,13 @@
             .SetResult(_textAreaInfo);
 		string value = "0123456789";
 		var cut = Render(
-    @<AntDesign.TextArea ShowCount MaxLength=100 Value=@value/>);
+    @<AntDesign.TextArea ShowCount MaxLength=100 Value=@value />);
 		//Act
 		var divWrapper = cut.Find("div");
 		var attribute = divWrapper.GetAttribute("data-count");
+        
 		//Assert           
-		attribute.Should().Be(value.Length.ToString());		
+        attribute.Should().Be($"{value.Length} / 100");
 	}
 
 	[Fact]
@@ -49,7 +50,7 @@
         var divWrapper = cut.Find("div");
         var attribute = divWrapper.GetAttribute("data-count");
         //Assert				
-        attribute.Should().Be(newValue.Length.ToString());
+        attribute.Should().Be($"{newValue.Length} / 100");
     }
 
     [Fact]

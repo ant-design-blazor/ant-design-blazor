@@ -141,6 +141,7 @@ namespace AntDesign
                 if (base.Value != value)
                 {
                     _valueHasChanged = true;
+                    _inputString = value;
                 }
                 base.Value = value;
             }
