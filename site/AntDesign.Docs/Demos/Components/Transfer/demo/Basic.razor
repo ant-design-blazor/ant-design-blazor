@@ -1,7 +1,7 @@
 ﻿<div>
     <Transfer DataSource="_dataSource"
               Disabled="_disabled"
-              TargetKeys="_targetKeys.ToArray()"
+              TargetKeys="_targetKeys"
               SelectedKeys="_selectedKeys"
               Titles="_titles"
               OnChange="OnChange"
@@ -9,13 +9,19 @@
               OnSelectChange="OnSelectChange">
     </Transfer>
 
-    <Switch Style="margin-top: 16px;" OnChange="OnSwitchChange"></Switch>
+    <br />
+    <br />
+
+    <Switch OnChange="OnSwitchChange"></Switch>
+    <Button OnClick="UpdateDataSource">Update DataSource</Button>
+    <Button OnClick="UpdateTargetKeys">Update TargetKeys</Button>
+    <Button OnClick="UpdateSelectedKeys">Update SelectedKeys</Button>
 </div>
 
 @code {
     private List<TransferItem> _dataSource = new List<TransferItem>();
     private List<string> _targetKeys = new List<string>();
-    private string[] _selectedKeys = Array.Empty<string>();
+    private List<string> _selectedKeys = new List<string>();
     private string[] _titles = { "Source", "Target" };
     private bool _disabled = false;
 
@@ -41,6 +47,45 @@
     {
         _disabled = check;
     }
+
+    void UpdateDataSource()
+    {
+        _dataSource = new List<TransferItem>();
+
+        for (int i = 0; i < 30; i++)
+        {
+            _dataSource.Add(new TransferItem
+                {
+                    Title = $"Content{i + 1} Update",
+                    Description = $"description of content{i + 1}",
+                    Key = i.ToString(),
+                    Disabled = i % 3 < 1
+                });
+        }
+    }
+
+    void UpdateTargetKeys()
+    {
+        _targetKeys = new List<string>();
+
+        for (int i = 0; i < 20; i++)
+        {
+            if (i % 2 == 0)
+                _targetKeys.Add(i.ToString());
+        }
+    }
+
+    void UpdateSelectedKeys()
+    {
+        _selectedKeys = new List<string>();
+
+        for (int i = 0; i < 20; i++)
+        {
+            if (i % 2 == 0)
+                _selectedKeys.Add(i.ToString());
+        }
+    }
+
 
     private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
     {
