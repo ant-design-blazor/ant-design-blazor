@@ -428,8 +428,6 @@ namespace AntDesign
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
-                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0)
-                .If($"{ClassPrefix}-status-warning", () => Status == "warning")
                 .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
         }

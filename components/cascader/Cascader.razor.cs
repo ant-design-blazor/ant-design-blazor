@@ -98,9 +98,10 @@ namespace AntDesign
         {
             base.OnInitialized();
             string prefixCls = "ant-cascader";
+            string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-allow-clear ant-select-show-arrow")
+                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
                 .If("ant-select-open", () => _dropdownOpened)
@@ -110,7 +111,10 @@ namespace AntDesign
                 .If($"ant-select-lg", () => Size == "large")
                 .If($"ant-select-sm", () => Size == "small")
                 .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-status-error", () => ValidationMessages.Length > 0)
+                .If("ant-select-allow-clear ", () => AllowClear)
+                .If($"{selectCls}-in-form-item ", () => FormItem != null)
+                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper

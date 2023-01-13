@@ -57,6 +57,8 @@ namespace AntDesign
 
         protected Action<TItem, TItemValue> _setValue;
 
+        internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
+
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>
@@ -208,8 +210,6 @@ namespace AntDesign
         /// Called when the selected items changes.
         /// </summary>
         [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
-
-        [Parameter] public string Status { get; set; }
 
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
@@ -607,6 +607,12 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             SetClassMap();
+
+            var classPrefix = "ant-select";
+            ClassMapper
+                .If($"{classPrefix}-in-form-item ", () => FormItem != null)
+                .If($"{classPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{classPrefix}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
 
             if (string.IsNullOrWhiteSpace(Style))
             {

@@ -282,7 +282,6 @@ namespace AntDesign
                                 AutoFocus = false;
                             }
                         }
-
                     }
                     else if (!isTab)
                     {
@@ -306,7 +305,6 @@ namespace AntDesign
             else if (!isOverlayShown)
                 await _dropDown.Show();
         }
-
 
         private async Task OnFocus(int index)
         {
@@ -633,6 +631,11 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick(0);
+        }
+
+        public bool ShowClear()
+        {
+            return CurrentValue is Array array && (array.GetValue(0) != null || array.GetValue(1) != null) && AllowClear;
         }
     }
 }

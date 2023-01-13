@@ -27,12 +27,12 @@ namespace AntDesign
         protected string PropertyName => _propertyReflector?.PropertyName;
 
         [CascadingParameter(Name = "FormItem")]
-        private IFormItem FormItem { get; set; }
+        protected IFormItem FormItem { get; set; }
 
         [CascadingParameter(Name = "Form")]
         protected IForm Form { get; set; }
 
-        public string[] ValidationMessages { get; set; } = Array.Empty<string>();
+        public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
         private string _formSize;
 
@@ -349,6 +349,15 @@ namespace AntDesign
             Form?.RemoveControl(this);
 
             base.Dispose(disposing);
+        }
+
+        internal virtual void OnValidated(string[] validationMessages)
+        {
+            this.ValidationMessages = validationMessages;
+        }
+
+        internal virtual void UpdateStyles()
+        {
         }
 
         internal virtual void ResetValue()

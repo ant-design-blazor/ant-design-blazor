@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -76,6 +77,9 @@ namespace AntDesign
 
         [Parameter]
         public string PlaceHolder { get; set; }
+
+        [Parameter]
+        public OneOf<string, RenderFragment> Prefix { get; set; }
 
         private static readonly Type _surfaceType = typeof(TValue);
 
@@ -170,6 +174,10 @@ namespace AntDesign
 
         private string _prefixCls = "ant-input-number";
         private string _inputNumberMode = "numeric";
+
+        private ClassMapper _affixWarrperClass = new ClassMapper();
+
+        private bool hasAffixWarrper => FormItem?.FeedbackIcon != null;
 
         public InputNumber()
         {
@@ -291,13 +299,19 @@ namespace AntDesign
 
         private void SetClass()
         {
+            _affixWarrperClass
+                .Add("ant-input-number-affix-wrapper")
+                .If("ant-input-number-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"ant-input-number-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
+            ;
+
             ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-focused", () => _focused)
                 .If($"{_prefixCls}-disabled", () => this.Disabled)
-                .If($"{_prefixCls}-status-error", () => ValidationMessages.Length > 0)
+                .GetIf(() => $"{_prefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{_prefixCls}-rtl", () => RTL);
         }
 

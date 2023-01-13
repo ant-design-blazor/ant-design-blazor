@@ -24,13 +24,32 @@
             .SetResult(_textAreaInfo);
 		string value = "0123456789";
 		var cut = Render(
-    @<AntDesign.TextArea ShowCount MaxLength=100 Value=@value/>);
+    @<AntDesign.TextArea ShowCount MaxLength=100 Value=@value />);
 		//Act
 		var divWrapper = cut.Find("div");
 		var attribute = divWrapper.GetAttribute("data-count");
+        
 		//Assert           
-		attribute.Should().Be(value.Length.ToString());		
+        attribute.Should().Be($"{value.Length} / 100");
 	}
+
+    [Fact]
+    public void TextArea_ShowCount_without_maxlength()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        .SetResult(_textAreaInfo);
+        string value = "0123456789";
+        var cut = Render(
+    @<AntDesign.TextArea ShowCount Value=@value />);
+        //Act
+        var divWrapper = cut.Find("div");
+        var attribute = divWrapper.GetAttribute("data-count");
+
+        //Assert
+        attribute.Should().Be($"{value.Length}");
+    }
 
 	[Fact]
 	public void TextArea_ShowCount_increase()
@@ -49,7 +68,7 @@
         var divWrapper = cut.Find("div");
         var attribute = divWrapper.GetAttribute("data-count");
         //Assert				
-        attribute.Should().Be(newValue.Length.ToString());
+        attribute.Should().Be($"{newValue.Length} / 100");
     }
 
     [Fact]

@@ -28,26 +28,26 @@
                 </div>
                 @if (ShowFooter)
                 {
-                  <div class="@(PrefixCls)-footer">
-                    @if (RenderExtraFooter != null)
-                    {
-                      <div class="@(PrefixCls)-footer-extra">
-                        @RenderExtraFooter
-                      </div>
-                    }
-
-                    @if (ShowRanges)
-                    {
-                      <ul class="@(PrefixCls)-ranges">
-                        @foreach (var range in Ranges)
+                    <div class="@(PrefixCls)-footer">
+                        @if (RenderExtraFooter != null)
                         {
-                          <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
-                            <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
-                          </li>
+                            <div class="@(PrefixCls)-footer-extra">
+                                @RenderExtraFooter
+                            </div>
                         }
-                      </ul>
-                    }
-                  </div>
+
+                        @if (ShowRanges)
+                        {
+                            <ul class="@(PrefixCls)-ranges">
+                                @foreach (var range in Ranges)
+                                {
+                                    <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
+                                        <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
                 }
             </div>
         </Overlay>
@@ -74,6 +74,7 @@
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
                                  HtmlInputSize="@HtmlInputSize"
+                                 FeedbackIcon="@FormItem?.FeedbackIcon"
                                  OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-range-separator">
@@ -101,8 +102,38 @@
                                  AllowClear="@AllowClear"
                                  HtmlInputSize="@HtmlInputSize"
                                  SuffixIcon="@SuffixIcon"
+                                 FeedbackIcon="@FormItem?.FeedbackIcon"
                                  OnClickClear="e => ClearValue(-1)" />
+
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
+
+                <span class="@(PrefixCls)-suffix" @onclick="@(_=> OnSuffixIconClick())">
+                    @if (SuffixIcon != null)
+                    {
+                        @SuffixIcon
+                    }
+                    else if (Picker == DatePickerType.Time)
+                    {
+                        <Icon Type="clock-circle" />
+                    }
+                    else
+                    {
+                        <Icon Type="calendar" />
+                    }
+
+                    @if (FormItem?.FeedbackIcon != null)
+                    {
+                        @FormItem.FeedbackIcon
+                    }
+
+                </span>
+
+                @if (ShowClear())
+                {
+                    <span class="@(PrefixCls)-clear" @onclick="@(e => ClearValue(-1))">
+                        <Icon Type="close-circle" Theme="fill" />
+                    </span>
+                }
             </div>
         </Unbound>
     </OverlayTrigger>

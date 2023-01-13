@@ -123,7 +123,20 @@ namespace AntDesign
         public bool ShowFeedbackOnError { get; set; }
 
         [Parameter]
-        public FormValidateStatus ValidateStatus { get; set; }
+        public FormValidateStatus ValidateStatus
+        {
+            get => _validateStatus;
+            set
+            {
+                _originalValidateStatus ??= value;
+
+                if (_validateStatus != value)
+                {
+                    _validateStatus = value;
+                    _vaildateStatusChanged?.Invoke();
+                }
+            }
+        }
 
         [Parameter]
         public string Help { get; set; }
@@ -138,7 +151,7 @@ namespace AntDesign
             { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
         };
 
-        private bool IsShowIcon => (HasFeedback && _iconMap.ContainsKey(ValidateStatus));
+        private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
 
         private bool IsShowFeedbackOnError => (ShowFeedbackOnError && !_isValid);
 
@@ -155,12 +168,29 @@ namespace AntDesign
         private PropertyReflector _propertyReflector;
 
         private ClassMapper _labelClassMapper = new ClassMapper();
+
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
         private PropertyInfo _fieldPropertyInfo;
 
         private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+        private FormValidateStatus _validateStatus;
+        private FormValidateStatus? _originalValidateStatus;
+        private Action _vaildateStatusChanged;
+
+        RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
+        {
+            builder.OpenElement(1, "span");
+            builder.AddAttribute(2, "class", $"ant-form-item-feedback-icon ant-form-item-feedback-icon-{_validateStatus.ToString().ToLowerInvariant()}");
+
+            builder.OpenComponent<Icon>(11);
+            builder.AddAttribute(12, nameof(Icon.Type), _iconMap[_validateStatus].type);
+            builder.AddAttribute(13, nameof(Icon.Theme), _iconMap[_validateStatus].theme);
+            builder.CloseComponent();
+            builder.CloseElement();
+        }
+        : null;
 
         protected override void OnInitialized()
         {
@@ -196,7 +226,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
-                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => (HasFeedback || IsShowFeedbackOnError) && ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
                 .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
@@ -295,9 +325,12 @@ namespace AntDesign
         {
             if (_control != null) return;
 
+            _vaildateStatusChanged = () => control.UpdateStyles();
+
             if (control.FieldIdentifier.Model == null)
             {
-                throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
+                return;
+                //throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
             }
 
             _fieldIdentifier = control.FieldIdentifier;
@@ -311,8 +344,11 @@ namespace AntDesign
             _validationStateChangedHandler = (s, e) =>
             {
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                this._isValid = !_validationMessages.Any();
-                control.ValidationMessages = _validationMessages;
+                _isValid = !_validationMessages.Any();
+
+                _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
+
+                control.OnValidated(_validationMessages);
 
                 if (!string.IsNullOrWhiteSpace(Help))
                 {
