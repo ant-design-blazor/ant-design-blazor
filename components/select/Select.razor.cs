@@ -1210,7 +1210,7 @@ namespace AntDesign
             }
             else
             {
-                SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
+                UnhideSelectOptions();
                 if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
                 {
                     SelectOptionItems.Remove(CustomTagSelectOptionItem);
@@ -1292,13 +1292,15 @@ namespace AntDesign
                         {
                             item.IsActive = false;
                         }
-                        if (item.IsHidden)
-                            item.IsHidden = false;
+
+                        item.IsHidden = item.IsSelected && HideSelected;
                     }
                     else
                     {
                         if (!item.IsHidden)
+                        {
                             item.IsHidden = true;
+                        }
                         item.IsActive = false;
                     }
                 }
@@ -1339,14 +1341,18 @@ namespace AntDesign
                             }
                         }
                         else if (item.IsActive)
+                        {
                             item.IsActive = false;
-                        if (item.IsHidden)
-                            item.IsHidden = false;
+                        }
+
+                        item.IsHidden = item.IsSelected && HideSelected;
                     }
                     else
                     {
                         if (!item.IsHidden)
+                        {
                             item.IsHidden = true;
+                        }
                         item.IsActive = false;
                     }
                 }
