@@ -51,6 +51,12 @@ namespace AntDesign
         public bool AllowClear { get; set; }
 
         /// <summary>
+        /// Callback when the content is cleared by clicking the "ClearIcon"
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClear { get; set; }
+
+        /// <summary>
         /// Controls the autocomplete attribute of the input HTML element.
         /// Default = true
         /// </summary>
@@ -252,11 +258,15 @@ namespace AntDesign
             IsFocused = true;
             _inputString = null;
             await this.FocusAsync(Ref);
+
             if (OnChange.HasDelegate)
                 await OnChange.InvokeAsync(Value);
-            else
-                //Without the delay, focus is not enforced.
-                await Task.Delay(1);
+
+            if (OnClear.HasDelegate)
+                await OnClear.InvokeAsync(Value);
+
+            //Without the delay, focus is not enforced.
+            await Task.Delay(1);
         }
 
         private string _inputString;
