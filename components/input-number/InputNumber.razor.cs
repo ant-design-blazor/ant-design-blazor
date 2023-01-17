@@ -35,17 +35,10 @@ namespace AntDesign
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
                 var stepStr = Convert.ToDecimal(_step).ToString(nfi);
-                if (string.IsNullOrEmpty(_format))
-                {
-                    _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));
-                }
+                if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
+                    _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
                 else
-                {
-                    if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
-                        _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
-                    else
-                        _decimalPlaces = 0;
-                }
+                    _decimalPlaces = 0;
             }
         }
 
@@ -166,7 +159,6 @@ namespace AntDesign
 
         private string _inputString;
         private bool _focused;
-        private string _format;
         private bool _hasDefaultValue;
         private int? _decimalPlaces;
         private TValue _step;
@@ -522,7 +514,7 @@ namespace AntDesign
                 return _toStringFunc(value, nN);
             }
 
-            return _toStringFunc(value, _format);
+            return _toStringFunc(value, null);
         }
     }
 }
