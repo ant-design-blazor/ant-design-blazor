@@ -177,7 +177,7 @@ namespace AntDesign
 
         private ClassMapper _affixWarrperClass = new ClassMapper();
 
-        private bool hasAffixWarrper => FormItem?.FeedbackIcon != null;
+        private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
 
         public InputNumber()
         {
@@ -511,16 +511,18 @@ namespace AntDesign
                 return Formatter(Value);
             }
 
+            if (EqualityComparer<TValue>.Default.Equals(value, default))
+            {
+                return default(TValue)?.ToString();
+            }
+
             if (Precision > 0 || _decimalPlaces > 0)
             {
                 var nN = "n" + (Precision > 0 ? Precision : _decimalPlaces.Value);
                 return _toStringFunc(value, nN);
             }
 
-            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
-                return _toStringFunc(value, _format);
-            else
-                return default(TValue)?.ToString();
+            return _toStringFunc(value, _format);
         }
     }
 }
