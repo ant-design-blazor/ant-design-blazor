@@ -3,7 +3,8 @@
 @attribute [ReuseTabsPage(Title = "TableDemo")]
 
 <Table DataSource="_data" TreeChildren="item=>item.Children">
-	<PropertyColumn Property="c=>c.Name" Sortable Filterable />
+	<PropertyColumn Property="c=>c.Name" Sortable Filterable/>
+	<PropertyColumn Property="c=>c.Gender" Sortable Filterable/>
 	<PropertyColumn Property="c=>c.Age" Sortable Filterable />
 	<PropertyColumn Property="c=>c.Address" Sortable Filterable />
 </Table>
@@ -99,6 +100,12 @@
 		},
 	};
 
+	public enum Gender
+	{
+		Male,
+		Female
+	}
+
 	public class Data
 	{
 		[DisplayName("Key")]
@@ -106,6 +113,9 @@
 
 		[DisplayName("Name")]
 		public string Name { get; set; }
+
+		[DisplayName("Gender")]
+		public Gender Gender { get; set; }
 
 		[DisplayName("Age")]
 		public int Age { get; set; }
