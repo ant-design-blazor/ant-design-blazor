@@ -144,6 +144,17 @@ namespace AntDesign.TableModels
             return firstGroupResult.AsQueryable();
         }
 
+        public IQueryable<IEnumerable<TItem>> ExecuteGroup(IQueryable<TItem> query)
+        {
+            IQueryable<IEnumerable<TItem>> result;
+            foreach (var group in GroupModel.OrderBy(x => x.Priority))
+            {
+                query = group.GroupList(query);
+            }
+
+            return query;
+        }
+
         public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
 
         public IQueryable<GroupData<TItem>> CurrentPagedRecords(IQueryable<GroupData<TItem>> query) => query.Skip(OffsetRecords).Take(PageSize);
