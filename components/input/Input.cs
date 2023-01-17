@@ -259,14 +259,11 @@ namespace AntDesign
             _inputString = null;
             await this.FocusAsync(Ref);
 
-            if (OnChange.HasDelegate)
-                await OnChange.InvokeAsync(Value);
-
             if (OnClear.HasDelegate)
                 await OnClear.InvokeAsync(Value);
-
-            //Without the delay, focus is not enforced.
-            await Task.Delay(1);
+            else
+                //Without the delay, focus is not enforced.
+                await Task.Yield();
         }
 
         private string _inputString;
