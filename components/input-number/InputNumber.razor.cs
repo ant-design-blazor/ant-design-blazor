@@ -35,17 +35,10 @@ namespace AntDesign
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
                 var stepStr = Convert.ToDecimal(_step).ToString(nfi);
-                if (string.IsNullOrEmpty(_format))
-                {
-                    _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));
-                }
+                if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
+                    _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
                 else
-                {
-                    if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
-                        _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
-                    else
-                        _decimalPlaces = 0;
-                }
+                    _decimalPlaces = 0;
             }
         }
 
@@ -166,7 +159,6 @@ namespace AntDesign
 
         private string _inputString;
         private bool _focused;
-        private string _format;
         private bool _hasDefaultValue;
         private int? _decimalPlaces;
         private TValue _step;
@@ -177,7 +169,7 @@ namespace AntDesign
 
         private ClassMapper _affixWarrperClass = new ClassMapper();
 
-        private bool hasAffixWarrper => FormItem?.FeedbackIcon != null;
+        private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
 
         public InputNumber()
         {
@@ -511,16 +503,18 @@ namespace AntDesign
                 return Formatter(Value);
             }
 
+            if (EqualityComparer<TValue>.Default.Equals(value, default))
+            {
+                return default(TValue)?.ToString();
+            }
+
             if (Precision > 0 || _decimalPlaces > 0)
             {
                 var nN = "n" + (Precision > 0 ? Precision : _decimalPlaces.Value);
                 return _toStringFunc(value, nN);
             }
 
-            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
-                return _toStringFunc(value, _format);
-            else
-                return default(TValue)?.ToString();
+            return _toStringFunc(value, null);
         }
     }
 }
