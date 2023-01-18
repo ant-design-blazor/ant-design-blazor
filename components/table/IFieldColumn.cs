@@ -20,12 +20,18 @@ namespace AntDesign
 
         public ITableFilterModel FilterModel { get; }
 
+        public ITableGroupModel GroupModel { get; }
+
         internal void ClearSorter();
 
         internal void ClearFilters();
 
+        internal void ClearGroups();
+
         internal void SetFilterModel(ITableFilterModel filterModel);
 
         internal void SetSortModel(ITableSortModel sortModel);
+
+        internal void SetGroupModel(ITableGroupModel groupModel);
     }
 }
