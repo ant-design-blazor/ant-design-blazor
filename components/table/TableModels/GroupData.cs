@@ -8,6 +8,8 @@ namespace AntDesign.TableModels
 {
     public class GroupData<TItem>
     {
+        public GroupData<TItem> Parent { get; set; }
+
         public TItem Overall { get; set; }
 
         public IEnumerable<TItem> Items { get; set; }

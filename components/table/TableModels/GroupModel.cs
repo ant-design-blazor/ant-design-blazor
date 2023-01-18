@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
@@ -39,7 +37,7 @@ namespace AntDesign.TableModels
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
             var result = source
                 .GroupBy(lambda)
-                .Select(group => new GroupData<TField, TItem>(group.Key) { Items = group })
+                .Select(group => new GroupData<TField, TItem>(group.Key) { Items = group.ToArray() })
                 .AsQueryable();
             return result;
         }
@@ -51,6 +49,7 @@ namespace AntDesign.TableModels
         Count = 2,
         Average = 3,
         Max = 4,
-        Min = 5
+        Min = 5,
+        Join = 6,
     }
 }
