@@ -7,8 +7,10 @@
             .SetResult(new AntDesign.JsInterop.DomRect());
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
+            .SetResult(new HtmlElement { ClientWidth = 123 });
     }
-    
+
     private RenderFragment GetBasicHorizontalRender()
     {
         return @<Menu Mode=MenuMode.Horizontal>
@@ -50,9 +52,9 @@
                         Navigation One	
 			        </span>
 		        </li>       
-                <li class=""ant-menu-submenu ant-menu-submenu-horizontal"" role=""menuitem"" style=""position:relative;"">    
+                <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" role=""button"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation Two
                         </span>
                     </div>
@@ -77,8 +79,8 @@
         var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert
         topOverlay.MarkupMatches(@"
-            <div class=""ant-menu-submenu ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-menu-submenu-light"" style:ignore>                    
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">                        
+            <div class=""ant-menu-submenu ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"" style:ignore>
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">                        
                     <li class=""ant-menu-item-group"">
                         <div class=""ant-menu-item-group-title"">
                             Item 1    
@@ -107,9 +109,9 @@
                                     Option 3	
 			                    </span>
 		                    </li>
-                            <li class=""ant-menu-submenu ant-menu-submenu-horizontal"" role=""menuitem"" style=""position:relative;"">
+                            <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                                 <div class=""ant-menu-submenu-title"" role=""button"">
-                                    <span>
+                                    <span class=""ant-menu-title-content"">
                                         Option 4
                                     </span>
                                     <i class=""ant-menu-submenu-arrow""></i>
@@ -136,16 +138,16 @@
         var midOverlay = midExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert        
         midOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-menu-submenu-light"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">
+            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
                             Option 1	
                 		</span>
 		            </li>
-                    <li class=""ant-menu-submenu ant-menu-submenu-horizontal"" role=""menuitem"" style=""position:relative;"">
+                    <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                         <div class=""ant-menu-submenu-title"" role=""button"">
-                            <span>
+                            <span class=""ant-menu-title-content"">
                                 Option 5
                             </span>
                             <i class=""ant-menu-submenu-arrow""></i>
@@ -171,8 +173,8 @@
         var bottomOverlay = bottomExpandable.FindComponent<AntDesign.Internal.Overlay>();              
         //Assert        
         bottomOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-menu-submenu-light"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">
+            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
                             Option 1	

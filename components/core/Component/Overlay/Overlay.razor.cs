@@ -459,7 +459,7 @@ namespace AntDesign.Internal
             }
         }
 
-        private int ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
+        private decimal ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
         {
             return container.ClientWidth - left - overlay.OffsetWidth;
         }
