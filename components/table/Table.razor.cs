@@ -282,6 +282,12 @@ namespace AntDesign
                     fieldColumn?.SetFilterModel(filter);
                 }
 
+                foreach (var group in queryModel.GroupModel)
+                {
+                    var fieldColumn = ColumnContext.HeaderColumns[group.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetGroupModel(group);
+                }
+
                 this.ReloadAndInvokeChange();
             }
         }
@@ -306,6 +312,11 @@ namespace AntDesign
                     {
                         fieldColumn.ClearFilters();
                     }
+
+                    if (fieldColumn.GroupModel != null)
+                    {
+                        fieldColumn.ClearGroups();
+                    }
                 }
             }
         }
@@ -328,6 +339,11 @@ namespace AntDesign
                     if (fieldColumn.FilterModel != null)
                     {
                         queryModel.AddFilterModel(fieldColumn.FilterModel);
+                    }
+
+                    if (fieldColumn.GroupModel != null)
+                    {
+                        queryModel.AddGroupModel(fieldColumn.GroupModel);
                     }
                 }
             }
