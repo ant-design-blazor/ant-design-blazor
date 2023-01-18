@@ -174,11 +174,11 @@ namespace AntDesign
         private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
         private string _operationStyle = "visibility: hidden; order: 1;";
 
-        private double _scrollOffset;
-        private int _scrollListWidth;
-        private int _scrollListHeight;
-        private int _wrapperWidth;
-        private int _wrapperHeight;
+        private decimal _scrollOffset;
+        private decimal _scrollListWidth;
+        private decimal _scrollListHeight;
+        private decimal _wrapperWidth;
+        private decimal _wrapperHeight;
 
         private bool _shouldRender;
         private bool _afterFirstRender;
@@ -503,7 +503,7 @@ namespace AntDesign
 
         private void OnWheel(string json)
         {
-            int maxOffset;
+            decimal maxOffset;
             if (IsHorizontal)
             {
                 maxOffset = _scrollListWidth - _wrapperWidth;
@@ -610,16 +610,16 @@ namespace AntDesign
             }
 
             int invisibleHeadCount;
-            double tabSize, visibleCount;
+            decimal tabSize, visibleCount;
 
             if (IsHorizontal)
             {
-                tabSize = 1.0 * _scrollListWidth / _tabs.Count;
+                tabSize = _scrollListWidth / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
             }
             else
             {
-                tabSize = 1.0 * _scrollListHeight / _tabs.Count;
+                tabSize = _scrollListHeight / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
             }
 
