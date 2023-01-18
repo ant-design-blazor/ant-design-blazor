@@ -2,7 +2,7 @@
 @using System.ComponentModel
 @attribute [ReuseTabsPage(Title = "TableDemo")]
 
-<Table DataSource="_data" TreeChildren="item=>item.Children">
+<Table DataSource="_data">
 	<PropertyColumn Property="c=>c.Name" Sortable Filterable Groupable />
 	<PropertyColumn Property="c=>c.Gender" Sortable Filterable Groupable />
 	<PropertyColumn Property="c=>c.Age" Sortable Filterable />
@@ -113,7 +113,5 @@
 
 		[DisplayName("Address")]
 		public string Address { get; set; }
-
-		public Data[] Children { get; set; }
 	}
 }
