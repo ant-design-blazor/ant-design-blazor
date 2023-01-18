@@ -211,6 +211,11 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
+
+                if (Groupable && GetFieldExpression is not null)
+                {
+                    GroupModel = new GroupModel<TData>(ColIndex, 0, FieldName, GetFieldExpression);
+                }
             }
             else if (IsBody)
             {
