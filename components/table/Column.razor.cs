@@ -57,6 +57,9 @@ namespace AntDesign
         public bool Sortable { get; set; }
 
         [Parameter]
+        public bool Groupable { get; set; }
+
+        [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
         [Parameter]
@@ -137,6 +140,8 @@ namespace AntDesign
 
         public ITableFilterModel FilterModel { get; private set; }
 
+        public ITableGroupModel GroupModel { get; private set; }
+
         private SortDirection _sortDirection;
 
         protected Func<RowData, TData> GetValue { get; set; }
@@ -148,6 +153,15 @@ namespace AntDesign
             SetSorter(SortDirection.None);
             if (FieldExpression == null)
             {
+                StateHasChanged();
+            }
+        }
+
+        void IFieldColumn.ClearGroups()
+        {
+            if (this.GroupModel is not null)
+            {
+                this.GroupModel = null;
                 StateHasChanged();
             }
         }
@@ -479,6 +493,9 @@ namespace AntDesign
 
             _hasFilterSelected = true;
         }
+
+        void IFieldColumn.SetGroupModel(ITableGroupModel groupModel)
+            => this.GroupModel = groupModel;
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
