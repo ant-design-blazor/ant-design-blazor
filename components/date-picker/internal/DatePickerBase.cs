@@ -398,7 +398,7 @@ namespace AntDesign
                 else if (_inputEnd.IsOnFocused)
                 {
                     HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
-                    int translateDistance = element.ClientWidth + 16;
+                    decimal translateDistance = element.ClientWidth + 16;
 
                     if (RTL)
                     {

@@ -80,13 +80,14 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Get(() => $"{prefixCls}-{RootMenu?.InternalMode}")
+                     .Get(() => $"{prefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () => {
+                    .If($"{prefixCls}-open", () =>
+                    {
                         var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
                         return eval;
-                        })
+                    })
                     ;
 
             SubMenuMapper
@@ -168,7 +169,7 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null && IsOpen)
+            if (firstRender && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
                 _popupMinWidthStyle = $"min-width: {domInfo.ClientWidth}px";
