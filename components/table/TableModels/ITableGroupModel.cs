@@ -15,6 +15,6 @@ namespace AntDesign.TableModels
 
         public int ColumnIndex { get; }
 
-        public IQueryable<IEnumerable<TItem>> GroupList<TItem>(IQueryable<TItem> source);
+        public IQueryable<GroupData<TItem>> GroupList<TItem>(IQueryable<TItem> source);
     }
 }
