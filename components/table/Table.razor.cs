@@ -179,6 +179,8 @@ namespace AntDesign
 
         private IEnumerable<TItem> _showItems;
 
+        private IEnumerable<GroupData<TItem>> _showGroupItems;
+
         private IEnumerable<TItem> _dataSource;
 
         private IList<SummaryRow> _summaryRows;
@@ -408,6 +410,7 @@ namespace AntDesign
             if (ServerSide)
             {
                 _showItems = _dataSource;
+                _showGroupItems = queryModel.GroupModel.Any() ? queryModel.ExecuteGroup(_dataSource.AsQueryable()).ToList() : Enumerable.Empty<GroupData<TItem>>();
                 _total = Total;
             }
             else
@@ -415,12 +418,14 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
-
                     _total = query.Count();
                     _showItems = queryModel.CurrentPagedRecords(query).ToList();
+                    _showGroupItems = queryModel.GroupModel.Any() ? queryModel.ExecuteGroup(query).ToList() : Enumerable.Empty<GroupData<TItem>>();
+                    _showGroupItems = queryModel.CurrentPagedRecords(_showGroupItems.AsQueryable()).ToList();
                 }
                 else
                 {
+                    _showGroupItems = Enumerable.Empty<GroupData<TItem>>();
                     _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
                 }

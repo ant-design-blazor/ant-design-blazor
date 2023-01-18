@@ -95,7 +95,7 @@ namespace AntDesign.TableModels
         public IQueryable<GroupData<TItem>> ExecuteGroup(IQueryable<TItem> query)
         {
             var firstGroup = GroupModel.OrderBy(x => x.Priority).FirstOrDefault();
-            _ = firstGroup ?? throw new InvalidOperationException();
+            if (firstGroup is null) return null;
 
             var firstGroupResult = firstGroup.GroupList(query).ToArray();
             var currentLayerGroups = firstGroupResult.AsQueryable();
@@ -119,6 +119,8 @@ namespace AntDesign.TableModels
         }
 
         public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
+
+        public IQueryable<GroupData<TItem>> CurrentPagedRecords(IQueryable<GroupData<TItem>> query) => query.Skip(OffsetRecords).Take(PageSize);
 
         public object Clone()
         {
