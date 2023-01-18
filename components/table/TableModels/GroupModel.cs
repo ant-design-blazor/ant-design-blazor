@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +19,8 @@ namespace AntDesign.TableModels
 
         public int ColumnIndex { get; set; }
 
+        public TableGroupOperator GroupOperator { get; set; }
+
         private LambdaExpression _getFieldExpression;
 
 #if NET5_0_OR_GREATER
@@ -28,11 +34,23 @@ namespace AntDesign.TableModels
             this._getFieldExpression = getFieldExpression;
         }
 
-        public IQueryable<IEnumerable<TItem>> GroupList<TItem>(IQueryable<TItem> source)
+        public IQueryable<GroupData<TItem>> GroupList<TItem>(IQueryable<TItem> source)
         {
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
-            var result = source.GroupBy(lambda);
+            var result = source
+                .GroupBy(lambda)
+                .Select(group => new GroupData<TField, TItem>(group.Key) { Items = group })
+                .AsQueryable();
             return result;
         }
+    }
+
+    public enum TableGroupOperator
+    {
+        Sum = 1,
+        Count = 2,
+        Average = 3,
+        Max = 4,
+        Min = 5
     }
 }
