@@ -221,12 +221,6 @@ namespace AntDesign
         [Parameter]
         public string WrapperStyle { get; set; }
 
-        /// <summary>
-        /// Callback when input value is cleard
-        /// </summary>
-        [Parameter]
-        public EventCallback OnClear { get; set; }
-
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
