@@ -152,6 +152,9 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; }
 
+        [Parameter]
+        public RenderFragment EmptyTemplate { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -192,7 +195,10 @@ namespace AntDesign
         private ElementReference _tableBodyRef;
         private ElementReference _tableRef;
 
+        private decimal _tableWidth;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
+        private bool UseResizeObserver => ScrollX != null;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -630,6 +636,18 @@ namespace AntDesign
         void ITable.TableLayoutIsFixed()
         {
             TableLayout = "fixed";
+            StateHasChanged();
+        }
+
+        private void OnResize(DomRect domRect)
+        {
+            if (_tableWidth == domRect.Width)
+            {
+                return;
+            }
+
+            _tableWidth = domRect.Width;
+            _shouldRender = true;
             StateHasChanged();
         }
 
