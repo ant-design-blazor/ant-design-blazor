@@ -33,6 +33,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public string PopupClassName { get; set; }
+
+        [Parameter]
         public string Title { get; set; }
 
         [Parameter]
