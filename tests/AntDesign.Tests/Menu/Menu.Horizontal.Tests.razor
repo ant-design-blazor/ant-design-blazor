@@ -9,6 +9,7 @@
         .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
         .SetResult(new HtmlElement { ClientWidth = 123 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
     }
 
     private RenderFragment GetBasicHorizontalRender()
