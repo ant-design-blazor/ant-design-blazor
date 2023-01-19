@@ -9,11 +9,13 @@
         .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
         .SetResult(new HtmlElement { ClientWidth = 123 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
     }
 
     private RenderFragment GetBasicHorizontalRender()
     {
-        return @<Menu Mode=MenuMode.Horizontal>
+        return 
+    @<Menu Mode=MenuMode.Horizontal>
         <MenuItem>Navigation One</MenuItem>
         <SubMenu Title="Navigation Two">
             <MenuItemGroup Title="Item 1">
