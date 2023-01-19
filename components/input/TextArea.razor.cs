@@ -121,16 +121,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
-        /// <summary>
-        /// Show character counting.
-        /// </summary>
-        [Parameter]
-        public bool ShowCount
-        {
-            get => _showCount;
-            set => _showCount = value;
-        }
-
         /// <inheritdoc/>
         [Parameter]
         public override string Value
@@ -150,7 +140,6 @@ namespace AntDesign
         private uint InnerMinRows => _hasMinSet ? MinRows : Rows;
         private string Count => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
 
-        private bool _showCount;
         private string _inputString;
 
         private ClassMapper _warpperClassMapper = new();
