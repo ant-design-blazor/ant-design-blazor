@@ -2,6 +2,8 @@
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
 @using AntDesign.Internal
+@using AntDesign.Core.Component.ResizeObserver
+
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
@@ -121,6 +123,11 @@
     </Spin>
 </div>
 
+@if (UseResizeObserver)
+{
+    <ResizeObserver RefBack="RefBack" OnResize="OnResize" />   
+}
+
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
@@ -169,7 +176,16 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
     {
                 <tr class="ant-table-placeholder">
                     <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                        <Empty Simple />
+                                @if (table.ScrollX != null)
+                                {
+                                    <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
+                                       @if (EmptyTemplate!=null) @EmptyTemplate else { <Empty Simple /> }
+                                    </div>
+                                }
+                                else
+                                {
+                                     @if (EmptyTemplate!=null) @EmptyTemplate else { <Empty Simple /> }
+                                }
                     </td>
                 </tr>
     }
