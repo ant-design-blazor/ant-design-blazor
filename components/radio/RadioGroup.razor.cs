@@ -6,6 +6,10 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TValue))]
+#endif
+
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
 

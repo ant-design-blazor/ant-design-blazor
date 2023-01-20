@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @inject NavigationManager _navigationManager
 
-@if (Pages == null)
+@if (Pages?.Any() != true)
 {
 
 }
@@ -15,9 +15,16 @@ else
                 <TabTemplate>
                     @item.Title
                 </TabTemplate>
-                <ChildContent>
-                    @Body(item)
-                </ChildContent>
+               <ChildContent>
+                    @if (Body != null)
+                    {
+                        @Body(item)
+                    }
+                    else
+                    {
+                        @item.Body
+                    }
+               </ChildContent>
                 <TabContextMenu>
                     <Menu>
                         <MenuItem Disabled="!item.Closable" OnClick="@(()=>{RemovePage(item.Url);})">@Locale.Close</MenuItem>

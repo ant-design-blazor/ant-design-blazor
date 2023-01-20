@@ -44,7 +44,13 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> RowTemplate { get; set; }
+        public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> ColumnDefinitions { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> HeaderTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
@@ -94,7 +100,7 @@ namespace AntDesign
         public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
-        public TableSize Size { get; set; }
+        public TableSize Size { get; set; } = TableSize.Default;
 
         [Parameter]
         public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
@@ -208,6 +214,9 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        bool ITable.HasHeaderTemplate => HeaderTemplate != null;
+        bool ITable.HasRowTemplate => RowTemplate != null;
+
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
@@ -475,9 +484,9 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (RowTemplate != null)
+            if (ColumnDefinitions != null)
             {
-                ChildContent = RowTemplate;
+                ChildContent = ColumnDefinitions;
             }
 
             this.ColumnContext = new ColumnContext(this);
