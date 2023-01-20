@@ -1,5 +1,5 @@
 ---
-order: 22
+order: 22.5
 title:
   en-US: Custom Row Styling
   zh-CN: 修改每行的样式

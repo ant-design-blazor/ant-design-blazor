@@ -72,6 +72,9 @@ namespace AntDesign
         public string PlaceHolder { get; set; }
 
         [Parameter]
+        public bool Bordered { get; set; } = true;
+
+        [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
 
         private static readonly Type _surfaceType = typeof(TValue);
@@ -303,6 +306,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-focused", () => _focused)
                 .If($"{_prefixCls}-disabled", () => this.Disabled)
+                .If($"{_prefixCls}-borderless", () => !Bordered)
                 .GetIf(() => $"{_prefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{_prefixCls}-rtl", () => RTL);
         }

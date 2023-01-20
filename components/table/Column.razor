@@ -46,7 +46,7 @@ else if (IsHeader && HeaderColSpan != 0)
 
 	var headerCellAttributes = OnHeaderCell?.Invoke();
 	<CascadingValue Name="IsHeader" Value="false" IsFixed>
-		<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
+		<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
 			@if (Sortable || (_filterable && _filters?.Any() == true))
 		    {
 		    	@FilterToolTipSorter
@@ -78,7 +78,10 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     var cellData = new CellData<TData>(RowData, Field, Format);
     var cellAttributes = OnCell?.Invoke(cellData);
 	<CascadingValue Name="IsBody" Value="false" IsFixed>
-		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@Context.HeaderColumns[ColIndex].Title"  @attributes="cellAttributes">
+        @{
+            var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+        }
+		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title"  @attributes="cellAttributes">
 			@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 		{
 			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>

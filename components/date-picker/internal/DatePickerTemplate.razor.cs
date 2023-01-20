@@ -119,7 +119,7 @@ namespace AntDesign.Internal
         private bool IsDateInRange(DateTime currentColDate)
         {
             if (!IsRange ||
-                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter))
+                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
             {
                 return false;
             }
@@ -130,6 +130,11 @@ namespace AntDesign.Internal
             if (startValue == null || endValue == null)
             {
                 return false;
+            }
+
+            if (Picker.IsIn(DatePickerType.Week))
+            {
+                startValue = startValue.Value.AddDays(6 - (int)startValue.Value.DayOfWeek);
             }
 
             DateTime currentDate = FormatDateByPicker(currentColDate);

@@ -9,25 +9,22 @@
             </GridCol>
         </GridRow>
     </TitleTemplate>
-      <RowTemplate>
-    <PropertyColumn
-            Property="c=>c.Name"
-            SorterCompare="@((a,b)=> a.Length - b.Length)"
-            SortDirections="new[] { SortDirection.Descending }"
-            Filters="nameFilters"
-            OnFilter="((value,name)=>name.StartsWith(value))" />
-    <PropertyColumn
-            Property="c=>c.Age"
-            DefaultSortOrder="@SortDirection.Descending"
-            SorterCompare="@((a,b)=> a - b)" />
-    <PropertyColumn
-            Property="c=>c.Address"
-            SorterCompare="@((a,b)=> a.Length - b.Length)"
-            SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
-            Filters="addressFilters"
-            FilterMultiple="false"
-            OnFilter="(value,address)=>address.StartsWith(value)" />
-    </RowTemplate>
+    <ColumnDefinitions>
+        <PropertyColumn Property="c=>c.Name"
+                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filters="nameFilters"
+                        OnFilter="((value,name)=>name.StartsWith(value))" />
+        <PropertyColumn Property="c=>c.Age"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a,b)=> a - b)" />
+        <PropertyColumn Property="c=>c.Address"
+                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+                        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+                        Filters="addressFilters"
+                        FilterMultiple="false"
+                        OnFilter="(value,address)=>address.StartsWith(value)" />
+    </ColumnDefinitions>
 </Table>
 
 @using AntDesign.TableModels;
@@ -52,7 +49,7 @@
     }
 
     Data[] data =
-{
+    {
         new("John Brown",32,"New York No. 1 Lake Park"),
         new("Jim Green",42, "London No. 1 Lake Park"),
         new("Joe Black", 32,"Sidney No. 1 Lake Park"),
