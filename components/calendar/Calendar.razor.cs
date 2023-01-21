@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -39,6 +39,7 @@ namespace AntDesign
         [Parameter]
         public bool FullScreen { get; set; } = true;
 
+        [Obsolete("Use OnChange instead")]
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
 
