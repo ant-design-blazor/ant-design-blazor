@@ -378,11 +378,6 @@ namespace AntDesign
                     {
                         queryModel.AddFilterModel(fieldColumn.FilterModel);
                     }
-
-                    if (fieldColumn.GroupModel != null)
-                    {
-                        queryModel.AddGroupModel(fieldColumn.GroupModel);
-                    }
                 }
             }
 
