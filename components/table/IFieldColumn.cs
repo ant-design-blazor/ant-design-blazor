@@ -14,6 +14,8 @@ namespace AntDesign
 
         public bool Sortable { get; }
 
+        public bool Groupable { get; set; }
+
         public int SorterMultiple { get; }
 
         public ITableSortModel SortModel { get; }
