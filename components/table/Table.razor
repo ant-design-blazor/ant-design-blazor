@@ -3,6 +3,7 @@
 @using AntDesign.TableModels
 @using AntDesign.Internal
 @using AntDesign.Select
+@using AntDesign.Select
 @using AntDesign.Core.Component.ResizeObserver
 
 @typeparam TItem
@@ -33,6 +34,25 @@
                         @ChildContent(_fieldModel)
                     </CascadingValue>
                     <div class="@ClassMapper.Class" @ref="_tableRef">
+                        @if (_groupMode)
+                        {
+                            <Select 
+                                Mode="multiple"
+                                Size="@(this.Size == TableSize.Default?"large":this.Size == TableSize.Middle?"default":"small")"
+                                Placeholder="Please select columns to group by."
+                                LabelName="@nameof(GroupModel.FieldName)" 
+                                ValueName="@nameof(GroupModel.ColumnIndex)" 
+                                TItem="GroupModel"
+                                DataSource="@this._allGroupModels"
+                                TItemValue="int"
+		                        @bind-Values="@this._selectedGroupModels"
+		                        OnSelectedItemsChanged="@this.OnSelectedGroupColumnsChange"
+		                        Style="width: calc(100% - 2px); margin: 1px;"
+		                        EnableSearch
+		                        AllowClear>
+                            </Select>
+                        }
+
                         @if (_groupMode)
                         {
                             <GridRow Wrap="false" Style="padding: 0px 1px;">
@@ -164,6 +184,8 @@
 {
     RenderFragment<Table<TItem>> header = table =>
     @<Template>
+                @{
+    @<Template>
        @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
@@ -208,6 +230,34 @@
 
     Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
+    @<Template>
+        @if (table._total <= 0)
+        {
+                    <tr class="ant-table-placeholder">
+                        <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                            <Empty Simple />
+                        </td>
+                    </tr>
+        }
+        else if (showItems != null && table.ColumnContext.Columns.Count > 0)
+        {
+    #if NET5_0_OR_GREATER
+            if (table.EnableVirtualization && table.ScrollY != null)
+            {
+                <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
+                                                                               ChildContent="table.bodyRow(table, level, rowDataCache)" />
+            }
+            else
+            {
+    #endif
+                { @*Build will fail without this block*@ }
+            <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
+                         ChildContent="table.bodyRow(table, level, rowDataCache)" />
+    #if NET5_0_OR_GREATER
+            }
+    #endif
+        }
+    </Template>;
 @<Template>
     @if (table._total <= 0)
     {
@@ -290,6 +340,16 @@
                         rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
                     }
 
+                    var rowClassName = table.RowClassName(currentRowData);
+                    <CascadingValue Value="true" Name="IsBody" IsFixed>
+                        <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                            <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
+                                <TableRow @key="currentRowData.Data" TItem="TItem">
+                                    @table.ChildContent(currentRowData.Data)
+                                </TableRow>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
                 var rowClassName = table.RowClassName(currentRowData);
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">

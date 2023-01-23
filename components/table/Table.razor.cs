@@ -528,6 +528,10 @@ namespace AntDesign
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
+        private void OnSelectedGroupColumnsChange(IEnumerable<ITableGroupModel> groupModels)
+        {
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
