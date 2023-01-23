@@ -188,6 +188,7 @@ namespace AntDesign
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
+        private bool _groupMode;
         private bool _treeMode;
         private string _scrollBarWidth = "17px";
 
@@ -196,6 +197,8 @@ namespace AntDesign
         private int _treeExpandIconColumnIndex;
 
         private QueryModel _currentQueryModel;
+        private IEnumerable<GroupModel> _allGroupModels;
+        private IEnumerable<int> _selectedGroupModels = new List<int>();
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -249,8 +252,20 @@ namespace AntDesign
                 return;
             }
 
+            InitializeGroupColumns();
             ReloadAndInvokeChange();
             _hasInitialized = true;
+        }
+
+        private void InitializeGroupColumns()
+        {
+            _allGroupModels = this.ColumnContext.HeaderColumns
+                .OfType<IFieldColumn>()
+                .Where(column => column.Groupable)
+                .Select(column => column.GroupModel)
+                .OfType<GroupModel>()
+                .ToList();
+            _groupMode = _allGroupModels.Any();
         }
 
         public void ReloadData()
@@ -499,6 +514,10 @@ namespace AntDesign
                 .Add($"{prefixCls}-wrapper")
                 .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
+        }
+
+        private void OnSelectedGroupColumnsChange(IEnumerable<ITableGroupModel> groupModels)
+        {
         }
 
         protected override void OnInitialized()

@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace AntDesign.TableModels
 {
-    public class GroupModel<TField> : ITableGroupModel
+    public abstract class GroupModel : ITableGroupModel
     {
         public int Priority { get; }
 
@@ -19,7 +19,7 @@ namespace AntDesign.TableModels
 
         public TableGroupOperator GroupOperator { get; set; }
 
-        private LambdaExpression _getFieldExpression;
+        protected LambdaExpression _getFieldExpression;
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
@@ -32,7 +32,28 @@ namespace AntDesign.TableModels
             this._getFieldExpression = getFieldExpression;
         }
 
-        public IQueryable<GroupData<TItem>> GroupList<TItem>(IQueryable<TItem> source)
+        public GroupModel(GroupModel model)
+        {
+            this.ColumnIndex = model.ColumnIndex;
+            this.Priority = model.Priority;
+            this.FieldName = model.FieldName;
+            this._getFieldExpression = model._getFieldExpression;
+        }
+
+        public abstract IQueryable<GroupData<TItem>> GroupList<TItem>(IQueryable<TItem> source);
+    }
+
+    public class GroupModel<TField> : GroupModel
+    {
+#if NET5_0_OR_GREATER
+        [JsonConstructor]
+#endif
+        public GroupModel(int columnIndex, int priority, string fieldName, LambdaExpression getFieldExpression = null)
+            : base(columnIndex, priority, fieldName, getFieldExpression)
+        {
+        }
+
+        public override IQueryable<GroupData<TItem>> GroupList<TItem>(IQueryable<TItem> source)
         {
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
             var result = source

@@ -2,6 +2,7 @@
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
 @using AntDesign.Internal
+@using AntDesign.Select
 @using AntDesign.Core.Component.ResizeObserver
 
 @typeparam TItem
@@ -32,6 +33,25 @@
                         @ChildContent(_fieldModel)
                     </CascadingValue>
                     <div class="@ClassMapper.Class" @ref="_tableRef">
+                        @if (_groupMode)
+                        {
+                            <Select 
+                                Mode="multiple"
+                                Size="@(this.Size == TableSize.Default?"large":this.Size == TableSize.Middle?"default":"small")"
+                                Placeholder="Please select columns to group by."
+                                LabelName="@nameof(GroupModel.FieldName)" 
+                                ValueName="@nameof(GroupModel.ColumnIndex)" 
+                                TItem="GroupModel"
+                                DataSource="@this._allGroupModels"
+                                TItemValue="int"
+		                        @bind-Values="@this._selectedGroupModels"
+		                        OnSelectedItemsChanged="@this.OnSelectedGroupColumnsChange"
+		                        Style="width: calc(100% - 2px); margin: 1px;"
+		                        EnableSearch
+		                        AllowClear>
+                            </Select>
+                        }
+
                         @if (TitleTemplate != null || Title != null)
                         {
                             <div class="ant-table-title">
@@ -131,7 +151,7 @@
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
-  @<Template>
+    @<Template>
        @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
@@ -157,12 +177,12 @@
         </thead>
     </Template>;
 
-RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
-  @<Template>
-            @{
-        var table = ctx.table;
-        var header = ctx.header;
-            }
+    RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
+    @<Template>
+        @{
+            var table = ctx.table;
+            var header = ctx.header;
+        }
             <colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                     @table.ChildContent(_fieldModel)
@@ -172,9 +192,9 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                     <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
         }
             </colgroup>
-  </Template>;
+    </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
+    Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
 @<Template>
     @if (table._total <= 0)
@@ -214,49 +234,49 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
     }
 </Template>;
 
-Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TItem data, int index)>> bodyRow = 
+    Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TItem data, int index)>> bodyRow = 
             (table, level, rowDataCache) => tuple =>
-@<Template @key="tuple">
-    @{
-        int rowIndex;
-        if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
-        else rowIndex = tuple.index + 1;
-        var data = tuple.data;
-        bool selected = table.SelectedRows.Contains(data);
-        if (!rowDataCache.ContainsKey(data) || rowDataCache[data] == null)
-        {
-            var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+    @<Template @key="tuple">
+        @{
+            int rowIndex;
+            if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
+            else rowIndex = tuple.index + 1;
+            var data = tuple.data;
+            bool selected = table.SelectedRows.Contains(data);
+            if (!rowDataCache.ContainsKey(data) || rowDataCache[data] == null)
             {
-                Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
-            };
-            rowDataCache[data] = rowData;
-        }
-        var currentRowData = rowDataCache[data];
-        if (!table._allRowDataCache.ContainsKey(data))
-        {
-            table._allRowDataCache.Add(data, new());
-        }
-        if (!table._allRowDataCache[data].Contains(currentRowData))
-        {
-            table._allRowDataCache[data].Add(currentRowData);
-        }
-        var childrenData = table.TreeChildren(data);
-        var hasChildren = childrenData?.Any() == true;
-        var childrenRowDataCache = currentRowData.Children;
-        currentRowData.Level = level;
-        currentRowData.HasChildren = hasChildren;
-        currentRowData.RowIndex = rowIndex;
-        currentRowData.PageIndex = table.PageIndex;
-        currentRowData.SetSelected(selected);
-
-        <TableRowWrapper RowData="currentRowData" RowDataSelectedChanged="table.RowDataSelectedChanged">
-            @{
-                var rowAttributes = table.OnRow?.Invoke(currentRowData);
-                if (table.OnRowClick.HasDelegate)
+                var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
                 {
-                    rowAttributes ??= new Dictionary<string, object>();
-                    rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
-                }
+                    Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
+                };
+                rowDataCache[data] = rowData;
+            }
+            var currentRowData = rowDataCache[data];
+            if (!table._allRowDataCache.ContainsKey(data))
+            {
+                table._allRowDataCache.Add(data, new());
+            }
+            if (!table._allRowDataCache[data].Contains(currentRowData))
+            {
+                table._allRowDataCache[data].Add(currentRowData);
+            }
+            var childrenData = table.TreeChildren(data);
+            var hasChildren = childrenData?.Any() == true;
+            var childrenRowDataCache = currentRowData.Children;
+            currentRowData.Level = level;
+            currentRowData.HasChildren = hasChildren;
+            currentRowData.RowIndex = rowIndex;
+            currentRowData.PageIndex = table.PageIndex;
+            currentRowData.SetSelected(selected);
+
+            <TableRowWrapper RowData="currentRowData" RowDataSelectedChanged="table.RowDataSelectedChanged">
+                @{
+                    var rowAttributes = table.OnRow?.Invoke(currentRowData);
+                    if (table.OnRowClick.HasDelegate)
+                    {
+                        rowAttributes ??= new Dictionary<string, object>();
+                        rowAttributes.TryAdd("onclick", ((Action)delegate { table.OnRowClick.InvokeAsync(currentRowData); }));
+                    }
 
                 var rowClassName = table.RowClassName(currentRowData);
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
@@ -276,37 +296,38 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                     </CascadingValue>
                 </CascadingValue>
 
-                @if (currentRowData.HasChildren && currentRowData.Expanded)
-                {
-                    @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache);
+                    @if (currentRowData.HasChildren && currentRowData.Expanded)
+                    {
+                        @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache);
+                    }
+                    @if (!currentRowData.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
+                    {
+                        <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
+                            style="@(currentRowData.Expanded?"":"display: none;")">
+                            <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                                @table.ExpandTemplate(currentRowData)
+                            </td>
+                        </tr>
+                    }
                 }
-                @if (!currentRowData.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
-                {
-                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
-                        style="@(currentRowData.Expanded?"":"display: none;")">
-                        <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
-                            @table.ExpandTemplate(currentRowData)
-                        </td>
-                    </tr>
-                }
-            }
-        </TableRowWrapper>
-    }
-  </Template>;
+            </TableRowWrapper>
+        }
+    </Template>;
 
-RenderFragment<Table<TItem>> tfoot = table =>@<Template>
-            @if (table._summaryRows?.Any() == true)
-    {
-                <CascadingValue Value="true" Name="IsSummary" IsFixed>
-                    <tfoot class="ant-table-summary">
-                        @foreach (var row in table._summaryRows)
-                {
-                            <tr>
-                                @row.ChildContent
-                            </tr>
-                }
-                    </tfoot>
-                </CascadingValue>
-    }
-  </Template>;
+    RenderFragment<Table<TItem>> tfoot = table =>
+    @<Template>
+        @if (table._summaryRows?.Any() == true)
+        {
+                    <CascadingValue Value="true" Name="IsSummary" IsFixed>
+                        <tfoot class="ant-table-summary">
+                            @foreach (var row in table._summaryRows)
+                    {
+                                <tr>
+                                    @row.ChildContent
+                                </tr>
+                    }
+                        </tfoot>
+                    </CascadingValue>
+        }
+    </Template>;
 }
