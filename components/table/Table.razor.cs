@@ -8,6 +8,7 @@ using AntDesign.Core.HashCodes;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
 
 namespace AntDesign
@@ -189,7 +190,7 @@ namespace AntDesign
 
         private QueryModel _currentQueryModel;
         private IEnumerable<GroupModel> _allGroupModels;
-        private IEnumerable<int> _selectedGroupModels = new List<int>();
+        private IEnumerable<int> _selectedGroupModelIndexes = new List<int>();
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -338,6 +339,11 @@ namespace AntDesign
             }
         }
 
+        public void OnApplyGroup(MouseEventArgs args)
+        {
+            var test = BuildQueryModel();
+        }
+
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
 
         private QueryModel<TItem> BuildQueryModel()
@@ -357,12 +363,13 @@ namespace AntDesign
                     {
                         queryModel.AddFilterModel(fieldColumn.FilterModel);
                     }
-
-                    if (fieldColumn.GroupModel != null)
-                    {
-                        queryModel.AddGroupModel(fieldColumn.GroupModel);
-                    }
                 }
+            }
+
+            foreach (var selectedGroupModelIndex in this._selectedGroupModelIndexes)
+            {
+                var groupModel = (ColumnContext.HeaderColumns[selectedGroupModelIndex] as IFieldColumn).GroupModel;
+                queryModel.AddGroupModel(groupModel);
             }
 
             return queryModel;

@@ -33,7 +33,7 @@
                     <div class="@ClassMapper.Class" @ref="_tableRef">
                         @if (_groupMode)
                         {
-                            <GridRow Wrap="false" Style="width: (100% - 2px); margin: 1px;">
+                            <GridRow Wrap="false" Style="padding: 0px 1px;">
                                 <GridCol Flex=@("auto")>
                                     <Select 
                                         Mode="multiple"
@@ -44,14 +44,17 @@
                                         TItem="GroupModel"
                                         DataSource="@this._allGroupModels"
                                         TItemValue="int"
-		                                @bind-Values="@this._selectedGroupModels"
+		                                @bind-Values="@this._selectedGroupModelIndexes"
 		                                EnableSearch
 		                                AllowClear>
                                     </Select>
                                 </GridCol>
                                 <GridCol Flex=@("none")>
                                     <Button 
+                                        Shape="@ButtonShape.Round"
+                                        Type="@ButtonType.Primary"
                                         Size="@(this.Size == TableSize.Default?ButtonSize.Large:this.Size== TableSize.Middle? ButtonSize.Default: ButtonSize.Small)"
+                                        OnClick="@this.OnApplyGroup"
                                     >
                                     Apply
                                     </Button>
