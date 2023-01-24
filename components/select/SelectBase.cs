@@ -810,6 +810,7 @@ namespace AntDesign
 
             if (ValuesChanged.HasDelegate)
             {
+                _selectedValues = newSelectedValues;
                 await ValuesChanged.InvokeAsync(newSelectedValues);
             }
             else
