@@ -157,15 +157,6 @@ namespace AntDesign
             }
         }
 
-        void IFieldColumn.ClearGroups()
-        {
-            if (this.GroupModel is not null)
-            {
-                this.GroupModel = null;
-                StateHasChanged();
-            }
-        }
-
         private static readonly EventCallbackFactory _callbackFactory = new();
 
         private bool _filterOpened;
@@ -498,9 +489,6 @@ namespace AntDesign
 
             _hasFilterSelected = true;
         }
-
-        void IFieldColumn.SetGroupModel(ITableGroupModel groupModel)
-            => this.GroupModel = groupModel;
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
