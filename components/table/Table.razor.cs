@@ -199,7 +199,7 @@ namespace AntDesign
 
         private QueryModel _currentQueryModel;
         private IEnumerable<GroupModel> _allGroupModels;
-        private IEnumerable<int> _selectedGroupModelIndexes = new List<int>();
+        private IEnumerable<int> _selectedGroupModelIndexes;
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -354,8 +354,9 @@ namespace AntDesign
             }
         }
 
-        public void OnApplyGroup(MouseEventArgs args)
+        public void OnSelectedGroupModelsChanged(IEnumerable<int> selectedGroupModelIndexes)
         {
+            this._selectedGroupModelIndexes = selectedGroupModelIndexes;
             var test = BuildQueryModel();
         }
 
@@ -381,10 +382,15 @@ namespace AntDesign
                 }
             }
 
-            foreach (var selectedGroupModelIndex in this._selectedGroupModelIndexes)
+            if (this._selectedGroupModelIndexes?.Any() ?? false)
             {
-                var groupModel = (ColumnContext.HeaderColumns[selectedGroupModelIndex] as IFieldColumn).GroupModel;
-                queryModel.AddGroupModel(groupModel);
+                foreach (var (groupModelIndex, priority) in this._selectedGroupModelIndexes
+                    .Select((groupModelIndex, index) => (groupModelIndex, index)))
+                {
+                    var groupModel = (ColumnContext.HeaderColumns[groupModelIndex] as IFieldColumn).GroupModel;
+                    groupModel.Priority = priority;
+                    queryModel.AddGroupModel(groupModel);
+                }
             }
 
             return queryModel;
