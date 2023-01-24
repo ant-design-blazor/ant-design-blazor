@@ -315,12 +315,7 @@ namespace AntDesign
                     fieldColumn?.SetFilterModel(filter);
                 }
 
-                foreach (var group in queryModel.GroupModel)
-                {
-                    var fieldColumn = ColumnContext.HeaderColumns[group.ColumnIndex] as IFieldColumn;
-                    fieldColumn?.SetGroupModel(group);
-                }
-
+                this._selectedGroupModelIndexes = queryModel.GroupModel.Select(model => model.ColumnIndex).ToList();
                 this.ReloadAndInvokeChange();
             }
         }
@@ -345,13 +340,9 @@ namespace AntDesign
                     {
                         fieldColumn.ClearFilters();
                     }
-
-                    if (fieldColumn.GroupModel != null)
-                    {
-                        fieldColumn.ClearGroups();
-                    }
                 }
             }
+            this._selectedGroupModelIndexes = new List<int>();
         }
 
         public void OnSelectedGroupModelsChanged(IEnumerable<int> selectedGroupModelIndexes)
