@@ -118,32 +118,6 @@ namespace AntDesign.TableModels
             return firstGroupResult.AsQueryable();
         }
 
-        public IQueryable<IEnumerable<TItem>> ExecuteGroup(IQueryable<TItem> query)
-        {
-            var firstGroup = GroupModel.OrderBy(x => x.Priority).FirstOrDefault();
-            _ = firstGroup ?? throw new InvalidOperationException();
-
-            var firstGroupResult = firstGroup.GroupList(query).ToArray();
-            var currentLayerGroups = firstGroupResult.AsQueryable();
-            foreach (var groupModel in GroupModel.OrderBy(x => x.Priority).Skip(1))
-            {
-                var nextLayerGroups = new List<GroupData<TItem>>();
-                foreach (var currentGroup in currentLayerGroups)
-                {
-                    var subGroups = groupModel.GroupList(currentGroup.Items.AsQueryable()).ToArray();
-                    currentGroup.Children = subGroups;
-                    foreach (var subGroup in currentGroup.Children)
-                    {
-                        subGroup.Parent = currentGroup;
-                    }
-                    nextLayerGroups.AddRange(subGroups);
-                }
-                currentLayerGroups = nextLayerGroups.AsQueryable();
-            }
-
-            return firstGroupResult.AsQueryable();
-        }
-
         public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
 
         public IQueryable<GroupData<TItem>> CurrentPagedRecords(IQueryable<GroupData<TItem>> query) => query.Skip(OffsetRecords).Take(PageSize);
