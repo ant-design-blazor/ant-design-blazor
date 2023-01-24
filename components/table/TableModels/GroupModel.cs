@@ -11,7 +11,7 @@ namespace AntDesign.TableModels
 {
     public abstract class GroupModel : ITableGroupModel
     {
-        public int Priority { get; }
+        public int Priority { get; set; }
 
         public string FieldName { get; }
 

@@ -8,7 +8,7 @@ namespace AntDesign.TableModels
 {
     public interface ITableGroupModel
     {
-        public int Priority { get; }
+        public int Priority { get; set; }
 
         public string FieldName { get; }
 
