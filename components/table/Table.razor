@@ -47,10 +47,20 @@
                                         TItem="GroupModel"
                                         DataSource="@this._allGroupModels"
                                         TItemValue="int"
-                                        ValuesChanged="@this.OnSelectedGroupModelsChanged"
+                                        @bind-Values="@this._selectedGroupModelIndexes"
 		                                EnableSearch
 		                                AllowClear>
                                     </Select>
+                                </GridCol>
+                                <GridCol Flex=@("none")>
+                                    <Button 
+                                        Shape="@ButtonShape.Round"
+                                        Type="@ButtonType.Primary"
+                                        Size="@(this.Size == TableSize.Default?ButtonSize.Large:this.Size== TableSize.Middle? ButtonSize.Default: ButtonSize.Small)"
+                                        OnClick="@this.OnApplyGroup"
+                                    >
+                                    Apply
+                                    </Button>
                                 </GridCol>
                             </GridRow>
                         }

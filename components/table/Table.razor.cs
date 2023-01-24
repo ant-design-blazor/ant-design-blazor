@@ -199,7 +199,7 @@ namespace AntDesign
 
         private QueryModel _currentQueryModel;
         private IEnumerable<GroupModel> _allGroupModels;
-        private IEnumerable<int> _selectedGroupModelIndexes;
+        private IEnumerable<int> _selectedGroupModelIndexes = new List<int>();
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -345,10 +345,9 @@ namespace AntDesign
             this._selectedGroupModelIndexes = new List<int>();
         }
 
-        public void OnSelectedGroupModelsChanged(IEnumerable<int> selectedGroupModelIndexes)
+        public void OnApplyGroup(MouseEventArgs args)
         {
-            this._selectedGroupModelIndexes = selectedGroupModelIndexes;
-            var test = BuildQueryModel();
+             // string.Join(", ", this._selectedGroupModelIndexes?.Select(x => (ColumnContext.HeaderColumns[x] as IFieldColumn).FieldName) ?? Enumerable.Empty<string>())
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
