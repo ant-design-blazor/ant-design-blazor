@@ -58,7 +58,7 @@ namespace AntDesign.TableModels
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
             var result = source
                 .GroupBy(lambda)
-                .Select(group => new GroupData<TField, TItem>(group.Key) { Items = group.ToArray() })
+                .Select(group => new GroupData<TItem>(group.Key) { Items = group.ToArray() })
                 .AsQueryable();
             return result;
         }
