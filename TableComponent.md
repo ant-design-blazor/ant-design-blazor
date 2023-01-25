@@ -13,6 +13,8 @@
          1. `@body(this, _showItems, 0, _dataSourceCache)`
             1. `showItems.Select((data, index) => (data, index))`
                1. ChildContent: `table.bodyRow(table, level, rowDataCache)`
+                  1. 如果当前数据行有子数据行且已展开 (`CurrentDataRaw.Expanded == true`)
+                     1. 递归调用 `@body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache)` 以渲染子数据行
          
       4. `</tbody>`
 
@@ -129,6 +131,7 @@
       1. 如果当前列索引等于树状展开按钮的列
          1. 通过一个带 `padding-left: (RawData.Level * Table.IndentSize)px` 的 `<span>` 缩进该列的数据
          2. 如果当前数据行还有子数据行，则绘制一个树状展开按钮，否则绘制一个不可见的空白占位元素
+            1. 点击按钮切换当前数据行的 `Expanded` 布尔属性，用于在 `Table` 组件中控制当前行的子数据行的可见性
       2. 根据数据字段表达式获取当前数据行在该列应该显示的数据 `CellData<TData>`
          1. 渲染格式化后的数据
 

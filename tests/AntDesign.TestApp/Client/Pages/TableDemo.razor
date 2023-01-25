@@ -2,116 +2,206 @@
 @using System.ComponentModel
 @attribute [ReuseTabsPage(Title = "TableDemo")]
 
-<Table DataSource="_data">
-	<PropertyColumn Property="c=>c.Name" Sortable Filterable Groupable />
-	<PropertyColumn Property="c=>c.Gender" Sortable Filterable Groupable />
-	<PropertyColumn Property="c=>c.Age" Sortable Filterable Groupable />
-	<PropertyColumn Property="c=>c.Address" Sortable Filterable />
+<Table HidePagination DataSource="_data">
+    <PropertyColumn Property="c=>c.Name" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Gender" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Age" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Address" Sortable Filterable />
+</Table>
+
+<Divider />
+
+<Table HidePagination DataSource="_data_" TreeChildren="item=>item.Children">
+    <PropertyColumn Property="c=>c.Name" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Gender" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Age" Sortable Filterable Groupable />
+    <PropertyColumn Property="c=>c.Address" Sortable Filterable />
 </Table>
 
 @code {
-	Data[] _data;
+    Data[] _data;
 
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
+    Data[] _data_;
 
-		await Task.Delay(500);
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
 
-		_data = data;
-		await InvokeAsync(StateHasChanged);
+        await Task.Delay(500);
 
-		await Task.Delay(500);
-	}
+        _data = data1;
+        _data_ = data2;
+        await InvokeAsync(StateHasChanged);
 
-	Data[] data =
-	{
-		new() {
-			Key = "1",
-			Name = "John",
-			Age = 60,
-			Gender = Gender.Male,
-			Address = "New York No. 1 Lake Park",
-		},
-				new() {
-			Key = "2",
-			Name = "Joe",
-			Age = 32,
-			Gender = Gender.Male,
-			Address = "Sidney No. 1 Lake Park",
-		},
-		new() {
-					Key = "11",
-			Name = "Jim",
-					Age = 42,
-			Gender = Gender.Male,
-					Address = "London No. 1 Lake Park",
-				},
-				new() {
-					Key= "12",
-			Name= "John",
-					Age=30,
-			Gender = Gender.Female,
-					Address= "New York No. 3 Lake Park",
-		},
-						  new() {
-							  Key= "121",
-			Name= "Jimmy",
-							  Age= 16,
-			Gender = Gender.Male,
-			Address= "New York No. 3 Lake Park",
-		},
-		new() {
-			Key= "13",
-			Name= "Jim",
-					Age= 72,
-			Gender = Gender.Female,
-			Address= "London No. 1 Lake Park"
-		},
-						new() {
-							Key= "131",
-			Name= "Jim",
-							Age= 42,
-			Gender = Gender.Male,
-			Address= "London No. 2 Lake Park"
-		},
-								new() {
-									Key= "1311",
-			Name= "Jim",
-									Age= 25,
-			Gender = Gender.Female,
-									Address= "London No. 3 Lake Park",
-								},
-								new() {
-								   Key= "1312",
-			Name= "Jimmy",
-								   Age= 18,
-			Gender = Gender.Male,
-								   Address= "London No. 4 Lake Park",
-		}
-	};
+        await Task.Delay(500);
+    }
 
-	public enum Gender
-	{
-		Male,
-		Female
-	}
+    Data[] data1 =
+    {
+        new() {
+            Key = "1",
+            Name = "John",
+            Age = 60,
+            Gender = Gender.Male,
+            Address = "New York No. 1 Lake Park",
+        },
+        new() {
+            Key = "2",
+            Name = "Joe",
+            Age = 32,
+            Gender = Gender.Male,
+            Address = "Sidney No. 1 Lake Park",
+        },
+        new() {
+            Key = "11",
+            Name = "Jim",
+            Age = 42,
+            Gender = Gender.Male,
+            Address = "London No. 1 Lake Park",
+        },
+        new() {
+            Key= "12",
+            Name= "John",
+            Age=30,
+            Gender = Gender.Female,
+            Address= "New York No. 3 Lake Park",
+        },
+        new() {
+            Key= "121",
+            Name= "Jimmy",
+            Age= 16,
+            Gender = Gender.Male,
+            Address= "New York No. 3 Lake Park",
+        },
+        new() {
+            Key= "13",
+            Name= "Jim",
+            Age= 72,
+            Gender = Gender.Female,
+            Address= "London No. 1 Lake Park"
+        },
+        new() {
+            Key= "131",
+            Name= "Jim",
+            Age= 42,
+            Gender = Gender.Male,
+            Address= "London No. 2 Lake Park"
+        },
+        new() {
+            Key= "1311",
+            Name= "Jim",
+            Age= 25,
+            Gender = Gender.Female,
+            Address= "London No. 3 Lake Park",
+        },
+        new() {
+            Key= "1312",
+            Name= "Jimmy",
+            Age= 18,
+            Gender = Gender.Male,
+            Address= "London No. 4 Lake Park",
+        }
+    };
 
-	public class Data
-	{
-		[DisplayName("Key")]
-		public string Key { get; set; }
+    Data[] data2 =
+    {
+        new() {
+            Key = "1",
+            Name = "John",
+            Age = 60,
+            Gender = Gender.Male,
+            Address = "New York No. 1 Lake Park",
+            Children = new Data[]
+    {
+                new() {
+                    Key= "12",
+                    Name= "John",
+                    Age=30,
+                    Gender = Gender.Female,
+                    Address= "New York No. 3 Lake Park",
+                }
+    }
+        },
+        new() {
+            Key = "2",
+            Name = "Joe",
+            Age = 32,
+            Gender = Gender.Male,
+            Address = "Sidney No. 1 Lake Park",
+        },
+        new() {
+            Key = "11",
+            Name = "Jim",
+            Age = 42,
+            Gender = Gender.Male,
+            Address = "London No. 1 Lake Park",
+            Children = new Data[]
+    {
+                new() {
+                    Key= "13",
+                    Name= "Jim",
+                    Age= 72,
+                    Gender = Gender.Female,
+                    Address= "London No. 1 Lake Park"
+                },
+                new() {
+                    Key= "131",
+                    Name= "Jim",
+                    Age= 42,
+                    Gender = Gender.Male,
+                    Address= "London No. 2 Lake Park"
+                },
+                new() {
+                    Key= "1311",
+                    Name= "Jim",
+                    Age= 25,
+                    Gender = Gender.Female,
+                    Address= "London No. 3 Lake Park",
+                }
+    }
+        },
+        new() {
+            Key= "121",
+            Name= "Jimmy",
+            Age= 16,
+            Gender = Gender.Male,
+            Address= "New York No. 3 Lake Park",
+            Children = new Data[]
+    {
+                new() {
+                    Key= "1312",
+                    Name= "Jimmy",
+                    Age= 18,
+                    Gender = Gender.Male,
+                    Address= "London No. 4 Lake Park",
+                }
+    }
+        }
+    };
 
-		[DisplayName("Name")]
-		public string Name { get; set; }
+    public enum Gender
+    {
+        Male,
+        Female
+    }
 
-		[DisplayName("Gender")]
-		public Gender Gender { get; set; }
+    public class Data
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
 
-		[DisplayName("Age")]
-		public int Age { get; set; }
+        [DisplayName("Name")]
+        public string Name { get; set; }
 
-		[DisplayName("Address")]
-		public string Address { get; set; }
-	}
+        [DisplayName("Gender")]
+        public Gender Gender { get; set; }
+
+        [DisplayName("Age")]
+        public int Age { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+
+        public Data[] Children { get; set; }
+    }
 }
