@@ -162,26 +162,50 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 }
 ```
 
-## Lifecycle
+# Table Lifecycle
 
-### OnInitialized()
+## OnInitialized()
 
 1. 初始化 `ColumnContext(this)`
 2. 初始化 `Dictionary<TItem, RowData<TItem>> _dataSourceCache` 和 `Dictionary<TItem, List<RowData<TItem>>> _allRowDataCache`
 
-### OnParametersSet()
+## OnParametersSet()
 
 1. `ReloadAndInvokeChange()`
 
-### OnAfterRenderAsync()
+## OnAfterRenderAsync()
 
 1. 首次渲染所有列后调用 `OnColumnInitialized()`
    1. `ReloadAndInvokeChange()`
 2. 非首次渲染后调用 `FinishLoadPage()`
 
-### ReloadAndInvokeChange()
+## ReloadAndInvokeChange()
 
 1. `InternalReload()`
    1. `BuildQueryModel()` 根据每个列的过滤、排序、分组规则生成查询模型
    2. 在全局数据集合上应用 `QueryModel` 的排序和过滤规则
    3. 在全局数据集合上应用 `QueryModel` 的分组规则
+
+# Column Lifecycle
+
+## OnInitialized()
+
+1. 初始化列的 `SortModel`、`FilterModel` 和 `GroupModel`
+2. 调用 `Context.HeaderColumnInitialed(this)`
+
+## OnParametersSet()
+
+1. 初始化 `FilterModel`
+
+## HandleSort()
+
+1. 点击列头控制排序时
+   1. 更新当前列的排序方向
+   2. 调用 `Table` 组件的 `ColumnSorterChange()` 方法以重新查询数据
+
+## FilterConfirm()
+
+1. 应用过滤器时
+   1. 更新当前列的过滤规则
+   2. 调用 `Table` 组件的 `ReloadAndInvokeChange()` 方法以重新查询数据
+
