@@ -6,32 +6,43 @@ using System.Collections.Generic;
 
 namespace AntDesign.TableModels
 {
-    public class GroupData<TItem>
+    public class GroupData
+    {
+        public object Key { get; set; }
+
+        public bool Expanded { get; set; } = true;
+
+        public GroupData()
+        {
+        }
+
+        public GroupData(object key)
+        {
+            this.Key = key;
+        }
+
+        public void ToggleTreeNode()
+        {
+            this.Expanded = !this.Expanded;
+        }
+    }
+
+    public class GroupData<TItem> : GroupData
     {
         public GroupData<TItem> Parent { get; set; }
-
-        public TItem Overall { get; set; }
 
         public IEnumerable<TItem> Items { get; set; }
 
         public IEnumerable<GroupData<TItem>> Children { get; set; }
 
-        public GroupData()
-        {
-        }
-    }
-
-    public class GroupData<TKey, TItem> : GroupData<TItem>
-    {
-        public TKey Key { get; set; }
+        public Dictionary<TItem, RowData<TItem>> Cache { get; set; } = new Dictionary<TItem, RowData<TItem>>();
 
         public GroupData() : base()
         {
         }
 
-        public GroupData(TKey key)
+        public GroupData(object key) : base(key)
         {
-            this.Key = key;
         }
     }
 }

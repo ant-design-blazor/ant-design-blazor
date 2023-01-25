@@ -347,7 +347,8 @@ namespace AntDesign
 
         public void OnApplyGroup(MouseEventArgs args)
         {
-             // string.Join(", ", this._selectedGroupModelIndexes?.Select(x => (ColumnContext.HeaderColumns[x] as IFieldColumn).FieldName) ?? Enumerable.Empty<string>())
+            ReloadAndInvokeChange();
+            // string.Join(", ", this._selectedGroupModelIndexes?.Select(x => (ColumnContext.HeaderColumns[x] as IFieldColumn).FieldName) ?? Enumerable.Empty<string>())
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
@@ -443,9 +444,9 @@ namespace AntDesign
                 }
                 else
                 {
-                    _showGroupItems = Enumerable.Empty<GroupData<TItem>>();
-                    _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
+                    _showItems = Enumerable.Empty<TItem>();
+                    _showGroupItems = Enumerable.Empty<GroupData<TItem>>();
                 }
 
                 if (_total != Total && TotalChanged.HasDelegate)
