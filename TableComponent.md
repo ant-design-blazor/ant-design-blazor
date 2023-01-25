@@ -2,22 +2,27 @@
 
 ## Table.razor
 
-1. Razor文件内宏观声明表格
+1. Table.razor文件内宏观声明表格
    1. 使用级联参数向下层组件传递：当前表格组件实例、数据条目类型、列交互实例、是否为初始化状态
    2. 执行`@ChildContent(_fieldModel)`渲染列头
-
 2. 使用RenderFragement委托配置头、行、列等的渲染逻辑
    1. `<Table>`
       1. `@colGroup((this, true))` => `<colgroup/>`
       2. `@header(this)` => `</thead>` 
       3. `<tbody>`
          1. `@body(this, _showItems, 0, _dataSourceCache)`
-
+            1. `showItems.Select((data, index) => (data, index))`
+               1. ChildContent: `table.bodyRow(table, level, rowDataCache)`
+         
       4. `</tbody>`
 
    2. `</Table>`
 
-3. 核心渲染行数据的逻辑在于 bodyRow 委托之内
+3. 使用 `table.bodyRaw()` 方法生成数据行的 `RenderFragment<TItem data, int index>` 以渲染每一行数据
+   1. `<TableRowWrapper RowData="currentRowData">`
+      1. `<TableRow @key="currentRowData.Data">`
+         1. `@table.ChildContent(currentRowData.Data)`
+
 
 - **<Table>**
   - RenderFragement **body**
@@ -54,10 +59,7 @@
                             // </template>
                             <tbody class="ant-table-tbody">
                                 // Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body(this, _showItems, 0, _dataSourceCache) = (table, showItems, level, rowDataCache) => @<Template>
-                                @_showItems.Select((data, index) => (data, index))
-                    ChildContent="table.bodyRow(table = this, level = 0, rowDataCache = _dataSourceCache)" />
-<ForeachLoop Items="showItems.Select((data, index) => (data, index))"
-                    ChildContent="table.bodyRow(table, level, rowDataCache)" />
+                                @_showItems.Select((data, index) => (data, index)).ForEach(tuple => table.bodyRow(table, level, rowDataCache).Invoke(data, index))
                                 // </Template>
                             </tbody>
                             @tfoot(this)
@@ -111,14 +113,6 @@
                 {
                     @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache);
                 }
-                @if (!currentRowData.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
-                {
-                    <tr>
-                        <td>
-                            @table.ExpandTemplate(currentRowData)
-                        </td>
-                    </tr>
-                }
             }
         </TableRowWrapper>
     }
@@ -128,69 +122,38 @@
 
 ## Column.razor
 
+1. Column.razor 声明每一个列的结构
+   1. `<Column>` 组件作为 `<Table>` 的 `ChildContent` 被定义在其内部，因此在每一行数据上循环执行 `@table.ChildContent()` 时，都将通过 `<Column>` 组件渲染每一行数据的所有列
+   2. 使用级联参数 `IsHeader` 和 `IsBody` 等控制 `<Column>` 组件的具体渲染行为
+   3. 渲染数据行时
+      1. 如果当前列索引等于树状展开按钮的列
+         1. 通过一个带 `padding-left: (RawData.Level * Table.IndentSize)px` 的 `<span>` 缩进该列的数据
+         2. 如果当前数据行还有子数据行，则绘制一个树状展开按钮，否则绘制一个不可见的空白占位元素
+      2. 根据数据字段表达式获取当前数据行在该列应该显示的数据 `CellData<TData>`
+         1. 渲染格式化后的数据
+
 ```csharp
 if (IsHeader && HeaderColSpan != 0)
 {
     <CascadingValue Name="IsHeader" Value="false" IsFixed>
         <th>
-            @if (Sortable || (_filterable && _filters?.Any() == true))
-            {
-                @FilterToolTipSorter
-            }
-            else if (TitleTemplate != null)
-            {
-                @TitleTemplate
-            }
-            else
-            {
-                @Title
-            }
+        	@FilterToolTipSorter
         </th>
     </CascadingValue>
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
-    var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field?.ToString();
-    @if (AppendExpandColumn)
-    {
-        <td class="ant-table-cell ant-table-row-expand-icon-cell">
-            @if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
-            {
-                <button type="button" @onclick="ToggleTreeNode"></button>
-            }
-        </td>
-    }
- 
-    // Get cell data value from Field (compiled Property expression) property
     var cellData = new CellData<TData>(RowData, Field, Format);
     <CascadingValue Name="IsBody" Value="false" IsFixed>
         <td>
             @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
             {
-                <span></span>
-                @if (RowData.HasChildren)
-                {
-                    <button type="button" @onclick="ToggleTreeNode"></button>
-                }
-                else
-                {
-                    <button type="button"></button>
-                }
+                <span style="padding-left: (RowData.Level * Table.IndentSize);"></span>
+                <button type="button" @onclick="ToggleTreeNode"></button>
             }
  
             // Render cell value
-            @if (CellRender != null)
-            {
-                @CellRender(cellData)
-            }
-            else if (ChildContent != null)
-            {
-                @ChildContent
-            }
-            else
-            {
-                @cellData.FormattedValue
-            }
+    		@cellData.FormattedValue
         </td>
     </CascadingValue>
 }
