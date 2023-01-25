@@ -162,3 +162,26 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 }
 ```
 
+## Lifecycle
+
+### OnInitialized()
+
+1. 初始化 `ColumnContext(this)`
+2. 初始化 `Dictionary<TItem, RowData<TItem>> _dataSourceCache` 和 `Dictionary<TItem, List<RowData<TItem>>> _allRowDataCache`
+
+### OnParametersSet()
+
+1. `ReloadAndInvokeChange()`
+
+### OnAfterRenderAsync()
+
+1. 首次渲染所有列后调用 `OnColumnInitialized()`
+   1. `ReloadAndInvokeChange()`
+2. 非首次渲染后调用 `FinishLoadPage()`
+
+### ReloadAndInvokeChange()
+
+1. `InternalReload()`
+   1. `BuildQueryModel()` 根据每个列的过滤、排序、分组规则生成查询模型
+   2. 在全局数据集合上应用 `QueryModel` 的排序和过滤规则
+   3. 在全局数据集合上应用 `QueryModel` 的分组规则
