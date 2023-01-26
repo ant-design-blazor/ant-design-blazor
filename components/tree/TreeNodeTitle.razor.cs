@@ -66,9 +66,6 @@ namespace AntDesign
             SelfNode.SetSelected(!SelfNode.Selected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-            else if (TreeComponent.OnContextMenu.HasDelegate && args.Button == 2)
-                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-
             TreeComponent.UpdateBindData();
         }
 
@@ -81,6 +78,17 @@ namespace AntDesign
         {
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private async Task OnContextMenu(MouseEventArgs args)
+        {
+            if (TreeComponent.OnContextMenu.HasDelegate)
+                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }
 
         /// <summary>
