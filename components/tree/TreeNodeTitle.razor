@@ -6,7 +6,7 @@
 
 @if (CanDraggable)
 {
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" @oncontextmenu="OnContextMenu" draggable="true"
       @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
       @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
         @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
@@ -64,7 +64,7 @@
 }
 else
 {
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick">
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" @oncontextmenu="OnContextMenu">
         @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
         {
             <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
