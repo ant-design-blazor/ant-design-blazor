@@ -99,6 +99,11 @@ namespace AntDesign
         /// </summary>
         public RenderFragment RestoreBtnIcon { get; set; } = DefaultRestoreIcon;
 
+        /// <summary>
+        /// Maximize the dialog during component initialization, and it will ignore the Maximizable value.
+        /// </summary>
+        public bool DefaultMaximized { get; set; } = false;
+
         #region internal
 
 

@@ -216,11 +216,18 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Obsolete]
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         /// <summary>
         /// Called when  clear button clicked.
         /// </summary>
         [Parameter]
-        public EventCallback OnClearClick { get; set; }
+        public EventCallback OnClear { get; set; }
+
+        [Parameter]
+        public EventCallback OnOk { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
@@ -229,7 +236,7 @@ namespace AntDesign
         public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
 
         [Parameter]
-        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+        public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         [Parameter]
         public Func<DateTime, int[]> DisabledHours { get; set; } = null;
@@ -362,9 +369,8 @@ namespace AntDesign
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
-                .If($"{PrefixCls}-status-error", () => ValidationMessages.Length > 0)
-               //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
-               //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
+                .If($"{PrefixCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                ;
 
             _panelClassMapper
@@ -392,7 +398,7 @@ namespace AntDesign
                 else if (_inputEnd.IsOnFocused)
                 {
                     HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
-                    int translateDistance = element.ClientWidth + 16;
+                    decimal translateDistance = element.ClientWidth + 16;
 
                     if (RTL)
                     {
@@ -548,6 +554,8 @@ namespace AntDesign
 
                 Close();
             }
+
+            await OnOk.InvokeAsync(null);
         }
 
         internal void OnRangeItemOver(DateTime?[] range)

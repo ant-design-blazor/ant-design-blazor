@@ -103,7 +103,7 @@ namespace AntDesign
         {
             if (!IsHeader)
             {
-                Table.Selection.RowSelections.Remove(this);
+                Table?.Selection?.RowSelections?.Remove(this);
             }
 
             base.Dispose(disposing);

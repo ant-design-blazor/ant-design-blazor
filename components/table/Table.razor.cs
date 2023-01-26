@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AntDesign
 {
-#if NET6_0
+#if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
@@ -44,7 +44,13 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> RowTemplate { get; set; }
+        public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> ColumnDefinitions { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> HeaderTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
@@ -94,7 +100,7 @@ namespace AntDesign
         public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
-        public TableSize Size { get; set; }
+        public TableSize Size { get; set; } = TableSize.Default;
 
         [Parameter]
         public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
@@ -152,6 +158,9 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; }
 
+        [Parameter]
+        public RenderFragment EmptyTemplate { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -192,7 +201,10 @@ namespace AntDesign
         private ElementReference _tableBodyRef;
         private ElementReference _tableRef;
 
+        private decimal _tableWidth;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
+        private bool UseResizeObserver => ScrollX != null;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -202,6 +214,9 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        bool ITable.HasHeaderTemplate => HeaderTemplate != null;
+        bool ITable.HasRowTemplate => RowTemplate != null;
+
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
@@ -386,7 +401,7 @@ namespace AntDesign
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-                    _showItems = queryModel.CurrentPagedRecords(query);
+                    _showItems = queryModel.CurrentPagedRecords(query).ToList();
                 }
                 else
                 {
@@ -400,6 +415,11 @@ namespace AntDesign
                 }
 
                 _shouldRender = true;
+            }
+
+            if (HidePagination && _dataSourceCount > 0)
+            {
+                _pageSize = _dataSourceCount;
             }
 
             if (!_preventRender)
@@ -464,9 +484,9 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (RowTemplate != null)
+            if (ColumnDefinitions != null)
             {
-                ChildContent = RowTemplate;
+                ChildContent = ColumnDefinitions;
             }
 
             this.ColumnContext = new ColumnContext(this);
@@ -625,6 +645,18 @@ namespace AntDesign
         void ITable.TableLayoutIsFixed()
         {
             TableLayout = "fixed";
+            StateHasChanged();
+        }
+
+        private void OnResize(DomRect domRect)
+        {
+            if (_tableWidth == domRect.Width)
+            {
+                return;
+            }
+
+            _tableWidth = domRect.Width;
+            _shouldRender = true;
             StateHasChanged();
         }
 

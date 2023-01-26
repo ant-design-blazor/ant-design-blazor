@@ -1,4 +1,5 @@
-﻿@inherits AntDesignTestBase	
+﻿@using AntDesign.Internal
+@inherits AntDesignTestBase	
 @code {
 
 	[Fact]
@@ -98,13 +99,23 @@
 		//Arrange
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input TValue="string" AllowClear/>);
-		//Act
-		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: hidden");
-		cut.Find("input").Input("test");		
+        //Act
+        bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
+        cut.Find("input").Input("test");		
 		//Assert  
 		isClearButtonHidden.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: visible");
-	}
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeFalse();
+    }
+
+    [Fact]
+	public void Input_show_clearButton_with_suffix()
+	{
+		//Arrange
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input TValue="string" AllowClear ><Suffix>suffix</Suffix></AntDesign.Input>);
+        //Assert
+         cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-has-suffix").Should().BeTrue();
+    }
 
 	[Fact]
 	public void Input_hide_clearButton_when_input_reset()
@@ -115,12 +126,25 @@
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input @ref="@input" Value="@("test")" AllowClear/>);
 		//Act
-		bool isClearButtonVisible = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: visible");
+		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
 		cut.Find("input").Input("");		
 		//Assert  
-		isClearButtonVisible.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
+		isClearButtonHidden.Should().BeFalse();
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeTrue();
 	}
+
+    [Fact]
+    public void Input_default_change()
+    {
+        //Arrange
+        string? value = null;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value />);
+        //Act
+        cut.Find("input").Input("newValue"); // get value on input
+        cut.Find("input").Change("newValue"); // binding value on change
+        //Assert
+        cut.Instance.Value.Should().Be("newValue");
+    }
 
 	[Fact]
 	public async Task Input_Debounce_sets_value()
@@ -133,8 +157,72 @@
 		cut.Find("input").Input("newValue");
 		cut.Find("input").KeyUp(String.Empty);
 		//Assert		
-		await Task.Delay(debounce + 100);		
+		await Task.Delay(debounce+100);		
 
 		cut.Instance.Value.Should().Be("newValue");
 	} 
+
+    [Fact]
+    public void Input_Debounce_sets_zero()
+    {
+        //Arrange
+        string? value = null;
+        int debounce = 0;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value DebounceMilliseconds="@debounce" />);
+        //Act
+        cut.Find("input").Input("newValue");
+        cut.Find("input").KeyUp(String.Empty);
+        //Assert
+
+        cut.Instance.Value.Should().Be("newValue");
+    }
+
+    [Fact]
+    public async Task Input_with_bindOnInput()
+    {
+        //Arrange
+        string? value = null;
+
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value BindOnInput />);
+        //Act
+        cut.Find("input").Input("newValue");
+        cut.Find("input").KeyUp(String.Empty);
+        //Assert
+        await Task.Delay(250);
+
+        cut.Instance.Value.Should().Be("newValue");
+    }
+
+
+    class TestModel
+    {
+       public int value { get; set; }
+    }
+
+    #if NET6_0_OR_GREATER
+    [Fact]
+    public void Form_convert_error_status()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+        TestModel model  = new();
+        Input<int> input=null; 
+        var cut = Render<AntDesign.Form<TestModel>>(
+        @<Form Model="model" ValidateOnChange>
+            <FormItem>
+                <Input @ref="input" @bind-Value=@context.value DebounceMilliseconds="0" />
+            </FormItem>
+        </Form>
+    );
+
+        cut.Find("input").Input("newValue");
+        cut.Find("input").KeyUp(String.Empty);	
+
+        var isValid = cut.Instance.Validate();
+
+        isValid.Should().Be(false);
+        input?.ValidationMessages.Should().Contain("value field isn't valid.");
+    }
+
+    #endif
 }

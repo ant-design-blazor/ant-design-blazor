@@ -1,14 +1,14 @@
-﻿<Tooltip Title="@("prompt text (wrapped with div element)")">
+﻿<Tooltip Title="prompt text (wrapped with div element)">
     <span>Tooltip will show on mouse enter.</span>
 </Tooltip>
 <br/>
-<Tooltip Title="@("prompt text (not wrapped)")">
+<Tooltip Title="prompt text (not wrapped)">
     <Unbound>
         <span @ref="@context.Current">Tooltip (unbounded) will show on mouse enter.</span>
     </Unbound>
 </Tooltip>
 <br/>
-<Tooltip Title="@("Triggered by focusing on element")" Trigger="_triggerTypes">
+<Tooltip Title="Triggered by focusing on element" Trigger="_triggerTypes">
     <span>Tooltip will show on focused.</span>
 </Tooltip>
 

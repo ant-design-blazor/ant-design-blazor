@@ -19,7 +19,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
         /// </summary>
@@ -133,7 +132,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnClose { get; set; }
 
-
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
@@ -157,7 +155,6 @@ namespace AntDesign
 
         #endregion Parameters
 
-
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
 
@@ -177,11 +174,11 @@ namespace AntDesign
         private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
         private string _operationStyle = "visibility: hidden; order: 1;";
 
-        private double _scrollOffset;
-        private int _scrollListWidth;
-        private int _scrollListHeight;
-        private int _wrapperWidth;
-        private int _wrapperHeight;
+        private decimal _scrollOffset;
+        private decimal _scrollListWidth;
+        private decimal _scrollListHeight;
+        private decimal _wrapperWidth;
+        private decimal _wrapperHeight;
 
         private bool _shouldRender;
         private bool _afterFirstRender;
@@ -339,7 +336,6 @@ namespace AntDesign
                 tab.Close();
                 pane.Close();
 
-
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
@@ -349,6 +345,10 @@ namespace AntDesign
 
         internal void RemovePane(TabPane tab)
         {
+            // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
+            if (IsDisposed)
+                return;
+
             if (tab.IsTab)
             {
                 var index = _tabs.IndexOf(tab);
@@ -394,7 +394,9 @@ namespace AntDesign
             if (tab == null || tabPane == null)
                 return;
 
-            if (tabPane.Disabled)
+            // Even if a TabPane is disabled, it is allowed to be activated at initial load time (at initial load time, _activeTab is null)
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/2732
+            if (_activeTab != null && tabPane.Disabled)
             {
                 return;
             }
@@ -501,7 +503,7 @@ namespace AntDesign
 
         private void OnWheel(string json)
         {
-            int maxOffset;
+            decimal maxOffset;
             if (IsHorizontal)
             {
                 maxOffset = _scrollListWidth - _wrapperWidth;
@@ -553,11 +555,6 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
-            if (_renderedActivePane == _activePane)
-            {
-                return;
-            }
-
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
@@ -613,16 +610,16 @@ namespace AntDesign
             }
 
             int invisibleHeadCount;
-            double tabSize, visibleCount;
+            decimal tabSize, visibleCount;
 
             if (IsHorizontal)
             {
-                tabSize = 1.0 * _scrollListWidth / _tabs.Count;
+                tabSize = _scrollListWidth / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
             }
             else
             {
-                tabSize = 1.0 * _scrollListHeight / _tabs.Count;
+                tabSize = _scrollListHeight / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
             }
 
@@ -681,6 +678,11 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.DisposeExclusive();
+
+            _panes.Clear();
+            _tabs.Clear();
+            _invisibleTabs.Clear();
+
             base.Dispose(disposing);
         }
     }

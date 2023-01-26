@@ -62,6 +62,20 @@ namespace AntDesign
             return targetType;
         }
 
+        public static Type GetUnderlyingType(this Type type)
+        {
+            Type targetType;
+            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                targetType = Nullable.GetUnderlyingType(type);
+            }
+            else
+            {
+                targetType = type;
+            }
+            return targetType;
+        }
+
         public static bool IsNumericType<T>()
         {
             Type type = GetUnderlyingType<T>();

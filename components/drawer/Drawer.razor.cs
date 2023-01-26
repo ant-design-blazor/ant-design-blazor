@@ -142,6 +142,17 @@ namespace AntDesign
 
         /// <summary>
         /// <para>
+        /// Drawer header 抽屉头
+        /// </para>
+        /// <para>
+        /// Header style for modal header element. Such as height, padding etc.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public string HeaderStyle { get; set; }
+
+        /// <summary>
+        /// <para>
         /// Drawer对话框外层容器的类名
         /// </para>
         /// <para>

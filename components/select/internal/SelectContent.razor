@@ -75,7 +75,7 @@
   }
   else
   {
-    if (ShowArrowIcon)
+    if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
     {
       <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.OnArrowClick" @onclick:stopPropagation="true">
         @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
@@ -88,6 +88,11 @@
         else
         {
           <Icon Type="down"></Icon>
+        }
+
+        @if (ParentSelect.FeedbackIcon!=null)
+        {
+           @ParentSelect.FeedbackIcon
         }
       </span>
     }

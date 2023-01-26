@@ -10,7 +10,8 @@
 		TItemValue="string"
 		TItem="LabeledValue"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		EnableSearch>
+		EnableSearch
+        EnableVirtualization>
 </Select>
 @code
 {
@@ -34,7 +35,7 @@
     protected override void OnInitialized()
     {
         const int min = 0;
-        const int max = 200;
+        const int max = 2000;
         _options = new List<LabeledValue>();
 
         for (var i = min; max > i; i++)

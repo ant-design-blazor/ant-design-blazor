@@ -17,6 +17,7 @@
                       OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                       OnVisibleChange="@OnOverlayVisibleChangeAsync"
                       PopupContainerSelector="@PopupContainerSelector"
+                      BoundaryAdjustMode="BoundaryAdjustMode"
                       OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                       OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
         <Overlay>
@@ -39,6 +40,7 @@
                         ShowLeafIcon="ShowLeafIcon"
                         ShowLine="ShowTreeLine"
                         TitleExpression="TitleExpression"
+                        TitleTemplate="TitleTemplate"
                         KeyExpression="KeyExpression"
                         IconExpression="IconExpression"
                         IsLeafExpression="IsLeafExpression"

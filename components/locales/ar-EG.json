@@ -140,5 +140,8 @@
     "previewFile": "استعرض الملف",
     "downloadFile": "تحميل الملف"
   },
-  "Empty": { "description": "لا توجد بيانات" }
+  "Empty": { "description": "لا توجد بيانات" },
+  "Form": {
+    "optional": "(اختياري)"
+  }
 }

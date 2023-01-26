@@ -65,11 +65,28 @@ namespace AntDesign
 
         private bool ShowRanges => Ranges?.Count > 0;
 
+        private readonly Func<DateTime, bool> _defaultDisabledDateCheck;
+
+        private Func<DateTime, bool> _disabledDate;
+
+        [Parameter]
+        public override Func<DateTime, bool> DisabledDate
+        {
+            get
+            {
+                return _disabledDate;
+            }
+            set
+            {
+                _disabledDate = (date) => (value is not null && value(date)) || _defaultDisabledDateCheck(date);
+            }
+        }
+
         public RangePicker()
         {
             IsRange = true;
 
-            DisabledDate = (date) =>
+            _defaultDisabledDateCheck = (date) =>
             {
                 int? index = null;
 
@@ -106,7 +123,8 @@ namespace AntDesign
                 {
                     var date1Week = DateHelper.GetWeekOfYear(date1, Locale.FirstDayOfWeek);
                     var date2Week = DateHelper.GetWeekOfYear(date2, Locale.FirstDayOfWeek);
-                    return index == 0 ? date1Week < date2Week : date1Week > date2Week;
+                    return index == 0 ? date1Week < date2Week && date1.Year <= date2.Year
+                                        : date1.Year >= date2.Year && date1Week > date2Week;
                 }
                 else
                 {
@@ -115,6 +133,7 @@ namespace AntDesign
                     return index == 0 ? formattedDate1 < formattedDate2 : formattedDate1 > formattedDate2;
                 }
             };
+            DisabledDate = null;
         }
 
         private async Task OnInputClick(int index)
@@ -263,7 +282,6 @@ namespace AntDesign
                                 AutoFocus = false;
                             }
                         }
-
                     }
                     else if (!isTab)
                     {
@@ -287,7 +305,6 @@ namespace AntDesign
             else if (!isOverlayShown)
                 await _dropDown.Show();
         }
-
 
         private async Task OnFocus(int index)
         {
@@ -515,8 +532,8 @@ namespace AntDesign
                 InvokeOnChange();
             }
 
-            if (OnClearClick.HasDelegate)
-                OnClearClick.InvokeAsync(null);
+            OnClear.InvokeAsync(null);
+            OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
         }
@@ -614,6 +631,11 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick(0);
+        }
+
+        public bool ShowClear()
+        {
+            return CurrentValue is Array array && (array.GetValue(0) != null || array.GetValue(1) != null) && AllowClear;
         }
     }
 }

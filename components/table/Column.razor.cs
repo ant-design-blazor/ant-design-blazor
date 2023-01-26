@@ -200,7 +200,10 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+                if (!Table.HasRowTemplate)
+                {
+                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                }
 
                 if (DataIndex != null)
                 {
@@ -462,7 +465,7 @@ namespace AntDesign
 
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                foreach (var filter in _filters.Where(f => filterModel.Filters.Any(x => x.Value.Equals(f.Value))))
                 {
                     filter.Selected = true;
                 }

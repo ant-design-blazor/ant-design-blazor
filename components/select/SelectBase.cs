@@ -57,6 +57,14 @@ namespace AntDesign
 
         protected Action<TItem, TItemValue> _setValue;
 
+        internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
+
+        /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
         /// <summary>
         /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default
         /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
@@ -202,8 +210,6 @@ namespace AntDesign
         /// Called when the selected items changes.
         /// </summary>
         [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
-
-        [Parameter] public string Status { get; set; }
 
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
@@ -602,6 +608,12 @@ namespace AntDesign
         {
             SetClassMap();
 
+            var classPrefix = "ant-select";
+            ClassMapper
+                .If($"{classPrefix}-in-form-item ", () => FormItem != null)
+                .If($"{classPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{classPrefix}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
+
             if (string.IsNullOrWhiteSpace(Style))
             {
                 Style = DefaultWidth;
@@ -708,7 +720,7 @@ namespace AntDesign
                     SelectedOptionItems.Add(selectOption);
                 }
                 selectOption.IsSelected = true;
-                await ValueChanged.InvokeAsync(selectOption.Value);
+                CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
             }
             else
@@ -748,10 +760,7 @@ namespace AntDesign
                     {
                         SelectOptionItems.Remove(selectOption);
                         SelectedOptionItems.Remove(selectOption);
-                        if (selectOption.IsAddedTag && SelectOptions != null)
-                        {
-                            AddedTags.Remove(selectOption);
-                        }
+                        AddedTags.Remove(selectOption);
                     }
 
                     if (IsResponsive)
@@ -906,7 +915,7 @@ namespace AntDesign
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
-                Value = default;
+                CurrentValue = default;
                 await ClearSelectedAsync();
             }
             else if (_hasValueOnClear)
@@ -914,7 +923,6 @@ namespace AntDesign
                 var selectOption = SelectOptionItems.Where(o => EqualityComparer<TItemValue>.Default.Equals(o.Value, _valueOnClear)).FirstOrDefault();
                 if (selectOption != null)
                 {
-                    Value = selectOption.Value;
                     await SetValueAsync(selectOption);
                 }
                 else
@@ -924,8 +932,7 @@ namespace AntDesign
 
                     ActiveOption = SelectOptionItems.FirstOrDefault();
                     SelectedOptionItems.Clear();
-                    Value = _valueOnClear;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _valueOnClear;
                 }
             }
             else
@@ -935,8 +942,7 @@ namespace AntDesign
                     SelectedOptionItems[0].IsSelected = false;
                     SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
                     SelectedOptionItems[0].IsSelected = true;
-                    Value = _selectOptionEqualToTypeDefault.Value;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
                 {
@@ -1009,6 +1015,19 @@ namespace AntDesign
             {
                 await OnSelectedItemsChanged.InvokeAsync(default);
                 await ValuesChanged.InvokeAsync(default);
+            }
+        }
+
+        /// <summary>
+        /// Unhide all select options, except any that are selected in the case that <see cref="HideSelected"/> is true
+        /// </summary>
+        protected void UnhideSelectOptions()
+        {
+            var hiddenOptions = SelectOptionItems.Where(x => x.IsHidden);
+
+            foreach (var option in hiddenOptions)
+            {
+                option.IsHidden = HideSelected && option.IsSelected;
             }
         }
 

@@ -171,5 +171,8 @@
   },
   "Empty": {
     "description": "Brak danych"
+  },
+  "Form": {
+    "optional": "(opcjonalne)"
   }
 }

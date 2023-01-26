@@ -81,7 +81,7 @@ namespace AntDesign.Docs.Services
         {
             await InitializeAsync(CurrentLanguage);
             return _componentCache.TryGetValue(CurrentLanguage, out var component)
-                ? (await component).TryGetValue(componentName.ToLower(), out var demoComponent)? demoComponent:null
+                ? (await component).TryGetValue(componentName.ToLower(), out var demoComponent) ? demoComponent : null
                 : null;
         }
 
@@ -110,7 +110,7 @@ namespace AntDesign.Docs.Services
             _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
             return _showCaseCache.GetOrAdd(type, t =>
             {
-                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{type}") ?? typeof(Template);
+                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{t}") ?? typeof(Template);
 
                 void ShowCase(RenderTreeBuilder builder)
                 {

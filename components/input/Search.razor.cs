@@ -33,7 +33,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnSearch { get; set; }
 
-
         protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
 
         protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
@@ -99,7 +98,12 @@ namespace AntDesign
                     {
                         if (boolean)
                         {
-                            builder.AddAttribute(17, "Icon", "search");
+                            builder.AddAttribute(17, "ChildContent", new RenderFragment((b) =>
+                            {
+                                b.OpenComponent<Icon>(20);
+                                b.AddAttribute(21, "Type", "search");
+                                b.CloseComponent();
+                            }));
                         }
                     }, str =>
                     {
@@ -128,7 +132,7 @@ namespace AntDesign
             }
 
             AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
-            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search ant-input-group-wrapper");
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 

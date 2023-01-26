@@ -1,0 +1,16 @@
+﻿@namespace AntDesign.Tests.Button
+@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Renders_basic_download()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.TriggerFileDownload, _ => true);
+
+        var cut = Context.Render(@<DownloadButton>Download</DownloadButton>);
+
+        cut.MarkupMatches(
+            @<button class="ant-btn ant-btn-default" id:ignore type="button" blazor:onclick="1" blazor:onmouseup="2" ant-click-animating-without-extra-node="false" blazor:elementReference:ignore>
+                <span>Download</span>
+            </button>);
+    }
+}

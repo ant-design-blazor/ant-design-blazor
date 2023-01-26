@@ -18,7 +18,7 @@
     <Switch @bind-Value="@context.Hot"></Switch>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Summary" Sortable />
-  <ActionColumn>
+  <ActionColumn Title="Action">
     <Space>
       <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
     </Space>

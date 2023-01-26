@@ -26,12 +26,12 @@ title: Ant Design of Blazor
 ## ✨ 特性
 
 - 🌈 提炼自企业级中后台产品的交互语言和视觉风格。
-- 📦 开箱即用的高质量 Razor 组件，可在多种托管方式共享。
-- 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
+- 📦 开箱即用的高质量 Blazor 组件，可在多种托管方式共享。
+- 💕 支持基于 WebAssembly 的前端和基于 SignalR 的服务端 UI 即时交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET Standard 2.1/.NET 5/.NET 6，可直接引用丰富的 .NET 类库。
-- 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
+- ⚙️ 支持 .NET Core 3.1 以上所有版本，可直接引用丰富的 .NET 类库。
+- 🌍 数十个国际化语言支持。
 - 💴 基于 MIT 开源协议，.NET 基金会项目，商业应用免费。
 
 ## 🌈 在线示例
@@ -40,11 +40,11 @@ title: Ant Design of Blazor
 
 ## 🖥 支持环境
 
-- 兼容 .NET Core 3.1 / .NET 5 / .NET 6
-- 最新支持 Blazor WebAssembly 6.0 正式版
-- 支持服务端双向绑定
-- 支持 WebAssembly 静态文件部署
-- 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)）
+- 兼容 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 。
+- 支持 WebAssembly 静态文件部署。
+- 支持服务端双向绑定。
+- 支持 WebAssembly 静态文件部署。
+- 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)）。
 - 可直接运行在 [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987)、[WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)、[Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) 等 Blazor 混合客户端环境中。
 - 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上
 
@@ -67,7 +67,7 @@ title: Ant Design of Blazor
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 以上版本，推荐使用 .NET 7。
 
 ### 从模板创建一个新项目
 
@@ -145,7 +145,16 @@ title: Ant Design of Blazor
 
 ## 🔨 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0?WT.mc_id=DT-MVP-5003987) 5.0.100 以上版本
+
+### Gitpod
+
+点击下方按钮，免费创建一个新的工作区用于开发。
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ant-design-blazor/ant-design-blazor)
+
+### 本地
+
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/7.0?WT.mc_id=DT-MVP-5003987) 7.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
@@ -158,7 +167,7 @@ title: Ant Design of Blazor
 
   打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ant-design-blazor/ant-design-blazor/wiki)。
 
-  > 推荐使用 Visual Studio 2019 开发。
+  > 推荐使用 Visual Studio 2022 开发。
 
 ## 🔗 链接
 
@@ -185,6 +194,13 @@ title: Ant Design of Blazor
   <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/docs/assets/dingtalk.jpg" width="300">
 
 - 另外，我还创立了面向中文开发者的 Blazor 中文社区，高手如云，只讨论技术，无卖课广告。可以加我微信（JamesYeungMVP）拉进微信群，另外也有一个 QQ 群 1012762441。广告勿扰。
+
+
+## 行为准则
+
+本项目采用了《贡献者公约》所定义的行为准则，以明确我们社区的预期行为。
+更多信息请见 [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct).
+
 
 ## ☀️ 授权协议
 

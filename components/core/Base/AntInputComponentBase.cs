@@ -27,12 +27,12 @@ namespace AntDesign
         protected string PropertyName => _propertyReflector?.PropertyName;
 
         [CascadingParameter(Name = "FormItem")]
-        private IFormItem FormItem { get; set; }
+        protected IFormItem FormItem { get; set; }
 
         [CascadingParameter(Name = "Form")]
         protected IForm Form { get; set; }
 
-        public string[] ValidationMessages { get; set; } = Array.Empty<string>();
+        public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
         private string _formSize;
 
@@ -70,10 +70,11 @@ namespace AntDesign
             get { return _value; }
             set
             {
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, _value);
                 if (hasChanged)
                 {
                     _value = value;
+
                     OnValueChange(value);
                 }
             }
@@ -95,7 +96,7 @@ namespace AntDesign
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
         /// <summary>
-        /// The size of the input box. Note: in the context of a form, 
+        /// The size of the input box. Note: in the context of a form,
         /// the `large` size is used. Available: `large` `default` `small`
         /// </summary>
         [Parameter]
@@ -132,6 +133,8 @@ namespace AntDesign
                     Value = value;
 
                     ValueChanged.InvokeAsync(value);
+
+                    OnCurrentValueChange(value);
 
                     if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
                     {
@@ -197,13 +200,12 @@ namespace AntDesign
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
 
-
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
         /// </summary>
         protected AntInputComponentBase()
         {
-            _validationStateChangedHandler = (sender, eventArgs) => StateHasChanged();
+            _validationStateChangedHandler = (sender, eventArgs) => InvokeAsync(StateHasChanged);
         }
 
         /// <summary>
@@ -267,6 +269,14 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
+        {
+        }
+
+        /// <summary>
+        /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual void OnCurrentValueChange(TValue value)
         {
         }
 
@@ -339,6 +349,15 @@ namespace AntDesign
             Form?.RemoveControl(this);
 
             base.Dispose(disposing);
+        }
+
+        internal virtual void OnValidated(string[] validationMessages)
+        {
+            this.ValidationMessages = validationMessages;
+        }
+
+        internal virtual void UpdateStyles()
+        {
         }
 
         internal virtual void ResetValue()

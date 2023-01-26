@@ -48,3 +48,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 | Size | 设置按钮大小        | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
 | Type | 设置按钮类型        | ButtonType | `ButtonType.Default` |
 | NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
+
+
+### DownloadButton
+
+| Property | Description | Type | Default Value | Version 
+| --- | --- | --- | --- |
+| Url | 文件下载地址     | string    | null         |
+| FileName |  指定文件名        | string    | false         | 
