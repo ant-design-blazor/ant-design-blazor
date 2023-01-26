@@ -15,6 +15,52 @@ timeline: true
 
 ---
 
+### 0.14.0
+
+`2023-01-26`
+
+新春快乐，兔年吉祥！
+
+- Table
+  - 🆕 支持根据表格的 `TItem` 类型自动生成列。[#2978](https://github.com/ant-design-blazor/ant-design-blazor/pull/2978) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 Table 头部和行的分组。[#2973](https://github.com/ant-design-blazor/ant-design-blazor/pull/2973) [@anranruye](https://github.com/anranruye)
+  - 🆕 增加 空状态模板，并使它在列滚动时固定。[#3031](https://github.com/ant-design-blazor/ant-design-blazor/pull/3031) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 选择列中的空引用异常。[#3028](https://github.com/ant-design-blazor/ant-design-blazor/pull/3028) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 列标题在可筛选时的对齐样式问题。[#3023](https://github.com/ant-design-blazor/ant-design-blazor/pull/3023) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🆕 增加 ShowCount 属性显示字数。[#3033](https://github.com/ant-design-blazor/ant-design-blazor/pull/3033) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 OnClear 事件回调。[#3020](https://github.com/ant-design-blazor/ant-design-blazor/pull/3020) [@Abin-Liu](https://github.com/Abin-Liu)
+
+- Menu
+  - 🆕 增加 `PopupClassName` 属性。[#3027](https://github.com/ant-design-blazor/ant-design-blazor/pull/3027) [@JustGentle](https://github.com/JustGentle)
+  - 🐞 修复 Menu 子菜单的动画和样式。[#3024](https://github.com/ant-design-blazor/ant-design-blazor/pull/3024) [@ElderJames](https://github.com/ElderJames)
+
+- Transfer
+  - 🐞 修复 在 Form 内抛异常的问题。[#3015](https://github.com/ant-design-blazor/ant-design-blazor/pull/3015) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 无法选中的问题。[#3011](https://github.com/ant-design-blazor/ant-design-blazor/pull/3011) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 DataSource 的刷新。[#2998](https://github.com/ant-design-blazor/ant-design-blazor/pull/2998) [@ElderJames](https://github.com/ElderJames)
+
+- InputNumber
+  - 🆕 增加 无边框样式。[#3019](https://github.com/ant-design-blazor/ant-design-blazor/pull/3019) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Step 回退和空引用异常。[#3018](https://github.com/ant-design-blazor/ant-design-blazor/pull/3018) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🛠 重构 ReuseTabs 移除 `ReuseTabsRouteView` 来降低跟原生组件的耦合，请使用 CsaCadingValue 传递 RouteData，[参考示例](https://github.com/ant-design-blazor/ant-design-blazor/blob/0.14.0/tests/AntDesign.TestApp/Client/App.razor#L4)。[#3009](https://github.com/ant-design-blazor/ant-design-blazor/pull/3009) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 ReuseTabs 关闭其他标签时的渲染错误。[#3002](https://github.com/ant-design-blazor/ant-design-blazor/pull/3002) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 当 Activekey  指定了一个禁用的 TabPane 时，或第一个 TabPane 就是禁用时，初次加载会抛异常的问题。[#2997](https://github.com/ant-design-blazor/ant-design-blazor/pull/2997) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 ThemeService 用于主题切换。[#2883](https://github.com/ant-design-blazor/ant-design-blazor/pull/2883) [@melinyi](https://github.com/melinyi)
+- 🆕 增加 Datepicker 已选星期范围的展示。[#2892](https://github.com/ant-design-blazor/ant-design-blazor/pull/2892) [@Alexbits](https://github.com/Alexbits)
+- 🆕 新增 Radio 的 RadioGroup 级联类型参数。[#3022](https://github.com/ant-design-blazor/ant-design-blazor/pull/3022) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 会在鼠标离开触发元素之后还打开。[#3025](https://github.com/ant-design-blazor/ant-design-blazor/pull/3025) [@JustGentle](https://github.com/JustGentle)
+- 🐞 修复 ResizeObserver 由于key类型的改动导致无效的问题。[#3030](https://github.com/ant-design-blazor/ant-design-blazor/pull/3030) [@ElderJames](https://github.com/ElderJames)
+- 🐞修复 Select 在搜索或清除搜索时即使将 HideSelected 设置为 true 也会显示所选选项的错误。[#3010](https://github.com/ant-design-blazor/ant-design-blazor/pull/3010) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 修复 Form 自定义校验的样式。[#3005](https://github.com/ant-design-blazor/ant-design-blazor/pull/3005) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Cascader 边界调整模式默认改为 InView。[#2999](https://github.com/ant-design-blazor/ant-design-blazor/pull/2999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 重构 Descriptions 删除控制台输出。[#3012](https://github.com/ant-design-blazor/ant-design-blazor/pull/3012) [@berkerdong](https://github.com/berkerdong)
+- 💄 同步 ant-design v4.24.2 样式。[#2877](https://github.com/ant-design-blazor/ant-design-blazor/pull/2877) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.13.3
 
 `2023-01-09`
