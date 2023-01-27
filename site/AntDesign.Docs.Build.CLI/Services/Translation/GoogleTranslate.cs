@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace AntDesign.Docs.Build.CLI.Services.Translation
 {
-    public class Translate : ITranslate
+    public class GoogleTranslate : ITranslate
     {
         private readonly HttpClient _client;
 
-        public Translate(HttpClient client)
+        public GoogleTranslate(HttpClient client)
         {
             _client = client;
         }
@@ -55,7 +55,7 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var deserialized = JsonSerializer.Deserialize<TranslationResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var deserialized = JsonSerializer.Deserialize<GoogleTranslationResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             var combinedResponse = string.Join(string.Empty, deserialized.Sentences.Select(x => x.Trans));
 

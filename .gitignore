@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# This file will contain settings we don't want committed to GIT
+appsettings.private.json
+
 # User-specific files
 *.rsuser
 *.suo

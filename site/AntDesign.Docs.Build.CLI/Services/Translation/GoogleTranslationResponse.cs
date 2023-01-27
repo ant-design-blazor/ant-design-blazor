@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace AntDesign.Docs.Build.CLI.Services.Translation
 {
-    public class TranslationResponse
+    public class GoogleTranslationResponse
     {
         public IEnumerable<SentencesModel> Sentences { get; set; }
 
