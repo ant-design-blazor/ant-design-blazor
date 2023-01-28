@@ -6,11 +6,19 @@ namespace AntDesign
 {
     public class Paragraph : TypographyBase
     {
+        /// <summary>
+        /// Style text as code or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
-        public bool Code { get; set; } = false;
+        public bool Code { get; set; }
 
+        /// <summary>
+        /// Style text as a keyboard key
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
-        public bool Keyboard { get; set; } = false;
+        public bool Keyboard { get; set; }
 
         protected override void OnInitialized()
         {

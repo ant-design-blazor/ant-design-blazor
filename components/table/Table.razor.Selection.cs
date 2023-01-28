@@ -10,6 +10,9 @@ namespace AntDesign
     {
         private IEnumerable<TItem> _outerSelectedRows;
 
+        /// <summary>
+        /// Rows that are selected
+        /// </summary>
         [Parameter]
         public IEnumerable<TItem> SelectedRows
         {
@@ -20,6 +23,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the selected rows change
+        /// </summary>
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
@@ -73,6 +79,9 @@ namespace AntDesign
 
         bool ITable.AnySelected => _selectedRows.Count > 0;
 
+        /// <summary>
+        /// Select all rows
+        /// </summary>
         public void SelectAll()
         {
             _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
@@ -94,6 +103,9 @@ namespace AntDesign
             SelectionChanged();
         }
 
+        /// <summary>
+        /// Deselect all selected rows
+        /// </summary>
         public void UnselectAll()
         {
             _selectedRows.Clear();
@@ -115,6 +127,11 @@ namespace AntDesign
             SelectionChanged();
         }
 
+        /// <summary>
+        /// Set which rows are selected by their key
+        /// </summary>
+        /// <param name="keys">Keys of the rows to select</param>
+        /// <exception cref="InvalidOperationException">Thrown when selection is not enabled</exception>
         public void SetSelection(string[] keys)
         {
             if (keys == null || !keys.Any())

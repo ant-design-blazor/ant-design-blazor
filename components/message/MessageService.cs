@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -11,7 +9,7 @@ namespace AntDesign
     /// <summary>
     /// Message Service
     /// </summary>
-    public class MessageService: IMessageService
+    public class MessageService : IMessageService
     {
         internal event Action<MessageGlobalConfig> OnConfig;
         internal event Func<MessageConfig, Task> OnOpening;

@@ -12,43 +12,74 @@ namespace AntDesign
 {
     public partial class PaginationOptions
     {
-        internal static readonly int[] DefaultPageSizeOptions = {10, 20, 50, 100};
+        internal static readonly int[] DefaultPageSizeOptions = { 10, 20, 50, 100 };
 
+        /// <summary>
+        /// If pagination is small or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool IsSmall { get; set; }
 
+        /// <summary>
+        /// Whether the pagination is disabled or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; }
 
         [Parameter]
         public string RootPrefixCls { get; set; }
 
+        /// <summary>
+        /// Callback executed when the page size changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> ChangeSize { get; set; }
 
+        /// <summary>
+        /// Current page
+        /// </summary>
         [Parameter]
         public int Current { get; set; }
 
+        /// <summary>
+        /// Current pag size
+        /// </summary>
         [Parameter]
         public int PageSize { get; set; }
 
+        /// <summary>
+        /// Options for page size selection
+        /// </summary>
+        /// <default value="{ 10, 20, 50, 100 }"/>
         [Parameter]
         public int[] PageSizeOptions { get; set; }
 
+        /// <summary>
+        /// Callback executed when jumping to a specific page
+        /// </summary>
         [Parameter]
         public EventCallback<int> QuickGo { get; set; }
 
+        /// <summary>
+        /// Quick jumper confirm button, this is for react version <c>ShowQuickJumper: { goButton: ReactNode }</c>
+        /// </summary>
         [Parameter]
         public OneOf<bool, RenderFragment>? GoButton { get; set; }
 
         private string _goInputText = string.Empty;
 
+        /// <summary>
+        /// Locale used for localization of the component
+        /// </summary>
+        /// <default value="LocaleProvider.CurrentLocale.Pagination" />
         [Parameter]
         public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
 
         private int GetValidValue()
         {
-            return string.IsNullOrWhiteSpace(_goInputText)   ? 0 :
+            return string.IsNullOrWhiteSpace(_goInputText) ? 0 :
                    int.TryParse(_goInputText, out var value) ? value : 0;
         }
 
@@ -95,7 +126,7 @@ namespace AntDesign
                 return;
             }
 
-            if (e is KeyboardEventArgs {Code: "Enter"} || e is MouseEventArgs {Type: "Click"})
+            if (e is KeyboardEventArgs { Code: "Enter" } || e is MouseEventArgs { Type: "Click" })
             {
                 if (QuickGo.HasDelegate)
                 {
@@ -114,7 +145,7 @@ namespace AntDesign
                 return PageSizeOptions;
             }
 
-            return PageSizeOptions.Concat(new[] {PageSize}).OrderBy(e => e).ToArray();
+            return PageSizeOptions.Concat(new[] { PageSize }).OrderBy(e => e).ToArray();
         }
     }
 }

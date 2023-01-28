@@ -17,6 +17,10 @@ namespace AntDesign
         internal event Func<string, Task> OnClosing;
         internal event Action OnDestroying;
 
+        /// <summary>
+        /// Provide default configuration for all notifications
+        /// </summary>
+        /// <param name="config"></param>
         public void Config(NotificationGlobalConfig config)
         {
             OnConfiging?.Invoke(config);

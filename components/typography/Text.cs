@@ -1,16 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public class Text : TypographyBase
     {
+        /// <summary>
+        /// Style text as code or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Code { get; set; }
 
+        /// <summary>
+        /// Style text as a keyboard key
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Keyboard { get; set; }
 

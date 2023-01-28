@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
-using OneOf;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     /// <summary>
     /// config the confirm button's properties

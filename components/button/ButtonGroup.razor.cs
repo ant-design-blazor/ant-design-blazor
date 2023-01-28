@@ -8,7 +8,8 @@ namespace AntDesign
 {
     public partial class ButtonGroup : AntDomComponentBase
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         private string _size;
 

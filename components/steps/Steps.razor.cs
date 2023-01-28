@@ -1,21 +1,49 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Navigation bar that guides users through the steps of a task.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When a given task is complicated or has a certain sequence in the series of subtasks, we can decompose it into several steps to make things easier.</item>
+    </list>
+    </summary>
+    <seealso cref="Step"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg", Columns = 1)]
     public partial class Steps : AntDomComponentBase
     {
         private bool _showProgressDot;
         private RenderFragment _progressDot;
-        public EventHandler Handler { get; }
 
         internal List<Step> _children;
 
-        [Parameter] public int Current { get; set; }
+        /// <summary>
+        /// Current step index, zero based
+        /// </summary>
+        /// <default value="0" />
+        [Parameter]
+        public int Current { get; set; }
 
-        [Parameter] public double? Percent { get; set; }
+        /// <summary>
+        /// Percent display for current step
+        /// </summary>
+        [Parameter]
+        public double? Percent { get; set; }
 
+        /// <summary>
+        /// Custom rendering for progress dot. Will also set ShowProgressDot to true if set.
+        /// </summary>
         [Parameter]
         public RenderFragment ProgressDot
         {
@@ -31,6 +59,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Show progress dot as opposed to the title, description, icon, etc
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowProgressDot
         {
@@ -38,21 +70,59 @@ namespace AntDesign
             set => _showProgressDot = value;
         }
 
-        [Parameter] public string Direction { get; set; } = "horizontal";
+        /// <summary>
+        /// Direction of the step bar
+        /// </summary>
+        /// <default value="horizontal" />
+        [Parameter]
+        public string Direction { get; set; } = "horizontal";
 
-        [Parameter] public string LabelPlacement { get; set; } = "horizontal";
+        /// <summary>
+        /// Place title and description horizontal or vertical
+        /// </summary>
+        /// <default value="horizontal" />
+        [Parameter]
+        public string LabelPlacement { get; set; } = "horizontal";
 
-        [Parameter] public string Type { get; set; } = "default";
+        /// <summary>
+        /// Type of steps. Possible Values: default, navigation
+        /// </summary>
+        /// <default value="default" />
+        [Parameter]
+        public string Type { get; set; } = "default";
 
-        [Parameter] public string Size { get; set; } = "default";
+        /// <summary>
+        /// Size of steps. Possible Values: default, small
+        /// </summary>
+        /// <default value="default" />
+        [Parameter]
+        public string Size { get; set; } = "default";
 
-        [Parameter] public int StartIndex { get; set; } = 0;
+        /// <summary>
+        /// Starting step index
+        /// </summary>
+        /// <default value="0" />
+        [Parameter]
+        public int StartIndex { get; set; } = 0;
 
-        [Parameter] public string Status { get; set; } = "process";
+        /// <summary>
+        /// Status of the current step. Possible Values: wait, process, finish, error
+        /// </summary>
+        /// <default value="process" />
+        [Parameter]
+        public string Status { get; set; } = "process";
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        /// <summary>
+        /// Child content should contain Step elements
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public EventCallback<int> OnChange { get; set; }
+        /// <summary>
+        /// Callback executed when step changes. Received the index of the step changing to
+        /// </summary>
+        [Parameter]
+        public EventCallback<int> OnChange { get; set; }
 
         protected override void OnInitialized()
         {

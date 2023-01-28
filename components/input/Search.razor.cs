@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System;
 using System.Threading.Tasks;
 
 namespace AntDesign
@@ -10,13 +9,13 @@ namespace AntDesign
     {
         /// <summary>
         /// Search input is rendered with suffix search icon, not as a button.
-        /// Will be ignored when EnterButton != false
+        /// Will be ignored when <see cref="EnterButton"/> != false
         /// </summary>
         [Parameter]
         public bool ClassicSearchIcon { get; set; }
 
         /// <summary>
-        /// Whether to show an enter button after input. This property conflicts with the AddonAfter property
+        /// Whether to show an enter button after input. This property conflicts with the <see cref="Input{TValue}.AddOnAfter"/>
         /// </summary>
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; } = false;
@@ -28,7 +27,7 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         /// <summary>
-        /// The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key
+        /// Callback executed when you click on the search-icon, the clear-icon or press the Enter key
         /// </summary>
         [Parameter]
         public EventCallback<string> OnSearch { get; set; }

@@ -5,19 +5,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Segmented Controls. This component is available since `v0.12.0`.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When displaying multiple options and user can select a single option</item>
+        <item>When switching the selected option, the content of the associated area changes.</item>
+    </list>
+    </summary>
+    <seealso cref="SegmentedItem{TValue}"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TValue))]
 #endif
-
     public partial class Segmented<TValue> : AntDomComponentBase
     {
+        /// <summary>
+        /// Default selected value
+        /// </summary>
         [Parameter]
         public TValue DefaultValue
         {
@@ -29,6 +44,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Disable all segments
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled
         {
@@ -43,9 +62,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The callback function that is triggered when the state changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        /// <summary>
+        /// Options for the segments. Takes priority over <see cref="Labels"/>
+        /// </summary>
         [Parameter]
         public IEnumerable<SegmentedOption<TValue>> Options
         {
@@ -62,6 +87,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Labels for the segments
+        /// </summary>
         [Parameter]
         public IEnumerable<TValue> Labels
         {
@@ -78,9 +106,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Size of the UI element
+        /// </summary>
         [Parameter]
         public SegmentedSize Size { get; set; }
 
+        /// <summary>
+        /// Currently selected value
+        /// </summary>
         [Parameter]
         public TValue Value
         {
@@ -99,12 +133,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the selected segment changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> ValueChanged { get; set; }
 
+        /// <summary>
+        /// Segments. Takes priority over <see cref="Labels"/> and <see cref="Options"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Make the component the width of the parent
+        /// </summary>
         [Parameter]
         public bool Block { get; set; }
 

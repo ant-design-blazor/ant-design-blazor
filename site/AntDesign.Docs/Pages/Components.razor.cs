@@ -93,7 +93,6 @@ namespace AntDesign.Docs.Pages
             {
                 await MainLayout.ChangePrevNextNav(Name);
                 _demoComponent = await DemoService.GetComponentAsync($"{fullPageName}");
-                _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
                 _filePaths = new() { _filePath };
                 foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue) ?? Array.Empty<DemoItem>())
                 {

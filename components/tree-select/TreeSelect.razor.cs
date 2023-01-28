@@ -4,20 +4,36 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using AntDesign.JsInterop;
 using OneOf;
-using System.Linq;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Tree selection control.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+        <c>TreeSelect</c> is similar to <c>Select</c>, but the values are provided in a tree like structure. 
+        Any data whose entries are defined in a hierarchical manner is fit to use this control. 
+        Examples of such case may include a corporate hierarchy, a directory structure, and so on.
+    </para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg")]
     public partial class TreeSelect<TItem> : SelectBase<string, TItem> where TItem : class
     {
-        [Parameter] public bool ShowExpand { get; set; } = true;
-
+        /// <summary>
+        /// Whether to allow multiple selections or not
+        /// </summary>
+        /// <default value="false unless TreeCheckable is true"/>
         [Parameter]
         public bool Multiple
         {
@@ -32,85 +48,151 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public bool TreeCheckable { get; set; }
-
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
-
-        [Parameter] public Action OnMouseEnter { get; set; }
-
-        [Parameter] public Action OnMouseLeave { get; set; }
-
-        [Parameter] public Action OnBlur { get; set; }
-
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
-
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
-
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
-
-        [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
-
-        [Parameter] public IEnumerable<TItem> DataSource { get; set; }
-
-        [Parameter] public RenderFragment ChildContent { get; set; }
-
-        [Parameter] public bool TreeDefaultExpandAll { get; set; }
-        
-        [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
-
-        [Parameter] public string MatchedStyle { get; set; } = string.Empty;
-
-        [Parameter] public string MatchedClass {get; set; }
-        
-        [Parameter] public string RootValue { get; set; } = "0";
-
-        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
-
-        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
-
-        [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
-
-        //[Parameter] public IEnumerable<ITreeData<TItem>> TreeData { get; set; }
-
-        [Parameter] public string DropdownStyle { get; set; }
-
-        [Parameter] public bool ShowTreeLine { get; set; }
-
-        [Parameter] public bool ShowLeafIcon { get; set; }
+        /// <summary>
+        /// Whether tree nodes are able to be selected or not, which would select all leafs under that node.
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool TreeCheckable { get; set; }
 
         /// <summary>
-        /// Specifies a method that returns the text of the node.
+        /// Container for displaying the popup
         /// </summary>
+        /// <default value="body"/>
+        [Parameter]
+        public string PopupContainerSelector { get; set; } = "body";
+
+        /// <summary>
+        /// Callback executed when the mouse enters the component
+        /// </summary>
+        [Parameter]
+        public Action OnMouseEnter { get; set; }
+
+        /// <summary>
+        /// Callback executed when the mouse leaves the component
+        /// </summary>
+        [Parameter]
+        public Action OnMouseLeave { get; set; }
+
+        /// <summary>
+        /// Callback executed when the component looses focus
+        /// </summary>
+        [Parameter]
+        public Action OnBlur { get; set; }
+
+        /// <summary>
+        /// Content to display as label for the lead nodes
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TItem> LabelTemplate { get; set; }
+
+        /// <inheritdoc cref="Tree{TItem}.TitleTemplate"/>
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
+
+        /// <summary>
+        /// Whether to show search icon or not
+        /// </summary>
+        /// <default value="true"/>
+        [Parameter]
+        public bool ShowSearchIcon { get; set; } = true;
+
+        /// <summary>
+        /// Whether to show arrow icons or not
+        /// </summary>
+        /// <default value="true"/>
+        [Parameter]
+        public bool ShowArrowIcon { get; set; } = true;
+
+        /// <summary>
+        /// Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <see cref="ChildContent"/>
+        /// </summary>
+        [Parameter]
+        public IEnumerable<TItem> DataSource { get; set; }
+
+        /// <summary>
+        /// Nodes for the tree. Use either this or <see cref="DataSource"/>
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        /// <inheritdoc cref="Tree{TItem}.DefaultExpandAll"/>
+        [Parameter]
+        public bool TreeDefaultExpandAll { get; set; }
+
+        /// <inheritdoc cref="Tree{TItem}.SearchExpression"/>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
+
+        /// <inheritdoc cref="Tree{TItem}.MatchedStyle"/>
+        [Parameter]
+        public string MatchedStyle { get; set; } = string.Empty;
+
+        /// <inheritdoc cref="Tree{TItem}.MatchedClass"/>
+        [Parameter]
+        public string MatchedClass { get; set; }
+        
+        /// <summary>
+        /// Determine whether the dropdown menu and the select input are the same width. Default set min-width same as input. Will ignore when value less than select width. false will disable virtual scroll
+        /// </summary>
+        [Parameter]
+        public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+
+        /// <summary>
+        /// Maximum width of the dropdown
+        /// </summary>
+        /// <default value="auto"/>
+        [Parameter]
+        public string DropdownMaxWidth { get; set; } = "auto";
+
+        /// <summary>
+        /// Maximum height of the dropdown
+        /// </summary>
+        /// <default value="256px"/>
+        [Parameter]
+        public string PopupContainerMaxHeight { get; set; } = "256px";
+
+        /// <summary>
+        /// Style to apply to the dropdown
+        /// </summary>
+        [Parameter]
+        public string DropdownStyle { get; set; }
+
+        /// <summary>
+        /// Whether to show lines in the tree or not
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool ShowTreeLine { get; set; }
+
+        /// <summary>
+        /// Whether to show an icon on leaf nodes or not
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool ShowLeafIcon { get; set; }
+
+        /// <inheritdoc cref="Tree{TItem}.TitleExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
-        /// <summary>
-        /// Specifies a method that returns the key of the node.
-        /// </summary>
+        /// <inheritdoc cref="Tree{TItem}.KeyExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, string> KeyExpression { get; set; }
 
-        /// <summary>
-        /// Specifies a method to return the node icon.
-        /// </summary>
+        /// <inheritdoc cref="Tree{TItem}.IconExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, string> IconExpression { get; set; }
 
-        /// <summary>
-        /// Specifies a method that returns whether the expression is a leaf node.
-        /// </summary>
+        /// <inheritdoc cref="Tree{TItem}.IsLeafExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
-        /// <summary>
-        /// Specifies a method  to return a child node
-        /// </summary>
+        /// <inheritdoc cref="Tree{TItem}.ChildrenExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
 
-        /// <summary>
-        /// Specifies a method to return a disabled node
-        /// </summary>
+        /// <inheritdoc cref="Tree{TItem}.DisabledExpression"/>
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
@@ -129,6 +211,9 @@ namespace AntDesign
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
 
+        /// <summary>
+        /// The selected value in the tree
+        /// </summary>
         public override string Value
         {
             get => base.Value;
@@ -148,6 +233,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The selected values in the tree
+        /// </summary>
         public override IEnumerable<string> Values
         {
             get => base.Values;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -8,6 +6,10 @@ namespace AntDesign
 {
     public class Title : TypographyBase
     {
+        /// <summary>
+        /// Level of heading (ex: h1 would be 1). Must be between 1 and 4, inclusive. If outside that range it will default back to 1.
+        /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public int Level { get; set; } = 1;
 

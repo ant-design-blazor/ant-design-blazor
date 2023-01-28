@@ -3,14 +3,12 @@
     @menuItemTemplate((MenuItems, LanguageService, 1))
 </Menu>
 
-
 @inject ILanguageService LanguageService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 @inject DemoService DemoService; 
 
 @code {
-
     [Parameter]
     public DemoMenuItem[] MenuItems { get; set; } = {};
 
@@ -20,13 +18,13 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                        <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
-                        </MenuItem>
+                    <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                        <span>@menu.Title</span>
+                        @if (menu.SubTitle != null)
+                        {
+                            <span class="chinese">@menu.SubTitle</span>
+                        }
+                    </MenuItem>
                 }
                 else if (menu.Type == "subMenu")
                 {
@@ -48,6 +46,4 @@
                 }
             }
         </Template>;
-
-
 }

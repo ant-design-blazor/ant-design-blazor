@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.AspNetCore.Components;
 
@@ -7,9 +6,16 @@ namespace AntDesign
 {
     public partial class CountDown : StatisticComponentBase<DateTime>
     {
+        /// <summary>
+        /// Format of the time
+        /// </summary>
+        /// <default value="hh:mm:ss"/>
         [Parameter]
         public string Format { get; set; } = "hh:mm:ss";
 
+        /// <summary>
+        /// The value of the countdown
+        /// </summary>
         public override DateTime Value
         {
             get
@@ -26,15 +32,22 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the countdown runs out
+        /// </summary>
         [Parameter]
         public EventCallback OnFinish { get; set; }
 
+        /// <summary>
+        /// Interval, in milliseconds, to update the UI on
+        /// </summary>
+        /// <default value="100ms" />
         [Parameter]
         public int RefreshInterval { get; set; } = REFRESH_INTERVAL;
 
         private Timer _timer;
 
-        private const int REFRESH_INTERVAL = 1000 / 10;
+        private const int REFRESH_INTERVAL = 100;
 
         private TimeSpan _countDown = TimeSpan.Zero;
 

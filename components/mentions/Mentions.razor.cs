@@ -1,38 +1,94 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using AntDesign.Internal;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
-using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Mention component.</para>
+
+    <h2>When To Use</h2>
+
+    <para>When need to mention someone or something.</para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg")]
     public partial class Mentions
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public bool Disable { get; set; }
-        [Parameter] public int Rows { get; set; } = 3;
-        [Parameter] public bool Focused { get; set; }
-        [Parameter] public bool Readonly { get; set; }
-        [Parameter] public bool Loading { get; set; }
+        [Inject]
+        public IJSRuntime JS { get; set; }
 
+        /// <summary>
+        /// Options to display in the mention
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public Dictionary<string, object> Attributes { get; set; }
-        [Inject] public IJSRuntime JS { get; set; }
-        [Parameter] public string Placeholder { get; set; }
-        [Parameter] public string Value { get; set; } = String.Empty;
-        [Parameter] public EventCallback<string> ValueChanged { get; set; }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public bool Disable { get; set; }
+        
+        /// <summary>
+        /// Number of options to display
+        /// </summary>
+        /// <default value="3"/>
+        [Parameter]
+        public int Rows { get; set; } = 3;
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public bool Focused { get; set; }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public bool Readonly { get; set; }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public bool Loading { get; set; }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public Dictionary<string, object> Attributes { get; set; }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public string Placeholder { get; set; }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public string Value { get; set; } = string.Empty;
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> ValueChanged { get; set; }
+
         internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
         internal List<MentionsOption> ShowOptions { get; } = new List<MentionsOption>();
         private OverlayTrigger _overlayTrigger;
@@ -86,6 +142,7 @@ namespace AntDesign
             }
             await base.OnAfterRenderAsync(firstRender);
         }
+
         [JSInvokable]
         public void PrevOption()
         {
@@ -93,6 +150,7 @@ namespace AntDesign
             ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
+        
         [JSInvokable]
         public void NextOption()
         {
@@ -100,6 +158,7 @@ namespace AntDesign
             ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
+        
         [JSInvokable]
         public async Task EnterOption()
         {
@@ -184,15 +243,15 @@ namespace AntDesign
             var nextText = Value.Substring(focusPosition);
             if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
             var option = " @" + optionValue + " ";
-          
+
             Value = preText + option + nextText;
             await ValueChanged.InvokeAsync(Value);
-          
+
             var pos = preText.Length + option.Length;
             var js = $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionStart = {pos};";
             js += $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionEnd = {pos}";
             await JS.InvokeVoidAsync("eval", js);
-         
+
             await HideOverlay();
             await InvokeStateHasChangedAsync();
         }
