@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +42,11 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             throw new NotImplementedException("Not the best design, but this class doesn't implement this. It is meant for the cache wrapper class.");
         }
 
-        public async Task<string> TranslateText(string text, string to, string from = "auto")
+        public async Task<string?> TranslateText(string text, string to, string from = "auto")
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return text;
+                return null;
             }
 
             var content = RequestContent(text, to, from);
@@ -57,9 +59,13 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             var responseContent = await response.Content.ReadAsStringAsync();
             var deserialized = JsonSerializer.Deserialize<GoogleTranslationResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            var combinedResponse = string.Join(string.Empty, deserialized.Sentences.Select(x => x.Trans));
+            var translations = deserialized?.Sentences.Select(x => x.Trans);
+            if (translations is null || !translations.Any())
+            {
+                return null;
+            }
 
-            return combinedResponse;
+            return string.Join(string.Empty, translations);
         }
 
         private static HttpContent RequestContent(string text, string to, string from)

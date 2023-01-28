@@ -73,6 +73,10 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             try
             {
                 var newTranslation = await _innerService.TranslateText(text, to, from);
+                if (newTranslation is null)
+                {
+                    return text;
+                }
 
                 KnownChineseTranslations.Add(text, new Translation
                 {
@@ -88,7 +92,7 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
                 // because something went wrong and we probably still need them.
                 await BackupTranslations(false);
 
-                throw;
+                return text;
             }
         }
 

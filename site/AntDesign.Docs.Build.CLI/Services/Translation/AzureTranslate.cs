@@ -2,17 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using YamlDotNet.Core.Tokens;
 
 namespace AntDesign.Docs.Build.CLI.Services.Translation
 {
@@ -33,11 +33,11 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             throw new NotImplementedException("Not the best design, but this class doesn't implement this. It is meant for the cache wrapper class.");
         }
 
-        public async Task<string> TranslateText(string text, string to, string from = "auto")
+        public async Task<string?> TranslateText(string text, string to, string from = "auto")
         {
             if (string.IsNullOrWhiteSpace(_options.Value.Key) || string.IsNullOrWhiteSpace(text))
             {
-                return text;
+                return null;
             }
 
             using var request = new HttpRequestMessage();
@@ -60,9 +60,11 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var deserialized = JsonSerializer.Deserialize<IEnumerable<AzureTranslationResponse>>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var deserialized = JsonSerializer.Deserialize<IEnumerable<AzureTranslationResponse>>(
+                responseContent, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return deserialized.SingleOrDefault()?.Translations.SingleOrDefault()?.Text ?? text;
+            return deserialized?.SingleOrDefault()?.Translations.SingleOrDefault()?.Text;
         }
 
         private Uri BuildRequestUri(string from, string to)
