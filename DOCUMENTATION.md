@@ -117,7 +117,21 @@ This property has English and Chinese summaries provided at once. By using the `
 
 ### Translation Service
 
-Currently, we translate text with requests to Google Translate. There is a limit to how many requests can be made to this which is very easily exceeded by even a single build. To alleviate this problem, we cache the translations as "known translations" for later use (in the `KnownChineseTranslations.json` file)
+Documentation will be translated into Chinese with either Google or Azure.
+
+- Azure: The default service used
+  - Requires providing an API key if you want it to run locally. Provide this key and the region for your key in the `appsettings.private.json` file in the Build.CLI folder. This file is gitignored so it will not be committed and reveal your key.
+  - Azure provides 2 million characters of translation per month for free. See details on [Microsoft's site](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/translator/#pricing).
+- Google: Not used unless a code change makes it used
+  - Available as a fallback option if desired
+  - Does not require an API key
+  - Very limited in number of requests that can be made. A single build of the docs will exceed this limit.
+
+
+
+To avoid making excessive calls to either translation service, we cache the translations as "known translations" for later use (in the `KnownChineseTranslations.json` file)
+
+
 
 <u>How it works</u>:
 
