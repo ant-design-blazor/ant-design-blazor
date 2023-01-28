@@ -99,7 +99,7 @@ All code documentation comments and messages are expected to be in English. Text
 
 ### Override Translations
 
-There may be cases when an automatic translation is insufficient or invalid. In these cases, there is the ability to specify the translation for <summary> tags by using a custom attribute on the tag. This is currently only supported for summary tags. 
+There may be cases when an automatic translation is insufficient or invalid. In these cases, there is the ability to specify the translation for <summary> tags by using a custom attribute on the tag. This is currently only supported for summary tags. If a translation is unable to be determined for any reason then the English will be used.
 
 The example below demonstrates the usage: 
 
