@@ -69,12 +69,7 @@ namespace AntDesign
                 : "b" + placementStr.Substring(1);
             var className = $"{ClassPrefix} {ClassPrefix}-" + placementStr;
 
-            var rtl = RTL;
-            if (_isRtl.HasValue)
-            {
-                rtl = _isRtl.Value;
-            }
-            if (rtl)
+            if (IsRtl())
             {
                 className += $" {ClassPrefix}-rtl";
             }
@@ -85,6 +80,10 @@ namespace AntDesign
         {
             switch (placement)
             {
+                case NotificationPlacement.Top:
+                    return $"inset: {_top}px auto auto 50%; transform: translateX(-50%);";
+                case NotificationPlacement.Bottom:
+                    return $"inset: auto auto {_bottom}px 50%; transform: translateX(-50%);";
                 case NotificationPlacement.TopRight:
                     return $"right: 0px; top:{_top}px; bottom: auto;";
                 case NotificationPlacement.TopLeft:
@@ -96,12 +95,32 @@ namespace AntDesign
             }
         }
 
+        private bool IsRtl()
+        {
+            var rtl = RTL;
+            if (_isRtl.HasValue)
+            {
+                rtl = _isRtl.Value;
+            }
+            return rtl;
+        }
+
+        private NotificationPlacement GetDefaultPlacement()
+        {
+            if (_defaultPlacement.HasValue)
+            {
+                return _defaultPlacement.Value;
+            }
+
+            return IsRtl() ? NotificationPlacement.TopLeft : NotificationPlacement.TopRight;
+        }
+
         #region GlobalConfig
 
         private double _top = 24;
         private double _bottom = 24;
         private bool? _isRtl;
-        private NotificationPlacement _defaultPlacement = NotificationPlacement.TopRight;
+        private NotificationPlacement? _defaultPlacement;
         private double _defaultDuration = 4.5;
 
         private RenderFragment _defaultCloseIcon = (builder) =>
@@ -133,10 +152,7 @@ namespace AntDesign
                 _top = defaultConfig.Top.Value;
             }
             _isRtl = defaultConfig.Rtl;
-            if (defaultConfig.Placement != null)
-            {
-                _defaultPlacement = defaultConfig.Placement.Value;
-            }
+            _defaultPlacement = defaultConfig.Placement;
             if (defaultConfig.Duration != null)
             {
                 _defaultDuration = defaultConfig.Duration.Value;
@@ -149,7 +165,7 @@ namespace AntDesign
 
         private NotificationConfig ExtendConfig(NotificationConfig config)
         {
-            config.Placement ??= _defaultPlacement;
+            config.Placement ??= GetDefaultPlacement();
             config.Duration ??= _defaultDuration;
             config.CloseIcon ??= _defaultCloseIcon;
 
