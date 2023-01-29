@@ -63,17 +63,21 @@ namespace AntDesign
 
         private string GetClassName(NotificationPlacement placement)
         {
-            string placementStr = placement.ToString();
+            var placementStr = placement.ToString();
             placementStr = placementStr[0] == 'T'
                 ? "t" + placementStr.Substring(1)
                 : "b" + placementStr.Substring(1);
-            string className = $"{ClassPrefix} {ClassPrefix}-" + placementStr;
+            var className = $"{ClassPrefix} {ClassPrefix}-" + placementStr;
 
-            if (_isRtl)
+            var rtl = RTL;
+            if (_isRtl.HasValue)
+            {
+                rtl = _isRtl.Value;
+            }
+            if (rtl)
             {
                 className += $" {ClassPrefix}-rtl";
             }
-
             return className;
         }
 
@@ -96,7 +100,7 @@ namespace AntDesign
 
         private double _top = 24;
         private double _bottom = 24;
-        private bool _isRtl;
+        private bool? _isRtl;
         private NotificationPlacement _defaultPlacement = NotificationPlacement.TopRight;
         private double _defaultDuration = 4.5;
 
@@ -104,6 +108,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close");
+            builder.AddAttribute(2, "Class", $"{ClassPrefix}-notice-close-icon");
             builder.CloseComponent();
         };
 
@@ -127,10 +132,7 @@ namespace AntDesign
             {
                 _top = defaultConfig.Top.Value;
             }
-            if (defaultConfig.Rtl != null)
-            {
-                _isRtl = defaultConfig.Rtl.Value;
-            }
+            _isRtl = defaultConfig.Rtl;
             if (defaultConfig.Placement != null)
             {
                 _defaultPlacement = defaultConfig.Placement.Value;
