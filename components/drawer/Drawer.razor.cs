@@ -438,6 +438,7 @@ namespace AntDesign
                 case ComponentStatus.Closing:
                     {
                         _status = ComponentStatus.Closed;
+                        StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
                             await HandleClose(true);
