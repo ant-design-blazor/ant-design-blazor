@@ -157,6 +157,7 @@
         cut.Find(".ant-select-item-option").Click();
         cut.WaitForState(() => itemsChanged);
         cut.Find("input[type=search]").Input("John");
+        cut.WaitForState(() => itemsChanged);
 
         // All items should be hidden because there is only 1 John and it is selected, but HideSelected is true
         cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(0);
@@ -208,6 +209,7 @@
         cut.Find(".ant-select-item-option").Click();
         cut.WaitForState(() => itemsChanged);
         cut.Find("input[type=search]").Input(string.Empty);
+        cut.WaitForState(() => itemsChanged);
 
         // All items except John should be visible because John is selected and HideSelected is true
         cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(3);
