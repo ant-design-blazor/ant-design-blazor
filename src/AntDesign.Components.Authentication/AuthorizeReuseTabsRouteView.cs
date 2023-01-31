@@ -12,7 +12,7 @@ namespace AntDesign.Components.Authentication
     /// <summary>
     /// This class is modify from the official AuthorizeRouteView.cs
     /// source: https://github.com/dotnet/aspnetcore/blob/main/src/Components/Authorization/src/AuthorizeRouteView.cs
-    /// 
+    ///
     /// Combines the behaviors of <see cref="AuthorizeView"/> and <see cref="RouteView"/>,
     /// so that it displays the page matching the specified route but only if the user
     /// is authorized to see it.
@@ -20,6 +20,7 @@ namespace AntDesign.Components.Authentication
     /// Additionally, this component supplies a cascading parameter of type <see cref="Task{AuthenticationState}"/>,
     /// which makes the user's current authentication state available to descendants.
     /// </summary>
+    [Obsolete("Pleaes use <CascadingValue Value=\"RouteData\"> to warp the AuthorizeRouteView.")]
     public sealed class AuthorizeReuseTabsRouteView : ReuseTabsRouteView
     {
         // We expect applications to supply their own authorizing/not-authorized content, but
@@ -27,6 +28,7 @@ namespace AntDesign.Components.Authentication
         // cases they will never be used (e.g., "authorizing" in out-of-box server-side Blazor)
         private static readonly RenderFragment<AuthenticationState> _defaultNotAuthorizedContent
             = state => builder => builder.AddContent(0, "Not authorized");
+
         private static readonly RenderFragment _defaultAuthorizingContent
             = builder => builder.AddContent(0, "Authorizing...");
 
