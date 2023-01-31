@@ -47,6 +47,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CollapsedChanged { get; set; }
 
+        [Obsolete("Use CollapsedChanged instead")]
         [Parameter]
         public EventCallback<bool> OnCollapse { get; set; }
 
