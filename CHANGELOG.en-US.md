@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.14.1
+
+`2023-02-01`
+
+- 🐞 Fixed Notification RTL incorrect style, and add top and bottom placement support; [#3049](https://github.com/ant-design-blazor/ant-design-blazor/pull/3049) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Table `PageSize` can't update once the datasource is changed while `HidePagination` is enabled. [#3052](https://github.com/ant-design-blazor/ant-design-blazor/pull/3052) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 Fixed Tabs that ReuseTabs keep obsoleted usage. [#3051](https://github.com/ant-design-blazor/ant-design-blazor/pull/3051) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree OnContextMenu event not firing. [#3042](https://github.com/ant-design-blazor/ant-design-blazor/pull/3042) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🐞 Fixed Select order issues with Select two-way binding selected items. [#3037](https://github.com/ant-design-blazor/ant-design-blazor/pull/3037) [@CuteLeon](https://github.com/CuteLeon)
+- 🐞Fixed Drawer mask not closing immediately. [#3047](https://github.com/ant-design-blazor/ant-design-blazor/pull/3047) [@zxyao145](https://github.com/zxyao145)
+- 🛠 Marked multiple redundant parameters as obsolete for future removal:  `Calendar.OnSelect`, `Card.Body`, `Sider.OnCollapse`, `PageHeader.PageHeaderTitle`, `PageHeader.PageHeaderSubtitle`, `Radio.CheckedChange`. [#3035](https://github.com/ant-design-blazor/ant-design-blazor/pull/3035) [@kooliokey](https://github.com/kooliokey)
+
 ### 0.14.0
 
 `2023-01-26`
