@@ -90,10 +90,8 @@
     </div>
 
     <a tabindex="0" class="@(ClassPrefix)-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
-        <span class="@(ClassPrefix)-close-x">
-            <span role="img" aria-label="close" class="anticon anticon-close @(ClassPrefix)-close-icon">
-                @Config.CloseIcon
-            </span>
+        <span class="@(ClassPrefix)-notice-close-x">
+            @Config.CloseIcon
         </span>
     </a>
 </div>
