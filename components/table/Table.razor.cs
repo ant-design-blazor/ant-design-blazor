@@ -329,7 +329,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, _pageSize);
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
