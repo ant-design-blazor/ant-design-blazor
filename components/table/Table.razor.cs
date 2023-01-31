@@ -329,7 +329,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+            var queryModel = new QueryModel<TItem>(PageIndex, _pageSize);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -386,6 +386,11 @@ namespace AntDesign
 
         private QueryModel<TItem> InternalReload()
         {
+            if (HidePagination && _dataSourceCount > 0)
+            {
+                _pageSize = _dataSourceCount;
+            }
+
             var queryModel = BuildQueryModel();
             _currentQueryModel = queryModel;
 
@@ -415,11 +420,6 @@ namespace AntDesign
                 }
 
                 _shouldRender = true;
-            }
-
-            if (HidePagination && _dataSourceCount > 0)
-            {
-                _pageSize = _dataSourceCount;
             }
 
             if (!_preventRender)
