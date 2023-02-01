@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.14.1
+
+`2023-02-01`
+
+- 🐞 修复 Notification 在 RTL 下显示异常问题，新增 top 和 bottom 位置支持[#3049](https://github.com/ant-design-blazor/ant-design-blazor/pull/3049) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Table 隐藏分页器时，更新数据源时行数不立刻刷新[#3052](https://github.com/ant-design-blazor/ant-design-blazor/pull/3052) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 修复 Tabs 保留 ReuseTabs 之前的用法。[#3051](https://github.com/ant-design-blazor/ant-design-blazor/pull/3051) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree OnContextMenu 事件不起作用。[#3042](https://github.com/ant-design-blazor/ant-design-blazor/pull/3042) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🐞 修复 Select 双向绑定选项的顺序问题。[#3037](https://github.com/ant-design-blazor/ant-design-blazor/pull/3037) [@CuteLeon](https://github.com/CuteLeon)
+- 🐞 修复 drawer 遮罩层不能立即关闭的问题。[#3047](https://github.com/ant-design-blazor/ant-design-blazor/pull/3047) [@zxyao145](https://github.com/zxyao145)
+- 🛠 将多个冗余参数标记为已过时以供将来删除: `Calendar.OnSelect`, `Card.Body`, `Sider.OnCollapse`, `PageHeader.PageHeaderTitle`, `PageHeader.PageHeaderSubtitle`, `Radio.CheckedChange`。[#3035](https://github.com/ant-design-blazor/ant-design-blazor/pull/3035) [@kooliokey](https://github.com/kooliokey)
+
 ### 0.14.0
 
 `2023-01-26`
