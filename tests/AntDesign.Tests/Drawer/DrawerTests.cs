@@ -29,7 +29,6 @@ namespace AntDesign.Tests.Drawer
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, placement));
 
             systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
-                <div class=""ant-drawer-mask""></div>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
@@ -66,7 +65,6 @@ namespace AntDesign.Tests.Drawer
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Placement, placement));
 
             systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
-                <div class=""ant-drawer-mask""></div>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
@@ -293,6 +291,7 @@ namespace AntDesign.Tests.Drawer
             };
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
                 .Add(x => x.OnClose, onClose)
+                .Add(x => x.Visible, true)
                 .Add(x => x.MaskClosable, true));
 
             systemUnderTest.InvokeAsync(() => systemUnderTest.Find(".ant-drawer-mask").TriggerEvent("onclick", new MouseEventArgs()));
@@ -310,6 +309,7 @@ namespace AntDesign.Tests.Drawer
             };
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
                 .Add(x => x.OnClose, onClose)
+                .Add(x => x.Visible, true)
                 .Add(x => x.MaskClosable, false));
 
             systemUnderTest.InvokeAsync(() => systemUnderTest.Find(".ant-drawer-mask").TriggerEvent("onclick", new MouseEventArgs()));
@@ -394,7 +394,6 @@ namespace AntDesign.Tests.Drawer
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Handler, fragment));
 
             systemUnderTest.MarkupMatches(@"<div diff:ignoreAttributes>
-                <div class=""ant-drawer-mask""></div>
                 <div class=""ant-drawer-content-wrapper"" diff:ignoreAttributes>
                     <div class=""ant-drawer-content"" diff:ignoreChildren></div>
                     <span>Handler Stuff</span>
