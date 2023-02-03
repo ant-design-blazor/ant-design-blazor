@@ -67,12 +67,14 @@ namespace AntDesign
                 var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
                 if (reuseTabsPageItem == null)
                 {
-                    _pageMap[CurrentUrl] = new ReuseTabsPageItem
+                    reuseTabsPageItem = new ReuseTabsPageItem
                     {
                         Url = CurrentUrl,
                         CreatedAt = DateTime.Now,
                         Ignore = false
                     };
+
+                    _pageMap[CurrentUrl] = reuseTabsPageItem;
                 }
 
                 reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
