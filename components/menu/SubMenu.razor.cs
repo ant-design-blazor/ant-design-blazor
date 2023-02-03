@@ -81,26 +81,22 @@ namespace AntDesign
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
 
             ClassMapper
-                    .Clear()
-                    .Add(prefixCls)
-                     .Get(() => $"{prefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
-                    .If($"{prefixCls}-disabled", () => Disabled)
-                    .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () =>
-                    {
-                        var eval = RootMenu?.InternalMode == MenuMode.Inline && IsOpen;
-                        return eval;
-                    })
-                    ;
+                .Add(prefixCls)
+                .Get(() => $"{prefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
+                .If($"{prefixCls}-disabled", () => Disabled)
+                .If($"{prefixCls}-selected", () => _isSelected)
+                .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
+                ;
 
             SubMenuMapper
-                .Clear()
                 .Add(RootMenu?.PrefixCls)
                 .Add($"{RootMenu?.PrefixCls}-sub")
                 .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
                 .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
+                .If($"{RootMenu?.PrefixCls}-rtl", () => RTL)
                 ;
 
             if (RootMenu?.InternalMode != MenuMode.Inline && _overlayTrigger != null)
