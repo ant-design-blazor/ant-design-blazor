@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 0.14.2
+
+`2023-02-06`
+
+开工大吉！
+
+- 🐞 修复 Menu 在RTL语言中错误的子菜单样式。[#3065](https://github.com/ant-design/ant-design/pull/3065) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 的 Reusetabs 在未打开过页面时会出现 null 引用异常。[#3060](https://github.com/ant-design/ant-design/pull/3060) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 drawe mask 不会消失的问题。[#3059](https://github.com/ant-design/ant-design/pull/3059) [@zxyao145](https://github.com/zxyao145)
+
 ### 0.14.1
 
 `2023-02-01`

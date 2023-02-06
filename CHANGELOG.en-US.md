@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.14.2
+
+`2023-02-06`
+
+- 🐞 Fixed Menu incorrect submenu styles in RTL language. [#3065](https://github.com/ant-design/ant-design/pull/3065) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs that reusetabs null reference exception. [#3060](https://github.com/ant-design/ant-design/pull/3060) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed drawer mask not disappear. [#3059](https://github.com/ant-design/ant-design/pull/3059) [@zxyao145](https://github.com/zxyao145)
+
 ### 0.14.1
 
 `2023-02-01`
