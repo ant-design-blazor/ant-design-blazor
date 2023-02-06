@@ -83,6 +83,28 @@ timeline: true
 - 🐞 重构 Descriptions 删除控制台输出。[#3012](https://github.com/ant-design-blazor/ant-design-blazor/pull/3012) [@berkerdong](https://github.com/berkerdong)
 - 💄 同步 ant-design v4.24.2 样式。[#2877](https://github.com/ant-design-blazor/ant-design-blazor/pull/2877) [@ElderJames](https://github.com/ElderJames)
 
+#### 破环性更新
+
+- Table : `RowTemplate` 改为 `ColumnDefinitions`。`RowTemplate` 原来用于 `Column` 定义，这个版本之后改为用于定义行模板。
+- ReuseTabs: `ReuseTabsRouteView` 和 `AuthorizeReuseTabsRouteView` 已被标记为弃用。 请用`<CascadingValue Value="routeData">` 包裹 `<RouteView>` 或 `<AuthorizeRouteView>`。
+  
+  即：
+
+  ```diff
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+  +   <CascadingValue Value="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+  +   </CascadingValue>
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
+  ```
+
 ### 0.13.3
 
 `2023-01-09`
