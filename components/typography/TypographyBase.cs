@@ -11,6 +11,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Copyable { get; set; } = false;
+
         [Parameter]
         public TypographyCopyableConfig CopyConfig { get; set; }
 
