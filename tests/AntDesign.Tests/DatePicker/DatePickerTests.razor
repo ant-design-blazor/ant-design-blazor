@@ -43,6 +43,48 @@
 		selectedCell.GetAttribute("title").Should().Be(expectedAsString);
 		selectedCell.Children[0].TextContent.Trim().Should().Be(value.Day.ToString());
 	}
+    
+    [Fact]
+    public async void Picker_Should_Picked_First_Day_In_Next_Month()
+    {
+        const string dateTimeFormat = "yyyy-MM-dd";
+        
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+        var value = new DateTime(2023,1,31);		
+        var expectedAsString = value.ToString("yyyy-MM-dd");
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value"/>);
+        var expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
+        
+        //Act
+        var input = cut.Find("input");
+        input.Click();
+        
+        //Task.Delay will force to wait for overlay to render the picker panel
+        await Task.Delay(1);
+        
+        //Assert
+        cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
+        cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(value.Year.ToString());
+        var selectedCell = cut.Find("td.ant-picker-cell-selected");
+        selectedCell.GetAttribute("title").Should().Be(expectedAsString);
+        selectedCell.Children[0].TextContent.Trim().Should().Be(value.Day.ToString());
+
+        var dateCells = cut.FindAll("td.ant-picker-cell");
+        
+        var dateToSelect = new DateTime(2023, 2, 1).ToString(dateTimeFormat);
+        
+        var firstCellInNextMonth = dateCells.First(x => x.GetAttribute("title") == dateToSelect);
+        firstCellInNextMonth.Click();
+
+        input.GetAttribute("value").Should().Be(dateToSelect);
+    }
 
 	[Theory]
 	[InlineData("yyyy-MM-dd", "2020-04-05")]
