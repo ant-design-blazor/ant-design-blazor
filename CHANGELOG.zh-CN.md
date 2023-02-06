@@ -15,6 +15,17 @@ timeline: true
 
 ---
 
+### 0.14.2
+
+`2023-02-06`
+
+开工大吉！
+
+- 🐞 修复 Menu 在RTL语言中错误的子菜单样式。[#3065](https://github.com/ant-design-blazor/ant-design-blazor/pull/3065) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 的 Reusetabs 在未打开过页面时会出现 null 引用异常。[#3060](https://github.com/ant-design-blazor/ant-design-blazor/pull/3060) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 drawe mask 不会消失的问题。[#3059](https://github.com/ant-design-blazor/ant-design-blazor/pull/3059) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Calendar 选中日期错误。[#3069](https://github.com/ant-design-blazor/ant-design-blazor/pull/3069) [@agolub-s](https://github.com/agolub-s)
+
 ### 0.14.1
 
 `2023-02-01`
@@ -72,6 +83,28 @@ timeline: true
 - 🐞 修复 Cascader 边界调整模式默认改为 InView。[#2999](https://github.com/ant-design-blazor/ant-design-blazor/pull/2999) [@ElderJames](https://github.com/ElderJames)
 - 🐞 重构 Descriptions 删除控制台输出。[#3012](https://github.com/ant-design-blazor/ant-design-blazor/pull/3012) [@berkerdong](https://github.com/berkerdong)
 - 💄 同步 ant-design v4.24.2 样式。[#2877](https://github.com/ant-design-blazor/ant-design-blazor/pull/2877) [@ElderJames](https://github.com/ElderJames)
+
+#### 破环性更新
+
+- Table : `RowTemplate` 改为 `ColumnDefinitions`。`RowTemplate` 原来用于 `Column` 定义，这个版本之后改为用于定义行模板。
+- ReuseTabs: `ReuseTabsRouteView` 和 `AuthorizeReuseTabsRouteView` 已被标记为弃用。 请用`<CascadingValue Value="routeData">` 包裹 `<RouteView>` 或 `<AuthorizeRouteView>`。
+  
+  即：
+
+  ```diff
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+  +   <CascadingValue Value="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+  +   </CascadingValue>
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
+  ```
 
 ### 0.13.3
 

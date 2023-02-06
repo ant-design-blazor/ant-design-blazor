@@ -15,6 +15,15 @@ timeline: true
 
 ---
 
+### 0.14.2
+
+`2023-02-06`
+
+- 🐞 Fixed Menu incorrect submenu styles in RTL language. [#3065](https://github.com/ant-design-blazor/ant-design-blazor/pull/3065) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs that reusetabs null reference exception. [#3060](https://github.com/ant-design-blazor/ant-design-blazor/pull/3060) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed drawer mask not disappear. [#3059](https://github.com/ant-design-blazor/ant-design-blazor/pull/3059) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Calendar wrong selected date. [#3069](https://github.com/ant-design-blazor/ant-design-blazor/pull/3069) [@agolub-s](https://github.com/agolub-s)
+
 ### 0.14.1
 
 `2023-02-01`
@@ -73,6 +82,29 @@ Happy Chinese New Year of rabbit!
 - 🐞 Fixed Cascader boudary adjust mode default to InView. [#2999](https://github.com/ant-design-blazor/ant-design-blazor/pull/2999) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Descriptions invalid messages in Console. [#3012](https://github.com/ant-design-blazor/ant-design-blazor/pull/3012) [@berkerdong](https://github.com/berkerdong)
 - 💄 sync ant-design v4.24.2. [#2877](https://github.com/ant-design-blazor/ant-design-blazor/pull/2877) [@ElderJames](https://github.com/ElderJames)
+
+
+#### Breaking Changes
+
+- Table : `RowTemplate` was Changed to `ColumnDefinitions`。`RowTemplate` was originally used for the `Column` definition, but this version was changed to define the row template.
+- ReuseTabs: `ReuseTabsRouteView` and `AuthorizeReuseTabsRouteView` have been marked as obsolete. Please use `<CascadingValue Value="routeData">` to wrap `<RouteView>` or `<AuthorizeRouteView>`.
+
+  See：
+
+  ```diff
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+  +   <CascadingValue Value="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+  +   </CascadingValue>
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
+  ```
 
 ### 0.13.3
 
