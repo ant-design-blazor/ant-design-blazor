@@ -88,7 +88,7 @@ Happy Chinese New Year of rabbit!
 - Table : `RowTemplate` was Changed to `ColumnDefinitions`。`RowTemplate` was originally used for the `Column` definition, but this version was changed to define the row template.
 - ReuseTabs: `ReuseTabsRouteView` and `AuthorizeReuseTabsRouteView` have been marked as obsolete. Please use `<CascadingValue Value="routeData">` to wrap `<RouteView>` or `<AuthorizeRouteView>`.
 
-See：
+  See：
 
   ```diff
   <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
