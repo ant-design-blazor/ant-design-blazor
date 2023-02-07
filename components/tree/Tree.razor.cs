@@ -76,7 +76,19 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
+        
+        /// <summary>
+        /// Whether to prevent the default browser context menu from displaying for tree nodes
+        /// </summary>
+        [Parameter]
+        public bool OnContextMenuPreventDefault { get; set; }
 
+        /// <summary>
+        /// Whether to prevent the default browser context menu from displaying for the entire tree component
+        /// </summary>
+        [Parameter]
+        public bool OnContextMenuPreventDefaultRoot { get; set; }
+        
         /// <summary>
         /// Displays the cotyledon icon
         /// </summary>

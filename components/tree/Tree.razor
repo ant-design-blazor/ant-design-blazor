@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref">
+<div class="@ClassMapper.Class" style="@Style" @ref="Ref" @oncontextmenu:preventDefault="OnContextMenuPreventDefaultRoot">
     <div class="ant-tree-list">
         <div class="ant-tree-list-holder-inner">
             <CascadingValue Value="this" Name="Tree" IsFixed="@true">
