@@ -3,7 +3,6 @@
 @using AntDesign.TableModels
 @using AntDesign.Internal
 @using AntDesign.Select
-@using AntDesign.Select
 @using AntDesign.Core.Component.ResizeObserver
 
 @typeparam TItem
@@ -205,8 +204,6 @@
 {
     RenderFragment<Table<TItem>> header = table =>
     @<Template>
-                @{
-    @<Template>
        @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
@@ -251,38 +248,10 @@
 
     Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
-    @<Template>
-        @if (table._total <= 0)
-        {
-                    <tr class="ant-table-placeholder">
-                        <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                            <Empty Simple />
-                        </td>
-                    </tr>
-        }
-        else if (showItems != null && table.ColumnContext.Columns.Count > 0)
-        {
-    #if NET5_0_OR_GREATER
-            if (table.EnableVirtualization && table.ScrollY != null)
-            {
-                <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
-                                                                               ChildContent="table.bodyRow(table, level, rowDataCache)" />
-            }
-            else
-            {
-    #endif
-                { @*Build will fail without this block*@ }
-            <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
-                         ChildContent="table.bodyRow(table, level, rowDataCache)" />
-    #if NET5_0_OR_GREATER
-            }
-    #endif
-        }
-    </Template>;
 @<Template>
     @if (table._total <= 0)
     {
-                    <tr class="ant-table-placeholder">
+                <tr class="ant-table-placeholder">
                     <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
                                 @if (table.ScrollX != null)
                                 {
@@ -315,6 +284,32 @@
 #if NET5_0_OR_GREATER
         }
 #endif
+    }
+</Template>;
+
+    Func<Table<TItem>, IEnumerable<GroupData<TItem>>, int, RenderFragment> bodyGroup = 
+            (table, showGroupItems, level) =>
+@<Template>
+    @{
+    if (showGroupItems != null && table.ColumnContext.Columns.Count > 0)
+    {
+        <h1>Body Group...</h1>
+#if NET5_0_OR_GREATER
+        if (table.EnableVirtualization && table.ScrollY != null)
+        {
+            <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showGroupItems.Select((group, index) => (group, index)).ToList()"
+                                                                           ChildContent="table.bodyGroupRow(table, level)" />
+        }
+        else
+        {
+#endif
+            { @*Build will fail without this block*@ }
+        <ForeachLoop Items="showGroupItems.Select((group, index) => (group, index))"
+                     ChildContent="table.bodyGroupRow(table, level)" />
+#if NET5_0_OR_GREATER
+        }
+#endif
+    }
     }
 </Template>;
 
