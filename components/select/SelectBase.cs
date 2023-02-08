@@ -808,7 +808,6 @@ namespace AntDesign
                 }
             }
 
-            _selectedValues = newSelectedValues;
             if (ValuesChanged.HasDelegate)
             {
                 await ValuesChanged.InvokeAsync(newSelectedValues);
