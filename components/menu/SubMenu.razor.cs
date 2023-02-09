@@ -62,7 +62,9 @@ namespace AntDesign
 
         internal int Level => RootMenu?.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
-        private int PaddingLeft => Level * RootMenu?.InlineIndent ?? 0;
+        private int Padding => Level * RootMenu?.InlineIndent ?? 0;
+
+        private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 

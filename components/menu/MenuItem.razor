@@ -7,7 +7,7 @@
     {
         <Tooltip TitleTemplate="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
             <Unbound Context="tooltip">
-                <li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
+                <li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
                     @icon(this)
                     <span class="ant-menu-title-content">
                         @if (RouterLink == null)
@@ -25,7 +25,7 @@
     }
     else
     {
-        <li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key">
+        <li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key">
             @icon(this)
             <span class="ant-menu-title-content">
                 @if (RouterLink == null)
