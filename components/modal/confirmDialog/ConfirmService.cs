@@ -10,7 +10,7 @@ namespace AntDesign
     /// <summary>
     /// show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef, but ConfirmService return ConfirmResult
     /// </summary>
-    public class ConfirmService
+    public class ConfirmService : IConfirmService
     {
         internal event Func<ConfirmRef, Task> OnOpenEvent;
 
