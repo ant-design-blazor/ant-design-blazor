@@ -406,7 +406,7 @@ namespace AntDesign
         private RenderFragment RenderPrev(int prevPage)
         {
             var disabled = !this.HasPrev();
-            var prevButton = ItemRender.Invoke(new(prevPage, PaginationItemType.Prev, GetItemIcon(PrevIcon, "prev page"), disabled));
+            var prevButton = ItemRender.Invoke(new(prevPage, PaginationItemType.Prev, GetItemIcon(RTL ? NextIcon : PrevIcon, "prev page"), disabled));
 
             return prevButton;
         }
@@ -414,7 +414,7 @@ namespace AntDesign
         private RenderFragment RenderNext(int nextPage)
         {
             var disabled = !this.HasNext();
-            var nextButton = ItemRender.Invoke(new(nextPage, PaginationItemType.Next, GetItemIcon(NextIcon, "next page"), disabled));
+            var nextButton = ItemRender.Invoke(new(nextPage, PaginationItemType.Next, GetItemIcon(RTL ? PrevIcon : NextIcon, "next page"), disabled));
             return nextButton;
         }
     }
