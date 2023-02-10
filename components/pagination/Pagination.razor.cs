@@ -156,7 +156,7 @@ namespace AntDesign
 
         private ClassMapper _jumpNextClass = new();
 
-        private int _current = InitCurrent;
+        private int _current = 0;
 
         private int _pageSize = InitPageSize;
 
@@ -182,9 +182,9 @@ namespace AntDesign
             }
 
             var current = DefaultCurrent;
-            if (Current != 0)
+            if (_current != 0)
             {
-                current = Current;
+                current = _current;
             }
 
             var pageSize = DefaultPageSize;
@@ -195,7 +195,7 @@ namespace AntDesign
 
             current = Math.Min(current, CalculatePage(pageSize, PageSize, Total));
 
-            Current = current;
+            _current = current;
             _currentInputValue = current;
             PageSize = pageSize;
 
