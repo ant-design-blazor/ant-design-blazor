@@ -1,0 +1,92 @@
+﻿@using System.ComponentModel
+@using AntDesign.TableModels
+
+<div>
+    <RadioGroup
+        Style="margin-bottom: 10px;"
+        Options="@positions"
+        @bind-Value="paginationPosition" />
+</div>
+<Table TItem="Data" DataSource="@data" PaginationPosition="@paginationPosition">
+  <PropertyColumn Property="c=>c.Name">
+    <a>@context.Name</a>
+  </PropertyColumn>
+  <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Address">
+    <TitleTemplate>
+      <span> <Icon Type="environment" /> Address </span>
+    </TitleTemplate>
+  </PropertyColumn>
+  <PropertyColumn Property="c=>c.Tags">
+    @foreach (var tag in context.Tags)
+    {
+      var color = tag.Length > 5 ? "geekblue" : "green";
+      if (tag == "loser")
+      {
+        color = "volcano";
+      }
+      <Tag Color="@color">@tag</Tag>
+    }
+  </PropertyColumn>
+  <ActionColumn Title="Action">
+    <Space Size=@("middle")>
+      <SpaceItem>
+        <a>Invite @context.Name</a>
+      </SpaceItem>
+      <SpaceItem>
+        <a>Delete</a>
+      </SpaceItem>
+    </Space>
+  </ActionColumn>
+</Table>
+
+@code {
+    string[] positions = new[] { "none", "topLeft", "topCenter", "topRight", "bottomLeft", "bottomCenter", "bottomRight" };
+    string paginationPosition = "bottomRight";
+
+  Data[] data = new Data[]
+  {
+        new()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+            Tags = new[] {"nice", "developer"}
+        },
+        new()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+            Tags = new[] { "loser"}
+        },
+        new()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+            Tags = new[] { "cool", "teacher" }
+        }
+  };
+
+  public class Data
+  {
+    [DisplayName("Key")]
+    public string Key { get; set; }
+
+    [DisplayName("Name")]
+    public string Name { get; set; }
+
+    [DisplayName("Age")]
+    public int Age { get; set; }
+
+    [DisplayName("Address")]
+    public string Address { get; set; }
+
+    [DisplayName("Tags")]
+    public string[] Tags { get; set; }
+  }
+}
