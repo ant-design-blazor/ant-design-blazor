@@ -89,7 +89,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 ### ConfirmService
 
-`ConfirmService.Show` 用于弹出类似于在WinForm中使用 MessageBox 方式弹出的对话框。这和 ModalService 不同的是，ModalService 只可以创建 具有 OK-Cancel 按钮的对话框并返回 ConfirmRef 对象或者是否OK按钮被点击，而 ConfirmService 总是返回 ConfirmResult ，以指示哪个按钮被点击。
+`IConfirmService.Show` 用于弹出类似于在WinForm中使用 MessageBox 方式弹出的对话框。这和 ModalService 不同的是，ModalService 只可以创建 具有 OK-Cancel 按钮的对话框并返回 ConfirmRef 对象或者是否OK按钮被点击，而 ConfirmService 总是返回 ConfirmResult ，以指示哪个按钮被点击。
 
 
 #### ConfirmOptions

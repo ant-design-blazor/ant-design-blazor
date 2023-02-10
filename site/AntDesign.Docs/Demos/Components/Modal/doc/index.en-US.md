@@ -87,7 +87,7 @@ There are some ways to display the information based on the content's nature:
 
 ### ConfirmService
 
-`ConfirmService.Show` to show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef or OK button is clicked, but ConfirmService return ConfirmResult.
+`IConfirmService.Show` to show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef or OK button is clicked, but ConfirmService return ConfirmResult.
 
 
 #### ConfirmOptions
