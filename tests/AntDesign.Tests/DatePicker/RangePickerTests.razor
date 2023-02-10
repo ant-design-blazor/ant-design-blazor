@@ -249,6 +249,99 @@
         range[1].Should().Be(expectedEnd);
         input[1].GetAttribute("value").Should().Be(endValueAsString);
 	}
+    
+    
+    [Fact]
+    public async Task Enter_Date_Before_Blur_Should_Change_Value_When_EnterOnBlur()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var range = new DateTime[]
+        {
+            DateTime.Now.Date,
+            DateTime.Now.Date.AddDays(1)
+        };
+
+        var expectedStart = DateTime.Now.Date.AddDays(-10);
+        var expectedEnd = DateTime.Now.Date.AddDays(10);
+
+        var format = "yyyy-MM-dd";
+        var startValueAsString = expectedStart.ToString(format);
+        var endValueAsString = expectedEnd.ToString(format);
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+            (@<RangePicker @bind-Value="range" EnterOnBlur/>  );
+
+        //Act
+        var input = cut.FindAll("input");
+        input[0].Click();
+        await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
+        input[0].Blur();
+        await Task.Delay(100);
+        
+        input[1].Click();
+        await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
+        input[1].Blur();
+        await Task.Delay(100);
+
+        //Assert
+        input = cut.FindAll("input");
+        range[0].Should().Be(expectedStart);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+        range[1].Should().Be(expectedEnd);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+    }
+    
+    [Fact]
+    public async Task Enter_Empty_Date_Should_Clear_Value_When_AllowClear()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var range = new DateTime?[]
+        {
+            DateTime.Now.Date,
+            DateTime.Now.Date.AddDays(1)
+        };
+        
+        var startValueAsString = string.Empty;
+        var endValueAsString = string.Empty;
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+            (@<RangePicker @bind-Value="range" EnterOnBlur AllowClear/>  );
+
+        //Act
+        var input = cut.FindAll("input");
+        input[0].Click();
+        await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
+        input[0].Blur();
+        await Task.Delay(100);
+        
+        input[1].Click();
+        await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
+        input[1].Blur();
+        await Task.Delay(100);
+
+        //Assert
+        input = cut.FindAll("input");
+        range[0].Should().Be(null);
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+        range[1].Should().Be(null);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+    }
 
     [Fact]
     public void ItShouldUseCustomSuffixIcon()

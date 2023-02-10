@@ -8,6 +8,7 @@ using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using OneOf;
 
@@ -23,6 +24,12 @@ namespace AntDesign
 
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
+        
+        /// <summary>
+        /// Saving the input value after blur
+        /// </summary>
+        [Parameter]
+        public bool EnterOnBlur { get; set; }
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -597,7 +604,13 @@ namespace AntDesign
             return true;
         }
 
-        protected abstract Task OnBlur(int index);
+        protected virtual async Task OnBlur(int index)
+        {
+            if (EnterOnBlur && _duringManualInput)
+            {
+                await OnKeyDown(new KeyboardEventArgs { Key = "ENTER" }, index);
+            }
+        }
 
         protected void InitPicker(string picker)
         {
@@ -660,6 +673,8 @@ namespace AntDesign
                 _needRefresh = true;
             }
         }
+
+        protected abstract Task OnKeyDown(KeyboardEventArgs e, int? index = null);
 
         public async Task Blur(int index = 0)
         {
