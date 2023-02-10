@@ -461,8 +461,11 @@ namespace AntDesign
                 await UpdateOverlayPositionAsync();
             }
 
-            await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
-            await ValuesChanged.InvokeAsync(Values);
+            if (ValuesChanged.HasDelegate)
+                await ValuesChanged.InvokeAsync(Values);
+
+            if (OnSelectedItemsChanged.HasDelegate)
+                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
         }
 
         /// <summary>
@@ -808,16 +811,7 @@ namespace AntDesign
                 }
             }
 
-            _selectedValues = newSelectedValues;
-            if (ValuesChanged.HasDelegate)
-            {
-                await ValuesChanged.InvokeAsync(newSelectedValues);
-            }
-            else
-            {
-                Values = newSelectedValues;
-                StateHasChanged();
-            }
+            Values = newSelectedValues;
         }
 
         protected void ClearSearch()
