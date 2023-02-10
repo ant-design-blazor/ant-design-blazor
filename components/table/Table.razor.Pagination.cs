@@ -20,7 +20,7 @@ namespace AntDesign
             set
             {
                 _paginationPosition = value;
-                InitializePagination();
+                _paginationPositionSet = true;
             }
         }
 
@@ -75,14 +75,18 @@ namespace AntDesign
 
         private int _total;
         private int _dataSourceCount;
-        private string _paginationPosition = "bottomRight";
-        private string _paginationClass;
+        private ClassMapper _paginationClass = new ClassMapper();
         private int _pageIndex = 1;
         private int _pageSize = 10;
+        private string _paginationPosition = "bottomRight";
+        private bool _paginationPositionSet;
 
         private void InitializePagination()
         {
-            _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
+            _paginationClass
+                .Add($"ant-table-pagination")
+                .GetIf(() => $"ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}", () => _paginationPositionSet)
+                .If("ant-table-pagination-left", () => RTL && !_paginationPositionSet);
         }
 
         private async Task HandlePageChange(PaginationEventArgs args)
