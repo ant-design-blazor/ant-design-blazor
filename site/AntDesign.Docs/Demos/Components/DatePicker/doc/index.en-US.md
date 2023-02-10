@@ -26,32 +26,32 @@ There are six kinds of picker:
 
 The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicker, WeekPicker.
 
-| Property | Description | Type | Default | Version |
-| --- | --- | --- | --- | --- |
-| allowClear（TODO） | Whether to show clear button | boolean | true |  |
-| autoFocus | get focus when component mounted | boolean | false |  |
-| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
-| className | picker className | string | '' |  |
-| dateRender | custom rendering function for date cells | function(currentDate: moment, today: moment) => React.ReactNode | - |  |
-| disabled | determine whether the DatePicker is disabled | boolean | false |  |
-| disabledDate | specify the date that cannot be selected | (currentDate: moment) => boolean | - |  |
-| dropdownClassName | to customize the className of the popup calendar | string | - |  |
-| getPopupContainer | to set the container of the floating layer, while the default is to create a `div` element in `body` | function(trigger) | - |  |
-| locale | Localization configuration. Note: do not change the order of days in the ShortWeekDays array. The wrong order will result in the incorrect day headers. | object | [default](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/locales/en-US.json) |  |
-| mode（TODO） | picker panel mode（[Cannot select year or month anymore?](/docs/react/faq#When-set-mode-to-DatePicker/RangePicker,-cannot-select-year-or-month-anymore?) | `time` \| `date` \| `month` \| `year` \| `decade` | - |  |
-| open | open state of picker | boolean | - |  |
-| picker | Set picker type | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
-| placeholder | placeholder of date input | string\|RangePicker\[] | - |  |
-| Placement | The position where the selection box pops up | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |
-| popupStyle | to customize the style of the popup calendar | CSSProperties | {} |  |
-| size | determine the size of the input box, the height of `large` and `small`, are 40px and 24px respectively, while default size is 32px | `large` \| `middle` \| `small` | - |  |
-| bordered | whether has border style | Boolean | true |  |
-| SuffixIcon | The custom suffix icon | RenderFragment | - |  |
-| style | to customize the style of the input box | CSSProperties | {} |  |
-| onOpenChange | a callback function, can be executed whether the popup calendar is popped up or closed | function(open) | - |  |
-| onPanelChange | callback when picker panel mode is changed | function(value, mode) | - |  |
-| OnClearClick | callback when clear button is clicked | Action | - |  |
-| inputReadOnly | Set the `readonly` attribute of the input tag (avoids virtual keyboard on touch devices) | boolean | false |  |
+| Property           | Description                                                                                                                                             | Type | Default                                                                                                     | Version |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------| --- |-------------------------------------------------------------------------------------------------------------| --- |
+| allowClear（TODO）   | Whether to show clear button                                                                                                                            | boolean | true                                                                                                        |  |
+| enterOnBlur        | Saving the input value after blur (when the mouse clicked outside the input)                                                                            | boolean | false                                                                                                       |  |
+| autoFocus          | get focus when component mounted                                                                                                                        | boolean | false                                                                                                       |  |
+| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)                                                                           | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView                                                                            |
+| className          | picker className                                                                                                                                        | string | ''                                                                                                          |  |
+| dateRender         | custom rendering function for date cells                                                                                                                | function(currentDate: moment, today: moment) => React.ReactNode | -                                                                                                           |  |
+| disabled           | determine whether the DatePicker is disabled                                                                                                            | boolean | false                                                                                                       |  |
+| disabledDate       | specify the date that cannot be selected                                                                                                                | (currentDate: moment) => boolean | -                                                                                                           |  |
+| dropdownClassName  | to customize the className of the popup calendar                                                                                                        | string | -                                                                                                           |  |
+| getPopupContainer  | to set the container of the floating layer, while the default is to create a `div` element in `body`                                                    | function(trigger) | -                                                                                                           |  |
+| locale             | Localization configuration. Note: do not change the order of days in the ShortWeekDays array. The wrong order will result in the incorrect day headers. | object | [default](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/locales/en-US.json) |  |
+| mode（TODO）         | picker panel mode（[Cannot select year or month anymore?](/docs/react/faq#When-set-mode-to-DatePicker/RangePicker,-cannot-select-year-or-month-anymore?) | `time` \| `date` \                                                                                                    | `month` \| `year` \| `decade` | - |  |
+| open               | open state of picker                                                                                                                                    | boolean | -                                                                                                           |  |
+| picker             | Set picker type                                                                                                                                         | `date` \| `week` \                                                                                                    | `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
+| placeholder        | placeholder of date input                                                                                                                               | string\| RangePicker\[]                                                                                              | - |  |
+| popupStyle         | to customize the style of the popup calendar                                                                                                            | CSSProperties | {}                                                                                                          |  |
+| size               | determine the size of the input box, the height of `large` and `small`, are 40px and 24px respectively, while default size is 32px                      | `large` \| `middle` \                                                                                                  | `small` | - |  |
+| bordered           | whether has border style                                                                                                                                | Boolean | true                                                                                                        |  |
+| SuffixIcon         | The custom suffix icon                                                                                                                                  | RenderFragment | -                                                                                                           |  |
+| style              | to customize the style of the input box                                                                                                                 | CSSProperties | {}                                                                                                          |  |
+| onOpenChange       | a callback function, can be executed whether the popup calendar is popped up or closed                                                                  | function(open) | -                                                                                                           |  |
+| onPanelChange      | callback when picker panel mode is changed                                                                                                              | function(value, mode) | -                                                                                                           |  |
+| OnClearClick       | callback when clear button is clicked                                                                                                                   | Action | -                                                                                                           |  |
+| inputReadOnly      | Set the `readonly` attribute of the input tag (avoids virtual keyboard on touch devices)                                                                | boolean | false                                                                                                       |  |
 
 ### Common Methods
 
