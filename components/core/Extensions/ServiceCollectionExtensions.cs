@@ -32,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+            services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
             services.TryAddSingleton<ReuseTabsService>();
