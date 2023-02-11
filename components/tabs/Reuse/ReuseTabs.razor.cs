@@ -58,6 +58,20 @@ namespace AntDesign
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
             ReuseTabsService.OnCloseCurrent += RemoveCurrent;
+            ReuseTabsService.OnUpdate += UpdateState;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReuseTabsService.GetNewKeyByUrl -= GetNewKeyByUrl;
+
+            ReuseTabsService.OnClosePage -= RemovePage;
+            ReuseTabsService.OnCloseOther -= RemoveOther;
+            ReuseTabsService.OnCloseAll -= RemoveAll;
+            ReuseTabsService.OnCloseCurrent -= RemoveCurrent;
+            ReuseTabsService.OnUpdate -= UpdateState;
+
+            base.Dispose(disposing);
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
@@ -106,7 +120,7 @@ namespace AntDesign
         {
             if (page is IReuseTabsPage resuse)
             {
-                pageItem.Title ??= resuse.GetPageTitle();
+                pageItem.Title = resuse.GetPageTitle();
             }
 
             var attributes = pageType.GetCustomAttributes(true);
@@ -175,22 +189,10 @@ namespace AntDesign
             if (_pageMap.ContainsKey(url)) return;
 
             var reuseTabsPageItem = new ReuseTabsPageItem();
-            GetPageInfo(reuseTabsPageItem, pageType, url, null);
+            GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
             reuseTabsPageItem.CreatedAt = DateTime.Now;
             reuseTabsPageItem.Url = url;
             _pageMap[url] = reuseTabsPageItem;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            ReuseTabsService.GetNewKeyByUrl -= GetNewKeyByUrl;
-
-            ReuseTabsService.OnClosePage -= RemovePage;
-            ReuseTabsService.OnCloseOther -= RemoveOther;
-            ReuseTabsService.OnCloseAll -= RemoveAll;
-            ReuseTabsService.OnCloseCurrent -= RemoveCurrent;
-
-            base.Dispose(disposing);
         }
 
         private void RemovePage(string key)
@@ -226,6 +228,11 @@ namespace AntDesign
         private void RemoveCurrent()
         {
             RemovePage(this.CurrentUrl);
+        }
+
+        private void UpdateState()
+        {
+            StateHasChanged();
         }
 
         private string GetNewKeyByUrl(string url)

@@ -19,6 +19,8 @@ namespace AntDesign
 
         internal event Action OnCloseCurrent;
 
+        internal event Action OnUpdate;
+
         internal event Func<string, string> GetNewKeyByUrl;
 
         public void ClosePage(string key)
@@ -39,6 +41,11 @@ namespace AntDesign
         public void CloseCurrent()
         {
             OnCloseCurrent?.Invoke();
+        }
+
+        public void Update()
+        {
+            OnUpdate?.Invoke();
         }
     }
 }
