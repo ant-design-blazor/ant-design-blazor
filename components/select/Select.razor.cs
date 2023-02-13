@@ -804,6 +804,7 @@ namespace AntDesign
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
         {
+            Open = visible;
             OnDropdownVisibleChange?.Invoke(visible);
 
             if (visible)

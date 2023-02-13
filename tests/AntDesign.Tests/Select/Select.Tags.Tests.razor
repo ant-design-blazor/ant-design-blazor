@@ -15,6 +15,12 @@
             JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult(); ;
 #pragma warning restore CS0618 // Type or member is obsolete
 #endif
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
     }
 
     [Fact]
