@@ -271,7 +271,6 @@ namespace AntDesign
                 Date = GetIndexValue(0),
                 DateString = GetInputValue(0)
             });
-
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
@@ -292,6 +291,7 @@ namespace AntDesign
 
         private void OverlayVisibleChange(bool visible)
         {
+            Open = visible;
             OnOpenChange.InvokeAsync(visible);
             _openingOverlay = false;
             InvokeInternalOverlayVisibleChanged(visible);
