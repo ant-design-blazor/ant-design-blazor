@@ -155,7 +155,6 @@ namespace AntDesign
         {
             _items ??= new List<SegmentedItem<TValue>>();
 
-            item.Index = _items.Count;
             _items.Add(item);
 
             if (Labels == null && Options == null)
@@ -227,7 +226,7 @@ namespace AntDesign
                 await ThumbAnimation(item);
             }
 
-            _activeIndex = item.Index;
+            _activeIndex = _items.IndexOf(item);
             _items.ForEach(x => x.SetSelected(false));
             item.SetSelected(true);
         }
