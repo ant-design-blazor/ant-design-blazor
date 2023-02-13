@@ -26,6 +26,7 @@ namespace AntDesign.Datepicker.Locale
         private int _separatorPrefixOffset;
         private readonly DatePickerLocale _locale;
         private readonly CultureInfo _cultureInfo;
+        private readonly string _format;
 
         public enum DateTimePartialType
         {
@@ -41,6 +42,7 @@ namespace AntDesign.Datepicker.Locale
 
         public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
         {
+            _format = format;
             _formatLength = format.Length;
             _analyzerType = analyzerType;
             _locale = locale;
@@ -310,8 +312,17 @@ namespace AntDesign.Datepicker.Locale
         {
             if (IsFullString(pickerString))
             {
-                return (TryBuildDateFromPartials(out DateTime result), result);
+                if (TryBuildDateFromPartials(out var result))
+                {
+                    return (true, result);
+                }
             }
+                
+            if (DateTime.TryParseExact(pickerString, _format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var result2))
+            {
+                return (true, result2);
+            }
+            
             return (false, default);
         }
 
