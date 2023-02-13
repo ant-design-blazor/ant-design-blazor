@@ -171,4 +171,35 @@
         members[1].Instance.Disabled.Should().Be(!initGroupDisabled);
     }
 
+    [Fact]
+    public void Change_radio_list_and_binding_value_at_same_time()
+    {
+        // Arrange
+        var radioList = new[] { "1", "2", "3" };
+        var seletedValue = "1";
+        var cut = Render<RadioGroup<string>>(
+        @<RadioGroup @bind-Value="seletedValue">
+            @foreach (var item in radioList)
+                {
+                    <Radio Value="item" />
+                }
+            </RadioGroup>
+    );
+
+        var defaultValueChecked = cut.Find("[type=radio][value=1]").HasAttribute("checked");
+
+        // Act
+        radioList = new[] { "2", "3", "4" };
+        seletedValue = "4";
+
+        cut.Instance.Value = seletedValue;
+        cut.Render();
+
+        cut.WaitForElement("[type=radio][value=4]");
+        cut.FindComponents<Radio<string>>().ForEach(x => x.Render());
+
+        // Assert
+        defaultValueChecked.Should().BeTrue();
+        cut.Find("[type=radio][value=4]").HasAttribute("checked").Should().BeTrue();
+    }
 }
