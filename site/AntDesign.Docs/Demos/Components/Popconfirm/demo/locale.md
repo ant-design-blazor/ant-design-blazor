@@ -7,9 +7,9 @@ title:
 
 ## zh-CN
 
-使用 `okText` 和 `cancelText` 自定义按钮文字。
+使用 `OkText` 和 `CancelText` 或者 `Locale` 自定义按钮文字。
 
 ## en-US
 
-Set `okText` and `cancelText` props to customize the button's labels.
+Set `okText` and `cancelText` or `Locale` props to customize the button's labels.
 
