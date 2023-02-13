@@ -36,14 +36,16 @@
                 <div class="ant-popover-inner" role="tooltip">
                     <div class="ant-popover-inner-content">
                         <div class="ant-popover-message">
-                            @if (IconTemplate != null)
-                            {
-                                @IconTemplate
-                            }
-                            else
-                            {
-                                <Icon Type="@Icon" />
-                            }
+                            <span class="ant-popover-message-icon">
+                                @if (IconTemplate != null)
+                                {
+                                    @IconTemplate
+                                }
+                                else
+                                {
+                                    <Icon Type="@Icon" />
+                                }
+                            </span>
                             <div class="ant-popover-message-title">
                                 @if (TitleTemplate != null)@TitleTemplate else @Title
                             </div>
