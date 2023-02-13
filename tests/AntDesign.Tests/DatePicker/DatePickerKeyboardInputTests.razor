@@ -38,6 +38,41 @@
 		value.Should().Be(expectedValue);
 		input.GetAttribute("value").Should().Be(expectedValueAsString);
 	}
+    
+    [Theory]
+    [InlineData("yyyy-MM-dd", "yyyyMMdd", "dd-MM-yyyy")]
+    [InlineData("yyyyMMdd", "yyyy-MM-dd", "dd-MM-yyyy")]
+    [InlineData("dd-MM-yyyy", "yyyyMMdd", "yyyy-MM-dd")]
+    public async Task ApplyDateTimeFormatsAsArray(params string[] dateTimeFormats)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        
+        DateTime? value = null;
+        var defaultFormat = dateTimeFormats.First();
+        var expectedValue = DateTime.Now.Date;
+
+        var cut = Render<AntDesign.DatePicker<DateTime?>>(
+            @<DatePicker @bind-Value="@value" Format="@dateTimeFormats" />
+            );
+
+        foreach (var dateTimeFormat in dateTimeFormats)
+        {
+            var expectedValueAsString =  DateTime.Now.ToString(dateTimeFormat);
+            
+            //Act
+            var input = cut.Find("input");
+            input.Input(expectedValueAsString);
+            input.KeyDown("ENTER");
+        
+            //Assert
+            cut.Instance.Value.Should().Be(expectedValue);
+            value!.Value.Should().Be(expectedValue);
+            input.GetAttribute("value").Should().Be(expectedValue.ToString(defaultFormat));
+        }
+    }
 
 	[Fact]
 	public void DefaultValue_applied_to_value_on_blur_when_input_not_valid()
