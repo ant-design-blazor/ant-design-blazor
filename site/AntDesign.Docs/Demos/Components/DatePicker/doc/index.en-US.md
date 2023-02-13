@@ -29,7 +29,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | allowClear（TODO） | Whether to show clear button | boolean | true |  |
-| autoFocus | get focus when component mounted | boolean | false |  |
+| enterOnBlur        | Saving the input value after blur (when the mouse clicked outside the input)                                                                            | boolean | false                                                                                                       |  |
 | autoFocus | get focus when component mounted | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | picker className | string | '' |  |
