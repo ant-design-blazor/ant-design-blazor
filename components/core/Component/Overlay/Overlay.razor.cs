@@ -188,6 +188,18 @@ namespace AntDesign.Internal
             {
                 return;
             }
+
+            // allow user avoid visible by setting `Visible=false` in `OnVisibleChange`
+            if (Trigger.OnVisibleChange.HasDelegate)
+            {
+                await Trigger.OnVisibleChange.InvokeAsync(true);
+
+                if (!Trigger.Visible)
+                {
+                    return;
+                }
+            }
+
             _isOverlayDuringShowing = true;
 
             if (_isOverlayFirstRender)
@@ -214,7 +226,6 @@ namespace AntDesign.Internal
             _isOverlayHiding = false;
 
             _overlayCls = Trigger.GetOverlayEnterClass();
-            await Trigger.OnVisibleChange.InvokeAsync(true);
 
             await InvokeAsync(StateHasChanged);
 
@@ -234,12 +245,25 @@ namespace AntDesign.Internal
             {
                 return;
             }
+
             await Task.Delay(HideMillisecondsDelay);
 
             if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
                 return;
             }
+
+            // allow user avoid hiding by setting `Visible=true` in `OnVisibleChange`
+            if (Trigger.OnVisibleChange.HasDelegate)
+            {
+                await Trigger.OnVisibleChange.InvokeAsync(false);
+
+                if (Trigger.Visible)
+                {
+                    return;
+                }
+            }
+
             _isOverlayFirstRender = true;
 
             _isWaitForOverlayFirstRender = false;
@@ -256,8 +280,6 @@ namespace AntDesign.Internal
             await Task.Delay(WaitForHideAnimMilliseconds);
             _isOverlayShow = false;
             _isOverlayHiding = false;
-
-            await Trigger.OnVisibleChange.InvokeAsync(false);
 
             StateHasChanged();
 
