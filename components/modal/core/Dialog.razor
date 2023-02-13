@@ -10,7 +10,7 @@
         <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
              @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
-             @onkeydown="@OnKeyDown"
+             @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
             <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onclick:stopPropagation
