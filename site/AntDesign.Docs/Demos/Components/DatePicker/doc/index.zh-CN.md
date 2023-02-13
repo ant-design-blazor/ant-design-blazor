@@ -34,6 +34,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | allowClear（TODO） | 是否显示清除按钮 | boolean | true |  |
+| enterOnBlur        | 模糊后保存输入值（当鼠标在输入外点击时）                                                                            | boolean | false                                                                                                       |  |
 | autoFocus | 自动获取焦点 | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | 选择器 className | string | '' |  |
