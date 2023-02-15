@@ -6,11 +6,12 @@
 	public void Input_Bordered_sets_class()
 	{
 		//Arrange
-		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>
-	);
+		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>);
+
 		//Act
 		ITokenList classList = cut.Find("input").ClassList;		
-		//Assert           
+		
+        //Assert
 		classList.Contains("ant-input-borderless").Should().BeTrue();
 	}
 
@@ -191,6 +192,30 @@
         await Task.Delay(250);
 
         cut.Instance.Value.Should().Be("newValue");
+    }
+
+    [Fact]
+    public void Input_MaxLength_Adds_Attribute_To_Input()
+    {
+        string? value = null;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value MaxLength="50" />);
+
+        var textAreaElement = cut.Find("input");
+
+        textAreaElement.Attributes.Single(x => x.Name.ToLowerInvariant() == "maxlength").Value.Should().Be("50");
+    }
+
+    [Fact]
+    public void Input_MaxLength_Adds_Attribute_To_Input_After_Initial_Render()
+    {
+        string? value = null;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value />);
+
+        cut.Find("input").Attributes.SingleOrDefault(x => x.Name.ToLowerInvariant() == "maxlength").Should().BeNull();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(x => x.MaxLength, 50));
+
+        cut.WaitForAssertion(() => cut.Find("input").Attributes.Single(x => x.Name.ToLowerInvariant() == "maxlength").Value.Should().Be("50"));
     }
 
 
