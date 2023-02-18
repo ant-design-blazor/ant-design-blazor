@@ -57,7 +57,6 @@ namespace AntDesign
         public Popconfirm()
         {
             PrefixCls = "ant-popover";
-            OverlayClassName = "ant-popconfirm";
             Placement = Placement.Top;
             Trigger = new[] { AntDesign.Trigger.Click };
         }
