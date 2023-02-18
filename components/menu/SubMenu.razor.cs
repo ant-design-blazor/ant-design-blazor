@@ -202,7 +202,6 @@ namespace AntDesign
 
         private void OnOverlayVisibleChange(bool visible)
         {
-            IsOpen = visible;
             _overlayVisible = visible;
         }
 
