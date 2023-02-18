@@ -293,7 +293,18 @@ namespace AntDesign
             _inputString = Value?.ToString();
 
             SetClasses();
+            SetAttributes();
             _isInitialized = true;
+        }
+
+        protected void SetAttributes()
+        {
+            Attributes ??= new Dictionary<string, object>();
+
+            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
+            {
+                Attributes?.Add("maxlength", MaxLength);
+            }
         }
 
         protected virtual void SetClasses()
@@ -316,13 +327,6 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
-
-            Attributes ??= new Dictionary<string, object>();
-
-            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
-            {
-                Attributes?.Add("maxlength", MaxLength);
-            }
 
             if (AllowClear)
             {
@@ -383,7 +387,9 @@ namespace AntDesign
             {
                 BindOnInput = true;
             }
+
             SetClasses();
+            SetAttributes();
         }
 
         protected virtual Task OnChangeAsync(ChangeEventArgs args)
