@@ -15,6 +15,32 @@ timeline: true
 
 ---
 
+### 0.14.3
+
+`2023-02-19`
+
+- Popconfirm
+  - 🐞 Fixed icon missing color. [#3093](https://github.com/ant-design-blazor/ant-design-blazor/pull/3093) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed missing built-in localization. [#3095](https://github.com/ant-design-blazor/ant-design-blazor/pull/3095) [@ElderJames](https://github.com/ElderJames)
+
+- Pagination
+  - 🐞 Fixed `DefaultCurrent` doesn't work. [#3085](https://github.com/ant-design-blazor/ant-design-blazor/pull/3085) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed jump button icon direction in RTL language. [#3084](https://github.com/ant-design-blazor/ant-design-blazor/pull/3084) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 Fixed every keydown will trigger Modal re-render. [#3099](https://github.com/ant-design-blazor/ant-design-blazor/pull/3099) [@zxyao145](https://github.com/zxyao145)
+  - 🛠 Refactor ConfirmService to use interface. [#3083](https://github.com/ant-design-blazor/ant-design-blazor/pull/3083) [@wss-awachowicz](https://github.com/wss-awachowicz)
+
+- 🐞 Fixed Overlay popup cannot picked in drawer. [#3106](https://github.com/ant-design-blazor/ant-design-blazor/pull/3106) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Textarea not rendering maxlength on textarea. [#3108](https://github.com/ant-design-blazor/ant-design-blazor/pull/3108) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 Fixed Tabs supports Reusetabs title update. [#3088](https://github.com/ant-design-blazor/ant-design-blazor/pull/3088) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed radio can't be selected while radio list and value of RadioGroup was changed at the same time. [#3098](https://github.com/ant-design-blazor/ant-design-blazor/pull/3098) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Segmented exception cause by label index was changed. [#3096](https://github.com/ant-design-blazor/ant-design-blazor/pull/3096) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table default pagination position in RTL language. [#3086](https://github.com/ant-design-blazor/ant-design-blazor/pull/3086) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Select don't `OnSelectedItemsChanged` triggers. [#3079](https://github.com/ant-design-blazor/ant-design-blazor/pull/3079) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 Fixed Menu title padding direction in RTL language. [#3080](https://github.com/ant-design-blazor/ant-design-blazor/pull/3080) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.14.2
 
 `2023-02-06`
