@@ -15,6 +15,31 @@ timeline: true
 
 ---
 
+### 0.14.3
+
+`2023-02-19`
+
+- Popconfirm
+  - 🐞 修复 Popconfirm 图标颜色缺失。[#3093](https://github.com/ant-design-blazor/ant-design-blazor/pull/3093) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Popconfirm 补全内置的本地化。[#3095](https://github.com/ant-design-blazor/ant-design-blazor/pull/3095) [@ElderJames](https://github.com/ElderJames)
+
+- Pagination
+  - 🐞 修复  Pagination 的 `DefaultCurrent` 参数无作用。[#3085](https://github.com/ant-design-blazor/ant-design-blazor/pull/3085) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Pagination 在RTL模式跳转按钮图标的方向。[#3084](https://github.com/ant-design-blazor/ant-design-blazor/pull/3084) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 修复 每次在按键的时候重渲染content的问题。[#3099](https://github.com/ant-design-blazor/ant-design-blazor/pull/3099) [@zxyao145](https://github.com/zxyao145)
+  - 🛠 重构 ConfirmService 改为注入 IConfirmService。[#3083](https://github.com/ant-design-blazor/ant-design-blazor/pull/3083) [@wss-awachowicz](https://github.com/wss-awachowicz)
+
+- 🐞 修复 Drawer 中 popup 无法选择的问题。[#3106](https://github.com/ant-design-blazor/ant-design-blazor/pull/3106) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Textarea 不在 textarea 上渲染 maxlength。[#3108](https://github.com/ant-design-blazor/ant-design-blazor/pull/3108) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 修复 Tabs 支持修改 ReuseTabs 标签名。[#3088](https://github.com/ant-design-blazor/ant-design-blazor/pull/3088) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 在 RadioGroup 中的选项和绑定值同时被修改时，不能选中最新值的问题。[#3098](https://github.com/ant-design-blazor/ant-design-blazor/pull/3098) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmented 在 Labels 索引发送改变时抛出异常的问题。[#3096](https://github.com/ant-design-blazor/ant-design-blazor/pull/3096) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 分页器在 RTL 语言下的默认位置。[#3086](https://github.com/ant-design-blazor/ant-design-blazor/pull/3086) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 的 OnSelectedItemsChanged 事件不正常触发。[#3079](https://github.com/ant-design-blazor/ant-design-blazor/pull/3079) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 修复 Menu 标题在 RTL 语言时内边距的方向。[#3080](https://github.com/ant-design-blazor/ant-design-blazor/pull/3080) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.14.2
 
 `2023-02-06`
