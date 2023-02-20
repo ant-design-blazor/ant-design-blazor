@@ -193,9 +193,7 @@ namespace AntDesign
         public string DropdownClassName { get; set; }
 
         [Parameter]
-        public OneOf<string, string[]> Format { get; set; }
-
-        public string DefaultFormat => InternalFormats.First();
+        public string Format { get; set; }
 
         private TValue _defaultValue;
 
@@ -788,10 +786,7 @@ namespace AntDesign
             {
                 if (_htmlInputSize == 0)
                 {
-                    var maxFormat = InternalFormats.OrderByDescending(x => x.Length).First();
-                    
-                    _htmlInputSize = maxFormat.Length + (int)(maxFormat.Count(ch => ch > 127) * 1.34) + 2;
-                    
+                    _htmlInputSize = InternalFormat.Length + (int)(InternalFormat.Count(ch => ch > 127) * 1.34) + 2;
                     if (_htmlInputSize < 12)
                     {
                         _htmlInputSize = 12;
@@ -801,36 +796,30 @@ namespace AntDesign
             }
         }
 
-        private string[] _internalFormats;
+        private string _internalFormat;
 
-        private string[] InternalFormats
+        private string InternalFormat
         {
             get
             {
-                if (_internalFormats is null)
+                if (string.IsNullOrEmpty(_internalFormat))
                 {
-                    if (Format.IsT0 && !string.IsNullOrEmpty(Format.AsT0))
-                    {
-                        _internalFormats = new []{Format.AsT0};
-                    }
-                    else if (Format.IsT1 && Format.AsT1?.Any() == true && Format.AsT1.All(x=> !string.IsNullOrEmpty(x)))
-                    {
-                        _internalFormats = Format.AsT1;
-                    }
+                    if (!string.IsNullOrEmpty(Format))
+                        _internalFormat = Format;
                     else
-                        _internalFormats = _pickerStatus[0].InitPicker switch
+                        _internalFormat = _pickerStatus[0].InitPicker switch
                         {
-                            DatePickerType.Date => new []{ GetTimeFormat() },
-                            DatePickerType.Month => new []{ Locale.Lang.YearMonthFormat },
-                            DatePickerType.Year => new []{ Locale.Lang.YearFormat },
-                            DatePickerType.Time when Use12Hours => new []{ Locale.Lang.TimeFormat12Hour },
-                            DatePickerType.Time => new []{ Locale.Lang.TimeFormat },
-                            DatePickerType.Week => new []{ $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}" },
-                            DatePickerType.Quarter => new []{ $"{Locale.Lang.YearFormat}-Q0" },
-                            _ => new []{ Locale.Lang.DateFormat },
+                            DatePickerType.Date => GetTimeFormat(),
+                            DatePickerType.Month => Locale.Lang.YearMonthFormat,
+                            DatePickerType.Year => Locale.Lang.YearFormat,
+                            DatePickerType.Time when Use12Hours => Locale.Lang.TimeFormat12Hour,
+                            DatePickerType.Time => Locale.Lang.TimeFormat,
+                            DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
+                            DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
+                            _ => Locale.Lang.DateFormat,
                         };
                 }
-                return _internalFormats;
+                return _internalFormat;
             }
         }
 
@@ -847,23 +836,21 @@ namespace AntDesign
             return Locale.Lang.DateFormat;
         }
 
-        private FormatAnalyzer[] _formatAnalyzers;
-        protected FormatAnalyzer[] FormatAnalyzers 
-            => _formatAnalyzers 
-                ??= InternalFormats.Select(x => new FormatAnalyzer(x, Picker, Locale, CultureInfo)).ToArray() ;
+        private FormatAnalyzer _formatAnalyzer;
+        protected FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale, CultureInfo);
 
         public string GetFormatValue(DateTime value, int index)
         {
             string format;
-            if ((Format.IsT0 && string.IsNullOrEmpty(Format.AsT0)) || (Format.IsT1 && Format.AsT1?.Any() != true))
+            if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index].InitPicker switch
                 {
                     DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
-                    _ => InternalFormats.First(),
+                    _ => InternalFormat,
                 };
             else
-                format = InternalFormats.First();
+                format = InternalFormat;
             return value.ToString(format, CultureInfo);
         }
 

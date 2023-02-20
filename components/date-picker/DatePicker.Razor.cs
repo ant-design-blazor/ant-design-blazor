@@ -94,6 +94,7 @@ namespace AntDesign
             {
                 _duringManualInput = true;
             }
+
             foreach (var formatAnalyzer in FormatAnalyzers)
             {
                 if (formatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
