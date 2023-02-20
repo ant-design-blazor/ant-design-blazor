@@ -248,7 +248,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         /// <param name="index">Refers to picker index - 0 for starting date, 1 for ending date</param>
-        protected override async Task OnKeyDown(KeyboardEventArgs e, int? index = null)
+        protected async Task OnKeyDown(KeyboardEventArgs e, int? index = null)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (index is null) throw new ArgumentNullException(nameof(index));
@@ -354,8 +354,6 @@ namespace AntDesign
             //right after OnBlur. Best way to achieve that is to wait.
             //Task.Yield() does not work here.
             await Task.Delay(1);
-            
-            await base.OnBlur(index);
             
             if (_duringFocus)
             {
