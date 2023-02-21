@@ -156,6 +156,11 @@ namespace AntDesign
                 }
             }
 
+            if (_selectedRadio == null)
+            {
+                return;
+            }
+
             StateHasChanged();
         }
 
