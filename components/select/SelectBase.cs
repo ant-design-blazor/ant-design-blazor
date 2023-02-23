@@ -811,7 +811,15 @@ namespace AntDesign
                 }
             }
 
-            Values = newSelectedValues;
+            if (ValuesChanged.HasDelegate)
+            {
+                await ValuesChanged.InvokeAsync(newSelectedValues);
+            }
+            else
+            {
+                Values = newSelectedValues;
+                StateHasChanged();
+            }
         }
 
         protected void ClearSearch()
