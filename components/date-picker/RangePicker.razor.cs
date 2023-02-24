@@ -223,6 +223,11 @@ namespace AntDesign
 
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
             {
+                if (IsDisabledDate(parsedValue))
+                {
+                    return;
+                }
+
                 _pickerStatus[index].SelectedValue = parsedValue;
                 ChangePickerValue(parsedValue, index);
             }
@@ -440,6 +445,11 @@ namespace AntDesign
 
         public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
+            if (DisabledDate(value))
+            {
+                return;
+            }
+
             bool isValueInstantiated = Value == null;
             if (isValueInstantiated)
             {
