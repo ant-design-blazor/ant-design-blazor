@@ -145,6 +145,8 @@ namespace AntDesign
         private ClassMapper _warpperClassMapper = new();
         private ClassMapper _textareaClassMapper = new();
 
+        private bool _afterFirstRender = false;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -200,6 +202,10 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                _afterFirstRender = true;
+            }
             if (AutoSize && _valueHasChanged)
             {
                 _valueHasChanged = false;
@@ -207,7 +213,7 @@ namespace AntDesign
                 {
                     _isInputing = false;
                 }
-                else
+                else if (_afterFirstRender)
                 {
                     await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, _textareaRef, InnerMinRows, MaxRows);
                 }
@@ -215,7 +221,7 @@ namespace AntDesign
             if (_styleHasChanged)
             {
                 _styleHasChanged = false;
-                if (AutoSize && !string.IsNullOrWhiteSpace(Style))
+                if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
                 {
                     await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, _textareaRef, Style);
                 }
