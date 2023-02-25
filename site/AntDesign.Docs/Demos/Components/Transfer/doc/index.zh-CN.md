@@ -37,7 +37,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | Titles | 标题集合，顺序从左至右 | string\[] | \['', ''] |  |
 | SelectAllLabels | 自定义顶部多选框标题的集合 |  |  |  |
 | Locale | 语言配置，包括过filter，空文本，项目单元等 | TransferLocale |  |  |
-| ListStyle | 两个穿梭框的自定义样式 | string | | |
+| ListStyle | 两个穿梭框的自定义样式 | Func<TransferDirection,string> | | |
 | OnChange | 选项在两栏之间转移时的回调函数 | TransferSelectChangeArgs |  |  |
 | OnScroll | 选项列表滚动时的回调函数 | TransferScrollArgs |  |  |
 | OnSearch | 搜索框内容时改变时的回调函数 | TransferSearchArgs | - |  |

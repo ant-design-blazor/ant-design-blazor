@@ -34,7 +34,7 @@ One or more elements can be selected from either column, one click on the proper
 | Titles | A set of titles that are sorted from left to right. | string\[] | - |  |
 | SelectAllLabels | A set of customized labels for select all checkboxs on the header |  |  |  |
 | Locale | The i18n text including filter, empty text, item unit, etc. | TransferLocale |  |  |
-| ListStyle | A custom CSS style used for rendering the transfer columns. | string | | |
+| ListStyle | A custom CSS style used for rendering the transfer columns. | Func<TransferDirection,string> | | |
 | OnChange | A callback function that is executed when the transfer between columns is complete. | TransferSelectChangeArgs |  |  |
 | OnScroll | A callback function which is executed when scroll options list | TransferScrollArgs |  |  |
 | OnSearch | A callback function which is executed when search field are changed | TransferSearchArgs                                | - |  |

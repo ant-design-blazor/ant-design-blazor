@@ -69,7 +69,7 @@ namespace AntDesign
         /// A custom CSS style used for rendering the transfer columns
         /// </summary>
         [Parameter]
-        public string ListStyle { get; set; }
+        public Func<TransferDirection, string> ListStyle { get; set; } = _ => string.Empty;
 
         private List<string> _targetKeys = new List<string>();
         private List<string> _selectedKeys = new List<string>();
@@ -196,7 +196,7 @@ namespace AntDesign
             CheckAllState();
         }
 
-        private async Task SelectItem(bool isCheck, string direction, string key)
+        private async Task SelectItem(bool isCheck, TransferDirection direction, string key)
         {
             var holder = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
             var index = Array.IndexOf(holder.ToArray(), key);
@@ -220,7 +220,7 @@ namespace AntDesign
             }
         }
 
-        private async Task SelectAll(bool isCheck, string direction)
+        private async Task SelectAll(bool isCheck, TransferDirection direction)
         {
             var list = _leftDataSource;
             if (direction == TransferDirection.Right)
@@ -240,7 +240,7 @@ namespace AntDesign
             }
         }
 
-        private void HandleSelect(string direction, List<string> keys)
+        private void HandleSelect(TransferDirection direction, List<string> keys)
         {
             if (direction == TransferDirection.Left)
             {
@@ -252,7 +252,7 @@ namespace AntDesign
             }
         }
 
-        private async Task MoveItem(MouseEventArgs e, string direction)
+        private async Task MoveItem(MouseEventArgs e, TransferDirection direction)
         {
             var moveKeys = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
 
@@ -314,7 +314,7 @@ namespace AntDesign
             _rightCheckAllIndeterminate = !_rightCheckAllState && _targetSelectedKeys.Count > 0;
         }
 
-        private async Task HandleScroll(string direction, EventArgs e)
+        private async Task HandleScroll(TransferDirection direction, EventArgs e)
         {
             if (OnScroll.HasDelegate)
             {
@@ -322,7 +322,7 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleSearch(ChangeEventArgs e, string direction, bool mathTileCount = true)
+        private async Task HandleSearch(ChangeEventArgs e, TransferDirection direction, bool mathTileCount = true)
         {
             if (direction == TransferDirection.Left)
             {
@@ -344,7 +344,7 @@ namespace AntDesign
             }
         }
 
-        private async Task ClearFilterValueAsync(string direction)
+        private async Task ClearFilterValueAsync(TransferDirection direction)
         {
             if (direction == TransferDirection.Left)
             {
