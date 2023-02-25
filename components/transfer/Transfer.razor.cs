@@ -65,6 +65,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// A custom CSS style used for rendering the transfer columns
+        /// </summary>
+        [Parameter]
+        public string ListStyle { get; set; }
+
         private List<string> _targetKeys = new List<string>();
         private List<string> _selectedKeys = new List<string>();
 
