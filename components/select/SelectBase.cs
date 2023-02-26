@@ -451,6 +451,12 @@ namespace AntDesign
 
             EvaluateValuesChangedOutsideComponent(values);
 
+            if (ValuesChanged.HasDelegate)
+                await ValuesChanged.InvokeAsync(Values);
+
+            if (OnSelectedItemsChanged.HasDelegate)
+                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
+
             if (_dropDown.IsOverlayShow())
             {
                 //A delay forces a refresh better than StateHasChanged().
@@ -460,12 +466,6 @@ namespace AntDesign
                 await Task.Delay(1);
                 await UpdateOverlayPositionAsync();
             }
-
-            if (ValuesChanged.HasDelegate)
-                await ValuesChanged.InvokeAsync(Values);
-
-            if (OnSelectedItemsChanged.HasDelegate)
-                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
         }
 
         /// <summary>
