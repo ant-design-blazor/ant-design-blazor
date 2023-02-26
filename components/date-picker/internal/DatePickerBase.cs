@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -1010,5 +1010,7 @@ namespace AntDesign
             ChangeValue(DateTime.Now, GetOnFocusPickerIndex());
             Close();
         }
+
+        protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
     }
 }

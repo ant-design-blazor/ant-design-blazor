@@ -5,6 +5,7 @@ import { resize } from '../../ObservableApi/observableApi';
 export class inputHelper {
 
   static getTextAreaInfo(element) {
+    if (!element) return null;
     var result = {};
     var dom = domInfoHelper.get(element);
     if (!dom) return null;
