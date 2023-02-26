@@ -258,12 +258,11 @@ namespace AntDesign
 
         public string GetNewKeyByUrlBase(string url)
         {
-            if (url.StartsWith("/"))
+            if (url == "")
             {
-                return url;
+                url = "/";
             }
-
-            return "/" + url;
+            return url;
         }
     }
 }
