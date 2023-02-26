@@ -99,6 +99,11 @@ namespace AntDesign
             {
                 GetIfNotNull(changeValue, parsed =>
                 {
+                    if (IsDisabledDate(parsed))
+                    {
+                        return;
+                    }
+
                     _pickerStatus[0].SelectedValue = parsed;
                     ChangePickerValue(parsed, index);
                 });
@@ -216,6 +221,11 @@ namespace AntDesign
             if (closeDropdown && !IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
+            }
+
+            if (IsDisabledDate(value))
+            {
+                return;
             }
 
             var currentValue = CurrentValue is not null ?

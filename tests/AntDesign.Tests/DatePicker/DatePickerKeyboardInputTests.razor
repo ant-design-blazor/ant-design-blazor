@@ -156,4 +156,38 @@
 		selectedCell.GetAttribute("title").Should().Be(expectedValueAsString);
 		selectedCell.Children[0].TextContent.Trim().Should().Be(expectedValue.Day.ToString());
 	}
+
+    [Theory]
+    [InlineData("Enter", true)]
+    [InlineData("Tab", true)]
+    [InlineData("Enter", false)]
+    [InlineData("Tab", false)]
+    public void Key_does_not_apply_input_to_value_when_disabledDate_is_set(string key, bool showTime)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        DateTime value = DateTime.MinValue;
+		DateTime defaultValue = new DateTime(2023, 02, 24);
+        DateTime maxValue = defaultValue.AddDays(-1);
+
+        string Format(DateTime input) {
+            return input.ToString(showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd");
+        }
+
+        string inputValue = Format(maxValue.AddDays(-5));
+
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker @bind-Value="@value" DisabledDate="date=>date<=maxValue" DefaultValue="@defaultValue" ShowTime="showTime" />
+		);
+		//Act
+		var input = cut.Find("input");
+		input.Input(inputValue);
+		input.KeyDown(key);
+		//Assert
+        cut.Instance.Value.Should().Be(defaultValue);
+        value.Should().Be(defaultValue);
+        input.GetAttribute("value").Should().Be(Format(defaultValue));
+	}
 }
