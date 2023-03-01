@@ -15,6 +15,22 @@ timeline: true
 
 ---
 
+### 0.14.4
+
+`2023-03-01`
+
+- 🐞 Fixed Radio avoid infinite loop when the binding vaule is not in options. [#3123](https://github.com/ant-design-blazor/ant-design-blazor/pull/3123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed InputNumber allow passing Style and ID to InputNumber without a wrapper. [#3144](https://github.com/ant-design-blazor/ant-design-blazor/pull/3144) [@Epictek](https://github.com/Epictek)
+- 🐞 Fixed Select that OnSelectedItemsChanged is not triggered in form. [#3129](https://github.com/ant-design-blazor/ant-design-blazor/pull/3129) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree that add preventdefault for oncontextmenu. [#3076](https://github.com/ant-design-blazor/ant-design-blazor/pull/3076) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🐞 Fixed Pagination avoid trigger ChangeSize while the size was not be changed. [#3133](https://github.com/ant-design-blazor/ant-design-blazor/pull/3133) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Transfer that add ListStyle to custom the css for columns. [#3139](https://github.com/ant-design-blazor/ant-design-blazor/pull/3139) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs that ReuseTabs occur error when the base url is not the default. [#3142](https://github.com/ant-design-blazor/ant-design-blazor/pull/3142) [@berkerdong](https://github.com/berkerdong)
+- 🐞 Fixed AutoComplete that fill the input component only if Backfill is true. [#3140](https://github.com/ant-design-blazor/ant-design-blazor/pull/3140) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DatePicker that DisabledDate does not affect keyboard input. [#3134](https://github.com/ant-design-blazor/ant-design-blazor/pull/3134) [@Alexbits](https://github.com/Alexbits)
+- 🐞 Fixed Input that avoid textarea call jsinterop before rendering. [#3128](https://github.com/ant-design-blazor/ant-design-blazor/pull/3128) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.14.3
 
 `2023-02-19`
