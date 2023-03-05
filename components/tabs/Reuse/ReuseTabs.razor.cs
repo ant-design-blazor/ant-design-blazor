@@ -39,8 +39,8 @@ namespace AntDesign
 
         private string CurrentUrl
         {
-            get => GetNewKeyByUrl(Navmgr.ToBaseRelativePath(Navmgr.Uri));
-            set => Navmgr.NavigateTo(value);
+            get => Navmgr.ToBaseRelativePath(Navmgr.Uri) == "" ? "/" : Navmgr.ToBaseRelativePath(Navmgr.Uri);
+            set => Navmgr.NavigateTo(value == "/" ? "" : value);
         }
 
         private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
@@ -52,8 +52,6 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            ReuseTabsService.GetNewKeyByUrl += GetNewKeyByUrl;
-
             ReuseTabsService.OnClosePage += RemovePage;
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
@@ -63,8 +61,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            ReuseTabsService.GetNewKeyByUrl -= GetNewKeyByUrl;
-
             ReuseTabsService.OnClosePage -= RemovePage;
             ReuseTabsService.OnCloseOther -= RemoveOther;
             ReuseTabsService.OnCloseAll -= RemoveAll;
@@ -184,8 +180,6 @@ namespace AntDesign
 
         public void AddReuseTabsPageItem(string url, Type pageType)
         {
-            url = this.GetNewKeyByUrl(url);
-
             if (_pageMap.ContainsKey(url)) return;
 
             var reuseTabsPageItem = new ReuseTabsPageItem();
@@ -235,10 +229,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private string GetNewKeyByUrl(string url)
-        {
-            return GetNewKeyByUrlBase(url);
-        }
+
 
         public void RemovePageBase(string key)
         {
@@ -256,13 +247,5 @@ namespace AntDesign
             }
         }
 
-        public string GetNewKeyByUrlBase(string url)
-        {
-            if (url == "")
-            {
-                url = "/";
-            }
-            return url;
-        }
     }
 }

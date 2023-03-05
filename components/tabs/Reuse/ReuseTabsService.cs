@@ -3,9 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -21,16 +18,16 @@ namespace AntDesign
 
         internal event Action OnUpdate;
 
-        internal event Func<string, string> GetNewKeyByUrl;
+
 
         public void ClosePage(string key)
         {
-            OnClosePage?.Invoke(GetNewKeyByUrl?.Invoke(key));
+            OnClosePage?.Invoke(key);
         }
 
         public void CloseOther(string key)
         {
-            OnCloseOther?.Invoke(GetNewKeyByUrl.Invoke(key));
+            OnCloseOther?.Invoke(key);
         }
 
         public void CloseAll()
