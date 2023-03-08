@@ -173,7 +173,7 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                if (ChildContent is not null && _checkboxItems.Count > 0)
+                if (ChildContent is not null && _checkboxItems?.Count > 0)
                 {
                     _constructedOptions = CreateConstructedOptions();
                 }
