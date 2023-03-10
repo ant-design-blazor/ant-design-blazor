@@ -338,7 +338,8 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 			}
 			else if (_columnDataType.IsEnum)
 			{
-				<EnumSelect TEnum="TData" Mode="multiple" Values="EnumHelper<TData>.Split(filter.Value)" 
+				<EnumSelect TEnum="TData" Mode="multiple"
+                        @*Values="EnumHelper<TData>.Split(filter.Value)" workaround for https://github.com/ant-design-blazor/ant-design-blazor/issues/3006 *@
 					PopupContainerSelector="@("#popup-container-for-" + Id)"
 					Style="width:180px;" 
 					ValuesChanged="value => SetFilterValue(filter, EnumHelper<TData>.Combine(value))"
