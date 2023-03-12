@@ -107,7 +107,7 @@ namespace AntDesign.Tests.Typography
         [Fact]
         public void ItShouldRenderKeyboard()
         {
-            var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters
+            var systemUnderTest = RenderComponent<Text>(parameters => parameters
                 .Add(x => x.Keyboard, true)
                 .AddChildContent("Something"));
 

@@ -215,7 +215,7 @@ namespace AntDesign
                 }
                 else if (_afterFirstRender)
                 {
-                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, _textareaRef, InnerMinRows, MaxRows);
+                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
                 }
             }
             if (_styleHasChanged)
@@ -223,7 +223,7 @@ namespace AntDesign
                 _styleHasChanged = false;
                 if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
                 {
-                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, _textareaRef, Style);
+                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace AntDesign
 
                 _ = InvokeAsync(async () =>
                 {
-                    await JsInvokeAsync(JSInteropConstants.DisposeResizeTextArea, _textareaRef);
+                    await JsInvokeAsync(JSInteropConstants.DisposeResizeTextArea, Ref);
                 });
             }
 
@@ -284,8 +284,6 @@ namespace AntDesign
         private string _oldStyle;
         private bool _styleHasChanged;
         private string _heightStyle;
-
-        private ElementReference _textareaRef;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
@@ -306,12 +304,12 @@ namespace AntDesign
             if (AutoSize)
             {
                 await JsInvokeAsync<TextAreaInfo>(
-                    JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _textareaRef, InnerMinRows, MaxRows, _reference);
+                    JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, Ref, InnerMinRows, MaxRows, _reference);
             }
             else
             {
                 var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(
-                    JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _textareaRef);
+                    JSInteropConstants.InputComponentHelper.GetTextAreaInfo, Ref);
 
                 var rowHeight = textAreaInfo.LineHeight;
                 var offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
