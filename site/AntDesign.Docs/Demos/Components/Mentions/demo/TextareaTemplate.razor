@@ -1,0 +1,20 @@
+﻿<Mentions>
+    <ChildContent>
+        <MentionsOption Value="afc163">afc163</MentionsOption>
+        <MentionsOption Value="zombieJ">zombieJ</MentionsOption>
+        <MentionsOption Value="yesmeck">yesmeck</MentionsOption>
+    </ChildContent>
+    <TextareaTemplate>
+        <TextArea RefBack=@context.RefBack
+                  OnInput=@context.OnInput
+                  BindOnInput=false
+                  OnkeyDown=@context.OnKeyDown
+                  Value=@context.Value
+                  ShowCount=true
+                  MaxLength="200" />
+    </TextareaTemplate>
+</Mentions>
+
+@code {
+    string value { get; set; }
+}

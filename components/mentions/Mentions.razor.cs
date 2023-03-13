@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using AntDesign.Internal;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
-using OneOf;
 
 namespace AntDesign
 {
@@ -22,17 +13,19 @@ namespace AntDesign
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public bool Disable { get; set; }
-        [Parameter] public int Rows { get; set; } = 3;
+        [Parameter] public uint Rows { get; set; } = 3;
         [Parameter] public bool Focused { get; set; }
         [Parameter] public bool Readonly { get; set; }
         [Parameter] public bool Loading { get; set; }
-
 
         [Parameter] public Dictionary<string, object> Attributes { get; set; }
         [Inject] public IJSRuntime JS { get; set; }
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string Value { get; set; } = String.Empty;
         [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+        [Parameter] public RenderFragment<MentionsTextareaTemplateOptions> TextareaTemplate { get; set; }
+
         internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
         internal List<MentionsOption> ShowOptions { get; } = new List<MentionsOption>();
         private OverlayTrigger _overlayTrigger;
