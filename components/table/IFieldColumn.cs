@@ -14,11 +14,15 @@ namespace AntDesign
 
         public bool Sortable { get; }
 
+        public bool Groupable { get; set; }
+
         public int SorterMultiple { get; }
 
         public ITableSortModel SortModel { get; }
 
         public ITableFilterModel FilterModel { get; }
+
+        public ITableGroupModel GroupModel { get; }
 
         internal void ClearSorter();
 

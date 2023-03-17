@@ -57,6 +57,9 @@ namespace AntDesign
         public bool Sortable { get; set; }
 
         [Parameter]
+        public bool Groupable { get; set; }
+
+        [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
         [Parameter]
@@ -137,6 +140,8 @@ namespace AntDesign
 
         public ITableFilterModel FilterModel { get; private set; }
 
+        public ITableGroupModel GroupModel { get; private set; }
+
         private SortDirection _sortDirection;
 
         protected Func<RowData, TData> GetValue { get; set; }
@@ -196,6 +201,11 @@ namespace AntDesign
                 if (Sortable && GetFieldExpression != null)
                 {
                     SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                }
+
+                if (Groupable && GetFieldExpression is not null)
+                {
+                    GroupModel = new GroupModel<TData>(ColIndex, 0, FieldName, GetFieldExpression);
                 }
             }
             else if (IsBody)

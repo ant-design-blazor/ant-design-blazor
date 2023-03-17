@@ -8,6 +8,7 @@ using AntDesign.Core.HashCodes;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
 
 namespace AntDesign
@@ -179,6 +180,8 @@ namespace AntDesign
 
         private IEnumerable<TItem> _showItems;
 
+        private IEnumerable<GroupData<TItem>> _showGroupItems;
+
         private IEnumerable<TItem> _dataSource;
 
         private IList<SummaryRow> _summaryRows;
@@ -186,6 +189,7 @@ namespace AntDesign
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
+        private bool _groupMode;
         private bool _treeMode;
         private string _scrollBarWidth = "17px";
 
@@ -194,6 +198,8 @@ namespace AntDesign
         private int _treeExpandIconColumnIndex;
 
         private QueryModel _currentQueryModel;
+        private IEnumerable<GroupModel> _allGroupModels;
+        private IEnumerable<int> _selectedGroupModelIndexes = new List<int>();
         private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -247,8 +253,20 @@ namespace AntDesign
                 return;
             }
 
+            InitializeGroupColumns();
             ReloadAndInvokeChange();
             _hasInitialized = true;
+        }
+
+        private void InitializeGroupColumns()
+        {
+            _allGroupModels = this.ColumnContext.HeaderColumns
+                .OfType<IFieldColumn>()
+                .Where(column => column.Groupable)
+                .Select(column => column.GroupModel)
+                .OfType<GroupModel>()
+                .ToList();
+            _groupMode = _allGroupModels.Any();
         }
 
         public void ReloadData()
@@ -297,6 +315,7 @@ namespace AntDesign
                     fieldColumn?.SetFilterModel(filter);
                 }
 
+                this._selectedGroupModelIndexes = queryModel.GroupModel.Select(model => model.ColumnIndex).ToList();
                 this.ReloadAndInvokeChange();
             }
         }
@@ -323,6 +342,13 @@ namespace AntDesign
                     }
                 }
             }
+            this._selectedGroupModelIndexes = new List<int>();
+        }
+
+        public void OnApplyGroup(MouseEventArgs args)
+        {
+            ReloadAndInvokeChange();
+            // string.Join(", ", this._selectedGroupModelIndexes?.Select(x => (ColumnContext.HeaderColumns[x] as IFieldColumn).FieldName) ?? Enumerable.Empty<string>())
         }
 
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
@@ -344,6 +370,17 @@ namespace AntDesign
                     {
                         queryModel.AddFilterModel(fieldColumn.FilterModel);
                     }
+                }
+            }
+
+            if (this._selectedGroupModelIndexes?.Any() ?? false)
+            {
+                foreach (var (groupModelIndex, priority) in this._selectedGroupModelIndexes
+                    .Select((groupModelIndex, index) => (groupModelIndex, index)))
+                {
+                    var groupModel = (ColumnContext.HeaderColumns[groupModelIndex] as IFieldColumn).GroupModel;
+                    groupModel.Priority = priority;
+                    queryModel.AddGroupModel(groupModel);
                 }
             }
 
@@ -397,6 +434,7 @@ namespace AntDesign
             if (ServerSide)
             {
                 _showItems = _dataSource;
+                _showGroupItems = queryModel.GroupModel.Any() ? queryModel.ExecuteGroup(_dataSource.AsQueryable()).ToList() : Enumerable.Empty<GroupData<TItem>>();
                 _total = Total;
             }
             else
@@ -404,14 +442,16 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
-
                     _total = query.Count();
                     _showItems = queryModel.CurrentPagedRecords(query).ToList();
+                    _showGroupItems = queryModel.GroupModel.Any() ? queryModel.ExecuteGroup(query).ToList() : Enumerable.Empty<GroupData<TItem>>();
+                    _showGroupItems = queryModel.CurrentPagedRecords(_showGroupItems.AsQueryable()).ToList();
                 }
                 else
                 {
-                    _showItems = Enumerable.Empty<TItem>();
                     _total = 0;
+                    _showItems = Enumerable.Empty<TItem>();
+                    _showGroupItems = Enumerable.Empty<GroupData<TItem>>();
                 }
 
                 if (_total != Total && TotalChanged.HasDelegate)

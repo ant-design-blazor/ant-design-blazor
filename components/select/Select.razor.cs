@@ -66,10 +66,7 @@ namespace AntDesign
             {
                 _dataSourceItemShallowCopyMehtod = typeof(TItem)
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (DataSourceEqualityComparer is null)
-                {
-                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
-                }
+                DataSourceEqualityComparer ??= new DataSourceEqualityComparer<TItemValue, TItem>(this);
             }
             return _dataSourceItemShallowCopyMehtod;
         }
