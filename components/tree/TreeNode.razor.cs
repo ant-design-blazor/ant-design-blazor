@@ -60,6 +60,11 @@ namespace AntDesign
         internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
 
         /// <summary>
+        /// Determine whether it should be hidden from the search reaults.
+        /// </summary>
+        internal bool SearchHidden => TreeComponent.HideMismatchedNode && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue) && !Matched && !Expanded;
+
+        /// <summary>
         /// add node to parent node
         /// </summary>
         /// <param name="treeNode"></param>
@@ -289,6 +294,7 @@ namespace AntDesign
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading)
+                .If("ant-tree-treenode-search-hidden", () => SearchHidden)
                 .If("drop-target", () => DragTarget)
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
                 .If("drag-over", () => DragTarget && !DragTargetBottom)

@@ -1,7 +1,11 @@
 <div>
+    <div style="margin-bottom: 16px">
+		hideMismatchedNode: <Switch @bind-Checked="_hideMismatchedNode" />
+	</div>
     <Search @bind-Value="@searchKey" Placeholder="Search.." />
     <Tree ShowIcon
           SearchValue="@searchKey"
+          HideMismatchedNode="@_hideMismatchedNode"
           MatchedClass="site-tree-search-value"
           DataSource="datas"
           TitleExpression="x => x.DataItem.Title"
@@ -15,6 +19,7 @@
 </style>
 
 @code {
+    bool _hideMismatchedNode = true;
     string searchKey;
 
     List<Data> datas = new List<Data>()

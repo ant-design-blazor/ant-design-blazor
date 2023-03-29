@@ -429,6 +429,12 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        /// <summary>
+        /// Determine whether to hide the mismatched nodes
+        /// </summary>
+        [Parameter]
+        public bool HideMismatchedNode { get; set; }
+
         private void SearchNodes()
         {
             var allList = _allNodes.ToList();
