@@ -62,7 +62,22 @@ namespace AntDesign
         /// <summary>
         /// Determine whether it should be hidden from the search reaults.
         /// </summary>
-        internal bool SearchHidden => TreeComponent.HideMismatchedNode && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue) && !Matched && !Expanded;
+        internal bool SearchHidden
+        {
+            get
+            {
+                if(!TreeComponent.SimplifySearchResults)
+                    return false;
+
+                if(string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
+                    return false;
+
+                if(Matched || HasChildMatched() || HasParentMatched())
+                    return false;
+
+                return true;
+            }
+        }
 
         /// <summary>
         /// add node to parent node
@@ -700,7 +715,36 @@ namespace AntDesign
         /// <summary>
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
         /// </summary>
-        internal bool HasChildMatched { get; set; }
+        public bool HasChildMatched()
+        {
+            if(!HasChildNodes)
+                return false;
+
+            foreach (var child in ChildNodes)
+            {
+                if(child.Matched)
+                    return true;
+
+                if(child.HasChildMatched())
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 父节点存在满足搜索条件，子节点也需要显示
+        /// </summary>
+        public bool HasParentMatched()
+        {
+            if(ParentNode == null)
+                return false;
+
+            if(ParentNode.Matched)
+                return true;
+
+            return ParentNode.HasParentMatched();
+        }
 
         #endregion Title
 

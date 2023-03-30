@@ -430,10 +430,10 @@ namespace AntDesign
         public string MatchedClass { get; set; }
 
         /// <summary>
-        /// Determine whether to hide the mismatched nodes
+        /// Determine whether to simplify the search results
         /// </summary>
         [Parameter]
-        public bool HideMismatchedNode { get; set; }
+        public bool SimplifySearchResults { get; set; }
 
         private void SearchNodes()
         {
