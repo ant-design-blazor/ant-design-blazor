@@ -121,8 +121,11 @@ namespace AntDesign
 
                 if (Picker == DatePickerType.Week)
                 {
-                    var date1Week = DateHelper.GetWeekOfYear(date1, Locale.FirstDayOfWeek);
-                    var date2Week = DateHelper.GetWeekOfYear(date2, Locale.FirstDayOfWeek);
+                    var calendar = CultureInfo.Calendar;
+                    var calendarWeekRule = CultureInfo.DateTimeFormat.CalendarWeekRule;
+                    
+                    var date1Week = calendar.GetWeekOfYear(date1,calendarWeekRule, Locale.FirstDayOfWeek);
+                    var date2Week = calendar.GetWeekOfYear(date2, calendarWeekRule, Locale.FirstDayOfWeek);
                     return index == 0 ? date1Week < date2Week && date1.Year <= date2.Year
                                         : date1.Year >= date2.Year && date1Week > date2Week;
                 }
