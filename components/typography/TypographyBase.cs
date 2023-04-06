@@ -74,7 +74,7 @@ namespace AntDesign
             ClassMapper
                 .Add(PrefixName)
                 .GetIf(() => $"{PrefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
-                .Get(() => $"{PrefixName}-{HtmlType}")
+                .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)
                 .If($"{PrefixName}-edit-content", () => Editing)
                 .If($"{PrefixName}-rtl", () => RTL);
