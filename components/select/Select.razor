@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         }
-                        else if (SelectOptions == null)
+                        else if (SelectOptions == null && !AllOptionsHidden())
                         {
                             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;"  @ref="_scrollableSelectDiv">
                                 <div>

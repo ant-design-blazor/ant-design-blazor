@@ -158,7 +158,13 @@ namespace AntDesign
             int? minute = null,
             int? second = null)
         {
-            return new DateTime(year ?? date.Year, month ?? date.Month, day ?? date.Day, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second);
+            var yearValue = year ?? date.Year;
+            var monthValue = month ?? date.Month;
+            var dayValue = day ?? date.Day;
+            var daysInMonth = DateTime.DaysInMonth(yearValue, monthValue);
+            dayValue = dayValue > daysInMonth ? daysInMonth : dayValue;
+
+            return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second);
         }
 
         public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)
