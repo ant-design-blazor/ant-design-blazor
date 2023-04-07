@@ -429,6 +429,12 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        /// <summary>
+        /// Determine whether to simplify the search results
+        /// </summary>
+        [Parameter]
+        public bool SimplifySearchResults { get; set; }
+
         private void SearchNodes()
         {
             var allList = _allNodes.ToList();
