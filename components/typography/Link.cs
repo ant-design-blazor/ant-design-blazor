@@ -4,71 +4,16 @@
 
 using System;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
     public class Link : TypographyBase
     {
-        private const string PrefixName = "ant-typography";
+        protected override string HtmlType => "a";
 
-        [Parameter]
-        public bool Code { get; set; }
+        protected override bool IsKeyboard => Keyboard;
 
         [Parameter]
         public bool Keyboard { get; set; }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            SetClassMap();
-        }
-
-        protected void SetClassMap()
-        {
-            ClassMapper
-                .Add("ant-typography")
-                .GetIf(() => $"{PrefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
-                .If($"{PrefixName}-disabled", () => Disabled)
-                .If($"{PrefixName}-rtl", () => RTL);
-        }
-
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            if (builder != null)
-            {
-                base.BuildRenderTree(builder);
-
-                builder.OpenElement(1, "a");
-                builder.AddAttribute(2, "class", ClassMapper.Class);
-                builder.AddAttribute(3, "style", Style);
-                if (Mark) builder.OpenElement(4, "mark");
-                if (Delete) builder.OpenElement(5, "del");
-                if (Underline) builder.OpenElement(6, "u");
-                if (Code) builder.OpenElement(7, "code");
-                if (Keyboard) builder.OpenElement(8, "kbd");
-                if (Strong) builder.OpenElement(9, "strong");
-                builder.AddContent(10, ChildContent);
-                if (Strong) builder.CloseElement();
-                if (Code) builder.CloseElement();
-                if (Keyboard) builder.CloseElement();
-                if (Underline) builder.CloseElement();
-                if (Delete) builder.CloseElement();
-                if (Mark) builder.CloseElement();
-                if (Copyable)
-                {
-                    builder.OpenElement(11, "a");
-                    builder.AddAttribute(12, "onclick", (Action)(async () => await Copy()));
-                    builder.AddAttribute(13, "data-id", "copy-link");
-                    builder.OpenComponent<Icon>(14);
-                    builder.AddAttribute(15, "Type", "copy");
-                    builder.AddAttribute(16, "Theme", IconThemeType.Outline);
-                    builder.CloseComponent();
-                    builder.CloseElement();
-                }
-                builder.AddElementReferenceCapture(17, r => Ref = r);
-                builder.CloseElement();
-            }
-        }
     }
 }

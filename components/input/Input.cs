@@ -89,7 +89,7 @@ namespace AntDesign
 
         /// <summary>
         /// Delays the processing of the KeyUp event until the user has stopped
-        /// typing for a predetermined amount of time
+        /// typing for a predetermined amount of time. Default is 250 ms.
         /// </summary>
         [Parameter]
         public int DebounceMilliseconds

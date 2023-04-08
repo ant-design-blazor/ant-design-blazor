@@ -39,29 +39,34 @@
     }
 }
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref" data-count="@(Count)">
-    @if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
-    {
-        <span class="@_warpperClassMapper.Class">
-            <textarea @ref="_textareaRef" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
-            <span class="ant-input-textarea-suffix">
-                @if (AllowClear)
-                {
-                    @ClearIcon
-                }
-                @if (Suffix != null)
-                {
-                    @Suffix
-                }
-                @if (FormItem?.FeedbackIcon != null)
-                {
-                    @FormItem.FeedbackIcon
-                }
-            </span>
+
+@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
+{
+    <span class="@_warpperClassMapper.Class">
+        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+        <span class="ant-input-textarea-suffix">
+            @if (AllowClear)
+            {
+                @ClearIcon
+            }
+            @if (Suffix != null)
+            {
+                @Suffix
+            }
+            @if (FormItem?.FeedbackIcon != null)
+            {
+                @FormItem.FeedbackIcon
+            }
         </span>
-    }
-    else
-    {
-        <textarea @ref="_textareaRef" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
-    }
-</div>
+    </span>
+}
+else if (ShowCount)
+{
+    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
+        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+    </div>
+}
+else
+{
+    <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+}
