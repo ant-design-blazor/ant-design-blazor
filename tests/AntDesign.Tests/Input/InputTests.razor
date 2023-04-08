@@ -189,8 +189,9 @@
         cut.Find("input").Input("newValue");
         cut.Find("input").KeyUp(String.Empty);
         //Assert
-        await Task.Delay(250);
+        await Task.Delay(300);
 
+        value.Should().Be("newValue");
         cut.Instance.Value.Should().Be("newValue");
     }
 
