@@ -27,15 +27,29 @@
         </Overlay>
 
         <Unbound>
-            @*！！！！！！！！！！！这里不能缩进换行代码！！！！！！！！！！！！！！！*@
-            <div class="@ClassMapper.Class"><textarea value="@Value"
+            <div class="@ClassMapper.Class">
+                @if (TextareaTemplate == null)
+                {
+                    <textarea value="@Value"
                           @ref="context.Current"
                           @attributes="@Attributes"
                           @onkeydown="OnKeyDown"
-                          @oninput="OnInput" style="@Style"
+                          @oninput="OnInput"
+                          style="@Style"
                           class="rc-textarea"
                           placeholder="@Placeholder"
-                          rows="@Rows" /></div>
+                          rows="@Rows" />
+                }
+                else
+                {
+                    @TextareaTemplate(new MentionsTextareaTemplateOptions{
+                        Value = Value,
+                        OnInput = OnInput,
+                        OnKeyDown = OnKeyDown,
+                        RefBack = context
+                    });
+                }
+            </div>
         </Unbound>
     </OverlayTrigger>
 </CascadingValue>
