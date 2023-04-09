@@ -183,8 +183,6 @@ namespace AntDesign
         private bool _shouldRender;
         private bool _afterFirstRender;
 
-        private string _contentAnimatedStyle;
-
         private readonly ClassMapper _inkClassMapper = new ClassMapper();
         private readonly ClassMapper _contentClassMapper = new ClassMapper();
         private readonly ClassMapper _tabsNavWarpPingClassMapper = new ClassMapper();
@@ -424,8 +422,6 @@ namespace AntDesign
 
                 _activeKey = _activePane.Key;
             }
-
-            _contentAnimatedStyle = Animated && tabIndex > 0 ? $"margin-left: -{tabIndex * 100}%" : "";
 
             Card?.SetBody(_activePane.ChildContent);
 
