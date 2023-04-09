@@ -60,7 +60,10 @@ namespace AntDesign
 
         internal ElementReference TabRef => _tabRef;
 
+        private ClassMapper _tabPaneClassMapper = new();
+
         private const string PrefixCls = "ant-tabs-tab";
+        private const string TabPanePrefixCls = "ant-tabs-tabpane";
 
         private ElementReference _tabRef;
         private bool _isActive;
@@ -95,6 +98,12 @@ namespace AntDesign
                 .If($"{PrefixCls}-active", () => _isActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
+
+            _tabPaneClassMapper
+                .Add(TabPanePrefixCls)
+                .If($"{TabPanePrefixCls}-active", () => _isActive)
+                .If($"{TabPanePrefixCls}-hidden", () => !_isActive)
+                ;
         }
 
         internal void SetKey(string key)
