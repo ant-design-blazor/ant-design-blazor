@@ -6,8 +6,9 @@
         mentionsHelper.isPopShowFlag = show;
     }
 
-    public static setEditorKeyHandler = function (Mentions: any, textArea: HTMLTextAreaElement): void {
+    public static setEditorKeyHandler = function (Mentions: any, element: HTMLTextAreaElement): void {
 
+        var textArea = mentionsHelper.getTextarea(element);
         textArea.onkeydown = async (ev): Promise<any> => {
             //判断isPopShow不能用异步方法
             if (!mentionsHelper.isPopShowFlag) return;
@@ -27,10 +28,13 @@
     }
 
     public static getProp = function (e: HTMLElement, propName: string): any {
-        return e[propName];
+        var textArea = mentionsHelper.getTextarea(e);
+
+        return textArea[propName];
     }
 
-    public static getCursorXY = function (textArea: HTMLTextAreaElement) {
+    public static getCursorXY = function (element: HTMLElement) {
+        var textArea = mentionsHelper.getTextarea(element);
         let format = function (value) {
             value = value.replace(/<|>|`|"|&/g, '?');
             return value;
@@ -60,5 +64,17 @@
         return [left, top];
     };
 
+    private static getTextarea(element: HTMLElement) {
+        const textAreaTag = "TEXTAREA";
+        var textarea = element;
+        if (element.tagName != textAreaTag) {
+            var allTextareas = element.getElementsByTagName(textAreaTag);
+            if (allTextareas.length == 0) {
+                throw "Mentions requires a textarea to be rendered, but none were found.";
+            }
+            textarea = allTextareas[0] as HTMLTextAreaElement;
+        }
 
+        return textarea as HTMLTextAreaElement;
+    }
 }

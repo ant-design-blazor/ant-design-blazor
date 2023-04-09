@@ -24,7 +24,7 @@ namespace AntDesign.Tests
             JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, _ => true);
             JSInterop.Mode = JSRuntimeMode.Strict;
 
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            LocaleProvider.SetLocale("en-US");
         }
 
         public new void Dispose()
