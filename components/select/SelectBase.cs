@@ -156,6 +156,11 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment PrefixIcon { get; set; }
 
+        /// <summary>
+        /// The accesskey global attribute.
+        /// </summary>
+        [Parameter] public string AccessKey { get; set; }
+
         protected IEnumerable<TItemValue> _defaultValues;
         protected bool _defaultValuesHasItems;
 
