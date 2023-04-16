@@ -21,6 +21,7 @@ namespace AntDesign
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         internal MenuMode? InitialMode { get; private set; }
+
         [Parameter]
         public MenuMode Mode
         {
@@ -79,8 +80,8 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
-
         private string[] _openKeysCopy = Array.Empty<string>();
+
         [Parameter]
         public string[] OpenKeys
         {
@@ -118,6 +119,9 @@ namespace AntDesign
 
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
+
+        [Parameter]
+        public bool ShowCollapsedTooltip { get; set; } = true;
 
         internal MenuMode InternalMode { get; private set; }
 
