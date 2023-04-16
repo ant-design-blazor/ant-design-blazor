@@ -6,11 +6,11 @@ namespace AntDesign.Internal
 {
     public interface IFormItem
     {
-        internal FormValidateStatus ValidateStatus { get; }
+        public FormValidateStatus ValidateStatus { get; }
 
-        internal bool HasFeedback { get; }
+        public bool HasFeedback { get; }
 
-        internal RenderFragment FeedbackIcon { get; }
+        public RenderFragment FeedbackIcon { get; }
 
         internal void AddControl<TValue>(AntInputComponentBase<TValue> control);
 
