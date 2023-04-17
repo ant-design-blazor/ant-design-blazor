@@ -9,6 +9,7 @@ using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -666,7 +667,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        public async ValueTask DisposeAsync()
+        async ValueTask IAsyncDisposable.DisposeAsync()
         {
             try
             {
@@ -679,9 +680,12 @@ namespace AntDesign
                 }
                 DomEventListener?.Dispose();
             }
+#if NET6_0_OR_GREATER
+            catch (JSDisconnectedException) { }
+#endif
             catch (Exception ex)
             {
-                Logger.LogError("AntDesign: an exception was thrown at Table `DisposeAsync` method.", ex);
+                Logger.LogError(ex, "AntDesign: an exception was thrown at Table `DisposeAsync` method.");
             }
         }
 
