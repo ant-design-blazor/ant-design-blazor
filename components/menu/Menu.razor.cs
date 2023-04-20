@@ -131,12 +131,8 @@ namespace AntDesign
 
         public void SelectItem(MenuItem item)
         {
-            try
+            if (item != null && !item.IsSelected)
             {
-                if (item == null || item.IsSelected)
-                {
-                    return;
-                }
                 var selectedKeys = new List<string>();
                 bool skipParentSelection = false;
                 if (!Multiple)
@@ -169,12 +165,10 @@ namespace AntDesign
                 if (SelectedKeysChanged.HasDelegate)
                     SelectedKeysChanged.InvokeAsync(_selectedKeys);
             }
-            finally
+
+            if (Overlay != null && AutoCloseDropdown)
             {
-                if (Overlay != null && AutoCloseDropdown)
-                {
-                    Overlay.Hide(true);
-                }
+                Overlay.Hide(true);
             }
         }
 
