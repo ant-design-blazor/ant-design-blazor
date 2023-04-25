@@ -467,12 +467,13 @@ namespace AntDesign
             }
             else
             {
+                var hide = HideUnmatched && !string.IsNullOrWhiteSpace(_searchValue);
+                var expand = DefaultExpandAll && string.IsNullOrWhiteSpace(_searchValue);
                 allList.ForEach(m =>
                 {
-                    m.Expand(false);
+                    m.Expand(expand);
                     m.Matched = false;
-                    if (HideUnmatched)
-                        m.Hidden = true;
+                    m.Hidden = hide;
                 });
             }
         }
