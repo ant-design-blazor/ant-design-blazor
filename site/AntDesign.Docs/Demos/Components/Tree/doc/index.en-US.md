@@ -36,6 +36,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
 | MatchedClass | The  class name of matching text | string | null |  |
+| HideUnmatched | Hides all nodes that are not matched by the search value | bool | false |  |
 | DataSource | bing datasource | List  |  null  |   |
 | TitleExpression  |  Specifies a method that returns the text of the node. | Func  |   |   |
 | KeyExpression |  Specifies a method that returns the key of the node. |  Func |   |   |

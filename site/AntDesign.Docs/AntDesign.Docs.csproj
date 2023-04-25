@@ -26,5 +26,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Demos\Components\Tree\demo\HideUnmatched.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Demos\Components\Tree\demo\HideUnmatched.razor" />
+  </ItemGroup>
   
 </Project>
