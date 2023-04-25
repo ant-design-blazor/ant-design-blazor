@@ -60,6 +60,8 @@ namespace AntDesign
 
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
+        [Parameter] public EventCallback<string> OnSearch { get; set; }
+
         [Parameter] public string MatchedStyle { get; set; } = string.Empty;
 
         [Parameter] public string MatchedClass { get; set; }
@@ -79,6 +81,8 @@ namespace AntDesign
         [Parameter] public bool ShowTreeLine { get; set; }
 
         [Parameter] public bool ShowLeafIcon { get; set; }
+
+        [Parameter] public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -269,6 +273,10 @@ namespace AntDesign
             }
 
             _prevSearchValue = _searchValue;
+
+            if (OnSearch.HasDelegate)
+                await OnSearch.InvokeAsync(e.Value?.ToString());
+
             _searchValue = e.Value?.ToString();
             StateHasChanged();
         }
