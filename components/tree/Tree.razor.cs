@@ -429,6 +429,9 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        [Parameter]
+        public bool HideUnmatched { get; set; }
+
         private void SearchNodes()
         {
             var allList = _allNodes.ToList();
@@ -448,12 +451,30 @@ namespace AntDesign
 
             if (exceptList?.Any() == true || searchDatas?.Any() == true)
             {
-                exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
-                searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
+                exceptList?.ForEach(m =>
+                {
+                    m.Expand(false);
+                    m.Matched = false;
+                    if (HideUnmatched)
+                        m.Hidden = true;
+                });
+
+                foreach (TreeNode<TItem> matchedNode in searchDatas)
+                {
+                    matchedNode.OpenPropagation();
+                    matchedNode.Matched = true;
+                    matchedNode.Hidden = false;
+                }
             }
             else
             {
-                allList.ForEach(m => { m.Expand(false); m.Matched = false; });
+                allList.ForEach(m =>
+                {
+                    m.Expand(false);
+                    m.Matched = false;
+                    if (HideUnmatched)
+                        m.Hidden = true;
+                });
             }
         }
 
