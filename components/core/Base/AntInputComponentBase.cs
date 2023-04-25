@@ -344,7 +344,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        internal virtual void OnValidated(string[] validationMessages)
+        public virtual void OnValidated(string[] validationMessages)
         {
             this.ValidationMessages = validationMessages;
         }
