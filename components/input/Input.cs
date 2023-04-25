@@ -366,7 +366,7 @@ namespace AntDesign
             }
         }
 
-        internal override void OnValidated(string[] validationMessages)
+        public override void OnValidated(string[] validationMessages)
         {
             base.OnValidated(validationMessages);
             SetClasses();
