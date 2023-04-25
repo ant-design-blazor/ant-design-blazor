@@ -383,11 +383,13 @@ namespace AntDesign
         /// <summary>
         /// expaned parents
         /// </summary>
-        internal void OpenPropagation()
+        internal void OpenPropagation(bool unhide = false)
         {
             this.Expand(true);
+            if (unhide)
+                Hidden = false;
             if (this.ParentNode != null)
-                this.ParentNode.OpenPropagation();
+                this.ParentNode.OpenPropagation(unhide);
         }
 
         #endregion Switcher

@@ -461,9 +461,8 @@ namespace AntDesign
 
                 foreach (TreeNode<TItem> matchedNode in searchDatas)
                 {
-                    matchedNode.OpenPropagation();
+                    matchedNode.OpenPropagation(true);
                     matchedNode.Matched = true;
-                    matchedNode.Hidden = false;
                 }
             }
             else
