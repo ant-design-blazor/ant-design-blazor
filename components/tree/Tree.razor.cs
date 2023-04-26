@@ -652,6 +652,12 @@ namespace AntDesign
             }
             return base.OnFirstAfterRenderAsync();
         }
+        
+        /// <summary>
+        /// Get TreeNode from Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x=>x.Key == key);
 
         /// <summary>
         /// Find Node
