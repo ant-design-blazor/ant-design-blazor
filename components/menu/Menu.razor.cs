@@ -21,6 +21,7 @@ namespace AntDesign
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         internal MenuMode? InitialMode { get; private set; }
+
         [Parameter]
         public MenuMode Mode
         {
@@ -79,8 +80,8 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
-
         private string[] _openKeysCopy = Array.Empty<string>();
+
         [Parameter]
         public string[] OpenKeys
         {
@@ -131,45 +132,47 @@ namespace AntDesign
 
         public void SelectItem(MenuItem item)
         {
-            if (item != null && !item.IsSelected)
-            {
-                var selectedKeys = new List<string>();
-                bool skipParentSelection = false;
-                if (!Multiple)
-                {
-                    foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
-                    {
-                        if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
-                        {
-                            menuitem.Select();
-                            selectedKeys.Add(menuitem.Key);
-                        }
-                        else if (menuitem.IsSelected || menuitem.FirstRun)
-                        {
-                            if (!menuitem.FirstRun)
-                                skipParentSelection = item.ParentMenu?.Key == menuitem.ParentMenu?.Key;
-                            menuitem.Deselect(skipParentSelection);
-                        }
-                    }
-                }
-
-                if (!item.IsSelected)
-                {
-                    item.Select(skipParentSelection);
-                }
-                selectedKeys.Add(item.Key);
-                _selectedKeys = selectedKeys.ToArray();
-
-                StateHasChanged();
-
-                if (SelectedKeysChanged.HasDelegate)
-                    SelectedKeysChanged.InvokeAsync(_selectedKeys);
-            }
-
             if (Overlay != null && AutoCloseDropdown)
             {
                 Overlay.Hide(true);
             }
+
+            if (item == null || item.IsSelected)
+            {
+                return;
+            }
+
+            var selectedKeys = new List<string>();
+            bool skipParentSelection = false;
+            if (!Multiple)
+            {
+                foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+                {
+                    if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
+                    {
+                        menuitem.Select();
+                        selectedKeys.Add(menuitem.Key);
+                    }
+                    else if (menuitem.IsSelected || menuitem.FirstRun)
+                    {
+                        if (!menuitem.FirstRun)
+                            skipParentSelection = item.ParentMenu?.Key == menuitem.ParentMenu?.Key;
+                        menuitem.Deselect(skipParentSelection);
+                    }
+                }
+            }
+
+            if (!item.IsSelected)
+            {
+                item.Select(skipParentSelection);
+            }
+            selectedKeys.Add(item.Key);
+            _selectedKeys = selectedKeys.ToArray();
+
+            StateHasChanged();
+
+            if (SelectedKeysChanged.HasDelegate)
+                SelectedKeysChanged.InvokeAsync(_selectedKeys);
         }
 
         public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
