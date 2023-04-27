@@ -81,6 +81,8 @@ namespace AntDesign
         [Parameter] public bool ShowTreeLine { get; set; }
 
         [Parameter] public bool ShowLeafIcon { get; set; }
+        
+        [Parameter] public IDictionary<string, object> TreeAttributes { get; set; }
 
         [Parameter] public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
 
