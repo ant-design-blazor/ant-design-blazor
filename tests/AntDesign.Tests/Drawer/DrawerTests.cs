@@ -33,7 +33,7 @@ namespace AntDesign.Tests.Drawer
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
                             <div class=""ant-drawer-header-no-title"">
-                                <button aria-label=""Close"" class=""ant-drawer-close"">
+                                <button type=""button"" aria-label=""Close"" class=""ant-drawer-close"">
                                     <span role=""img"" class=""anticon anticon-close"" id:ignore>
                                         <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor""
                                             style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon""
@@ -69,7 +69,7 @@ namespace AntDesign.Tests.Drawer
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
                             <div class=""ant-drawer-header-no-title"">
-                                <button aria-label=""Close"" class=""ant-drawer-close"">
+                                <button type=""button"" aria-label=""Close"" class=""ant-drawer-close"">
                                     <span role=""img"" class=""anticon anticon-close"" id:ignore>
                                         <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor""
                                             style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon""
