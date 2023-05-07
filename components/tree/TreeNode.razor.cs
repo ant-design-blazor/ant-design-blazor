@@ -346,6 +346,7 @@ namespace AntDesign
         {
             get
             {
+                if (Hidden) return false;
                 if (ParentNode == null) return true;
                 if (ParentNode.Expanded == false) return false;
                 return ParentNode.RealDisplay;
@@ -382,11 +383,13 @@ namespace AntDesign
         /// <summary>
         /// expaned parents
         /// </summary>
-        internal void OpenPropagation()
+        internal void OpenPropagation(bool unhide = false)
         {
             this.Expand(true);
+            if (unhide)
+                Hidden = false;
             if (this.ParentNode != null)
-                this.ParentNode.OpenPropagation();
+                this.ParentNode.OpenPropagation(unhide);
         }
 
         #endregion Switcher
@@ -690,6 +693,8 @@ namespace AntDesign
         /// title是否包含SearchValue(搜索使用)
         /// </summary>
         public bool Matched { get; set; }
+
+        public bool Hidden { get; set; }
 
         /// <summary>
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
