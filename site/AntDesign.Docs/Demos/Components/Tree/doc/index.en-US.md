@@ -1,4 +1,4 @@
-ï»¿---
+---
 category: Components
 type: Data Display
 title: Tree
@@ -24,7 +24,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Draggable | Whether the node allows drag and drop | boolean | false |  |
 | BlockNode | Whether treeNode fill remaining horizontal space | boolean | false |  |
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
-| SwitcherIcon | Customize toggle icon the value is Icon types | string | null | |
+| SwitcherIcon | Customize toggle icon£¬the value is Icon types | string | null | |
 | Selectable | Whether can be selected | boolean | true |  |
 | DefaultSelectedKeys | Specifies the keys of the default selected treeNodes | string[] | null |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
@@ -36,7 +36,6 @@ Almost anything can be represented in a tree structure. Examples include directo
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
 | MatchedClass | The  class name of matching text | string | null |  |
-| SimplifySearchResults  | Whether to hide the nodes without any matched parent or child |  boolean | false  |   |
 | DataSource | bing datasource | List  |  null  |   |
 | TitleExpression  |  Specifies a method that returns the text of the node. | Func  |   |   |
 | KeyExpression |  Specifies a method that returns the key of the node. |  Func |   |   |
@@ -50,7 +49,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | AutoExpandParent | Whether to automatically expand a parent treeNode | bool | false |  |
 
-### Bind
+### Bind °ó¶¨Öµ
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
@@ -65,7 +64,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| OnNodeLoadDelayAsync  |   Lazy load callbacks. You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnNodeLoadDelayAsync  |   Lazy load callbacks ¡£You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
 | OnClick |  Click the tree node callback | EventCallback  |   |   |
 | OnDblClick | Double-click the node callback  |  EventCallback |   |   |
 | OnContextMenu  |  Right-click tree node callback | EventCallback  |  |   |
@@ -75,7 +74,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | OnDragEnter |  Called when drag and drop into a releasable target  | EventCallback  |   |   |
 | OnDragLeave | Called when drag and drop away from a releasable target  | EventCallback  |   |   |
 | OnDrop | Triggered when drag-and-drop drops succeed  | EventCallback  |   |   |
-| OnDragEnd | Drag-and-drop end callback, this callback method must be set  | EventCallback  |   |   |
+| OnDragEnd | Drag-and-drop end callback ¡£this callback method must be set  | EventCallback  |   |   |
 
 ### Tree Functions
 
@@ -108,5 +107,5 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Icon | icon  |  string |  false |   |
 | IconTemplate | icon template | RenderFragment | null |  |
 | DataItem | dataitem |  Type |  |   | 
-| SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
+| SwitcherIcon | Customize node toggle icon £¬the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |

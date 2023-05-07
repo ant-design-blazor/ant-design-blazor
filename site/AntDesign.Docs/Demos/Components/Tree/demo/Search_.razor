@@ -1,11 +1,7 @@
-﻿<div>
-    <div style="margin-bottom: 16px">
-		simplifySearchResults: <Switch @bind-Checked="_simplifySearchResults" />
-	</div>
-    <Search @bind-Value="@searchKey" Placeholder="Search.." BindOnInput />
+<div>
+    <Search @bind-Value="@searchKey" Placeholder="Search.." />
     <Tree ShowIcon
           SearchValue="@searchKey"
-          SimplifySearchResults="@_simplifySearchResults"
           MatchedClass="site-tree-search-value"
           DataSource="datas"
           TitleExpression="x => x.DataItem.Title"
@@ -19,7 +15,6 @@
 </style>
 
 @code {
-    bool _simplifySearchResults = false;
     string searchKey;
 
     List<Data> datas = new List<Data>()
