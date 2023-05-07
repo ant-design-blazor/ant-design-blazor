@@ -60,26 +60,6 @@ namespace AntDesign
         internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
 
         /// <summary>
-        /// Determine whether it should be hidden from the search reaults.
-        /// </summary>
-        internal bool SearchHidden
-        {
-            get
-            {
-                if (!TreeComponent.SimplifySearchResults)
-                    return false;
-
-                if (string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
-                    return false;
-
-                if (Matched || HasChildNodeMatched() || HasParentNodeMatched())
-                    return false;
-
-                return true;
-            }
-        }
-
-        /// <summary>
         /// add node to parent node
         /// </summary>
         /// <param name="treeNode"></param>
@@ -309,7 +289,6 @@ namespace AntDesign
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading)
-                .If("ant-tree-treenode-search-hidden", () => SearchHidden)
                 .If("drop-target", () => DragTarget)
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
                 .If("drag-over", () => DragTarget && !DragTargetBottom)
@@ -476,7 +455,6 @@ namespace AntDesign
                 TreeComponent.AddOrRemoveCheckNode(this);
             StateHasChanged();
         }
-
         /// <summary>
         /// Set the checkbox state when ini
         /// </summary>
@@ -511,7 +489,6 @@ namespace AntDesign
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
         }
-
         /// <summary>
         /// Sets the checkbox status of child nodes whern bind default
         /// </summary>
@@ -525,7 +502,7 @@ namespace AntDesign
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildCheckedDefault(child, check);
-        }
+        }        
 
         /// <summary>
         /// Update check status
@@ -590,7 +567,6 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
-
         /// <summary>
         /// Update check status when bind default
         /// </summary>
@@ -716,31 +692,9 @@ namespace AntDesign
         public bool Matched { get; set; }
 
         /// <summary>
-        /// Whether there is a matched child node
+        /// 子节点存在满足搜索条件，所以夫节点也需要显示
         /// </summary>
-        public bool HasChildNodeMatched()
-        {
-            if (!HasChildNodes)
-            {
-                return false;
-            }
-
-            return ChildNodes.Any(child => child.Matched || child.HasChildNodeMatched());
-        }
-
-        /// <summary>
-        /// Whether there is a matched parent node
-        /// </summary>
-        public bool HasParentNodeMatched()
-        {
-            if (ParentNode == null)
-                return false;
-
-            if (ParentNode.Matched)
-                return true;
-
-            return ParentNode.HasParentNodeMatched();
-        }
+        internal bool HasChildMatched { get; set; }
 
         #endregion Title
 
