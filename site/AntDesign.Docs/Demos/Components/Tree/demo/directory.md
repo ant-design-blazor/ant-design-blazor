@@ -1,5 +1,5 @@
 ---
-order: 8
+order: 7
 title:
   zh-CN: 目录
   en-US: directory

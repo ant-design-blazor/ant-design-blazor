@@ -1,5 +1,5 @@
 ---
-order: 7
+order: 6
 title:
   zh-CN: 自定义图标
   en-US: Customize Icon
