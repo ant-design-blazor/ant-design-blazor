@@ -407,9 +407,7 @@ namespace AntDesign
             {
                 this.SelectedValue = item.Value;
                 this.SelectedItem = item;
-
-                if (Backfill)
-                    _inputComponent?.SetValue(this.SelectedItem.Label);
+                _inputComponent?.SetValue(this.SelectedItem.Label);
 
                 if (OnSelectionChange.HasDelegate) await OnSelectionChange.InvokeAsync(this.SelectedItem);
             }
