@@ -193,7 +193,7 @@
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 
         DateTime value = DateTime.Now;
-        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" EnterOnBlur/>);
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" ChangeOnBlur/>);
         
         //Act
         var input = cut.Find("input");

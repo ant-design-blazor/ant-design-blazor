@@ -248,11 +248,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         /// <param name="index">Refers to picker index - 0 for starting date, 1 for ending date</param>
-        protected override async Task OnKeyDown(KeyboardEventArgs e, int? index = null)
+        protected async Task OnKeyDown(KeyboardEventArgs e, int index)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-            if (index is null) throw new ArgumentNullException(nameof(index));
-            
+
             var key = e.Key.ToUpperInvariant();
 
             var isEnter = key == "ENTER";
@@ -275,25 +274,25 @@ namespace AntDesign
 
                 if (isEnter || isTab)
                 {
-                    if (HasTimeInput && _pickerStatus[index.Value].SelectedValue is not null)
+                    if (HasTimeInput && _pickerStatus[index].SelectedValue is not null)
                     {
                         await OnOkClick();
                     }
-                    else if (_pickerStatus[index.Value].SelectedValue is not null)
+                    else if (_pickerStatus[index].SelectedValue is not null)
                     {
-                        await OnSelect(_pickerStatus[index.Value].SelectedValue.Value, index.Value);
+                        await OnSelect(_pickerStatus[index].SelectedValue.Value, index);
                     }
                     else if (AllowClear)
                     {
-                        ClearValue(index.Value);
+                        ClearValue(index);
                     }
                     else if (isOverlayShown)
                     {
-                        if (_pickerStatus[index.Value].SelectedValue is null && _pickerStatus[index.Value].IsValueSelected)
+                        if (_pickerStatus[index].SelectedValue is null && _pickerStatus[index].IsValueSelected)
                         {
-                            _pickerStatus[index.Value].SelectedValue = GetIndexValue(index.Value);
+                            _pickerStatus[index].SelectedValue = GetIndexValue(index);
                         }
-                        if (isTab || !await SwitchFocus(index.Value))
+                        if (isTab || !await SwitchFocus(index))
                         {
                             Close();
 
@@ -354,9 +353,9 @@ namespace AntDesign
             //right after OnBlur. Best way to achieve that is to wait.
             //Task.Yield() does not work here.
             await Task.Delay(1);
-            
+
             await base.OnBlur(index);
-            
+
             if (_duringFocus)
             {
                 _duringFocus = false;

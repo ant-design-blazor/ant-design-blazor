@@ -116,17 +116,17 @@ namespace AntDesign
         protected override async Task OnBlur(int index)
         {
             await base.OnBlur(index);
-            
+
             if (_openingOverlay)
                 return;
 
             AutoFocus = false;
-            
+
             if (!_dropDown.IsOverlayShow())
             {
                 _pickerStatus[0].SelectedValue = null;
             }
-            
+
             await Task.Yield();
         }
 
@@ -134,7 +134,7 @@ namespace AntDesign
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
-        protected override async Task OnKeyDown(KeyboardEventArgs e, int? _ = null)
+        protected async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
@@ -294,7 +294,6 @@ namespace AntDesign
                 Date = GetIndexValue(0),
                 DateString = GetInputValue(0)
             });
-
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)

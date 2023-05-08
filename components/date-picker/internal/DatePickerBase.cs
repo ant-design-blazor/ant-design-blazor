@@ -24,12 +24,12 @@ namespace AntDesign
 
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
-        
+
         /// <summary>
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool EnterOnBlur { get; set; }
+        public bool ChangeOnBlur { get; set; }
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -606,9 +606,9 @@ namespace AntDesign
 
         protected virtual async Task OnBlur(int index)
         {
-            if (EnterOnBlur && _duringManualInput)
+            if (ChangeOnBlur && _duringManualInput)
             {
-                await OnKeyDown(new KeyboardEventArgs { Key = "ENTER" }, index);
+                ChangeValue(_pickerStatus[index].SelectedValue.Value);
             }
         }
 
@@ -673,8 +673,6 @@ namespace AntDesign
                 _needRefresh = true;
             }
         }
-
-        protected abstract Task OnKeyDown(KeyboardEventArgs e, int? index = null);
 
         public async Task Blur(int index = 0)
         {
@@ -916,6 +914,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
+        /// <param name="closeDropdown"></param>
         public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
         public abstract void ClearValue(int index = 0, bool closeDropdown = true);
