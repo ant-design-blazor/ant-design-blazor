@@ -277,7 +277,7 @@
 
         //Act
         var cut = Render<AntDesign.RangePicker<DateTime[]>>
-            (@<RangePicker @bind-Value="range" EnterOnBlur/>  );
+            (@<RangePicker @bind-Value="range" ChangeOnClose Format="@format" />  );
 
         //Act
         var input = cut.FindAll("input");
@@ -321,7 +321,7 @@
 
         //Act
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-            (@<RangePicker @bind-Value="range" EnterOnBlur AllowClear/>  );
+            (@<RangePicker @bind-Value="range" ChangeOnClose AllowClear/>  );
 
         //Act
         var input = cut.FindAll("input");

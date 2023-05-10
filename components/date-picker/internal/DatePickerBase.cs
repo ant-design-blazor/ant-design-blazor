@@ -29,7 +29,7 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnBlur { get; set; }
+        public bool ChangeOnClose { get; set; }
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -606,9 +606,8 @@ namespace AntDesign
 
         protected virtual async Task OnBlur(int index)
         {
-            if (ChangeOnBlur && _duringManualInput)
+            if (ChangeOnClose && _duringManualInput)
             {
-                ChangeValue(_pickerStatus[index].SelectedValue.Value);
             }
         }
 
@@ -953,7 +952,21 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            _pickerStatus[index].SelectedValue = null;
+            if (!visible && ChangeOnClose)
+            {
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else
+                {
+                    ClearValue(index);
+                }
+            }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
 
             if (IsRange)
             {
