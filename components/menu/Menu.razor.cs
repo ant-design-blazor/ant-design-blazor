@@ -120,6 +120,9 @@ namespace AntDesign
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
+        [Parameter]
+        public bool ShowCollapsedTooltip { get; set; } = true;
+
         internal MenuMode InternalMode { get; private set; }
 
         private string[] _openKeys;
