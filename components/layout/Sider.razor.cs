@@ -54,6 +54,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
 
+        [Parameter]
+        public bool DefaultCollapsed { get; set; }
+
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
@@ -101,6 +104,11 @@ namespace AntDesign
             if (Trigger == null && !NoTrigger)
             {
                 Trigger = DefaultTrigger;
+            }
+
+            if (DefaultCollapsed)
+            {
+                Collapsed = true;
             }
 
             SetClass();
