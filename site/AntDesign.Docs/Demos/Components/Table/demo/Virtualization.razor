@@ -4,7 +4,7 @@
     </SpaceItem>
 </Space>
 
-<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" EnableVirtualization>
+<Table TItem="Data" DataSource="data" ScrollY="500px" Total="total" EnableVirtualization OnChange="OnChange" RemoteDataSource HidePagination>
     <Selection />
     <PropertyColumn Property="c=>c.Name" Width="400" />
     <PropertyColumn Property="c=>c.Age" Width="150" />
@@ -23,15 +23,31 @@
 
     Data[] data = Array.Empty<Data>();
 
-    int pageSize = 10000;
+    int total = 0;
+    int count = 0;
 
     void LoadData()
     {
-        data = Enumerable.Range(0, 10000).Select(i => new Data()
-        {
-            Name = $"Edward King {i}",
-            Age = 32,
-            Address = $"Edward King {i}'s address"
-        }).ToArray();
+        //data = Enumerable.Range(0, 10000).Select(i => new Data()
+        //{
+        //    Name = $"Edward King {i}",
+        //    Age = 32,
+        //    Address = $"Edward King {i}'s address"
+        //}).ToArray();
+    }
+
+
+    async Task OnChange(TableModels.QueryModel queryModel)
+    {
+        Console.WriteLine($"StartIndex:{queryModel.StartIndex} PageSize: {queryModel.PageSize} {++count}");
+        await Task.Delay(1000);
+        data = Enumerable.Range(queryModel.StartIndex, queryModel.PageSize).Select(i => new Data
+            {
+                Name = $"Edward King {i}",
+                Age = 32,
+                Address = $"Edward King {i}'s address"
+            }).ToArray();
+
+        total = 10000;
     }
 }

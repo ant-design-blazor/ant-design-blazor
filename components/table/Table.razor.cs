@@ -11,6 +11,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
+#if NET5_0_OR_GREATER
+
+using Microsoft.AspNetCore.Components.Web.Virtualization;
+
+#endif
+
 namespace AntDesign
 {
 #if NET6_0_OR_GREATER
@@ -36,7 +42,7 @@ namespace AntDesign
             set
             {
                 _waitingDataSourceReload = true;
-                _dataSourceCount = value?.Count() ?? 0;
+                _dataSourceCount = value is IQueryable<TItem> ? 0 : value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
         }
@@ -168,6 +174,8 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool EnableVirtualization { get; set; }
+
+        private bool UseItemsProvider => EnableVirtualization && ServerSide;
 #endif
 
         [Inject]
@@ -330,7 +338,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -377,11 +385,28 @@ namespace AntDesign
 
         private void ReloadAndInvokeChange()
         {
+#if NET5_0_OR_GREATER
+            if (UseItemsProvider)
+            {
+                return;
+            }
+#endif
+
             var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
+            }
+        }
+
+        private async Task ReloadAndInvokeChangeAsync()
+        {
+            var queryModel = this.InternalReload();
+            StateHasChanged();
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(queryModel);
             }
         }
 
@@ -457,6 +482,23 @@ namespace AntDesign
 
             return queryModel;
         }
+
+#if NET5_0_OR_GREATER
+        private async ValueTask<ItemsProviderResult<(TItem, int)>> ItemsProvider(ItemsProviderRequest request)
+        {
+            _startIndex = request.StartIndex;
+            if (_total > 0)
+            {
+                PageSize = Math.Min(request.Count, _total - _startIndex);
+            }
+            else
+            {
+                PageSize = request.Count;
+            }
+            await ReloadAndInvokeChangeAsync();
+            return new ItemsProviderResult<(TItem, int)>(_dataSource.Select((data, index) => (data, index)), _total);
+        }
+#endif
 
         private void SetClass()
         {

@@ -78,6 +78,7 @@ namespace AntDesign
         private ClassMapper _paginationClass = new ClassMapper();
         private int _pageIndex = 1;
         private int _pageSize = 10;
+        private int _startIndex = 0;
         private string _paginationPosition = "bottomRight";
         private bool _paginationPositionSet;
 
