@@ -212,6 +212,8 @@ namespace AntDesign
 
         private decimal _tableWidth;
 
+        private bool _isEmpty;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
         private bool UseResizeObserver => ScrollX != null;
 
@@ -388,6 +390,7 @@ namespace AntDesign
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
+                StateHasChanged();
                 return;
             }
 #endif
@@ -403,7 +406,6 @@ namespace AntDesign
         private async Task ReloadAndInvokeChangeAsync()
         {
             var queryModel = this.InternalReload();
-            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(queryModel);
@@ -496,6 +498,11 @@ namespace AntDesign
                 PageSize = request.Count;
             }
             await ReloadAndInvokeChangeAsync();
+
+            if (_startIndex == 0 && _total == 0)
+            {
+                _isEmpty = true;
+            }
             return new ItemsProviderResult<(TItem, int)>(_dataSource.Select((data, index) => (data, index)), _total);
         }
 #endif
@@ -540,6 +547,13 @@ namespace AntDesign
             {
                 TableLayout = "fixed";
             }
+
+#if NET5_0_OR_GREATER
+            if (UseItemsProvider)
+            {
+                HidePagination = true;
+            }
+#endif
 
             InitializePagination();
 

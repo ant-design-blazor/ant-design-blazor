@@ -48,7 +48,7 @@
                                     </table>
                                 </div>
                                 <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); min-height:@((CssSizeLength)ScrollY); --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"")  min-height:@((CssSizeLength)ScrollY); @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
@@ -180,10 +180,8 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
 
     @if (table._hasInitialized)
     {
-#if NET5_0_OR_GREATER
-        if (table.EnableVirtualization && table.ScrollY != null)
-        {
-            @if (table.UseItemsProvider)
+#if NET5_0_OR_GREATER 
+            if (table.UseItemsProvider && !table._isEmpty)
             {
                  <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
                     TItem="(TItem,int)"
@@ -202,33 +200,34 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
                         </Placeholder> 
                     </Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize>
             }
-            else 
+        else
+#endif
+        if (table._total <= 0 || showItems == null||table._isEmpty)
+        {
+             <tr class="ant-table-placeholder">
+                 <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                     @if (table.ScrollX != null)
+                     {
+                         <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
+                            @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                         </div>
+                     }
+                     else
+                     {
+                          @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                     }
+                 </td>
+             </tr>
+        }
+#if NET5_0_OR_GREATER
+            else if (table.EnableVirtualization)
             {
                  <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
                     OverscanCount="10"
                     Items="showItems.Select((data, index) => (data, index)).ToList()"
                     ChildContent="table.bodyRow(table, level, rowDataCache)" />
             }
-        }
-        else
 #endif
-        if (table._total <= 0)
-        {
-             <tr class="ant-table-placeholder">
-                 <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                             @if (table.ScrollX != null)
-                             {
-                                 <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
-                                    @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
-                                 </div>
-                             }
-                             else
-                             {
-                                  @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
-                             }
-                 </td>
-             </tr>
-        }
         else
         {
             { @*Build will fail without this block*@ }
