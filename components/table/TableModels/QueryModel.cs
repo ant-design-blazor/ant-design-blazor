@@ -11,7 +11,10 @@ namespace AntDesign.TableModels
 
         public int PageSize { get; }
 
-        public int OffsetRecords => (PageIndex - 1) * PageSize;
+        public int StartIndex { get; }
+
+        [Obsolete("Please use StartIndex")]
+        public int OffsetRecords => StartIndex;
 
         public IList<ITableSortModel> SortModel { get; private set; }
 
@@ -23,10 +26,11 @@ namespace AntDesign.TableModels
             this.FilterModel = new List<ITableFilterModel>();
         }
 
-        internal QueryModel(int pageIndex, int pageSize)
+        internal QueryModel(int pageIndex, int pageSize, int startIndex)
         {
             this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
+            this.PageIndex = pageIndex > 0 ? pageIndex : (int)Math.Ceiling((double)startIndex / pageSize);
+            this.StartIndex = startIndex > 0 ? startIndex : (pageIndex - 1) * pageSize;
             this.SortModel = new List<ITableSortModel>();
             this.FilterModel = new List<ITableFilterModel>();
         }
@@ -34,10 +38,10 @@ namespace AntDesign.TableModels
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
-        public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
+
+        public QueryModel(int pageIndex, int pageSize, int startIndex, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
+            : this(pageIndex, pageSize, startIndex)
         {
-            this.PageIndex = pageIndex;
-            this.PageSize = pageSize;
             this.SortModel = sortModel;
             this.FilterModel = filterModel;
         }
@@ -45,14 +49,16 @@ namespace AntDesign.TableModels
 
     public class QueryModel<TItem> : QueryModel, ICloneable
     {
-        internal QueryModel(int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        internal QueryModel(int pageIndex, int pageSize, int startIndex) : base(pageIndex, pageSize, startIndex)
         {
         }
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
-        public QueryModel(int pageIndex, int pageSize, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel) : base(pageIndex, pageSize, sortModel, filterModel)
+
+        public QueryModel(int pageIndex, int pageSize, int startIndex, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
+            : base(pageIndex, pageSize, startIndex, sortModel, filterModel)
         {
         }
 
@@ -87,7 +93,7 @@ namespace AntDesign.TableModels
         {
             var sorters = this.SortModel.Select(x => x.Clone() as ITableSortModel).ToList();
             var filters = this.FilterModel.ToList();
-            return new QueryModel<TItem>(PageIndex, PageSize, sorters, filters);
+            return new QueryModel<TItem>(PageIndex, PageSize, StartIndex, sorters, filters);
         }
     }
 }

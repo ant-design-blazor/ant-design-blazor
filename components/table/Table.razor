@@ -47,8 +47,8 @@
                                         @header(this)
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY);--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); min-height:@((CssSizeLength)ScrollY); --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"")  min-height:@((CssSizeLength)ScrollY); @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
@@ -177,40 +177,63 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
 Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
 @<Template>
-    @if (table._total <= 0)
+
+    @if (table._hasInitialized)
     {
-                <tr class="ant-table-placeholder">
-                    <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                                @if (table.ScrollX != null)
+#if NET5_0_OR_GREATER 
+            if (table.UseItemsProvider && !table._isEmpty)
+            {
+                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    TItem="(TItem,int)"
+                    OverscanCount="10"
+                    ItemsProvider="table.ItemsProvider"
+                    ItemContent="table.bodyRow(table, level, rowDataCache)" >
+                        <Placeholder>
+                            <tr class="ant-table-row ant-table-row-level-0">
+                                @foreach (var item in table.ColumnContext.HeaderColumns)
                                 {
-                                    <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
-                                       @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
-                                    </div>
+                                    <td class="ant-table-cell" colspan="@item.ColSpan">
+                                       <Skeleton Active="true" ParagraphRows="1" Paragraph="false" ParagraphWidth="@item.Width"></Skeleton>
+                                    </td>
                                 }
-                                else
-                                {
-                                     @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
-                                }
-                    </td>
-                </tr>
-    }
-    else if (showItems != null && table.ColumnContext.Columns.Count > 0)
-    {
-#if NET5_0_OR_GREATER
-        if (table.EnableVirtualization && table.ScrollY != null)
+                            </tr>
+                        </Placeholder> 
+                    </Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize>
+            }
+        else
+#endif
+        if (table._total <= 0 || showItems == null||table._isEmpty)
         {
-            <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
-                                                                           ChildContent="table.bodyRow(table, level, rowDataCache)" />
+             <tr class="ant-table-placeholder">
+                 <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                     @if (table.ScrollX != null)
+                     {
+                         <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
+                            @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                         </div>
+                     }
+                     else
+                     {
+                          @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                     }
+                 </td>
+             </tr>
         }
+#if NET5_0_OR_GREATER
+            else if (table.EnableVirtualization)
+            {
+                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    OverscanCount="10"
+                    Items="showItems.Select((data, index) => (data, index)).ToList()"
+                    ChildContent="table.bodyRow(table, level, rowDataCache)" />
+            }
+#endif
         else
         {
-#endif
             { @*Build will fail without this block*@ }
-        <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
+            <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
                      ChildContent="table.bodyRow(table, level, rowDataCache)" />
-#if NET5_0_OR_GREATER
         }
-#endif
     }
 </Template>;
 
