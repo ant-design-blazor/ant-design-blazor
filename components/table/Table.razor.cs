@@ -450,6 +450,8 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            _isEmpty = _total <= 0 || _showItems == null;
+
             if (!_preventRender)
             {
                 if (_outerSelectedRows != null)
