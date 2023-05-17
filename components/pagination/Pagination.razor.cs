@@ -208,7 +208,7 @@ namespace AntDesign
                .Add(PrefixCls)
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
-               .If("mini", () => !Simple && Size == PaginationSize.Small)
+               .If($"{PrefixCls}-mini", () => !Simple && Size == PaginationSize.Small)
                .If($"{PrefixCls}-rtl", () => RTL);
 
             _prevClass
