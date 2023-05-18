@@ -48,7 +48,7 @@
                                     </table>
                                 </div>
                                 <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); min-height:@((CssSizeLength)ScrollY); --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"")  @(_isEmpty?$"min-height:{(CssSizeLength)ScrollY};":"") @TableLayoutStyle">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
@@ -181,7 +181,7 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
     @if (table._hasInitialized)
     {
 #if NET5_0_OR_GREATER 
-            if (table.UseItemsProvider && !table._isEmpty)
+            if (table.UseItemsProvider)
             {
                  <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
                     TItem="(TItem,int)"
