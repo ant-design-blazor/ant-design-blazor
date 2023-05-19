@@ -175,7 +175,6 @@ namespace AntDesign
         [Parameter]
         public bool EnableVirtualization { get; set; }
 
-        private bool UseItemsProvider => EnableVirtualization && ServerSide;
 #endif
 
         [Inject]
@@ -212,10 +211,22 @@ namespace AntDesign
 
         private decimal _tableWidth;
 
-        private bool _isEmpty;
+        private bool _isVirtualizeEmpty;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
         private bool UseResizeObserver => ScrollX != null;
+
+        private bool UseItemsProvider
+        {
+            get
+            {
+#if NET5_0_OR_GREATER
+                return EnableVirtualization && ServerSide;
+#else
+                return false;
+#endif
+            }
+        }
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -450,8 +461,6 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
-            _isEmpty = _total <= 0 || _showItems == null;
-
             if (!_preventRender)
             {
                 if (_outerSelectedRows != null)
@@ -503,7 +512,7 @@ namespace AntDesign
 
             if (_startIndex == 0 && _total == 0)
             {
-                _isEmpty = true;
+                _isVirtualizeEmpty = true;
             }
             return new ItemsProviderResult<(TItem, int)>(_dataSource.Select((data, index) => (data, index)), _total);
         }
