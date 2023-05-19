@@ -215,13 +215,14 @@ namespace AntDesign
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
         private bool UseResizeObserver => ScrollX != null;
+        private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
 
         private bool UseItemsProvider
         {
             get
             {
 #if NET5_0_OR_GREATER
-                return EnableVirtualization && ServerSide;
+                return EnableVirtualization && (ServerSide || IsEntityFrameworkCore);
 #else
                 return false;
 #endif
@@ -508,13 +509,26 @@ namespace AntDesign
             {
                 PageSize = request.Count;
             }
-            await ReloadAndInvokeChangeAsync();
+
+            IEnumerable<TItem> items = Array.Empty<TItem>();
+
+            if (_dataSource is IQueryable<TItem> query)
+            {
+                _total = query.Count();
+                items = query.Skip(_startIndex).Take(PageSize).ToArray();
+            }
+            else
+            {
+                await ReloadAndInvokeChangeAsync();
+                items = _dataSource;
+            }
 
             if (_startIndex == 0 && _total == 0)
             {
                 _isVirtualizeEmpty = true;
             }
-            return new ItemsProviderResult<(TItem, int)>(_dataSource.Select((data, index) => (data, index)), _total);
+
+            return new ItemsProviderResult<(TItem, int)>(items.Select((data, index) => (data, index)), _total);
         }
 #endif
 
