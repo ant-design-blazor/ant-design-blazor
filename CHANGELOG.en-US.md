@@ -15,6 +15,58 @@ timeline: true
 
 ---
 
+### 0.15.0
+
+`2023-05-21`
+
+- Table
+  - 🆕 Add ItemsProvider support for Virtualization. [#3262](https://github.com/ant-design-blazor/ant-design-blazor/pull/3262) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add EF Core support for Virtualization ItemsProvider. [#3270](https://github.com/ant-design-blazor/ant-design-blazor/pull/3270) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed not logging exception and ignore JSDisconnectedException. [#3216](https://github.com/ant-design-blazor/ant-design-blazor/pull/3216) [@LuukGlorie](https://github.com/LuukGlorie)
+  - 🐞 Fixed the filter of column with the flags enum type place incorrectly. [#3168](https://github.com/ant-design-blazor/ant-design-blazor/pull/3168) [@ElderJames](https://github.com/ElderJames)
+
+- Layout
+  - 🆕 Add `DefaultCollapsed` for sider. [#3260](https://github.com/ant-design-blazor/ant-design-blazor/pull/3260) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed menu can't collapsed when sider is default to collapsed. [#3268](https://github.com/ant-design-blazor/ant-design-blazor/pull/3268) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🆕 Add `HideUnmatched` parameter, which allows you to hide all TreeNodes that are not matched to the `SearchValue`. [#3242](https://github.com/ant-design-blazor/ant-design-blazor/pull/3242) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🆕 Add public method `GetNode(string key)`. [#3243](https://github.com/ant-design-blazor/ant-design-blazor/pull/3243) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+
+- TreeSelect
+  - 🆕 Add TreeSelect `OnSearch` and `OnNodeLoadDelayAsync` to allow dynamic loading. [#3240](https://github.com/ant-design-blazor/ant-design-blazor/pull/3240) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🆕 Add `TreeAttributes` parameter to give additional parameters to internal Tree component. [#3234](https://github.com/ant-design-blazor/ant-design-blazor/pull/3234) [@rhodon-jargon](https://github.com/rhodon-jargon)
+
+- Select
+  - 🆕 Add Select support for <code class="notranslate">accesskey</code> attribute. [#3228](https://github.com/ant-design-blazor/ant-design-blazor/pull/3228) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed empty incorrectly in virtualization mode. [#3171](https://github.com/ant-design-blazor/ant-design-blazor/pull/3171) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 Fixed Tabs animated cause display incorrectly. [#3177](https://github.com/ant-design-blazor/ant-design-blazor/pull/3177) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the logic of ReuseTabs about tab key. [#3153](https://github.com/ant-design-blazor/ant-design-blazor/pull/3153) [@berkerdong](https://github.com/berkerdong)
+
+- Datepicker
+  - 🐞 Fixed Calculation for WeekPicker. [#3214](https://github.com/ant-design-blazor/ant-design-blazor/pull/3214) [@sebastian-wachsmuth](https://github.com/sebastian-wachsmuth)
+  - 🐞 Fixed un-representable DateTime when day > daysInMonth. [#3193](https://github.com/ant-design-blazor/ant-design-blazor/pull/3193) [@Alexbits](https://github.com/Alexbits)
+
+
+- 🆕 Add Typography editable text support. [#3173](https://github.com/ant-design-blazor/ant-design-blazor/pull/3173) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Mentions ability to customize the rendering of the textarea. [#3178](https://github.com/ant-design-blazor/ant-design-blazor/pull/3178) [@wss-kroche](https://github.com/wss-kroche)
+- 🆕 Add Menu `ShowCollapsedTooltip` parameter to handle Tooltip display. [#3226](https://github.com/ant-design-blazor/ant-design-blazor/pull/3226) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Descriptions `LabelStyle` and `ContentStyle` for DescriptionItem custom styles. [#3186](https://github.com/ant-design-blazor/ant-design-blazor/pull/3186) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Add InputNumber the id attribute on internal input element. [#3198](https://github.com/ant-design-blazor/ant-design-blazor/pull/3198) [@varbedi](https://github.com/varbedi)
+- 🛠 Refactor Form expose the feedback status of FormItem for the input component base class. [#3227](https://github.com/ant-design-blazor/ant-design-blazor/pull/3227) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Dropdown not hiding after clicking the selected menuitem. [#3231](https://github.com/ant-design-blazor/ant-design-blazor/pull/3231) [@huangjia2107](https://github.com/huangjia2107)
+- 🐞 Fixed Input that read spaces or empty strings as null. [#3190](https://github.com/ant-design-blazor/ant-design-blazor/pull/3190) [@berkerdong](https://github.com/berkerdong)
+- 🐞 Fixed Image preview operations would be covered by the preview image. [#3170](https://github.com/ant-design-blazor/ant-design-blazor/pull/3170) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox that CheckboxGroup will report an error when the internal Checkbox is null. [#3162](https://github.com/ant-design-blazor/ant-design-blazor/pull/3162) [@berkerdong](https://github.com/berkerdong)
+- 🐞 Fixed Pagination mini class name was changed. [#3266](https://github.com/ant-design-blazor/ant-design-blazor/pull/3266) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete that can't be selected. (#3252). [7d24d09](https://github.com/ant-design-blazor/ant-design-blazor/commit/7d24d09) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed Drawer that add `type="button"` to close button to avoid submitting form. [#3233](https://github.com/ant-design-blazor/ant-design-blazor/pull/3233) [@trafium](https://github.com/trafium)
+
+
+
+
 ### 0.14.4
 
 `2023-03-01`
