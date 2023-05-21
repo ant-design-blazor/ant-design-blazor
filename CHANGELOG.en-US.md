@@ -39,7 +39,7 @@ timeline: true
 
 - Select
   - 🆕 Add Select support for <code class="notranslate">accesskey</code> attribute. [#3228](https://github.com/ant-design-blazor/ant-design-blazor/pull/3228) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fixed empty incorrectly in virtualization mode. [#3171](https://github.com/ant-design-blazor/ant-design-blazor/pull/3171) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed empty incorrectly in virtualization mode. [#3171](https://github.com/ant-design-blazor/ant-design-blazor/pull/3171) [@ElderJames](https://github.com/ElderJames)
 
 - Tabs
   - 🐞 Fixed Tabs animated cause display incorrectly. [#3177](https://github.com/ant-design-blazor/ant-design-blazor/pull/3177) [@ElderJames](https://github.com/ElderJames)
