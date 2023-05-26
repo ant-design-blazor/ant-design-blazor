@@ -37,25 +37,38 @@
         else
         {
             <span class="ant-tree-title" style="pointer-events: none;">
+
+
                 @if (SelfNode.TitleTemplate != null)
                 {
                     @SelfNode.TitleTemplate
-                }
-                else if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
-                {
-                    int index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
-                    var start = SelfNode.Title.Substring(0, index);
-                    var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
-                    var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
-                    var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
-                    <span>
-                       @((MarkupString)value)
-                    </span>
+                    return;
                 }
                 else
                 {
-                    @SelfNode.Title
+                    bool shouldMarkup = SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue);
+                    int index = -1;
+                    if (shouldMarkup)
+                    {
+                        index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+                    }
+
+                    if (shouldMarkup && (index > -1))
+                    {
+                        var start = SelfNode.Title.Substring(0, index);
+                        var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+                        var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+                        var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
+                        <span>
+                            @((MarkupString)value)
+                        </span>
+                    }
+                    else
+                    {
+                        @SelfNode.Title
+                    }
                 }
+ 
             </span>
         }
         @if (SelfNode.DragTarget)
