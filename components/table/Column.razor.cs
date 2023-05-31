@@ -109,6 +109,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public IEnumerable<TableFilter> DefaultFilters { get; set; }
+
+        [Parameter]
         public bool FilterMultiple { get; set; } = true;
 
         [Parameter]
@@ -226,15 +229,7 @@ namespace AntDesign
                 if (_hasFiltersAttribute)
                 {
                     if (!_hasFilterableAttribute) Filterable = true;
-                    if (FieldFilterType is null)
-                    {
-                        _columnFilterType = TableFilterType.List;
-                    }
-                    else
-                    {
-                        _fieldFilterType = FieldFilterType;
-                        _columnFilterType = TableFilterType.FieldType;
-                    }
+                    _columnFilterType = TableFilterType.List;
                 }
                 else if (_hasFilterableAttribute)
                 {
@@ -272,9 +267,13 @@ namespace AntDesign
                         }
                     }
 
-                    if (_columnFilterType == TableFilterType.FieldType) {
+                    if (_columnFilterType == TableFilterType.FieldType)
+                    {
                         _fieldFilterType = FieldFilterType ?? Table.FieldFilterTypeResolver.Resolve<TData>();
-                        InitFilters();
+                        if (DefaultFilters is null)
+                            InitFilters();
+                        else
+                            _filters = DefaultFilters;
                     }
 
                     if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
