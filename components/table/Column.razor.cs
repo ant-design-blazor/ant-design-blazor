@@ -273,7 +273,10 @@ namespace AntDesign
                         if (DefaultFilters is null)
                             InitFilters();
                         else
+                        {
                             _filters = DefaultFilters;
+                            _hasFilterSelected = DefaultFilters.Any(f => f.Selected);
+                        }
                     }
 
                     if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
