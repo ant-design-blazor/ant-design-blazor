@@ -126,6 +126,8 @@ namespace AntDesign.JsInterop
                         var dotNetObject = _sharedDotNetObjectStore[key];
 
                         _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
+
+                        _domEventSubscriptionsStore.Remove(key, out var _);
                     }
                 }
                 else
