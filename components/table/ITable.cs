@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AntDesign.Filters;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -72,5 +73,7 @@ namespace AntDesign
         internal void AddSummaryRow(SummaryRow summaryRow);
 
         internal void OnColumnInitialized();
+
+        IFieldFilterTypeResolver FieldFilterTypeResolver { get; }
     }
 }

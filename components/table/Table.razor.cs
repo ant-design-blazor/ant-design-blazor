@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.Filters;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -168,6 +169,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        [Parameter]
+        public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -182,6 +186,9 @@ namespace AntDesign
 
         [Inject]
         private ILogger<Table<TItem>> Logger { get; set; }
+
+        [Inject]
+        private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -583,6 +590,8 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
+
+            FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
         private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
