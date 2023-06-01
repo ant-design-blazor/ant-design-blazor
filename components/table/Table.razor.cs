@@ -476,15 +476,11 @@ namespace AntDesign
                 {
                     _selectedRows?.Clear();
                 }
-
+                
                 var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
-                if (removedCacheItems.Length > 0)
+                foreach (var item in removedCacheItems)
                 {
-                    foreach (var item in removedCacheItems)
-                    {
-                        _dataSourceCache.Remove(item);
-                    }
-                    _allRowDataCache.Clear();
+                    _dataSourceCache.Remove(item);
                 }
             }
 

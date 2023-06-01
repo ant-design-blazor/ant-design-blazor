@@ -26,12 +26,9 @@ namespace AntDesign
         private ISelectionColumn _selection;
         private HashSet<TItem> _selectedRows = new();
         private bool _preventRowDataTriggerSelectedRowsChanged;
-        private bool _preventChangeRowDataWithSameData;
-        private bool _preventRowDataSelectedChangedCallback;
 
         private void RowDataSelectedChanged(RowData<TItem> rowData, bool selected)
         {
-            if (_preventRowDataSelectedChangedCallback) return;
             if (!RowSelectable(rowData.Data))
             {
                 rowData.SetSelected(!selected);
@@ -44,18 +41,6 @@ namespace AntDesign
             else
             {
                 _selectedRows.Remove(rowData.Data);
-            }
-            if (!_preventChangeRowDataWithSameData)
-            {
-                _preventRowDataSelectedChangedCallback = true;
-                if (_allRowDataCache.ContainsKey(rowData.Data))
-                {
-                    foreach (var rowDataWithSameData in _allRowDataCache[rowData.Data])
-                    {
-                        rowDataWithSameData.Selected = selected;
-                    }
-                }
-                _preventRowDataSelectedChangedCallback = false;
             }
             if (!_preventRowDataTriggerSelectedRowsChanged)
             {
@@ -76,65 +61,107 @@ namespace AntDesign
         public void SelectAll()
         {
             _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
-            _preventRowDataSelectedChangedCallback = true;
-            _preventRowDataTriggerSelectedRowsChanged = true;
-            _preventChangeRowDataWithSameData = true;
-            foreach (var rowDataList in _allRowDataCache.Values)
+            foreach (RowData<TItem> rowData in _dataSourceCache.Values)
             {
-                foreach (var rowData in rowDataList)
-                {
-                    rowData.Selected = true;
-                }
+                rowData.SetSelected(true);
             }
-            _preventRowDataSelectedChangedCallback = false;
-            _preventRowDataTriggerSelectedRowsChanged = false;
-            _preventChangeRowDataWithSameData = false;
-            if (_selection != null)
-            {
-                _selection.StateHasChanged();
-            }
+
+            _selection?.StateHasChanged();
             SelectionChanged();
+        }
+
+        private void ClearSelectedRows()
+        {
+            _selectedRows.Clear();
+            foreach (RowData<TItem> rowData in _dataSourceCache.Values)
+            {
+                rowData.SetSelected(false);
+            }
         }
 
         public void UnselectAll()
         {
-            _selectedRows.Clear();
-            _preventRowDataTriggerSelectedRowsChanged = true;
-            _preventChangeRowDataWithSameData = true;
-            foreach (var rowDataList in _allRowDataCache.Values)
-            {
-                foreach (var rowData in rowDataList)
-                {
-                    rowData.Selected = false;
-                }
-            }
-            _preventRowDataTriggerSelectedRowsChanged = false;
-            _preventChangeRowDataWithSameData = false;
-            if (_selection != null)
-            {
-                _selection.StateHasChanged();
-            }
+            ClearSelectedRows();
+
+            _selection?.StateHasChanged();
             SelectionChanged();
         }
 
-        public void SetSelection(string[] keys)
+        /// <summary>
+        /// Please use <see cref="SetSelection(IEnumerable{TItem})"/> instead if possible,
+        /// as this method won't correctly select items from invisible rows when virtualization is enabled.
+        /// </summary>
+        public void SetSelection(ICollection<string> keys)
         {
-            if (keys == null || !keys.Any())
-            {
-                UnselectAll();
-                return;
-            }
-
             if (_selection == null)
             {
                 throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
             }
 
+            ClearSelectedRows();
+            if (keys?.Count > 0)
+            {
+                _preventRowDataTriggerSelectedRowsChanged = true;
+                _selection.RowSelections.ForEach(x => x.RowData.Selected = keys.Contains(x.Key));
+                _preventRowDataTriggerSelectedRowsChanged = false;
+            }
+
+            _selection.StateHasChanged();
+            SelectionChanged();
+        }
+
+        // Only select the given row (radio)
+        internal void SetSelection(ISelectionColumn selectItem)
+        {
+            ClearSelectedRows();
+
             _preventRowDataTriggerSelectedRowsChanged = true;
-            _preventChangeRowDataWithSameData = true;
-            _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+            selectItem.RowData.Selected = true;
             _preventRowDataTriggerSelectedRowsChanged = false;
-            _preventChangeRowDataWithSameData = false;
+
+            _selection.StateHasChanged();
+            SelectionChanged();
+        }
+
+        private void SelectItem(TItem item)
+        {
+            if (!RowSelectable(item))
+                return;
+
+            _selectedRows.Add(item);
+            if (_dataSourceCache.TryGetValue(item, out var rowData))
+            {
+                rowData.SetSelected(true);
+            }
+        }
+
+        public void SetSelection(IEnumerable<TItem> items)
+        {
+            if (_selection == null)
+            {
+                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
+            }
+
+            ClearSelectedRows();
+            items?.ForEach(SelectItem);
+
+            _selection.StateHasChanged();
+            SelectionChanged();
+        }
+
+        public void SetSelection(TItem item)
+        {
+            if (_selection == null)
+            {
+                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
+            }
+
+            ClearSelectedRows();
+            if (item != null)
+            {
+                SelectItem(item);
+            }
+
             _selection.StateHasChanged();
             SelectionChanged();
         }

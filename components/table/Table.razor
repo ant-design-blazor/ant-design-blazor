@@ -246,22 +246,13 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
         else rowIndex = tuple.index + 1;
         var data = tuple.data;
         bool selected = table.SelectedRows.Contains(data);
-        if (!rowDataCache.ContainsKey(data) || rowDataCache[data] == null)
+        if (!rowDataCache.TryGetValue(data, out var currentRowData) || currentRowData == null)
         {
-            var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+            currentRowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
             {
                 Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
             };
-            rowDataCache[data] = rowData;
-        }
-        var currentRowData = rowDataCache[data];
-        if (!table._allRowDataCache.ContainsKey(data))
-        {
-            table._allRowDataCache.Add(data, new());
-        }
-        if (!table._allRowDataCache[data].Contains(currentRowData))
-        {
-            table._allRowDataCache[data].Add(currentRowData);
+            rowDataCache[data] = currentRowData;
         }
         var childrenData = table.TreeChildren(data);
         var hasChildren = childrenData?.Any() == true;

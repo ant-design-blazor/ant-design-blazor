@@ -48,7 +48,7 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table.SetSelection(new[] { Key });
+                    Table.SetSelection(this);
                 }
                 else
                 {
