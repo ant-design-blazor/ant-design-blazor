@@ -32,3 +32,5 @@ Uses `DefaultSortOrder` to make a column sorted by default.
 If a `SortOrder` or `DefaultSortOrder` is specified with the value `ascend` or `descend`, you can access this value from within the function passed to the `sorter` as explained above. Such a function can take the form: `function(a, b, sortOrder) { ... }`.
 
 You can also customize the filtering logic in the 'OnChange' event method, using the method 'QueryModel.ExecuteQuery(data)' to build query expressions.
+
+You can entirely customize the filters UI by using the `FilterTemplate` property (`Filterable` still needs to be set at true for the dropdown button to appear)
