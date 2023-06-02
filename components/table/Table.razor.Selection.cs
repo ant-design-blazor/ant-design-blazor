@@ -111,7 +111,7 @@ namespace AntDesign
         }
 
         // Only select the given row (radio)
-        internal void SetSelection(ISelectionColumn selectItem)
+        void ITable.SetSelection(ISelectionColumn selectItem)
         {
             ClearSelectedRows();
 
