@@ -165,7 +165,7 @@ namespace AntDesign
                 _selectedRadio = null;
             }
             
-            if (_selectedRadio == null && previousSelectedRadio == null )
+            if (_selectedRadio == null && previousSelectedRadio == null)
             {
                 return;
             }
