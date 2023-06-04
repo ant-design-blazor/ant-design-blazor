@@ -125,9 +125,6 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 
-        [Parameter]
-        public RenderFragment FilterTemplate { get; set; }
-
         private TableFilterType _columnFilterType;
 
         private Type _columnDataType;

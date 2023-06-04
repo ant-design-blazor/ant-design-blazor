@@ -1,4 +1,14 @@
-﻿<Table @ref="_table" DataSource="dataSource" OnChange="OnChange" TItem="Data" Title="Table Title">
+﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
+    <TitleTemplate>
+        <GridRow>
+            <GridCol Span="4">
+                <Title Level="3">Table Title</Title>
+            </GridCol>
+            <GridCol Span="8" Offset="12">
+                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
     <ColumnDefinitions>
         <PropertyColumn Property="c=>c.Name"
                         SorterCompare="@((a,b)=> a.Length - b.Length)"
@@ -14,11 +24,6 @@
                         Filters="addressFilters"
                         FilterMultiple="false"
                         OnFilter="(value,address)=>address.StartsWith(value)" />
-        <PropertyColumn Property="c=>c.Code" Filterable>
-            <FilterTemplate>
-                <Search WrapperStyle="padding:20px;" Placeholder="Search Code" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
-            </FilterTemplate>
-        </PropertyColumn>
     </ColumnDefinitions>
 </Table>
 
@@ -31,26 +36,24 @@
 
     class Data
     {
-        public Data(string name, int age, string address, string code)
+        public Data(string name, int age, string address)
         {
             Name = name;
             Age = age;
             Address = address;
-            Code = code;
         }
 
         public string Name { get; set; }
         public int Age { get; set; }
         public string Address { get; set; }
-        public string Code { get; set; }
     }
 
     Data[] data =
     {
-        new("John Brown",32,"New York No. 1 Lake Park", "123"),
-        new("Jim Green",42, "London No. 1 Lake Park", "456"),
-        new("Joe Black", 32,"Sidney No. 1 Lake Park", "789"),
-        new("Jim Red",32,"London No. 2 Lake Park", "101112"),
+        new("John Brown",32,"New York No. 1 Lake Park"),
+        new("Jim Green",42, "London No. 1 Lake Park"),
+        new("Joe Black", 32,"Sidney No. 1 Lake Park"),
+        new("Jim Red",32,"London No. 2 Lake Park"),
     };
 
     public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
@@ -68,7 +71,7 @@
         Console.WriteLine(JsonSerializer.Serialize(query));
 
         dataSource = query.ExecuteQuery(data.AsQueryable())
-            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     void OnRowClick(RowData<Data> row)
