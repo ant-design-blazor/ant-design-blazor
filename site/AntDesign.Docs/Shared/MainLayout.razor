@@ -21,7 +21,7 @@
                     <div class="drawer-mask" @onclick="()=> { _drawerVisible = false; }"></div>
                     <div class="drawer-content-wrapper" style="@(_drawerVisible?"":"transform:translateX(-100%)")">
                         <div class="drawer-content">
-                            <NavMenu />
+                            @*<NavMenu />*@
                         </div>
                         <div class="drawer-handle" @onclick="()=> { _drawerVisible = !_drawerVisible; }">
                             <i class="drawer-handle-icon"></i>
@@ -37,7 +37,7 @@
                 <GridCol Class="main-menu" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
                     <Affix>
                         <section class="main-menu-inner">
-                            <NavMenu />
+                            @*<NavMenu />*@
                         </section>
                     </Affix>
                 </GridCol>

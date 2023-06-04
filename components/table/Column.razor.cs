@@ -28,6 +28,9 @@ namespace AntDesign
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         [Parameter]
+        public RenderFragment FilterDropdown { get; set; }
+
+        [Parameter]
         public TData Field
         {
             get
