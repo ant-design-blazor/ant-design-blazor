@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -143,12 +143,16 @@ namespace AntDesign
                 return;
             }
 
+            var foundRadioWithValue = false;
+            var previousSelectedRadio = _selectedRadio;
+            
             foreach (var radio in _radioItems)
             {
                 if (EqualsValue(this.CurrentValue, radio.Value))
                 {
                     _ = radio.Select();
                     _selectedRadio = radio;
+                    foundRadioWithValue = true;
                 }
                 else
                 {
@@ -156,7 +160,12 @@ namespace AntDesign
                 }
             }
 
-            if (_selectedRadio == null)
+            if (!foundRadioWithValue)
+            {
+                _selectedRadio = null;
+            }
+            
+            if (_selectedRadio == null && previousSelectedRadio == null )
             {
                 return;
             }
