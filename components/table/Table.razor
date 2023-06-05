@@ -123,11 +123,6 @@
     </Spin>
 </div>
 
-@if (UseResizeObserver)
-{
-    <ResizeObserver RefBack="RefBack" OnResize="OnResize" />   
-}
-
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
@@ -174,8 +169,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
             </colgroup>
   </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
-            (table, showItems, level, rowDataCache) =>
+ RenderFragment body(Table<TItem> table, IEnumerable<TItem> showItems, int level, Dictionary<TItem, RowData<TItem>> rowDataCache) =>
 @<Template>
 
     @if (table._hasInitialized)
@@ -208,9 +202,14 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
                  <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
                      @if (table.ScrollX != null)
                      {
-                         <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
-                            @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
-                         </div>
+                        <ResizeObserver RefBack="table.RefBack" OnResize="table.OnResize" />   
+
+                        @if (table._tableWidth>0)
+                        {
+                            <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
+                               @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                            </div>
+                        }
                      }
                      else
                      {
