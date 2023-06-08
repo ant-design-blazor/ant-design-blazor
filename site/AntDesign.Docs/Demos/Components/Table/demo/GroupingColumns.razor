@@ -11,7 +11,7 @@
         <PropertyColumn Property="c=>c.CompanyName" />
         <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="right" />
     </ColumnDefinitions>
-    <HeaderTemplate>
+@*    <HeaderTemplate>
         <TableRow>
             <TableHeader @bind-Field="context.Name" RowSpan="4" Filters="filters" OnFilter="(v1, v2) => v2.Contains(v1)" />
             <SimpleTableHeader ColSpan="4">Other</SimpleTableHeader>
@@ -32,7 +32,7 @@
             <SimpleTableHeader>Building</SimpleTableHeader>
             <SimpleTableHeader>Door No.</SimpleTableHeader>
         </TableRow>
-    </HeaderTemplate>
+    </HeaderTemplate>*@
 </Table>
 
 @code{

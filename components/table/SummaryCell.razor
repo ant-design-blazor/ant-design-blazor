@@ -2,21 +2,26 @@
 @using AntDesign.TableModels
 @inherits ColumnBase
 
-<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
-    @if (CellRender != null)
-    {
-        var cellData = new CellData(RowData);
-        @CellRender(cellData)
-    }
-    else
-    {
-        @ChildContent
-    }
-</td>
 
 @code {
 
     [Parameter]
     public virtual RenderFragment<CellData> CellRender { get; set; }
+
+    RenderFragment RenderBody(RowData rowData)
+    {
+        return @<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
+        @if (CellRender != null)
+        {
+            var cellData = new CellData(rowData);
+            @CellRender(cellData)
+        }
+        else
+        {
+            @ChildContent
+        }
+    </td>;
+
+    }
 
 }

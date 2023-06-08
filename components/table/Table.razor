@@ -3,6 +3,7 @@
 @using AntDesign.TableModels
 @using AntDesign.Internal
 @using AntDesign.Core.Component.ResizeObserver
+@using AntDesign.Table
 
 @typeparam TItem
 
@@ -52,9 +53,13 @@
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
+                                               @* <CascadingValue Name="IsMeasure" Value="true" IsFixed>
                                                     @ChildContent(_fieldModel)
-                                                </CascadingValue>
+                                                </CascadingValue>*@
+                                                @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                                {
+                                                    @column.RenderMeasure()
+                                                }
                                             </tr>
                                             @body(this, _showItems, 0, _dataSourceCache)
                                         </tbody>
@@ -70,9 +75,13 @@
                                         @header(this)
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
+                                               @* <CascadingValue Name="IsMeasure" Value="true" IsFixed>
                                                     @ChildContent(_fieldModel)
-                                                </CascadingValue>
+                                                </CascadingValue>*@
+                                                @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                                {
+                                                    @column.RenderMeasure()
+                                                }
                                             </tr>
                                             @body(this, _showItems, 0, _dataSourceCache)
                                         </tbody>
@@ -125,7 +134,7 @@
 
 @code
 {
-    RenderFragment<Table<TItem>> header = table =>
+    RenderFragment header(Table<TItem> table) =>
   @<Template>
        @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
@@ -142,7 +151,10 @@
                             else
                             {
                                 <TableRow>
-                                    @table.ChildContent(_fieldModel)
+                                     @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                     {
+                                         @column.RenderHeader()
+                                     }
                                 </TableRow>
                             }
                         </CascadingValue>
@@ -152,7 +164,7 @@
         </thead>
     </Template>;
 
-RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
+RenderFragment colGroup((Table<TItem> table, bool header) ctx)  =>
   @<Template>
             @{
         var table = ctx.table;
@@ -160,7 +172,10 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
             }
             <colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
-                    @table.ChildContent(_fieldModel)
+                    @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                    {
+                        @column.RenderColGroup()
+                    }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
         {
@@ -184,7 +199,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                     ItemContent="table.bodyRow(table, level, rowDataCache)" >
                         <Placeholder>
                             <tr class="ant-table-row ant-table-row-level-0">
-                                @foreach (var item in table.ColumnContext.HeaderColumns)
+                                @foreach (var item in table.ColumnContext.Columns)
                                 {
                                     <td class="ant-table-cell" colspan="@item.ColSpan">
                                        <Skeleton Active="true" ParagraphRows="1" Paragraph="false" ParagraphWidth="@item.Width"></Skeleton>
@@ -236,8 +251,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
     }
 </Template>;
 
-Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TItem data, int index)>> bodyRow = 
-            (table, level, rowDataCache) => tuple =>
+RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, IDictionary<TItem, RowData<TItem>> rowDataCache) => tuple =>
 @<Template @key="tuple">
     @{
         int rowIndex;
@@ -291,7 +305,12 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                             else
                             {
                                 <TableRow @key="currentRowData.Data">
-                                    @table.ChildContent(currentRowData.Data)
+                       
+                                     @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                    {
+                                        @column.RenderBody(currentRowData)
+                                    }
+
                                 </TableRow>
                             }
                         </CascadingValue>

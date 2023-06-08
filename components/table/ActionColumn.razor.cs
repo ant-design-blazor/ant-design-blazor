@@ -1,9 +1,10 @@
 ﻿using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Table;
 
 namespace AntDesign
 {
-    public partial class ActionColumn : ColumnBase
+    public partial class ActionColumn : ColumnBase, IRenderColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
@@ -14,10 +15,9 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (IsHeader)
-            {
-                Context.HeaderColumnInitialed(this);
-            }
+
+            Context.HeaderColumnInitialed(this);
+
         }
 
         protected override bool ShouldRender()

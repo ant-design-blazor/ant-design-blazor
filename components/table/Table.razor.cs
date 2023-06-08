@@ -312,13 +312,13 @@ namespace AntDesign
 
                 foreach (var sorter in queryModel.SortModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[sorter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetSortModel(sorter);
                 }
 
                 foreach (var filter in queryModel.FilterModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[filter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetFilterModel(filter);
                 }
 
@@ -333,7 +333,7 @@ namespace AntDesign
 
             FlushCache();
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -356,7 +356,7 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -388,7 +388,7 @@ namespace AntDesign
 
         void ITable.ColumnSorterChange(IFieldColumn column)
         {
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
                 {
@@ -699,7 +699,7 @@ namespace AntDesign
                 }
 
                 // To handle the case where a dynamic table does not render columns until the data is requested
-                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                if (!ColumnContext.Columns.Any() && !_hasInitialized)
                 {
                     OnColumnInitialized();
                     return;

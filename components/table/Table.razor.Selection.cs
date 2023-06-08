@@ -132,7 +132,7 @@ namespace AntDesign
 
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
-            _selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+            //_selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
             _preventRowDataTriggerSelectedRowsChanged = false;
             _preventChangeRowDataWithSameData = false;
             _selection.StateHasChanged();

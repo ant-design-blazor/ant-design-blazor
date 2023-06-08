@@ -1,4 +1,4 @@
-﻿<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
+﻿@*<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
     <ChildContent Context="data">
         <Column TData="string" Title="Name">
             @if (!editCache[data.Id].edit)
@@ -47,7 +47,7 @@
             }
         </ActionColumn>
     </ChildContent>
-</Table>
+</Table>*@
 
 <style>
     .save {

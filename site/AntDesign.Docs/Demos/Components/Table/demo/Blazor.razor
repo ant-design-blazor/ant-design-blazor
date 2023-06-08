@@ -16,7 +16,9 @@
   <PropertyColumn Property="c=>c.TemperatureC" Sortable />
   <PropertyColumn Title="Temp. (F)" Property="c=>c.TemperatureF" />
   <PropertyColumn Title="Hot" Property="c=>c.Hot">
-    <Switch @bind-Value="@context.Hot"></Switch>
+   <CellRender Context="cell">
+        <Switch @bind-Value="@cell.FieldValue"></Switch>
+   </CellRender>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Summary" Sortable />
   <ActionColumn Title="Action">

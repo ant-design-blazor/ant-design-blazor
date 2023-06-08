@@ -3,10 +3,11 @@ using System.Linq;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Table;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IRenderColumn
     {
         [Parameter] public string Type { get; set; } = "checkbox";
 
@@ -21,8 +22,7 @@ namespace AntDesign
 
         //private bool _checked;
 
-        private bool Indeterminate => IsHeader
-                                      && !Table.AllSelected
+        private bool Indeterminate => !Table.AllSelected
                                       && Table.AnySelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
@@ -31,9 +31,9 @@ namespace AntDesign
 
         private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
 
-        private void OnCheckedChange(bool selected)
+        private void OnCheckedChange(bool selected, RowData rowData = null, bool isHeader = false)
         {
-            if (IsHeader)
+            if (isHeader)
             {
                 if (selected)
                 {
@@ -44,7 +44,7 @@ namespace AntDesign
                     Table.UnselectAll();
                 }
             }
-            else if (IsBody)
+            else
             {
                 if (Type == "radio")
                 {
@@ -52,7 +52,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    RowData.Selected = selected;
+                    rowData.Selected = selected;
                     Table.Selection.StateHasChanged();
                 }
             }
@@ -67,15 +67,10 @@ namespace AntDesign
                 return;
             }
 
-            if (IsHeader)
-            {
-                Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
-            }
-            else if (IsBody)
-            {
-                Table?.Selection?.RowSelections.Add(this);
-            }
+            Table.Selection = this;
+
+            Table?.Selection?.RowSelections.Add(this);
+            Context.HeaderColumnInitialed(this);
         }
 
         protected override void OnParametersSet()
@@ -93,7 +88,7 @@ namespace AntDesign
 
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader && Type == "checkbox")
+            if (Type == "checkbox")
             {
                 StateHasChanged();
             }
@@ -101,11 +96,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (!IsHeader)
-            {
-                Table?.Selection?.RowSelections?.Remove(this);
-            }
-
+            Table?.Selection?.RowSelections?.Remove(this);
             base.Dispose(disposing);
         }
     }

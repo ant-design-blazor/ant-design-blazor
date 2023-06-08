@@ -3,7 +3,7 @@
 
 <Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">@cell.FieldValue</CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address">
@@ -12,31 +12,33 @@
         </TitleTemplate>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </PropertyColumn>
-  <ActionColumn Title="Action">
-    <Space Size=@("middle")>
-      <SpaceItem>
-        <a>Invite @context.Name</a>
-      </SpaceItem>
-      <SpaceItem>
-        <a>Delete</a>
-      </SpaceItem>
-    </Space>
-  </ActionColumn>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 
 @code {
-  IData[] data = new Data[]
-  {
+    Data[] data = new Data[]
+    {
         new()
         {
             Key = "1",
@@ -61,7 +63,7 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-  };
+    };
 
     public interface IData
     {
@@ -77,25 +79,25 @@
     }
 
     public class Data : IData
-  {
-    [DisplayName("Key")]
-    public string Key { get; set; }
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
 
-    [DisplayName("Name")]
-    public string Name { get; set; }
+        [DisplayName("Name")]
+        public string Name { get; set; }
 
-    [DisplayName("Age")]
-    public int Age { get; set; }
+        [DisplayName("Age")]
+        public int Age { get; set; }
 
-    [DisplayName("Address")]
-    public string Address { get; set; }
+        [DisplayName("Address")]
+        public string Address { get; set; }
 
-    [DisplayName("Tags")]
-    public string[] Tags { get; set; }
-  }
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
 
     void OnRowClick(RowData<IData> row)
-  {
-    Console.WriteLine($"row {row.Data.Key} was clicked.");
-  }
+    {
+        Console.WriteLine($"row {row.Data.Key} was clicked.");
+    }
 }
