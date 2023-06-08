@@ -47,14 +47,16 @@ else if (IsHeader && HeaderColSpan != 0)
 	var headerCellAttributes = OnHeaderCell?.Invoke();
 	<CascadingValue Name="IsHeader" Value="false" IsFixed>
 		<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
-			@if (Sortable || (_filterable && _filters?.Any() == true))
-		    {
-		    	@FilterToolTipSorter
-		    }
-		    else
-		    {
-                @ColumnTitle()
-		    }
+            @if (IsFiexedEllipsis)
+            {
+                <span class="ant-table-cell-content">
+                    @HeaderCellContent()
+                </span>
+            }
+            else
+            {
+                @HeaderCellContent()
+            }
     	</th>
     </CascadingValue>
 }
@@ -83,31 +85,29 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
 		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title"  @attributes="cellAttributes">
 			@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
-		{
-			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
-			@if (RowData.HasChildren)
-			{
-				<button type="button" @onclick="ToggleTreeNode" @onclick:stopPropagation class="ant-table-row-expand-icon @(RowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
-			}
-			else
-			{
-				<button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
-			}
-		}
+		    {
+		    	<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
+		    	@if (RowData.HasChildren)
+		    	{
+		    		<button type="button" @onclick="ToggleTreeNode" @onclick:stopPropagation class="ant-table-row-expand-icon @(RowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+		    	}
+		    	else
+		    	{
+		    		<button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+		    	}
+		    }
 
-		@if (CellRender != null)
-		{
-			@CellRender(cellData)
-		}
-		else if (ChildContent != null)
-		{
-			@ChildContent
-		}
-		else
-		{
-			@cellData.FormattedValue
-		}
-	</td>
+		    @if (IsFiexedEllipsis)
+            {
+                <span class="ant-table-cell-content">
+                    @CellContent(cellData)
+                </span>
+            }
+            else
+            {
+                @CellContent(cellData)
+            }
+	    </td>
 </CascadingValue>
 }
 
@@ -124,7 +124,36 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             {
                 @Title
             }
-        </span>;
+            </span>
+    ;
+    }
+
+    RenderFragment CellContent(CellData<TData> cellData)
+    {
+        if (CellRender != null)
+        {
+            return CellRender(cellData);
+        }
+        else if (ChildContent != null)
+        {
+            return ChildContent;
+        }
+        else
+        {
+            return builder => builder.AddContent(1, cellData.FormattedValue);
+        }
+    }
+
+    RenderFragment HeaderCellContent()
+    {
+        if (Sortable || (_filterable && _filters?.Any() == true))
+        {
+            return FilterToolTipSorter;
+        }
+        else
+        {
+            return ColumnTitle();
+        }
     }
 
 	RenderFragment SortHeader =>
