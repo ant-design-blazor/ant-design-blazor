@@ -4,6 +4,7 @@ using System.Text;
 
 namespace AntDesign.TableModels
 {
+    /// <inheritdoc />
     public class RowData<TItem> : RowData
     {
         internal TableDataItem<TItem> DataItem { get; }
@@ -20,6 +21,10 @@ namespace AntDesign.TableModels
         }
     }
 
+    /// <summary>
+    /// Holds all data that is specific to a row, e.g. the row being expanded or not.
+    /// See <see cref="TableDataItem"/> for all properties that are specific to an item instead of a row.
+    /// </summary>
     public abstract class RowData
     {
         private bool _expanded;
@@ -44,7 +49,7 @@ namespace AntDesign.TableModels
         public int Level { get; set; }
 
         public abstract TableDataItem TableDataItem { get; }
-        
+
         public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
         public bool HasChildren { get => TableDataItem.HasChildren; set => TableDataItem.HasChildren = value; }
 
@@ -56,6 +61,7 @@ namespace AntDesign.TableModels
         }
     }
 
+    /// <inheritdoc />
     public class TableDataItem<TItem> : TableDataItem
     {
         public TItem Data { get; }
@@ -75,6 +81,14 @@ namespace AntDesign.TableModels
         }
     }
 
+    /// <summary>
+    /// Holds the properties of an item within a table.
+    /// Is unique for each item in a table (e.g. even if the item is displayed more than once,
+    /// there will only be one <see cref="TableDataItem"/>).
+    /// Therefore, all rows with the same item will be selected/deselected all at once.
+    /// <br/>
+    /// For row specific data, see <see cref="RowData"/>.
+    /// </summary>
     public abstract class TableDataItem
     {
         private bool _selected;
