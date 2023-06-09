@@ -6,40 +6,27 @@ namespace AntDesign.TableModels
 {
     public class RowData<TItem> : RowData
     {
-        public TItem Data { get; set; }
+        internal TableDataItem<TItem> DataItem { get; }
+        public override TableDataItem TableDataItem => DataItem;
 
-        internal Dictionary<TItem, RowData<TItem>> Children { get; set; } = new();
+        public TItem Data => DataItem.Data;
+        public Table<TItem> Table => DataItem.Table;
 
-        public RowData(int rowIndex, int pageIndex, TItem data)
+        internal Dictionary<TItem, RowData<TItem>> Children { get; set; }
+
+        public RowData(TableDataItem<TItem> dataItem)
         {
-            this.RowIndex = rowIndex;
-            this.PageIndex = pageIndex;
-            this.Data = data;
+            DataItem = dataItem;
         }
     }
 
-    public class RowData
+    public abstract class RowData
     {
-        private bool _selected;
-
         private bool _expanded;
 
         public int RowIndex { get; set; }
 
         public int PageIndex { get; set; }
-
-        public bool Selected
-        {
-            get => _selected;
-            set
-            {
-                if (_selected != value)
-                {
-                    _selected = value;
-                    SelectedChanged?.Invoke(this, _selected);
-                }
-            }
-        }
 
         public bool Expanded
         {
@@ -56,22 +43,68 @@ namespace AntDesign.TableModels
 
         public int Level { get; set; }
 
-        public int CacheKey { get; set; }
-
-        public bool HasChildren { get; set; }
-
-        public event Action<RowData, bool> SelectedChanged;
+        public abstract TableDataItem TableDataItem { get; }
+        
+        public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
+        public bool HasChildren { get => TableDataItem.HasChildren; set => TableDataItem.HasChildren = value; }
 
         public event Action<RowData, bool> ExpandedChanged;
-
-        internal void SetSelected(bool selected)
-        {
-            _selected = selected;
-        }
 
         internal void SetExpanded(bool expanded)
         {
             _expanded = expanded;
+        }
+    }
+
+    public class TableDataItem<TItem> : TableDataItem
+    {
+        public TItem Data { get; }
+
+        public Table<TItem> Table { get; }
+
+        public TableDataItem(TItem data, Table<TItem> table)
+        {
+            this.Data = data;
+            Table = table;
+        }
+
+        protected override void OnSelectedChanged(bool value)
+        {
+            base.OnSelectedChanged(value);
+            Table.DataItemSelectedChanged(this, value);
+        }
+    }
+
+    public abstract class TableDataItem
+    {
+        private bool _selected;
+
+        public bool Selected
+        {
+            get => _selected;
+            set
+            {
+                if (_selected != value)
+                {
+                    OnSelectedChanged(value);
+                }
+            }
+        }
+
+        public bool HasChildren { get; set; }
+
+        public event Action<TableDataItem, bool> SelectedChanged;
+
+        protected virtual void OnSelectedChanged(bool value)
+        {
+            SetSelected(value);
+        }
+
+        internal void SetSelected(bool selected, bool triggersSelectedChanged = true)
+        {
+            _selected = selected;
+            if (triggersSelectedChanged)
+                SelectedChanged?.Invoke(this, _selected);
         }
     }
 }

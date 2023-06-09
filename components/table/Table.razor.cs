@@ -466,11 +466,7 @@ namespace AntDesign
             {
                 if (_outerSelectedRows != null)
                 {
-                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
-                    if (_selectedRows.Count != _outerSelectedRows.Count())
-                    {
-                        SelectedRowsChanged.InvokeAsync(_selectedRows);
-                    }
+                    SetSelection(_outerSelectedRows);
                 }
                 else
                 {
@@ -584,51 +580,28 @@ namespace AntDesign
         private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
         {
             if (items?.Any() != true) return Array.Empty<TItem>();
-            if (TreeChildren == null) return items;
-            var result = GetAllDataItemsWithParent(items.Select(x => new DataItemWithParent<TItem>
+            if (TreeChildren != null)
             {
-                Data = x,
-                Parent = null
-            })).Select(x => x.Data);
-            if (onlySelectable) result = result.Where(x => RowSelectable(x));
-            return result.ToHashSet();
+                var itemsSet = new HashSet<TItem>();
+                AddAllItemsAndChildren(items);
+                items = itemsSet;
 
-            IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
-            {
-                if (dataItems?.Any() != true) return Array.Empty<DataItemWithParent<TItem>>();
-                if (TreeChildren == null) return dataItems ?? Array.Empty<DataItemWithParent<TItem>>();
-                return dataItems.Union(
-                    dataItems.SelectMany(
-                        x1 =>
-                        {
-                            var ancestors = x1.GetAllAncestors().Select(x2 => x2.Data).ToHashSet();
-                            return GetAllDataItemsWithParent(TreeChildren(x1.Data)?.Select(x2 => new DataItemWithParent<TItem>
-                            {
-                                Data = x2,
-                                Parent = x1
-                            }).Where(x2 => !ancestors.Contains(x2.Data) && x2.Data?.Equals(x1.Data) == false));
-                        })
-                    ).ToList();
-            }
-        }
-
-        private class DataItemWithParent<T>
-        {
-            public T Data { get; set; }
-
-            public DataItemWithParent<T> Parent { get; set; }
-
-            public IEnumerable<DataItemWithParent<T>> GetAllAncestors()
-            {
-                var result = new HashSet<DataItemWithParent<T>>();
-                var parent = Parent;
-                while (parent != null)
+                void AddAllItemsAndChildren(IEnumerable<TItem> itemsToAdd)
                 {
-                    result.Add(parent);
-                    parent = parent.Parent;
+                    if (itemsToAdd is null)
+                        return;
+                    foreach (TItem item in itemsToAdd)
+                    {
+                        if (!itemsSet.Add(item))
+                            continue;
+
+                        AddAllItemsAndChildren(TreeChildren(item));
+                    }
                 }
-                return result;
             }
+
+            if (onlySelectable) items = items.Where(x => RowSelectable(x));
+            return items;
         }
 
         protected override void OnParametersSet()

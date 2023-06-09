@@ -55,11 +55,11 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 		{
 			@if (Type == "checkbox")
 			{
-				<Checkbox Checked="RowData.Selected" Disabled="Disabled" CheckedChange="OnCheckedChange" />
+				<Checkbox Checked="DataItem.Selected" Disabled="Disabled" CheckedChange="OnCheckedChange" />
 			}
 			else if (Type == "radio")
 			{
-				<Radio Checked="RowData.Selected" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
+				<Radio Checked="DataItem.Selected" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
 			}
 		}
 	</td>

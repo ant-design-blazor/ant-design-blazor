@@ -56,7 +56,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body(this, _showItems, 0, _dataSourceCache)
+                                            @body(this, _showItems, 0, _rootRowDataCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -74,7 +74,7 @@
                                                     @ChildContent(_fieldModel)
                                                 </CascadingValue>
                                             </tr>
-                                            @body(this, _showItems, 0, _dataSourceCache)
+                                            @body(this, _showItems, 0, _rootRowDataCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -87,7 +87,7 @@
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
-                                            @body(this, _showItems, 0, _dataSourceCache)
+                                            @body(this, _showItems, 0, _rootRowDataCache)
                                         </tbody>
                                         @tfoot(this)
                                     </table>
@@ -174,7 +174,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
             </colgroup>
   </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
+Func<Table<TItem>, IEnumerable<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment> body = 
             (table, showItems, level, rowDataCache) =>
 @<Template>
 
@@ -220,18 +220,18 @@ Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, R
              </tr>
         }
 #if NET5_0_OR_GREATER
-            else if (table.EnableVirtualization)
-            {
-                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
-                    OverscanCount="10"
-                    Items="showItems.Select((data, index) => (data, index)).ToList()"
-                    ChildContent="table.bodyRow(table, level, rowDataCache)" />
+            else if (table.EnableVirtualization) {
+                <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize TItem="ValueTuple<TItem, int>"
+                     OverscanCount="10"
+                     Items="showItems.Select((data, index) => (data, index)).ToList()"
+                     ChildContent="table.bodyRow(table, level, rowDataCache)"/>
             }
 #endif
         else
         {
             { @*Build will fail without this block*@ }
-            <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
+            <ForeachLoop TItem="ValueTuple<TItem, int>" 
+                    Items="showItems.Select((data, index) => (data, index))"
                      ChildContent="table.bodyRow(table, level, rowDataCache)" />
         }
     }
@@ -245,25 +245,27 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
         if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
         else rowIndex = tuple.index + 1;
         var data = tuple.data;
-        bool selected = table.SelectedRows.Contains(data);
+        if (!table._dataSourceCache.TryGetValue(data, out var currentDataItem) || currentDataItem == null)
+        {
+            currentDataItem = new TableDataItem<TItem>(data, table);
+            currentDataItem.SetSelected(table.SelectedRows.Contains(data), triggersSelectedChanged: false);
+            table._dataSourceCache.Add(data, currentDataItem);
+        }
         if (!rowDataCache.TryGetValue(data, out var currentRowData) || currentRowData == null)
         {
-            currentRowData = new RowData<TItem>(rowIndex, table.PageIndex, data)
+            currentRowData = new RowData<TItem>(currentDataItem)
             {
                 Expanded = table.DefaultExpandAllRows && level < table.DefaultExpandMaxLevel
             };
-            rowDataCache[data] = currentRowData;
+            rowDataCache.Add(data, currentRowData);
         }
         var childrenData = table.TreeChildren(data);
-        var hasChildren = childrenData?.Any() == true;
-        var childrenRowDataCache = currentRowData.Children;
+        currentDataItem.HasChildren = childrenData?.Any() == true;
         currentRowData.Level = level;
-        currentRowData.HasChildren = hasChildren;
         currentRowData.RowIndex = rowIndex;
         currentRowData.PageIndex = table.PageIndex;
-        currentRowData.SetSelected(selected);
 
-        <TableRowWrapper RowData="currentRowData" RowDataSelectedChanged="table.RowDataSelectedChanged">
+        <TableRowWrapper RowData="currentRowData">
             @{
                 var rowAttributes = table.OnRow?.Invoke(currentRowData);
                 if (table.OnRowClick.HasDelegate)
@@ -282,19 +284,20 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                             }
                             else
                             {
-                                <TableRow @key="currentRowData.Data">
-                                    @table.ChildContent(currentRowData.Data)
+                                <TableRow @key="currentDataItem.Data">
+                                    @table.ChildContent(currentDataItem.Data)
                                 </TableRow>
                             }
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
 
-                @if (currentRowData.HasChildren && currentRowData.Expanded)
+                @if (currentDataItem.HasChildren && currentRowData.Expanded)
                 {
-                    @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, childrenRowDataCache);
+                    currentRowData.Children ??= new Dictionary<TItem, RowData<TItem>>();
+                    @table.body(table, table.SortFilterChildren(childrenData), currentRowData.Level + 1, currentRowData.Children);
                 }
-                @if (!currentRowData.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
+                @if (!currentDataItem.HasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
                         style="@(currentRowData.Expanded?"":"display: none;")">

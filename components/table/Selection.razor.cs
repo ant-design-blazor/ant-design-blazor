@@ -22,8 +22,8 @@ namespace AntDesign
         //private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && !Table.AllSelected
-                                      && Table.AnySelected;
+                                   && Table.AnySelected
+                                   && !Table.AllSelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
@@ -52,8 +52,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    RowData.Selected = selected;
-                    Table.Selection.StateHasChanged();
+                    DataItem.Selected = selected;
                 }
             }
         }

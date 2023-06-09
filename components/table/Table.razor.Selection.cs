@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -27,24 +28,25 @@ namespace AntDesign
         private HashSet<TItem> _selectedRows = new();
         private bool _preventRowDataTriggerSelectedRowsChanged;
 
-        private void RowDataSelectedChanged(RowData<TItem> rowData, bool selected)
+        internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
         {
-            if (!RowSelectable(rowData.Data))
+            if (!RowSelectable(dataItem.Data))
             {
-                rowData.SetSelected(!selected);
+                dataItem.SetSelected(!selected, triggersSelectedChanged: false);
                 return;
             }
             if (selected)
             {
-                _selectedRows.Add(rowData.Data);
+                _selectedRows.Add(dataItem.Data);
             }
             else
             {
-                _selectedRows.Remove(rowData.Data);
+                _selectedRows.Remove(dataItem.Data);
             }
             if (!_preventRowDataTriggerSelectedRowsChanged)
             {
                 SelectionChanged();
+                _selection?.StateHasChanged();
             }
         }
 
@@ -61,9 +63,9 @@ namespace AntDesign
         public void SelectAll()
         {
             _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
-            foreach (RowData<TItem> rowData in _dataSourceCache.Values)
+            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
-                rowData.SetSelected(true);
+                dataItem.SetSelected(_selectedRows.Contains(dataItem.Data));
             }
 
             _selection?.StateHasChanged();
@@ -73,9 +75,9 @@ namespace AntDesign
         private void ClearSelectedRows()
         {
             _selectedRows.Clear();
-            foreach (RowData<TItem> rowData in _dataSourceCache.Values)
+            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
-                rowData.SetSelected(false);
+                dataItem.SetSelected(false);
             }
         }
 
@@ -110,7 +112,7 @@ namespace AntDesign
             SelectionChanged();
         }
 
-        // Only select the given row (radio)
+        // Only select the given row (for radio selection)
         void ITable.SetSelection(ISelectionColumn selectItem)
         {
             ClearSelectedRows();
@@ -137,10 +139,7 @@ namespace AntDesign
 
         public void SetSelection(IEnumerable<TItem> items)
         {
-            if (_selection == null)
-            {
-                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
-            }
+            EnsureSelection();
 
             ClearSelectedRows();
             items?.ForEach(SelectItem);
@@ -151,10 +150,7 @@ namespace AntDesign
 
         public void SetSelection(TItem item)
         {
-            if (_selection == null)
-            {
-                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
-            }
+            EnsureSelection();
 
             ClearSelectedRows();
             if (item != null)
@@ -164,6 +160,17 @@ namespace AntDesign
 
             _selection.StateHasChanged();
             SelectionChanged();
+        }
+
+#if NET5_0_OR_GREATER
+        [MemberNotNull(nameof(_selection))]
+#endif
+        private void EnsureSelection()
+        {
+            if (_selection == null)
+            {
+                throw new InvalidOperationException("To use the SetSelection method for a table, you should add a Selection component to the column definition.");
+            }
         }
 
         void ITable.SelectionChanged() => SelectionChanged();
