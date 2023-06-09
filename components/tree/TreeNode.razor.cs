@@ -713,7 +713,14 @@ namespace AntDesign
             get
             {
                 if (TreeComponent.ChildrenExpression != null)
-                    return TreeComponent.ChildrenExpression(this)?.ToList() ?? new List<TItem>();
+                {
+                    var childItems = TreeComponent.ChildrenExpression(this);
+                    if (childItems is IList<TItem> list)
+                    {
+                        return list;
+                    }
+                    return childItems?.ToList() ?? new List<TItem>();
+                }
                 else
                     return new List<TItem>();
             }
@@ -728,7 +735,7 @@ namespace AntDesign
             if (this.ParentNode != null)
                 return this.ParentNode.ChildDataItems;
             else
-                return this.TreeComponent.DataSource.ToList();
+                return this.TreeComponent.DataSource as IList<TItem> ?? this.TreeComponent.DataSource.ToList();
         }
 
         #endregion data binding

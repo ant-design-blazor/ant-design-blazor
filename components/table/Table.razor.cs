@@ -214,7 +214,7 @@ namespace AntDesign
         private bool _isVirtualizeEmpty;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
-        private bool UseResizeObserver => ScrollX != null;
+
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
 
         private bool UseItemsProvider
