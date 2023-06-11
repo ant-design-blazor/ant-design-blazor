@@ -65,6 +65,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 
 
 ### Column
+
+先前版本的列定义，对于 .NET 6 及以上版本，建议使用 `PropertyColumn`。
+
 | 参数             | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | FieldChanged | Field更改事件 | EventCallback<TData | - |
@@ -82,6 +85,17 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
+
+### PropertyColumn
+
+继承自 `Column`.
+
+| 参数              | 说明             | 类型                         | 默认值 |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
+
+
+
 ### 响应式
 
 表格默认支持响应式，当屏幕宽度小于 960px 时，表格的数据列变为小屏模式。

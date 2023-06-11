@@ -63,7 +63,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 
 ### Column
 
-The Column type of the previous version, For .NET 6 and above, `PropertyColumn` is recommended.
+The Column definition of the previous version, For .NET 6 and above, `PropertyColumn` is recommended.
 
 | Parameter             | Instruction             | Type                         | Defaults |
 | ---------------- | ---------------- | ---------------------------- | ------ |
