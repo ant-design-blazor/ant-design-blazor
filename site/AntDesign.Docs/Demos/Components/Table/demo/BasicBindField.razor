@@ -2,16 +2,16 @@
 @using AntDesign.TableModels
 
 <Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
-    <PropertyColumn Property="c=>c.Name">
+    <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address">
+    </Column>
+    <Column TData="int" DataIndex="Age"></Column>
+    <Column @bind-Field="@context.Address">
         <TitleTemplate>
             <span> <Icon Type="environment" /> Address </span>
         </TitleTemplate>
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Tags">
+    </Column>
+    <Column @bind-Field="@context.Tags">
         @foreach (var tag in context.Tags)
         {
             var color = tag.Length > 5 ? "geekblue" : "green";
@@ -21,22 +21,22 @@
             }
             <Tag Color="@color">@tag</Tag>
         }
-    </PropertyColumn>
-  <ActionColumn Title="Action">
-    <Space Size=@("middle")>
-      <SpaceItem>
-        <a>Invite @context.Name</a>
-      </SpaceItem>
-      <SpaceItem>
-        <a>Delete</a>
-      </SpaceItem>
-    </Space>
-  </ActionColumn>
+    </Column>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 
 @code {
-  IData[] data = new Data[]
-  {
+    IData[] data = new Data[]
+      {
         new()
         {
             Key = "1",
@@ -61,9 +61,27 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-  };
+      };
 
     public interface IData
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
+        [DisplayName("Name")]
+        public string Name { get; set; }
+
+        [DisplayName("🔢Age")]
+        public int Age { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
+
+    public class Data : IData
     {
         public string Key { get; set; }
 
@@ -76,26 +94,8 @@
         public string[] Tags { get; set; }
     }
 
-    public class Data : IData
-  {
-    [DisplayName("Key")]
-    public string Key { get; set; }
-
-    [DisplayName("Name")]
-    public string Name { get; set; }
-
-    [DisplayName("Age")]
-    public int Age { get; set; }
-
-    [DisplayName("Address")]
-    public string Address { get; set; }
-
-    [DisplayName("Tags")]
-    public string[] Tags { get; set; }
-  }
-
     void OnRowClick(RowData<IData> row)
-  {
-    Console.WriteLine($"row {row.Data.Key} was clicked.");
-  }
+    {
+        Console.WriteLine($"row {row.Data.Key} was clicked.");
+    }
 }
