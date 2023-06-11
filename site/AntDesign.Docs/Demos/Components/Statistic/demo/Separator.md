@@ -1,13 +1,13 @@
 ---
 order: 4
 title:
-  zh-CN: 分隔器
-  en-US: Separator
+  zh-CN: 数字分隔符
+  en-US: Number separator
 ---
 
 ## zh-CN
 
-數字分隔符的使用。
+指定数字分隔符。
 
 ## en-US
 
