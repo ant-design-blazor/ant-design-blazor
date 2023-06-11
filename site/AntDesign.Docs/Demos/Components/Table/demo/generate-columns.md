@@ -1,5 +1,5 @@
 ---
-order: 0
+order: 0.3
 title:
   en-US: Generate Columns
   zh-CN: 自动生成列
