@@ -1,0 +1,86 @@
+{
+  "name": "DevContainer for .NET",
+
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": ".",
+    "args": {
+      // version: 7.0, 7.0-bullseye-slim, 7.0-jammy, 6.0, 6.0-bullseye-slim, 6.0-jammy, 6.0-focal
+      "VARIANT": "7.0"
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    // ASP.NET Core Web/API App, Blazor App
+    5000, 5001,
+    // Azure Static Web Apps
+    4280
+  ],
+
+  "features": {
+    // Azure CLI
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest"
+    },
+
+    // GitHub CLI
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+
+    // node.js
+    "ghcr.io/devcontainers/features/node:1": {
+      // version: 'latest', 'lts', '18', '16', '14'
+      "version": "lts",
+      "nodeGypDependencies": true,
+      "nvmInstallPath": "/usr/local/share/nvm"
+    },
+
+    // Install common utilities
+    "ghcr.io/devcontainers/features/common-utils:1": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "vscode",
+      "uid": "1000",
+      "gid": "1000"
+    }
+  },
+
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/common-utils"
+  ],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-vscode.PowerShell",
+        "ms-vscode.vscode-node-azure-pack",
+        "VisualStudioExptTeam.vscodeintellicode"
+      ],
+      "settings": {
+        // Uncomment if you want to disable the minimap view
+        // "editor.minimap.enabled": false,
+
+        // Recommended settings for the explorer pane
+        "explorer.sortOrder": "type",
+        "explorer.fileNesting.enabled": true,
+        "explorer.fileNesting.patterns": {
+          "*.js": "${capture}.js.map",
+          "*.razor": "${capture}.razor.cs,${capture}.razor.css"
+        }
+      }
+    }
+  },
+
+  // Uncomment if you want to use bash in 'postCreateCommand' after the container is created
+  "postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh > ~/post-create.log",
+
+  // Uncomment if you want to connect other than 'root'. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "vscode"
+}
