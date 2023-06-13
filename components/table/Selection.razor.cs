@@ -70,7 +70,6 @@ namespace AntDesign
             Table.Selection = this;
 
             Table?.Selection?.RowSelections.Add(this);
-            Context.HeaderColumnInitialed(this);
         }
 
         protected override void OnParametersSet()

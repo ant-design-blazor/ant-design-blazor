@@ -74,8 +74,6 @@ namespace AntDesign
         private int ColEndIndex => ColIndex + ColSpan;
         private int HeaderColEndIndex => ColIndex + HeaderColSpan;
 
-        //public RowData RowData { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         private readonly ClassMapper _headerMapper = new();
 
         private void SetClass()

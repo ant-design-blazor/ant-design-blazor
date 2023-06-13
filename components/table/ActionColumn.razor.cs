@@ -16,7 +16,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            Context.HeaderColumnInitialed(this);
+     
 
         }
 

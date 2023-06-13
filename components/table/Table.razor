@@ -32,6 +32,9 @@
                     <CascadingValue Name="IsInitialize" Value="true" IsFixed>
                         @ChildContent(_fieldModel)
                     </CascadingValue>
+                    @{
+                        ColumnContext.HeaderColumnInitialed();
+                    }
                     <div class="@ClassMapper.Class" @ref="_tableRef">
                         @if (TitleTemplate != null || Title != null)
                         {
@@ -153,6 +156,9 @@
                                 <TableRow>
                                      @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
                                      {
+                                         if (column is IColumn col && col.HeaderColSpan == 0)
+                                            continue;
+
                                          @column.RenderHeader()
                                      }
                                 </TableRow>
@@ -305,9 +311,11 @@ RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, I
                             else
                             {
                                 <TableRow @key="currentRowData.Data">
-                       
                                      @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
                                     {
+                                        if (column is IColumn col && (col.ColSpan==0 || col.RowSpan==0))
+                                            continue;
+
                                         @column.RenderBody(currentRowData)
                                     }
 

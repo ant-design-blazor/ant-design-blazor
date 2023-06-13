@@ -253,9 +253,6 @@ namespace AntDesign
                 }
             }
 
-            Context.HeaderColumnInitialed(this);
-
-
             ClassMapper
                .If("ant-table-column-has-sorters", () => Sortable)
                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
