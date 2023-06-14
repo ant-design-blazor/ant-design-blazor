@@ -27,7 +27,8 @@ namespace AntDesign
 
     public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static Type _itemType = typeof(TItem);
+        private static readonly TItem _fieldModel = _itemType.IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(_itemType);
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
@@ -245,6 +246,8 @@ namespace AntDesign
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
+
+        Type ITable.ItemType => _itemType;
 
         /// <summary>
         /// This method will be called when all columns have been set

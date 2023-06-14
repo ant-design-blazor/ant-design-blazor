@@ -19,9 +19,6 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
 
-        [CascadingParameter(Name = "ItemType")]
-        public Type ItemType { get; set; }
-
         [Parameter]
         public EventCallback<TData> FieldChanged { get; set; }
 
@@ -29,7 +26,7 @@ namespace AntDesign
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         [Parameter]
-        public TData Field { get;set; }
+        public TData Field { get; set; }
 
         public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
 
@@ -146,8 +143,6 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
-        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -158,15 +153,15 @@ namespace AntDesign
             {
                 if (FieldExpression.Body is not MemberExpression memberExp)
                 {
-                    throw new ArgumentException($"'Field' parameter must be a property or a field of {ItemType}");
+                    throw new ArgumentException($"'Field' parameter must be a property or a field of {Table.ItemType}");
                 }
 
-                var paramExp = Expression.Parameter(ItemType);
+                var paramExp = Expression.Parameter(Table.ItemType);
                 var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
                 GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
 
                 var rowDataParamExp = Expression.Parameter(typeof(RowData));
-                var rowDataType = typeof(RowData<>).MakeGenericType(ItemType);
+                var rowDataType = typeof(RowData<>).MakeGenericType(Table.ItemType);
                 var convertExp = Expression.Convert(rowDataParamExp, rowDataType);
                 var dataBodyExp = Expression.MakeMemberAccess(convertExp, rowDataType.GetMember(nameof(RowData<int>.Data))[0]);
                 var memberBodyExp = Expression.MakeMemberAccess(dataBodyExp, memberExp.Member);

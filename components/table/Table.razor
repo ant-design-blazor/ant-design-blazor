@@ -7,6 +7,12 @@
 
 @typeparam TItem
 
+<CascadingValue Value="@ColumnContext" IsFixed>
+    @ChildContent(_fieldModel)
+</CascadingValue>
+@{
+    ColumnContext.HeaderColumnInitialed();
+}
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
@@ -25,16 +31,7 @@
                 @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
-
-        <CascadingValue Value="@this" TValue="ITable" IsFixed>
-            <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
-                <CascadingValue Value="@ColumnContext" IsFixed>
-                    <CascadingValue Name="IsInitialize" Value="true" IsFixed>
-                        @ChildContent(_fieldModel)
-                    </CascadingValue>
-                    @{
-                        ColumnContext.HeaderColumnInitialed();
-                    }
+          
                     <div class="@ClassMapper.Class" @ref="_tableRef">
                         @if (TitleTemplate != null || Title != null)
                         {
@@ -113,9 +110,7 @@
                             </div>
                         }
                     </div>
-                </CascadingValue>
-            </CascadingValue>
-        </CascadingValue>
+      
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
             if (PaginationTemplate == null)
@@ -143,13 +138,14 @@
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
         <thead class="ant-table-thead">
-            <CascadingValue Name="IsHeader" Value="true" IsFixed>
                 <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
                     <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
                         <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
                             @if (table.HeaderTemplate != null)
                             {
-                                @table.HeaderTemplate(_fieldModel)
+                                <CascadingValue Name="IsHeader" Value="true" IsFixed>
+                                    @table.HeaderTemplate(_fieldModel)
+                                </CascadingValue>
                             }
                             else
                             {
@@ -166,7 +162,6 @@
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
-            </CascadingValue>
         </thead>
     </Template>;
 

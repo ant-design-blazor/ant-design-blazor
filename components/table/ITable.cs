@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -50,6 +51,8 @@ namespace AntDesign
         internal bool HasHeaderTemplate { get; }
 
         internal bool HasRowTemplate { get; }
+
+        internal Type ItemType { get; }
 
         internal void SelectionChanged();
 

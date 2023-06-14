@@ -11,8 +11,6 @@ namespace AntDesign
 
         private int _currentColIndex;
 
-        //private int[] ColIndexOccupied { get; set; }
-
         private ITable _table;
 
         public ColumnContext(ITable table)
@@ -27,6 +25,7 @@ namespace AntDesign
                 return;
             }
 
+            column.Table = _table;
             column.ColIndex = _currentColIndex++;
             Columns.Add(column);
         }
