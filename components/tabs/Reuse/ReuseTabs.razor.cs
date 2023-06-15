@@ -39,7 +39,7 @@ namespace AntDesign
 
         private string CurrentUrl
         {
-            get => Navmgr.ToBaseRelativePath(Navmgr.Uri) == "" ? "/" : Navmgr.ToBaseRelativePath(Navmgr.Uri);
+            get => "/" + Navmgr.ToBaseRelativePath(Navmgr.Uri);
             set => Navmgr.NavigateTo(value == "/" ? "" : value);
         }
 
