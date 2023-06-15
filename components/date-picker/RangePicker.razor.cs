@@ -123,8 +123,8 @@ namespace AntDesign
                 {
                     var calendar = CultureInfo.Calendar;
                     var calendarWeekRule = CultureInfo.DateTimeFormat.CalendarWeekRule;
-                    
-                    var date1Week = calendar.GetWeekOfYear(date1,calendarWeekRule, Locale.FirstDayOfWeek);
+
+                    var date1Week = calendar.GetWeekOfYear(date1, calendarWeekRule, Locale.FirstDayOfWeek);
                     var date2Week = calendar.GetWeekOfYear(date2, calendarWeekRule, Locale.FirstDayOfWeek);
                     return index == 0 ? date1Week < date2Week && date1.Year <= date2.Year
                                         : date1.Year >= date2.Year && date1Week > date2Week;
@@ -471,28 +471,13 @@ namespace AntDesign
                 array.SetValue(value, index);
             }
 
+            var otherIndex = Math.Abs(index - 1);
+
             //if Value was just now instantiated then set the other index to existing DefaultValue
             if (isValueInstantiated && DefaultValue != null)
             {
                 var arrayDefault = DefaultValue as Array;
-                int oppositeIndex = index == 1 ? 0 : 1;
-                array.SetValue(arrayDefault.GetValue(oppositeIndex), oppositeIndex);
-            }
-
-            _pickerStatus[index].IsValueSelected = true;
-
-            if (closeDropdown && !HasTimeInput)
-            {
-                if (_pickerStatus[0].SelectedValue is not null
-                    && _pickerStatus[1].SelectedValue is not null)
-                {
-                    Close();
-                }
-                // if the other DatePickerInput is disabled, then close picker panel
-                else if (IsDisabled(Math.Abs(index - 1)))
-                {
-                    Close();
-                }
+                array.SetValue(arrayDefault.GetValue(otherIndex), otherIndex);
             }
 
             var startDate = array.GetValue(0) as DateTime?;
@@ -507,6 +492,15 @@ namespace AntDesign
             if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
             {
                 EditContext?.NotifyFieldChanged(FieldIdentifier);
+            }
+
+            _pickerStatus[index].IsValueSelected = true;
+
+            if (closeDropdown && !HasTimeInput
+                && _pickerStatus[index].SelectedValue is not null
+                && (_pickerStatus[otherIndex].SelectedValue is not null || IsDisabled(otherIndex)))
+            {
+                Close();
             }
         }
 
