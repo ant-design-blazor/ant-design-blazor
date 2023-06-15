@@ -81,7 +81,6 @@ namespace AntDesign
                     {
                         Url = CurrentUrl,
                         CreatedAt = DateTime.Now,
-                        Ignore = false
                     };
 
                     _pageMap[CurrentUrl] = reuseTabsPageItem;
@@ -132,6 +131,7 @@ namespace AntDesign
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
+                pageItem.KeepAlive = attr.KeepAlive;
             }
 
             pageItem.Title ??= url.ToRenderFragment();
@@ -148,12 +148,6 @@ namespace AntDesign
             if (entryAssembly == null) return assemblies;
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
-
-            var paths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
-                .Where(w => w.EndsWith(".dll") && !w.Contains(nameof(Microsoft)))
-                .Select(w => w)
-             ;
-
             return assemblies;
         }
 
