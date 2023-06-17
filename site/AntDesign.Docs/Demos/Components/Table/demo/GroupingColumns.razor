@@ -12,11 +12,11 @@
         <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="right" />
     </ColumnDefinitions>
     <HeaderTemplate>
-@*        <TableRow>
-            <TableHeader @bind-Field="context.Name" RowSpan="4" Filters="filters" OnFilter="(v1, v2) => v2.Contains(v1)" />
+        <TableRow>
+            <TableHeader Fixed="left" @bind-Field="context.Name" RowSpan="4" Filters="filters" OnFilter="(v1, v2) => v2.Contains(v1)" />
             <SimpleTableHeader ColSpan="4">Other</SimpleTableHeader>
             <SimpleTableHeader ColSpan="2">Company</SimpleTableHeader>
-            <SimpleTableHeader RowSpan="4">Gender</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="4" Fixed="right">Gender</SimpleTableHeader>
         </TableRow>
         <TableRow>
             <TableHeader @bind-Field="context.Age" RowSpan="3" Sortable />
@@ -31,7 +31,7 @@
         <TableRow>
             <SimpleTableHeader>Building</SimpleTableHeader>
             <SimpleTableHeader>Door No.</SimpleTableHeader>
-        </TableRow>*@
+        </TableRow>
     </HeaderTemplate>
 </Table>
 

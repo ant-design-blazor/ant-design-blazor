@@ -54,6 +54,8 @@ namespace AntDesign
 
         internal Type ItemType { get; }
 
+        internal ColumnContext ColumnContext { get; }
+
         internal void SelectionChanged();
 
         internal void OnExpandChange(RowData rowData);

@@ -166,7 +166,7 @@ namespace AntDesign
                 var dataBodyExp = Expression.MakeMemberAccess(convertExp, rowDataType.GetMember(nameof(RowData<int>.Data))[0]);
                 var memberBodyExp = Expression.MakeMemberAccess(dataBodyExp, memberExp.Member);
                 var getValueLambda = Expression.Lambda<Func<RowData, TData>>(memberBodyExp, rowDataParamExp);
-                GetValue = getValueLambda.Compile(); // RowData=> ((RowData<TItem>)RowData).Data.{Member}
+                GetValue = getValueLambda.Compile(); // RowData => ((RowData<TItem>)RowData).Data.{Member}
             }
             else if (DataIndex != null)
             {
@@ -196,7 +196,6 @@ namespace AntDesign
 
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
-
 
             if (_hasFiltersAttribute)
             {

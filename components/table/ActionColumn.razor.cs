@@ -15,9 +15,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-     
-
         }
 
         protected override bool ShouldRender()

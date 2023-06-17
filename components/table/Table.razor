@@ -144,7 +144,9 @@
                             @if (table.HeaderTemplate != null)
                             {
                                 <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                                    @table.HeaderTemplate(_fieldModel)
+                                    <CascadingValue Name="Table" Value="table" IsFixed>
+                                        @table.HeaderTemplate(_fieldModel)
+                                    </CascadingValue>
                                 </CascadingValue>
                             }
                             else
@@ -301,19 +303,20 @@ RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, I
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
                             @if (table.RowTemplate != null)
                             {
-                                @table.RowTemplate(currentRowData)
+                                <CascadingValue Name="Table" Value="table" IsFixed>
+                                    @table.RowTemplate(currentRowData)
+                                </CascadingValue>
                             }
                             else
                             {
                                 <TableRow @key="currentRowData.Data">
-                                     @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                    @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
                                     {
                                         if (column is IColumn col && (col.ColSpan==0 || col.RowSpan==0))
                                             continue;
 
                                         @column.RenderBody(currentRowData)
                                     }
-
                                 </TableRow>
                             }
                         </CascadingValue>
