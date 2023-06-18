@@ -251,6 +251,12 @@ namespace AntDesign
         [Parameter]
         public bool DefaultMaximized { get; set; } = false;
 
+        /// <summary>
+        /// Resizable (Horizontal direction only)
+        /// </summary>
+        [Parameter]
+        public bool Resizable { get; set; } = false;
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -332,7 +338,8 @@ namespace AntDesign
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
-                DefaultMaximized = DefaultMaximized
+                DefaultMaximized = DefaultMaximized,
+                Resizable = Resizable,
             };
 
             return options;
