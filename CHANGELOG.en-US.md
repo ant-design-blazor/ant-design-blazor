@@ -15,6 +15,28 @@ timeline: true
 
 ---
 
+### 0.15.1
+
+`2023-06-18`
+
+Happy Father's Day!
+
+- Table
+  - 🆕 Add the items of DataSource support interface types. [#3297](https://github.com/ant-design-blazor/ant-design-blazor/pull/3297) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the text would overflow at the cell which is fixed and ellipsis. [#3291](https://github.com/ant-design-blazor/ant-design-blazor/pull/3291) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed empty status position incorrectly during pre-rendering stage, and avoid unnecessary use of ResizeObserver. [#3281](https://github.com/ant-design-blazor/ant-design-blazor/pull/3281) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🐞 Fixed search crash issue after Tree custom SearchExpression. [#3274](https://github.com/ant-design-blazor/ant-design-blazor/pull/3274) [@ruyisee](https://github.com/ruyisee)
+  - 🐞 Fixed DataSource cannot be modify in place after drag and drop. [#3275](https://github.com/ant-design-blazor/ant-design-blazor/pull/3275) [@Jtfk](https://github.com/Jtfk)
+
+- 🐞 Fixed DatePicker that OnOpenChange would be called twice on RangePicker close. [#3307](https://github.com/ant-design-blazor/ant-design-blazor/pull/3307) [@Alexbits](https://github.com/Alexbits)
+- 🐞 Fixed Tabs duplicated pinned tabs in reusetab. [#3306](https://github.com/ant-design-blazor/ant-design-blazor/pull/3306) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Radio infinite loop render after changing the bind value out of the optons. [#3287](https://github.com/ant-design-blazor/ant-design-blazor/pull/3287) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DomEventListener that remove the shared event subscriptions from it's store after there are no one are listening the event. [#3278](https://github.com/ant-design-blazor/ant-design-blazor/pull/3278) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed incorrect call of `EditContext.NotifyFieldChanged` when `SelectBase.Values` is set (unchanged) to null. [#3277](https://github.com/ant-design-blazor/ant-design-blazor/pull/3277) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 📖 Update Statistic docs and add a demo about Separator usage. [#3166](https://github.com/ant-design-blazor/ant-design-blazor/pull/3166) [@Alerinos](https://github.com/Alerinos)
+
 ### 0.15.0
 
 `2023-05-21`
