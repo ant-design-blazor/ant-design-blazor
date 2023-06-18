@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div @ref="@_element">
+<div @ref="@_element" id="@Id">
     <div class=@($"{Config.PrefixCls}-root")>
         @if (Config.Mask)
         {
@@ -12,7 +12,8 @@
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
-            <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
+            <div @ref="@_modal" role="document" 
+                 class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onclick:stopPropagation
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()"

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -365,9 +366,15 @@ namespace AntDesign
 
         private string GetModalClsName()
         {
-            var clsName = Config.ClassName;
-            return clsName + _modalAnimationClsName
-                + (_modalStatus == ModalStatus.Max ? " ant-modal-max" : "");
+            var clsList = new List<string>()
+            {
+                Config.ClassName,
+                _modalAnimationClsName,
+                _modalStatus == ModalStatus.Max ? "ant-modal-max" : "",
+                Class
+            };
+
+            return string.Join(" ", clsList.Where(x => !string.IsNullOrWhiteSpace(x)));
         }
 
         #endregion build element's class name
