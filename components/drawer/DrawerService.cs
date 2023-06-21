@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using OneOf;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -14,6 +13,25 @@ namespace AntDesign
         internal event Func<DrawerRef, Task> OnCloseEvent;
 
         internal event Func<DrawerRef, Task> OnUpdateEvent;
+
+
+        private readonly NavigationManager _navigationManager;
+        private readonly IJSRuntime _jsRuntime;
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public DrawerService(NavigationManager navigationManager, IJSRuntime jsRuntime)
+        {
+            _navigationManager = navigationManager;
+            _navigationManager.LocationChanged += NavigationManager_LocationChanged;
+            _jsRuntime = jsRuntime;
+        }
+
+        private void NavigationManager_LocationChanged(object sender, LocationChangedEventArgs e)
+        {
+            _ = _jsRuntime.InvokeVoidAsync(JSInteropConstants.EnableBodyScroll, true);
+        }
 
 
         /// <summary>

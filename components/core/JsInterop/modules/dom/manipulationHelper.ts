@@ -226,8 +226,12 @@ export class manipulationHelper {
     styleHelper.addCls(document.body, "ant-scrolling-effect");
   }
 
-  static enableBodyScroll() {
+  static enableBodyScroll(force: boolean | undefined) {
+    if (force) {
+        state.oldBodyCacheStack = [];
+    }
     let oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
+    
 
     styleHelper.css(document.body,
       {

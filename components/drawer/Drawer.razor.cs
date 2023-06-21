@@ -387,19 +387,13 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             _originalPlacement = Placement;
-
-            // TODO: remove
-            SetClass();
-
             base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
             SetClass();
-
             _drawerStyle = "";
-
             base.OnParametersSet();
         }
 
@@ -517,6 +511,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             _timer?.Dispose();
+            _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
             base.Dispose(disposing);
         }
     }
