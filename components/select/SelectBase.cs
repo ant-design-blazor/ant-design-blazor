@@ -454,10 +454,10 @@ namespace AntDesign
                 return;
             }
 
-            if (!SelectOptionItems.Any())
-            {
-                return;
-            }
+            //if (!SelectOptionItems.Any())
+            //{
+            //    return;
+            //}
 
             if (values == null)
             {
