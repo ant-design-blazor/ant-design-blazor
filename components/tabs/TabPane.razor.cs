@@ -142,7 +142,7 @@ namespace AntDesign
 
             Dispose();
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             Parent?.RemovePane(this);

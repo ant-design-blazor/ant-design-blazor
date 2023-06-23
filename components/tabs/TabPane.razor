@@ -17,7 +17,7 @@
      @onclick="@(e => Parent.HandleTabClick(this))"
      @ondragover:preventDefault="@ondragoverPreventDefault"
      @ondragstart="@(e => Parent.HandleDragStart(e, this))"
-     @ondrop="@(_ => Parent.HandleDrop(this))"     
+     @ondrop="@(_ => Parent.HandleDrop(this))"
      aria-controls="@($"rc-tabs-{Id}-tab-{Key}")"
      aria-selected="@(_isActive)"
      class="@ClassMapper.Class"
