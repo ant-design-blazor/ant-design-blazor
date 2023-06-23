@@ -269,18 +269,6 @@ namespace AntDesign
                         }
                     }
 
-                    if (_columnFilterType == TableFilterType.FieldType)
-                    {
-                        _fieldFilterType = FieldFilterType ?? Table.FieldFilterTypeResolver.Resolve<TData>();
-                        if (DefaultFilters is null)
-                            InitFilters();
-                        else
-                        {
-                            _filters = DefaultFilters;
-                            _hasFilterSelected = DefaultFilters.Any(f => f.Selected);
-                        }
-                    }
-
                     if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
                     {
                         var nullFilterOption = GetNewFilter();
@@ -304,6 +292,18 @@ namespace AntDesign
 
             if (IsHeader)
             {
+                if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
+                {
+                    _fieldFilterType = FieldFilterType ?? Table.FieldFilterTypeResolver.Resolve<TData>();
+                    if (DefaultFilters is null)
+                        ResetFieldFilters();
+                    else
+                    {
+                        _filters = DefaultFilters;
+                        _hasFilterSelected = DefaultFilters.Any(f => f.Selected);
+                    }
+                }
+
                 FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
                     new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType) :
                     null;
@@ -421,7 +421,7 @@ namespace AntDesign
             }
             else
             {
-                InitFilters();
+                ResetFieldFilters();
             }
             FilterConfirm(true);
         }
@@ -456,7 +456,7 @@ namespace AntDesign
             }
         }
 
-        private void InitFilters()
+        private void ResetFieldFilters()
         {
             _filters = new List<TableFilter>() { GetNewFilter() };
         }
