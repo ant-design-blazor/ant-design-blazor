@@ -252,29 +252,41 @@ namespace AntDesign
             get => _selectedValues;
             set
             {
-                if (value != null && _selectedValues != null)
+                if (value != null)
                 {
-                    var hasChanged = !value.SequenceEqual(_selectedValues);
-
-                    if (!hasChanged)
+                    if (_selectedValues != null)
                     {
+                        var hasChanged = !value.SequenceEqual(_selectedValues);
+
+                        if (!hasChanged)
+                        {
+                            return;
+                        }
+
+                        _selectedValues = value;
+                        _ = OnValuesChangeAsync(value);
+                    }
+                    else
+                    {
+                        _selectedValues = value;
+
+                        _ = OnValuesChangeAsync(value);
+                    }
+                }
+                else
+                {
+                    // value is null
+                    if (_selectedValues != null)
+                    {
+                        _selectedValues = null;
+
+                        _ = OnValuesChangeAsync(null);
+                    }
+                    else
+                    {
+                        // Don't notify that the field changed (as both values are null)
                         return;
                     }
-
-                    _selectedValues = value;
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value != null && _selectedValues == null)
-                {
-                    _selectedValues = value;
-
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value == null && _selectedValues != null)
-                {
-                    _selectedValues = default;
-
-                    _ = OnValuesChangeAsync(default);
                 }
 
                 if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
@@ -442,10 +454,10 @@ namespace AntDesign
                 return;
             }
 
-            if (!SelectOptionItems.Any())
-            {
-                return;
-            }
+            //if (!SelectOptionItems.Any())
+            //{
+            //    return;
+            //}
 
             if (values == null)
             {

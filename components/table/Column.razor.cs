@@ -168,6 +168,8 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
+        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

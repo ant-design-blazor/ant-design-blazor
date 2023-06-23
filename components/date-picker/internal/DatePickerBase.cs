@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -462,7 +462,7 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnSelect(DateTime date, int index, bool switchFocus = true, bool closeDropdown = true)
+        protected virtual async Task OnSelect(DateTime date, int index)
         {
             _duringManualInput = false;
 
@@ -478,33 +478,30 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-                            var otherIndex = Math.Abs(index - 1);
 
+                            ChangeValue(date, index, false);
+
+                            var otherIndex = Math.Abs(index - 1);
                             if (_pickerStatus[otherIndex].SelectedValue is not null)
                             {
-                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, closeDropdown);
+                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, true);
                             }
-
-                            ChangeValue(date, index, closeDropdown);
                         }
                     }
                 }
                 else if (!HasTimeInput)
                 {
-                    ChangeValue(date, index, closeDropdown);
+                    ChangeValue(date, index, true);
                 }
 
                 // auto focus the other input
-                if (switchFocus)
+                if (IsRange && !HasTimeInput)
                 {
-                    if (IsRange && !HasTimeInput)
-                    {
-                        await SwitchFocus(index);
-                    }
-                    else
-                    {
-                        await Focus(index);
-                    }
+                    await SwitchFocus(index);
+                }
+                else
+                {
+                    await Focus(index);
                 }
             }
             else
@@ -829,7 +826,7 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index].InitPicker switch
                 {
-                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value,CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };

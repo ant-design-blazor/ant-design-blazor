@@ -15,6 +15,29 @@ timeline: true
 
 ---
 
+### 0.15.1
+
+`2023-06-18`
+
+父亲节快乐！
+
+- Table
+  - 🆕 增加 支持接口类型的 DataSource 子项。[#3297](https://github.com/ant-design-blazor/ant-design-blazor/pull/3297) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在列定义设置了 Fixed 和 Ellipsis 后，文本超长会超出单元格的问题。[#3291](https://github.com/ant-design-blazor/ant-design-blazor/pull/3291) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 空状态团在预渲染时定位不正确的问题，并进少了不必要的 ResizeObserver 订阅。[#3281](https://github.com/ant-design-blazor/ant-design-blazor/pull/3281) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🐞 修复 在使用 SearchExpression 匹配关键字后会抛出异常的问题。[#3274](https://github.com/ant-design-blazor/ant-design-blazor/pull/3274) [@ruyisee](https://github.com/ruyisee)
+  - 🐞 修复 拖拽节点不能修改 DataSource 的问题。[#3275](https://github.com/ant-design-blazor/ant-design-blazor/pull/3275) [@Jtfk](https://github.com/Jtfk)
+
+- 🐞 修复 DatePicker 的 RangePicker 在关闭时会触发两次 OnOpenChange。[#3307](https://github.com/ant-design-blazor/ant-design-blazor/pull/3307) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 Tabs 的 Reusetabs 当有固定标签时，再次导航改标签会重复的问题。[#3306](https://github.com/ant-design-blazor/ant-design-blazor/pull/3306) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 当绑定值变成不在选项中的值后会无限循环的问题。[#3287](https://github.com/ant-design-blazor/ant-design-blazor/pull/3287) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DomEventListener 移除不再订阅共享事件的事件列表，避免再次订阅时没创新事件监听器。[#3278](https://github.com/ant-design-blazor/ant-design-blazor/pull/3278) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 在 `SelectBase.Values` 被设置为null时， `EditContext.NotifyFieldChanged`  调用不正常的问题。[#3277](https://github.com/ant-design-blazor/ant-design-blazor/pull/3277) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 📖 更新 Statistic 文档，增加自定义数字分组和小数点符号的示例。[#3166](https://github.com/ant-design-blazor/ant-design-blazor/pull/3166) [@Alerinos](https://github.com/Alerinos)
+
+
 ### 0.15.0
 
 `2023-05-21`
