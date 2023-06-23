@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -141,7 +142,7 @@ namespace AntDesign
 
             Dispose();
         }
-
+        
         protected override void Dispose(bool disposing)
         {
             Parent?.RemovePane(this);
@@ -188,6 +189,14 @@ namespace AntDesign
 
             _shouldTabRender = true;
             StateHasChanged();
+        }
+        
+        private async Task HandleEnterPressed(KeyboardEventArgs e)
+        {
+            if (e.Code is "Enter" or "NumpadEnter")
+            {
+                await Parent.HandleTabClick(this);
+            }
         }
     }
 }
