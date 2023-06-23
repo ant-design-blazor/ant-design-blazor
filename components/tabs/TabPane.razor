@@ -12,24 +12,24 @@
     var onclickStopPropagation = !_isActive;
 
     <div @key="Key"
-         @ref="_tabRef"
-         @onclick:stopPropagation="@onclickStopPropagation"
-         @onclick="@(e => Parent.HandleTabClick(this))"
-         @ondragover:preventDefault="@ondragoverPreventDefault"
-         @ondragstart="@(e => Parent.HandleDragStart(e, this))"
-         @ondrop="@(_ => Parent.HandleDrop(this))"
-         aria-controls="@($"rc-tabs-{Id}-tab-{Key}")"
-         aria-selected="@(_isActive)"
-         class="@ClassMapper.Class"
-         draggable="@Parent.Draggable.ToString()"
-         id="@($"rc-tabs-{Id}-tab-{Key}")"
-         ondragover="event.preventDefault();">
-        <div
+     @ref="_tabRef"
+     @onclick:stopPropagation="@onclickStopPropagation"
+     @onclick="@(e => Parent.HandleTabClick(this))"
+     @ondragover:preventDefault="@ondragoverPreventDefault"
+     @ondragstart="@(e => Parent.HandleDragStart(e, this))"
+     @ondrop="@(_ => Parent.HandleDrop(this))"     
+     aria-controls="@($"rc-tabs-{Id}-tab-{Key}")"
+     aria-selected="@(_isActive)"
+     class="@ClassMapper.Class"
+     draggable="@Parent.Draggable.ToString()"
+     id="@($"rc-tabs-{Id}-tab-{Key}")"
+     ondragover="event.preventDefault();">
+        <div 
             @onkeydown="@HandleEnterPressed"
-            role="tab"
-            aria-selected="false"
-            class="ant-tabs-tab-btn"
-            tabindex="0">
+            role="tab" 
+             aria-selected="false" 
+             class="ant-tabs-tab-btn" 
+             tabindex="0">
             @if (TabTemplate != null)
             {
                 @TabTemplate
@@ -42,14 +42,14 @@
         @if (Parent.Type == TabType.EditableCard && Closable)
         {
             <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
-                <Icon Type="close"/>
+                <Icon Type="close" />
             </button>
         }
     </div>
 
     @if (TabContextMenu != null)
     {
-        <Dropdown Trigger="new[] { Trigger.ContextMenu }" TriggerReference="_tabRef">
+        <Dropdown Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
             <Overlay>
                 @TabContextMenu
             </Overlay>
@@ -59,12 +59,12 @@
 else if (IsPane)
 {
     <div @key="Key"
-         tabindex="@(_isActive ? "0" : "-1")"
-         class="ant-tabs-tabpane @(_isActive ? "ant-tabs-tabpane-active" : "")"
-         id="@($"rc-tabs-{Id}-panel-{Key}")"
-         role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
-         aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-         style="@(_isActive ? "" : Parent.Animated ? "visibility: hidden; height: 0px; overflow-y: hidden;" : "display: none;")">
+     tabindex="@(_isActive ? "0" : "-1")"
+     class="ant-tabs-tabpane @(_isActive ? "ant-tabs-tabpane-active" : "")"
+     id="@($"rc-tabs-{Id}-panel-{Key}")"
+     role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
+     aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
+     style="@(_isActive  ? "" : Parent.Animated? "visibility: hidden; height: 0px; overflow-y: hidden;":"display: none;")">
         @if (_isActive || _hasRendered || ForceRender)
         {
             _hasRendered = true;
