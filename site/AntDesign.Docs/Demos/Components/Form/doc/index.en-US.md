@@ -14,7 +14,7 @@ High performance Form component with data scope management. Including data colle
 - When you need to validate fields in certain rules.
 
 ## API
-### From
+### Form
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | Layout | Form Layout | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
@@ -31,7 +31,8 @@ High performance Form component with data scope management. Including data colle
 | OnFinish | Submit Event | EventCallback\<EditContext\> |-|
 | OnFinishFailed | Submission failure (verification failure) callback event | EventCallback\<EditContext\> |-|
 | ValidateOnChange | Whether to verify when changing | bool | false |
-### FromItem
+| RequiredMark | Change how required/optional field labels are displayed on the form. | FormRequiredMark | FormRequiredMark.Required |
+### FormItem
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | Label | **label** Label text | string | Display or DisplayName characteristics of the input component |

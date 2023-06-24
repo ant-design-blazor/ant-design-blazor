@@ -125,5 +125,8 @@
   },
   "Empty": {
     "description": "Ni podatkov"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

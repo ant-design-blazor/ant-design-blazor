@@ -429,6 +429,9 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        [Parameter]
+        public bool HideUnmatched { get; set; }
+
         private void SearchNodes()
         {
             var allList = _allNodes.ToList();
@@ -448,12 +451,30 @@ namespace AntDesign
 
             if (exceptList?.Any() == true || searchDatas?.Any() == true)
             {
-                exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
-                searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
+                exceptList?.ForEach(m =>
+                {
+                    m.Expand(false);
+                    m.Matched = false;
+                    if (HideUnmatched)
+                        m.Hidden = true;
+                });
+
+                foreach (TreeNode<TItem> matchedNode in searchDatas)
+                {
+                    matchedNode.OpenPropagation(true);
+                    matchedNode.Matched = true;
+                }
             }
             else
             {
-                allList.ForEach(m => { m.Expand(false); m.Matched = false; });
+                var hide = HideUnmatched && !string.IsNullOrWhiteSpace(_searchValue);
+                var expand = DefaultExpandAll && string.IsNullOrWhiteSpace(_searchValue);
+                allList.ForEach(m =>
+                {
+                    m.Expand(expand);
+                    m.Matched = false;
+                    m.Hidden = hide;
+                });
             }
         }
 
@@ -652,6 +673,12 @@ namespace AntDesign
             }
             return base.OnFirstAfterRenderAsync();
         }
+        
+        /// <summary>
+        /// Get TreeNode from Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x=>x.Key == key);
 
         /// <summary>
         /// Find Node

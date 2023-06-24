@@ -200,6 +200,6 @@ namespace AntDesign
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
-        private int GetPickerIndex() => IsRange && !IsShowTime ? DatePicker.GetOnFocusPickerIndex() : PickerIndex;
+        protected int GetPickerIndex() => IsRange && !IsShowTime ? DatePicker.GetOnFocusPickerIndex() : PickerIndex;
     }
 }

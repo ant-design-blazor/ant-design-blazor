@@ -37,8 +37,6 @@ namespace AntDesign
 
         protected AntDomComponentBase()
         {
-            ClassMapper
-                .Get(() => this.Class);
         }
 
         protected override void OnInitialized()

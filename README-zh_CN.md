@@ -10,7 +10,7 @@
 
 一套基于 Ant Design 和 Blazor 的企业级组件库
 
-![Build](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/ant-design-blazor/ant-design-blazor/nightly-build.yml?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
@@ -29,11 +29,11 @@
 
 - 🌈 提炼自企业级中后台产品的交互语言和视觉风格。
 - 📦 开箱即用的高质量 Blazor 组件，可在多种托管方式共享。
-- 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
+- 💕 支持基于 WebAssembly 的前端和基于 SignalR 的服务端 UI 即时交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET Standard 2.1 / .NET 5 / .NET 6，可直接引用丰富的 .NET 类库。
-- 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
+- ⚙️ 支持 .NET Core 3.1 以上所有版本，可直接引用丰富的 .NET 类库。
+- 🌍 数十个国际化语言支持。
 - 💴 基于 MIT 开源协议，.NET 基金会项目，商业应用免费。
 
 ## 🌈 在线示例
@@ -44,17 +44,11 @@ WebAssembly 静态托管页面示例
 
 ## 🖥 支持环境
 
-- 兼容 .NET Core 3.1 / .NET 5 / .NET 6。
-- Blazor WebAssembly 3.2 /.NET 5 /.NET 6 正式版。
-- 支持服务端双向绑定。
+- 支持 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 。
 - 支持 WebAssembly 静态文件部署。
-- 主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)）。
-- 可直接运行在 [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987)、[WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)、[Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) 等 Blazor 混合客户端环境中。
-- 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上。
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                                                          Edge 16 / IE 11†                                                                                           |                                                                                                 522                                                                                                  |                                                                                                57                                                                                                |                                                                                                11                                                                                                |                                                                                              44                                                                                              |                                                                                               Chromium 57                                                                                                |
+- 支持主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)）。
+- 支持 [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987)、[WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)、[Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) 等 Blazor 混合客户端环境中。
+- 支持 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上。
 
 > 由于 [WebAssembly](https://webassembly.org) 的限制，Blazor WebAssembly 不支持 IE 浏览器，但 Blazor Server 支持 IE 11†。 详见[官网说明](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)。
 
@@ -65,13 +59,15 @@ WebAssembly 静态托管页面示例
 - 正式发布： [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 - 每日构建: [![AntDesign](https://img.shields.io/myget/ant-design-blazor/vpre/AntDesign?style=flat-square)](https://www.myget.org/feed/ant-design-blazor/package/nuget/AntDesign)
 
-  _[如何安装每日构建版本](docs/nightly-build.zh-CN.md)_
+  _[了解如何安装每日构建版本](docs/nightly-build.zh-CN.md)_
 
 ## 🎨 设计规范
 
 与 Ant Design 设计规范定期同步，你可以在线查看[同步日志](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22)。
 
 因此，你可以直接使用在 Ant Design 中的自定义主题样式。
+
+**在 1.0 版本发布之前，我们将只同步 antd 4.x 的样式。**
 
 ## 📦 安装
 
@@ -133,7 +129,7 @@ WebAssembly 静态托管页面示例
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
 
-  ```
+  ```diff
   <Router AppAssembly="@typeof(MainLayout).Assembly">
       <Found Context="routeData">
           <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -145,7 +141,7 @@ WebAssembly 静态托管页面示例
       </NotFound>
   </Router>
 
-  <AntContainer />   <-- 在这里添加 ✨
+  + <AntContainer />   <-- 在这里添加 ✨
   ```
 
 - 最后就可以在`.razor`组件中引用啦！
@@ -154,7 +150,7 @@ WebAssembly 静态托管页面示例
   <Button Type="primary">Hello World!</Button>
   ```
 
-## ⌨️ 开发
+## 🔨  开发
 
 ### Gitpod
 
@@ -164,7 +160,7 @@ WebAssembly 静态托管页面示例
 
 ### 本地
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/6.0?WT.mc_id=DT-MVP-5003987) 6.0.100 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/7.0?WT.mc_id=DT-MVP-5003987) 7.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
@@ -182,28 +178,22 @@ WebAssembly 静态托管页面示例
 
 ## 🔗 链接
 
-- [文档主页](https://ant-design-blazor.gitee.io)
+- [文档主页](https://antblazor.com)
 - [Ant Design Blazor 商业应用调查](https://wj.qq.com/s2/10306537/c332/)
 - [Blazor 官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn 平台 Blazor 教程](https://docs.microsoft.com/zh-cn/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 
 ## 🗺 开发路线
 
-查看[这个 issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
+查看[这个 issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) 来了解我们在 1.0 版本的开发计划。
+
+另外也可以关注这个 [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/2870) 了解我们关于将来对 antd 5.0 适配的讨论和最新进展。
 
 ## 🤝 如何贡献
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/pulls)
 
 如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ant-design-blazor/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ant-design-blazor/ant-design-blazor/issues/new) 。
-
-### 贡献者
-
-感谢所有为本项目做出过贡献的朋友。
-
-<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor" />
-</a>
 
 ## 💕 支持本项目
 
@@ -226,6 +216,14 @@ WebAssembly 静态托管页面示例
   <img src="/docs/assets/dingtalk.jpg" width="200">
 
 - 另外，我还创立了面向中文开发者的 Blazor 中文社区，高手如云，只讨论技术，无卖课广告。可以加我微信（JamesYeungMVP）拉进微信群，另外也有一个 QQ 群 1012762441。广告勿扰。
+
+## 贡献者
+
+感谢所有为本项目做出过贡献的朋友。
+
+<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor&max=1000&columns=15&anon=1" />
+</a>
 
 ## 行为准则
 

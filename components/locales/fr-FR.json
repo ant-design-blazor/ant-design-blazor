@@ -143,5 +143,8 @@
     "copy": "copier",
     "copied": "copie effectuée",
     "expand": "développer"
+  },
+  "Form": {
+    "optional": "(optionnel)"
   }
 }

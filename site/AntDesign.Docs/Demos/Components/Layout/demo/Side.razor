@@ -1,5 +1,5 @@
 ﻿<Layout Style="min-height: 100vh; ">
-    <Sider Collapsible Collapsed=@collapsed OnCollapse=@onCollapse>
+    <Sider Collapsible>
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
             <MenuItem Key="1">
@@ -52,16 +52,6 @@
         <Footer Style="text-align:center ">Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
 </Layout>
-
-
-@code {
-    bool collapsed;
-
-   void onCollapse(bool collapsed) {
-        Console.WriteLine(collapsed);
-        this.collapsed =collapsed;
-    }
-}
 
 
 <style>

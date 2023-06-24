@@ -173,6 +173,10 @@
                         transform: rotate(405deg);
                     }
                 }
+
+                .loading-progress-text:after {
+                    content: var(--blazor-load-percentage-text, "Loading");
+                }
             </style>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
                 <img src="/logo.png" alt="logo" width="256">
@@ -187,7 +191,7 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <img src="/logo.png" width="32" style="margin-right: 8px;"> Ant Design of Blazor
+                    <div class="loading-progress-text"></div>
                 </div>
             </div>
         </div>

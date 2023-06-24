@@ -216,11 +216,18 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        [Obsolete]
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         /// <summary>
         /// Called when  clear button clicked.
         /// </summary>
         [Parameter]
-        public EventCallback OnClearClick { get; set; }
+        public EventCallback OnClear { get; set; }
+
+        [Parameter]
+        public EventCallback OnOk { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
@@ -229,7 +236,7 @@ namespace AntDesign
         public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
 
         [Parameter]
-        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+        public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         [Parameter]
         public Func<DateTime, int[]> DisabledHours { get; set; } = null;
@@ -362,9 +369,8 @@ namespace AntDesign
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
-                .If($"{PrefixCls}-status-error", () => ValidationMessages.Length > 0)
-               //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
-               //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
+                .If($"{PrefixCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                ;
 
             _panelClassMapper
@@ -392,7 +398,7 @@ namespace AntDesign
                 else if (_inputEnd.IsOnFocused)
                 {
                     HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
-                    int translateDistance = element.ClientWidth + 16;
+                    decimal translateDistance = element.ClientWidth + 16;
 
                     if (RTL)
                     {
@@ -456,7 +462,7 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnSelect(DateTime date, int index, bool switchFocus = true, bool closeDropdown = true)
+        protected virtual async Task OnSelect(DateTime date, int index)
         {
             _duringManualInput = false;
 
@@ -472,33 +478,30 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-                            var otherIndex = Math.Abs(index - 1);
 
+                            ChangeValue(date, index, false);
+
+                            var otherIndex = Math.Abs(index - 1);
                             if (_pickerStatus[otherIndex].SelectedValue is not null)
                             {
-                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, closeDropdown);
+                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, true);
                             }
-
-                            ChangeValue(date, index, closeDropdown);
                         }
                     }
                 }
                 else if (!HasTimeInput)
                 {
-                    ChangeValue(date, index, closeDropdown);
+                    ChangeValue(date, index, true);
                 }
 
                 // auto focus the other input
-                if (switchFocus)
+                if (IsRange && !HasTimeInput)
                 {
-                    if (IsRange && !HasTimeInput)
-                    {
-                        await SwitchFocus(index);
-                    }
-                    else
-                    {
-                        await Focus(index);
-                    }
+                    await SwitchFocus(index);
+                }
+                else
+                {
+                    await Focus(index);
                 }
             }
             else
@@ -548,6 +551,8 @@ namespace AntDesign
 
                 Close();
             }
+
+            await OnOk.InvokeAsync(null);
         }
 
         internal void OnRangeItemOver(DateTime?[] range)
@@ -821,7 +826,7 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index].InitPicker switch
                 {
-                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value, Locale.FirstDayOfWeek)}{Locale.Lang.Week}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };
@@ -1002,5 +1007,7 @@ namespace AntDesign
             ChangeValue(DateTime.Now, GetOnFocusPickerIndex());
             Close();
         }
+
+        protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
     }
 }

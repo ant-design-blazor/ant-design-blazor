@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Назад" },
   "Form": {
+    "optional": "(необязательный)",
     "defaultValidateMessages": {
       "default": "Ошибка при проверке поля ${label}",
       "required": "Пожалуйста введите ${label}",

@@ -1,40 +1,71 @@
-﻿@inject NotificationService _notice
+﻿@inject INotificationService _notice
 
-<div>
-    <Button Type="@ButtonType.Primary" OnClick="@OnTopLeftClick">
-        <Icon Type="Radius-Upleft" Theme="Outline"></Icon>
-        TopLeft
-    </Button>
+<Space>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnTopClick">
+            <Icon Type="border-top" Theme="Outline"/>
+            Top
+        </Button>
+    </SpaceItem>
+    
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnBottomClick">
+            <Icon Type="border-bottom" Theme="Outline"/>
+            Bottom
+        </Button>
+    </SpaceItem>
+</Space>
+<Divider />
 
-    <Button Type="@ButtonType.Primary" OnClick="@OnTopRightClick">
-        <Icon Type="Radius-Upright" Theme="Outline"></Icon>
-        TopRight
-    </Button>
-</div>
+<Space>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnTopLeftClick">
+            <Icon Type="radius-upleft" Theme="outline" />
+            TopLeft
+        </Button>
+    </SpaceItem>
 
-<br/>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnTopRightClick">
+            <Icon Type="radius-upright" Theme="outline" />
+            TopRight
+        </Button>
+    </SpaceItem>
+</Space>
+<Divider />
 
-<div>
-    <Button Type="@ButtonType.Primary" OnClick="@OnBottomLeftClick">
-        <Icon Type="Radius-Bottomleft" Theme="Outline"></Icon>
-        BottomLeft
-    </Button>
 
-    <Button Type="@ButtonType.Primary" OnClick="@OnBottomRightClick">
-        <Icon Type="Radius-Bottomright" Theme="Outline"></Icon>
-        BottomRight
-    </Button>
-</div>
+<Space>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnBottomLeftClick">
+            <Icon Type="radius-bottomleft" Theme="outline" />
+            BottomLeft
+        </Button>
+    </SpaceItem>
+
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@OnBottomRightClick">
+            <Icon Type="radius-bottomright" Theme="outline" />
+            BottomRight
+        </Button>
+    </SpaceItem>
+</Space>
+
 
 @code {
     private async Task OpenWithPlacement(NotificationPlacement placement)
     {
-        await _notice.Open(new NotificationConfig()
-        {
-            Message = $"Notification {placement}",
-            Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-            Placement = placement
-        });
+        var config = new NotificationConfig()
+            {
+                Message = $"Notification {placement} {DateTime.Now :O}",
+                Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+                Placement = placement
+            };
+#if DEBUG
+        config.Duration = 0;
+#endif
+
+        await _notice.Open(config);
     }
 
     private async Task OnTopLeftClick()
@@ -55,5 +86,15 @@
     private async Task OnBottomRightClick()
     {
         await OpenWithPlacement(NotificationPlacement.BottomRight);
+    }
+
+    private async Task OnBottomClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.Bottom);
+    }
+
+    private async Task OnTopClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.Top);
     }
 }

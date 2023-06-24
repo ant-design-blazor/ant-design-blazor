@@ -54,10 +54,10 @@
         </Overlay>
         <Unbound>
             <CascadingValue Value="this" IsFixed="@true">
-                <CascadingValue Value="context" Name="OverlayTriggerContext">
+                <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput />
                     }
                     else
                     {

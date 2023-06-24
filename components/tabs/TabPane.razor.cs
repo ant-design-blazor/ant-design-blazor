@@ -54,19 +54,23 @@ namespace AntDesign
 
         [Parameter]
         public bool Closable { get; set; } = true;
+
         internal bool IsActive => _isActive;
 
         private bool HasTabTitle => Tab != null || TabTemplate != null;
 
         internal ElementReference TabRef => _tabRef;
 
+        private ClassMapper _tabPaneClassMapper = new();
+
         private const string PrefixCls = "ant-tabs-tab";
+        private const string TabPanePrefixCls = "ant-tabs-tabpane";
 
         private ElementReference _tabRef;
         private bool _isActive;
-        private bool _shouldRender;
-        private bool _shouldTabRender;
+
         private bool _hasClosed;
+
         private bool _hasRendered;
 
         protected override void OnInitialized()
@@ -86,27 +90,6 @@ namespace AntDesign
             {
                 _hasRendered = true;
             }
-
-            _shouldRender = false;
-            _shouldTabRender = false;
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            _shouldRender = true;
-            _shouldTabRender = true;
-        }
-
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            // Avoid changes in tab as we modify the properties used for display when drag and drop occurs
-            if (IsTab && _hasRendered)
-            {
-                return;
-            }
-
-            await base.SetParametersAsync(parameters);
         }
 
         private void SetClass()
@@ -116,6 +99,12 @@ namespace AntDesign
                 .If($"{PrefixCls}-active", () => _isActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
+
+            _tabPaneClassMapper
+                .Add(TabPanePrefixCls)
+                .If($"{TabPanePrefixCls}-active", () => _isActive)
+                .If($"{TabPanePrefixCls}-hidden", () => !_isActive)
+                ;
         }
 
         internal void SetKey(string key)
@@ -128,7 +117,6 @@ namespace AntDesign
             if (_isActive != isActive)
             {
                 _isActive = isActive;
-                _shouldTabRender = true;
                 InvokeAsync(StateHasChanged);
             }
         }
@@ -136,9 +124,6 @@ namespace AntDesign
         internal void Close()
         {
             _hasClosed = true;
-
-            _shouldTabRender = true;
-            _shouldRender = true;
 
             Dispose();
         }
@@ -148,16 +133,6 @@ namespace AntDesign
             Parent?.RemovePane(this);
 
             base.Dispose(disposing);
-        }
-
-        protected override bool ShouldRender()
-        {
-            if (IsTab)
-            {
-                return _shouldTabRender;
-            }
-
-            return _shouldRender;
         }
 
         internal void ExchangeWith(TabPane other)
@@ -187,7 +162,6 @@ namespace AntDesign
             Disabled = tabPane.Disabled;
             Closable = tabPane.Closable;
 
-            _shouldTabRender = true;
             StateHasChanged();
         }
         

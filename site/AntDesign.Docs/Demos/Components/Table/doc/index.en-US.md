@@ -15,8 +15,17 @@ A table displays rows of data.
 
 ## How To Use
 
-Specify `dataSource` of Table as an array of data.
+Specify `dataSource` of Table as an array of data, the `OnChange` event and its incoming query state can be paged and filtered.
 
+### Two data column types
+
+- **PropertyColumn** inherits from Column and is bound with 'Property="c=> c.User.Name "' to support cascading access.  If used below .NET 6, need to specify the type of 'TItem', 'TProp'.
+- **Column** bound with `@bind-Field="context.UserName"`, but does not support cascading access to class attributes (for example, `context.User.Name`), but it can be bound with `DataIndex="'User.Name'"`.
+
+### Other column types
+
+- **ActionColumn** for operation buttons or template, would not bind the data.
+- **Selection** for add checkboxes for row selection.
 
 ## API
 | Parameter             | Instruction             | Type                         | Defaults |
@@ -53,6 +62,9 @@ Specify `dataSource` of Table as an array of data.
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
 
 ### Column
+
+The Column definition of the previous version, For .NET 6 and above, `PropertyColumn` is recommended.
+
 | Parameter             | Instruction             | Type                         | Defaults |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | FieldChanged | Field change event | EventCallback<TData | - |
@@ -70,6 +82,14 @@ Specify `dataSource` of Table as an array of data.
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
+
+### PropertyColumn
+
+Inherit from `Column`.
+
+| Parameter             | Instruction             | Type                         | Defaults |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Property         |  Defines the value to be displayed in this column's cells. | Expression<Func<TItem, TProp>> | - |
 
 ### Responsive
 

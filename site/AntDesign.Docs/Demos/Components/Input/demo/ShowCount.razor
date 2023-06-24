@@ -1,0 +1,13 @@
+﻿<div>
+    <AntDesign.Input TValue="string" ShowCount MaxLength="20" OnChange="OnChange" AllowClear Suffix="@("RMB".ToRenderFragment())" />
+    <br />
+    <br />
+    <TextArea ShowCount MaxLength="100" OnChange="OnChange" />
+</div>
+
+@code {
+    void OnChange(string value)
+    {
+        Console.WriteLine(value);
+    }
+}

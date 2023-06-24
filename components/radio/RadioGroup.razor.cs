@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TValue))]
+#endif
+
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
-
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
@@ -61,6 +65,7 @@ namespace AntDesign
         private bool _defaultValueSetted;
 
         private readonly List<Radio<TValue>> _radioItems = new();
+        private Radio<TValue> _selectedRadio;
 
         private static readonly Dictionary<RadioButtonStyle, string> _buttonStyleDics = new()
         {
@@ -108,8 +113,7 @@ namespace AntDesign
             }
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
-                await radio.Select();
-                StateHasChanged();
+                OnValueChange(radio.Value);
             }
         }
 
@@ -119,20 +123,28 @@ namespace AntDesign
             OnDisabledValueChanged -= radio.SetDisabledValue;
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnValueChange(TValue value)
         {
+            if (_selectedRadio != null && EqualsValue(CurrentValue, _selectedRadio.Value))
+            {
+                return;
+            }
+
+            _ = _selectedRadio?.UnSelect();
+            _selectedRadio = null;
+
             foreach (var radio in _radioItems)
             {
                 if (EqualsValue(this.CurrentValue, radio.Value))
                 {
-                    await radio.Select();
+                    _ = radio.Select();
+                    _selectedRadio = radio;
                 }
                 else
                 {
-                    await radio.UnSelect();
+                    _ = radio.UnSelect();
                 }
             }
-            await base.OnParametersSetAsync();
         }
 
         internal async Task OnRadioChange(TValue value)

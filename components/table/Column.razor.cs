@@ -160,6 +160,8 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
+        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -200,7 +202,10 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+                if (!Table.HasRowTemplate)
+                {
+                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                }
 
                 if (DataIndex != null)
                 {
@@ -242,17 +247,13 @@ namespace AntDesign
                     {
                         _columnFilterType = TableFilterType.List;
 
-                        _filters = new List<TableFilter>();
-
-                        foreach (var enumValue in Enum.GetValues(_columnDataType))
+                        _filters = EnumHelper<TData>.GetValueLabelList().Select(item =>
                         {
-                            var enumName = Enum.GetName(_columnDataType, enumValue);
                             var filterOption = GetNewFilter();
-                            // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
-                            filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                            filterOption.Value = enumValue;
-                            ((List<TableFilter>)_filters).Add(filterOption);
-                        }
+                            filterOption.Text = item.Label;
+                            filterOption.Value = item.Value;
+                            return filterOption;
+                        }).ToList();
                     }
                     else
                     {
@@ -462,7 +463,7 @@ namespace AntDesign
 
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                foreach (var filter in _filters.Where(f => filterModel.Filters.Any(x => x.Value.Equals(f.Value))))
                 {
                     filter.Selected = true;
                 }

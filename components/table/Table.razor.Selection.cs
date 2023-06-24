@@ -76,6 +76,7 @@ namespace AntDesign
         public void SelectAll()
         {
             _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
+            _preventRowDataSelectedChangedCallback = true;
             _preventRowDataTriggerSelectedRowsChanged = true;
             _preventChangeRowDataWithSameData = true;
             foreach (var rowDataList in _allRowDataCache.Values)
@@ -85,6 +86,7 @@ namespace AntDesign
                     rowData.Selected = true;
                 }
             }
+            _preventRowDataSelectedChangedCallback = false;
             _preventRowDataTriggerSelectedRowsChanged = false;
             _preventChangeRowDataWithSameData = false;
             if (_selection != null)

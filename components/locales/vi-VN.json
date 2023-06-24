@@ -125,5 +125,8 @@
   },
   "Empty": {
     "description": "Trống"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

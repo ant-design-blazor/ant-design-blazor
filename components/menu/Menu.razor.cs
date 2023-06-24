@@ -21,6 +21,7 @@ namespace AntDesign
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         internal MenuMode? InitialMode { get; private set; }
+
         [Parameter]
         public MenuMode Mode
         {
@@ -79,8 +80,8 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
-
         private string[] _openKeysCopy = Array.Empty<string>();
+
         [Parameter]
         public string[] OpenKeys
         {
@@ -119,6 +120,9 @@ namespace AntDesign
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
+        [Parameter]
+        public bool ShowCollapsedTooltip { get; set; } = true;
+
         internal MenuMode InternalMode { get; private set; }
 
         private string[] _openKeys;
@@ -131,10 +135,16 @@ namespace AntDesign
 
         public void SelectItem(MenuItem item)
         {
+            if (Overlay != null && AutoCloseDropdown)
+            {
+                Overlay.Hide(true);
+            }
+
             if (item == null || item.IsSelected)
             {
                 return;
             }
+
             var selectedKeys = new List<string>();
             bool skipParentSelection = false;
             if (!Multiple)
@@ -166,11 +176,6 @@ namespace AntDesign
 
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
-
-            if (Overlay != null && AutoCloseDropdown)
-            {
-                Overlay.Hide(true);
-            }
         }
 
         public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)

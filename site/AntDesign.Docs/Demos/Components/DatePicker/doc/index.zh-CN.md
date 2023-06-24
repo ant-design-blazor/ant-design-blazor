@@ -50,7 +50,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | popupStyle | 额外的弹出日历样式 | CSSProperties | {} |  |
 | size | 输入框大小，`large` 高度为 40px，`small` 为 24px，默认是 32px | `large` \| `middle` \| `small` | 无 |  |
 | bordered | 是否有边框 | Boolean | true |  |
-| suffixIcon | 自定义的选择框后缀图标 | ReactNode | - |  |
+| SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
 | style | 自定义输入框样式 | CSSProperties | {} |  |
 | onOpenChange | 弹出日历和关闭日历的回调 | function(open) | 无 |  |
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |
@@ -78,7 +78,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | showToday | 是否展示“今天”按钮 | boolean | true |  |
 | value | 日期 | [moment](http://momentjs.com/) | 无 |  |
 | onChange | 时间发生变化的回调 | function(date: moment, dateString: string) | 无 |  |
-| onOk（TODO） | 点击确定按钮的回调 | function() | - |  |
+| onOk | 点击确定按钮的回调 | function() | - |  |
 | onPanelChange | 日期面板变化时的回调 | function(value, mode) | - |  |
 
 ### YearPicker

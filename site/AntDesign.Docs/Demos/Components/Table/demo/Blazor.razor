@@ -8,7 +8,8 @@
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        @bind-SelectedRows="selectedRows"
-       OnChange="OnChange">
+       OnChange="OnChange"
+       Size="TableSize.Small">
   <Selection Key="@(context.Id.ToString())" />
   <PropertyColumn Property="c=>c.Id" Sortable />
   <PropertyColumn Property="c=>c.Date" Format="yyyy-MM-dd" Sortable />
@@ -18,7 +19,7 @@
     <Switch @bind-Value="@context.Hot"></Switch>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Summary" Sortable />
-  <ActionColumn>
+  <ActionColumn Title="Action">
     <Space>
       <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
     </Space>
