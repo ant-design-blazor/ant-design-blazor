@@ -61,12 +61,15 @@ namespace AntDesign
 
         internal ElementReference TabRef => _tabRef;
 
+        internal ElementReference TabBtnRef => _tabBtnRef;
+
         private ClassMapper _tabPaneClassMapper = new();
 
         private const string PrefixCls = "ant-tabs-tab";
         private const string TabPanePrefixCls = "ant-tabs-tabpane";
 
         private ElementReference _tabRef;
+        private ElementReference _tabBtnRef;
         private bool _isActive;
 
         private bool _hasClosed;
@@ -164,13 +167,10 @@ namespace AntDesign
 
             StateHasChanged();
         }
-        
-        private async Task HandleEnterPressed(KeyboardEventArgs e)
+
+        private Task HandleKeydown(KeyboardEventArgs e)
         {
-            if (e.Code is "Enter" or "NumpadEnter")
-            {
-                await Parent.HandleTabClick(this);
-            }
+            return Parent?.HandleKeydown(e, this);
         }
     }
 }
