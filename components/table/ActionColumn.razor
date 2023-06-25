@@ -4,6 +4,14 @@
 
 @inherits ColumnBase
 
+@if (IsHeaderTemplate)
+{
+    @RenderHeader();
+}
+else if (IsRowTemplate)
+{
+    @RenderBody(RowData);
+}
 
 @code
 {
@@ -36,8 +44,9 @@
             }
         };
     }
+    RenderFragment IRenderColumn.RenderHeader() => RenderHeader();
 
-    RenderFragment IRenderColumn.RenderHeader()
+    RenderFragment RenderHeader()
     {
         return builder =>
         {
@@ -59,8 +68,8 @@
     );
         };
     }
-
-    RenderFragment IRenderColumn.RenderBody(RowData rowData)
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+    RenderFragment RenderBody(RowData rowData)
     {
         return builder =>
         {

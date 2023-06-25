@@ -27,27 +27,16 @@
     }
 }
 
-@if (_columnContext != null)
-{
-    <CascadingValue Value="_columnContext">
-        @ChildContent
-    </CascadingValue>
-
-    _columnContext.HeaderColumnInitialed();
-}
-
-
 @if (IsBody)
 {
     <tr @attributes="attributes"
         data-row-key="@(RowData.RowIndex)" 
         class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
-        @if (_columnContext != null)
+        @if (IsRowTemplate)
         {
-            foreach (var item in _columnContext.Columns.OfType<IRenderColumn>())
-            {
-               @item.RenderBody(RowData)
-            }
+            <CascadingValue Value="RowData" IsFixed>
+                @ChildContent
+            </CascadingValue>
         }
         else
         {
@@ -58,12 +47,11 @@
 else if (IsHeader)
 {
     <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
-        @if (_columnContext != null)
+        @if (IsHeaderTemplate)
         {
-            foreach (var item in _columnContext.Columns.OfType<IRenderColumn>())
-            {
-                @item.RenderHeader()
-            }
+            <CascadingValue Value="RowData" IsFixed>
+                @ChildContent
+            </CascadingValue>
         }
         else
         {
@@ -83,11 +71,17 @@ else if (IsHeader)
     [CascadingParameter(Name = "IsHeader")]
     public bool IsHeader { get; set; }
 
-    [CascadingParameter(Name = "Table")]
-    public ITable Table { get; set; }
-
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
+
+    [CascadingParameter(Name = "IsHeaderTemplate")]
+    public bool IsHeaderTemplate { get; set; }
+
+    [CascadingParameter(Name = "IsRowTemplate")]
+    public bool IsRowTemplate{ get; set; }
+
+    [CascadingParameter(Name = "Table")]
+    public ITable Table { get; set; }
 
     [CascadingParameter(Name = "RowData")]
     public RowData RowData { get; set; }
@@ -106,16 +100,4 @@ else if (IsHeader)
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> AdditionalAttributes { get; set; }
-
-    private ColumnContext _columnContext;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        if (Table != null)
-        {
-            _columnContext ??= new ColumnContext(Table);
-        }
-    }
 }

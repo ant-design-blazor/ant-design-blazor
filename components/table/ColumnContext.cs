@@ -9,7 +9,13 @@ namespace AntDesign
     {
         public IList<IColumn> Columns { get; set; } = new List<IColumn>();
 
-        private int _currentColIndex;
+        public IList<IColumn> HeaderColumns { get; set; } = new List<IColumn>();
+
+        public IList<IColumn> RowColumns { get; set; } = new List<IColumn>();
+
+        private int CurrentColIndex { get; set; }
+
+        private int[] ColIndexOccupied { get; set; }
 
         private ITable _table;
 
@@ -26,8 +32,88 @@ namespace AntDesign
             }
 
             column.Table = _table;
-            column.ColIndex = _currentColIndex++;
+            column.ColIndex = CurrentColIndex++;
             Columns.Add(column);
+        }
+
+        public void AddHeaderColumn(IColumn column)
+        {
+            if (column == null)
+            {
+                return;
+            }
+
+            var columnSpan = column.HeaderColSpan;
+            if (column.RowSpan == 0) columnSpan = 0;
+
+            do
+            {
+                if (++CurrentColIndex >= Columns.Count)
+                {
+                    CurrentColIndex = 0;
+                    if (ColIndexOccupied != null)
+                    {
+                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        {
+                            if (item > 0) item--;
+                        }
+                    }
+                }
+            }
+            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+
+            column.ColIndex = CurrentColIndex;
+            HeaderColumns.Add(column);
+            CurrentColIndex += columnSpan - 1;
+
+            if (column.RowSpan > 1)
+            {
+                ColIndexOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                {
+                    ColIndexOccupied[i] = column.RowSpan;
+                }
+            }
+        }
+
+        public void AddRowColumn(IColumn column)
+        {
+            if (column == null)
+            {
+                return;
+            }
+
+            var columnSpan = column.ColSpan;
+            if (column.RowSpan == 0) columnSpan = 0;
+
+            do
+            {
+                if (++CurrentColIndex >= Columns.Count)
+                {
+                    CurrentColIndex = 0;
+                    if (ColIndexOccupied != null)
+                    {
+                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        {
+                            if (item > 0) item--;
+                        }
+                    }
+                }
+            }
+            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+
+            column.ColIndex = CurrentColIndex;
+            RowColumns.Add(column);
+            CurrentColIndex += columnSpan - 1;
+
+            if (column.RowSpan > 1)
+            {
+                ColIndexOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                {
+                    ColIndexOccupied[i] = column.RowSpan;
+                }
+            }
         }
 
         internal void HeaderColumnInitialed()

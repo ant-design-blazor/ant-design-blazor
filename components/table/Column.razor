@@ -7,6 +7,15 @@
 @typeparam TData
 
 
+@if (IsHeaderTemplate)
+{
+    @RenderHeader();
+}
+else if (IsRowTemplate)
+{
+    @RenderBody(RowData);
+}
+
 @code
 {
     RenderFragment ColumnTitle()
@@ -82,7 +91,9 @@
         };
     }
 
-    RenderFragment IRenderColumn.RenderHeader()
+    RenderFragment IRenderColumn.RenderHeader() => RenderHeader();
+
+    RenderFragment RenderHeader()
     {
         return builder =>
         {
@@ -111,7 +122,9 @@
         };
     }
 
-    RenderFragment IRenderColumn.RenderBody(RowData rowData)
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+
+    RenderFragment RenderBody(RowData rowData)
     {
         return builder =>
         {

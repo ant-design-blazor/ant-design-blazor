@@ -8,10 +8,20 @@ namespace AntDesign
 {
     public abstract class ColumnBase : AntDomComponentBase, IColumn
     {
+        [CascadingParameter(Name = "Table")]
         public ITable Table { get; set; }
 
         [CascadingParameter]
         public ColumnContext Context { get; set; }
+
+        [CascadingParameter(Name = "IsHeaderTemplate")]
+        public bool IsHeaderTemplate { get; set; }
+
+        [CascadingParameter(Name = "IsRowTemplate")]
+        public bool IsRowTemplate { get; set; }
+
+        [CascadingParameter]
+        public RowData RowData { get; set; }
 
         [Parameter]
         public virtual string Title { get; set; }
@@ -102,7 +112,18 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            Context?.AddColumn(this);
+            if (IsHeaderTemplate)
+            {
+                Context?.AddHeaderColumn(this);
+            }
+            else if (IsRowTemplate)
+            {
+                Context?.AddRowColumn(this);
+            }
+            else
+            {
+                Context?.AddColumn(this);
+            }
 
             if (Fixed == "left")
             {
