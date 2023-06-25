@@ -141,17 +141,16 @@
                 <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
                     <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
                         <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
+                          <CascadingValue Name="IsHeader" Value="true" IsFixed>
                             @if (table.HeaderTemplate != null)
                             {
                                 <CascadingValue Name="IsHeaderTemplate" Value="true" IsFixed>
-                                    <CascadingValue Name="IsHeader" Value="true" IsFixed>
                                         <CascadingValue Name="Table" Value="table" IsFixed>
                                             <CascadingValue Value="ColumnContext" IsFixed>
                                                 @table.HeaderTemplate(_fieldModel)
                                             </CascadingValue>
                                         </CascadingValue>
                                     </CascadingValue>
-                                </CascadingValue>
                             }
                             else
                             {
@@ -168,14 +167,15 @@
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
+            </CascadingValue>
         </thead>
     </Template>;
 
 RenderFragment colGroup((Table<TItem> table, bool header) ctx)  =>
   @<Template>
             @{
-        var table = ctx.table;
-        var header = ctx.header;
+                var table = ctx.table;
+                var header = ctx.header;
             }
             <colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
@@ -185,9 +185,9 @@ RenderFragment colGroup((Table<TItem> table, bool header) ctx)  =>
                     }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
-        {
+                {
                     <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
-        }
+                }
             </colgroup>
   </Template>;
 

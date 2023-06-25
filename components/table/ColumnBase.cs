@@ -165,7 +165,7 @@ namespace AntDesign
                     cssStyleBuilder.AddStyle("text-align", alignment);
             }
 
-            //Fixed ??= Context?.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+            Fixed ??= Context?.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
 
             if (Fixed != null)
             {
