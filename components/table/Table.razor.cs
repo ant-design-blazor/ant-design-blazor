@@ -569,6 +569,11 @@ namespace AntDesign
                 ChildContent = ColumnDefinitions;
             }
 
+            if (ChildContent == null && RowTemplate != null)
+            {
+                ChildContent = item => builder => builder.AddContent(1, RowTemplate(new RowData<TItem>(0, 0, item)));
+            }
+
             this.ColumnContext = new ColumnContext(this);
 
             SetClass();
