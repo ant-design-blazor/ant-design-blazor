@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,7 +39,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.28.0" PrivateAssets="all" />
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.9" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyDocs" BeforeTargets="Build">
