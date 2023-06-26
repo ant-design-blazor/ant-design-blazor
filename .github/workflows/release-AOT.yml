@@ -31,6 +31,11 @@ jobs:
         with:
           dotnet-version: 6.0.101
 
+      - name: Setup .NET 7.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.100
+
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -52,7 +57,7 @@ jobs:
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo -p:EnableAOT=true
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net7 -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
 
       - name: Deploy to Azure 🚀
@@ -67,29 +72,29 @@ jobs:
           skip_api_build: true
           skip_app_build: true
 
-      - name: Deploy to Gitee 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_PUSH_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./cargo/wwwroot
-          force_orphan: true
+      # - name: Deploy to Gitee 🚀
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GH_PUSH_TOKEN }}
+      #     publish_branch: gh-pages
+      #     publish_dir: ./cargo/wwwroot
+      #     force_orphan: true
 
-      - name: Deploy to Github.io 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.GH_PUSH_TOKEN }}
-          external_repository: ant-design-blazor/ant-design-blazor.github.io
-          publish_branch: master
-          publish_dir: ./cargo/wwwroot
-          cname: antblazor.com
-          force_orphan: true
-          tag_name: ${{ steps.publish.outputs.package_version }}
+      # - name: Deploy to Github.io 🚀
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     personal_token: ${{ secrets.GH_PUSH_TOKEN }}
+      #     external_repository: ant-design-blazor/ant-design-blazor.github.io
+      #     publish_branch: master
+      #     publish_dir: ./cargo/wwwroot
+      #     cname: antblazor.com
+      #     force_orphan: true
+      #     tag_name: ${{ steps.publish.outputs.package_version }}
 
-      - name: Sync to Gitee 💕
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
+      # - name: Sync to Gitee 💕
+      #   uses: wearerequired/git-mirror-action@master
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+      #   with:
+      #     source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
+      #     destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"

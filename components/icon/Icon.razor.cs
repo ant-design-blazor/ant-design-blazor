@@ -81,11 +81,6 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
-            if (Type == "loading")
-            {
-                Spin = true;
-            }
-
             Button?.Icons.Add(this);
 
             ClassMapper.Add($"anticon")

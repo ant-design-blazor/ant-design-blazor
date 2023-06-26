@@ -1,0 +1,62 @@
+﻿@inject ModalService modalService
+
+<Space Direction="DirectionVHType.Vertical">
+    <SpaceItem>
+        <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+            Open Modal With Only OK button
+        </Button>
+    </SpaceItem>
+
+    <SpaceItem>
+        <Button Type="primary" OnClick="@OpenModal">
+            Open Modal With Only Cancel button
+        </Button>
+    </SpaceItem>
+</Space>
+
+<Modal Title="@title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       Footer="@ModalFooter.DefaultOkFooter">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+@code {
+
+    string title = "BasicModal";
+    bool _visible = false;
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine("OK");
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine("Cancel");
+        _visible = false;
+    }
+
+    private async Task OpenModal()
+    {
+        var options = new ModalOptions()
+        {
+            Footer = ModalFooter.DefaultCancelFooter,
+            Title = "Modal Only with Cancel button",
+            Content =@<div>content</div>
+        };
+
+        options.OnCancel = async e =>
+        {
+            Console.WriteLine("Cancel2");
+            await options.DefaultOnCancelOrOk(e);
+        };
+
+
+        await modalService.CreateModalAsync(options);
+    }
+
+}

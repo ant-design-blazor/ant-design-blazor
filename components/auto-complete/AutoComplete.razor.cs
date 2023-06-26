@@ -27,6 +27,9 @@ namespace AntDesign
         [Parameter]
         public bool Backfill { get; set; } = false;
 
+        [Parameter]
+        public int DebounceMilliseconds { get; set; } = 250;
+
         /// <summary>
         /// 列表对象集合
         /// List object collection
@@ -164,7 +167,7 @@ namespace AntDesign
         public object ActiveValue { get; set; }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
         [Parameter]
@@ -177,6 +180,8 @@ namespace AntDesign
 
         private IAutoCompleteInput _inputComponent;
 
+        private IList<AutoCompleteDataItem<TOption>> _filteredOptions;
+
         public void SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
@@ -184,19 +189,26 @@ namespace AntDesign
 
         #region 子控件触发事件 / Child controls trigger events
 
-        public async Task InputFocus(FocusEventArgs e)
+        public Task InputFocus(FocusEventArgs e)
         {
             if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
+
+            return Task.CompletedTask;
         }
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            SelectedValue = args?.Value;
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
-            StateHasChanged();
+        }
+
+        public Task InputValueChange(string value)
+        {
+            SelectedValue = value;
+            ResetActiveItem();
+            return Task.CompletedTask;
         }
 
         public async Task InputKeyDown(KeyboardEventArgs args)
@@ -234,7 +246,7 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            ResetActiveItem();
+            UpdateFilteredOptions();
         }
 
         protected override async Task OnFirstAfterRenderAsync()
@@ -346,10 +358,16 @@ namespace AntDesign
                 _inputComponent.SetValue(this.ActiveValue);
         }
 
+        public void UpdateFilteredOptions()
+        {
+            _filteredOptions = GetOptionItems();
+            _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+        }
+
         private void ResetActiveItem()
         {
-            var items = GetOptionItems();
-            _isOptionsZero = items.Count == 0 && Options != null;
+            var items = _filteredOptions;
+
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {
                 // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
@@ -360,7 +378,7 @@ namespace AntDesign
                 }
                 else if (DefaultActiveFirstOption == true && items.Count > 0)
                 {
-                    this.ActiveValue = items.FirstOrDefault().Value;
+                    this.ActiveValue = items.FirstOrDefault()?.Value.ToString();
                 }
                 else
                 {
@@ -368,7 +386,7 @@ namespace AntDesign
                 }
             }
 
-            if (_overlayTrigger != null && ShowPanel)
+            if (_overlayTrigger != null)
             {
                 // if options count == 0 then close overlay
                 if (_isOptionsZero && _overlayTrigger.IsOverlayShow())

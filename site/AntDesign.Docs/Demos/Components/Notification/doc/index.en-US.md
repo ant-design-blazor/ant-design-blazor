@@ -19,16 +19,16 @@ To display a notification message at any of the four corners of the viewport. Ty
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
 
-- `NotificationService.Open(config:NotificationConfig)`
-- `NotificationService.Info(config:NotificationConfig)`
-- `NotificationService.Success(config:NotificationConfig)`
-- `NotificationService.Warning(config:NotificationConfig)`
-- `NotificationService.Warn(config:NotificationConfig)`
-- `NotificationService.Error(config:NotificationConfig)`
-- `NotificationService.Close(key:string)`
-- `NotificationService.Destroy()`
-- `NotificationService.CreateAsync()`
-- `NotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
+- `INotificationService.Open(config:NotificationConfig)`
+- `INotificationService.Info(config:NotificationConfig)`
+- `INotificationService.Success(config:NotificationConfig)`
+- `INotificationService.Warning(config:NotificationConfig)`
+- `INotificationService.Warn(config:NotificationConfig)`
+- `INotificationService.Error(config:NotificationConfig)`
+- `INotificationService.Close(key:string)`
+- `INotificationService.Destroy()`
+- `INotificationService.CreateAsync()`
+- `INotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
 
 The properties of config are as follows:
 
@@ -47,9 +47,9 @@ The properties of config are as follows:
 | Placement   | Position of Notification, can be one of `NotificationPlacement.TopLeft` `NotificationPlacement.TopRight` `NotificationPlacement.BottomLeft` `NotificationPlacement.BottomRight` | NotificationPlacement? | `NotificationPlacement.TopRight` |
 | Style       | Customized inline style                                            | string                    | null                                |
 
-`NotificationService` also provides a global `Config()` method that can be used for specifying the default options. Once this method is used, all the notification boxes will take into account these globally defined options when displaying.
+`INotificationService` also provides a global `Config()` method that can be used for specifying the default options. Once this method is used, all the notification boxes will take into account these globally defined options when displaying.
 
-`NotificationService.Config(config:NotificationGlobalConfig)`
+`INotificationService.Config(config:NotificationGlobalConfig)`
 
 | Property | Description | Type | Default |
 | :-------- | :----------------------------------------------------------- | :------------------------- | :-------------------------------- |

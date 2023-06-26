@@ -147,5 +147,8 @@
   },
   "PageHeader": {
     "back": "חזרה"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

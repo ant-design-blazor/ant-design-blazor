@@ -56,7 +56,7 @@
       "quarterSelect": "Select quarter",
       "week": "Week",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
+      "shortWeekDays": [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
     },
     "timePickerLocale": { "placeholder": "Select time" }
   },
@@ -155,5 +155,8 @@
     "previewFile": "Preview file",
     "downloadFile": "Download file"
   },
-  "Empty": { "description": "No data" }
+  "Empty": { "description": "No data" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

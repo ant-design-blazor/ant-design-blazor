@@ -35,6 +35,7 @@ namespace AntDesign.Internal
 
         string Name { get; }
         object Model { get; }
+        FormRequiredMark RequiredMark { get; set; }
 
         void Reset();
 

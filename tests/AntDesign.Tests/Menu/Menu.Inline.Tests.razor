@@ -12,18 +12,6 @@
 
     private RenderFragment GetBasicInlineRender(bool expaned, string[]? defaultSelectedKeys = null, bool hasIcon = false)
     {
-        RenderFragment sub1Title = hasIcon ?
-        @<span>
-            @if (hasIcon) 
-            {
-                <Icon Type="mail" Theme="outline"></Icon>
-            }
-            <span>Navigation One</span>
-        </span> 
-        :
-        @<span>Navigation One</span>
-        ;
-
         string[] openKeys = expaned ? new[] { "sub1" } : Array.Empty<string>();        
 
         return 
@@ -31,15 +19,24 @@
             DefaultSelectedKeys=@(defaultSelectedKeys ?? Array.Empty<string>())
             DefaultOpenKeys=@openKeys
             Mode=@MenuMode.Inline>
-            <SubMenu Key="sub1" TitleTemplate=@sub1Title>
-                <MenuItemGroup Title="Item 1">
-                    <MenuItem Key="1">Option 1</MenuItem>
-                    <MenuItem Key="2">Option 2</MenuItem>
-                </MenuItemGroup>
-                <MenuItemGroup Key="g2" Title="Item 2">
-                    <MenuItem Key="3">Option 3</MenuItem>
-                    <MenuItem Key="4">Option 4</MenuItem>
-                </MenuItemGroup>
+            <SubMenu Key="sub1" >
+            <TitleTemplate>
+                @if (hasIcon)
+                {
+                    <Icon Type="mail" Theme="outline"></Icon>
+                }
+                Navigation One
+            </TitleTemplate>
+                <ChildContent>
+                    <MenuItemGroup Title="Item 1">
+                        <MenuItem Key="1">Option 1</MenuItem>
+                        <MenuItem Key="2">Option 2</MenuItem>
+                    </MenuItemGroup>
+                    <MenuItemGroup Key="g2" Title="Item 2">
+                        <MenuItem Key="3">Option 3</MenuItem>
+                        <MenuItem Key="4">Option 4</MenuItem>
+                    </MenuItemGroup>
+                </ChildContent>
             </SubMenu>
             <MenuItem Key="nav2">Navigation Two</MenuItem>
         </Menu>
@@ -58,15 +55,13 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             <span role=""img"" class="" anticon anticon-mail"" id:ignore>
                                 <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor"" style=""pointer-events: none;"" xmlns:ignore class=""icon"" viewBox=""0 0 1024 1024"">  
                                     <path d=""M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 110.8V792H136V270.8l-27.6-21.5 39.3-50.5 42.8 33.3h643.1l42.8-33.3 39.3 50.5-27.7 21.5zM833.6 232L512 482 190.4 232l-42.8-33.3-39.3 50.5 27.6 21.5 341.6 265.6a55.99 55.99 0 0 0 68.7 0L888 270.8l27.6-21.5-39.3-50.5-42.7 33.2z""></path>
                                 </svg>
                             </span>
-                            <span>
-                                Navigation One
-                            </span>
+                            Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
                     </div>
@@ -128,7 +123,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">                
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
@@ -191,7 +186,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
@@ -254,7 +249,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
@@ -317,7 +312,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
@@ -381,7 +376,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>
@@ -446,7 +441,7 @@
             <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-inline"" style=""width: 256px;"" id:ignore direction=""ltr"" role=""menu"">        
                 <li class=""ant-menu-submenu ant-menu-submenu-inline ant-menu-submenu-selected ant-menu-submenu-open"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" style=""padding-left: 24px; "" role=""button"" aria-haspopup=""true"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation One
                         </span>
                         <i class=""ant-menu-submenu-arrow""></i>

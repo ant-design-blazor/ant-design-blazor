@@ -115,5 +115,8 @@
     "previewFile": "파일 미리보기",
     "downloadFile": "파일 다운로드"
   },
-  "Empty": { "description": "데이터 없음" }
+  "Empty": { "description": "데이터 없음" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

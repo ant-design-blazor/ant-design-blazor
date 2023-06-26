@@ -39,7 +39,7 @@ A single step in the step bar.
 | --- | --- | --- | --- |
 | Description | Description of the step, optional property | string         | -         |
 | Icon | Icon of the step, optional property | string         | -         |
-| Dtatus | To specify the status. It will be automatically set by current of Steps if not configured. Optional values are: wait process finish error | string         | -         |
+| Status | To specify the status. It will be automatically set by current of Steps if not configured. Optional values are: wait process finish error | string         | -         |
 | Title | Title of the step | string         | -         |
 | SubTitle | Subtitle of the step | string         | -         |
 | Disabled | Disable click | boolean         | false         |

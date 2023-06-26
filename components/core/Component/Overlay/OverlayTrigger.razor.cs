@@ -526,6 +526,8 @@ namespace AntDesign.Internal
             _placement = placement;
         }
 
+        internal virtual string GetArrowClass() => "";
+
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
@@ -564,6 +566,10 @@ namespace AntDesign.Internal
 
         internal virtual async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
+            if (!_mouseInTrigger && IsContainTrigger(TriggerType.Hover))
+            {
+                return;
+            }
             await _overlay.Show(overlayLeft, overlayTop);
         }
 

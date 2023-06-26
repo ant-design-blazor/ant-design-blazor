@@ -55,11 +55,11 @@ else if (IsPane)
 {
     <div @key="Key"
      tabindex="@(_isActive ? "0" : "-1")"
-     class="ant-tabs-tabpane @(_isActive ? "ant-tabs-tabpane-active" : "")"
+     class="@_tabPaneClassMapper.Class"
      id="@($"rc-tabs-{Id}-panel-{Key}")"
      role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
      aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-     style="@(_isActive  ? "" : Parent.Animated? "visibility: hidden; height: 0px; overflow-y: hidden;":"display: none;")">
+     >
         @if (_isActive || _hasRendered || ForceRender)
         {
             _hasRendered = true;

@@ -40,12 +40,21 @@ task('library:copy-libs-js', () => {
   return src([join(buildConfig.publishDir, '*.js*')]).pipe(dest(join(buildConfig.componentsDir, 'wwwroot/js')));
 });
 
+task('library:copy-libs-less', () => {
+  // Copy all the less files, excluding the src folder which would duplicate some files.  
+  return src([
+      join(buildConfig.publishDir, '**/*.less'),
+      '!' + join(buildConfig.publishDir, 'src', '**/*.less')
+    ])
+    .pipe(dest(join(buildConfig.componentsDir, 'wwwroot/less')));
+});
+
 task(
   'build:library',
   series(
     'clean',
     'library:mkdir-dir',
     parallel('library:scripts', 'library:compile-less'),
-    parallel('library:copy-libs-css', 'library:copy-libs-js'),
+    parallel('library:copy-libs-css', 'library:copy-libs-js', 'library:copy-libs-less'),
   )
 );

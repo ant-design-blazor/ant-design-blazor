@@ -20,6 +20,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
+| AccessKey | 指定 [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) 全局属性。  | string | |
 | AllowClear | 支持清除. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
 | Bordered | 是否有边框 | bool | true |  |

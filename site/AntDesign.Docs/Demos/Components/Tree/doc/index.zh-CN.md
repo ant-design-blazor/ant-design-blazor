@@ -37,6 +37,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
 | MatchedClass  | 搜索匹配关键字高亮样式 | string  | null  |   |
+| HideUnmatched | 隐藏所有不匹配关键字的节点 | bool | false |  |
 | DataSource | 数据源 | List  |  null  |   |
 | TitleExpression  |  指定一个方法，该表达式返回节点的文本。 | Func  |   |   |
 | KeyExpression |  指定一个返回节点Key的方法。 |  Func |   |   |

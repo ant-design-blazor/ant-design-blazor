@@ -50,7 +50,7 @@ namespace AntDesign.Core.HashCodes
 
             public override int GetHashCode(object parameter)
             {
-                if (!(parameter is IEnumerable enumerable))
+                if (parameter is not IEnumerable enumerable)
                 {
                     return 0;
                 }
@@ -59,12 +59,11 @@ namespace AntDesign.Core.HashCodes
                 var enumerator = enumerable.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    hashCode ^= OtherHashCodeProvider.Instance.GetHashCode(enumerator.Current);
+                    hashCode = HashCode.Combine(hashCode, OtherHashCodeProvider.Instance.GetHashCode(enumerator.Current));
                 }
                 return hashCode;
             }
         }
-
 
         /// <summary>
         /// The hash providers for dictionary types
@@ -75,7 +74,7 @@ namespace AntDesign.Core.HashCodes
 
             public override int GetHashCode(object parameter)
             {
-                if (!(parameter is IDictionary<string, object> dic))
+                if (parameter is not IDictionary<string, object> dic)
                 {
                     return 0;
                 }
@@ -83,16 +82,15 @@ namespace AntDesign.Core.HashCodes
                 var hashCode = 0;
                 foreach (var item in dic)
                 {
-                    hashCode ^= OtherHashCodeProvider.Instance.GetHashCode(item.Key);
-                    hashCode ^= OtherHashCodeProvider.Instance.GetHashCode(item.Value);
+                    hashCode = HashCode.Combine(hashCode, OtherHashCodeProvider.Instance.GetHashCode(item.Key));
+                    hashCode = HashCode.Combine(hashCode, OtherHashCodeProvider.Instance.GetHashCode(item.Value));
                 }
                 return hashCode;
             }
         }
 
-
         /// <summary>
-        /// The hash providers for other types 
+        /// The hash providers for other types
         /// </summary>
         private class OtherHashCodeProvider : HashCodeProvider
         {

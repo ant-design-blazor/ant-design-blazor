@@ -29,7 +29,9 @@ namespace AntDesign
 
         //private int[] _selectedIndexes;
 
-        private void OnCkeckedChange(bool selected)
+        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+
+        private void OnCheckedChange(bool selected)
         {
             if (IsHeader)
             {
@@ -101,7 +103,7 @@ namespace AntDesign
         {
             if (!IsHeader)
             {
-                Table.Selection.RowSelections.Remove(this);
+                Table?.Selection?.RowSelections?.Remove(this);
             }
 
             base.Dispose(disposing);

@@ -2,7 +2,7 @@
 @using TableModels
 
 <Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
-	<RowTemplate>
+	<ColumnDefinitions>
 		<PropertyColumn Property="c=>c.Name" />
 		<PropertyColumn Property="c=>c.Age" />
 		<PropertyColumn Property="c=>c.Address" />
@@ -14,7 +14,7 @@
 				<a>Delete</a>
 			</CellRender>
 		</ActionColumn>
-	</RowTemplate>
+	</ColumnDefinitions>
 	<ExpandTemplate>
 		@context.Data.Description
 	</ExpandTemplate>

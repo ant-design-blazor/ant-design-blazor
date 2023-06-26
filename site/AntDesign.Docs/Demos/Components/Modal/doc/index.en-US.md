@@ -49,7 +49,7 @@ When requiring users to interact with the application, but without jumping to a 
 | Maximizable       | Whether to display the maximize button | bool   | false |
 | MaximizeBtnIcon | The icon of the maximize button when the modal is in normal state    | RenderFragment | fullscreen       |
 | RestoreBtnIcon  | The icon of the maximize button when the modal is in maximized state | RenderFragment | fullscreen-exit  |
-
+| DefaultMaximized | Modal is maximized at initialization | bool   | false |
 
 #### Note
 
@@ -87,7 +87,7 @@ There are some ways to display the information based on the content's nature:
 
 ### ConfirmService
 
-`ConfirmService.Show` to show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef or OK button is clicked, but ConfirmService return ConfirmResult.
+`IConfirmService.Show` to show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef or OK button is clicked, but ConfirmService return ConfirmResult.
 
 
 #### ConfirmOptions

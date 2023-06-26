@@ -8,7 +8,7 @@
 	Model _model = new();
 	AntDesign.Form<Model>? _form;
 
-#if NET6_0
+#if NET6_0_OR_GREATER
 	[Fact]
 	public void Form_EditContext_fires_OnFieldChange()
 	{
@@ -36,7 +36,7 @@
 	}
 #endif
 
-#if NET6_0
+#if NET6_0_OR_GREATER
 	[Fact]
 	public void Form_EditContext_Build_keep_OnFieldChange_subscription()
 	{

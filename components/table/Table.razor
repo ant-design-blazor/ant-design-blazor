@@ -2,6 +2,8 @@
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
 @using AntDesign.Internal
+@using AntDesign.Core.Component.ResizeObserver
+
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
@@ -11,7 +13,7 @@
             if (PaginationTemplate == null)
             {
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
-                            Class="@_paginationClass"
+                            Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
@@ -19,7 +21,7 @@
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
 
@@ -45,7 +47,7 @@
                                         @header(this)
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY);--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
                                     <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
@@ -107,7 +109,7 @@
             if (PaginationTemplate == null)
             {
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
-                            Class="@_paginationClass"
+                            Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="PageSize"
                             Current="PageIndex"
@@ -115,7 +117,7 @@
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
     </Spin>
@@ -125,20 +127,25 @@
 {
     RenderFragment<Table<TItem>> header = table =>
   @<Template>
-                @{
+       @{
             var headerRowAttributes = table.OnHeaderRow?.Invoke();
         }
         <thead class="ant-table-thead">
             <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                <CascadingValue Value="table" TValue="ITable" Name="AntDesign.TableRow.Table">
-                    <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
-                        <TableRow TItem="TItem">
-                            @table.ChildContent(_fieldModel)
-                            @if (table.ScrollY != null)
+                <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                    <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
+                        <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
+                            @if (table.HeaderTemplate != null)
                             {
-                                <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
+                                @table.HeaderTemplate(_fieldModel)
                             }
-                        </TableRow>
+                            else
+                            {
+                                <TableRow>
+                                    @table.ChildContent(_fieldModel)
+                                </TableRow>
+                            }
+                        </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
@@ -162,34 +169,70 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
             </colgroup>
   </Template>;
 
-Func<Table<TItem>, IEnumerable<TItem>, int, Dictionary<TItem, RowData<TItem>>, RenderFragment> body = 
-            (table, showItems, level, rowDataCache) =>
+ RenderFragment body(Table<TItem> table, IEnumerable<TItem> showItems, int level, Dictionary<TItem, RowData<TItem>> rowDataCache) =>
 @<Template>
-    @if (table._total <= 0)
+
+    @if (table._hasInitialized)
     {
-                <tr class="ant-table-placeholder">
-                    <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
-                        <Empty Simple />
-                    </td>
-                </tr>
-    }
-    else if (showItems != null && table.ColumnContext.Columns.Count > 0)
-    {
-#if NET5_0_OR_GREATER
-        if (table.EnableVirtualization && table.ScrollY != null)
+#if NET5_0_OR_GREATER 
+            if (table.UseItemsProvider&&!table._isVirtualizeEmpty)
+            {
+                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    TItem="(TItem,int)"
+                    OverscanCount="10"
+                    ItemsProvider="table.ItemsProvider"
+                    ItemContent="table.bodyRow(table, level, rowDataCache)" >
+                        <Placeholder>
+                            <tr class="ant-table-row ant-table-row-level-0">
+                                @foreach (var item in table.ColumnContext.HeaderColumns)
+                                {
+                                    <td class="ant-table-cell" colspan="@item.ColSpan">
+                                       <Skeleton Active="true" ParagraphRows="1" Paragraph="false" ParagraphWidth="@item.Width"></Skeleton>
+                                    </td>
+                                }
+                            </tr>
+                        </Placeholder> 
+                    </Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize>
+            }
+        else
+#endif
+        if (table._total<=0 || showItems==null)
         {
-            <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items="showItems.Select((data, index) => (data, index)).ToList()"
-                                                                           ChildContent="table.bodyRow(table, level, rowDataCache)" />
+             <tr class="ant-table-placeholder">
+                 <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                     @if (table.ScrollX != null)
+                     {
+                        <ResizeObserver RefBack="table.RefBack" OnResize="table.OnResize" />   
+
+                        @if (table._tableWidth>0)
+                        {
+                            <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
+                               @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                            </div>
+                        }
+                     }
+                     else
+                     {
+                          @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                     }
+                 </td>
+             </tr>
         }
+#if NET5_0_OR_GREATER
+            else if (table.EnableVirtualization)
+            {
+                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    OverscanCount="10"
+                    Items="showItems.Select((data, index) => (data, index)).ToList()"
+                    ChildContent="table.bodyRow(table, level, rowDataCache)" />
+            }
+#endif
         else
         {
-#endif
             { @*Build will fail without this block*@ }
-        <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
+            <ForeachLoop Items="showItems.Select((data, index) => (data, index))"
                      ChildContent="table.bodyRow(table, level, rowDataCache)" />
-#if NET5_0_OR_GREATER
         }
-#endif
     }
 </Template>;
 
@@ -241,9 +284,16 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                            <TableRow @key="currentRowData.Data" TItem="TItem">
-                                @table.ChildContent(currentRowData.Data)
-                            </TableRow>
+                            @if (table.RowTemplate != null)
+                            {
+                                @table.RowTemplate(currentRowData)
+                            }
+                            else
+                            {
+                                <TableRow @key="currentRowData.Data">
+                                    @table.ChildContent(currentRowData.Data)
+                                </TableRow>
+                            }
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>

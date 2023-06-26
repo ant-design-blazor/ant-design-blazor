@@ -14,27 +14,6 @@ namespace AntDesign
     {
         private const string IdPrefix = "Ant-Design-";
 
-        /// <summary>
-        /// default Dialog close icon
-        /// </summary>
-        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
-        {
-            builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
-            builder.CloseComponent();
-        };
-
-        /// <summary>
-        /// default modal footer
-        /// </summary>
-        internal static readonly RenderFragment DefaultFooter = (builder) =>
-        {
-            builder.OpenComponent<ModalFooter>(0);
-            builder.CloseComponent();
-        };
-
-
         #region Parameters
 
 #pragma warning disable 1591
@@ -46,11 +25,14 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment AdditionalContent { get; set; }
+
+        [Parameter]
         public bool Visible { get; set; }
 
 #pragma warning restore 1591
 
-        #endregion
+        #endregion Parameters
 
         [CascadingParameter(Name = "DialogWrapperId")]
         public string DialogWrapperId { get; set; } = "";
@@ -66,6 +48,7 @@ namespace AntDesign
         private bool _doDraggable;
 
 #pragma warning disable 649
+
         /// <summary>
         /// dialog root container
         /// </summary>
@@ -79,6 +62,7 @@ namespace AntDesign
         #region ant-modal style
 
         private string _modalStyle = null;
+
         /// <summary>
         /// ant-modal style
         /// </summary>
@@ -116,7 +100,6 @@ namespace AntDesign
             return style + Style + ";";
         }
 
-
         private string GetBodyStyle()
         {
             var style = Config.BodyStyle;
@@ -141,7 +124,7 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion ant-modal style
 
         /// <summary>
         ///  append To body
@@ -181,7 +164,7 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion mask and dialog click event
 
         #region keyboard control
 
@@ -189,6 +172,7 @@ namespace AntDesign
         /// TAB keyboard control
         /// </summary>
         private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
+
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
         /// <summary>
@@ -228,7 +212,7 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion keyboard control
 
         /// <summary>
         /// closer(X) click event
@@ -261,15 +245,20 @@ namespace AntDesign
         {
             if (_modalStatus == ModalStatus.Default)
             {
-                _modalStatus = ModalStatus.Max;
+                SetModalStatus(ModalStatus.Max);
             }
             else
             {
-                _modalStatus = ModalStatus.Default;
+                SetModalStatus(ModalStatus.Default);
             }
+            return Task.CompletedTask;
+        }
+
+        private void SetModalStatus(ModalStatus modalStatus)
+        {
+            _modalStatus = modalStatus;
             _wrapStyle = CalcWrapStyle();
             _modalStyle = CalcModalStyle();
-            return Task.CompletedTask;
         }
 
         #region control show and hide class name and style
@@ -326,7 +315,6 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
-
         /// <summary>
         /// Hide Dialog through animation
         /// </summary>
@@ -353,7 +341,6 @@ namespace AntDesign
                     await Config.OnClosed.Invoke();
                 }
             }
-
         }
 
         /// <summary>
@@ -365,7 +352,7 @@ namespace AntDesign
             return _hasShow;
         }
 
-        #endregion
+        #endregion control show and hide class name and style
 
         #region build element's class name
 
@@ -379,16 +366,18 @@ namespace AntDesign
         private string GetModalClsName()
         {
             var clsName = Config.ClassName;
-            return clsName + _modalAnimationClsName 
+            return clsName + _modalAnimationClsName
                 + (_modalStatus == ModalStatus.Max ? " ant-modal-max" : "");
         }
 
-        #endregion
+        #endregion build element's class name
 
         #region override
 
+        private bool _hasRendered = false;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         protected override async Task OnParametersSetAsync()
@@ -396,10 +385,14 @@ namespace AntDesign
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
+                if (!_hasRendered && Config.DefaultMaximized)
+                {
+                    _hasRendered = true;
+                    SetModalStatus(ModalStatus.Max);
+                }
                 if (!_hasDestroy)
                 {
                     Show();
-                    //await InvokeStateHasChangedAsync();
                 }
                 else
                 {
@@ -415,7 +408,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="isFirst"></param>
         /// <returns></returns>
@@ -464,7 +457,8 @@ namespace AntDesign
 
             await base.OnAfterRenderAsync(isFirst);
         }
-        #endregion
+
+        #endregion override
 
         protected override void Dispose(bool disposing)
         {

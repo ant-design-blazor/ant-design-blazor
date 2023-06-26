@@ -56,7 +56,7 @@
       "quarterSelect": "Quartal wählen",
       "week": "Woche",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" ]
+      "shortWeekDays": [ "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa" ]
     },
     "timePickerLocale": { "placeholder": "Zeit auswählen" }
   },
@@ -162,5 +162,8 @@
     "copied": "Kopiert",
     "expand": "Erweitern"
   },
-  "PageHeader": { "back": "Zurück" }
+  "PageHeader": { "back": "Zurück" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

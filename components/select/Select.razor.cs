@@ -23,12 +23,6 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
-        /// </summary>
-        [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
-
-        /// <summary>
         /// Toggle the border style.
         /// </summary>
         [Parameter] public bool Bordered { get; set; } = true;
@@ -411,7 +405,7 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(ValueName));
             }
 
-            SetClassMap();
+            //SetClassMap();
 
             if (string.IsNullOrWhiteSpace(Style))
                 Style = DefaultWidth;
@@ -473,24 +467,6 @@ namespace AntDesign
                 TypeDefaultExistsAsSelectOption = false;
 
                 OnDataSourceChanged?.Invoke();
-                return;
-            }
-
-            // clear DataSource
-            if (DataSource?.Any() == false && SelectOptionItems.Any())
-            {
-                SelectOptionItems.Clear();
-                SelectedOptionItems.Clear();
-
-                Value = default;
-
-                _datasource = DataSource;
-                _dataSourceShallowCopy = new List<TItem>();
-                _dataSourceCopy = new List<TItem>();
-                TypeDefaultExistsAsSelectOption = false;
-
-                OnDataSourceChanged?.Invoke();
-
                 return;
             }
 
@@ -647,12 +623,11 @@ namespace AntDesign
             if (SelectOptionItems.Any())
             {
                 // Delete items from SelectOptions if it is no longer in the datastore
-                for (var i = SelectOptionItems.Count - 1; i >= 0; i--)
+                foreach (var selectOption in SelectOptionItems)
                 {
-                    var selectOption = SelectOptionItems.ElementAt(i);
                     if (!selectOption.IsAddedTag)
                     {
-                        var exists = _datasource.Where(x => x.Equals(selectOption.Item)).FirstOrDefault();
+                        var exists = _datasource.FirstOrDefault(x => x.Equals(selectOption.Item));
 
                         if (exists is null)
                         {
@@ -752,6 +727,21 @@ namespace AntDesign
                     }
                 }
             }
+
+            // add the tag options back in if they were removed since they are separate from the datasource
+            foreach (var tag in AddedTags)
+            {
+                if (!SelectOptionItems.Contains(tag))
+                {
+                    SelectOptionItems.Add(tag);
+
+                    if (tag.IsSelected)
+                    {
+                        processedSelectedCount--;
+                        SelectedOptionItems.Add(tag);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -759,7 +749,7 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
-            ClassMapper.Clear()
+            ClassMapper
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
@@ -774,7 +764,8 @@ namespace AntDesign
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
-                .If($"{ClassPrefix}-status-error", () => ValidationMessages.Length > 0);
+
+                ;
         }
 
         /// <summary>
@@ -1219,7 +1210,7 @@ namespace AntDesign
             }
             else
             {
-                SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
+                UnhideSelectOptions();
                 if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
                 {
                     SelectOptionItems.Remove(CustomTagSelectOptionItem);
@@ -1301,13 +1292,15 @@ namespace AntDesign
                         {
                             item.IsActive = false;
                         }
-                        if (item.IsHidden)
-                            item.IsHidden = false;
+
+                        item.IsHidden = item.IsSelected && HideSelected;
                     }
                     else
                     {
                         if (!item.IsHidden)
+                        {
                             item.IsHidden = true;
+                        }
                         item.IsActive = false;
                     }
                 }
@@ -1348,14 +1341,18 @@ namespace AntDesign
                             }
                         }
                         else if (item.IsActive)
+                        {
                             item.IsActive = false;
-                        if (item.IsHidden)
-                            item.IsHidden = false;
+                        }
+
+                        item.IsHidden = item.IsSelected && HideSelected;
                     }
                     else
                     {
                         if (!item.IsHidden)
+                        {
                             item.IsHidden = true;
+                        }
                         item.IsActive = false;
                     }
                 }
@@ -1802,7 +1799,7 @@ namespace AntDesign
             {
                 Focused = false;
 
-                SetClassMap();
+                //SetClassMap();
 
                 await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
 

@@ -144,5 +144,8 @@
   },
   "PageHeader": {
     "back": "înapoi"
+  },
+  "Form": {
+    "optional": "(opțional)"
   }
 }

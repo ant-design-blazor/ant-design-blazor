@@ -1,9 +1,11 @@
 @namespace AntDesign.Internal
+@using AntDesign.Core.Extensions
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
 @{
     var calendar = CultureInfo.Calendar;
+    var calendarWeekRule = CultureInfo.DateTimeFormat.CalendarWeekRule;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -58,21 +60,20 @@
                 {
                     <th></th>
                 }
-                @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
+
+                @foreach (var dayName in Locale.Lang.ShortWeekDays.Scroll((int)Locale.FirstDayOfWeek))
                 {
-                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
-                }
-                @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
-                {
-                    <th>@(Locale.Lang.ShortWeekDays[i])</th>
+                    <th>
+                        @dayName
+                    </th>
                 }
             </tr>
         </RenderTableHeader>
         <RenderFirstCol>
             @if (IsWeek)
             {
-                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
-                    @DateHelper.GetWeekOfYear(context, Locale.FirstDayOfWeek)
+                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">  
+                    @calendar.GetWeekOfYear(context,calendarWeekRule, Locale.FirstDayOfWeek)
                 </td>
             }
         </RenderFirstCol>
@@ -111,7 +112,10 @@
 
     private string GetRowClass(DateTime viewDate)
     {
-        string selectedRowClass = IsWeek && DateHelper.IsSameWeek(viewDate, Value, Locale.FirstDayOfWeek) ? $"{PrefixCls}-week-panel-row-selected" : "";
+        var isSelectedWeek = IsWeek && (DateHelper.IsSameWeek(viewDate, Value, Locale.FirstDayOfWeek)
+                                      || IsRange && DateHelper.IsSameWeek(viewDate, GetIndexValue(Math.Abs(GetPickerIndex() - 1)), Locale.FirstDayOfWeek));
+
+        string selectedRowClass = isSelectedWeek ? $"{PrefixCls}-week-panel-row-selected" : "";
         string rowClass = IsWeek ? $"{PrefixCls}-week-panel-row" : "";
 
         return $"{rowClass} {selectedRowClass}";

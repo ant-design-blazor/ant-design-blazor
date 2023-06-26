@@ -32,8 +32,6 @@ namespace AntDesign
 
         protected string PrefixCls => "ant-segmented-item";
 
-        internal int Index { get; set; }
-
         private bool _selected;
 
         protected override void OnInitialized()
@@ -42,22 +40,24 @@ namespace AntDesign
 
             ClassMapper.Add(PrefixCls)
                 .If($"{PrefixCls}-selected", () => _selected)
-                .If($"{PrefixCls}-disabled", () => Disabled)
+                .If($"{PrefixCls}-disabled", () => Disabled || Parent?.Disabled == true)
                 ;
 
             Parent?.AddItem(this);
         }
 
-        internal void SetSelected(bool selected)
+        protected internal void SetSelected(bool selected)
         {
             _selected = selected;
 
             StateHasChanged();
         }
 
+        protected internal void MarkStateHasChanged() => StateHasChanged();
+
         private void OnClick()
         {
-            if (Disabled)
+            if (Disabled || Parent.Disabled)
             {
                 return;
             }
