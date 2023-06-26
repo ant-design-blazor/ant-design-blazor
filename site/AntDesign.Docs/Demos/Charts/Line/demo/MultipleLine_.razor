@@ -61,16 +61,15 @@
     IChartComponent chart7;
     EmissionsItem[] data7;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
-        await chart2.ChangeData(data2);
-
-        data3 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
-
-        data7 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
+            await chart2.ChangeData(data2);
+            data3 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+            data7 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+        }
     }
 
     #region 示例1

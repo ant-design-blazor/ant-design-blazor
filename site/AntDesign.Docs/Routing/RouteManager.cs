@@ -76,7 +76,7 @@ namespace AntDesign.Docs.Routing
                 relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('?'));
             }
 
-            var segments = relativeUri.Trim().Split('/', StringSplitOptions.RemoveEmptyEntries).Select(Uri.UnescapeDataString).ToArray();
+            var segments = relativeUri.Trim(' ', '/').Split('/', StringSplitOptions.RemoveEmptyEntries).Select(Uri.UnescapeDataString).ToArray();
 
             if (segments.Length == 0)
             {
@@ -110,7 +110,7 @@ namespace AntDesign.Docs.Routing
         {
             return routeTemplate.Segments
                 .Where(s => s.IsParameter)
-                .Select(s => s.Value)
+                .Select(s => s.Value.TrimEnd('/'))
                 .ToArray();
         }
     }

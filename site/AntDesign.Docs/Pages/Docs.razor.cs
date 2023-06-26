@@ -38,21 +38,9 @@ namespace AntDesign.Docs.Pages
         [Inject] private IPrismHighlighter PrismHighlighter { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             NavigationManager.LocationChanged += OnLocationChanged;
-
-            if (string.IsNullOrWhiteSpace(FileName))
-            {
-                var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
-                var menus = await DemoService.GetMenuAsync();
-                var current = menus.FirstOrDefault(x => x.Url == newUrl);
-                if (current != null)
-                {
-                    NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Url}");
-                }
-            }
         }
 
         private async ValueTask SetDocUrl()
@@ -85,6 +73,18 @@ namespace AntDesign.Docs.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (firstRender && string.IsNullOrWhiteSpace(FileName))
+            {
+                var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+                var menus = await DemoService.GetMenuAsync();
+                var current = menus.FirstOrDefault(x => x.Url == newUrl);
+                if (current != null)
+                {
+                    NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Url}");
+                }
+            }
+
             if (_waitingHighlight)
             {
                 _waitingHighlight = false;

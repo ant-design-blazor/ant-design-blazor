@@ -37,6 +37,15 @@
     <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
   </ItemGroup>
 
+  <PropertyGroup>
+    <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
+    <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US/;/zh-CN/</BlazorWasmPrerenderingUrlPathToExplicitFetch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.9" PrivateAssets="all" />
+  </ItemGroup>
+
   <Target Name="CopyDocs" BeforeTargets="Build">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
   </Target>
