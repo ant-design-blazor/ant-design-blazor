@@ -9,10 +9,6 @@ namespace AntDesign
     {
         public IList<IColumn> Columns { get; set; } = new List<IColumn>();
 
-        public IList<IColumn> HeaderColumns { get; set; } = new List<IColumn>();
-
-        public IList<IColumn> RowColumns { get; set; } = new List<IColumn>();
-
         private int CurrentColIndex { get; set; }
 
         private int[] ColIndexOccupied { get; set; }
@@ -63,7 +59,6 @@ namespace AntDesign
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
-            HeaderColumns.Add(column);
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
@@ -103,7 +98,6 @@ namespace AntDesign
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
-            RowColumns.Add(column);
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)

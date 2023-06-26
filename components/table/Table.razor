@@ -308,11 +308,13 @@ RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, I
                             @if (table.RowTemplate != null)
                             {
                                 <CascadingValue Name="IsRowTemplate" Value="true" IsFixed>
+                                <CascadingValue Value="currentRowData">
                                     <CascadingValue Name="Table" Value="table" IsFixed>
                                         <CascadingValue Value="ColumnContext" IsFixed>
                                             @table.RowTemplate(currentRowData)
                                         </CascadingValue>
                                     </CascadingValue>
+                                </CascadingValue>
                                 </CascadingValue>
                             }
                             else

@@ -67,6 +67,7 @@ namespace AntDesign
 
                 _align = value;
                 _fixedStyle = CalcFixedStyle();
+                _headerFixedStyle = CalcFixedStyle(isHeader: true);
             }
         }
 
@@ -74,11 +75,10 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
         protected bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
-        private string _fixedStyle;
+        protected string _fixedStyle;
+        protected string _headerFixedStyle;
 
         private ColumnAlign _align = ColumnAlign.Left;
-
-        protected string FixedStyle => _fixedStyle;
 
         private int ColEndIndex => ColIndex + ColSpan;
 
@@ -140,6 +140,7 @@ namespace AntDesign
             }
 
             _fixedStyle = CalcFixedStyle();
+            _headerFixedStyle = CalcFixedStyle(isHeader: true);
             SetClass();
         }
 
@@ -149,7 +150,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private string CalcFixedStyle()
+        private string CalcFixedStyle(bool isHeader = false)
         {
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
@@ -186,7 +187,7 @@ namespace AntDesign
                     }
                 }
 
-                if (Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+                if (isHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
                 {
                     fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
                 }

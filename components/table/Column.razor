@@ -105,7 +105,7 @@ else if (IsRowTemplate)
             var headerCellAttributes = OnHeaderCell?.Invoke();
             builder.AddContent(2,
         @<CascadingValue Name="IsHeader" Value="false" IsFixed>
-            <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
+            <th class="@ClassMapper.Class" style="@_headerFixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
                 @if (IsFiexedEllipsis)
                     {
                         <span class="ant-table-cell-content">
@@ -156,7 +156,7 @@ else if (IsRowTemplate)
 
             builder.AddContent(2,
         
-            @<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title" @attributes="cellAttributes">
+            @<td class="@ClassMapper.Class" style="@_fixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title" @attributes="cellAttributes">
                 @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
                 {
                     <span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>

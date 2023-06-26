@@ -32,7 +32,7 @@
     RenderFragment IRenderColumn.RenderHeader()
     {
         return
-    @<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
+    @<th class="@ClassMapper.Class ant-table-selection-column" style="@_headerFixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
         @if (Type == "checkbox")
             {
                 <Checkbox Checked="Table.AllSelected" CheckedChange="(e)=>OnCheckedChange(e,null,true)" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
@@ -43,7 +43,7 @@
 
     RenderFragment IRenderColumn.RenderBody(RowData rowData)
     {
-       return @<td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+       return @<td class="@ClassMapper.Class ant-table-selection-column" style="@_fixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
 
             @if (CellRender != null)
             {

@@ -10,7 +10,7 @@
 
     RenderFragment RenderBody(RowData rowData)
     {
-        return @<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
+        return @<td class="@ClassMapper.Class" style="@_fixedStyle @Style" colspan="@ColSpan">
         @if (CellRender != null)
         {
             var cellData = new CellData(rowData);

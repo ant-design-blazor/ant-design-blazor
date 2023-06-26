@@ -55,7 +55,7 @@ else if (IsRowTemplate)
                 builder.AddContent(1,@<th class="ant-table-cell ant-table-row-expand-icon-cell"></th>);
             }
 
-            builder.AddContent(2,@<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
+            builder.AddContent(2,@<th class="@ClassMapper.Class" style="@_headerFixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
                 @if (TitleTemplate != null)
                 {
                     @TitleTemplate
@@ -86,7 +86,7 @@ else if (IsRowTemplate)
             }
 
             var title = Context.Columns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-            builder.AddContent(2,@<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
+            builder.AddContent(2,@<td class="@ClassMapper.Class" style="@_fixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
                 @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
                 {
                     <span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>
