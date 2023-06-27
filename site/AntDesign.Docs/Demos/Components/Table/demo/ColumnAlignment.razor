@@ -12,14 +12,12 @@
             <span> <Icon Type="environment" /> Address </span>
         </TitleTemplate>
     </PropertyColumn>
-    <PropertyColumn Property="c=>c.Tags" Align="columnAlign">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
-            {
-                string color = tag.Length > 5 ? "geekblue" : "green";
-                <Tag Color="@color">@tag</Tag>
-            }
-        </CellRender>
+  <PropertyColumn Property="c=>c.Tags" Align="columnAlign">
+        @foreach (var tag in context.Tags)
+        {
+            string color = tag.Length > 5 ? "geekblue" : "green";
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action" Align="columnAlign">
         <Space Size=@("middle")>
@@ -34,7 +32,7 @@
 </Table>
 
 
-@code {
+@code{
     ColumnAlign columnAlign = ColumnAlign.Left;
 
     readonly Data[] data = new Data[]

@@ -7,17 +7,15 @@
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
             {
-                var color = tag.Length > 5 ? "geekblue" : "green";
-                if (tag == "loser")
-                {
-                    color = "volcano";
-                }
-                <Tag Color="@color">@tag</Tag>
+                color = "volcano";
             }
-        </CellRender>
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
@@ -38,17 +36,15 @@
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
             {
-                var color = tag.Length > 5 ? "geekblue" : "green";
-                if (tag == "loser")
-                {
-                    color = "volcano";
-                }
-                <Tag Color="@color">@tag</Tag>
+                color = "volcano";
             }
-        </CellRender>
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
@@ -62,7 +58,7 @@
     </ActionColumn>
 </Table>
 
-@code {
+@code{
     Data[] data =
     {
         new Data()

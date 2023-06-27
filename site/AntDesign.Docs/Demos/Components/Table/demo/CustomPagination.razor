@@ -12,17 +12,15 @@
             </TitleTemplate>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Tags">
-            <CellRender Context="cell">
-                @foreach (var tag in cell.FieldValue)
+            @foreach (var tag in context.Tags)
+            {
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
-                    if (tag == "loser")
-                    {
-                        color = "volcano";
-                    }
-                    <Tag Color="@color">@tag</Tag>
+                    color = "volcano";
                 }
-            </CellRender>
+                <Tag Color="@color">@tag</Tag>
+            }
         </PropertyColumn>
     </ChildContent>
 
@@ -31,12 +29,12 @@
                     Total="context.Total"
                     PageSize="context.PageSize"
                     Current="context.PageIndex"
-                        ShowSizeChanger
+                    ShowSizeChanger
                     OnChange="context.HandlePageChange" />
     </PaginationTemplate>
-    </Table>
+</Table>
 
-    @code {
+@code {
     Data[] data = new Data[]
     {
         new()
