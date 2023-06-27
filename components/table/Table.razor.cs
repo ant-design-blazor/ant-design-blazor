@@ -216,6 +216,8 @@ namespace AntDesign
 
         private bool _isVirtualizeEmpty;
 
+        private bool _useRowTemplateAsColumnDefinitions;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
@@ -571,6 +573,7 @@ namespace AntDesign
 
             if (ChildContent == null && RowTemplate != null)
             {
+                _useRowTemplateAsColumnDefinitions = true;
                 ChildContent = item => builder => builder.AddContent(1, RowTemplate(new RowData<TItem>(0, 0, item)));
             }
 
