@@ -1,69 +1,65 @@
 @using System.ComponentModel
 <p>Middle size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
-    <RowTemplate>
-        <PropertyColumn Property="c=>c.Name">
-            <a>@context.Data.Name</a>
-        </PropertyColumn>
-        <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Address"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Tags">
-            <CellRender Context="cell">
-                @foreach (var tag in cell.FieldValue)
+    <PropertyColumn Property="c=>c.Name">
+        <a>@context.Name</a>
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Tags">
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
+            {
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
-                    if (tag == "loser")
-                    {
-                        color = "volcano";
-                    }
-                    <Tag Color="@color">@tag</Tag>
+                    color = "volcano";
                 }
-            </CellRender>
-        </PropertyColumn>
-        <ActionColumn Title="Action">
-            <Space Size=@("middle")>
-                <SpaceItem>
-                    <a>Invite @context.Data.Name</a>
-                </SpaceItem>
-                <SpaceItem>
-                    <a>Delete</a>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </RowTemplate>
+                <Tag Color="@color">@tag</Tag>
+            }
+        </CellRender>
+    </PropertyColumn>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 <p>Small size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
-    <RowTemplate>
-        <PropertyColumn Property="c=>c.Name">
-            <a>@context.Data?.Name</a>
-        </PropertyColumn>
-        <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Address"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Tags">
-            <CellRender Context="cell">
-                @foreach (var tag in cell.FieldValue)
+    <PropertyColumn Property="c=>c.Name">
+        <a>@context.Name</a>
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Tags">
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
+            {
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
-                    if (tag == "loser")
-                    {
-                        color = "volcano";
-                    }
-                    <Tag Color="@color">@tag</Tag>
+                    color = "volcano";
                 }
-            </CellRender>
-        </PropertyColumn>
-        <ActionColumn Title="Action">
-            <Space Size=@("middle")>
-                <SpaceItem>
-                    <a>Invite @context.Data?.Name</a>
-                </SpaceItem>
-                <SpaceItem>
-                    <a>Delete</a>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </RowTemplate>
+                <Tag Color="@color">@tag</Tag>
+            }
+        </CellRender>
+    </PropertyColumn>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 
 @code {

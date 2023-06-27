@@ -171,6 +171,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        [Parameter]
+        public bool Quick { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -569,12 +572,6 @@ namespace AntDesign
             if (ColumnDefinitions != null)
             {
                 ChildContent = ColumnDefinitions;
-            }
-
-            if (ChildContent == null && RowTemplate != null)
-            {
-                _useRowTemplateAsColumnDefinitions = true;
-                ChildContent = item => builder => builder.AddContent(1, RowTemplate(new RowData<TItem>(0, 0, item)));
             }
 
             this.ColumnContext = new ColumnContext(this);

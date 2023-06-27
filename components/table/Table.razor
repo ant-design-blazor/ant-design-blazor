@@ -305,12 +305,12 @@ RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, I
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                            @if (table.RowTemplate != null)
+                            @if (table.RowTemplate != null || !Quick)
                             {
                                 <CascadingValue Name="IsRowTemplate" Value="true" IsFixed>
                                     <CascadingValue Name="Table" Value="table" IsFixed>
                                         <CascadingValue Value="ColumnContext" IsFixed>
-                                            @if (_useRowTemplateAsColumnDefinitions)
+                                            @if (!Quick)
                                             {
                                                  <TableRow @key="currentRowData.Data">
                                                       @ChildContent(currentRowData.Data)
