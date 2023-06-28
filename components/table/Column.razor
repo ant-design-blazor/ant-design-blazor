@@ -6,14 +6,17 @@
 @using System.Linq.Expressions;
 @typeparam TData
 
-
 @if (IsHeaderTemplate)
 {
-    @RenderHeader();
+    @if (HeaderColSpan == 0)
+        return;
+    @RenderHeader()
 }
 else if (IsRowTemplate)
-{
-    @RenderBody(RowData);
+{  
+    @if (RowSpan == 0 || ColSpan == 0)
+        return;
+    @RenderBody(RowData)
 }
 
 @code

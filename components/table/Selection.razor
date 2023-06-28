@@ -6,10 +6,14 @@
 
 @if (IsHeaderTemplate)
 {
+    @if (HeaderColSpan == 0)
+        return;
     @RenderHeader()
 }
 else if (IsRowTemplate)
-{
+{  
+    @if (RowSpan == 0 || ColSpan == 0)
+        return;
     @RenderBody(RowData)
 }
 

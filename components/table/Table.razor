@@ -310,7 +310,7 @@ RenderFragment<(TItem data, int index)> bodyRow(Table<TItem> table, int level, I
                                 <CascadingValue Name="IsRowTemplate" Value="true" IsFixed>
                                     <CascadingValue Name="Table" Value="table" IsFixed>
                                         <CascadingValue Value="ColumnContext" IsFixed>
-                                            @if (!Quick)
+                                            @if (RowTemplate == null)
                                             {
                                                  <TableRow @key="currentRowData.Data">
                                                       @ChildContent(currentRowData.Data)
