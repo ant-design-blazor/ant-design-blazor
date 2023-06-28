@@ -10,6 +10,8 @@ using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using System.Reflection;
+using AntDesign.Table.Internal;
 
 #if NET5_0_OR_GREATER
 
@@ -25,7 +27,7 @@ namespace AntDesign
 
     public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
