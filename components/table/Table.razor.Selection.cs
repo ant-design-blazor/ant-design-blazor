@@ -143,6 +143,10 @@ namespace AntDesign
 
         private void SelectionChanged()
         {
+            foreach (var item in _selection.RowSelections)
+            {
+                item.StateHasChanged();
+            }
             if (SelectedRowsChanged.HasDelegate)
             {
                 _preventRender = true;

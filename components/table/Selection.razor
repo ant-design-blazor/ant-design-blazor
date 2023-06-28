@@ -4,6 +4,15 @@
 
 @inherits ColumnBase
 
+@if (IsHeaderTemplate)
+{
+    @RenderHeader()
+}
+else if (IsRowTemplate)
+{
+    @RenderBody(RowData)
+}
+
 @code{
 
     RenderFragment IRenderColumn.RenderPlaceholder()
@@ -28,22 +37,22 @@
             return@<col class="ant-table-selection-col">;
         }
     }
-
-    RenderFragment IRenderColumn.RenderHeader()
+    RenderFragment IRenderColumn.RenderHeader() => RenderHeader();
+    RenderFragment RenderHeader()
     {
         return
     @<th class="@ClassMapper.Class ant-table-selection-column" style="@_headerFixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
         @if (Type == "checkbox")
             {
-                <Checkbox Checked="Table.AllSelected" CheckedChange="(e)=>OnCheckedChange(e,null,true)" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
+                <Checkbox Checked="Table.AllSelected" CheckedChanged="(e)=>OnCheckedChange(e,null,true)" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
             }
             </th>
     ;
     }
-
-    RenderFragment IRenderColumn.RenderBody(RowData rowData)
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+    RenderFragment RenderBody(RowData rowData)
     {
-       return @<td class="@ClassMapper.Class ant-table-selection-column" style="@_fixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+        return @<td class="@ClassMapper.Class ant-table-selection-column" style="@_fixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
 
             @if (CellRender != null)
             {
@@ -58,11 +67,11 @@
             {
                 @if (Type == "checkbox")
                 {
-               <Checkbox Checked="rowData.Selected" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" />
+                    <Checkbox Checked="rowData.Selected" Disabled="Disabled" CheckedChanged="e=>OnCheckedChange(e,rowData)" />
                 }
                 else if (Type == "radio")
                 {
-               <Radio Checked="rowData.Selected" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" TValue="bool" />
+                    <Radio Checked="rowData.Selected" Disabled="Disabled" CheckedChanged="e=>OnCheckedChange(e,rowData)" TValue="bool" />
                 }
             }
         </td>;

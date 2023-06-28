@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 
 <Table TItem="Data" DataSource="data" @bind-PageSize="pageSize" Quick>
-    <ChildContent>
+    <ColumnDefinitions>
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
         </PropertyColumn>
@@ -24,7 +24,7 @@
                 }
             </CellRender>
         </PropertyColumn>
-    </ChildContent>
+    </ColumnDefinitions>
 
     <PaginationTemplate>
         <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"

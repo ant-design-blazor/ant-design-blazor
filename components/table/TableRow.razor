@@ -34,7 +34,7 @@
         class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
         @if (IsRowTemplate)
         {
-            <CascadingValue Value="RowData" IsFixed>
+            <CascadingValue Value="RowData">
                 @ChildContent
             </CascadingValue>
         }
@@ -49,7 +49,7 @@ else if (IsHeader)
     <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
         @if (IsHeaderTemplate)
         {
-            <CascadingValue Value="RowData" IsFixed>
+            <CascadingValue Value="RowData">
                 @ChildContent
             </CascadingValue>
         }

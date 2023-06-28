@@ -69,7 +69,7 @@ namespace AntDesign
 
             Table.Selection = this;
 
-            Table?.Selection?.RowSelections.Add(this);
+            Table.Selection.RowSelections.Add(this);
         }
 
         protected override void OnParametersSet()
