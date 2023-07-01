@@ -28,7 +28,7 @@ namespace AntDesign
                 Size = value;
             }
         }
-        
+
         /// <summary>
         /// Sets the value of the aria-label attribute
         /// </summary>
@@ -82,7 +82,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
-        
+
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
@@ -125,12 +125,15 @@ namespace AntDesign
         [Parameter]
         public bool NoSpanWrap { get; set; }
 
-        public IList<Icon> Icons { get; set; } = new List<Icon>();
+        [CascadingParameter] public SpaceCompact SpaceCompact { get; set; }
 
+        public IList<Icon> Icons { get; set; } = new List<Icon>();
 
         private bool _animating = false;
 
         private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
+
+        internal override string PrefixClassName => "ant-btn";
 
         protected void SetClassMap()
         {
@@ -149,6 +152,8 @@ namespace AntDesign
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
+
+            SpaceCompact?.AddComponent(this);
         }
 
         protected override void OnInitialized()
@@ -186,6 +191,12 @@ namespace AntDesign
             {
                 Style += ColorHelper.GetBackgroundStyle(Color);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            SpaceCompact?.AddComponent(this);
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,0 +1,94 @@
+﻿<div>
+    <SpaceCompact Block>
+        <Tooltip Title="Like">
+            <Unbound>
+                <Button RefBack="context" Icon="like" />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Comment">
+            <Unbound>
+                <Button RefBack="context" Icon="comment" />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Star">
+            <Unbound>  
+                <Button RefBack="context" Icon="star" />
+                </Unbound>
+        </Tooltip>
+        <Tooltip Title="Heart">
+            <Unbound>
+                <Button RefBack="context" Icon="heart" />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Share">
+            <Unbound>
+                <Button RefBack="context" Icon="share-alt" />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Download">
+            <Unbound>
+                <Button RefBack="context" Icon="download" />
+            </Unbound>
+        </Tooltip>
+        <Dropdown Placement="Placement.BottomRight"
+                  Trigger="new[]{Trigger.Click}">
+            <Overlay>
+                <Menu>
+                    <MenuItem Key="1" Title="Report" Icon="warning" />
+                    <MenuItem Key="1" Title="Mail" Icon="mail" />
+                    <MenuItem Key="1" Title="Mobile" Icon="mobile" />
+                </Menu>
+            </Overlay>
+            <Unbound>
+                <Button RefBack="@context" Icon="ellipsis" />
+            </Unbound>
+        </Dropdown>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Button Type="primary">Button 1</Button>
+        <Button Type="primary">Button 2</Button>
+        <Button Type="primary">Button 3</Button>
+        <Button Type="primary">Button 4</Button>
+        <Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Type="primary" Icon="download" Disabled />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Type="primary" Icon="download" />
+            </Unbound>
+        </Tooltip>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Button>Button 1</Button>
+        <Button>Button 2</Button>
+        <Button>Button 3</Button>
+        <Tooltip Title="Tooltip">
+            <Unbound>
+            <Button RefBack="context" Icon="download" Disabled />
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Icon="download" />
+            </Unbound>
+        </Tooltip>
+        <Button Type="primary">Button 4</Button>
+        <Dropdown Placement="@Placement.BottomRight"
+                  Trigger="new[]{Trigger.Click}">
+            <Overlay>
+                <Menu>
+                    <MenuItem Key="1" Title="1st item"></MenuItem>
+                    <MenuItem Key="2" Title="2nd item"></MenuItem>
+                    <MenuItem Key="3" Title="3rd item"></MenuItem>
+                </Menu>
+            </Overlay>
+            <Unbound>
+                <Button RefBack="context" Type="primary" Icon="ellipsis" />
+            </Unbound>
+        </Dropdown>
+    </SpaceCompact>
+</div>
