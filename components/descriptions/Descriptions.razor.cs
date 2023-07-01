@@ -44,7 +44,6 @@ namespace AntDesign
 
         private IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
-        public bool IsDirty = true;
         private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
 
         [Inject]
@@ -88,11 +87,6 @@ namespace AntDesign
             await base.OnInitializedAsync();
         }
 
-        protected override bool ShouldRender()
-        {
-            return base.ShouldRender() || IsDirty;
-        }
-
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender && Column.IsT1)
@@ -101,7 +95,6 @@ namespace AntDesign
             }
 
             base.OnAfterRender(firstRender);
-            IsDirty = false;
         }
 
         protected override void Dispose(bool disposing)
