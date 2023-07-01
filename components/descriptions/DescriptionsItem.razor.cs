@@ -34,12 +34,14 @@ namespace AntDesign
         {
             this.Descriptions?.Items.Remove(this);
             base.Dispose(disposing);
+            this.Descriptions?.ReRender();
         }
 
         protected override void OnInitialized()
         {
             this.Descriptions?.Items.Add(this);
             base.OnInitialized();
+            this.Descriptions?.ReRender();
         }
     }
 }
