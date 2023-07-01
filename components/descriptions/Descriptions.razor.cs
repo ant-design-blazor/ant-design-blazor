@@ -42,7 +42,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
+        private IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
         public bool IsDirty = true;
         private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
@@ -123,10 +123,22 @@ namespace AntDesign
             await base.OnFirstAfterRenderAsync();
         }
 
-        public void ReRender()
+        protected void ReRender()
         {
             PrepareMatrix();
             this.StateHasChanged();
+        }
+
+        public void AddItem(IDescriptionsItem item)
+        {
+            this.Items.Add(item);
+            ReRender();
+        }
+
+        public void RemoveItem(IDescriptionsItem item)
+        {
+            this.Items.Remove(item);
+            ReRender();
         }
 
         private void PrepareMatrix()

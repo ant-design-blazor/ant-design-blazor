@@ -32,16 +32,14 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            this.Descriptions?.Items.Remove(this);
+            this.Descriptions?.RemoveItem(this);
             base.Dispose(disposing);
-            this.Descriptions?.ReRender();
         }
 
         protected override void OnInitialized()
         {
-            this.Descriptions?.Items.Add(this);
             base.OnInitialized();
-            this.Descriptions?.ReRender();
+            this.Descriptions?.AddItem(this);
         }
     }
 }
