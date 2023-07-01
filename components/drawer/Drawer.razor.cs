@@ -156,7 +156,7 @@ namespace AntDesign
         /// Drawer对话框外层容器的类名
         /// </para>
         /// <para>
-        /// The class name of the container of the Drawer dialog.                       
+        /// The class name of the container of the Drawer dialog.
         /// </para>
         /// </summary>
         [Parameter]
@@ -287,7 +287,7 @@ namespace AntDesign
 
         private RenderFragment ContentTemplate { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         private ComponentStatus _status;
         private bool _hasInvokeClosed;
@@ -423,8 +423,8 @@ namespace AntDesign
                         CalcDrawerStyle();
                         StateHasChanged();
                         await Task.Delay(3000);
-                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) 
-                            ? $"transform: {OffsetTransform};" 
+                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
+                            ? $"transform: {OffsetTransform};"
                             : string.Empty;
                         StateHasChanged();
                         break;
@@ -437,7 +437,6 @@ namespace AntDesign
                         {
                             await HandleClose(true);
                         }
-                        await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                         break;
                     }
             }
@@ -486,6 +485,7 @@ namespace AntDesign
             {
                 await OnClose.InvokeAsync(this);
             }
+            await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
         }
 
         private void CalcDrawerStyle()
@@ -511,7 +511,12 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             _timer?.Dispose();
-            _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+
+            if (_isOpen)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            }
+
             base.Dispose(disposing);
         }
     }

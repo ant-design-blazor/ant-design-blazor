@@ -14,26 +14,6 @@ namespace AntDesign
 
         internal event Func<DrawerRef, Task> OnUpdateEvent;
 
-
-        private readonly NavigationManager _navigationManager;
-        private readonly IJSRuntime _jsRuntime;
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public DrawerService(NavigationManager navigationManager, IJSRuntime jsRuntime)
-        {
-            _navigationManager = navigationManager;
-            _navigationManager.LocationChanged += NavigationManager_LocationChanged;
-            _jsRuntime = jsRuntime;
-        }
-
-        private void NavigationManager_LocationChanged(object sender, LocationChangedEventArgs e)
-        {
-            _ = _jsRuntime.InvokeVoidAsync(JSInteropConstants.EnableBodyScroll, true);
-        }
-
-
         /// <summary>
         /// Create and open a simple drawer without result
         /// </summary>
@@ -76,7 +56,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Update a drawer 
+        /// Update a drawer
         /// </summary>
         /// <param name="drawerRef"></param>
         /// <returns></returns>
@@ -86,7 +66,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Create and open a drawer 
+        /// Create and open a drawer
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
         /// <typeparam name="TComponentOptions"></typeparam>
@@ -113,7 +93,6 @@ namespace AntDesign
             await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
             return await drawerRef.TaskCompletionSource.Task;
         }
-
 
         public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(TComponentOptions options,
             bool closable = true,
