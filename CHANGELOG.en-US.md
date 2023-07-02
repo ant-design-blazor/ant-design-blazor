@@ -15,6 +15,22 @@ timeline: true
 
 ---
 
+### 0.15.2
+
+`2013-07-03`
+
+- Table
+  - 🐞 Fixed Table avoid exception at DisposeAsync method. [#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed Table render incorrectly with `ParametersHashCodeChanged` render mode in some case. [#3313](https://github.com/ant-design-blazor/ant-design-blazor/pull/3313) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Menu that MenuItem unselect incorrectly when menu was inline and collapsed. [#3338](https://github.com/ant-design-blazor/ant-design-blazor/pull/3338) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer scroll not enable when page url changed. [#3316](https://github.com/ant-design-blazor/ant-design-blazor/pull/3316) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Slider does not always fire OnAfterChange. [#3323](https://github.com/ant-design-blazor/ant-design-blazor/pull/3323) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Statistic that coundown pause while the navigate to other page. [#3329](https://github.com/ant-design-blazor/ant-design-blazor/pull/3329) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Card missing loading effect. [#3319](https://github.com/ant-design-blazor/ant-design-blazor/pull/3319) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed TreeSelect that removing last option can't change the binding values. [#3314](https://github.com/ant-design-blazor/ant-design-blazor/pull/3314) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n ru-RU changed dateFormat and dateTimeFormat to `d.m.yyyy` in ru-RU locale. [#3327](https://github.com/ant-design-blazor/ant-design-blazor/pull/3327) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+
 ### 0.15.1
 
 `2023-06-18`
