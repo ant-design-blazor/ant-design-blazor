@@ -52,6 +52,8 @@ namespace AntDesign
 
         internal bool HasRowTemplate { get; }
 
+        internal bool Quick { get; }
+
         internal Type ItemType { get; }
 
         internal ColumnContext ColumnContext { get; }

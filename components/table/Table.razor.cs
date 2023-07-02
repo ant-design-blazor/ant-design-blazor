@@ -247,7 +247,7 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
-
+        bool ITable.Quick => Quick;
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
