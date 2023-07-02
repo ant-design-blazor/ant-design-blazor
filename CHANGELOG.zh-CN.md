@@ -15,6 +15,22 @@ timeline: true
 
 ---
 
+### 0.15.2
+
+`2013-07-03`
+
+- Table
+  - 🐞 避免 DisposeAsync 中的异常。[#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在 ParametersHashCodeChanged 模式下某些情况不渲染的问题。[#3313](https://github.com/ant-design-blazor/ant-design-blazor/pull/3313) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Menu 在收起时 MenuItem 切换又是无法取消选中的问题。[#3338](https://github.com/ant-design-blazor/ant-design-blazor/pull/3338) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 滚动条在页面路由发生变化时没有重置。[#3316](https://github.com/ant-design-blazor/ant-design-blazor/pull/3316) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Slider 在拖动释放时不触发OnAfterChange。[#3323](https://github.com/ant-design-blazor/ant-design-blazor/pull/3323) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复  Statistic  的 CountDown 在切换其他页面时会暂停的问题。[#3329](https://github.com/ant-design-blazor/ant-design-blazor/pull/3329) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Card 加载效果失效。[#3319](https://github.com/ant-design-blazor/ant-design-blazor/pull/3319) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TreeSelect 在移除最后一个选项时没有更新绑定的属性。[#3314](https://github.com/ant-design-blazor/ant-design-blazor/pull/3314) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: 俄语本地化文件 dateFormat 和 dateTimeFormat 改为 d.m.yyyy。[#3327](https://github.com/ant-design-blazor/ant-design-blazor/pull/3327) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+
 ### 0.15.1
 
 `2023-06-18`
