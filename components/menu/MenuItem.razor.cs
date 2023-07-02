@@ -56,6 +56,9 @@ namespace AntDesign
 
         private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
 
+        // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
+        private bool ShowTooltip => RootMenu.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
+
         private void SetClass()
         {
             string prefixCls = $"{RootMenu.PrefixCls}-item";
@@ -148,6 +151,11 @@ namespace AntDesign
             FirstRun = false;
             if (!skipParentSelection)
                 ParentMenu?.Select(isInitializing);
+
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
+            if (ShowTooltip)
+                StateHasChanged();
         }
 
         public void Deselect(bool sameParentAsSelected = false)
@@ -156,6 +164,11 @@ namespace AntDesign
             FirstRun = false;
             if (!sameParentAsSelected)
                 ParentMenu?.Deselect();
+
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
+            if (ShowTooltip)
+                StateHasChanged();
         }
     }
 }
