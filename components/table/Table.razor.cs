@@ -170,6 +170,11 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        /// <summary>
+        /// Enable resizable column
+        /// </summary>
+        [Parameter] public bool Resizable { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -550,6 +555,7 @@ namespace AntDesign
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-resizable", () => Resizable)
                 ;
 
             _wrapperClassMapper
@@ -687,9 +693,9 @@ namespace AntDesign
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null)
+                if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.

@@ -31,7 +31,7 @@
                     <CascadingValue Name="IsInitialize" Value="true" IsFixed>
                         @ChildContent(_fieldModel)
                     </CascadingValue>
-                    <div class="@ClassMapper.Class" @ref="_tableRef">
+                    <div class="@ClassMapper.Class">
                         @if (TitleTemplate != null || Title != null)
                         {
                             <div class="ant-table-title">
@@ -48,7 +48,7 @@
                                     </table>
                                 </div>
                                 <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
+                                    <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
@@ -65,7 +65,7 @@
                             else if (ScrollX != null)
                             {
                                 <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;" @ref="_tableRef">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
@@ -83,7 +83,7 @@
                             else
                             {
                                 <div class="ant-table-content">
-                                    <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                    <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);" @ref="_tableRef">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">

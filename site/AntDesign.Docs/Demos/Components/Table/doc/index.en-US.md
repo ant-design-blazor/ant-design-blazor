@@ -60,6 +60,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | TableLayout | The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column | string | - |
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
+| Resizable | Enable resizable column | bool | false |
 
 ### Column
 
