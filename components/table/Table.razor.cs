@@ -189,7 +189,7 @@ namespace AntDesign
         [Inject]
         private ILogger<Table<TItem>> Logger { get; set; }
 
-        public ColumnContext ColumnContext { get; set; }
+        internal ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
@@ -253,6 +253,8 @@ namespace AntDesign
         SortDirection[] ITable.SortDirections => SortDirections;
 
         Type ITable.ItemType => _itemType;
+
+        ColumnContext ITable.ColumnContext => ColumnContext;
 
         /// <summary>
         /// This method will be called when all columns have been set

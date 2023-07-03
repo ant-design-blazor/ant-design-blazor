@@ -20,16 +20,17 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
-        //private bool _checked;
+        private bool Indeterminate => !Table.AllSelected && Table.AnySelected;
 
-        private bool Indeterminate => !Table.AllSelected
-                                      && Table.AnySelected;
+        private IList<ISelectionColumn> _rowSelections = new List<ISelectionColumn>();
 
-        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
+        private bool IsHeaderDisabled => _rowSelections.All(x => x.Disabled);
 
-        //private int[] _selectedIndexes;
+        bool ISelectionColumn.Disabled => Disabled;
 
-        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+        string ISelectionColumn.Key => Key;
+
+        IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
 
         private void OnCheckedChange(bool selected, RowData rowData = null, bool isHeader = false)
         {
@@ -70,19 +71,6 @@ namespace AntDesign
             Table.Selection = this;
 
             Table.Selection.RowSelections.Add(this);
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            //if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
-            //{
-            //    var first = RowSelections.FirstOrDefault(x => x.Checked);
-            //    if (first != null)
-            //    {
-            //        Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.SetSelected(false));
-            //    }
-            //}
         }
 
         void ISelectionColumn.StateHasChanged()

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public interface IColumn
+    internal interface IColumn
     {
         public ITable Table { get; set; }
 
@@ -23,5 +23,7 @@ namespace AntDesign
         public int RowSpan { get; set; }
 
         public int HeaderColSpan { get; set; }
+
+        public bool Hidden { get; set; }
     }
 }

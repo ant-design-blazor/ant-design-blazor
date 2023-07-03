@@ -12,7 +12,7 @@ namespace AntDesign
         public ITable Table { get; set; }
 
         [CascadingParameter]
-        public ColumnContext Context { get; set; }
+        internal ColumnContext Context { get; set; }
 
         [CascadingParameter(Name = "IsHeaderTemplate")]
         public bool IsHeaderTemplate { get; set; }
@@ -146,7 +146,10 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            Context?.Columns.Remove(this);
+            if (!IsHeaderTemplate && !IsRowTemplate)
+            {
+                Context?.RemoveColumn(this);
+            }
             base.Dispose(disposing);
         }
 

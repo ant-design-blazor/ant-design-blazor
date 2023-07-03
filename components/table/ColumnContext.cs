@@ -5,15 +5,19 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class ColumnContext
+    internal class ColumnContext
     {
-        public IList<IColumn> Columns { get; set; } = new List<IColumn>();
+        public IReadOnlyList<IColumn> Columns => _columns.Where(x => !x.Hidden).ToList();
 
-        private int CurrentColIndex { get; set; }
+        private IList<IColumn> _columns = new List<IColumn>();
 
-        private int[] ColIndexOccupied { get; set; }
+        private int _currentColIndex;
+
+        private int[] _colIndexOccupied;
 
         private ITable _table;
+
+        private bool _collectingColumns;
 
         public ColumnContext(ITable table)
         {
@@ -28,8 +32,13 @@ namespace AntDesign
             }
 
             column.Table = _table;
-            column.ColIndex = CurrentColIndex++;
-            Columns.Add(column);
+            column.ColIndex = _currentColIndex++;
+            _columns.Add(column);
+        }
+
+        public void RemoveColumn(IColumn column)
+        {
+            _columns.Remove(column);
         }
 
         public void AddHeaderColumn(IColumn column)
@@ -44,29 +53,29 @@ namespace AntDesign
 
             do
             {
-                if (++CurrentColIndex >= Columns.Count)
+                if (++_currentColIndex >= _columns.Count)
                 {
-                    CurrentColIndex = 0;
-                    if (ColIndexOccupied != null)
+                    _currentColIndex = 0;
+                    if (_colIndexOccupied != null)
                     {
-                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        foreach (ref var item in _colIndexOccupied.AsSpan())
                         {
                             if (item > 0) item--;
                         }
                     }
                 }
             }
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            while (_colIndexOccupied != null && _colIndexOccupied[_currentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
-            CurrentColIndex += columnSpan - 1;
+            column.ColIndex = _currentColIndex;
+            _currentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
             {
-                ColIndexOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                _colIndexOccupied ??= new int[_columns.Count];
+                for (var i = column.ColIndex; i <= _currentColIndex; i++)
                 {
-                    ColIndexOccupied[i] = column.RowSpan;
+                    _colIndexOccupied[i] = column.RowSpan;
                 }
             }
         }
@@ -83,45 +92,55 @@ namespace AntDesign
 
             do
             {
-                if (++CurrentColIndex >= Columns.Count)
+                if (++_currentColIndex >= _columns.Count)
                 {
-                    CurrentColIndex = 0;
-                    if (ColIndexOccupied != null)
+                    _currentColIndex = 0;
+                    if (_colIndexOccupied != null)
                     {
-                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        foreach (ref var item in _colIndexOccupied.AsSpan())
                         {
                             if (item > 0) item--;
                         }
                     }
                 }
             }
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            while (_colIndexOccupied != null && _colIndexOccupied[_currentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
-            CurrentColIndex += columnSpan - 1;
+            column.ColIndex = _currentColIndex;
+            _currentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
             {
-                ColIndexOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                _colIndexOccupied ??= new int[_columns.Count];
+                for (var i = column.ColIndex; i <= _currentColIndex; i++)
                 {
-                    ColIndexOccupied[i] = column.RowSpan;
+                    _colIndexOccupied[i] = column.RowSpan;
                 }
+            }
+        }
+
+        internal void StartCollectingColumns()
+        {
+            if (!_collectingColumns)
+            {
+                _collectingColumns = true;
+                _columns.Clear();
             }
         }
 
         internal void HeaderColumnInitialed()
         {
-            if (_table.ScrollX != null && Columns.Any(x => x.Width == null))
+            if (_table.ScrollX != null && _columns.Any(x => x.Width == null))
             {
-                var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
-                var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
+                var zeroWidthCols = _columns.Where(x => x.Width == null).ToArray();
+                var totalWidth = string.Join(" + ", _columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
                 foreach (var col in zeroWidthCols)
                 {
                     col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
                 }
             }
 
+            _collectingColumns = false;
             // Header columns have all been initialized, then we can invoke the first change.
             _table.OnColumnInitialized();
         }
