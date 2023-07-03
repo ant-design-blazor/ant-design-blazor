@@ -142,15 +142,22 @@
                     <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
                         <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
                           <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                            @if (table.HeaderTemplate != null)
+                            @if (table.HeaderTemplate != null || !Quick)
                             {
                                 <CascadingValue Name="IsHeaderTemplate" Value="true" IsFixed>
-                                        <CascadingValue Name="Table" Value="table" IsFixed>
-                                            <CascadingValue Value="ColumnContext" IsFixed>
-                                                @table.HeaderTemplate(_fieldModel)
-                                            </CascadingValue>
+                                    <CascadingValue Name="Table" Value="table" IsFixed>
+                                        <CascadingValue Value="ColumnContext" IsFixed>
+                                        @if (HeaderTemplate == null)
+                                        {
+                                           @ChildContent(_fieldModel)
+                                        }
+                                        else
+                                        {
+                                             @table.HeaderTemplate(_fieldModel)
+                                        }
                                         </CascadingValue>
                                     </CascadingValue>
+                                </CascadingValue>
                             }
                             else
                             {

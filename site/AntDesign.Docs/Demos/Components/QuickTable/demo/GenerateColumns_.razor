@@ -3,24 +3,25 @@
 @using AntDesign.Core.Extensions
 
 <Table TItem="Data" DataSource="@data" Quick>
-
-    <GenerateColumns Range="1.." Definitions=definitions />
-
-    <ActionColumn Title="Action">
-        <Space Size=@("middle")>
-            <SpaceItem>
-                <a>Invite @context.Name</a>
-            </SpaceItem>
-            <SpaceItem>
-                <a>Delete</a>
-            </SpaceItem>
-        </Space>
-    </ActionColumn>
+    <GenerateColumns Range="1.." Definitions=definitions>
+        <RightColumns>
+            <ActionColumn Title="Action">
+                <Space Size=@("middle")>
+                    <SpaceItem>
+                        <a>Invite @context.Name</a>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <a>Delete</a>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </RightColumns>
+    </GenerateColumns>
 </Table>
 
 @code {
     Data[] data = new Data[]
-    {
+        {
         new()
         {
             Key = "1",
@@ -45,7 +46,7 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-    };
+        };
 
     public class Data
     {
@@ -77,17 +78,17 @@
             var tagCol = ((Column<string[]>)column);
 
             tagCol.CellRender = cellData =>
-            @<span>
-                @foreach (var tag in cellData.FieldValue)
-                {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
-                    if (tag == "loser")
-                    {
-                        color = "volcano";
-                    }
-                    <Tag Color="@color">@tag</Tag>
-                }
-            </span>;
+    @<span>
+        @foreach (var tag in cellData.FieldValue)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
+            {
+                color = "volcano";
+            }
+            <Tag Color="@color">@tag</Tag>
+        }
+    </span>;
 
             return;
         }

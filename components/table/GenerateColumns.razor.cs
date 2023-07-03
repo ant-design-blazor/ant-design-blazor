@@ -14,7 +14,7 @@ namespace AntDesign
 {
     public partial class GenerateColumns<TItem> : ComponentBase
     {
-        private PropertyInfo[] _propertyInfos = { };
+        private static PropertyInfo[] _propertyInfos;
 
         /// <summary>
         /// Specific the range of the columns that need to display.
@@ -30,21 +30,28 @@ namespace AntDesign
         [Parameter]
         public Action<string, object> Definitions { get; set; }
 
-        protected override void OnInitialized()
+        [Parameter]
+        public RenderFragment LeftColumns { get; set; }
+
+        [Parameter]
+        public RenderFragment RightColumns { get; set; }
+
+        static GenerateColumns()
         {
             _propertyInfos = typeof(TItem).GetProperties();
-
-            base.OnInitialized();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var i = 0;
             var showPropertys = _propertyInfos;
             if (Range != null)
             {
                 showPropertys = _propertyInfos[Range.Value];
             }
+
+            builder.AddContent(0, LeftColumns);
+
+            var i = 0;
             foreach (var property in showPropertys)
             {
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
@@ -61,9 +68,10 @@ namespace AntDesign
                 builder.OpenComponent(++i, columnType);
                 builder.AddAttribute(++i, "DataIndex", property.Name);
                 builder.AddMultipleAttributes(++i, attributes);
-
                 builder.CloseComponent();
             }
+
+            builder.AddContent(0, RightColumns);
         }
     }
 }

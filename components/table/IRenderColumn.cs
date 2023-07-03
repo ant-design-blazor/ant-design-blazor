@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Table
 {
-    public interface IRenderColumn
+    internal interface IRenderColumn
     {
         RenderFragment RenderPlaceholder();
 
