@@ -10,9 +10,8 @@
 <CascadingValue Value="@ColumnContext" IsFixed>
     @ChildContent(_fieldModel)
 </CascadingValue>
-@{
-    ColumnContext.HeaderColumnInitialed();
-}
+@{ ColumnContext.HeaderColumnInitialed(); }
+
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
@@ -32,84 +31,78 @@
             }
         }
           
-                    <div class="@ClassMapper.Class" @ref="_tableRef">
-                        @if (TitleTemplate != null || Title != null)
-                        {
-                            <div class="ant-table-title">
-                                @if (TitleTemplate != null)@TitleTemplate else @Title
-                            </div>
-                        }
-                        <div class="ant-table-container">
-                            @if (ScrollY != null)
-                            {
-                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
-                                    <table style="@TableLayoutStyle">
-                                        @colGroup((this, true))
-                                        @header(this)
-                                    </table>
-                                </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
-                                        @colGroup((this, false))
-                                        <tbody class="ant-table-tbody">
-                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                               @* <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @ChildContent(_fieldModel)
-                                                </CascadingValue>*@
-                                                @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
-                                                {
-                                                    @column.RenderMeasure()
-                                                }
-                                            </tr>
-                                            @body(this, _showItems, 0, _dataSourceCache)
-                                        </tbody>
-                                        @tfoot(this)
-                                    </table>
-                                </div>
-                            }
-                            else if (ScrollX != null)
-                            {
-                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;">
-                                        @colGroup((this, true))
-                                        @header(this)
-                                        <tbody class="ant-table-tbody">
-                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                               @* <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @ChildContent(_fieldModel)
-                                                </CascadingValue>*@
-                                                @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
-                                                {
-                                                    @column.RenderMeasure()
-                                                }
-                                            </tr>
-                                            @body(this, _showItems, 0, _dataSourceCache)
-                                        </tbody>
-                                        @tfoot(this)
-                                    </table>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="ant-table-content">
-                                    <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
-                                        @colGroup((this, true))
-                                        @header(this)
-                                        <tbody class="ant-table-tbody">
-                                            @body(this, _showItems, 0, _dataSourceCache)
-                                        </tbody>
-                                        @tfoot(this)
-                                    </table>
-                                </div>
-                            }
-                        </div>
-                        @if (FooterTemplate != null || Footer != null)
-                        {
-                            <div class="ant-table-footer">
-                                @if (FooterTemplate != null)@FooterTemplate else @Footer
-                            </div>
-                        }
+        <div class="@ClassMapper.Class" @ref="_tableRef">
+            @if (TitleTemplate != null || Title != null)
+            {
+                <div class="ant-table-title">
+                    @if (TitleTemplate != null)@TitleTemplate else @Title
+                </div>
+            }
+            <div class="ant-table-container">
+                @if (ScrollY != null)
+                {
+                    <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                        <table style="@TableLayoutStyle">
+                            @colGroup((this, true))
+                            @header(this)
+                        </table>
                     </div>
+                    <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                        <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
+                            @colGroup((this, false))
+                            <tbody class="ant-table-tbody">
+                                <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                    @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                    {
+                                        @column.RenderMeasure()
+                                    }
+                                </tr>
+                                @body(this, _showItems, 0, _dataSourceCache)
+                            </tbody>
+                            @tfoot(this)
+                        </table>
+                    </div>
+                }
+                else if (ScrollX != null)
+                {
+                    <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                        <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;">
+                            @colGroup((this, true))
+                            @header(this)
+                            <tbody class="ant-table-tbody">
+                                <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                    @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                    {
+                                        @column.RenderMeasure()
+                                    }
+                                </tr>
+                                @body(this, _showItems, 0, _dataSourceCache)
+                            </tbody>
+                            @tfoot(this)
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="ant-table-content">
+                        <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                            @colGroup((this, true))
+                            @header(this)
+                            <tbody class="ant-table-tbody">
+                                @body(this, _showItems, 0, _dataSourceCache)
+                            </tbody>
+                            @tfoot(this)
+                        </table>
+                    </div>
+                }
+            </div>
+            @if (FooterTemplate != null || Footer != null)
+            {
+                <div class="ant-table-footer">
+                    @if (FooterTemplate != null)@FooterTemplate else @Footer
+                </div>
+            }
+        </div>
       
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
