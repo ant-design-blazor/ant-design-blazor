@@ -120,7 +120,7 @@ namespace AntDesign.Datepicker.Locale
 
         public bool IsFullString(string forEvaluation)
         {
-            if (forEvaluation.Length < _formatLength)
+            if (string.IsNullOrEmpty(forEvaluation) || forEvaluation.Length < _formatLength)
                 return false;
 
             int startPosition = _startPosition, endingPosition, parsed;

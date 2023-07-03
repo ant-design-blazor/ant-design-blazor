@@ -180,7 +180,7 @@
     }
     
     [Fact]
-    public async Task Enter_Date_Before_Blur_Should_Change_Value_When_EnterOnBlur()
+    public async Task Enter_Date_Before_Blur_Should_Change_Value_When_ChangeOnClose()
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -192,12 +192,12 @@
         JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 
-        DateTime value = DateTime.Now;
+        DateTime value = DateTime.Now.Date;
         var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" ChangeOnClose />);
         
         //Act
         var input = cut.Find("input");
-        var newDate = value.AddDays(20).Date;
+        var newDate = value.AddDays(20);
         var newDateAsString = newDate.ToString(DateFormat);
         input.Click();
         await Task.Delay(1);

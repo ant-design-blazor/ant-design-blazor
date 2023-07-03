@@ -608,6 +608,7 @@ namespace AntDesign
         {
             if (ChangeOnClose && _duringManualInput)
             {
+                ChangeValue(_pickerStatus[index].SelectedValue.Value);
             }
         }
 

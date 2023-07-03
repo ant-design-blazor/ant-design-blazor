@@ -354,7 +354,17 @@ namespace AntDesign
             //Task.Yield() does not work here.
             await Task.Delay(1);
 
-            await base.OnBlur(index);
+            if (ChangeOnClose && _duringManualInput)
+            {
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    await OnSelect(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else if (AllowClear)
+                {
+                    ClearValue(index);
+                }
+            }
 
             if (_duringFocus)
             {
@@ -548,7 +558,7 @@ namespace AntDesign
                 Close();
             }
 
-            if (array.GetValue(0) is null && array.GetValue(1) is null)
+            if (array.GetValue(0) is null || array.GetValue(1) is null)
             {
                 InvokeOnChange();
             }
