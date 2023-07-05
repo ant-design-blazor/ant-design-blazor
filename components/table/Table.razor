@@ -4,13 +4,16 @@
 @using AntDesign.Internal
 @using AntDesign.Core.Component.ResizeObserver
 @using AntDesign.Table
+@using AntDesign.Table.Internal
 
 @typeparam TItem
-
+  
 <CascadingValue Value="@ColumnContext" IsFixed>
+    @{ ColumnContext.StartCollectingColumns(); }
     @ChildContent(_fieldModel)
-</CascadingValue>
-@{ ColumnContext.HeaderColumnInitialed(); }
+
+<Defer>
+    @{ ColumnContext.HeaderColumnInitialed(); }
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
@@ -122,7 +125,8 @@
         }
     </Spin>
 </div>
-
+</Defer>
+</CascadingValue>
 @code
 {
     RenderFragment header(Table<TItem> table) =>

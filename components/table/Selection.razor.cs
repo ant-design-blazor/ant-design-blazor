@@ -62,15 +62,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            if (Table == null)
-            {
-                return;
-            }
-
-            Table.Selection = this;
-
-            Table.Selection.RowSelections.Add(this);
         }
 
         void ISelectionColumn.StateHasChanged()

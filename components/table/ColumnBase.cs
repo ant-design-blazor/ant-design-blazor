@@ -8,9 +8,6 @@ namespace AntDesign
 {
     public abstract class ColumnBase : AntDomComponentBase, IColumn
     {
-        [CascadingParameter(Name = "Table")]
-        public ITable Table { get; set; }
-
         [CascadingParameter]
         internal ColumnContext Context { get; set; }
 
@@ -72,6 +69,7 @@ namespace AntDesign
         }
 
         public int ColIndex { get; set; }
+        public ITable Table => Context?.Table;
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
         protected bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
@@ -86,7 +84,7 @@ namespace AntDesign
 
         private readonly ClassMapper _headerMapper = new();
 
-        private void SetClass()
+        protected void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
@@ -111,37 +109,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            if (IsHeaderTemplate)
-            {
-                Context?.AddHeaderColumn(this);
-            }
-            else if (IsRowTemplate)
-            {
-                Context?.AddRowColumn(this);
-            }
-            else
-            {
-                Context?.AddColumn(this);
-            }
-
-            if (Fixed == "left")
-            {
-                Table?.HasFixLeft();
-            }
-            else if (Fixed == "right")
-            {
-                Table?.HasFixRight();
-            }
-
-            if (Ellipsis)
-            {
-                Table?.TableLayoutIsFixed();
-            }
-
-            _fixedStyle = CalcFixedStyle();
-            _headerFixedStyle = CalcFixedStyle(isHeader: true);
-            SetClass();
         }
 
         protected override void Dispose(bool disposing)
@@ -153,7 +120,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private string CalcFixedStyle(bool isHeader = false)
+        protected string CalcFixedStyle(bool isHeader = false)
         {
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)

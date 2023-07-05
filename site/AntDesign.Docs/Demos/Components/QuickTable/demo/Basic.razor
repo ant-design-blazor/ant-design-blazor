@@ -6,11 +6,15 @@
         <CellRender Context="cell">@cell.FieldValue</CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address">
-        <TitleTemplate>
-            <span> <Icon Type="environment" /> Address </span>
-        </TitleTemplate>
-    </PropertyColumn>
+    @if (show)
+    {
+        <PropertyColumn Property="c=>c.Address">
+            <TitleTemplate>
+                <span> <Icon Type="environment" /> Address </span>
+            </TitleTemplate>
+        </PropertyColumn>
+    }
+
     <PropertyColumn Property="c=>c.Tags">
         <CellRender Context="cell">
             @foreach (var tag in cell.FieldValue)
@@ -36,7 +40,15 @@
     </ActionColumn>
 </Table>
 
+<Button OnClick="OnClick">Show</Button>
 @code {
+    bool show;
+
+    void OnClick()
+    {
+        show = !show;
+    }
+
     Data[] data = new Data[]
     {
         new()

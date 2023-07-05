@@ -8,6 +8,37 @@
 
 @if (IsHeaderTemplate)
 {
+    Context?.AddHeaderColumn(this);
+}
+else if (IsRowTemplate)
+{
+    Context?.AddRowColumn(this);
+}
+else
+{
+    Context?.AddColumn(this);
+
+    if (Fixed == "left")
+    {
+        Table?.HasFixLeft();
+    }
+    else if (Fixed == "right")
+    {
+        Table?.HasFixRight();
+    }
+
+    if (Ellipsis)
+    {
+        Table?.TableLayoutIsFixed();
+    }
+
+    _fixedStyle = CalcFixedStyle();
+    _headerFixedStyle = CalcFixedStyle(isHeader: true);
+    SetClass();
+}
+
+@if (IsHeaderTemplate)
+{
     @if (HeaderColSpan == 0)
         return;
     @RenderHeader()

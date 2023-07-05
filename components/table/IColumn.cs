@@ -8,7 +8,7 @@ namespace AntDesign
 {
     internal interface IColumn
     {
-        public ITable Table { get; set; }
+        public ITable Table { get; }
 
         public int ColIndex { get; set; }
 

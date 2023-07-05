@@ -15,23 +15,26 @@ namespace AntDesign
 
         private int[] _colIndexOccupied;
 
-        private ITable _table;
+        public ITable Table { get; }
 
         private bool _collectingColumns;
 
         public ColumnContext(ITable table)
         {
-            _table = table;
+            Table = table;
         }
 
         public void AddColumn(IColumn column)
         {
+            if (!_collectingColumns)
+            {
+                return;
+            }
             if (column == null)
             {
                 return;
             }
 
-            column.Table = _table;
             column.ColIndex = _currentColIndex++;
             _columns.Add(column);
         }
@@ -121,28 +124,26 @@ namespace AntDesign
 
         internal void StartCollectingColumns()
         {
-            if (!_collectingColumns)
-            {
-                _collectingColumns = true;
-                _columns.Clear();
-            }
+            _columns.Clear();
+
+            _collectingColumns = true;
         }
 
         internal void HeaderColumnInitialed()
         {
-            if (_table.ScrollX != null && _columns.Any(x => x.Width == null))
+            if (Table.ScrollX != null && _columns.Any(x => x.Width == null))
             {
                 var zeroWidthCols = _columns.Where(x => x.Width == null).ToArray();
                 var totalWidth = string.Join(" + ", _columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
                 foreach (var col in zeroWidthCols)
                 {
-                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
+                    col.Width = $"calc(({(CssSizeLength)Table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
                 }
             }
 
             _collectingColumns = false;
             // Header columns have all been initialized, then we can invoke the first change.
-            _table.OnColumnInitialized();
+            Table.OnColumnInitialized();
         }
     }
 }
