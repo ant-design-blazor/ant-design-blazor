@@ -37,22 +37,27 @@ namespace AntDesign.Docs.Shared
         private List<string> _filePaths;
         private bool _waitForRefresh;
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            await GetContributors();
-            await base.OnInitializedAsync();
-
             Navigation.LocationChanged += OnLocationChanged;
+            base.OnInitialized();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                _waitForRefresh = true;
+                return;
+            }
+
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
                 await GetContributors();
             }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async void OnLocationChanged(object _, LocationChangedEventArgs e)
@@ -68,14 +73,18 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePaths?.Any() != true)
                 return;
-            var taskList = new List<Task<AvatarInfo[]>>();
-            foreach (var filePath in FilePaths)
+
+            var taskList = FilePaths.Select(filePath => HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
+
+            try
             {
-                taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
+                await Task.WhenAll(taskList);
+                _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
+                StateHasChanged();
             }
-            await Task.WhenAll(taskList);
-            _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
-            StateHasChanged();
+            catch
+            {
+            }
         }
 
         public void Dispose()
