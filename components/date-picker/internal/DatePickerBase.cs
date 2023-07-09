@@ -260,6 +260,11 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        /// <summary>
+        /// The position where the selection box pops up
+        /// </summary>
+        [Parameter] public Placement Placement { get; set; } = Placement.BottomLeft;
+
         public DateTime CurrentDate { get; set; } = DateTime.Today;
 
         protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
@@ -478,7 +483,6 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-
                             ChangeValue(date, index, false);
 
                             var otherIndex = Math.Abs(index - 1);
