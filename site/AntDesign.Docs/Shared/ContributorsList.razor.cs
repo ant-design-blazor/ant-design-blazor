@@ -48,24 +48,24 @@ namespace AntDesign.Docs.Shared
             if (firstRender)
             {
                 _waitForRefresh = true;
+                StateHasChanged();
                 return;
             }
 
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                await GetContributors();
+                _ = GetContributors();
             }
 
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async void OnLocationChanged(object _, LocationChangedEventArgs e)
+        private void OnLocationChanged(object _, LocationChangedEventArgs e)
         {
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                await GetContributors();
             }
         }
 

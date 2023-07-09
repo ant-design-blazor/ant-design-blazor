@@ -15,9 +15,23 @@
 
     private Type _demoType;
 
-    protected override async Task OnInitializedAsync()
+    private bool _render;
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        await base.OnInitializedAsync();
-        _demoType = demoService.GetShowCase(Demo.Type);
+        if (firstRender)
+        {
+            _render = true;
+            StateHasChanged();
+            return;
+        }
+        if (_render && _demoType == null)
+        {
+            _demoType = demoService.GetShowCase(Demo.Type);
+            StateHasChanged();
+        }
+
+        base.OnAfterRender(firstRender);
+
     }
 }

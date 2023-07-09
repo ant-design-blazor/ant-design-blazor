@@ -125,7 +125,7 @@
             return;
         }
 
-        if (_rendered)
+        if (_rendered && _demoType == null)
         {
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();

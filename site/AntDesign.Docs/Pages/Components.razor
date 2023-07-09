@@ -47,16 +47,22 @@
                     </Tooltip>
                 </h1>
                 <section class="markdown">
-                    @((MarkupString) _demoComponent.Desc)
+                    @((MarkupString)_demoComponent.Desc)
                 </section>
 
-                @if (_rendered && demos.Any())
+                @if (_rendered)
                 {
                     @foreach (var docDemo in docDemos)
                     {
                         <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")" />
                     }
-
+                }
+                else
+                {
+                    <Skeleton ParagraphRows="3" Active></Skeleton>
+                }
+                @if (demos.Any())
+                {
                     <h2 data-scrollama-index="1">
                         @LanguageService.Resources["app.component.examples"]
                         <span class="all-code-box-controls">
@@ -75,10 +81,6 @@
                             @*<Icon Type="bug" Class="code-box-expand-trigger" />*@
                         </span>
                     </h2>
-                }
-                else
-                {
-                    <Skeleton ParagraphRows="3" Active></Skeleton>
                 }
             </section>
 
@@ -119,7 +121,7 @@
                 <Skeleton ParagraphRows="3" Active></Skeleton>
             }
             <section class="markdown api-container">
-                @((MarkupString) _demoComponent.ApiDoc)
+                @((MarkupString)_demoComponent.ApiDoc)
             </section>
         }
         else
@@ -127,5 +129,5 @@
             <Skeleton ParagraphRows="3" Active></Skeleton>
         }
     </article>
-    @*<ContributorsList FilePaths="_filePaths" />*@
+    <ContributorsList FilePaths="_filePaths" />
 </section>
