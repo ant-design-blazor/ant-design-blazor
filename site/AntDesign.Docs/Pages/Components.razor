@@ -84,7 +84,7 @@
                 }
             </section>
 
-            @if (_rendered && demos.Any())
+            @if (demos.Any())
             {
                 <Row Style="margin-left: -8px; margin-right: -8px;">
                     @if (_demoComponent.Cols == 1 || _expanded)
@@ -116,10 +116,7 @@
                     }
                 </Row>
             }
-            else
-            {
-                <Skeleton ParagraphRows="3" Active></Skeleton>
-            }
+           
             <section class="markdown api-container">
                 @((MarkupString)_demoComponent.ApiDoc)
             </section>
