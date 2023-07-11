@@ -55,8 +55,7 @@ namespace AntDesign.Docs.Shared
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                await Task.Yield();
-                await GetContributors();
+                _ = GetContributors();
             }
 
             await base.OnAfterRenderAsync(firstRender);
