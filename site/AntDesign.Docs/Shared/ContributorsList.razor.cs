@@ -55,7 +55,8 @@ namespace AntDesign.Docs.Shared
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                _ = GetContributors();
+                await Task.Yield();
+                await GetContributors();
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -65,7 +66,7 @@ namespace AntDesign.Docs.Shared
         {
             if (_waitForRefresh)
             {
-                _waitForRefresh = false;
+                _waitForRefresh = true;
             }
         }
 
@@ -74,17 +75,10 @@ namespace AntDesign.Docs.Shared
             if (FilePaths?.Any() != true)
                 return;
 
-            var taskList = FilePaths.Select(filePath => HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
-
-            try
-            {
-                await Task.WhenAll(taskList);
-                _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
-                StateHasChanged();
-            }
-            catch
-            {
-            }
+            var taskList = FilePaths.Select(filePath => HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor")).ToArray();
+            await Task.WhenAll(taskList);
+            _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
+            StateHasChanged();
         }
 
         public void Dispose()
