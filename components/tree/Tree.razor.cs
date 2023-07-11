@@ -6,7 +6,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -801,5 +803,45 @@ namespace AntDesign
         }
 
         #endregion Expand
+
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+        internal bool IsCtrlKeyDown { get; set; } = false;
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventListener.AddShared<JsonElement>("document", "keydown", OnKeyDown);
+                DomEventListener.AddShared<JsonElement>("document", "keyup", OnKeyUp);
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected virtual void OnKeyDown(JsonElement jsonElement)
+        {
+            HanldeCtrlKeyPress(jsonElement);
+        }
+
+        protected virtual void OnKeyUp(JsonElement jsonElement)
+        {
+            HanldeCtrlKeyPress(jsonElement);
+        }
+
+        private void HanldeCtrlKeyPress(JsonElement jsonElement)
+        {
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            IsCtrlKeyDown = eventArgs.CtrlKey || eventArgs.MetaKey;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener?.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }
