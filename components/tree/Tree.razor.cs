@@ -678,12 +678,12 @@ namespace AntDesign
             }
             return base.OnFirstAfterRenderAsync();
         }
-        
+
         /// <summary>
         /// Get TreeNode from Key
         /// </summary>
         /// <param name="key">Key</param>
-        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x=>x.Key == key);
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x => x.Key == key);
 
         /// <summary>
         /// Find Node
@@ -807,9 +807,9 @@ namespace AntDesign
 
         #endregion Expand
 
-
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
+
         internal bool IsCtrlKeyDown { get; set; } = false;
 
         protected override void OnAfterRender(bool firstRender)
@@ -822,28 +822,26 @@ namespace AntDesign
                 }
                 else
                 {
-                    DomEventListener.AddShared<JsonElement>("document", "keydown", OnKeyDown);
-                    DomEventListener.AddShared<JsonElement>("document", "keyup", OnKeyUp);
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keydown", OnKeyDown);
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keyup", OnKeyUp);
                 }
             }
 
             base.OnAfterRender(firstRender);
         }
 
-        protected virtual void OnKeyDown(JsonElement jsonElement)
+        protected virtual void OnKeyDown(KeyboardEventArgs eventArgs)
         {
-            HanldeCtrlKeyPress(jsonElement);
+            HanldeCtrlKeyPress(eventArgs);
         }
 
-        protected virtual void OnKeyUp(JsonElement jsonElement)
+        protected virtual void OnKeyUp(KeyboardEventArgs eventArgs)
         {
-            HanldeCtrlKeyPress(jsonElement);
+            HanldeCtrlKeyPress(eventArgs);
         }
 
-        private void HanldeCtrlKeyPress(JsonElement jsonElement)
+        private void HanldeCtrlKeyPress(KeyboardEventArgs eventArgs)
         {
-            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
             IsCtrlKeyDown = eventArgs.CtrlKey || eventArgs.MetaKey;
         }
 
