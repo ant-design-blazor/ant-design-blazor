@@ -16,6 +16,9 @@ namespace AntDesign
 {
     public partial class Tree<TItem> : AntDomComponentBase
     {
+        [CascadingParameter(Name = "IsTreeSelect")]
+        public bool IsTreeSelect { get; set; }
+
         #region fields
 
         /// <summary>
@@ -813,8 +816,15 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                DomEventListener.AddShared<JsonElement>("document", "keydown", OnKeyDown);
-                DomEventListener.AddShared<JsonElement>("document", "keyup", OnKeyUp);
+                if (IsTreeSelect)
+                {
+                    IsCtrlKeyDown = true;
+                }
+                else
+                {
+                    DomEventListener.AddShared<JsonElement>("document", "keydown", OnKeyDown);
+                    DomEventListener.AddShared<JsonElement>("document", "keyup", OnKeyUp);
+                }
             }
 
             base.OnAfterRender(firstRender);
