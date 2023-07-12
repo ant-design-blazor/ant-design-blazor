@@ -89,6 +89,7 @@ namespace AntDesign.Select.Internal
         private bool _refocus;
         private Timer _debounceTimer;
         private string _inputString;
+        private bool _firstRender;
 
         protected override void OnInitialized()
         {
@@ -105,6 +106,7 @@ namespace AntDesign.Select.Internal
             SetSuppressInput();
             if (firstRender)
             {
+                _firstRender = true;
                 if (ParentSelect.IsSearchEnabled)
                 {
                     DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
@@ -140,7 +142,7 @@ namespace AntDesign.Select.Internal
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
-            else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
+            else if (_firstRender && _currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
                 _currentItemCount = ParentSelect.SelectedOptionItems.Count;
                 _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
