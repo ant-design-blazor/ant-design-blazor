@@ -18,26 +18,42 @@ namespace AntDesign.Docs.Pages
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private ILanguageService Language { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        private bool _rendered;
+
+        protected override void OnInitialized()
         {
-            await base.OnInitializedAsync();
-            await FetchData();
+            base.OnInitialized();
 
             Language.LanguageChanged += HandleLanguageChanged;
         }
 
-        private async void HandleLanguageChanged(object _, CultureInfo culture)
+        private void HandleLanguageChanged(object _, CultureInfo culture)
         {
-            await FetchData();
-            await InvokeAsync(StateHasChanged);
+            _ = FetchData();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            if (firstRender)
+            {
+                _rendered = true;
+                StateHasChanged();
+                return;
+            }
+
+            if (_rendered)
+            {
+                _ = FetchData();
+            }
         }
 
         private async Task FetchData()
         {
             _recommends = await DemoService.GetRecommend();
-
             _products = await DemoService.GetProduct();
             _moreArticles = await DemoService.GetMore();
+            await InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()

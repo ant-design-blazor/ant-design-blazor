@@ -19,6 +19,10 @@
 
             @((MarkupString) _file.Html)
         }
+        else
+        {
+            <Skeleton Paragraph ParagraphRows="5"></Skeleton>
+        }
     </article>
     <ContributorsList FilePaths="@_filePaths" />
 </section>
