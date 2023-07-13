@@ -85,7 +85,7 @@ namespace AntDesign.JsInterop
                     for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
                     {
                         var subscription = _domEventSubscriptionsStore[key][i];
-                        object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                        var tP = JsonSerializer.Deserialize(p, subscription.Type, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
                         subscription.Delegate.DynamicInvoke(tP);
                     }
                 }));

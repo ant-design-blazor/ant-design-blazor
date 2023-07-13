@@ -198,7 +198,11 @@ namespace AntDesign
             _selected = value;
             if (value == true)
             {
-                if (TreeComponent.Multiple == false) TreeComponent.DeselectAll();
+                if (!(TreeComponent.Multiple && TreeComponent.IsCtrlKeyDown))
+                {
+                    TreeComponent.DeselectAll();
+                }
+
                 TreeComponent.SelectedNodeAdd(this);
             }
             else
@@ -505,7 +509,7 @@ namespace AntDesign
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildCheckedDefault(child, check);
-        }        
+        }
 
         /// <summary>
         /// Update check status
