@@ -144,8 +144,10 @@
                                 <CascadingValue Name="IsHeaderTemplate" Value="true" IsFixed>
                                     <CascadingValue Name="Table" Value="table" IsFixed>
                                         @if (HeaderTemplate == null)
-                                        {
-                                            @ChildContent(_fieldModel)
+                                        {  
+                                            <TableRow>
+                                                @ChildContent(_fieldModel)
+                                            </TableRow>
                                         }
                                         else
                                         {

@@ -63,8 +63,6 @@ namespace AntDesign
                     return;
 
                 _align = value;
-                _fixedStyle = CalcFixedStyle();
-                _headerFixedStyle = CalcFixedStyle(isHeader: true);
             }
         }
 
@@ -73,8 +71,8 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
         protected bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
-        protected string _fixedStyle;
-        protected string _headerFixedStyle;
+        //protected string _fixedStyle;
+        //protected string _headerFixedStyle;
 
         private ColumnAlign _align = ColumnAlign.Left;
 
@@ -82,7 +80,7 @@ namespace AntDesign
 
         private int HeaderColEndIndex => ColIndex + HeaderColSpan;
 
-        private readonly ClassMapper _headerMapper = new();
+        protected readonly ClassMapper HeaderMapper = new();
 
         protected void SetClass()
         {
@@ -96,7 +94,7 @@ namespace AntDesign
                 .If($"ant-table-cell-ellipsis", () => Ellipsis)
                 ;
 
-            _headerMapper
+            HeaderMapper
                 .Add("ant-table-cell")
                 .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == "right" && x.ColIndex >= ColIndex && x.ColIndex < HeaderColEndIndex))
                 .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < HeaderColEndIndex))
@@ -108,6 +106,22 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (Fixed == "left")
+            {
+                Table?.HasFixLeft();
+            }
+            else if (Fixed == "right")
+            {
+                Table?.HasFixRight();
+            }
+
+            if (Ellipsis)
+            {
+                Table?.TableLayoutIsFixed();
+            }
+
+            SetClass();
+
             base.OnInitialized();
         }
 

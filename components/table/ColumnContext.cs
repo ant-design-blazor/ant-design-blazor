@@ -125,7 +125,6 @@ namespace AntDesign
         internal void StartCollectingColumns()
         {
             _columns.Clear();
-
             _collectingColumns = true;
         }
 
@@ -140,7 +139,6 @@ namespace AntDesign
                     col.Width = $"calc(({(CssSizeLength)Table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
                 }
             }
-
             _collectingColumns = false;
             // Header columns have all been initialized, then we can invoke the first change.
             Table.OnColumnInitialized();
