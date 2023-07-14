@@ -35,6 +35,21 @@
             // If you have changed the default port / launch URL make sure to update the expectation below
             "url": "http://localhost:5000",
             "webRoot": "${workspaceFolder}/site/AntDesign.Docs.Wasm",
-        }
+        },
+        {
+          "name": "Migrator",
+          "type": "node",
+          "request": "launch",
+          "skipFiles": [
+              "<node_internals>/**"
+          ],
+          "runtimeArgs": [
+              "-r",
+              "ts-node/register"
+          ],
+          "args": [
+              "${workspaceFolder}/scripts/migrator/index.ts"
+          ]
+      }
     ]
 }

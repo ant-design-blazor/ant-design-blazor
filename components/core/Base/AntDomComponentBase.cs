@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using CssInCs;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -84,5 +85,10 @@ namespace AntDesign
 
         private string _class;
         private string _style;
+
+        protected virtual CSSInterpolation[] UseStyle(GlobalToken token)
+        {
+            return null;
+        }
     }
 }
