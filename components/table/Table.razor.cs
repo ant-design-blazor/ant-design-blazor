@@ -739,7 +739,7 @@ namespace AntDesign
         void ITable.TableLayoutIsFixed()
         {
             TableLayout = "fixed";
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         private void OnResize(DomRect domRect)

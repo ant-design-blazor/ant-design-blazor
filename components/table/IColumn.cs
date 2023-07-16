@@ -25,5 +25,7 @@ namespace AntDesign
         public int HeaderColSpan { get; set; }
 
         public bool Hidden { get; set; }
+
+        void Load();
     }
 }

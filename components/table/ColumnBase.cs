@@ -196,5 +196,10 @@ namespace AntDesign
             rowData.Expanded = !rowData.Expanded;
             Table?.OnExpandChange(rowData);
         }
+
+        public void Load()
+        {
+            //StateHasChanged();
+        }
     }
 }

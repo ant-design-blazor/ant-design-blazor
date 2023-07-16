@@ -125,6 +125,7 @@ namespace AntDesign
         internal void StartCollectingColumns()
         {
             _columns.Clear();
+            _currentColIndex = 0;
             _collectingColumns = true;
         }
 
@@ -142,6 +143,8 @@ namespace AntDesign
             _collectingColumns = false;
             // Header columns have all been initialized, then we can invoke the first change.
             Table.OnColumnInitialized();
+
+            _columns.ForEach(x => x.Load());
         }
     }
 }
