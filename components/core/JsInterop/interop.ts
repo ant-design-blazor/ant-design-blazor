@@ -12,7 +12,8 @@ export {
     overlayHelper,
     tableHelper,
     uploadHelper,
-    downloadHelper
+    downloadHelper,
+    watermarkHelper,
 } from './modules/components/export'
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
 
