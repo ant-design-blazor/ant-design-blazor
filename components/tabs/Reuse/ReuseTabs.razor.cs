@@ -40,7 +40,7 @@ namespace AntDesign
         private string CurrentUrl
         {
             get => "/" + Navmgr.ToBaseRelativePath(Navmgr.Uri);
-            set => Navmgr.NavigateTo(value == "/" ? "" : value);
+            set => Navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
         }
 
         private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
