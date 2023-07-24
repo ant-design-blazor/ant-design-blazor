@@ -26,7 +26,7 @@ namespace AntDesign
             };
         }
 
-        protected override CSSInterpolation[] UseStyle(GlobalToken token)
+        public CSSInterpolation GenComponentStyleHook(TokenWithCommonCls token)
         {
             var affixToken = MergeToken(
                 token,

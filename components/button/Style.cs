@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCs;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -440,7 +440,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject[] GenSizeButtonStyle(ButtonToken token, string sizePrefixCls = "")
+        public CSSInterpolation[] GenSizeButtonStyle(ButtonToken token, string sizePrefixCls = "")
         {
             var componentCls = token.ComponentCls;
             var controlHeight = token.ControlHeight;
@@ -453,7 +453,7 @@ namespace AntDesign
             var paddingVertical = Math.Max(0, (controlHeight - fontSize * lineHeight) / 2 - lineWidth);
             var paddingHorizontal = buttonPaddingHorizontal - lineWidth;
             var iconOnlyCls = @$"{componentCls}-icon-only";
-            return new CSSObject[]
+            return new CSSInterpolation[]
             {
                 new CSSObject()
                 {
@@ -499,12 +499,12 @@ namespace AntDesign
             };
         }
 
-        public CSSObject[] GenSizeBaseButtonStyle(ButtonToken token)
+        public CSSInterpolation GenSizeBaseButtonStyle(ButtonToken token)
         {
             return GenSizeButtonStyle(token);
         }
 
-        public CSSObject[] GenSizeSmallButtonStyle(ButtonToken token)
+        public CSSInterpolation GenSizeSmallButtonStyle(ButtonToken token)
         {
             var smallToken = MergeToken(
                 token,
@@ -519,7 +519,7 @@ namespace AntDesign
             return GenSizeButtonStyle(smallToken, $"{token.ComponentCls}-sm");
         }
 
-        public CSSObject[] GenSizeLargeButtonStyle(ButtonToken token)
+        public CSSInterpolation GenSizeLargeButtonStyle(ButtonToken token)
         {
             var largeToken = MergeToken(
                 token,
@@ -548,7 +548,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GenComponentStyleHook(GlobalToken token)
+        public CSSInterpolation GenComponentStyleHook(TokenWithCommonCls token)
         {
             var controlTmpOutline = token.ControlTmpOutline;
             var paddingContentHorizontal = token.PaddingContentHorizontal;
@@ -614,7 +614,7 @@ namespace AntDesign
             var colorErrorHover = token.ColorErrorHover;
             return new CSSObject()
             {
-                [$"{componentCls}-group"] = new CSSObject[]
+                [$"{componentCls}-group"] = new CSSInterpolation[]
                 {
                     new CSSObject()
                     {

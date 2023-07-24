@@ -11,6 +11,7 @@ namespace AntDesign
 {
     public partial class Button : AntDomComponentBase
     {
+        private const string PrefixCls = "ant-btn";
         private string _formSize;
         public static readonly int RemoveAnimationAfter = 500;
 

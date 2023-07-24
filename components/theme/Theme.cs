@@ -17,9 +17,10 @@ namespace AntDesign
 
     internal class Theme
     {
-        public static T MergeToken<T>(GlobalToken token, T value)
+        public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : TokenWithCommonCls
         {
-            return default;
+            value.Merge(token);
+            return value;
         }
 
         public static CSSObject GenPresetColor(GlobalToken token, Func<PresetColor, CalcColor, CSSObject> func)

@@ -2,6 +2,7 @@ import { CsOptions, TypeMap } from "./CsBuilder";
 import * as fs from 'fs';
 import * as path from 'path';
 
+let blockIndex = 0;
 let typeMap: { [key: string]: string } = {};
 let options: CsOptions | undefined = undefined;
 let emptyMap: { [key: string]: number } = {};
@@ -19,6 +20,11 @@ let htmlTag: { [key: string]: string } = {
 }
 
 export const spFieldName = '_skip_check_';
+
+export const increaseIndex = (reset: boolean) => {
+    if (reset) blockIndex = 0;
+    else blockIndex++;
+}
 
 export const toPascalCase = (str?: string): string => {
     if (!str) return str || '';
@@ -117,7 +123,8 @@ export const castFieldValue = (value: string) => {
     if (value.includes('a0')) return value;
     let str = value
         .replace(/\$/g, '')    // 剔除$
-        .replace(/"(.*)"/g, `\\"$1\\"`)
+        .replace(/'"(.*)"'/g, `'\\"$1\\"'`)
+        .replace(/"'(.*)'"/g, `"\\"$1\\""`)
         .replace(/'/g, '"')    // 单引号转双引号
 
     if (str.includes('`')) {
@@ -171,8 +178,8 @@ export const castFunName = (name: string) => {
 }
 
 export const unknown = () => {
-    const key = 'Unknown';
-    if (!emptyMap[key]) {
+    const key = `Unknown${blockIndex}`;
+    if (!(key in emptyMap)) {
         emptyMap[key] = 0;
     }
     const index = emptyMap[key] = emptyMap[key] + 1;

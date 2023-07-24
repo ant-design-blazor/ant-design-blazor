@@ -70,10 +70,5 @@ namespace AntDesign
         {
             return new CSSObject();
         }
-
-        public static CSSObject GenCollapseMotion(GlobalToken token)
-        {
-            return new CSSObject();
-        }
     }
 }

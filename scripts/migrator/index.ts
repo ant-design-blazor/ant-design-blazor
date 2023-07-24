@@ -39,10 +39,17 @@ async function clone(): Promise<void> {
 }
 
 /**
- * remove less files.
+ * remove style files.
  */
 function clean() {
-
+    // clean generated style file.
+    components.forEach(x => {
+        try {
+            console.log(`remove style file: ${x.dist}`);
+            fs.rmSync(x.dist);
+        } catch (error) {
+        }
+    });
 }
 
 /**
@@ -56,13 +63,11 @@ function converTsStyle() {
         const content = convert(src, component.csOptions);
         writeAllText(dist, content);
     });
-    console.log(`Migrate ok.`);
 }
 
 async function migrate() {
     await clone();
     converTsStyle();
-    clean();
 }
 
 migrate();

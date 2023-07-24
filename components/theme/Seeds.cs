@@ -1,4 +1,4 @@
-namespace AntDesign
+﻿namespace AntDesign
 {
     // ======================================================================
     // ==                            Seed Token                            ==
@@ -195,7 +195,7 @@ namespace AntDesign
         * @descEN The unit of animation duration change
         * @default 100ms
         */
-        public int MotionUnit { get; set; }
+        public float MotionUnit { get; set; }
 
         /**
         * @nameZH 动画基础时长。

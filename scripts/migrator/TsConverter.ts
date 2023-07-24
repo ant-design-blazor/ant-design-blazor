@@ -26,16 +26,24 @@ function convertType(context: Context<ts.TypeAliasDeclaration>) {
     const name = context.node.name.getText();
     context.csBuilder.addClass(name);
     // parse properties
-    (context.node.type as any)?.types?.forEach((type: any) => {
-        if (type.kind === ts.SyntaxKind.TypeLiteral) {
-            (type.members as ts.NodeArray<ts.TypeElement>).forEach((x) => {
-                const memberName = x.name?.getText() || '';
-                const memberType = context.typeChecker.getTypeAtLocation(x);
-                const typeName = context.typeChecker.typeToString(memberType);
-                context.csBuilder.addClassProperty(name, memberName, typeName);
-            });
-        }
-    });
+    const addProps = (members: any[]) => {
+        members.forEach((x) => {
+            const memberName = x.name?.getText() || '';
+            const memberType = context.typeChecker.getTypeAtLocation(x);
+            const typeName = context.typeChecker.typeToString(memberType);
+            context.csBuilder.addClassProperty(name, memberName, typeName);
+        });
+    }
+    const type = context.node.type as any;
+    if (type.types) {
+        type.types.forEach((type: any) => {
+            if (type.kind === ts.SyntaxKind.TypeLiteral) {
+                addProps(type.members);
+            }
+        });
+    } else if (type.members) {
+        addProps(type.members);
+    }
 }
 
 function createObjectExpression(type: string, expression: ts.ObjectLiteralExpression, args?: string[]): ObjectExpression {

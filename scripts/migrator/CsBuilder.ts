@@ -1,4 +1,4 @@
-import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue } from "./Util";
+import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue, increaseIndex } from "./Util";
 
 export type Transform = {
     source: string;
@@ -164,7 +164,7 @@ export class CsFunction {
     constructor(name: string, parameters: ParameterType[], returnType: string, body: FunctionBody, kind: CsKinds = CsKinds.Method) {
         this.name = name;
         this.paramaters = parameters;
-        this.returnType = returnType || unknown();
+        this.returnType = returnType;
         this.body = body;
         this.kind = kind;
     }
@@ -183,8 +183,8 @@ export class CsFunction {
         }
         switch (this.kind) {
             case CsKinds.Method:
-                const ps = this.paramaters.map(x => `${castType(x.type || unknown())} ${defaultValue(x.name, x.defaultValue)}`).join(', ');
-                codes.push(`${tab}public ${castType(this.returnType)} ${toPascalCase(this.name)}(${ps})`);
+                const ps = () => this.paramaters.map(x => `${castType(x.type || unknown())} ${defaultValue(x.name, x.defaultValue)}`).join(', ');
+                codes.push(`${tab}public ${castType(this.returnType || unknown())} ${toPascalCase(this.name)}(${ps()})`);
                 codes.push(`${tab}{`);
                 codes.push(...this.createBody(tab + '    '));
                 codes.push(`${tab}}`);
@@ -258,7 +258,8 @@ export class CsFunction {
                 if (isString(value)) {
                     codes.push(`${rootTab}    ${name} = ${castFieldValue(value as string)},`);
                 } else if (value.kind === CsKinds.ArrayExpression) {
-                    const arrExp = this.createArrayExpression(rootTab + '    ', value as ArrayExpression, '', '');
+                    const end = i === exp.properties.length - 1 ? '' : ',';
+                    const arrExp = this.createArrayExpression(rootTab + '    ', value as ArrayExpression, end, '');
                     codes.push(`${rootTab}    ${name} = ${arrExp[0].trimStart()}`);
                     codes.push(...arrExp.slice(1));
                 } else if (value.kind === CsKinds.CallExpression) {
@@ -390,20 +391,24 @@ export class CsClass {
 
     public format(tab: string): string[] {
         const codes: string[] = [];
+        increaseIndex(true);
         codes.push(`${tab}${this.access}${this.partial ? ' partial' : ''} class ${this.name}`);
         codes.push(`${tab}{`);
 
         this.variables.forEach(x => {
+            increaseIndex(false);
             codes.push(...x.format(tab + tab));
             codes.push('');
         });
 
         this.props.forEach(x => {
+            increaseIndex(false);
             codes.push(...x.format(tab + tab));
             codes.push('');
         });
 
         this.funcs.forEach(x => {
+            increaseIndex(false);
             codes.push(...x.format(tab + tab));
             codes.push('');
         });

@@ -1,5 +1,8 @@
-﻿using CssInCs;
+﻿using System;
+using System.Text.Json;
+using CssInCs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 
 namespace AntDesign
 {
@@ -86,9 +89,16 @@ namespace AntDesign
         private string _class;
         private string _style;
 
-        protected virtual CSSInterpolation[] UseStyle(GlobalToken token)
+        [Inject]
+        public IOptions<GlobalToken> Options { get; set; }
+
+        public CSSObject[] UseStyle(string prefixCls, Func<TokenWithCommonCls, CSSInterpolation> func)
         {
-            return null;
+            // todo: more parameters.
+            var token = JsonSerializer.Deserialize<TokenWithCommonCls>(JsonSerializer.Serialize(Options.Value));
+            token.ComponentCls = $".{prefixCls}";
+            var css = func(token);
+            return css.ToCssArray();
         }
     }
 }
