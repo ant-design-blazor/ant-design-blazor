@@ -110,10 +110,10 @@ namespace AntDesign
 
         /// <summary>
         /// Sets the height of the TextArea expressed in number of rows.
-        /// Default value is 3.
+        /// Default value is 2.
         /// </summary>
         [Parameter]
-        public uint Rows { get; set; } = 3;
+        public uint Rows { get; set; } = 2;
 
         /// <summary>
         /// Callback when the size changes
