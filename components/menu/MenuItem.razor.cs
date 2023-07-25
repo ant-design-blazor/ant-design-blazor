@@ -85,7 +85,7 @@ namespace AntDesign
 
             RootMenu?.MenuItems.Add(this);
 
-            if (RootMenu.DefaultSelectedKeys.Contains(Key))
+            if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
         }
 
@@ -93,13 +93,13 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu.SelectedKeys.Contains(Key) && !IsSelected)
+            if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
                 Select();
         }
 
         internal void UpdateStelected()
         {
-            if (RootMenu.SelectedKeys.Contains(Key))
+            if (RootMenu?.SelectedKeys.Contains(Key) == true)
             {
                 if (!IsSelected) Select();
             }
@@ -124,7 +124,7 @@ namespace AntDesign
                 await RootMenu.OnMenuItemClicked.InvokeAsync(this);
             }
 
-            if (!RootMenu.Selectable)
+            if (RootMenu?.Selectable != true)
                 return;
 
             if (IsSelected && RootMenu?.Multiple == true)
@@ -133,7 +133,7 @@ namespace AntDesign
             }
             else
             {
-                RootMenu.SelectItem(this);
+                RootMenu?.SelectItem(this);
             }
 
             if (ParentMenu == null)
