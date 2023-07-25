@@ -54,7 +54,7 @@
                 {
                     @foreach (var docDemo in docDemos)
                     {
-                        <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")" />
+                        <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
                     }
                 }
                 else
@@ -92,7 +92,7 @@
                         foreach (var demo in demos)
                         {
                             <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
                     }
@@ -104,13 +104,13 @@
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }
