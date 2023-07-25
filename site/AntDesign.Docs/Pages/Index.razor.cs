@@ -29,6 +29,7 @@ namespace AntDesign.Docs.Pages
 
         private void HandleLanguageChanged(object _, CultureInfo culture)
         {
+            _rendered = true;
             _ = FetchData();
         }
 
@@ -44,6 +45,7 @@ namespace AntDesign.Docs.Pages
 
             if (_rendered)
             {
+                _rendered = false;
                 _ = FetchData();
             }
         }
