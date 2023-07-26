@@ -10,10 +10,10 @@ namespace AntDesign
     public partial class MenuItem : AntDomComponentBase
     {
         [CascadingParameter]
-        public Menu RootMenu { get; set; }
+        internal Menu RootMenu { get; set; }
 
         [CascadingParameter]
-        public SubMenu ParentMenu { get; set; }
+        internal SubMenu ParentMenu { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -52,16 +52,16 @@ namespace AntDesign
 
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
-        private int Padding => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
+        private int Padding => RootMenu?.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
 
         private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
 
         // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
-        private bool ShowTooltip => RootMenu.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
+        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
 
         private void SetClass()
         {
-            string prefixCls = $"{RootMenu.PrefixCls}-item";
+            string prefixCls = $"{RootMenu?.PrefixCls}-item";
 
             ClassMapper
                 .Clear()
@@ -83,9 +83,9 @@ namespace AntDesign
 
             SetClass();
 
-            RootMenu.MenuItems.Add(this);
+            RootMenu?.MenuItems.Add(this);
 
-            if (RootMenu.DefaultSelectedKeys.Contains(Key))
+            if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
         }
 
@@ -93,13 +93,13 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu.SelectedKeys.Contains(Key) && !IsSelected)
+            if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
                 Select();
         }
 
         internal void UpdateStelected()
         {
-            if (RootMenu.SelectedKeys.Contains(Key))
+            if (RootMenu?.SelectedKeys.Contains(Key) == true)
             {
                 if (!IsSelected) Select();
             }
@@ -124,7 +124,7 @@ namespace AntDesign
                 await RootMenu.OnMenuItemClicked.InvokeAsync(this);
             }
 
-            if (!RootMenu.Selectable)
+            if (RootMenu?.Selectable != true)
                 return;
 
             if (IsSelected && RootMenu?.Multiple == true)
@@ -133,13 +133,13 @@ namespace AntDesign
             }
             else
             {
-                RootMenu.SelectItem(this);
+                RootMenu?.SelectItem(this);
             }
 
             if (ParentMenu == null)
                 return;
 
-            if (RootMenu.Mode != MenuMode.Inline)
+            if (RootMenu?.Mode != MenuMode.Inline)
             {
                 await ParentMenu?.Collapse();
             }
