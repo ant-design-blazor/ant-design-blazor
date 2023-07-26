@@ -331,13 +331,13 @@ namespace AntDesign
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnAfterChange { get; set; } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
+        public EventCallback<TValue> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnChange { get; set; }
+        public EventCallback<TValue> OnChange { get; set; }
 
         [Parameter]
         public bool HasTooltip { get; set; } = true;
@@ -566,7 +566,8 @@ namespace AntDesign
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
 
-                OnChange?.Invoke(CurrentValue);
+                if (OnChange.HasDelegate)
+                    await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
             }
         }
 
@@ -579,8 +580,9 @@ namespace AntDesign
                 if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-                    OnAfterChange?.Invoke(CurrentValue);
                 }
+                if (OnAfterChange.HasDelegate)
+                    await InvokeAsync(() => OnAfterChange.InvokeAsync(CurrentValue));
             }
             if (_toolTipRight != null)
             {
