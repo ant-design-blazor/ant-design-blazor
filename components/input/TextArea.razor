@@ -39,7 +39,7 @@
     }
 }
 
-@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
+@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
     <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
         <span class="@_warpperClassMapper.Class">
