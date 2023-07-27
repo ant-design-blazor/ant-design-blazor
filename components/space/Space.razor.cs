@@ -45,6 +45,16 @@ namespace AntDesign
 
         private string InnerStyle => Wrap && Direction == DirectionVHType.Horizontal ? "flex-wrap: wrap;" : "";
 
+        private string _gapStyle;
+        private string _verticalStyle;
+
+        private static readonly Dictionary<string, string> _spaceSize = new()
+        {
+            ["small"] = "8",
+            ["middle"] = "16",
+            ["large"] = "24"
+        };
+
         public void SetClass()
         {
             ClassMapper
@@ -59,6 +69,40 @@ namespace AntDesign
         {
             SetClass();
             base.OnInitialized();
+        }
+
+        protected override void OnParametersSet()
+        {
+            ChangeSize();
+            base.OnParametersSet();
+        }
+
+        private void ChangeSize()
+        {
+            var size = Size;
+            var direction = Direction;
+
+            size.Switch(sigleSize =>
+            {
+                _gapStyle = $"gap: {GetSize(sigleSize)}";
+            },
+            arraySize =>
+            {
+                _gapStyle = $"gap: {GetSize(arraySize.Item2)} {GetSize(arraySize.Item1)};";
+            });
+
+            _verticalStyle = direction == DirectionVHType.Vertical ? "display: flex;" : "";
+        }
+
+        private CssSizeLength GetSize(string size)
+        {
+            var originalSize = size.IsIn(_spaceSize.Keys) ? _spaceSize[size] : size;
+            if (Split != null)
+            {
+                return ((CssSizeLength)originalSize).Value / 2;
+            }
+
+            return originalSize;
         }
     }
 }
