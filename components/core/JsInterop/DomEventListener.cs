@@ -82,6 +82,9 @@ namespace AntDesign.JsInterop
 
                 var dotNetObject = DotNetObjectReference.Create(new Invoker<string>((p) =>
                 {
+                    if (!_domEventSubscriptionsStore.ContainsKey(key))
+                        return;
+
                     for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
                     {
                         var subscription = _domEventSubscriptionsStore[key][i];
