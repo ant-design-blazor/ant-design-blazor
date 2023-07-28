@@ -27,7 +27,7 @@ namespace AntDesign.Filters
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
-            MethodCallExpression lowerLeftExpr = Expression.Call(leftExpr,   _stringToLower);
+            MethodCallExpression lowerLeftExpr  = Expression.Call(leftExpr,  _stringToLower);
             MethodCallExpression lowerRightExpr = Expression.Call(rightExpr, _stringToLower);
 
             return compareOperator switch

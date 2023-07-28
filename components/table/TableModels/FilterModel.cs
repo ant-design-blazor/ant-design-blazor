@@ -85,16 +85,15 @@ public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
                 }
                 else // TableFilterType.FieldType
                 {
-                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
-                    Expression constantExpression = null;
-                    if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
-                    {
-                        constantExpression = Expression.Constant(null, typeof(TField));
-                    }
-                    else
-                    {
-                        constantExpression = Expression.Constant(filter.Value, typeof(TField));
-                    }
+                    if (filter.Value == null
+                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull)) 
+                        continue;
+
+                    Expression constantExpression = Expression.Constant(
+                        filter.FilterCompareOperator is TableFilterCompareOperator.IsNull
+                            or TableFilterCompareOperator.IsNotNull
+                            ? null
+                            : filter.Value);
                     var expression = _fieldFilterType.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
                     if (lambda == null)
                     {

@@ -60,6 +60,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | TableLayout | The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column | string | - |
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
+| FieldFilterTypeResolver | Used to resolve filter types for columns | `IFilterTypeResolver` | Injected |
 
 ### Column
 
@@ -82,6 +83,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
+| FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
 
 ### PropertyColumn
 
