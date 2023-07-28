@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -370,6 +371,15 @@ namespace AntDesign
         {
             base.OnValidated(validationMessages);
             SetClasses();
+
+            if (validationMessages.Length > 0)
+            {
+                Attributes.Add("aria-invalid", "true");
+            }
+            else
+            {
+                Attributes.Remove("aria-invalid");
+            }
         }
 
         internal override void UpdateStyles()
