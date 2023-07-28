@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
@@ -84,20 +85,34 @@ namespace AntDesign
                     _pageMap[CurrentUrl] = reuseTabsPageItem;
                 }
 
-                reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
+                reuseTabsPageItem.Body ??= builder => RenderPageWithParameters(builder, routeData, reuseTabsPageItem);
             }
 
             return base.SetParametersAsync(parameters);
         }
 
-        private static RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private static void RenderPageWithParameters(RenderTreeBuilder builder, RouteData routeData, ReuseTabsPageItem item)
         {
-            return builder =>
+#if NET8_0_OR_GREATER
+            builder.OpenComponent<CascadingModelBinder>(0);
+            builder.AddComponentParameter(1, nameof(CascadingModelBinder.ChildContent), (RenderFragment<ModelBindingContext>)RenderPageWithContext);
+            builder.CloseComponent();
+
+            RenderFragment RenderPageWithContext(ModelBindingContext context) => RenderPageCore;
+#else
+            RenderPageCore(builder);
+#endif
+            void RenderPageCore(RenderTreeBuilder builder)
             {
                 builder.OpenComponent(0, routeData.PageType);
-                foreach (var routeValue in routeData.RouteValues)
+
+                foreach (var kvp in routeData.RouteValues)
                 {
-                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
+#if NET8_0_OR_GREATER
+                    builder.AddComponentParameter(1, kvp.Key, kvp.Value);
+#else
+                    builder.AddAttribute(1, kvp.Key, kvp.Value);
+#endif
                 }
 
                 builder.AddComponentReferenceCapture(2, @ref =>
@@ -106,7 +121,7 @@ namespace AntDesign
                 });
 
                 builder.CloseComponent();
-            };
+            }
         }
 
         private static void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
