@@ -31,7 +31,7 @@ timeline: true
 
 ### 0.15.3
 
-`2013-07-13`
+`2023-07-13`
 
 - 🐞 Fixed Tree multiple should not take effect when Ctrl is not pressed. [#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
 - 🐞 Fixed Icons compatible with bootstrap. [#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
@@ -41,7 +41,7 @@ timeline: true
 
 ### 0.15.2
 
-`2013-07-03`
+`2023-07-03`
 
 - Table
   - 🐞 Fixed Table avoid exception at DisposeAsync method. [#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
