@@ -13,11 +13,10 @@
                 {
                     @foreach (var option in Options.AsT0)
                     { 
-                        <Checkbox class="ant-checkbox-group-item"
-                                  Disabled="option.Disabled || Disabled"
+                        <Checkbox Disabled="option.Disabled || Disabled"
                                   Checked="@option.Checked"
                                   Label="@option.Value">
-                            <span>@option.Label</span>
+                            @option.Label
                         </Checkbox>
                     }
                 }
@@ -25,11 +24,10 @@
                 {
                     @foreach (var option in Options.AsT1)
                     {
-                        <Checkbox class="ant-checkbox-group-item"
-                                  Disabled="Disabled"
+                        <Checkbox Disabled="Disabled"
                                   Checked="@option.IsIn(_selectedValues)"
                                   Label="@option">
-                            <span>@option</span>
+                            @option
                         </Checkbox>
                     }
                 }

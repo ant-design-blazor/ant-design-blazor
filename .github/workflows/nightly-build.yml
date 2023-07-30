@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "10.x"
+          node-version: "16.x"
 
       - name: Check Building ⚙
         run: |
@@ -117,14 +117,6 @@ jobs:
 
       - name: Push to MyGet package registry
         run: dotnet nuget push './publish/*.nupkg' --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
-
-      - name: Sync to Gitee 💕
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
 
       - name: Publish Docs 🎉
         run: |

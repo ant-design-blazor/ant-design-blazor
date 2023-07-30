@@ -23,6 +23,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 - **PropertyColumn** 继承自 Column，用 `Property="c=>c.User.Name"` 绑定列，支持级联访问。在 .NET6 以下使用需指定 `TItem`, `TProp` 的类型。
 - **Column** 用 `@bind-Field="context.UssrName"` 绑定时不支持级联访问类的属性（例如：`context.User.Name`），但可以用 `DataIndex="'User.Name'"` 绑定。
 
+### 其他列类型
+
+- **ActionColumn** 用于放置操作按钮，也可以作为不绑定类型的模板。
+- **Selection** 用来开启选择列，并提供选择框。
 
 ## API
 ### Table
@@ -61,6 +65,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 
 
 ### Column
+
+先前版本的列定义，对于 .NET 6 及以上版本，建议使用 `PropertyColumn`。
+
 | 参数             | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | FieldChanged | Field更改事件 | EventCallback<TData | - |
@@ -78,6 +85,17 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
+
+### PropertyColumn
+
+继承自 `Column`.
+
+| 参数              | 说明             | 类型                         | 默认值 |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
+
+
+
 ### 响应式
 
 表格默认支持响应式，当屏幕宽度小于 960px 时，表格的数据列变为小屏模式。

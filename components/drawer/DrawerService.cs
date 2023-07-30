@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using OneOf;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -14,7 +13,6 @@ namespace AntDesign
         internal event Func<DrawerRef, Task> OnCloseEvent;
 
         internal event Func<DrawerRef, Task> OnUpdateEvent;
-
 
         /// <summary>
         /// Create and open a simple drawer without result
@@ -58,7 +56,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Update a drawer 
+        /// Update a drawer
         /// </summary>
         /// <param name="drawerRef"></param>
         /// <returns></returns>
@@ -68,7 +66,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Create and open a drawer 
+        /// Create and open a drawer
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
         /// <typeparam name="TComponentOptions"></typeparam>
@@ -95,7 +93,6 @@ namespace AntDesign
             await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
             return await drawerRef.TaskCompletionSource.Task;
         }
-
 
         public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(TComponentOptions options,
             bool closable = true,

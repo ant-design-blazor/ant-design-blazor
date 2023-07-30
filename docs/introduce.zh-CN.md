@@ -65,6 +65,8 @@ title: Ant Design of Blazor
 
 与 Ant Design 设计规范定期同步，你可以在线查看[同步日志](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22)。
 
+**在 1.0 版本发布之前，我们将只同步 antd 4.x 的样式。**
+
 ## 📦 安装
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 以上版本，推荐使用 .NET 7。
@@ -162,6 +164,7 @@ title: Ant Design of Blazor
   $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
+  $ dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
   $ npm start
   ```
 
@@ -171,13 +174,8 @@ title: Ant Design of Blazor
 
 ## 🔗 链接
 
-- [文档主页](https://ant-design-blazor.gitee.io)
 - [Blazor 官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn 平台 Blazor 教程](https://docs.microsoft.com/zh-cn/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
-
-## 🗺 开发路线
-
-查看 [这个 issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
 
 ## 🤝 如何贡献
 

@@ -15,6 +15,55 @@ timeline: true
 
 ---
 
+### 0.15.3
+
+`2013-07-13`
+
+- 🐞 修复 Tree 多选模式未使用 Ctrl 键。[#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 Icons 与Bootstrap 样式冲突。[#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Steps 的 RTL 样式。[#3343](https://github.com/ant-design-blazor/ant-design-blazor/pull/3343) [@ElderJames](https://github.com/ElderJames)
+- 🌐 修复 俄语 dateFormat 和 dateTimeFormat 格式。[#3342](https://github.com/ant-design-blazor/ant-design-blazor/pull/3342) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+- 📖 文档 优化demo渲染策略[#3347](https://github.com/ant-design-blazor/ant-design-blazor/pull/3347) [@ElderJames](https://github.com/ElderJames)
+
+### 0.15.2
+
+`2013-07-03`
+
+- Table
+  - 🐞 避免 DisposeAsync 中的异常。[#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在 ParametersHashCodeChanged 模式下某些情况不渲染的问题。[#3313](https://github.com/ant-design-blazor/ant-design-blazor/pull/3313) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Menu 在收起时 MenuItem 切换又是无法取消选中的问题。[#3338](https://github.com/ant-design-blazor/ant-design-blazor/pull/3338) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 滚动条在页面路由发生变化时没有重置。[#3316](https://github.com/ant-design-blazor/ant-design-blazor/pull/3316) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Slider 在拖动释放时不触发OnAfterChange。[#3323](https://github.com/ant-design-blazor/ant-design-blazor/pull/3323) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复  Statistic  的 CountDown 在切换其他页面时会暂停的问题。[#3329](https://github.com/ant-design-blazor/ant-design-blazor/pull/3329) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Card 加载效果失效。[#3319](https://github.com/ant-design-blazor/ant-design-blazor/pull/3319) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TreeSelect 在移除最后一个选项时没有更新绑定的属性。[#3314](https://github.com/ant-design-blazor/ant-design-blazor/pull/3314) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: 俄语本地化文件 dateFormat 和 dateTimeFormat 改为 d.m.yyyy。[#3327](https://github.com/ant-design-blazor/ant-design-blazor/pull/3327) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+
+### 0.15.1
+
+`2023-06-18`
+
+父亲节快乐！
+
+- Table
+  - 🆕 增加 支持接口类型的 DataSource 子项。[#3297](https://github.com/ant-design-blazor/ant-design-blazor/pull/3297) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在列定义设置了 Fixed 和 Ellipsis 后，文本超长会超出单元格的问题。[#3291](https://github.com/ant-design-blazor/ant-design-blazor/pull/3291) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 空状态团在预渲染时定位不正确的问题，并进少了不必要的 ResizeObserver 订阅。[#3281](https://github.com/ant-design-blazor/ant-design-blazor/pull/3281) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🐞 修复 在使用 SearchExpression 匹配关键字后会抛出异常的问题。[#3274](https://github.com/ant-design-blazor/ant-design-blazor/pull/3274) [@ruyisee](https://github.com/ruyisee)
+  - 🐞 修复 拖拽节点不能修改 DataSource 的问题。[#3275](https://github.com/ant-design-blazor/ant-design-blazor/pull/3275) [@Jtfk](https://github.com/Jtfk)
+
+- 🐞 修复 DatePicker 的 RangePicker 在关闭时会触发两次 OnOpenChange。[#3307](https://github.com/ant-design-blazor/ant-design-blazor/pull/3307) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 Tabs 的 Reusetabs 当有固定标签时，再次导航改标签会重复的问题。[#3306](https://github.com/ant-design-blazor/ant-design-blazor/pull/3306) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 当绑定值变成不在选项中的值后会无限循环的问题。[#3287](https://github.com/ant-design-blazor/ant-design-blazor/pull/3287) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DomEventListener 移除不再订阅共享事件的事件列表，避免再次订阅时没创新事件监听器。[#3278](https://github.com/ant-design-blazor/ant-design-blazor/pull/3278) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 在 `SelectBase.Values` 被设置为null时， `EditContext.NotifyFieldChanged`  调用不正常的问题。[#3277](https://github.com/ant-design-blazor/ant-design-blazor/pull/3277) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 📖 更新 Statistic 文档，增加自定义数字分组和小数点符号的示例。[#3166](https://github.com/ant-design-blazor/ant-design-blazor/pull/3166) [@Alerinos](https://github.com/Alerinos)
+
+
 ### 0.15.0
 
 `2023-05-21`

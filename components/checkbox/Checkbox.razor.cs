@@ -19,9 +19,12 @@ namespace AntDesign
         [Parameter] public bool Indeterminate { get; set; }
         [Parameter] public string Label { get; set; }
 
-        [CascadingParameter] public CheckboxGroup CheckboxGroup { get; set; }
+        [CascadingParameter] private CheckboxGroup CheckboxGroup { get; set; }
 
         internal bool IsFromOptions { get; set; }
+
+        private bool IsDisabled => Disabled || (CheckboxGroup?.Disabled ?? false);
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -38,16 +41,18 @@ namespace AntDesign
         protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
 
         private string _prefixCls = "ant-checkbox";
+
         protected void SetClass()
         {
-            ClassMapperLabel.Clear()
+            ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
-                .If($"{_prefixCls}-wrapper-checked", () => Checked);
+                .If($"{_prefixCls}-wrapper-checked", () => Checked)
+                .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
-            ClassMapper.Clear()
+            ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
-                .If($"{_prefixCls}-disabled", () => Disabled)
+                .If($"{_prefixCls}-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-indeterminate", () => Indeterminate)
                 .If($"{_prefixCls}-rtl", () => RTL);
         }
@@ -65,6 +70,5 @@ namespace AntDesign
         }
 
         internal void SetValue(bool value) => Checked = value;
-
     }
 }
