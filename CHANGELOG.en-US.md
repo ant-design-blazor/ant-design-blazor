@@ -15,6 +15,20 @@ timeline: true
 
 ---
 
+### 0.15.4
+
+`2023-07-31`
+
+- 🆕 Add AutoFocus for all select components. [#3375](https://github.com/ant-design-blazor/ant-design-blazor/pull/3375) [@LuukGlorie](https://github.com/LuukGlorie)
+- 🐞 Fixed Tree would not invoke CheckedKeys changed while CheckStrictly was set. [#3379](https://github.com/ant-design-blazor/ant-design-blazor/pull/3379) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox passing disabled value to templated options from checkbox group. [#3365](https://github.com/ant-design-blazor/ant-design-blazor/pull/3365) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DomEventListener check ContainsKey for shared event subscriptions store. [#3364](https://github.com/ant-design-blazor/ant-design-blazor/pull/3364) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input incorrect html structure of TextArea icons. [#3367](https://github.com/ant-design-blazor/ant-design-blazor/pull/3367) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu missing null check. [#3368](https://github.com/ant-design-blazor/ant-design-blazor/pull/3368) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form Help message change. [#3373](https://github.com/ant-design-blazor/ant-design-blazor/pull/3373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs throwing navigate exceptiion while base path was set. [#3362](https://github.com/ant-design-blazor/ant-design-blazor/pull/3362) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ i11y: Icon role update. [#3370](https://github.com/ant-design-blazor/ant-design-blazor/pull/3370) [@eizzn](https://github.com/eizzn)
+
 ### 0.15.3
 
 `2013-07-13`
