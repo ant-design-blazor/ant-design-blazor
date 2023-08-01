@@ -20,5 +20,7 @@ namespace AntDesign
         public bool Pin { get; set; } = false;
 
         public bool KeepAlive { get; set; } = true;
+
+        public int Order { get; set; } = 9999;
     }
 }
