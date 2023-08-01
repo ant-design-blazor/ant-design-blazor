@@ -15,9 +15,23 @@ timeline: true
 
 ---
 
+### 0.15.4
+
+`2023-07-31`
+
+- 🆕 新增 Select 的 AutoFocus 属性，自动获取焦点。[#3375](https://github.com/ant-design-blazor/ant-design-blazor/pull/3375) [@LuukGlorie](https://github.com/LuukGlorie)
+- 🐞 修复 Tree 设置了 CheckStrictly 后不触发 CheckedKeys 更新 。[#3379](https://github.com/ant-design-blazor/ant-design-blazor/pull/3379) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 不能从 CheckboxGroup 传递 Disabled 值给模板中的子项。[#3365](https://github.com/ant-design-blazor/ant-design-blazor/pull/3365) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DomEventListener 回调共享订阅时未检查 key 不存在。[#3364](https://github.com/ant-design-blazor/ant-design-blazor/pull/3364) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TextArea 显示图标的 HTML 结构。[#3367](https://github.com/ant-design-blazor/ant-design-blazor/pull/3367) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 缺失的 NULL 检查。[#3368](https://github.com/ant-design-blazor/ant-design-blazor/pull/3368) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 的 Help 消息文本更新。[#3373](https://github.com/ant-design-blazor/ant-design-blazor/pull/3373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 当设置了Base Url 时，访问加载不了页面。[#3362](https://github.com/ant-design-blazor/ant-design-blazor/pull/3362) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ 增强 Icon role 属性的可访问性。[#3370](https://github.com/ant-design-blazor/ant-design-blazor/pull/3370) [@eizzn](https://github.com/eizzn)
+
 ### 0.15.3
 
-`2013-07-13`
+`2023-07-13`
 
 - 🐞 修复 Tree 多选模式未使用 Ctrl 键。[#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
 - 🐞 修复 Icons 与Bootstrap 样式冲突。[#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
@@ -27,7 +41,7 @@ timeline: true
 
 ### 0.15.2
 
-`2013-07-03`
+`2023-07-03`
 
 - Table
   - 🐞 避免 DisposeAsync 中的异常。[#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
