@@ -12,6 +12,8 @@ namespace AntDesign.Internal
 
         public RenderFragment FeedbackIcon { get; }
 
+        public bool IsRequiredByValidation { get; }
+
         internal void AddControl<TValue>(AntInputComponentBase<TValue> control);
 
         internal ValidationResult[] ValidateField();
