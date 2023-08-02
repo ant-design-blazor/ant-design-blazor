@@ -180,7 +180,7 @@ namespace AntDesign
         /// Provide prompt information that describes the expected value of the input field
         /// </summary>
         [Parameter]
-        public string Placeholder { get; set; }
+        public string Placeholder { get; set; } = "";
 
         /// <summary>
         /// The prefix icon for the Input.
@@ -372,7 +372,7 @@ namespace AntDesign
             base.OnValidated(validationMessages);
             SetClasses();
 
-            if (validationMessages.Length > 0)
+            if (validationMessages.Length > 0 && !Attributes.ContainsKey("aria-invalid"))
             {
                 Attributes.Add("aria-invalid", "true");
             }
