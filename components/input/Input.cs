@@ -180,7 +180,7 @@ namespace AntDesign
         /// Provide prompt information that describes the expected value of the input field
         /// </summary>
         [Parameter]
-        public string Placeholder { get; set; } = "";
+        public string Placeholder { get; set; }
 
         /// <summary>
         /// The prefix icon for the Input.
@@ -688,7 +688,10 @@ namespace AntDesign
 
             builder.AddAttribute(50, "id", Id);
             builder.AddAttribute(51, "type", Type);
-            builder.AddAttribute(60, "placeholder", Placeholder);
+            if (!String.IsNullOrWhiteSpace(Placeholder))
+            {
+                builder.AddAttribute(60, "placeholder", Placeholder);
+            }
             builder.AddAttribute(61, "value", CurrentValueAsString);
             builder.AddAttribute(62, "disabled", needsDisabled);
             builder.AddAttribute(63, "readonly", ReadOnly);
