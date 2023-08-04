@@ -688,7 +688,7 @@ namespace AntDesign
                 builder.AddAttribute(64, "autocomplete", "off");
             }
 
-            if (FormItem.IsRequiredByValidation)
+            if (FormItem?.IsRequiredByValidation ?? false)
             {
                 builder.AddAttribute(65, "required", "required");
             }
