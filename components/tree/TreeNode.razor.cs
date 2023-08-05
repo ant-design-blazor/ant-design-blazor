@@ -198,7 +198,11 @@ namespace AntDesign
             _selected = value;
             if (value == true)
             {
-                if (TreeComponent.Multiple == false) TreeComponent.DeselectAll();
+                if (!(TreeComponent.Multiple && TreeComponent.IsCtrlKeyDown))
+                {
+                    TreeComponent.DeselectAll();
+                }
+
                 TreeComponent.SelectedNodeAdd(this);
             }
             else
@@ -441,23 +445,26 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if (!Disabled)
+            if (Disabled)
             {
-                if (TreeComponent.CheckStrictly)
-                {
-                    this.Checked = check;
-                }
-                else
-                {
-                    SetChildChecked(this, check);
-                    if (ParentNode != null)
-                        ParentNode.UpdateCheckState();
-                }
+                return;
+            }
+
+            if (TreeComponent.CheckStrictly)
+            {
+                this.Checked = check;
             }
             else
-                TreeComponent.AddOrRemoveCheckNode(this);
+            {
+                SetChildChecked(this, check);
+                if (ParentNode != null)
+                    ParentNode.UpdateCheckState();
+            }
+
+            TreeComponent.AddOrRemoveCheckNode(this);
             StateHasChanged();
         }
+
         /// <summary>
         /// Set the checkbox state when ini
         /// </summary>
@@ -492,6 +499,7 @@ namespace AntDesign
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
         }
+
         /// <summary>
         /// Sets the checkbox status of child nodes whern bind default
         /// </summary>
@@ -505,7 +513,7 @@ namespace AntDesign
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildCheckedDefault(child, check);
-        }        
+        }
 
         /// <summary>
         /// Update check status
@@ -570,6 +578,7 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
+
         /// <summary>
         /// Update check status when bind default
         /// </summary>
