@@ -45,13 +45,9 @@ namespace AntDesign
 
         private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
 
-        public ReuseTabs()
-        {
-            this.ScanReuseTabsPageAttribute();
-        }
-
         protected override void OnInitialized()
         {
+            this.ScanReuseTabsPageAttribute();
             ReuseTabsService.OnClosePage += RemovePage;
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
@@ -165,18 +161,17 @@ namespace AntDesign
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
-                    var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
-                    var reuseTabsPageAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
-
-                    this.AddReuseTabsPageItem(routeAttribute.Template, pageType);
+                    this.AddReuseTabsPageItem(pageType);
                 }
             }
         }
 
-        public void AddReuseTabsPageItem(string url, Type pageType)
+        public void AddReuseTabsPageItem(Type pageType)
         {
-            if (_pageMap.ContainsKey(url)) return;
+            var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
+            var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
+            var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
             var reuseTabsPageItem = new ReuseTabsPageItem();
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
             reuseTabsPageItem.CreatedAt = DateTime.MinValue;
