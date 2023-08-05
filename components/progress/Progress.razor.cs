@@ -130,16 +130,11 @@ namespace AntDesign
             SetStyle();
         }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
-
         private void SetDefaultValues(IReadOnlyDictionary<string, object> dict)
         {
             if (!dict.ContainsKey(nameof(Type)) || (ProgressType)dict[nameof(Type)] == ProgressType.Line)
             {
-                StrokeWidth = 10;
+                StrokeWidth = Size.Value;
             }
             else // Type is Circle or Dashboard
             {
