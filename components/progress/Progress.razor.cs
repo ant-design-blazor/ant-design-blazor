@@ -18,7 +18,6 @@ namespace AntDesign
         private string _circleTrailStyle;
         private string _circlePathStyle;
         private string _circleSuccessStyle;
-        private bool _format = false;
 
         private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
 
@@ -120,28 +119,29 @@ namespace AntDesign
 
         #endregion Parameters
 
-        public async override Task SetParametersAsync(ParameterView parameters)
+        protected override void OnInitialized()
         {
-            IReadOnlyDictionary<string, object> dict = parameters.ToDictionary();
-            SetDefaultValues(dict);
-            await base.SetParametersAsync(parameters);
-
             SetClasses();
-            SetStyle();
+            base.OnInitialized();
         }
 
-        private void SetDefaultValues(IReadOnlyDictionary<string, object> dict)
+        protected override void OnParametersSet()
         {
-            if (!dict.ContainsKey(nameof(Type)) || (ProgressType)dict[nameof(Type)] == ProgressType.Line)
+            base.OnParametersSet();
+
+            if (StrokeWidth <= 0)
             {
-                StrokeWidth = Size.Value;
-            }
-            else // Type is Circle or Dashboard
-            {
-                StrokeWidth = 6;
+                if (Type == ProgressType.Line)
+                {
+                    StrokeWidth = Size.Value;
+                }
+                else // Type is Circle or Dashboard
+                {
+                    StrokeWidth = 6;
+                }
             }
 
-            if (dict.TryGetValue(nameof(Percent), out var percentObject) && percentObject is double percent && percent == 100)
+            if (Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
@@ -150,12 +150,12 @@ namespace AntDesign
                 Status = ProgressStatus.Normal;
             }
 
-            _format = dict.ContainsKey(nameof(Format));
+            SetStyle();
         }
 
         private void SetClasses()
         {
-            ClassMapper.Clear()
+            ClassMapper
                 .Add(PrefixCls)
                 .Get(() => $"{PrefixCls}-{Size.Name}")
                 .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
