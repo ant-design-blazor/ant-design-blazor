@@ -43,10 +43,19 @@
 
 <Button OnClick="DeselectAll">Deselect All</Button>
 <br />
+<br />
 
 <Button OnClick="ExpandAll">Expand All Nodes</Button>
 
 <Button OnClick="CollapseAll">Collapse All Nodes</Button>
+
+<br />
+<br />
+
+<Button OnClick="ExpandAllChild">Expand Node "0-0" And Expand All Child Nodes</Button>
+
+<Button OnClick="CollapseAllChild">Collapse Node "0-0" And Collapse All Child Nodes</Button>
+
 
 @if (string.IsNullOrWhiteSpace(printType) == false)
 {
@@ -60,73 +69,83 @@
 }
 @code {
 
-	string printType;
+    string printType;
 
-	string[] printTexts;
+    string[] printTexts;
 
-	Tree<string> _tree;
+    Tree<string> _tree;
 
-	string[] expandedKeys;
-	string[] checkedKeys;
-	string[] selectedKeys;
+    string[] expandedKeys;
+    string[] checkedKeys;
+    string[] selectedKeys;
 
-	bool autoExpandParent;
+    bool autoExpandParent;
 
-	//private void PrintCheckedNodesTitle()
-	//{
-	//    printType = "CheckedNodesTitle";
-	//    printTexts = tree.CheckedTitles;
-	//}
+    //private void PrintCheckedNodesTitle()
+    //{
+    //    printType = "CheckedNodesTitle";
+    //    printTexts = tree.CheckedTitles;
+    //}
 
-	private void PrintCheckedNodesKey()
-	{
-		printType = "CheckedNodesKey";
-		printTexts = _tree.CheckedKeys;
-	}
+    private void PrintCheckedNodesKey()
+    {
+        printType = "CheckedNodesKey";
+        printTexts = _tree.CheckedKeys;
+    }
 
-	private void CheckAll()
-	{
-		_tree.CheckAll();
-	}
+    private void CheckAll()
+    {
+        _tree.CheckAll();
+    }
 
-	private void UncheckAll()
-	{
-		_tree.UncheckAll();
-	}
+    private void UncheckAll()
+    {
+        _tree.UncheckAll();
+    }
 
-	//private void PrintSelectedNodes()
-	//{
-	//    printType = "SelectedNodes";
-	//    printTexts = tree.SelectedTitles;
-	//}
+    //private void PrintSelectedNodes()
+    //{
+    //    printType = "SelectedNodes";
+    //    printTexts = tree.SelectedTitles;
+    //}
 
-	private void DeselectAll()
-	{
-		_tree.DeselectAll();
-	}
+    private void DeselectAll()
+    {
+        _tree.DeselectAll();
+    }
 
-	private void ExpandAll()
-	{
-		_tree.ExpandAll();
-	}
+    private void ExpandAll()
+    {
+        _tree.ExpandAll();
+    }
 
-	private void CollapseAll()
-	{
-		_tree.CollapseAll();
-	}
+    private void CollapseAll()
+    {
+        _tree.CollapseAll();
+    }
 
-	private void OnCheck(TreeEventArgs<string> e)
-	{
-		Console.WriteLine("OnCheck:" + e.Node.Key);
-	}
+    private void ExpandAllChild()
+    {
+        _tree.ExpandAll(n => n.Key == "0-0");
+    }
 
-	private void OnSelect(TreeEventArgs<string> e)
-	{
-		Console.WriteLine("OnSelect:" + e.Node.Key);
-	}
+    private void CollapseAllChild()
+    {
+        _tree.CollapseAll(n => n.Key == "0-0");
+    }
 
-	private void OnExpand((string[] ExpandedKeys, TreeNode<string> Node, bool Expanded) e)
-	{
-		Console.WriteLine("OnExpand:" + JsonSerializer.Serialize(e.ExpandedKeys));
-	}
+    private void OnCheck(TreeEventArgs<string> e)
+    {
+        Console.WriteLine("OnCheck:" + e.Node.Key);
+    }
+
+    private void OnSelect(TreeEventArgs<string> e)
+    {
+        Console.WriteLine("OnSelect:" + e.Node.Key);
+    }
+
+    private void OnExpand((string[] ExpandedKeys, TreeNode<string> Node, bool Expanded) e)
+    {
+        Console.WriteLine("OnExpand:" + JsonSerializer.Serialize(e.ExpandedKeys));
+    }
 }
