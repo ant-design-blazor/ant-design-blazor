@@ -116,11 +116,11 @@ namespace AntDesign
 
                 if (Active)
                 {
-                    InvokeAsync(HandleExpand);
+                    HandleExpand();
                 }
                 else
                 {
-                    InvokeAsync(HandleCollapse);
+                    HandleCollapse();
                 }
             }
         }
@@ -139,23 +139,13 @@ namespace AntDesign
 
         public void Toggle() => SetActive(!this.Active);
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                //await UpdateHeight();
-            }
-
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
         private async Task UpdateHeight()
         {
             var rect = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _warpperRef);
             _warpperHight = rect.ScrollHeight;
         }
 
-        private async Task HandleExpand()
+        private void HandleExpand()
         {
             _isActive = true;
             _isInactive = false;
@@ -190,7 +180,7 @@ namespace AntDesign
             });
         }
 
-        private async Task HandleCollapse()
+        private void HandleCollapse()
         {
             _isActive = false;
             _isInactive = true;
@@ -219,6 +209,7 @@ namespace AntDesign
                 });
 
                 StateHasChanged();
+                await Task.Yield();
             });
 
             StateHasChanged();
