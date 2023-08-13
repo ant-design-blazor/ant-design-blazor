@@ -416,6 +416,11 @@ namespace AntDesign
                             await OnOpen.Invoke();
                         }
 
+                        if (Visible == false && VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(true);
+                        }
+
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {
