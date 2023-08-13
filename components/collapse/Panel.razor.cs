@@ -48,9 +48,13 @@ namespace AntDesign
         private bool _isActive = false;
         private bool _isInactive = true;
         private bool _isHidden = true;
-        private bool _isCollapsePrepare;
-        private bool _isCollapseStart;
-        private bool _isCollapseActive;
+        private bool _isCollapseEnterPrepare;
+        private bool _isCollapseEnterStart;
+        private bool _isCollapseEnterActive;
+
+        private bool _isCollapseLeavePrepare;
+        private bool _isCollapseLeaveStart;
+        private bool _isCollapseLeaveActive;
 
         private ClassMapper _contentClassMapper = new ClassMapper();
 
@@ -67,9 +71,12 @@ namespace AntDesign
                 .If("ant-collapse-content-active", () => _isActive)
                 .If("ant-collapse-content-inactive", () => _isInactive)
                 .If("ant-collapse-content-hidden", () => _isHidden)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapsePrepare)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseStart)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-active ant-motion-collapse", () => _isCollapseActive)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapseEnterPrepare)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseEnterStart)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-active ant-motion-collapse", () => _isCollapseEnterActive)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-prepare ant-motion-collapse", () => _isCollapseLeavePrepare)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-start ant-motion-collapse", () => _isCollapseLeaveStart)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-active ant-motion-collapse", () => _isCollapseLeaveActive)
                 ;
         }
 
@@ -153,22 +160,20 @@ namespace AntDesign
             _isActive = true;
             _isInactive = false;
             _isHidden = false;
-            _isCollapsePrepare = true;
-            //StateHasChanged();
+            _isCollapseEnterPrepare = true;
 
             CallAfterRender(async () =>
             {
                 await UpdateHeight();
 
-                _isCollapsePrepare = false;
-                _isCollapseStart = true;
+                _isCollapseEnterPrepare = false;
+                _isCollapseEnterStart = true;
                 _warpperStyle = "height: 0px; opacity: 0;";
 
                 CallAfterRender(async () =>
                 {
-                    //await Task.Delay(100);
-                    _isCollapseStart = false;
-                    _isCollapseActive = true;
+                    _isCollapseEnterStart = false;
+                    _isCollapseEnterActive = true;
                     StateHasChanged();
                     await Task.Delay(100);
 
@@ -176,7 +181,7 @@ namespace AntDesign
                     StateHasChanged();
                     await Task.Delay(450);
 
-                    _isCollapseActive = false;
+                    _isCollapseEnterActive = false;
                     _warpperStyle = "";
                     StateHasChanged();
                 });
@@ -189,7 +194,34 @@ namespace AntDesign
         {
             _isActive = false;
             _isInactive = true;
-            _isHidden = true;
+            _isCollapseLeavePrepare = true;
+
+            CallAfterRender(async () =>
+            {
+                _isCollapseLeavePrepare = false;
+                _isCollapseLeaveStart = true;
+                _warpperStyle = $"height: {_warpperHight}px;";
+
+                CallAfterRender(async () =>
+                {
+                    await Task.Delay(100);
+                    _isCollapseLeaveStart = false;
+                    _isCollapseLeaveActive = true;
+
+                    _warpperStyle = "height: 0px; opacity: 0;";//still active
+                    StateHasChanged();
+
+                    await Task.Delay(450);
+                    _isHidden = true; // still height 0
+                    _warpperStyle = "";
+                    _isCollapseLeaveActive = false;
+                    StateHasChanged();
+                });
+
+                StateHasChanged();
+            });
+
+            StateHasChanged();
         }
     }
 }
