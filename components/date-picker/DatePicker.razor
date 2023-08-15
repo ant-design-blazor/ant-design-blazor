@@ -37,7 +37,7 @@
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(); }"
                                  OnSuffixIconClick="OnSuffixIconClick"
-                                 OnKeyDown="@(e => OnKeyDown(e))"
+                                 OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
                                  OnBlur="e => OnBlur(0)"
                                  Onfocus="e => AutoFocus = true"
