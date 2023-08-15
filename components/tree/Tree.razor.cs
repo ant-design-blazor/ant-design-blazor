@@ -6,7 +6,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,6 +16,9 @@ namespace AntDesign
 {
     public partial class Tree<TItem> : AntDomComponentBase
     {
+        [CascadingParameter(Name = "IsTreeSelect")]
+        public bool IsTreeSelect { get; set; }
+
         #region fields
 
         /// <summary>
@@ -673,12 +678,12 @@ namespace AntDesign
             }
             return base.OnFirstAfterRenderAsync();
         }
-        
+
         /// <summary>
         /// Get TreeNode from Key
         /// </summary>
         /// <param name="key">Key</param>
-        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x=>x.Key == key);
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x => x.Key == key);
 
         /// <summary>
         /// Find Node
@@ -801,5 +806,50 @@ namespace AntDesign
         }
 
         #endregion Expand
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+
+        internal bool IsCtrlKeyDown { get; set; } = false;
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (IsTreeSelect)
+                {
+                    IsCtrlKeyDown = true;
+                }
+                else
+                {
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keydown", OnKeyDown);
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keyup", OnKeyUp);
+                }
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected virtual void OnKeyDown(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        protected virtual void OnKeyUp(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        private void HanldeCtrlKeyPress(KeyboardEventArgs eventArgs)
+        {
+            IsCtrlKeyDown = eventArgs.CtrlKey || eventArgs.MetaKey;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener?.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }

@@ -15,9 +15,33 @@ timeline: true
 
 ---
 
+### 0.15.4
+
+`2023-07-31`
+
+- 🆕 Add AutoFocus for all select components. [#3375](https://github.com/ant-design-blazor/ant-design-blazor/pull/3375) [@LuukGlorie](https://github.com/LuukGlorie)
+- 🐞 Fixed Tree would not invoke CheckedKeys changed while CheckStrictly was set. [#3379](https://github.com/ant-design-blazor/ant-design-blazor/pull/3379) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox passing disabled value to templated options from checkbox group. [#3365](https://github.com/ant-design-blazor/ant-design-blazor/pull/3365) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DomEventListener check ContainsKey for shared event subscriptions store. [#3364](https://github.com/ant-design-blazor/ant-design-blazor/pull/3364) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input incorrect html structure of TextArea icons. [#3367](https://github.com/ant-design-blazor/ant-design-blazor/pull/3367) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu missing null check. [#3368](https://github.com/ant-design-blazor/ant-design-blazor/pull/3368) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form Help message change. [#3373](https://github.com/ant-design-blazor/ant-design-blazor/pull/3373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs throwing navigate exceptiion while base path was set. [#3362](https://github.com/ant-design-blazor/ant-design-blazor/pull/3362) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ i11y: Icon role update. [#3370](https://github.com/ant-design-blazor/ant-design-blazor/pull/3370) [@eizzn](https://github.com/eizzn)
+
+### 0.15.3
+
+`2023-07-13`
+
+- 🐞 Fixed Tree multiple should not take effect when Ctrl is not pressed. [#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 Fixed Icons compatible with bootstrap. [#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Steps missing RTL style. [#3343](https://github.com/ant-design-blazor/ant-design-blazor/pull/3343) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n changed dateFormat and dateTimeFormat in ru-RU locale from d.M.yyyy to dd.MM.yyyy. [#3342](https://github.com/ant-design-blazor/ant-design-blazor/pull/3342) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+- 📖 Docs optimize the performance of document navigation. [#3347](https://github.com/ant-design-blazor/ant-design-blazor/pull/3347) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.15.2
 
-`2013-07-03`
+`2023-07-03`
 
 - Table
   - 🐞 Fixed Table avoid exception at DisposeAsync method. [#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)

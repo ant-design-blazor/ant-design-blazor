@@ -40,35 +40,50 @@ namespace AntDesign.Docs.Pages
 
         private List<string> _filePaths;
 
+        private bool _rendered;
+
+        private bool _changed = true;
+
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             LanguageService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
-
-            await HandleNavigate();
         }
 
-        private async void OnLanguageChanged(object sender, CultureInfo args)
+        private void OnLanguageChanged(object sender, CultureInfo args)
         {
             if (!string.IsNullOrEmpty(Name))
             {
-                await InvokeAsync(HandleNavigate);
-                await InvokeAsync(StateHasChanged);
+                _changed = true;
+                InvokeAsync(StateHasChanged);
             }
         }
 
-        private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
-            Name = null;
-            await HandleNavigate();
+            _changed = true;
+            InvokeAsync(StateHasChanged);
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnParametersSetAsync();
-            await HandleNavigate();
+            if (firstRender)
+            {
+                _rendered = true;
+                await Task.Yield();
+                StateHasChanged();
+                return;
+            }
+
+            if (_rendered && _changed)
+            {
+                _changed = false;
+                _ = HandleNavigate();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task HandleNavigate()
