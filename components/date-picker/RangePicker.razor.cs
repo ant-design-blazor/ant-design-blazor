@@ -224,22 +224,19 @@ namespace AntDesign
                 _duringManualInput = true;
             }
 
-            foreach (var formatAnalyzer in FormatAnalyzers)
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
             {
-                if (formatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
+                if (IsDisabledDate(parsedValue))
                 {
-                    if (IsDisabledDate(parsedValue))
-                    {
-                        return;
-                    }
+                    return;
+                }
 
-                    _pickerStatus[index].SelectedValue = parsedValue;
-                    ChangePickerValue(parsedValue, index);
-                }
-                else
-                {
-                    _pickerStatus[index].SelectedValue = null;
-                }
+                _pickerStatus[index].SelectedValue = parsedValue;
+                ChangePickerValue(parsedValue, index);
+            }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
             }
         }
 
