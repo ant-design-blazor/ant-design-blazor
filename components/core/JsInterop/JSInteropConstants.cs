@@ -91,6 +91,12 @@ namespace AntDesign
 
         #endregion icon
 
+        #region image
+
+        public static string InitializeDragAndDrop => ImageComponentHelper.InitializeDragAndDrop;
+
+        #endregion
+
         #region input
 
         public static string RegisterResizeTextArea => InputComponentHelper.RegisterResizeTextArea;
@@ -225,6 +231,12 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "iconHelper.";
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
+        }
+
+        public static class ImageComponentHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "imageHelper.";
+            public static string InitializeDragAndDrop => $"{FUNC_PREFIX}initializeDragAndDrop";
         }
 
         public static class InputComponentHelper
