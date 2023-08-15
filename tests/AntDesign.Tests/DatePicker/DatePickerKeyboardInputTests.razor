@@ -200,7 +200,7 @@
         var newDate = value.AddDays(20);
         var newDateAsString = newDate.ToString(DateFormat);
         input.Click();
-        await Task.Delay(1);
+        await Task.Delay(100);
         input.Input(newDateAsString); 
         input.Blur();
         await Task.Delay(100);

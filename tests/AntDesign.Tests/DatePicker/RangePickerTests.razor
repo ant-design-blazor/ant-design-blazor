@@ -370,11 +370,11 @@
         //Act
         var input = cut.FindAll("input");
         
-        await input[0].InputAsync(new ChangeEventArgs() { Value = null });
+        await input[0].InputAsync(new ChangeEventArgs() { Value = "" });
         input[0].KeyDown("ENTER");
         await Task.Delay(100);
         
-        await input[1].InputAsync(new ChangeEventArgs() { Value = null });
+        await input[1].InputAsync(new ChangeEventArgs() { Value = "" });
         input[1].KeyDown("ENTER");
         await Task.Delay(100);
 
