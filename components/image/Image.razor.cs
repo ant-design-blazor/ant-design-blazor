@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -43,6 +41,10 @@ namespace AntDesign
                 }
             }
         }
+
+        [Parameter]
+        public string DataSrc { get; set; }
+
 
         [Parameter]
         public string Src
