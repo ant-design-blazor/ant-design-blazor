@@ -185,6 +185,7 @@ namespace AntDesign
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
+            public static string FocusOnChildFormIfExists = $"{FUNC_PREFIX}focusOnChildFormIfExists";
         }
 
         public static class StyleHelper

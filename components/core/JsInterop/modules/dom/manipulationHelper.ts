@@ -242,6 +242,31 @@ export class manipulationHelper {
     styleHelper.removeCls(document.body, "ant-scrolling-effect");
   }
 
+  static focusOnChildFormIfExists(parentId) {
+      let BreakException = {};
+      let parent = document.getElementById(parentId);
+      if (parent) {
+          let forms = parent.getElementsByTagName('form');
+          if (forms.length > 0) {
+              let form = forms[0];
+              let inputs = form.querySelectorAll('input, textarea, select');
+              try {
+                  [].forEach.call(inputs, function (input) {
+                      var style = window.getComputedStyle(input);
+                      if (style.display !== 'none' && style.visibility !== 'hidden') {
+                          input.focus();
+                          throw BreakException;
+                      }
+                  });
+              } catch (e) {
+                  if (e !== BreakException) {
+                      throw e;
+                  }
+              }
+          }
+      }
+  }
+
   static hasScrollbar = () => {
     let overflow = document.body.style.overflow;
     if (overflow && overflow === "hidden") return false;

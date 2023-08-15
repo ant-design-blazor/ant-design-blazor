@@ -441,6 +441,7 @@ namespace AntDesign
                     }
             }
             await base.OnAfterRenderAsync(isFirst);
+            await JsInvokeAsync(JSInteropConstants.DomMainpulationHelper.FocusOnChildFormIfExists, Id);
         }
 
         private Timer _timer;
