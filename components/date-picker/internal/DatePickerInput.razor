@@ -18,7 +18,7 @@
                readonly="@ReadOnly">
         @if (ShowSuffixIcon || FeedbackIcon != null)
         {
-            <span class="@(PrefixCls)-suffix" onclick="@OnSuffixIconClick">
+            <span class="@(PrefixCls)-suffix" style="pointer-events: auto;" onclick="@OnSuffixIconClick">
 
                 @if (SuffixIcon != null)
                 {
