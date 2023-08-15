@@ -519,8 +519,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _timer?.Dispose();
-
             if (_isOpen)
             {
                 _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
