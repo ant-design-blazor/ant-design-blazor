@@ -251,7 +251,7 @@ export class manipulationHelper {
               let form = forms[0];
               let inputs = form.querySelectorAll('input, textarea, select');
               try {
-                  [].forEach.call(inputs, function (input) {
+                  inputs.forEach(function (input:HTMLElement) {
                       var style = window.getComputedStyle(input);
                       if (style.display !== 'none' && style.visibility !== 'hidden') {
                           input.focus();
