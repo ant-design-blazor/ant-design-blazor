@@ -28,7 +28,7 @@
             </div>
         }
     </div>
-    <div class="ant-collapse-content @(Active?"ant-collapse-content-active":"ant-collapse-content-inactive ant-collapse-content-hidden")">
+    <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@_warpperStyle">
         <div class="ant-collapse-content-box">
             @ChildContent
         </div>

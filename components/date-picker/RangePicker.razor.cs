@@ -234,6 +234,10 @@ namespace AntDesign
                 _pickerStatus[index].SelectedValue = parsedValue;
                 ChangePickerValue(parsedValue, index);
             }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
         }
 
         /// <summary>
@@ -274,6 +278,10 @@ namespace AntDesign
                     else if (_pickerStatus[index].SelectedValue is not null)
                     {
                         await OnSelect(_pickerStatus[index].SelectedValue.Value, index);
+                    }
+                    else if (AllowClear)
+                    {
+                        ClearValue(index);
                     }
                     else if (isOverlayShown)
                     {
@@ -342,6 +350,19 @@ namespace AntDesign
             //right after OnBlur. Best way to achieve that is to wait.
             //Task.Yield() does not work here.
             await Task.Delay(1);
+
+            if (ChangeOnClose && _duringManualInput)
+            {
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    await OnSelect(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else if (AllowClear)
+                {
+                    ClearValue(index);
+                }
+            }
+
             if (_duringFocus)
             {
                 _duringFocus = false;
@@ -534,7 +555,7 @@ namespace AntDesign
                 Close();
             }
 
-            if (array.GetValue(0) is null && array.GetValue(1) is null)
+            if (array.GetValue(0) is null || array.GetValue(1) is null)
             {
                 InvokeOnChange();
             }

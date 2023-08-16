@@ -8,6 +8,7 @@ using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using OneOf;
 
@@ -23,6 +24,12 @@ namespace AntDesign
 
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
+
+        /// <summary>
+        /// Saving the input value after blur
+        /// </summary>
+        [Parameter]
+        public bool ChangeOnClose { get; set; }
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -260,6 +267,11 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        /// <summary>
+        /// The position where the selection box pops up
+        /// </summary>
+        [Parameter] public Placement Placement { get; set; } = Placement.BottomLeft;
+
         public DateTime CurrentDate { get; set; } = DateTime.Today;
 
         protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
@@ -478,7 +490,6 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-
                             ChangeValue(date, index, false);
 
                             var otherIndex = Math.Abs(index - 1);
@@ -593,7 +604,13 @@ namespace AntDesign
             return true;
         }
 
-        protected abstract Task OnBlur(int index);
+        protected virtual async Task OnBlur(int index)
+        {
+            if (ChangeOnClose && _duringManualInput)
+            {
+                ChangeValue(_pickerStatus[index].SelectedValue.Value);
+            }
+        }
 
         protected void InitPicker(string picker)
         {
@@ -897,6 +914,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
+        /// <param name="closeDropdown"></param>
         public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
         public abstract void ClearValue(int index = 0, bool closeDropdown = true);
@@ -935,7 +953,21 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            _pickerStatus[index].SelectedValue = null;
+            if (!visible && ChangeOnClose)
+            {
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else
+                {
+                    ClearValue(index);
+                }
+            }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
 
             if (IsRange)
             {

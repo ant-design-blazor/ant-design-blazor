@@ -205,11 +205,6 @@ namespace AntDesign
 
             Form.AddFormItem(this);
 
-            if (!string.IsNullOrWhiteSpace(Help))
-            {
-                _validationMessages = new[] { Help };
-            }
-
             if (ShowFeedbackOnError && ValidateStatus == FormValidateStatus.Default)
             {
                 ValidateStatus = FormValidateStatus.Error;
@@ -234,6 +229,14 @@ namespace AntDesign
                 .Add($"{_prefixCls}-label")
                 .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
                 ;
+        }
+
+        protected override void OnParametersSet()
+        {
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
         }
 
         private void SetInternalIsRequired()
