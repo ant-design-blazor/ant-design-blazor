@@ -15,6 +15,46 @@ timeline: true
 
 ---
 
+### 0.15.4
+
+`2023-07-31`
+
+- 🆕 Add AutoFocus for all select components. [#3375](https://github.com/ant-design-blazor/ant-design-blazor/pull/3375) [@LuukGlorie](https://github.com/LuukGlorie)
+- 🐞 Fixed Tree would not invoke CheckedKeys changed while CheckStrictly was set. [#3379](https://github.com/ant-design-blazor/ant-design-blazor/pull/3379) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox passing disabled value to templated options from checkbox group. [#3365](https://github.com/ant-design-blazor/ant-design-blazor/pull/3365) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DomEventListener check ContainsKey for shared event subscriptions store. [#3364](https://github.com/ant-design-blazor/ant-design-blazor/pull/3364) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input incorrect html structure of TextArea icons. [#3367](https://github.com/ant-design-blazor/ant-design-blazor/pull/3367) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu missing null check. [#3368](https://github.com/ant-design-blazor/ant-design-blazor/pull/3368) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form Help message change. [#3373](https://github.com/ant-design-blazor/ant-design-blazor/pull/3373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs throwing navigate exceptiion while base path was set. [#3362](https://github.com/ant-design-blazor/ant-design-blazor/pull/3362) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ i11y: Icon role update. [#3370](https://github.com/ant-design-blazor/ant-design-blazor/pull/3370) [@eizzn](https://github.com/eizzn)
+
+### 0.15.3
+
+`2023-07-13`
+
+- 🐞 Fixed Tree multiple should not take effect when Ctrl is not pressed. [#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 Fixed Icons compatible with bootstrap. [#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Steps missing RTL style. [#3343](https://github.com/ant-design-blazor/ant-design-blazor/pull/3343) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n changed dateFormat and dateTimeFormat in ru-RU locale from d.M.yyyy to dd.MM.yyyy. [#3342](https://github.com/ant-design-blazor/ant-design-blazor/pull/3342) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+- 📖 Docs optimize the performance of document navigation. [#3347](https://github.com/ant-design-blazor/ant-design-blazor/pull/3347) [@ElderJames](https://github.com/ElderJames)
+
+### 0.15.2
+
+`2023-07-03`
+
+- Table
+  - 🐞 Fixed Table avoid exception at DisposeAsync method. [#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed Table render incorrectly with `ParametersHashCodeChanged` render mode in some case. [#3313](https://github.com/ant-design-blazor/ant-design-blazor/pull/3313) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Menu that MenuItem unselect incorrectly when menu was inline and collapsed. [#3338](https://github.com/ant-design-blazor/ant-design-blazor/pull/3338) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer scroll not enable when page url changed. [#3316](https://github.com/ant-design-blazor/ant-design-blazor/pull/3316) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Slider does not always fire OnAfterChange. [#3323](https://github.com/ant-design-blazor/ant-design-blazor/pull/3323) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Statistic that coundown pause while the navigate to other page. [#3329](https://github.com/ant-design-blazor/ant-design-blazor/pull/3329) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Card missing loading effect. [#3319](https://github.com/ant-design-blazor/ant-design-blazor/pull/3319) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed TreeSelect that removing last option can't change the binding values. [#3314](https://github.com/ant-design-blazor/ant-design-blazor/pull/3314) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n ru-RU changed dateFormat and dateTimeFormat to `d.m.yyyy` in ru-RU locale. [#3327](https://github.com/ant-design-blazor/ant-design-blazor/pull/3327) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+
 ### 0.15.1
 
 `2023-06-18`

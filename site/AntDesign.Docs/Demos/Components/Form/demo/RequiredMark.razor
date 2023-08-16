@@ -7,8 +7,12 @@
     <Radio RadioButton Value=@FormRequiredMark.None>None</Radio>
 </RadioGroup>
 
-<Form Model="@model" ValidateMode=@FormValidateMode.Complex RequiredMark=@ChosenRequiredMark>
-    <FormItem Label="Required By Parameter" Required>
+<Form 
+    Model="@model"
+      Layout="vertical"
+    ValidateMode=@FormValidateMode.Complex
+    RequiredMark=@ChosenRequiredMark>
+    <FormItem Label="Required By Parameter" Required >
         <Input @bind-Value="@context.RequiredByParameter" />
     </FormItem>
     <FormItem Label="Required By Rule Field" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
@@ -17,7 +21,7 @@
     <FormItem Label="Required By Data Attribute">
         <Input @bind-Value="@context.RequiredByDataAttribute" />
     </FormItem>
-    <FormItem Label="Optional">
+    <FormItem Label="Optional" >
         <Input @bind-Value="@context.Optional" />
     </FormItem>
 </Form>

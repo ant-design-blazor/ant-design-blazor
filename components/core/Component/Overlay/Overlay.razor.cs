@@ -335,7 +335,7 @@ namespace AntDesign.Internal
                     await Task.Delay(10);
                     await AddOverlayToBody(overlayLeft, overlayTop);
                 }
-                else
+                else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
                     _overlayStyle = _position.PositionCss + GetTransformOrigin();

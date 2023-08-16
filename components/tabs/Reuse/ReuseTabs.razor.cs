@@ -40,18 +40,14 @@ namespace AntDesign
         private string CurrentUrl
         {
             get => "/" + Navmgr.ToBaseRelativePath(Navmgr.Uri);
-            set => Navmgr.NavigateTo(value == "/" ? "" : value);
+            set => Navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
         }
 
-        private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
-
-        public ReuseTabs()
-        {
-            this.ScanReuseTabsPageAttribute();
-        }
+        private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
 
         protected override void OnInitialized()
         {
+            this.ScanReuseTabsPageAttribute();
             ReuseTabsService.OnClosePage += RemovePage;
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
@@ -81,7 +77,6 @@ namespace AntDesign
                     {
                         Url = CurrentUrl,
                         CreatedAt = DateTime.Now,
-                        Ignore = false
                     };
 
                     _pageMap[CurrentUrl] = reuseTabsPageItem;
@@ -132,6 +127,8 @@ namespace AntDesign
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
+                pageItem.KeepAlive = attr.KeepAlive;
+                pageItem.Order = attr.Order;
             }
 
             pageItem.Title ??= url.ToRenderFragment();
@@ -148,12 +145,6 @@ namespace AntDesign
             if (entryAssembly == null) return assemblies;
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
-
-            var paths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
-                .Where(w => w.EndsWith(".dll") && !w.Contains(nameof(Microsoft)))
-                .Select(w => w)
-             ;
-
             return assemblies;
         }
 
@@ -170,21 +161,20 @@ namespace AntDesign
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
-                    var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
-                    var reuseTabsPageAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
-
-                    this.AddReuseTabsPageItem(routeAttribute.Template, pageType);
+                    this.AddReuseTabsPageItem(pageType);
                 }
             }
         }
 
-        public void AddReuseTabsPageItem(string url, Type pageType)
+        public void AddReuseTabsPageItem(Type pageType)
         {
-            if (_pageMap.ContainsKey(url)) return;
+            var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
+            var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
+            var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
             var reuseTabsPageItem = new ReuseTabsPageItem();
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
-            reuseTabsPageItem.CreatedAt = DateTime.Now;
+            reuseTabsPageItem.CreatedAt = DateTime.MinValue;
             reuseTabsPageItem.Url = url;
             _pageMap[url] = reuseTabsPageItem;
         }

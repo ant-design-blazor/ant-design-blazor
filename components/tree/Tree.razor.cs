@@ -6,7 +6,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,6 +16,9 @@ namespace AntDesign
 {
     public partial class Tree<TItem> : AntDomComponentBase
     {
+        [CascadingParameter(Name = "IsTreeSelect")]
+        public bool IsTreeSelect { get; set; }
+
         #region fields
 
         /// <summary>
@@ -434,6 +439,12 @@ namespace AntDesign
 
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -673,12 +684,12 @@ namespace AntDesign
             }
             return base.OnFirstAfterRenderAsync();
         }
-        
+
         /// <summary>
         /// Get TreeNode from Key
         /// </summary>
         /// <param name="key">Key</param>
-        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x=>x.Key == key);
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x => x.Key == key);
 
         /// <summary>
         /// Find Node
@@ -745,28 +756,23 @@ namespace AntDesign
         /// <summary>
         /// Expand all nodes
         /// </summary>
-        public void ExpandAll()
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, true));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+            else
+                ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
 
         /// <summary>
         /// Collapse all nodes
         /// </summary>
-        public void CollapseAll()
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, false));
-        }
-
-        /// <summary>
-        /// 节点展开关闭
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="expanded"></param>
-        private void Switch(TreeNode<TItem> node, bool expanded)
-        {
-            node.Expand(expanded);
-            node.ChildNodes.ForEach(n => Switch(n, expanded));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+            else
+                ChildNodes.ForEach(node => _ = node.CollapseAll());
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
@@ -777,6 +783,7 @@ namespace AntDesign
                 node.SetLoading(true);
                 await OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
                 node.SetLoading(false);
+                StateHasChanged();
             }
 
             if (OnExpandChanged.HasDelegate)
@@ -801,5 +808,50 @@ namespace AntDesign
         }
 
         #endregion Expand
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+
+        internal bool IsCtrlKeyDown { get; set; } = false;
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (IsTreeSelect)
+                {
+                    IsCtrlKeyDown = true;
+                }
+                else
+                {
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keydown", OnKeyDown);
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keyup", OnKeyUp);
+                }
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected virtual void OnKeyDown(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        protected virtual void OnKeyUp(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        private void HanldeCtrlKeyPress(KeyboardEventArgs eventArgs)
+        {
+            IsCtrlKeyDown = eventArgs.CtrlKey || eventArgs.MetaKey;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener?.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }

@@ -1,6 +1,5 @@
 ---
-order: 8
-debug: true
+order: 28
 title:
   zh-CN: 弹出位置
   en-US: Placement
@@ -13,4 +12,3 @@ title:
 ## en-US
 
 You can manually specify the position of the popup via `placement`.
-
