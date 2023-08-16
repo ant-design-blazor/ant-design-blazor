@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Core.HashCodes
 {
     /// <summary>
     /// Provide HashCode calculation of component parameters and other functions
     /// </summary>
-    static class HashCodeExtensions
+    internal static class HashCodeExtensions
     {
         /// <summary>
         /// Compute the HashCode for all parameters
@@ -19,7 +20,7 @@ namespace AntDesign.Core.HashCodes
             var descriptors = ParameterDescriptor<TComponent>.Descriptors;
             foreach (var descriptor in descriptors)
             {
-                hashCode ^= descriptor.GetValueHashCode(component);
+                hashCode = HashCode.Combine(hashCode, descriptor.GetValueHashCode(component));
             }
             return hashCode;
         }

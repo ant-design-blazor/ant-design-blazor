@@ -119,6 +119,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public EventCallback OnFocus { get; set; }
 
+        [Parameter] public bool AutoFocus { get; set; }
+
         /// <summary>
         /// The name of the property to be used as a group indicator.
         /// If the value is set, the entries are displayed in groups.
@@ -454,10 +456,10 @@ namespace AntDesign
                 return;
             }
 
-            if (!SelectOptionItems.Any())
-            {
-                return;
-            }
+            //if (!SelectOptionItems.Any())
+            //{
+            //    return;
+            //}
 
             if (values == null)
             {
@@ -642,6 +644,16 @@ namespace AntDesign
             _isInitialized = true;
 
             base.OnInitialized();
+        }
+
+        protected override async Task OnFirstAfterRenderAsync()
+        {
+            if (AutoFocus)
+            {
+                await SetInputFocusAsync();
+            }
+
+            await base.OnFirstAfterRenderAsync();
         }
 
         protected void OnOverlayHide()

@@ -218,6 +218,7 @@ namespace AntDesign
         private decimal _tableWidth;
 
         private bool _isVirtualizeEmpty;
+        private bool _afterFirstRender;
 
         private bool _useRowTemplateAsColumnDefinitions;
 
@@ -693,6 +694,7 @@ namespace AntDesign
 
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
                 if (ScrollY != null || ScrollX != null)
@@ -757,6 +759,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener?.Dispose();
+
             base.Dispose(disposing);
         }
 
@@ -764,7 +767,7 @@ namespace AntDesign
         {
             try
             {
-                if (!_isReloading)
+                if (_afterFirstRender && !_isReloading)
                 {
                     if (ScrollY != null || ScrollX != null)
                     {
