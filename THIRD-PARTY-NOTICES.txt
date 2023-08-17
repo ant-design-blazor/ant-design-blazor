@@ -1,3 +1,6 @@
+License notice for ant-design
+------------------------------------
+
 MIT LICENSE
 
 Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/

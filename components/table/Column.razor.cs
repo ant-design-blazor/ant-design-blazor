@@ -165,6 +165,8 @@ namespace AntDesign
 
         private RenderFragment _renderDefaultFilterDropdown;
 
+        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

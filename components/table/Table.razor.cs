@@ -10,6 +10,8 @@ using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using System.Reflection;
+using AntDesign.Table.Internal;
 
 #if NET5_0_OR_GREATER
 
@@ -25,7 +27,7 @@ namespace AntDesign
 
     public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
@@ -212,6 +214,7 @@ namespace AntDesign
         private decimal _tableWidth;
 
         private bool _isVirtualizeEmpty;
+        private bool _afterFirstRender;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -681,6 +684,7 @@ namespace AntDesign
 
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
                 if (ScrollY != null || ScrollX != null)
@@ -745,6 +749,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener?.Dispose();
+
             base.Dispose(disposing);
         }
 
@@ -752,7 +757,7 @@ namespace AntDesign
         {
             try
             {
-                if (!_isReloading)
+                if (_afterFirstRender && !_isReloading)
                 {
                     if (ScrollY != null || ScrollX != null)
                     {

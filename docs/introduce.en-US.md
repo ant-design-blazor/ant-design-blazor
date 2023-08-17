@@ -64,6 +64,8 @@ WebAssembly static hosting examples:
 
 Regularly synchronize with Official Ant Design specifications, you can check the [sync logs](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22) online.
 
+**Before the 1.0 release, we will only sync antd 4.x styles.**
+
 ## 📦 Installation Guide
 
 - Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 or later, .NET 7 is even better.
@@ -154,6 +156,7 @@ Options for the template：
   $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
+  $ dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
   $ npm start
   ```
 
@@ -163,7 +166,6 @@ Options for the template：
 
 ## 🔗 Links
 
-- [Ant Design Blazor Documentation](https://ant-design-blazor.github.io)
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 

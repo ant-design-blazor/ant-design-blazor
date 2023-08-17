@@ -113,9 +113,7 @@ namespace AntDesign
             }
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
-                await radio.Select();
-                _selectedRadio = radio;
-                StateHasChanged();
+                OnValueChange(radio.Value);
             }
         }
 
@@ -125,23 +123,15 @@ namespace AntDesign
             OnDisabledValueChanged -= radio.SetDisabledValue;
         }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-            UpdateSelected();
-        }
-
-        protected override void OnCurrentValueChange(TValue value)
-        {
-            UpdateSelected();
-        }
-
-        private void UpdateSelected()
+        protected override void OnValueChange(TValue value)
         {
             if (_selectedRadio != null && EqualsValue(CurrentValue, _selectedRadio.Value))
             {
                 return;
             }
+
+            _ = _selectedRadio?.UnSelect();
+            _selectedRadio = null;
 
             foreach (var radio in _radioItems)
             {
@@ -155,13 +145,6 @@ namespace AntDesign
                     _ = radio.UnSelect();
                 }
             }
-
-            if (_selectedRadio == null)
-            {
-                return;
-            }
-
-            StateHasChanged();
         }
 
         internal async Task OnRadioChange(TValue value)
