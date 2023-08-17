@@ -163,6 +163,8 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
+        private RenderFragment _renderDefaultFilterDropdown;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -219,6 +221,8 @@ namespace AntDesign
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
 
+            _filterable = _filterable || FilterDropdown != null;
+
             if (IsHeader)
             {
                 if (_hasFiltersAttribute)
@@ -272,6 +276,8 @@ namespace AntDesign
                 }
 
                 Context.HeaderColumnInitialed(this);
+
+                _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
 
             ClassMapper

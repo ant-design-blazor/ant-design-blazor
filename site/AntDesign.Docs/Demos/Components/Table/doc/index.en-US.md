@@ -75,6 +75,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
+| FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
 
 ### Responsive
 

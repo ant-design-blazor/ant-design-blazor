@@ -78,6 +78,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
+| FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
+
+
 ### 响应式
 
 表格默认支持响应式，当屏幕宽度小于 960px 时，表格的数据列变为小屏模式。
