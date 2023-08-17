@@ -1,5 +1,4 @@
 @namespace AntDesign.Internal
-@using AntDesign.core.Helpers
 @inherits AntDomComponentBase
 
 @if (!IsRange)
@@ -151,6 +150,4 @@ else
     {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }
-
-    private string _value;
 }

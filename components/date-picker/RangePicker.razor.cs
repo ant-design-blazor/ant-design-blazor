@@ -241,8 +241,6 @@ namespace AntDesign
                 {
                     _inputEnd.Value = newValue;
                 }
-
-                newValue = index == 0 ? _inputStart.Value : _inputEnd.Value;
             }
 
             if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, false) || 
