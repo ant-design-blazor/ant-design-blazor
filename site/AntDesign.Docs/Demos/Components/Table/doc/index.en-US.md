@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: Data Display
@@ -83,6 +83,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
+| FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
 | FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
 
 ### PropertyColumn
