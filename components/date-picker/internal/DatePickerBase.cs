@@ -93,6 +93,9 @@ namespace AntDesign
         public bool ShowToday { get; set; } = true;
 
         [Parameter]
+        public string Mask { get; set; }
+
+        [Parameter]
         public DatePickerLocale Locale
         {
             get { return _locale; }
@@ -430,6 +433,13 @@ namespace AntDesign
 
         protected string GetInputValue(int index = 0)
         {
+            var inputValue = index == 0 ? _inputStart?.Value : _inputEnd?.Value;
+            
+            if (_duringManualInput && !string.IsNullOrEmpty(Mask))
+            { 
+                return inputValue;
+            }
+            
             DateTime? tryGetValue = GetIndexValue(index);
 
             if (tryGetValue == null)

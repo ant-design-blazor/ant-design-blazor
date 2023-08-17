@@ -1,4 +1,5 @@
 @namespace AntDesign.Internal
+@using AntDesign.core.Helpers
 @inherits AntDomComponentBase
 
 @if (!IsRange)
@@ -12,6 +13,7 @@
                @onfocus="Onfocus"
                @onblur="OnBlur"
                @bind-value="@Value"
+               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
@@ -26,11 +28,11 @@
                 }
                 else if (ShowTime)
                 {
-                    <Icon Type="clock-circle" />
+                    <Icon Type="clock-circle"/>
                 }
                 else
                 {
-                    <Icon Type="calendar" />
+                    <Icon Type="calendar"/>
                 }
 
                 @if (FeedbackIcon != null)
@@ -42,14 +44,14 @@
         @if (ShowClear())
         {
             <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                <Icon Type="close-circle" Theme="fill" />
+                <Icon Type="close-circle" Theme="fill"/>
             </span>
         }
     </div>
 }
 else
 {
-    <div class="@(PrefixCls)-input @(Active? $"{PrefixCls}-input-active":"")">
+    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -58,6 +60,7 @@ else
                @onfocus="Onfocus"
                @onblur="OnBlur"
                @bind-value="@Value"
+               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
@@ -66,6 +69,7 @@ else
 }
 
 @code {
+
     [Parameter]
     public string PrefixCls { get; set; } = "ant-picker";
 
@@ -80,6 +84,9 @@ else
 
     [Parameter]
     public bool ReadOnly { get; set; }
+
+    [Parameter]
+    public string Mask { get; set; }
 
     [Parameter]
     public bool IsRange { get; set; } = false;
@@ -144,4 +151,6 @@ else
     {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }
+
+    private string _value;
 }

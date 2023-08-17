@@ -56,6 +56,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |
 | OnClearClick | 清除按钮点击时的回调 | Action | - |  |
 | inputReadOnly | 设置输入框为只读（避免在移动设备上打开虚拟键盘） | boolean | false |  |
+| mask | 通过掩码输入值     | string  | - | |
 
 ### 共同的方法
 

@@ -51,6 +51,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | onPanelChange | callback when picker panel mode is changed | function(value, mode) | - |  |
 | OnClearClick | callback when clear button is clicked | Action | - |  |
 | inputReadOnly | Set the `readonly` attribute of the input tag (avoids virtual keyboard on touch devices) | boolean | false |  |
+| mask | input value by mask     | string  | - | |
 
 ### Common Methods
 

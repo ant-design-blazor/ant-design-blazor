@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.core.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -95,7 +97,17 @@ namespace AntDesign
                 _duringManualInput = true;
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
+            var newValue = args.Value.ToString();
+            var hasMask = !string.IsNullOrEmpty(Mask);
+            
+            if (hasMask) 
+            {
+                newValue = MaskHelper.Fill(newValue, Mask);
+                _inputStart.Value = newValue;
+            }
+            
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out TValue changeValue, IsNullable) || 
+                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
             {
                 GetIfNotNull(changeValue, parsed =>
                 {
@@ -106,6 +118,12 @@ namespace AntDesign
 
                     _pickerStatus[0].SelectedValue = parsed;
                     ChangePickerValue(parsed, index);
+                    
+                    if (hasMask)
+                    {
+                        ChangeValue(parsed);
+                        _ = Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
+                    }
                 });
             }
         }
@@ -201,7 +219,8 @@ namespace AntDesign
 
                 return Convert.ToDateTime(Value, CultureInfo);
             }
-            else if (DefaultValue != null)
+
+            if (DefaultValue != null)
             {
                 return Convert.ToDateTime(DefaultValue, CultureInfo);
             }

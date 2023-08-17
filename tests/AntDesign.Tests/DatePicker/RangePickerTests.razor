@@ -49,7 +49,70 @@
             input.GetAttribute("placeholder").Should().Be(placeholders[i]);
         }
     }
+    
+    [Theory]
+    [InlineData("11", "11/")]
+    [InlineData("111", "11/1")]
+    [InlineData("1111", "11/11/")]
+    [InlineData("11111111", "11/11/1111")]
+    [InlineData("111111111", "11/11/1111")]
+    [InlineData("11/11/1111", "11/11/1111")]
+    [InlineData("11/11/11111", "11/11/1111")]
+    public async Task Mask_is_applied(string inputValue, string expectedValue)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Format="dd/MM/yyyy" Mask="dd/MM/yyyy"/>
+            );
+        
+        //Act
+        var inputs = cut.FindAll("input");
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            await input.InputAsync(new ChangeEventArgs() { Value = inputValue });
+        }
+        
+        //Assert
+        inputs = cut.FindAll("input");
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            input.GetAttribute("value").Should().Be(expectedValue);
+        }
+    }
+    
+    [Fact]
+    public void Enter_Full_Mask_Should_Apply_Date()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Mask="dd/MM/yyyy"/>
+            );
+        
+        //Act
+        var inputs = cut.FindAll("input");
 
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            input.Input("01012020");
+        }
+        
+        //Assert
+        cut.Instance.Value.Should().BeEquivalentTo(new []{new DateTime(2020, 01, 01),new DateTime(2020, 01, 01)});
+    }
+    
     [Fact]
     public async Task Sets_disabled_time_when_range_dates_are_the_same()
     {

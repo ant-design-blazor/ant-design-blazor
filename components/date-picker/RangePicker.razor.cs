@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.core.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -223,8 +225,28 @@ namespace AntDesign
             {
                 _duringManualInput = true;
             }
+            
+            var newValue = args.Value.ToString();
+            var hasMask = !string.IsNullOrEmpty(Mask);
+            
+            if (hasMask) 
+            {
+                newValue = MaskHelper.Fill(newValue, Mask);
+                
+                if (index == 0)
+                {
+                    _inputStart.Value = newValue;
+                }
+                else
+                {
+                    _inputEnd.Value = newValue;
+                }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
+                newValue = index == 0 ? _inputStart.Value : _inputEnd.Value;
+            }
+
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, false) || 
+                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out parsedValue, IsNullable)))
             {
                 if (IsDisabledDate(parsedValue))
                 {
@@ -233,6 +255,12 @@ namespace AntDesign
 
                 _pickerStatus[index].SelectedValue = parsedValue;
                 ChangePickerValue(parsedValue, index);
+                
+                if (hasMask)
+                {
+                    ChangeValue(parsedValue, index);
+                    _ = Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
+                }
             }
         }
 
