@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Datepicker.Locale;
@@ -15,6 +16,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
+        protected static readonly MaskInputConverter MaskInputConverter = new(new Regex("[0-9]"), new Regex("[a-zA-Z]"));
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 

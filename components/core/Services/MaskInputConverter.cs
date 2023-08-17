@@ -6,23 +6,32 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AntDesign.core.Helpers;
+namespace AntDesign;
 
-public static class MaskHelper
+public class MaskInputConverter
 {
+    private readonly Regex _allowedInput;
+    private readonly Regex _maskSymbolsToReplace;
+
+    public MaskInputConverter(Regex allowedInput, Regex maskSymbolsToReplace)
+    {
+        _allowedInput = allowedInput;
+        _maskSymbolsToReplace = maskSymbolsToReplace;
+    }
+    
     /// <summary>
-    /// Fill symbols to mask (at now only for dates)
+    /// Convert string value to mask
     /// </summary>
     /// <param name="value"></param>
     /// <param name="mask"></param>
     /// <returns></returns>
-    public static string Fill(string value, string mask)
+    public string Convert(string value, string mask)
     {
         if (string.IsNullOrWhiteSpace(mask))
             return value;
 
-        var allowedSymbols = new Regex("[0-9]");
-        var keySymbols = new Regex("[a-zA-Z]");
+        var allowedSymbols = _allowedInput;
+        var keySymbols = _maskSymbolsToReplace;
         var masks = mask.ToArray();
         var chars = value.Where(x => allowedSymbols.IsMatch(x.ToString())).ToArray();
         var newValue = new StringBuilder();

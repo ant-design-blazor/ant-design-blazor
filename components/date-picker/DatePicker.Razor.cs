@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
-using AntDesign.core.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -102,7 +101,7 @@ namespace AntDesign
             
             if (hasMask) 
             {
-                newValue = MaskHelper.Fill(newValue, Mask);
+                newValue = MaskInputConverter.Convert(newValue, Mask);
                 _inputStart.Value = newValue;
             }
             
