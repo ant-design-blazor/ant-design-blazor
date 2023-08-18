@@ -1,19 +1,19 @@
----
+﻿---
 order: 6.55
 title:
-  zh-CN: �Զ���ɸѡ��
+  zh-CN: 自定义筛选器
   en-US: Custom field filter
 ---
 
 ## zh-CN
 
-�������Ͳ�������ɸѡ��֧�ֵ�����ʱ�����������޸�ɸѡ���ıȽϲ���������ʹ���Զ���ɸѡ�� `FieldFilterType`��
+当列类型不是内置筛选器支持的类型时，或者您想修改筛选器的比较操作，可以使用自定义筛选器 `FieldFilterType`。
 
-�ڱ�ʾ���У�Color �п��԰�"����"ɸѡ ����HUEֵ���򣩡�
+在本示例中，Color 列可以按"亮度"筛选 （或按HUE值排序）。
 
-�Զ���ɸѡ����Ҫʵ�� `IFieldFilterType`�����߼̳� `BaseFieldFilterType` �� `DateFieldFilterType` ��������д��ط�����
+自定义筛选器需要实现 `IFieldFilterType`，或者继承 `BaseFieldFilterType` 或 `DateFieldFilterType` 来按需重写相关方法。
 
-���⣬������ͨ������ `FieldFilterTypeResolver` ����Ϊ����������������Զ���ɸѡ�������߿���ͨ��������ע�������ע�᲻ͬ�� `IFilterTypeResolver` ʵ����Ϊ����Ӧ�ó����еı�����������Զ���ɸѡ����`DefaultFieldFilterTypeResolver` ��Ĭ��ʵ�֡�����
+另外，还可以通过设置 `FieldFilterTypeResolver` 属性为整个表格组件配置自定义筛选器，或者可以通过在依赖注入服务中注册不同的 `IFilterTypeResolver` 实现来为整个应用程序中的表格组件设置自定义筛选器（`DefaultFieldFilterTypeResolver` 是默认实现。）。
 
 ## en-US
 
