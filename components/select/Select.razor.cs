@@ -327,6 +327,8 @@ namespace AntDesign
             }
         }
 
+        [Parameter] public string ListboxStyle { get; set; } = "display: flex; flex-direction: column;";
+        
         #endregion Parameters
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
