@@ -84,7 +84,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filterable | 是否显示筛选器 | bool | false |
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
+| FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
+
 
 ### PropertyColumn
 
@@ -93,7 +95,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | 参数              | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
-
 
 
 ### 响应式
