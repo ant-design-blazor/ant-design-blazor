@@ -87,6 +87,7 @@
         const originalColumnWidth = th.offsetWidth;
         const rtlMultiplier = window.getComputedStyle(th, null).getPropertyValue('direction') === 'rtl' ? -1 : 1;
         let updatedColumnWidth = 0;
+        handle.classList.add('ant-table-resizing');
 
         function handleMouseMove(evt) {
           evt.stopPropagation();
@@ -94,12 +95,20 @@
           const nextWidth = originalColumnWidth + (newPageX - startPageX) * rtlMultiplier;
           if (Math.abs(nextWidth - updatedColumnWidth) > 0) {
             updatedColumnWidth = nextWidth;
-            th.style.width = `${updatedColumnWidth}px`;
-            col.style.width = `${updatedColumnWidth}px`;
+            handle.style.right = '';
+            handle.style.left = `${updatedColumnWidth}px`;
           }
         }
 
         function handleMouseUp() {
+          if (updatedColumnWidth > 0) {
+            th.style.width = `${updatedColumnWidth}px`;
+            col.style.width = `${updatedColumnWidth}px`;
+            handle.style.right = '0';
+            handle.style.left = '';
+            handle.classList.remove('ant-table-resizing');
+          }
+
           document.body.removeEventListener('mousemove', handleMouseMove);
           document.body.removeEventListener('mouseup', handleMouseUp);
           document.body.removeEventListener('touchmove', handleMouseMove);
