@@ -6,11 +6,11 @@
         <CellRender Context="cell"> <a>@cell.FieldValue</a></CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <Column Title="Address" TData="string">
+    <PropertyColumn Property="c=>c.Address" Title="Address">
         <TitleTemplate>
             <span> <Icon Type="environment" /> Address </span>
         </TitleTemplate>
-    </Column>
+    </PropertyColumn>
     <PropertyColumn Title="Tag" Property="c=>c.Tags">
         <CellRender Context="cell">
             @foreach (var tag in cell.FieldValue)

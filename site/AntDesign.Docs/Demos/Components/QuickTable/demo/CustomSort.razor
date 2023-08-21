@@ -3,7 +3,7 @@
     <PropertyColumn Title="Default sort" Property="c=>c.DayOfWeek" Sortable />
     <PropertyColumn Title="Custom comparer" Property="c=>c.DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
     <PropertyColumn Title="Custom comparer(order by DayName)" Property="c=>c.DayOfWeek" Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(DayName[v1], DayName[v2]))" />
-    <PropertyColumn Title="DayName" Field="DayName[context.DayOfWeek]"/>
+    <PropertyColumn Title="DayName" Property="c=>DayName[c.DayOfWeek]"/>
 </Table>
 
 @code {

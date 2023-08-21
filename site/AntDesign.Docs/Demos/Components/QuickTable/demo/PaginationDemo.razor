@@ -8,7 +8,9 @@
 </div>
 <Table TItem="Data" DataSource="@data" PaginationPosition="@paginationPosition" Quick>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address">

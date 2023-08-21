@@ -2,7 +2,9 @@
 <p>Middle size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Middle Quick>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
@@ -33,7 +35,9 @@
 <p>Small size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Small Quick>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>

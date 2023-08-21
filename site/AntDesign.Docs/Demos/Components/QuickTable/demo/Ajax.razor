@@ -4,7 +4,11 @@
 @inject HttpClient Http
 
 <Table TItem="Data" DataSource="_data" Loading="_loading" Total="_total" OnChange="HandleTableChange" RemoteDataSource Quick>
-    <PropertyColumn Style="width:20%;" Property="c=>c.Name" Sortable DefaultSortOrder="SortDirection.Ascending">@context.Name.First @context.Name.Last</PropertyColumn>
+    <PropertyColumn Style="width:20%;" Property="c=>c.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
+        <CellRender Context="cell">
+             @cell.FieldValue.First @cell.FieldValue.Last
+        </CellRender>
+    </PropertyColumn>
     <PropertyColumn Style="width:20%;" Property="c=>c.Gender" Filters="_genderFilters" />
     <PropertyColumn Property="c=>c.Email" />
 </Table>
