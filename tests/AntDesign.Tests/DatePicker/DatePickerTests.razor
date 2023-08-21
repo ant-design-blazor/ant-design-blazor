@@ -108,11 +108,13 @@
     [InlineData("11", "11/")]
     [InlineData("111", "11/1")]
     [InlineData("1111", "11/11/")]
-    [InlineData("11111111", "11/11/1111")]
-    [InlineData("111111111", "11/11/1111")]
-    [InlineData("11/11/1111", "11/11/1111")]
-    [InlineData("11/11/11111", "11/11/1111")]
-    public void Mask_is_applied(string inputValue, string expectedValue)
+    [InlineData("11111111", "11/11/1111", true)]
+    [InlineData("421111", "04/02/1111", true)]
+    [InlineData("111111111", "11/11/1111", true)]
+    [InlineData("11/11/1111", "11/11/1111", true)]
+    [InlineData("11/11/1111", "11/11/1111", true)]
+    [InlineData("11/11/11111", "11/11/1111", true)]
+    public void Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -121,6 +123,33 @@
         DateTime value = new DateTime(2020, 4, 5);		
         var cut = Render<AntDesign.DatePicker<DateTime>>(
             @<DatePicker @bind-Value="@value" Format="dd/MM/yyyy" Mask="dd/MM/yyyy"/>
+            );
+        
+        //Act
+        var input = cut.Find("input");
+        input.Input(inputValue);
+        
+        //Assert
+        input.GetAttribute("value").Should().Be(expectedValue);
+        
+        if (validateValue)
+        {
+            cut.Instance.Value.Should().Be(DateTime.ParseExact(expectedValue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+        }
+    }
+
+    [Theory]
+    [InlineData("11111111111111", "11/11/1111T11:11:11")]
+    [InlineData("992020999", "09/09/2020T09:09:09")]
+    public void Mask_is_applied_with_time(string inputValue, string expectedValue)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        DateTime value = new DateTime(2020, 4, 5);		
+        var cut = Render<AntDesign.DatePicker<DateTime>>(
+            @<DatePicker @bind-Value="@value" Format="dd/MM/yyyyTHH:mm:ss" Mask="dd/MM/yyyyTHH:mm:ss" ShowTime="true"/>
             );
         
         //Act

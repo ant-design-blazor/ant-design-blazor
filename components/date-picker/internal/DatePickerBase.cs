@@ -16,7 +16,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
-        protected static readonly MaskInputConverter MaskInputConverter = new(new Regex("[0-9]"), new Regex("[a-zA-Z]"));
+        protected static readonly MaskInputConverter MaskInputConverter = MaskInputConverterFactory.CreateForDateTime();
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 

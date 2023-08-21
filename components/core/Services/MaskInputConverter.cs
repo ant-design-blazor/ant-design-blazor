@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,15 +11,19 @@ namespace AntDesign;
 
 public class MaskInputConverter
 {
+    public delegate string SymbolConverter(string mask, string resultString, char symbol);
+
     private readonly Regex _allowedInput;
     private readonly Regex _maskSymbolsToReplace;
+    private readonly SymbolConverter _symbolConverter;
 
-    public MaskInputConverter(Regex allowedInput, Regex maskSymbolsToReplace)
+    public MaskInputConverter(Regex allowedInput, Regex maskSymbolsToReplace, SymbolConverter symbolConverter = null)
     {
         _allowedInput = allowedInput;
         _maskSymbolsToReplace = maskSymbolsToReplace;
+        _symbolConverter = symbolConverter;
     }
-    
+
     /// <summary>
     /// Convert string value to mask
     /// </summary>
@@ -36,9 +41,10 @@ public class MaskInputConverter
         var chars = value.Where(x => allowedSymbols.IsMatch(x.ToString())).ToArray();
         var newValue = new StringBuilder();
         var insertedCount = 0;
-        foreach (var maskItem in masks)
+        for (var maskIndex = 0; maskIndex < masks.Length; maskIndex++)
         {
-            var isKeySymbol = keySymbols.IsMatch(maskItem.ToString()) && maskItem != 'T';
+            var maskItem = masks[maskIndex];
+            var isKeySymbol = keySymbols.IsMatch(maskItem.ToString());
             if (insertedCount == chars.Length)
             {
                 if (!isKeySymbol)
@@ -51,9 +57,22 @@ public class MaskInputConverter
 
             if (isKeySymbol)
             {
-                newValue.Append(chars[insertedCount]);
-                insertedCount++;
+                var symbol = chars[insertedCount];
 
+                if (_symbolConverter is not null)
+                {
+                    var symbolsToAdd = _symbolConverter.Invoke(mask, newValue.ToString(), symbol);
+
+                    newValue.Append(symbolsToAdd);
+
+                    maskIndex += symbolsToAdd.Length - 1;
+                }
+                else
+                {
+                    newValue.Append(symbol);
+                }
+
+                insertedCount++;
                 continue;
             }
 
