@@ -30,6 +30,7 @@ else
                </ChildContent>
                 <TabContextMenu>
                     <Menu>
+                        <MenuItem OnClick="@(()=>{ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
                         <MenuItem Disabled="!item.Closable" OnClick="@(()=>{RemovePage(item.Url);})">@Locale.Close</MenuItem>
                         <MenuItem OnClick="RemoveAll">@Locale.CloseAllTabs</MenuItem>
                         <MenuItem OnClick="@(()=>{ RemoveOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>

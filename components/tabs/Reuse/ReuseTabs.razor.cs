@@ -53,6 +53,7 @@ namespace AntDesign
             ReuseTabsService.OnCloseAll += RemoveAll;
             ReuseTabsService.OnCloseCurrent += RemoveCurrent;
             ReuseTabsService.OnUpdate += UpdateState;
+            ReuseTabsService.OnReloadPage += ReloadPage;
         }
 
         protected override void Dispose(bool disposing)
@@ -62,6 +63,7 @@ namespace AntDesign
             ReuseTabsService.OnCloseAll -= RemoveAll;
             ReuseTabsService.OnCloseCurrent -= RemoveCurrent;
             ReuseTabsService.OnUpdate -= UpdateState;
+            ReuseTabsService.OnReloadPage -= ReloadPage;
 
             base.Dispose(disposing);
         }
@@ -138,7 +140,7 @@ namespace AntDesign
         /// 获取所有程序集
         /// </summary>
         /// <returns></returns>
-        protected IEnumerable<Assembly> GetAllAssembly()
+        private IEnumerable<Assembly> GetAllAssembly()
         {
             IEnumerable<Assembly> assemblies = new List<Assembly>();
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -166,7 +168,7 @@ namespace AntDesign
             }
         }
 
-        public void AddReuseTabsPageItem(Type pageType)
+        private void AddReuseTabsPageItem(Type pageType)
         {
             var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
             var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
@@ -219,14 +221,23 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void ReloadPage(string key)
+        {
+            key ??= CurrentUrl;
+            _pageMap[key].Body = null;
+            if (CurrentUrl == key)
+            {
+                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation. 
+            }
+            StateHasChanged();
+        }
 
-
-        public void RemovePageBase(string key)
+        private void RemovePageBase(string key)
         {
             _pageMap.Remove(key);
         }
 
-        public void RemovePageWithRegex(string pattern)
+        private void RemovePageWithRegex(string pattern)
         {
             foreach (var key in _pageMap.Keys)
             {
