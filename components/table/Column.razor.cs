@@ -26,6 +26,9 @@ namespace AntDesign
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         [Parameter]
+        public RenderFragment FilterDropdown { get; set; }
+
+        [Parameter]
         public TData Field { get; set; }
 
         public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
@@ -143,6 +146,10 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
+        private RenderFragment _renderDefaultFilterDropdown;
+
+        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -196,6 +203,8 @@ namespace AntDesign
 
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
+
+            _filterable = _filterable || FilterDropdown != null;
 
             if (_hasFiltersAttribute)
             {

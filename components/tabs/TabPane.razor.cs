@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -60,12 +61,15 @@ namespace AntDesign
 
         internal ElementReference TabRef => _tabRef;
 
+        internal ElementReference TabBtnRef => _tabBtnRef;
+
         private ClassMapper _tabPaneClassMapper = new();
 
         private const string PrefixCls = "ant-tabs-tab";
         private const string TabPanePrefixCls = "ant-tabs-tabpane";
 
         private ElementReference _tabRef;
+        private ElementReference _tabBtnRef;
         private bool _isActive;
 
         private bool _hasClosed;
@@ -162,6 +166,11 @@ namespace AntDesign
             Closable = tabPane.Closable;
 
             StateHasChanged();
+        }
+
+        private Task HandleKeydown(KeyboardEventArgs e)
+        {
+            return Parent?.HandleKeydown(e, this);
         }
     }
 }

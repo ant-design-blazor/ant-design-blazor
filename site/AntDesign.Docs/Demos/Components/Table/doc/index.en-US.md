@@ -82,6 +82,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
+| FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
 
 ### PropertyColumn
 
