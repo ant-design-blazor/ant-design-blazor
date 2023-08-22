@@ -74,7 +74,7 @@ namespace AntDesign
 
             if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
-                GetIfNotNull(Value, notNullValue =>
+                GetIfNotNull(Value, 0, notNullValue =>
                 {
                     ChangePickerValue(notNullValue);
                 });
@@ -228,7 +228,7 @@ namespace AntDesign
 
             _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
 
-            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+            GetIfNotNull(CurrentValue, 0, (notNullValue) => PickerValues[0] = notNullValue);
 
             _dropDown?.SetShouldRender(true);
         }

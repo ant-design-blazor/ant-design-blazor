@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AntDesign;
 
-internal class DateTimeInputMaskConverter : IMaskInputConverter
+internal class DateTimeInputMaskConverter : IInputMaskConverter
 {
     private static readonly Regex _allowedInput = new("[0-9]");
     private static readonly Regex _maskSymbolsToReplace = new("[a-zA-Z](?<!T)");

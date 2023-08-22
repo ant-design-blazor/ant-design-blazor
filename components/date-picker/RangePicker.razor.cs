@@ -532,25 +532,6 @@ namespace AntDesign
             });
         }
 
-        private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
-        {
-            var array = value as Array;
-            var indexValue = array.GetValue(index);
-
-            if (!IsNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && indexValue != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(indexValue, CultureInfo));
-            }
-        }
-
         private TValue CreateInstance()
         {
             if (DefaultValue is not null)

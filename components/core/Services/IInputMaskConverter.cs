@@ -4,7 +4,7 @@
 
 namespace AntDesign;
 
-public interface IMaskInputConverter
+public interface IInputMaskConverter
 {
     string Convert(string value, string mask);
 }

@@ -16,7 +16,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
-        protected readonly IMaskInputConverter MaskInputConverter = new DateTimeInputMaskConverter();
+        protected readonly IInputMaskConverter InputMaskConverter = new DateTimeInputMaskConverter();
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
@@ -491,14 +491,14 @@ namespace AntDesign
             
             if (hasMask) 
             {
-                newValue = MaskInputConverter.Convert(newValue, Mask);
+                newValue = InputMaskConverter.Convert(newValue, Mask);
                 _inputStart.Value = newValue;
             }
             
             if (FormatAnalyzer.TryPickerStringConvert(newValue, out TValue changeValue, IsNullable) || 
                 (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
             {
-                GetIfNotNull(changeValue, parsed =>
+                GetIfNotNull(changeValue, index, parsed =>
                 {
                     if (IsDisabledDate(parsed))
                     {
@@ -516,19 +516,18 @@ namespace AntDesign
             }
         }
         
-        protected void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
+        protected void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
         {
-            if (!IsNullable)
+            var indexValue = value is Array array ? array.GetValue(index) : value;
+            
+            if (indexValue is not null)
             {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
+                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
+                
                 if (dateTime != DateTime.MinValue)
                 {
                     notNullAction?.Invoke(dateTime);
                 }
-            }
-            if (IsNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }
         }
         
