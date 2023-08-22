@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -263,7 +262,6 @@ namespace AntDesign
                 Date = GetIndexValue(0),
                 DateString = GetInputValue(0)
             });
-
         }
 
         private void OverlayVisibleChange(bool visible)

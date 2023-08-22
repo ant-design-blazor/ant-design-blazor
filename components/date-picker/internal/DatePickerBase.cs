@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
+using AntDesign.Core;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -436,12 +436,12 @@ namespace AntDesign
         protected string GetInputValue(int index = 0)
         {
             var inputValue = index == 0 ? _inputStart?.Value : _inputEnd?.Value;
-            
+
             if (_duringManualInput && !string.IsNullOrEmpty(Mask))
-            { 
+            {
                 return inputValue;
             }
-            
+
             DateTime? tryGetValue = GetIndexValue(index);
 
             if (tryGetValue == null)
@@ -473,14 +473,14 @@ namespace AntDesign
             AutoFocus = true;
             return Task.CompletedTask;
         }
-        
+
         protected virtual void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (args == null)
             {
                 return;
             }
-            
+
             if (!_duringManualInput)
             {
                 _duringManualInput = true;
@@ -488,11 +488,11 @@ namespace AntDesign
 
             var newValue = args.Value.ToString();
             var hasMask = !string.IsNullOrEmpty(Mask);
-            
-            if (hasMask) 
+
+            if (hasMask)
             {
                 newValue = InputMaskConverter.Convert(newValue, Mask);
-                
+
                 if (index == 0)
                 {
                     _inputStart.Value = newValue;
@@ -502,8 +502,8 @@ namespace AntDesign
                     _inputEnd.Value = newValue;
                 }
             }
-            
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime changeValue, IsNullable) || 
+
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime changeValue, IsNullable) ||
                 (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
             {
                 if (IsDisabledDate(changeValue))
@@ -513,29 +513,29 @@ namespace AntDesign
 
                 _pickerStatus[index].SelectedValue = changeValue;
                 ChangePickerValue(changeValue, index);
-                    
+
                 if (hasMask)
                 {
-                    ChangeValue(changeValue, index);     
+                    ChangeValue(changeValue, index);
                 }
             }
         }
-        
+
         protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
         {
             var indexValue = value is Array array ? array.GetValue(index) : value;
-            
+
             if (indexValue is not null)
             {
                 DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
-                
+
                 if (dateTime != DateTime.MinValue)
                 {
                     notNullAction?.Invoke(dateTime);
                 }
             }
         }
-        
+
         protected virtual async Task OnSelect(DateTime date, int index)
         {
             _duringManualInput = false;
@@ -552,7 +552,6 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-
                             ChangeValue(date, index, false);
 
                             var otherIndex = Math.Abs(index - 1);

@@ -6,14 +6,15 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using AntDesign.Core;
 
-namespace AntDesign;
+namespace AntDesign.Internal;
 
 internal class DateTimeInputMaskConverter : IInputMaskConverter
 {
     private static readonly Regex _allowedInput = new("[0-9]");
     private static readonly Regex _maskSymbolsToReplace = new("[a-zA-Z](?<!T)");
-    
+
     /// <summary>
     /// Convert string value to mask
     /// </summary>
@@ -64,45 +65,45 @@ internal class DateTimeInputMaskConverter : IInputMaskConverter
 
         return newValue.ToString();
     }
-    
+
     private static string ConvertSymbol(string mask, string resultStr, char symbol)
     {
         var indexOfMonthPattern = mask.IndexOf("MM", StringComparison.InvariantCulture);
         if (indexOfMonthPattern >= 0 && resultStr.Length == indexOfMonthPattern && symbol >= '2')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
-            
+
         var indexOfDayPattern = mask.IndexOf("dd", StringComparison.InvariantCulture);
         if (indexOfDayPattern >= 0 && resultStr.Length == indexOfDayPattern && symbol >= '4')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
 
         var indexOfMinutesPattern = mask.IndexOf("mm", StringComparison.InvariantCulture);
         if (indexOfMinutesPattern >= 0 && resultStr.Length == indexOfMinutesPattern && symbol >= '7')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
-        
+
         var indexOfSecondsPattern = mask.IndexOf("ss", StringComparison.InvariantCulture);
         if (indexOfSecondsPattern >= 0 && resultStr.Length == indexOfSecondsPattern && symbol >= '7')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
-        
+
         var indexOfHoursClockPattern = mask.IndexOf("HH", StringComparison.InvariantCulture);
         if (indexOfHoursClockPattern >= 0 && resultStr.Length == indexOfHoursClockPattern && symbol >= '3')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
-        
+
         var indexOfHoursPattern = mask.IndexOf("hh", StringComparison.InvariantCulture);
         if (indexOfHoursPattern >= 0 && resultStr.Length == indexOfHoursPattern && symbol >= '2')
         {
-            return new string(new []{ '0', symbol });
+            return new string(new[] { '0', symbol });
         }
-            
+
         return new string(symbol, 1);
     }
 }
