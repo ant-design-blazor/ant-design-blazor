@@ -196,7 +196,7 @@ namespace AntDesign
 
             if (!Table.HasRowTemplate)
             {
-                SortModel = (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                SortModel ??= (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
             }
 
             SortDirections ??= Table.SortDirections;
@@ -205,6 +205,11 @@ namespace AntDesign
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
 
             _filterable = _filterable || FilterDropdown != null;
+
+            if (!IsRowTemplate)
+            {
+                _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
+            }
 
             if (_hasFiltersAttribute)
             {

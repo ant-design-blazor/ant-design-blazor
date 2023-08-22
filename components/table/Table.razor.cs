@@ -421,7 +421,7 @@ namespace AntDesign
 #endif
 
             var queryModel = this.InternalReload();
-            //StateHasChanged();
+            StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
