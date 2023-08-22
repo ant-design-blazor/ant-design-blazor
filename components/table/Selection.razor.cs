@@ -24,7 +24,7 @@ namespace AntDesign
 
         private IList<ISelectionColumn> _rowSelections = new List<ISelectionColumn>();
 
-        private bool IsHeaderDisabled => _rowSelections.All(x => x.Disabled);
+        private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
         bool ISelectionColumn.Disabled => Disabled;
 

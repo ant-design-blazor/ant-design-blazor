@@ -6,19 +6,20 @@
 
 @if (IsHeaderTemplate)
 {
+    Table.Selection = this;
+
     Context?.AddHeaderColumn(this);
 }
 else if (IsRowTemplate)
 {
     Context?.AddRowColumn(this);
+
+    Table.Selection.RowSelections.Add(this);
 }
 else
 {
     Context?.AddColumn(this);
 
-    Table.Selection = this;
-
-    Table.Selection.RowSelections.Add(this);
 }
 
 @if (IsHeaderTemplate)
