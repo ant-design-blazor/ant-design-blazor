@@ -134,6 +134,7 @@
         
         if (validateValue)
         {
+            input.KeyDown("ENTER");
             cut.Instance.Value.Should().Be(DateTime.ParseExact(expectedValue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
         }
     }

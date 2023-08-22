@@ -492,31 +492,36 @@ namespace AntDesign
             if (hasMask) 
             {
                 newValue = InputMaskConverter.Convert(newValue, Mask);
-                _inputStart.Value = newValue;
+                
+                if (index == 0)
+                {
+                    _inputStart.Value = newValue;
+                }
+                else
+                {
+                    _inputEnd.Value = newValue;
+                }
             }
             
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out TValue changeValue, IsNullable) || 
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime changeValue, IsNullable) || 
                 (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
             {
-                GetIfNotNull(changeValue, index, parsed =>
+                if (IsDisabledDate(changeValue))
                 {
-                    if (IsDisabledDate(parsed))
-                    {
-                        return;
-                    }
+                    return;
+                }
 
-                    _pickerStatus[0].SelectedValue = parsed;
-                    ChangePickerValue(parsed, index);
+                _pickerStatus[index].SelectedValue = changeValue;
+                ChangePickerValue(changeValue, index);
                     
-                    if (hasMask)
-                    {
-                        ChangeValue(parsed);
-                    }
-                });
+                if (hasMask)
+                {
+                    ChangeValue(changeValue, index);     
+                }
             }
         }
         
-        protected void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
+        protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
         {
             var indexValue = value is Array array ? array.GetValue(index) : value;
             

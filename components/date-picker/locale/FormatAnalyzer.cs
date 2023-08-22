@@ -395,9 +395,10 @@ namespace AntDesign.Datepicker.Locale
         private bool GetParsedValue<TValue>(out TValue changeValue, DateTime foundDate, bool isDateTypeNullable)
         {
             if (isDateTypeNullable)
-                changeValue = DataConvertionExtensions.Convert<DateTime?, TValue>(foundDate);
+                changeValue = (TValue)(object)(foundDate);
             else
                 changeValue = DataConvertionExtensions.Convert<DateTime, TValue>(foundDate);
+            
             return true;
         }
     }
