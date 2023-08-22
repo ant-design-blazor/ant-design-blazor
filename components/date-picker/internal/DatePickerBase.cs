@@ -16,7 +16,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
-        protected static readonly MaskInputConverter MaskInputConverter = MaskInputConverterFactory.CreateForDateTime();
+        protected readonly IMaskInputConverter MaskInputConverter = new DateTimeInputMaskConverter();
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
@@ -473,7 +473,65 @@ namespace AntDesign
             AutoFocus = true;
             return Task.CompletedTask;
         }
+        
+        protected virtual void OnInput(ChangeEventArgs args, int index = 0)
+        {
+            if (args == null)
+            {
+                return;
+            }
+            
+            if (!_duringManualInput)
+            {
+                _duringManualInput = true;
+            }
 
+            var newValue = args.Value.ToString();
+            var hasMask = !string.IsNullOrEmpty(Mask);
+            
+            if (hasMask) 
+            {
+                newValue = MaskInputConverter.Convert(newValue, Mask);
+                _inputStart.Value = newValue;
+            }
+            
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out TValue changeValue, IsNullable) || 
+                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
+            {
+                GetIfNotNull(changeValue, parsed =>
+                {
+                    if (IsDisabledDate(parsed))
+                    {
+                        return;
+                    }
+
+                    _pickerStatus[0].SelectedValue = parsed;
+                    ChangePickerValue(parsed, index);
+                    
+                    if (hasMask)
+                    {
+                        ChangeValue(parsed);
+                    }
+                });
+            }
+        }
+        
+        protected void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
+        {
+            if (!IsNullable)
+            {
+                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
+                if (dateTime != DateTime.MinValue)
+                {
+                    notNullAction?.Invoke(dateTime);
+                }
+            }
+            if (IsNullable && value != null)
+            {
+                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
+            }
+        }
+        
         protected virtual async Task OnSelect(DateTime date, int index)
         {
             _duringManualInput = false;

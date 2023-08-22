@@ -3,18 +3,69 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AntDesign;
 
-public static class MaskInputConverterFactory
+internal class DateTimeInputMaskConverter : IMaskInputConverter
 {
-    public static MaskInputConverter CreateForDateTime()
+    private static readonly Regex _allowedInput = new("[0-9]");
+    private static readonly Regex _maskSymbolsToReplace = new("[a-zA-Z](?<!T)");
+    
+    /// <summary>
+    /// Convert string value to mask
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="mask"></param>
+    /// <returns></returns>
+    public string Convert(string value, string mask)
     {
-        return new(new Regex("[0-9]"), new Regex("[a-zA-Z](?<!T)"), MaskInputSymbolConverter);
-    }
+        if (string.IsNullOrWhiteSpace(mask))
+            return value;
 
-    private static string MaskInputSymbolConverter(string mask, string resultStr, char symbol)
+        var allowedSymbols = _allowedInput;
+        var keySymbols = _maskSymbolsToReplace;
+        var masks = mask.ToArray();
+        var chars = value.Where(x => allowedSymbols.IsMatch(x.ToString())).ToArray();
+        var newValue = new StringBuilder();
+        var insertedCount = 0;
+        for (var maskIndex = 0; maskIndex < masks.Length; maskIndex++)
+        {
+            var maskItem = masks[maskIndex];
+            var isKeySymbol = keySymbols.IsMatch(maskItem.ToString());
+            if (insertedCount == chars.Length)
+            {
+                if (!isKeySymbol)
+                {
+                    newValue.Append(maskItem);
+                }
+
+                break;
+            }
+
+            if (isKeySymbol)
+            {
+                var symbol = chars[insertedCount];
+
+                var symbolsToAdd = ConvertSymbol(mask, newValue.ToString(), symbol);
+
+                newValue.Append(symbolsToAdd);
+
+                maskIndex += symbolsToAdd.Length - 1;
+
+                insertedCount++;
+                continue;
+            }
+
+            newValue.Append(maskItem);
+        }
+
+        return newValue.ToString();
+    }
+    
+    private static string ConvertSymbol(string mask, string resultStr, char symbol)
     {
         var indexOfMonthPattern = mask.IndexOf("MM", StringComparison.InvariantCulture);
         if (indexOfMonthPattern >= 0 && resultStr.Length == indexOfMonthPattern && symbol >= '2')

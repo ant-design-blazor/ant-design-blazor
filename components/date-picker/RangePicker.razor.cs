@@ -213,54 +213,6 @@ namespace AntDesign
             }
         }
 
-        protected void OnInput(ChangeEventArgs args, int index = 0)
-        {
-            if (args == null)
-            {
-                return;
-            }
-
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-            }
-            
-            var newValue = args.Value.ToString();
-            var hasMask = !string.IsNullOrEmpty(Mask);
-            
-            if (hasMask) 
-            {
-                newValue = MaskInputConverter.Convert(newValue, Mask);
-                
-                if (index == 0)
-                {
-                    _inputStart.Value = newValue;
-                }
-                else
-                {
-                    _inputEnd.Value = newValue;
-                }
-            }
-
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, false) || 
-                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out parsedValue, IsNullable)))
-            {
-                if (IsDisabledDate(parsedValue))
-                {
-                    return;
-                }
-
-                _pickerStatus[index].SelectedValue = parsedValue;
-                ChangePickerValue(parsedValue, index);
-                
-                if (hasMask)
-                {
-                    ChangeValue(parsedValue, index);
-                    _ = Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
-                }
-            }
-        }
-
         /// <summary>
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>

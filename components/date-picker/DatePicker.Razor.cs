@@ -81,50 +81,14 @@ namespace AntDesign
             }
         }
 
-        protected void OnInput(ChangeEventArgs args, int index = 0)
+        protected override void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (args == null)
-            {
-                return;
-            }
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-            }
 
-            var newValue = args.Value.ToString();
-            var hasMask = !string.IsNullOrEmpty(Mask);
-            
-            if (hasMask) 
-            {
-                newValue = MaskInputConverter.Convert(newValue, Mask);
-                _inputStart.Value = newValue;
-            }
-            
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out TValue changeValue, IsNullable) || 
-                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
-            {
-                GetIfNotNull(changeValue, parsed =>
-                {
-                    if (IsDisabledDate(parsed))
-                    {
-                        return;
-                    }
-
-                    _pickerStatus[0].SelectedValue = parsed;
-                    ChangePickerValue(parsed, index);
-                    
-                    if (hasMask)
-                    {
-                        ChangeValue(parsed);
-                        _ = Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
-                    }
-                });
-            }
+            base.OnInput(args, index);
         }
 
         protected override async Task OnBlur(int index)
@@ -300,22 +264,6 @@ namespace AntDesign
                 DateString = GetInputValue(0)
             });
 
-        }
-
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
-        {
-            if (!IsNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
         }
 
         private void OverlayVisibleChange(bool visible)
