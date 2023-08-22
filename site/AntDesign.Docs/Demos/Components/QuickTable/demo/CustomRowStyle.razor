@@ -3,7 +3,7 @@
 
 <Table TItem="Data" DataSource="@data" OnRow="OnRow" RowClassName="@(x => x.Data.RowClass)" Quick>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell"><a>@cell.FieldValue</a></CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Score"></PropertyColumn>
 </Table>
