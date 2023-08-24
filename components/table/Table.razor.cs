@@ -389,7 +389,7 @@ namespace AntDesign
         void ITable.Refresh()
         {
             _shouldRender = true;
-            StateHasChanged();
+            // StateHasChanged();
         }
 
         void ITable.ReloadAndInvokeChange()
@@ -415,13 +415,13 @@ namespace AntDesign
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
-                StateHasChanged();
+                //StateHasChanged();
                 return;
             }
 #endif
 
             var queryModel = this.InternalReload();
-            StateHasChanged();
+            // StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -706,7 +706,7 @@ namespace AntDesign
                 if (_hasInitialized && !_shouldRender)
                 {
                     _shouldRender = true;
-                    StateHasChanged();
+                    // StateHasChanged();
                     return;
                 }
 
@@ -753,7 +753,7 @@ namespace AntDesign
 
             _tableWidth = domRect.Width;
             _shouldRender = true;
-            StateHasChanged();
+            //  StateHasChanged();
         }
 
         protected override void Dispose(bool disposing)

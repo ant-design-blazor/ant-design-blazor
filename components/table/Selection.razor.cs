@@ -59,17 +59,18 @@ namespace AntDesign
             }
         }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
-
         void ISelectionColumn.StateHasChanged()
         {
             if (Type == "checkbox")
             {
                 StateHasChanged();
             }
+        }
+
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
         }
 
         protected override void Dispose(bool disposing)

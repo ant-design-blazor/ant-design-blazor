@@ -6,16 +6,8 @@ namespace AntDesign
 {
     public partial class ActionColumn : ColumnBase, IRenderColumn
     {
-        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
-
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
 
         protected override bool ShouldRender()
         {

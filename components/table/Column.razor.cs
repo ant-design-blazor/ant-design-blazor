@@ -16,9 +16,6 @@ namespace AntDesign
 {
     public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
-        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
-
         [Parameter]
         public EventCallback<TData> FieldChanged { get; set; }
 

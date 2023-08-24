@@ -17,6 +17,9 @@ namespace AntDesign
         [CascadingParameter(Name = "IsRowTemplate")]
         public bool IsRowTemplate { get; set; }
 
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        public bool Blocked { get; set; }
+
         [CascadingParameter]
         public RowData RowData { get; set; }
 
