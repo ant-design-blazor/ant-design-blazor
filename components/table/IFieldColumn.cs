@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public interface IFieldColumn : IColumn
+    internal interface IFieldColumn : IColumn
     {
         public string DisplayName { get; }
 

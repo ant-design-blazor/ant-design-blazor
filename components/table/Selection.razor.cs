@@ -3,10 +3,11 @@ using System.Linq;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Table;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IRenderColumn
     {
         [Parameter] public string Type { get; set; } = "checkbox";
 
@@ -19,21 +20,21 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
-        //private bool _checked;
+        private bool Indeterminate => !Table.AllSelected && Table.AnySelected;
 
-        private bool Indeterminate => IsHeader
-                                      && !Table.AllSelected
-                                      && Table.AnySelected;
+        private IList<ISelectionColumn> _rowSelections = new List<ISelectionColumn>();
 
-        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
+        private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
-        //private int[] _selectedIndexes;
+        bool ISelectionColumn.Disabled => Disabled;
 
-        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+        string ISelectionColumn.Key => Key;
 
-        private void OnCheckedChange(bool selected)
+        IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
+
+        private void OnCheckedChange(bool selected, RowData rowData = null, bool isHeader = false)
         {
-            if (IsHeader)
+            if (isHeader)
             {
                 if (selected)
                 {
@@ -44,7 +45,7 @@ namespace AntDesign
                     Table.UnselectAll();
                 }
             }
-            else if (IsBody)
+            else
             {
                 if (Type == "radio")
                 {
@@ -52,60 +53,29 @@ namespace AntDesign
                 }
                 else
                 {
-                    RowData.Selected = selected;
+                    rowData.Selected = selected;
                     Table.Selection.StateHasChanged();
                 }
             }
         }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            if (Table == null)
-            {
-                return;
-            }
-
-            if (IsHeader)
-            {
-                Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
-            }
-            else if (IsBody)
-            {
-                Table?.Selection?.RowSelections.Add(this);
-            }
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            //if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
-            //{
-            //    var first = RowSelections.FirstOrDefault(x => x.Checked);
-            //    if (first != null)
-            //    {
-            //        Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.SetSelected(false));
-            //    }
-            //}
-        }
-
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader && Type == "checkbox")
+            if (Type == "checkbox")
             {
                 StateHasChanged();
             }
         }
 
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
+        }
+
         protected override void Dispose(bool disposing)
         {
-            if (!IsHeader)
-            {
-                Table?.Selection?.RowSelections?.Remove(this);
-            }
-
+            Table?.Selection?.RowSelections?.Remove(this);
             base.Dispose(disposing);
         }
     }

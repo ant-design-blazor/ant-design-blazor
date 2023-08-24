@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@using AntDesign.Table;
 @using AntDesign.TableModels
 
 @{
@@ -29,15 +30,33 @@
 @if (IsBody)
 {
     <tr @attributes="attributes"
-        data-row-key="@(RowData.RowIndex-1)" 
+        data-row-key="@(RowData.RowIndex)" 
         class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
-        @ChildContent
+        @if (IsRowTemplate)
+        {
+            <CascadingValue Value="RowData" IsFixed="Table.Quick">
+                @ChildContent
+            </CascadingValue>
+        }
+        else
+        {
+            @ChildContent
+        }
     </tr>
 }
 else if (IsHeader)
 {
     <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
-        @ChildContent
+        @if (IsHeaderTemplate)
+        {
+            <CascadingValue Value="RowData">
+                @ChildContent
+            </CascadingValue>
+        }
+        else
+        {
+            @ChildContent
+        }
         @if (ScrollY != null)
         {
             <th class="ant-table-cell @(HasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(HasFixRight?"position: sticky; right: 0px;":"")"></th>
@@ -54,6 +73,15 @@ else if (IsHeader)
 
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
+
+    [CascadingParameter(Name = "IsHeaderTemplate")]
+    public bool IsHeaderTemplate { get; set; }
+
+    [CascadingParameter(Name = "IsRowTemplate")]
+    public bool IsRowTemplate{ get; set; }
+
+    [CascadingParameter(Name = "Table")]
+    public ITable Table { get; set; }
 
     [CascadingParameter(Name = "RowData")]
     public RowData RowData { get; set; }
