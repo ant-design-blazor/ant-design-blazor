@@ -13,7 +13,7 @@
     
     <PropertyColumn Property="c=>Color.FromKnownColor(c)" Title="Color"
                     SorterCompare="(x, y) => x.GetHue().CompareTo(y.GetHue())"
-                    FieldFilterType="filterType" Filterable>
+                    FieldFilterType="colorFilterOptions" Filterable>
         <CellRender Context="cell">
             <span style="background-color: @(ColorTranslator.ToHtml(cell.FieldValue))">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </CellRender>
@@ -23,7 +23,7 @@
 @code {
 
     readonly KnownColor[] data = Enum.GetValues<KnownColor>();
-    readonly ColorFieldFilterType filterType = new();
+    readonly ColorFieldFilterType colorFilterOptions = new();
 
     class ColorFieldFilterType : BaseFieldFilterType
     {
@@ -39,12 +39,16 @@
                          Min="0" Max="1" Step=".01"/>;
         }
 
-        public override bool SupportsCompareOperator(TableFilterCompareOperator compareOperator)
-            => compareOperator is TableFilterCompareOperator.GreaterThan 
-                               or TableFilterCompareOperator.GreaterThanOrEquals 
-                               or TableFilterCompareOperator.LessThan 
-                               or TableFilterCompareOperator.LessThanOrEquals 
-               || base.SupportsCompareOperator(compareOperator);
+        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        {
+            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
+                yield return baseCompareOperator;
+
+            yield return TableFilterCompareOperator.GreaterThan;
+            yield return TableFilterCompareOperator.LessThan;
+            yield return TableFilterCompareOperator.GreaterThanOrEquals;
+            yield return TableFilterCompareOperator.LessThanOrEquals;
+        }
                
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr) {
             // Compare the brightness of the color to the selected value

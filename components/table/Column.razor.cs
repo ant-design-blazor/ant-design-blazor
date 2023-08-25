@@ -279,7 +279,7 @@ namespace AntDesign
                     if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
                     {
                         var nullFilterOption = GetNewFilter();
-                        nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
+                        nullFilterOption.Text = Table.Locale.FilterOptions.Operator(TableFilterCompareOperator.IsNull);
                         nullFilterOption.Value = null;
                         ((List<TableFilter>)_filters).Add(nullFilterOption);
                     }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
 
@@ -14,8 +15,11 @@ public abstract class BaseFieldFilterType : IFieldFilterType
 
     public abstract RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
 
-    public virtual bool SupportsCompareOperator(TableFilterCompareOperator compareOperator)
-        => compareOperator is TableFilterCompareOperator.Equals or TableFilterCompareOperator.NotEquals;
+    public virtual IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+    {
+        yield return TableFilterCompareOperator.Equals;
+        yield return TableFilterCompareOperator.NotEquals;
+    }
 
     public virtual Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr,
         Expression rightExpr)
@@ -29,6 +33,6 @@ public abstract class BaseFieldFilterType : IFieldFilterType
             TableFilterCompareOperator.LessThanOrEquals => Expression.LessThanOrEqual(leftExpr, rightExpr),
             TableFilterCompareOperator.IsNull => Expression.Equal(leftExpr, rightExpr),
             TableFilterCompareOperator.IsNotNull => Expression.NotEqual(leftExpr, rightExpr),
-            _ => throw new ArgumentOutOfRangeException(nameof(compareOperator), compareOperator, null)
+            _ => throw new NotSupportedException($"{nameof(TableFilterCompareOperator)} {compareOperator} is not supported by {GetType().Name}!")
         };
 }

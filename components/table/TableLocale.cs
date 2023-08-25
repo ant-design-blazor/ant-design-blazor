@@ -32,10 +32,10 @@ namespace AntDesign
 
         public string CancelSort { get; set; } = "Click to cancel sort";
 
-        public FilterOptions FilterOptions { get; set; } = new();
+        public FilterOptionsLocale FilterOptions { get; set; } = new();
     }
 
-    public class FilterOptions
+    public class FilterOptionsLocale
     {
         public string True { get; set; } = "True";
 
@@ -45,30 +45,23 @@ namespace AntDesign
 
         public string Or { get; set; } = "Or";
 
-        public new string Equals { get; set; } = "Equal";
-
-        public string NotEquals { get; set; } = "Not Equal";
-
-        public string Contains { get; set; } = "Contains";
-
-        public string NotContains { get; set; } = "Not Contains";
-
-        public string StartsWith { get; set; } = "Start With";
-
-        public string EndsWith { get; set; } = "End With";
-
-        public string GreaterThan { get; set; } = "Greater Than";
-
-        public string LessThan { get; set; } = "Less Than";
-
-        public string GreaterThanOrEquals { get; set; } = "Greater Than Or Equals";
-
-        public string LessThanOrEquals { get; set; } = "Less Than Or Equals";
-
-        public string IsNull { get; set; } = "Is Null";
-
-        public string IsNotNull { get; set; } = "Is Not Null";
-
-        public string TheSameDateWith { get; set; } = "The Same Date With";
+        public string Operator(TableFilterCompareOperator compareOperator)
+            => compareOperator switch
+            {
+                TableFilterCompareOperator.Equals              => "Equal",
+                TableFilterCompareOperator.Contains            => "Contains",
+                TableFilterCompareOperator.StartsWith          => "Start With",
+                TableFilterCompareOperator.EndsWith            => "End With",
+                TableFilterCompareOperator.GreaterThan         => "Greater Than",
+                TableFilterCompareOperator.LessThan            => "Less Than",
+                TableFilterCompareOperator.GreaterThanOrEquals => "Greater Than Or Equals",
+                TableFilterCompareOperator.LessThanOrEquals    => "Less Than Or Equals",
+                TableFilterCompareOperator.NotEquals           => "Not Equal",
+                TableFilterCompareOperator.IsNull              => "Is Null",
+                TableFilterCompareOperator.IsNotNull           => "Is Not Null",
+                TableFilterCompareOperator.NotContains         => "Not Contains",
+                TableFilterCompareOperator.TheSameDateWith     => "The Same Date With",
+                _                                              => throw new ArgumentOutOfRangeException(nameof(compareOperator), compareOperator, null)
+            };
     }
 }

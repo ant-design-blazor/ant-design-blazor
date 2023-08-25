@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
@@ -11,13 +12,16 @@ namespace AntDesign.Filters
 {
     public abstract class DateFieldFilterType : BaseFieldFilterType
     {
-        public override bool SupportsCompareOperator(TableFilterCompareOperator compareOperator)
-            => compareOperator
-                   is TableFilterCompareOperator.GreaterThan
-                   or TableFilterCompareOperator.LessThan
-                   or TableFilterCompareOperator.GreaterThanOrEquals
-                   or TableFilterCompareOperator.LessThanOrEquals
-            || base.SupportsCompareOperator(compareOperator);
+        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        {
+            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
+                yield return baseCompareOperator;
+
+            yield return TableFilterCompareOperator.GreaterThan;
+            yield return TableFilterCompareOperator.LessThan;
+            yield return TableFilterCompareOperator.GreaterThanOrEquals;
+            yield return TableFilterCompareOperator.LessThanOrEquals;
+        }
 
         protected virtual Expression GetNonNullFilterExpression(TableFilterCompareOperator compareOperator,
             Expression leftExpr, Expression rightExpr)

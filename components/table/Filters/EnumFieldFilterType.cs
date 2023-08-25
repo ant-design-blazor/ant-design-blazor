@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -15,9 +16,14 @@ namespace AntDesign.Filters
 
         public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; } = FilterInputs.Instance.GetEnumInput<T>();
 
-        public override bool SupportsCompareOperator(TableFilterCompareOperator compareOperator)
-            => compareOperator is TableFilterCompareOperator.Contains or TableFilterCompareOperator.NotContains
-            || base.SupportsCompareOperator(compareOperator);
+        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        {
+            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
+                yield return baseCompareOperator;
+
+            yield return TableFilterCompareOperator.Contains;
+            yield return TableFilterCompareOperator.NotContains;
+        }
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
