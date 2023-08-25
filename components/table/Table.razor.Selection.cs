@@ -25,7 +25,7 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private HashSet<TItem> _selectedRows = new();
+        private readonly HashSet<TItem> _selectedRows = new();
         private bool _preventRowDataTriggerSelectedRowsChanged;
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
@@ -62,7 +62,11 @@ namespace AntDesign
 
         public void SelectAll()
         {
-            _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).ToHashSet();
+            _selectedRows.Clear();
+            foreach (var selectedRow in GetAllItemsByTopLevelItems(_showItems, true))
+            {
+                _selectedRows.Add(selectedRow);
+            }
             foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
                 dataItem.SetSelected(_selectedRows.Contains(dataItem.Data));
@@ -139,7 +143,15 @@ namespace AntDesign
 
         public void SetSelection(IEnumerable<TItem> items)
         {
+            if (ReferenceEquals(items, _selectedRows))
+                return;
+
             EnsureSelection();
+
+            if (items is not null and not IReadOnlyCollection<TItem>)
+                // Ensure that the given enumerable doesn't change when we clear the current collection
+                // (which would happen when the given enumerable is based on _selectedRows with linq methods)
+                items = items.ToArray();
 
             ClearSelectedRows();
             items?.ForEach(SelectItem);

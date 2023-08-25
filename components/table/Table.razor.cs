@@ -475,7 +475,7 @@ namespace AntDesign
                 {
                     _selectedRows?.Clear();
                 }
-                
+
                 var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
                 foreach (var item in removedCacheItems)
                 {
