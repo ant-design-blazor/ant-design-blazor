@@ -15,8 +15,8 @@ namespace AntDesign
         {
             _onCancel = DefaultOnCancelOrOk;
             _onOk = DefaultOnCancelOrOk;
-            Width = 520;
-            MaskClosable = true;
+            Width = ModalDefaultValueOptions.Instance.Width ?? 520;
+            MaskClosable = ModalDefaultValueOptions.Instance.MaskClosable ?? true;
         }
 
         internal ModalRef ModalRef { get; set; }

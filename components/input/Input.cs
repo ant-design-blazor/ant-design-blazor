@@ -32,7 +32,8 @@ namespace AntDesign
 
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
-
+        [Inject]
+        private DefaultValueConfigService DefaultValueConfigService { get; set; }
         /// <summary>
         /// The label text displayed before (on the left side of) the input field.
         /// </summary>
@@ -126,7 +127,7 @@ namespace AntDesign
         /// Max length
         /// </summary>
         [Parameter]
-        public int MaxLength { get; set; } = -1;
+        public int MaxLength { get; set; }
 
         /// <summary>
         /// Callback when input looses focus
@@ -388,7 +389,11 @@ namespace AntDesign
             SetClasses();
             StateHasChanged();
         }
-
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            MaxLength = DefaultValueConfigService.Options.InputDefaultValue.MaxLength ?? -1;
+            return base.SetParametersAsync(parameters);
+        }
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

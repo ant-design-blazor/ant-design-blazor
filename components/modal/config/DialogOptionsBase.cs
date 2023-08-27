@@ -2,12 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -58,6 +53,18 @@ namespace AntDesign
 
         #endregion
 
+        public DialogOptionsBase()
+        {
+            var congifInstance = DialogDefaultValueOptions.Instance;
+            Centered = congifInstance.Centered ?? false;
+            Keyboard = congifInstance.Keyboard ?? true;
+            Mask = congifInstance.Mask ?? true;
+            OkText = congifInstance.OkText ?? "OK";
+            CancelText = congifInstance.CancelText ?? "Cancel";
+            ZIndex = congifInstance.ZIndex ?? 1000;
+            Rtl = congifInstance.Rtl ?? false;
+        }
+
         /// <summary>
         /// class name prefix 
         /// </summary>
@@ -71,7 +78,7 @@ namespace AntDesign
         /// <summary>
         /// modal default footer cancel text
         /// </summary>
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
+        public OneOf<string, RenderFragment> CancelText { get; set; }
 
         /// <summary>
         /// whether center display
@@ -86,12 +93,12 @@ namespace AntDesign
         /// <summary>
         /// Whether support press esc to close	
         /// </summary>
-        public bool Keyboard { get; set; } = true;
+        public bool Keyboard { get; set; }
 
         /// <summary>
         /// Whether show mask or not
         /// </summary>
-        public bool Mask { get; set; } = true;
+        public bool Mask { get; set; }
 
         /// <summary>
         /// Whether to close the modal dialog when the mask (area outside the modal) is clicked
@@ -111,7 +118,7 @@ namespace AntDesign
         /// <summary>
         /// Text of the OK button
         /// </summary>
-        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
+        public OneOf<string, RenderFragment> OkText { get; set; }
 
         /// <summary>
         /// Button type of the OK button
@@ -136,11 +143,11 @@ namespace AntDesign
         /// <summary>
         /// The z-index of the Modal
         /// </summary>
-        public int ZIndex { get; set; } = 1000;
+        public int ZIndex { get; set; }
 
         /// <summary>
         /// Is RTL
         /// </summary>
-        public bool Rtl { get; set; } = false;
+        public bool Rtl { get; set; }
     }
 }
