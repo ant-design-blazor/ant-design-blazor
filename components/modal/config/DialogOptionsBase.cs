@@ -55,14 +55,14 @@ namespace AntDesign
 
         public DialogOptionsBase()
         {
-            var congifInstance = DialogDefaultValueOptions.Instance;
-            Centered = congifInstance.Centered ?? false;
-            Keyboard = congifInstance.Keyboard ?? true;
-            Mask = congifInstance.Mask ?? true;
-            OkText = congifInstance.OkText ?? "OK";
-            CancelText = congifInstance.CancelText ?? "Cancel";
-            ZIndex = congifInstance.ZIndex ?? 1000;
-            Rtl = congifInstance.Rtl ?? false;
+            var configInstance = DialogDefaultValueOptions.Instance;
+            Centered = configInstance.Centered ?? false;
+            Keyboard = configInstance.Keyboard ?? true;
+            Mask = configInstance.Mask ?? true;
+            OkText = configInstance.OkText ?? "OK";
+            CancelText = configInstance.CancelText ?? "Cancel";
+            ZIndex = configInstance.ZIndex ?? 1000;
+            Rtl = configInstance.Rtl ?? false;
         }
 
         /// <summary>
