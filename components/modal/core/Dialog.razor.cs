@@ -79,13 +79,12 @@ namespace AntDesign
         private string CalcModalStyle()
         {
             string style;
-            if (_modalStatus == ModalStatus.Default)
+            if (Status == ModalStatus.Default)
             {
                 style = $"{Config.GetWidth()};";
                 if (Config.Draggable)
                 {
-                    string left = $"margin: 0; padding-bottom:0;";
-                    style += left;
+                    style += "margin: 0; padding-bottom:0;";
                 }
             }
             else
@@ -235,7 +234,7 @@ namespace AntDesign
             }
         }
 
-        private ModalStatus _modalStatus = ModalStatus.Default;
+        public ModalStatus Status { get; private set; } = ModalStatus.Default;
 
         /// <summary>
         /// closer(X) click event
@@ -243,7 +242,7 @@ namespace AntDesign
         /// <returns></returns>
         private Task OnMaxBtnClick()
         {
-            if (_modalStatus == ModalStatus.Default)
+            if (Status == ModalStatus.Default)
             {
                 SetModalStatus(ModalStatus.Max);
             }
@@ -256,7 +255,7 @@ namespace AntDesign
 
         private void SetModalStatus(ModalStatus modalStatus)
         {
-            _modalStatus = modalStatus;
+            Status = modalStatus;
             _wrapStyle = CalcWrapStyle();
             _modalStyle = CalcModalStyle();
         }
@@ -282,7 +281,7 @@ namespace AntDesign
         private string CalcWrapStyle()
         {
             string style;
-            if (_modalStatus == ModalStatus.Default && Config.Draggable)
+            if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
                 if (Config.Centered)
@@ -367,7 +366,7 @@ namespace AntDesign
         {
             var clsName = Config.ClassName;
             return clsName + _modalAnimationClsName
-                + (_modalStatus == ModalStatus.Max ? " ant-modal-max" : "");
+                + (Status == ModalStatus.Max ? " ant-modal-max" : "");
         }
 
         #endregion build element's class name
@@ -432,7 +431,7 @@ namespace AntDesign
                 }
 
                 // enable drag and drop
-                if (_modalStatus != ModalStatus.Max && Config.Draggable && !_doDraggable)
+                if (Status != ModalStatus.Max && Config.Draggable && !_doDraggable)
                 {
                     _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
@@ -448,7 +447,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                 }
                 // disable drag and drop
-                if (_modalStatus != ModalStatus.Max && Config.Draggable && _doDraggable)
+                if (Status != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
                     _doDraggable = false;
                     await JsInvokeAsync(JSInteropConstants.DisableDraggable, _dialogHeader);
