@@ -62,7 +62,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | TableLayout | 表格元素的 table-layout 属性，设为 fixed 表示内容不会影响列的布局 | string | - |
 | OnRowClick | 行点击事件(于antd v3中已废弃) | EventCallback<RowData<TItem>> | - |
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
-
+| Resizable | 启用可伸缩列 | bool | false |
 
 ### Column
 
