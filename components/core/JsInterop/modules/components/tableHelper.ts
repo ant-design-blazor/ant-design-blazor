@@ -92,7 +92,7 @@
         function handleMouseMove(evt) {
           evt.stopPropagation();
           const newPageX = evt.touches ? evt.touches[0].pageX : evt.pageX;
-          const nextWidth = originalColumnWidth + (newPageX - startPageX) * rtlMultiplier;
+          const nextWidth = originalColumnWidth + (newPageX - startPageX) * rtlMultiplier - 5;
           if (Math.abs(nextWidth - updatedColumnWidth) > 0) {
             updatedColumnWidth = nextWidth;
             handle.style.right = '';

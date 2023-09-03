@@ -84,8 +84,12 @@
         user-select: none;
     }
 
-    .ant-table-resizable-handle:hover,
+    .ant-table-resizable-handle:hover {
+        border-right: 2px dashed @primary-color-hover;
+    }
+
     .ant-table-resizing {
-        border-right: 2px solid @primary-color;
+        border-right: 2px dashed @primary-color-active;
+        z-index: 99;
     }
 }
