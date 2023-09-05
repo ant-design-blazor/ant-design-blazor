@@ -940,11 +940,18 @@ namespace AntDesign
 
             TreeComponent.AddNode(this);
 
+            if (this.Checked)
+                this.SetChecked(true);
+
+            if (!TreeComponent.DefaultExpandAll && TreeComponent.DefaultExpandParent)
+                Expand(true);
+
             if (TreeComponent.DisabledExpression != null)
                 Disabled = TreeComponent.DisabledExpression(this);
 
             if (TreeComponent.DefaultExpandAll)
                 Expand(true);
+
             else if (TreeComponent.ExpandedKeys != null)
             {
                 Expand(TreeComponent.ExpandedKeys.Any(k => k == this.Key));
@@ -956,13 +963,6 @@ namespace AntDesign
                 this.SetChecked(this.Selected);
             }
 
-            if (TreeComponent.Selectable && TreeComponent.SelectedKeys != null)
-            {
-                this.Selected = TreeComponent.SelectedKeys.Any(k => k == this.Key);
-            }
-
-            if (this.Checked)
-                this.SetChecked(true);
             if (!TreeComponent.DefaultExpandAll)
             {
                 if (this.Expanded)

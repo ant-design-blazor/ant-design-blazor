@@ -703,6 +703,12 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
+        protected override void OnParametersSet()
+        {
+            UpdateState();
+            base.OnParametersSet();
+        }
+
         /// <summary>
         /// Get TreeNode from Key
         /// </summary>
@@ -795,7 +801,7 @@ namespace AntDesign
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
         {
-            var expandedKeys = _allNodes.Select(x => x.Key).ToArray();
+            var expandedKeys = _allNodes.Where(x=>x.Expanded).Select(x => x.Key).ToArray();
             if (OnNodeLoadDelayAsync.HasDelegate && expanded == true)
             {
                 node.SetLoading(true);
@@ -870,6 +876,17 @@ namespace AntDesign
             DomEventListener?.Dispose();
 
             base.Dispose(disposing);
+        }
+
+        private void UpdateState()
+        {
+
+            foreach(var node in _allNodes)
+            {
+                node.SetChecked(CheckedKeys?.Contains( node.Key)==true);
+                node.SetSelected(SelectedKeys?.Contains(node.Key)==true);
+                Switch(node, ExpandedKeys?.Contains(node.Key) == true);
+            }
         }
     }
 }
