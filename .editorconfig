@@ -224,7 +224,7 @@ csharp_preserve_single_line_statements = true
 dotnet_diagnostic.CS1591.severity = none
 
 # IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = error
+dotnet_diagnostic.IDE1006.severity = warning
 
 # CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive).
 dotnet_diagnostic.CS8509.severity = error
@@ -232,23 +232,23 @@ dotnet_diagnostic.CS8509.severity = error
 # CA2007: Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = none
 
-# CA2227: ¼¯ºÏÊôĞÔÓ¦ÎªÖ»¶Á
+# CA2227: é›†åˆå±æ€§åº”ä¸ºåªè¯»
 dotnet_diagnostic.CA2227.severity = none
 
-# CA1303: Çë²»Òª½«ÎÄ±¾×÷Îª±¾µØ»¯²ÎÊı´«µİ
+# CA1303: è¯·ä¸è¦å°†æ–‡æœ¬ä½œä¸ºæœ¬åœ°åŒ–å‚æ•°ä¼ é€’
 dotnet_diagnostic.CA1303.severity = none
 
-# CA2208: ÕıÈ·ÊµÀı»¯²ÎÊıÒì³£
+# CA2208: æ­£ç¡®å®ä¾‹åŒ–å‚æ•°å¼‚å¸¸
 dotnet_diagnostic.CA2208.severity = none
 
-# CA1819: ÊôĞÔ²»Ó¦·µ»ØÊı×é
+# CA1819: å±æ€§ä¸åº”è¿”å›æ•°ç»„
 dotnet_diagnostic.CA1819.severity = none
 
-# CA2225: ÔËËã·ûÖØÔØ¾ßÓĞÃüÃûµÄ±¸ÓÃÏî
+# CA2225: è¿ç®—ç¬¦é‡è½½å…·æœ‰å‘½åçš„å¤‡ç”¨é¡¹
 dotnet_diagnostic.CA2225.severity = none
 
-# CA1308: ½«×Ö·û´®¹æ·¶»¯Îª´óĞ´
+# CA1308: å°†å­—ç¬¦ä¸²è§„èŒƒåŒ–ä¸ºå¤§å†™
 dotnet_diagnostic.CA1308.severity = none
 
-# CA1040: ±ÜÃâÊ¹ÓÃ¿Õ½Ó¿Ú
+# CA1040: é¿å…ä½¿ç”¨ç©ºæ¥å£
 dotnet_diagnostic.CA1040.severity = none
