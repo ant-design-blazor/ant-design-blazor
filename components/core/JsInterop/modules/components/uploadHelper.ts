@@ -58,15 +58,6 @@ export class uploadHelper {
   }
 
   static uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod, method: string) {
-    let formData = new FormData();
-    var file = element.files[index];
-    var size = file.size;
-    formData.append(name, file);
-    if (data != null) {
-      for (var key in data) {
-        formData.append(key, data[key]);
-      }
-    }
     const req = new XMLHttpRequest()
     req.onreadystatechange = function () {
       if (req.readyState === 4) {
@@ -92,6 +83,21 @@ export class uploadHelper {
         req.setRequestHeader(header, headers[header]);
       }
     }
-    req.send(formData)
+
+    var file = element.files[index];
+    if (method.toLowerCase() === 'put') {
+      req.setRequestHeader('Content-type', '');
+      req.send(new Blob[file]);
+    } else {
+      let formData = new FormData();
+      var size = file.size;
+      formData.append(name, file);
+      if (data != null) {
+        for (var key in data) {
+          formData.append(key, data[key]);
+        }
+      }
+      req.send(formData)
+    }
   }
 }
