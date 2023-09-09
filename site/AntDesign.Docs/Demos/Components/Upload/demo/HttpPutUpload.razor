@@ -1,0 +1,41 @@
+<Upload Action="@_uploadUrl"
+        Name="files"
+        Method="PUT"
+        BeforeUpload="BeforeUpload"
+        OnSingleCompleted="OnSingleCompleted">
+    <Button Icon="upload">
+        <span>Click to Upload</span>
+    </Button>
+</Upload>
+
+@code {
+    private string _uploadUrl = "https://www.mocky.io/v2/5cc8019d300000980a055e76";
+
+    bool BeforeUpload(UploadFileItem file)
+    {
+        // obtains the upload URL from the backend interface
+        // _uploadUrl = GetUploadUrl();
+        return true;
+    }
+
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}

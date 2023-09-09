@@ -86,8 +86,7 @@ export class uploadHelper {
 
     var file = element.files[index];
     if (method.toLowerCase() === 'put') {
-      req.setRequestHeader('Content-type', '');
-      req.send(new Blob[file]);
+        req.send(file);
     } else {
       let formData = new FormData();
       var size = file.size;
