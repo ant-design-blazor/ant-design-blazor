@@ -25,7 +25,7 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -169,6 +169,9 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
+
+        [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
+
 
         /// <summary>
         /// Enable resizable column
@@ -474,7 +477,7 @@ namespace AntDesign
             {
                 if (_outerSelectedRows != null)
                 {
-                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
+                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows, this).ToHashSet();
                     if (_selectedRows.Count != _outerSelectedRows.Count())
                     {
                         SelectedRowsChanged.InvokeAsync(_selectedRows);
@@ -815,6 +818,22 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement)
         {
             _isReloading = true;
+        }
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(x).Equals(RowKey(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(obj).GetHashCode();
         }
     }
 }
