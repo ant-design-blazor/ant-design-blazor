@@ -15,6 +15,29 @@ timeline: true
 
 ---
 
+### 0.15.5
+
+`2023-09-10`
+
+Happy Teachers' Day
+
+- Table
+  - 🐞 Fixed Table that avoid disabled selection would be selected when select-all checked. [#3419](https://github.com/ant-design-blazor/ant-design-blazor/pull/3419) [@ElderJames](https://github.com/ElderJames)
+  - 📖 docs(module: table): introduce how to use RowClassName with fixed column and hover rows. [#3409](https://github.com/ant-design-blazor/ant-design-blazor/pull/3409) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 fix(module: table): reset PageIndex when filters and sorters change. [#3397](https://github.com/ant-design-blazor/ant-design-blazor/pull/3397) [@ElderJames](https://github.com/ElderJames)
+
+- 🌐 fix i18n: ko-KR locale Confim And Form. [#3415](https://github.com/ant-design-blazor/ant-design-blazor/pull/3415) [@Jeongyong-park](https://github.com/Jeongyong-park)
+- 🐞 fix: centered conflict maximizable style. [#3403](https://github.com/ant-design-blazor/ant-design-blazor/pull/3403) [@zxyao145](https://github.com/zxyao145)
+- 🐞 fix(module: autocomplete): dropdown resize. [#3402](https://github.com/ant-design-blazor/ant-design-blazor/pull/3402) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module: notification): change sync statehaschanged to async (<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1620616860" data-permission-text="Title is private" data-url="https://github.com/ant-design-blazor/ant-design-blazor/issues/3175" data-hovercard-type="issue" data-hovercard-url="/ant-design-blazor/ant-design-blazor/issues/3175/hovercard" href="https://github.com/ant-design-blazor/ant-design-blazor/issues/3175">#3175</a>). [#3400](https://github.com/ant-design-blazor/ant-design-blazor/pull/3400) [@zxyao145](https://github.com/zxyao145)
+- 🐞 fix(module: progress): text wrapping issue of the line type. [#3387](https://github.com/ant-design-blazor/ant-design-blazor/pull/3387) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ feat(Module:SelectOption) add aria-label to select option. [#3385](https://github.com/ant-design-blazor/ant-design-blazor/pull/3385) [@eizzn](https://github.com/eizzn)
+
+- Input
+  - ⌨️ feat(module:input) adds required attribute to input elements. [#3383](https://github.com/ant-design-blazor/ant-design-blazor/pull/3383) [@eizzn](https://github.com/eizzn)
+  - ⌨️ feat(module:input): when input fails validation, add the aria-invalid…. [#3378](https://github.com/ant-design-blazor/ant-design-blazor/pull/3378) [@eizzn](https://github.com/eizzn)
+  - 🐞 fix(module: input): null check for the js of textarea resizable. [#3382](https://github.com/ant-design-blazor/ant-design-blazor/pull/3382) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.15.4
 
 `2023-07-31`

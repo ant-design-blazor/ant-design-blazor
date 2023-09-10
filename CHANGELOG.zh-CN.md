@@ -15,6 +15,31 @@ timeline: true
 
 ---
 
+### 0.15.5
+
+`2023-09-10`
+
+教师节快乐
+
+- Table
+  - 🐞 修复 避免禁用了的行仍然可以被"全选"选中。[#3419](https://github.com/ant-design-blazor/ant-design-blazor/pull/3419) [@ElderJames](https://github.com/ElderJames)
+  - 📖 更新 文档介绍列固定时的自定义行样式。[#3409](https://github.com/ant-design-blazor/ant-design-blazor/pull/3409) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在排序和筛选被修改时，重置页码。[#3397](https://github.com/ant-design-blazor/ant-design-blazor/pull/3397) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Input Resizable TextArea空引用错误。[#3382](https://github.com/ant-design-blazor/ant-design-blazor/pull/3382) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 居中和最大化的样式冲突。[#3403](https://github.com/ant-design-blazor/ant-design-blazor/pull/3403) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 AutoComplete 下拉框的自动宽度调整。[#3402](https://github.com/ant-design-blazor/ant-design-blazor/pull/3402) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Notification 通知组件使用异步时异常。[#3400](https://github.com/ant-design-blazor/ant-design-blazor/pull/3400) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Progress 的 Line 类型进度条文本换行问题。[#3387](https://github.com/ant-design-blazor/ant-design-blazor/pull/3387) [@ElderJames](https://github.com/ElderJames)
+
+- ⌨️ 可访问性增强
+  - 增加 Select 选项 aria-label 属性。[#3385](https://github.com/ant-design-blazor/ant-design-blazor/pull/3385) [@eizzn](https://github.com/eizzn)
+  - ⌨️ 可访问性增强，增加 input 元素的 required 属性。[#3383](https://github.com/ant-design-blazor/ant-design-blazor/pull/3383) [@eizzn](https://github.com/eizzn)
+  - ⌨️ 可访问性增强，在验证失败时候增加 input 元素的 aria-invalid 属性。[#3378](https://github.com/ant-design-blazor/ant-design-blazor/pull/3378) [@eizzn](https://github.com/eizzn)
+
+- 🌐 修复 Confim 和 Form 的韩文。[#3415](https://github.com/ant-design-blazor/ant-design-blazor/pull/3415) [@Jeongyong-park](https://github.com/Jeongyong-park)
+
+
 ### 0.15.4
 
 `2023-07-31`
