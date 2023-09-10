@@ -24,11 +24,10 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-
                 Size = value;
             }
         }
-        
+
         /// <summary>
         /// Sets the value of the aria-label attribute
         /// </summary>
@@ -82,7 +81,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
-        
+
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
@@ -160,6 +159,9 @@ namespace AntDesign
 
         private async Task HandleOnClick(MouseEventArgs args)
         {
+            if (Loading)
+                return;
+
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(args);
