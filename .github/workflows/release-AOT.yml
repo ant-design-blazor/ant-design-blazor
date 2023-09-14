@@ -36,6 +36,11 @@ jobs:
         with:
           dotnet-version: 7.0.100
 
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'
+
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
@@ -57,7 +62,7 @@ jobs:
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net7 -o cargo -p:EnableAOT=true
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
 
       - name: Deploy to Azure 🚀
