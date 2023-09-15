@@ -8,7 +8,7 @@
 
   <PropertyGroup Condition="$(EnableAOT) == 'true'">
     <RunAOTCompilation>true</RunAOTCompilation>
-    <WasmStripILAfterAOT>true</WasmStripILAfterAOT>
+    <!--<WasmStripILAfterAOT>true</WasmStripILAfterAOT>-->
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'net6'">
