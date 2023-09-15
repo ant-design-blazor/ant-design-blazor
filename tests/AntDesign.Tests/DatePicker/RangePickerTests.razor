@@ -90,7 +90,7 @@
     }
     
     [Fact]
-    public void Enter_Full_Mask_Should_Apply_Date()
+    public async Task Enter_Full_Mask_Should_Apply_Date()
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -110,6 +110,8 @@
             input.Input("01012020");
             input.KeyDown("ENTER");
         }
+
+        await Task.Delay(100);
         
         //Assert
         cut.Instance.Value.Should().BeEquivalentTo(new []{new DateTime(2020, 01, 01),new DateTime(2020, 01, 01)});
