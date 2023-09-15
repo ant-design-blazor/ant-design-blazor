@@ -31,6 +31,19 @@
         Assert.Equal("Zhejiang", options[1].TextContent.Trim());
         Assert.Equal("Beijing", options[2].TextContent.Trim());
     }
+    
+    [Fact]
+    public void Render_multiple_enum_select_with_ShowArrowIcon() 
+    {
+        // Arrange
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City" Mode="multiple" ShowArrowIcon></EnumSelect>);
+        
+        // Act
+        var arrow = cut.Find("span.ant-select-arrow");
+
+        // Assert
+        arrow.Should().NotBeNull();
+    }
 
     [Fact] //covers scenario from issue #1989
     public async Task Render_select_dropdown_on_arrow_click()
