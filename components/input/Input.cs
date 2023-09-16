@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -370,6 +371,15 @@ namespace AntDesign
         {
             base.OnValidated(validationMessages);
             SetClasses();
+
+            if (validationMessages.Length > 0 && !Attributes.ContainsKey("aria-invalid"))
+            {
+                Attributes.Add("aria-invalid", "true");
+            }
+            else
+            {
+                Attributes.Remove("aria-invalid");
+            }
         }
 
         internal override void UpdateStyles()
@@ -678,7 +688,10 @@ namespace AntDesign
 
             builder.AddAttribute(50, "id", Id);
             builder.AddAttribute(51, "type", Type);
-            builder.AddAttribute(60, "placeholder", Placeholder);
+            if (!String.IsNullOrWhiteSpace(Placeholder))
+            {
+                builder.AddAttribute(60, "placeholder", Placeholder);
+            }
             builder.AddAttribute(61, "value", CurrentValueAsString);
             builder.AddAttribute(62, "disabled", needsDisabled);
             builder.AddAttribute(63, "readonly", ReadOnly);
@@ -686,6 +699,11 @@ namespace AntDesign
             if (!AutoComplete)
             {
                 builder.AddAttribute(64, "autocomplete", "off");
+            }
+
+            if (FormItem?.IsRequiredByValidation ?? false)
+            {
+                builder.AddAttribute(65, "required", "required");
             }
 
             // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件

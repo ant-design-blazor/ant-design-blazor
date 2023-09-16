@@ -387,8 +387,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        void ITable.ReloadAndInvokeChange()
+        void ITable.ColumnFilterChange()
         {
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -402,6 +403,7 @@ namespace AntDesign
                 }
             }
 
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 

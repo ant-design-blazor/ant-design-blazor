@@ -7,7 +7,7 @@
         {
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
-        <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
+        <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
              @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
@@ -35,7 +35,7 @@
                         <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@OnMaxBtnClick">
                             <span class=@($"{Config.PrefixCls}-max-btn-x")>
                                 <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
-                                    @if(_modalStatus == ModalStatus.Default)
+                                    @if(Status == ModalStatus.Default)
                                     {
                                         @(Config.MaximizeBtnIcon)
                                     }

@@ -71,6 +71,12 @@
     IEnumerable<Column> selectedRows;
     string selectionType = "checkbox";
 
+    protected override void OnInitialized()
+    {
+        selectedRows = data[..1]; // default selected
+        base.OnInitialized();
+    }
+
     public void RemoveSelection(string key)
     {
         var selected = selectedRows.Where(x => x.Name != key).ToList();
