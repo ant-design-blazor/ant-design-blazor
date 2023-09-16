@@ -103,6 +103,8 @@ namespace AntDesign
 
         private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required;
 
+        bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
+
         [Parameter]
         public bool Required { get; set; } = false;
 

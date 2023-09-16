@@ -8,7 +8,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    internal enum ModalStatus
+    public enum ModalStatus
     {
         Default = 0,
         Max = 1,

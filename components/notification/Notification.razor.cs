@@ -228,7 +228,7 @@ namespace AntDesign
             if (option.AnimationClass == AnimationType.Enter)
             {
                 option.AnimationClass = AnimationType.Leave;
-                StateHasChanged();
+                await InvokeStateHasChangedAsync();
 
                 option.InvokeOnClose();
 
@@ -245,7 +245,7 @@ namespace AntDesign
                 }
 
                 //when next notification item fade out or add new notice item, item will toggle StateHasChanged
-                StateHasChanged();
+                await InvokeStateHasChangedAsync();
             }
 
             //return Task.CompletedTask;
