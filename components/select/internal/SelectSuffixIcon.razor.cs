@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SuffixSelectIcon<TItemValue, TItem>
+    public partial class SelectSuffixIcon<TItemValue, TItem>
     {
         [Parameter] public bool IsOverlayShow { get; set; }
 
