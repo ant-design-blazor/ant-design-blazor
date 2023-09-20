@@ -8,20 +8,22 @@
                checked="@Checked"
                disabled="@IsDisabled"
                autofocus=@AutoFocus
-        @onchange="@InputCheckedChange"
+               @onchange="@InputCheckedChange"
                type="checkbox"
                class="ant-checkbox-input" />
         <span class="ant-checkbox-inner"></span>
     </span>
-    <span>
-        @if (ChildContent != null)
-        {
+
+    @if (ChildContent != null)
+    {
+        <span>
             @ChildContent
-        }
-        else
-        {
-            @Label
-        }
-    </span>
+        </span>
+    }
+    else
+    {
+        <span>@Label</span>
+    }
+
 </label>
 
