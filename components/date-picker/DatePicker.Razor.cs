@@ -92,12 +92,18 @@ namespace AntDesign
 
         protected override async Task OnBlur(int index)
         {
+            await base.OnBlur(index);
+
             if (_openingOverlay)
                 return;
 
             AutoFocus = false;
+
             if (!_dropDown.IsOverlayShow())
+            {
                 _pickerStatus[0].SelectedValue = null;
+            }
+
             await Task.Yield();
         }
 
@@ -133,6 +139,10 @@ namespace AntDesign
                     else if (_pickerStatus[0].SelectedValue is not null)
                     {
                         await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
+                    }
+                    else if (AllowClear)
+                    {
+                        ClearValue();
                     }
                     else if (isOverlayShown)
                     {

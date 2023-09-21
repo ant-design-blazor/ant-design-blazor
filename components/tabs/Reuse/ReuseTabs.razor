@@ -16,17 +16,21 @@ else
                     @item.Title
                 </TabTemplate>
                <ChildContent>
-                    @if (Body != null)
+                    @if (item.KeepAlive || item.Url == CurrentUrl)
                     {
-                        @Body(item)
-                    }
-                    else
-                    {
-                        @item.Body
+                        @if (Body != null)
+                        {
+                            @Body(item)
+                        }
+                        else
+                        {
+                            @item.Body
+                        }
                     }
                </ChildContent>
                 <TabContextMenu>
                     <Menu>
+                        <MenuItem OnClick="@(()=>{ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
                         <MenuItem Disabled="!item.Closable" OnClick="@(()=>{RemovePage(item.Url);})">@Locale.Close</MenuItem>
                         <MenuItem OnClick="RemoveAll">@Locale.CloseAllTabs</MenuItem>
                         <MenuItem OnClick="@(()=>{ RemoveOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
