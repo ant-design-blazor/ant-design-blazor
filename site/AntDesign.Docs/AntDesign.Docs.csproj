@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6;net7;net8</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
