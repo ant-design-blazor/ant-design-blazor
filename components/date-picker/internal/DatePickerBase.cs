@@ -530,6 +530,10 @@ namespace AntDesign
                 {
                     ChangeValue(changeValue, index);
                 }
+            }  
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
             }
         }
 
