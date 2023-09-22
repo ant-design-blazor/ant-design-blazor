@@ -1,5 +1,6 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @using AntDesign.JsInterop
+@using System.Globalization
 @inherits AntDesignTestBase
 
 @code {
@@ -71,7 +72,7 @@
 		DateTime defaultValue = new DateTime(2020,1,1);
         var defaultValueAsString = defaultValue.ToString(DateFormat);
         var cut = Render<AntDesign.DatePicker<DateTime>>(
-        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" Format="@DateFormat"/>
         );
         var newValue = defaultValue.AddDays(1);        
 		string newValueAsString = newValue.ToString(DateFormat);
@@ -146,8 +147,6 @@
 		//Act
 		var input = cut.Find("input");
 		input.Click();
-		//Task.Delay will force to wait for overlay to render the picker panel
-		await Task.Delay(1);
 		input.Input(expectedValueAsString);
 		//Assert
 		string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(expectedValue.Month);
@@ -200,15 +199,18 @@
         var newDate = value.AddDays(20);
         var newDateAsString = newDate.ToString(DateFormat);
         input.Click();
-        await Task.Delay(100);
         input.Input(newDateAsString); 
         input.Blur();
-        await Task.Delay(100);
         
         //Assert
+        cut.WaitForState(() =>
+        {
+            input = cut.Find("input");
+            return input.GetAttribute("value") == newDateAsString;
+        }, TimeSpan.FromSeconds(2));
+
         value.Should().Be(newDate);
         cut.Instance.Value.Should().Be(newDate);
-        input.GetAttribute("value").Should().Be(newDateAsString);
     }
 
 

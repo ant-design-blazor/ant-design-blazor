@@ -391,6 +391,11 @@ namespace AntDesign
         {
             if (_pickerStatus[index].SelectedValue is null)
             {
+                if (AllowClear)
+                {
+                    return null;
+                }
+                
                 var isFocused = index == 0 && _inputStart?.IsOnFocused == true ||
                      index == 1 && _inputEnd?.IsOnFocused == true;
 

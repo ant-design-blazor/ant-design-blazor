@@ -54,21 +54,22 @@
     [InlineData("11", "11/")]
     [InlineData("111", "11/1")]
     [InlineData("1111", "11/11/")]
-    [InlineData("11111111", "11/11/1111")]
-    [InlineData("111111111", "11/11/1111")]
-    [InlineData("11/11/1111", "11/11/1111")]
-    [InlineData("11/11/11111", "11/11/1111")]
-    public async Task Mask_is_applied(string inputValue, string expectedValue)
+    [InlineData("11111111", "11/11/1111", true)]
+    [InlineData("111111111", "11/11/1111", true)]
+    [InlineData("11/11/1111", "11/11/1111", true)]
+    [InlineData("11/11/11111", "11/11/1111", true)]
+    public async Task Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition());
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
-            @<RangePicker TValue="DateTime?[]" Format="dd/MM/yyyy" Mask="dd/MM/yyyy"/>
+            @<RangePicker TValue="DateTime?[]" Format="dd/MM/yyyy" Mask="dd/MM/yyyy" AllowClear="false"/>
             );
         
         //Act
@@ -76,16 +77,21 @@
         for (var i = 0; i < inputs.Count; i++)
         {
             var input = inputs[i];
-            await input.InputAsync(new ChangeEventArgs() { Value = inputValue });
-            input.KeyDown("ENTER");
+            input.Input(inputValue);
         }
         
         //Assert
         inputs = cut.FindAll("input");
-        for (var i = 0; i < inputs.Count; i++)
+        inputs.Select(x => x.GetAttribute("value")).Should().AllBe(expectedValue);
+        
+        if (validateValue)
         {
-            var input = inputs[i];
-            input.GetAttribute("value").Should().Be(expectedValue);
+            foreach (var input in inputs)
+            {
+                await input.KeyDownAsync(new KeyboardEventArgs() { Key = "ENTER" });
+            }
+            
+            cut.Instance.Value.Should().AllBeEquivalentTo(DateTime.ParseExact(expectedValue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
         }
     }
     
@@ -98,7 +104,7 @@
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
         
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
-            @<RangePicker TValue="DateTime?[]" Mask="dd/MM/yyyy"/>
+            @<RangePicker TValue="DateTime?[]" Mask="dd/MM/yyyy" Format="dd/MM/yyyy"/>
             );
         
         //Act
@@ -107,14 +113,14 @@
         for (var i = 0; i < inputs.Count; i++)
         {
             var input = inputs[i];
-            input.Input("01012020");
+            await input.InputAsync(new ChangeEventArgs() { Value = "01012020" });
             input.KeyDown("ENTER");
         }
 
-        await Task.Delay(100);
-        
         //Assert
-        cut.Instance.Value.Should().BeEquivalentTo(new []{new DateTime(2020, 01, 01),new DateTime(2020, 01, 01)});
+        inputs = cut.FindAll("input");
+        inputs.Select(x => x.GetAttribute("value")).Should().AllBe("01/01/2020");
+        cut.Instance.Value.Should().BeEquivalentTo(new[] { new DateTime(2020, 01, 01), new DateTime(2020, 01, 01) });
     }
     
     [Fact]
@@ -278,6 +284,7 @@
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
 
         var range = new DateTime[]
         {
@@ -308,7 +315,7 @@
         await input[0].KeyDownAsync(new KeyboardEventArgs() { Key = key });
         await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
         await input[1].KeyDownAsync(new KeyboardEventArgs() { Key = key });
-
+        
         //Assert
         input = cut.FindAll("input");
         range[0].Should().Be(expectedStart);
@@ -351,19 +358,24 @@
         input[0].Click();
         await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
         input[0].Blur();
-        await Task.Delay(100);
         
         input[1].Click();
         await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
         input[1].Blur();
-        await Task.Delay(100);
 
         //Assert
-        input = cut.FindAll("input");
-        range[0].Should().Be(expectedStart);
-        input[0].GetAttribute("value").Should().Be(startValueAsString);
-        range[1].Should().Be(expectedEnd);
-        input[1].GetAttribute("value").Should().Be(endValueAsString);
+        cut.WaitForState(() =>
+        {
+            input = cut.FindAll("input");
+            return input[0].GetAttribute("value") == startValueAsString &&
+                   input[1].GetAttribute("value") == endValueAsString;
+        }, TimeSpan.FromSeconds(2));
+        
+        cut.WaitForAssertion(() =>
+        {
+            range[0].Should().Be(expectedStart);
+            range[1].Should().Be(expectedEnd);
+        });
     }
     
     [Fact]
@@ -392,22 +404,23 @@
 
         //Act
         var input = cut.FindAll("input");
-        input[0].Click();
+        await input[0].ClickAsync(new MouseEventArgs());
         await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
         input[0].Blur();
-        await Task.Delay(100);
         
-        input[1].Click();
+        await input[1].ClickAsync(new MouseEventArgs());
         await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
         input[1].Blur();
-        await Task.Delay(100);
 
         //Assert
         input = cut.FindAll("input");
-        range[0].Should().Be(null);
         input[0].GetAttribute("value").Should().Be(startValueAsString);
-        range[1].Should().Be(null);
         input[1].GetAttribute("value").Should().Be(endValueAsString);
+
+        cut.WaitForState(() =>
+        {
+            return range[0] == null && range[1] == null;
+        });
     }
     
     [Fact]
@@ -432,25 +445,29 @@
 
         //Act
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-            (@<RangePicker @bind-Value="range" ChangeOnClose AllowClear/>  );
+            (@<RangePicker @bind-Value="range" AllowClear/>  );
 
         //Act
         var input = cut.FindAll("input");
         
         await input[0].InputAsync(new ChangeEventArgs() { Value = "" });
         input[0].KeyDown("ENTER");
-        await Task.Delay(100);
         
         await input[1].InputAsync(new ChangeEventArgs() { Value = "" });
         input[1].KeyDown("ENTER");
-        await Task.Delay(100);
 
         //Assert
-        input = cut.FindAll("input");
-        range[0].Should().Be(null);
-        input[0].GetAttribute("value").Should().Be(startValueAsString);
-        range[1].Should().Be(null);
-        input[1].GetAttribute("value").Should().Be(endValueAsString);
+        cut.WaitForState(() =>
+        {
+            input = cut.FindAll("input");
+            return input[0].GetAttribute("value") == startValueAsString &&
+                   input[1].GetAttribute("value") == endValueAsString;
+        }, TimeSpan.FromSeconds(2));
+        
+        cut.WaitForState(() =>
+        {
+            return range[0] == null && range[1] == null;
+        }, TimeSpan.FromSeconds(2));
     }
 
     [Fact]
