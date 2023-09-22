@@ -1,4 +1,5 @@
 ﻿using System;
+using AntDesign.Internal;
 
 namespace AntDesign
 {
@@ -11,42 +12,34 @@ namespace AntDesign
         public static void ProcessDefaults<TValue>(TValue value, TValue defaultValue,
             TValue defaultPickerValue, DateTime[] pickerValues, bool[] useDefaultPickerValue)
         {
-            bool isNullable = false;
-            Type type = typeof(TValue);
-            if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-            {
-                isNullable = true;
-            }
+            var isNullable = InternalConvert.IsNullable<TValue>();
 
             var defaultElementValue = Activator.CreateInstance(typeof(TValue).GetElementType());
-            Array valueTemp, defaultTemp;
+
             DateTime?[] evaluatedPickerValue = new DateTime?[2];
+
+            var valueTemp = InternalConvert.ToDateTimeArray(value);
+            var defaultTemp = InternalConvert.ToDateTimeArray(defaultValue);
 
             if (isNullable)
             {
                 if (defaultPickerValue != null)
                 {
-                    evaluatedPickerValue = defaultPickerValue as DateTime?[];
+                    evaluatedPickerValue = InternalConvert.ToDateTimeArray(defaultPickerValue);
                 }
-
-                valueTemp = value as DateTime?[];
-                defaultTemp = defaultValue as DateTime?[];
             }
             else
             {
                 if (defaultPickerValue != null)
                 {
-                    evaluatedPickerValue[0] = (defaultPickerValue as DateTime[])[0];
-                    evaluatedPickerValue[1] = (defaultPickerValue as DateTime[])[1];
+                    evaluatedPickerValue = InternalConvert.ToDateTimeArray(defaultPickerValue);
                 }
                 else
                 {
                     evaluatedPickerValue = new DateTime?[] { default(DateTime), default(DateTime) };
                 }
-
-                valueTemp = value as DateTime[];
-                defaultTemp = defaultValue as DateTime[];
             }
+
             useDefaultPickerValue[0] = EvaluateDefault(0, defaultElementValue, isNullable, evaluatedPickerValue, valueTemp, defaultTemp, pickerValues);
             useDefaultPickerValue[1] = EvaluateDefault(1, defaultElementValue, isNullable, evaluatedPickerValue, valueTemp, defaultTemp, pickerValues);
 

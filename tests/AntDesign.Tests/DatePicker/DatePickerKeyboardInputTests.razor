@@ -6,245 +6,193 @@
 @code {
     
     [Theory]
-    [InlineData("Enter", true)]
-    [InlineData("Tab", true)]
-    [InlineData("Enter", false)]
-    [InlineData("Tab", false)]
-    public async Task Key_applies_input_to_value(string key, bool showTime)
+    [MemberData(nameof(DatePickerKeyboardTestData.KeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Key_applies_input_to_value<T>(string key, T value, T defaultValue, T expectedValue, string format, bool showTime) where T : struct, IFormattable
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-        DateTime value = DateTime.MinValue;
-		DateTime defaultValue = new DateTime(2020,1,1);
-		DateTime expectedValue = new DateTime(2020,1,2);
 
-        if (showTime)
-        {
-            expectedValue = expectedValue.AddHours(10).AddMinutes(30).AddSeconds(5);
-        }
-        var format = showTime ? TimeFormat : DateFormat;
-        string expectedValueAsString = expectedValue.ToString(format, Culture);
-        var cut = Render<AntDesign.DatePicker<DateTime>>(
-            @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" ShowTime="showTime" CultureInfo="@Culture" Format="@format"/>
-            );
-
+        string expectedValueAsString = expectedValue.ToString(format, null);
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" ShowTime="showTime" />
+    );
         //Act
         var input = cut.Find("input");
         input.Input(expectedValueAsString);
         input.KeyDown(key);
-        
         //Assert
-		cut.Instance.Value.Should().Be(expectedValue);
+        cut.Instance.Value.Should().Be(expectedValue);
         value.Should().Be(expectedValue);
-		input.GetAttribute("value").Should().Be(expectedValueAsString);
-	}
+        input.GetAttribute("value").Should().Be(expectedValueAsString);
+    }
 
-	[Fact]
-	public void DefaultValue_applied_to_value_on_blur_when_input_not_valid()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.InvalidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void DefaultValue_applied_to_value_on_blur_when_input_not_valid<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 
-		DateTime value = DateTime.MinValue;
-		DateTime defaultValue = new DateTime(2020,1,1);		
-		string defaultValueAsString = defaultValue.ToString(DateFormat, CultureInfo.InvariantCulture);
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
-		);
-		//Act
-		var input = cut.Find("input");
-		input.Input("2022-90-1");
-		input.Blur();
-		//Assert
-		cut.Instance.Value.Should().Be(defaultValue);
-		value.Should().Be(defaultValue);
-		input.GetAttribute("value").Should().Be(defaultValueAsString);
-	}
-
-    [Fact]
-	public void Input_restored_to_previous_value_on_blur_if_not_confirmed_with_enter_key()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-
-		DateTime value = DateTime.MinValue;
-		DateTime defaultValue = new DateTime(2020,1,1);
-        var defaultValueAsString = defaultValue.ToString(DateFormat, Culture);
-        var cut = Render<AntDesign.DatePicker<DateTime>>(
-        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
-        );
-        var newValue = defaultValue.AddDays(1);        
-		string newValueAsString = newValue.ToString(DateFormat);
-
+        string defaultValueAsString = defaultValue.ToString(format, null);
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+    );
         //Act
-        var input = cut.Find("input");      
-        input.Input(newValueAsString);
-		input.Blur();
+        var input = cut.Find("input");
+        input.Input(keyedInput);
+        input.Blur();
         //Assert
         cut.Instance.Value.Should().Be(defaultValue);
         value.Should().Be(defaultValue);
         input.GetAttribute("value").Should().Be(defaultValueAsString);
-	}
+    }
 
-	[Fact]
-	public void Entering_wrong_date_reverts_to_default()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
-
-		DateTime value = DateTime.MinValue;
-		DateTime defaultValue = new DateTime(2020,1,1);		
-		string defaultValueAsString = defaultValue.ToString(DateFormat, Culture);
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
-		);
-		//Act
-		var input = cut.Find("input");
-		input.Input("202-01-01"); //wrong year
-		input.KeyDown("ENTER");
-		//Assert
-		cut.Instance.Value.Should().Be(defaultValue);
-		value.Should().Be(defaultValue);
-		input.GetAttribute("value").Should().Be(defaultValueAsString);
-	}
-
-	[Fact]
-	public void Entering_wrong_date_reverts_to_initial()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
-
-		DateTime? value = null;
-		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value"/>);
-		//Act
-		var input = cut.Find("input");
-		input.Input("202-01-01"); //wrong year
-		input.KeyDown("ENTER");
-		//Assert
-		value.Should().Be(null);
-		cut.Instance.Value.Should().Be(value);
-		input.GetAttribute("value").Should().Be("");
-	}
-
-	[Fact]
-	public async Task Entering_new_date_focuses_in_picker()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-			.SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
-
-		DateTime? value = null;
-		DateTime expectedValue = new DateTime(2021,4,5);
-		string expectedValueAsString = expectedValue.ToString(DateFormat, Culture);
-		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value" CultureInfo="@Culture" Format="@DateFormat"/>);
-		//Act
-		var input = cut.Find("input");
-		input.Click();
-		input.Input(expectedValueAsString);
-		//Assert
-		string expectedMonth = Culture.DateTimeFormat.GetAbbreviatedMonthName(expectedValue.Month);
-		cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
-		cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(expectedValue.Year.ToString());
-		var selectedCell = cut.Find("td.ant-picker-cell-selected");
-		selectedCell.GetAttribute("title").Should().Be(expectedValue.ToString(LocaleProvider.GetCurrentLocale().DatePicker.DateLocale.DateFormat));
-		selectedCell.Children[0].TextContent.Trim().Should().Be(expectedValue.Day.ToString());
-	}
-    
-    [Fact]
-    public void Enter_Empty_Date_Should_Clear_Value_When_AllowClear()
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.ValidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Input_restored_to_previous_value_on_blur_if_not_confirmed_with_enter_key<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
-        DateTime? value = DateTime.Now;
-        var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value" AllowClear/>);
-        
+        var defaultValueAsString = defaultValue.ToString(format, null);
+        var cut = Render<AntDesign.DatePicker<T>>(
+        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+    );
+
         //Act
         var input = cut.Find("input");
-        input.Input(string.Empty); 
-        input.KeyDown("ENTER");
-        
+        input.Input(keyedInput);
+        input.Blur();
         //Assert
-        value.Should().Be(null);
-        cut.Instance.Value.Should().Be(value);
-        input.GetAttribute("value").Should().Be("");
+        cut.Instance.Value.Should().Be(defaultValue);
+        value.Should().Be(defaultValue);
+        input.GetAttribute("value").Should().Be(defaultValueAsString);
     }
-    
-    [Fact]
-    public async Task Enter_Date_Before_Blur_Should_Change_Value_When_ChangeOnClose()
+
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.InvalidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Entering_wrong_date_reverts_to_default<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        string defaultValueAsString = defaultValue.ToString(format, null);
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        );
+        //Act
+        var input = cut.Find("input");
+        input.Input(keyedInput);
+        input.KeyDown("ENTER");
+        //Assert
+        cut.Instance.Value.Should().Be(defaultValue);
+        value.Should().Be(defaultValue);
+        input.GetAttribute("value").Should().Be(defaultValueAsString);
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.InvalidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Entering_wrong_date_reverts_to_initial<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var cut = Render<AntDesign.DatePicker<T>>(@<DatePicker @bind-Value="@value" />);
+        //Act
+        var input = cut.Find("input");
+        input.Input(keyedInput);
+        input.KeyDown("ENTER");
+        //Assert
+        cut.Instance.Value.Should().Be(value);
+        input.GetAttribute("value").Should().Be(value.ToString(format, null));
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.ValidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public async Task Entering_new_date_focuses_in_picker<T>(T value, T expectedValue, string format, string keyedInput) where T : struct, IFormattable
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
         JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 
-        DateTime value = DateTime.Now.Date;
-        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" ChangeOnClose CultureInfo="@Culture" Format="@DateFormat"/>);
-        
+        string expectedValueAsString = expectedValue.ToString(format, null);
+        var cut = Render<AntDesign.DatePicker<T>>(@<DatePicker @bind-Value="@value" />);
         //Act
         var input = cut.Find("input");
-        var newDate = value.AddDays(20);
-        var newDateAsString = newDate.ToString(DateFormat, Culture);
         input.Click();
-        input.Input(newDateAsString); 
-        input.Blur();
-        
+        //Task.Delay will force to wait for overlay to render the picker panel
+        await Task.Delay(1);
+        input.Input(expectedValueAsString);
         //Assert
-        cut.WaitForAssertion(() =>
+
+        var expected = AntDesign.Internal.InternalConvert.ToDateTime(expectedValue)!.Value;
+
+        string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(expected.Month);
+        cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
+        cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(expected.Year.ToString());
+        var selectedCell = cut.Find("td.ant-picker-cell-selected");
+        selectedCell.GetAttribute("title").Should().Be(expectedValueAsString);
+        selectedCell.Children[0].TextContent.Trim().Should().Be(expected.Day.ToString());
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerKeyboardTestData.KeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Key_does_not_apply_input_to_value_when_disabledDate_is_set<T>(string key, T value, T defaultValue, T maxValue, string format, bool showTime) where T : struct, IFormattable
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+
+        string Format(T input)
         {
-            input = cut.Find("input");
-            input.GetAttribute("value").Should().Be(newDateAsString);
-        }, TimeSpan.FromSeconds(2));
-        value.Should().Be(newDate);
-        cut.Instance.Value.Should().Be(newDate);
+            return input.ToString(showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd", null);
+        }
+
+        string inputValue = Format(maxValue);
+
+        var dateTimeMax = AntDesign.Internal.InternalConvert.ToDateTime(maxValue)!.Value;
+
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" DisabledDate="date=>date<=dateTimeMax" DefaultValue="@defaultValue" ShowTime="showTime" />
+        );
+        //Act
+        var input = cut.Find("input");
+        input.Input(inputValue);
+        input.KeyDown(key);
+        //Assert
+        cut.Instance.Value.Should().Be(defaultValue);
+        value.Should().Be(defaultValue);
+        input.GetAttribute("value").Should().Be(Format(defaultValue));
     }
 
 
     [Theory]
-    [InlineData("Enter", true)]
-    [InlineData("Tab", true)]
-    [InlineData("Enter", false)]
-    [InlineData("Tab", false)]
-    public void Key_does_not_apply_input_to_value_when_disabledDate_is_set(string key, bool showTime)
+    [MemberData(nameof(DatePickerKeyboardTestData.DateTimeOffsetData), MemberType = typeof(DatePickerKeyboardTestData))]
+    public void Preserves_Offset_After_Input(DateTimeOffset value, DateTimeOffset newValue, string inputFormat)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-        DateTime value = DateTime.MinValue;
-		DateTime defaultValue = new DateTime(2023, 02, 24);
-        DateTime maxValue = defaultValue.AddDays(-1);
-        var format = showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd";
-        string Format(DateTime input) {
-            return input.ToString(showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd");
-        }
 
-        string inputValue = Format(maxValue.AddDays(-5));
+        //Act
+        var cut = Render<AntDesign.DatePicker<DateTimeOffset>>(
+			@<DatePicker TValue="DateTimeOffset" DefaultValue="@value" />);
 
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DisabledDate="date=>date<=maxValue" DefaultValue="@defaultValue" ShowTime="showTime" Format="@format" />
-		);
-		//Act
-		var input = cut.Find("input");
-		input.Input(inputValue);
-		input.KeyDown(key);
-		//Assert
-        cut.Instance.Value.Should().Be(defaultValue);
-        value.Should().Be(defaultValue);
-        input.GetAttribute("value").Should().Be(Format(defaultValue));
-	}
+        var input = cut.Find("input");
+        input.Input(newValue.ToString(inputFormat));
+        input.KeyDown("ENTER");
+
+        //Assert
+        cut.Instance.Value.Should().Be(newValue);
+        newValue.Offset.Should().Be(value.Offset);
+    }
 }

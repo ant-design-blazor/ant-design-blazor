@@ -2,7 +2,7 @@
 
 namespace AntDesign.core.Extensions
 {
-    public static class DataConvertionExtensions
+    public static class DataConversionExtensions
     {
         /// <summary>
         /// Converts the generic type TFrom to the specified TTo type
