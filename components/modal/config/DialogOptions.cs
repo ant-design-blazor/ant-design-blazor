@@ -133,25 +133,15 @@ namespace AntDesign
             }
         }
 
-        internal string GetWrapClassNameExtended(Modal modal = null)
+        internal string GetWrapClassNameExtended(ModalStatus status)
         {
             var classNameArray = new List<string>();
-            if (modal == null)
-            {
-                classNameArray.AddIf(
-                        !string.IsNullOrWhiteSpace(WrapClassName),
-                        WrapClassName)
-                    .AddIf(Centered, $"{PrefixCls}-centered")
-                    .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
-
-                return string.Join(' ', classNameArray);
-            }
 
             classNameArray.AddIf(
-                    !string.IsNullOrWhiteSpace(modal.WrapClassName),
-                    modal.WrapClassName)
-                .AddIf(modal.Centered, $"{PrefixCls}-centered")
-                .AddIf(modal.Rtl, $"{PrefixCls}-wrap-rtl");
+                    !string.IsNullOrWhiteSpace(WrapClassName),
+                    WrapClassName)
+                .AddIf(Centered && status != ModalStatus.Max, $"{PrefixCls}-centered")
+                .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
 
             return string.Join(' ', classNameArray);
         }

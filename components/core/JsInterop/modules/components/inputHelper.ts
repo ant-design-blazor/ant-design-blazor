@@ -60,6 +60,8 @@ export class inputHelper {
 
   static resizeTextArea(element: HTMLTextAreaElement, minRows: number, maxRows: number) {
     let dims = this.getTextAreaInfo(element);
+    if (!dims) return;
+
     let rowHeight = dims["lineHeight"];
     let offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
     let oldHeight = parseFloat(element.style.height);
