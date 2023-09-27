@@ -926,7 +926,8 @@ namespace AntDesign
                     _ => InternalFormat,
                 };
             else
-                format = InternalFormat;
+                format = Format;
+
             return value.ToString(format, CultureInfo);
         }
 

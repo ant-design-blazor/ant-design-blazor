@@ -47,7 +47,7 @@ namespace AntDesign.Tests.DatePicker
                 DefaultPickerValue => defaultPickerValue[index],
                 Minimum => DateTime.MinValue,
                 Now => _now,
-                _ => throw new ThrowsException(typeof(ExpectedSource))
+                _ => throw new ArgumentException(typeof(ExpectedSource).ToString())
             };
         }
 
@@ -167,7 +167,7 @@ namespace AntDesign.Tests.DatePicker
                 DefaultPickerValue => defaultPickerValue[index],
                 Minimum => DateTime.MinValue,
                 Now => _now,
-                _ => throw new ThrowsException(typeof(ExpectedSource))
+                _ => throw new ArgumentException(typeof(ExpectedSource).ToString())
             };
         }
 
