@@ -39,9 +39,9 @@
       "yearSelect": "Выбрать год",
       "decadeSelect": "Выбрать десятилетие",
       "yearFormat": "yyyy",
-      "dateFormat": "d-M-yyyy",
-      "dayFormat": "d",
-      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
+      "dateFormat": "dd.MM.yyyy",
+      "dayFormat": "dd",
+      "dateTimeFormat": "dd.MM.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Предыдущий месяц (PageUp)",
       "nextMonth": "Следующий месяц (PageDown)",
@@ -64,7 +64,7 @@
       "quarterSelect": "Выберите четверть",
       "week": "Неделя",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
+      "shortWeekDays": [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ]
     },
     "timePickerLocale": {
       "placeholder": "Выберите время",
@@ -101,9 +101,9 @@
       "yearSelect": "Выбрать год",
       "decadeSelect": "Выбрать десятилетие",
       "yearFormat": "yyyy",
-      "dateFormat": "d-M-yyyy",
-      "dayFormat": "d",
-      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
+      "dateFormat": "dd.MM.yyyy",
+      "dayFormat": "dd",
+      "dateTimeFormat": "dd.MM.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Предыдущий месяц (PageUp)",
       "nextMonth": "Следующий месяц (PageDown)",
@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Назад" },
   "Form": {
+    "optional": "(необязательный)",
     "defaultValidateMessages": {
       "default": "Ошибка при проверке поля ${label}",
       "required": "Пожалуйста введите ${label}",

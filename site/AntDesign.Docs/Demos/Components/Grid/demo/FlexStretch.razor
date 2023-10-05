@@ -1,24 +1,24 @@
 ﻿<div>
     <Divider Orientation="left">Percentage columns</Divider>
-    <Row>
-        <Col Flex="2">2 / 5</Col>
-        <Col Flex="3">3 / 5</Col>
-    </Row>
+    <GridRow>
+        <GridCol Flex="2">2 / 5</GridCol>
+        <GridCol Flex="3">3 / 5</GridCol>
+    </GridRow>
     <Divider Orientation="left">Fill rest</Divider>
-    <Row>
-        <Col Flex=@("100px")>100px</Col>
-        <Col Flex=@("auto")>Fill Rest</Col>
-    </Row>
+    <GridRow>
+        <GridCol Flex=@("100px")>100px</GridCol>
+        <GridCol Flex=@("auto")>Fill Rest</GridCol>
+    </GridRow>
     <Divider Orientation="left">Raw flex style</Divider>
-    <Row>
-        <Col Flex=@("1 1 200px")>1 1 200px</Col>
-        <Col Flex=@("0 1 300px")>0 1 300px</Col>
-    </Row>
+    <GridRow>
+        <GridCol Flex=@("1 1 200px")>1 1 200px</GridCol>
+        <GridCol Flex=@("0 1 300px")>0 1 300px</GridCol>
+    </GridRow>
 
-    <Row Wrap="false">
-        <Col Flex=@("none")>
+    <GridRow Wrap="false">
+        <GridCol Flex=@("none")>
         <div style="padding: 0 16px">none</div>
-        </Col>
-        <Col Flex=@("auto")>auto with no-wrap</Col>
-    </Row>
+        </GridCol>
+        <GridCol Flex=@("auto")>auto with no-wrap</GridCol>
+    </GridRow>
 </div>

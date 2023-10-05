@@ -122,5 +122,8 @@
   },
   "Empty": {
     "description": "Ingen data"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

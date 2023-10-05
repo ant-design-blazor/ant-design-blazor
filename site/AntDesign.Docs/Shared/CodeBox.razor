@@ -1,16 +1,27 @@
 ﻿@using AntDesign.JsInterop
 @using AntDesign.Docs.Services
+@using System.Reflection;
 @inherits ComponentBase
 
 <div class="code-box" id="@DemoId">
     <section class="code-box-demo">
-        @if (Demo.Iframe > 0)
+        @if (_rendered)
         {
-            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={DemoId}&type={Demo.Type}")" />
+            if (Demo.Iframe > 0)
+            {
+                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={DemoId}&type={Demo.Type}")" />
+            }
+            else
+            {
+                @if (_demoType != null)
+                {
+                    <DynamicComponent Type="_demoType" />
+                }
+            }
         }
         else
         {
-            @Component
+             <Skeleton ParagraphRows="3" Active></Skeleton>
         }
     </section>
     <section class="code-box-meta markdown">
@@ -69,26 +80,27 @@
     [Parameter]
     public bool CodeExpand { get; set; }
 
-    RenderFragment Component;
+    private Type _demoType;
 
     RenderFragment DebugIcon;
 
     private bool _copied;
+    private bool _rendered;
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
-    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/{ComponentName}/demo/{Demo.Name}.razor";
+    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        Component = demoService.GetShowCase(Demo.Type);
-
 #if DEBUG
-        DebugIcon =@<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
+        DebugIcon =
+    @<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
             <Icon Type="bug" />
-        </a>;
+    </a>
+    ;
 #endif
     }
 
@@ -101,5 +113,22 @@
     async Task AnchorClick()
     {
         await InteropService.JsInvokeAsync("window.eval", $"window.location.hash='{DemoId}'");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _rendered = true;
+            await Task.Yield();
+            StateHasChanged();
+            return;
+        }
+
+        if (_rendered && _demoType == null)
+        {
+            _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
+            StateHasChanged();
+        }
     }
 }

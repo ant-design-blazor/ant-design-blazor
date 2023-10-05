@@ -1,4 +1,5 @@
-﻿@inherits AntDesignTestBase
+﻿@using AntDesign.Core.JsInterop.Modules.Components;
+@inherits AntDesignTestBase
 @code {
     record Person(int Id, string Name);
     class PersonClass 
@@ -42,10 +43,10 @@
         Person value = _persons[1];
         var cut = Render<AntDesign.Select<Person, Person>>(
         @<AntDesign.Select Mode="default"
-			TItemValue="Person"
-			TItem="Person"
+            TItemValue="Person"
+            TItem="Person"
             @bind-Value="@value">
-			<SelectOptions>						
+            <SelectOptions>						
                 @foreach (var item in _persons)
                 {
                     <SelectOption @key="item"
@@ -54,8 +55,8 @@
                                   Value=@item
                                   Label=@item.Name />
                 }
-			</SelectOptions>
-		</AntDesign.Select>
+            </SelectOptions>
+        </AntDesign.Select>
     );
         //Act
         value = new Person(5, "NewPerson");
@@ -77,10 +78,10 @@
         IEnumerable<Person> values = new List<Person>() { _persons[1] };
         var cut = Render<AntDesign.Select<Person, Person>>(
         @<AntDesign.Select Mode="multiple"
-			TItemValue="Person"
-			TItem="Person"
+            TItemValue="Person"
+            TItem="Person"
             @bind-Values="@values">
-			<SelectOptions>						
+            <SelectOptions>						
                 @foreach (var item in _persons)
                 {
                     <SelectOption @key="item"
@@ -89,9 +90,9 @@
                                   Value=@item
                                   Label=@item.Name />
                 }
-			</SelectOptions>
-		</AntDesign.Select>
-        );
+            </SelectOptions>
+            </AntDesign.Select>
+    );
         //Act
         var newPerson = new Person(5, "NewPerson");
         _persons.Add(newPerson);   
@@ -105,6 +106,113 @@
         cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(_persons.Count);
         selectedItems.Should().HaveCount(values.Count());
         selectedItems.Select(x => x.TextContent).Should().ContainInOrder(new string[] { "Lucy", "NewPerson"});
+    }
+
+    [Theory]
+    [InlineData("default")]
+    [InlineData("multiple")]
+    public void Will_not_show_selected_items_on_search_when_hide_selected_is_true(string mode)
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+            .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition
+                {
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10,
+                    Top = 10,
+                    Placement = Placement.TopLeft,
+                    ZIndex = 100
+                });
+
+        IEnumerable<Person> values = new List<Person>();
+        var itemsChanged = false;
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode=@mode
+                EnableSearch=true
+                HideSelected=true
+                SearchDebounceMilliseconds=0
+                OnSelectedItemChanged="() => { itemsChanged = true; }"
+                OnSelectedItemsChanged="() => { itemsChanged = true; }"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Values="@values">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                              TItemValue="Person"
+                              TItem="Person"
+                              Value=@item
+                              Label=@item.Name />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+    );
+
+        cut.Find("input[type=search]").Input("John");
+        cut.Find(".ant-select-item-option").Click();
+        cut.WaitForState(() => itemsChanged);
+        cut.Find("input[type=search]").Input("John");
+        cut.WaitForState(() => itemsChanged);
+
+        // All items should be hidden because there is only 1 John and it is selected, but HideSelected is true
+        cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(0);
+    }
+
+    [Fact]
+    public void Multiple_will_not_show_selected_items_when_clearing_search_when_hide_selected_is_true()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+        .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+        .SetResult(new OverlayPosition
+                {
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10,
+                    Top = 10,
+                    Placement = Placement.TopLeft,
+                    ZIndex = 100
+                });
+
+        IEnumerable<Person> values = new List<Person>();
+        var itemsChanged = false;
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="multiple"
+                               EnableSearch=true
+                               HideSelected=true
+                               SearchDebounceMilliseconds=0
+                               OnSelectedItemsChanged="() => { itemsChanged = true; }"
+                               TItemValue="Person"
+                               TItem="Person"
+                                   @bind-Values="@values">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                              TItemValue="Person"
+                              TItem="Person"
+                              Value=@item
+                              Label=@item.Name />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+            );
+
+        cut.Find("input[type=search]").Input("John");
+        cut.Find(".ant-select-item-option").Click();
+        cut.WaitForState(() => itemsChanged);
+        cut.Find("input[type=search]").Input(string.Empty);
+        cut.WaitForState(() => itemsChanged);
+
+        // All items except John should be visible because John is selected and HideSelected is true
+        cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(3);
     }
 }
 }

@@ -331,13 +331,13 @@ namespace AntDesign
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnAfterChange { get; set; } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
+        public EventCallback<TValue> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnChange { get; set; }
+        public EventCallback<TValue> OnChange { get; set; }
 
         [Parameter]
         public bool HasTooltip { get; set; } = true;
@@ -420,27 +420,13 @@ namespace AntDesign
                     TValue defaultValue;
                     if (Range)
                     {
-                        //if (typeof(T) == typeof((int, int)))
-                        //{
-                        //    defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(int, int), T>((0, 0)));
-                        //}
-                        //else
-                        //{
                         defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(double, double), TValue>((0, 0)));
-                        //}
                         LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
                         RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
                     }
                     else
                     {
-                        //if (typeof(T) == typeof(int))
-                        //{
-                        //    defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<int, T>(0));
-                        //}
-                        //else
-                        //{
                         defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<double, TValue>(0));
-                        //}
                         RightValue = DataConvertionExtensions.Convert<TValue, double>(defaultValue);
                     }
                 }
@@ -477,6 +463,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(PreFixCls)
                 .If($"{PreFixCls}-disabled", () => Disabled)
+                .If($"{PreFixCls}-horizontal", () => !Vertical)
                 .If($"{PreFixCls}-vertical", () => Vertical)
                 .If($"{PreFixCls}-with-marks", () => Marks != null)
                 .If($"{PreFixCls}-rtl", () => RTL);
@@ -527,23 +514,15 @@ namespace AntDesign
                 throw new ArgumentOutOfRangeException(nameof(Step), "Must greater than 0.");
             }
 
-            if (Step != null && (Max - Min) / Step % 1 != 0)
+            var minMaxStepComparison = (Max - Min) / Step % 1;
+            if (Step != null && (minMaxStepComparison < 0 || minMaxStepComparison >= 0.1))
             {
                 throw new ArgumentOutOfRangeException(nameof(Step), $"Must be divided by ({Max} - {Min}).");
             }
         }
 
-        private async void OnMouseDown(MouseEventArgs args)
+        private void OnMouseDown(MouseEventArgs args)
         {
-            //// _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
-            //_sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _slider);
-            //decimal x = (decimal)args.ClientX;
-            //decimal y = (decimal)args.ClientY;
-
-            //_mouseDown = !Disabled
-            //    && _sliderDom.clientLeft <= x && x <= _sliderDom.clientLeft + _sliderDom.clientWidth
-            //    && _sliderDom.clientTop <= y && y <= _sliderDom.clientTop + _sliderDom.clientHeight;
-
             _mouseDown = !Disabled;
         }
 
@@ -587,7 +566,8 @@ namespace AntDesign
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
 
-                OnChange?.Invoke(CurrentValue);
+                if (OnChange.HasDelegate)
+                    await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
             }
         }
 
@@ -600,8 +580,9 @@ namespace AntDesign
                 if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-                    OnAfterChange?.Invoke(CurrentValue);
                 }
+                if (OnAfterChange.HasDelegate)
+                    await InvokeAsync(() => OnAfterChange.InvokeAsync(CurrentValue));
             }
             if (_toolTipRight != null)
             {
@@ -743,13 +724,8 @@ namespace AntDesign
             return Formatter.ToPercentWithoutBlank((key - Min) / MinMaxDelta);
         }
 
-        private string IsActiveMark(double key)
-        {
-            bool active = (Range && key >= LeftValue && key <= RightValue)
-                || (!Range && key <= RightValue);
-
-            return active ? "ant-slider-dot-active" : string.Empty;
-        }
+        private bool IsActiveMark(double key) => (Range && key >= LeftValue && key <= RightValue)
+            || (!Range && key <= RightValue);
 
         private double GetNearestStep(double value)
         {

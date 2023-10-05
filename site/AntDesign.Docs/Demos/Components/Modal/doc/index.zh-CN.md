@@ -52,6 +52,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Maximizable | 是否显示最大化按钮 | bool | false |
 | MaximizeBtnIcon | Modal在正常状态下的最大化按钮icon | RenderFragment | fullscreen       |
 | RestoreBtnIcon  | Modal在最大化状态下的还原按钮icon | RenderFragment | fullscreen-exit  |
+| DefaultMaximized | Modal 在初始化时即为最大化状态 | bool | false |
+| Resizable | 是否可以对 Modal 进行大小调整 | bool | false |
 
 
 #### 注意
@@ -88,7 +90,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 ### ConfirmService
 
-`ConfirmService.Show` 用于弹出类似于在WinForm中使用 MessageBox 方式弹出的对话框。这和 ModalService 不同的是，ModalService 只可以创建 具有 OK-Cancel 按钮的对话框并返回 ConfirmRef 对象或者是否OK按钮被点击，而 ConfirmService 总是返回 ConfirmResult ，以指示哪个按钮被点击。
+`IConfirmService.Show` 用于弹出类似于在WinForm中使用 MessageBox 方式弹出的对话框。这和 ModalService 不同的是，ModalService 只可以创建 具有 OK-Cancel 按钮的对话框并返回 ConfirmRef 对象或者是否OK按钮被点击，而 ConfirmService 总是返回 ConfirmResult ，以指示哪个按钮被点击。
 
 
 #### ConfirmOptions

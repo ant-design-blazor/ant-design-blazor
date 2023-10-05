@@ -142,7 +142,7 @@
                         @ItemRender(new(
                             GetJumpPrevPage(),
                             PaginationItemType.JumpPrev,
-                            GetItemIcon(JumpPrevIcon, "prev page")
+                            GetItemIcon(RTL ? JumpNextIcon: JumpPrevIcon, "prev page")
                             ))
                     </li>;
 
@@ -157,7 +157,7 @@
                         @ItemRender(new(
                             GetJumpNextPage(),
                             PaginationItemType.JumpNext,
-                            GetItemIcon(JumpNextIcon, "next page")
+                            GetItemIcon(RTL ? JumpPrevIcon: JumpNextIcon, "next page")
                             ))
                     </li>;
             }

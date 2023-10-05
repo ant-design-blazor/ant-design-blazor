@@ -158,13 +158,13 @@ namespace AntDesign
             int? minute = null,
             int? second = null)
         {
-            return date
-                .AddYears(year != null ? (int)year - date.Year : 0)
-                .AddMonths(month != null ? (int)month - date.Month : 0)
-                .AddDays(day != null ? (int)day - date.Day : 0)
-                .AddHours(hour != null ? (int)hour - date.Hour : 0)
-                .AddMinutes(minute != null ? (int)minute - date.Minute : 0)
-                .AddSeconds(second != null ? (int)second - date.Second : 0);
+            var yearValue = year ?? date.Year;
+            var monthValue = month ?? date.Month;
+            var dayValue = day ?? date.Day;
+            var daysInMonth = DateTime.DaysInMonth(yearValue, monthValue);
+            dayValue = dayValue > daysInMonth ? daysInMonth : dayValue;
+
+            return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second);
         }
 
         public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)
@@ -267,6 +267,16 @@ namespace AntDesign
             }
 
             return currentDate.AddDays(value);
+        }
+
+        public static bool IsSameDecade(DateTime? date, DateTime? compareDate)
+        {
+            if (date is null || compareDate is null)
+                return false;
+
+            var num1 = Math.Floor(date.Value.Year / 10d);
+            var num2 = Math.Floor(compareDate.Value.Year / 10d);
+            return num1 == num2;
         }
     }
 }

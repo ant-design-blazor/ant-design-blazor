@@ -34,6 +34,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | allowClear（TODO） | 是否显示清除按钮 | boolean | true |  |
+| ChangeOnClose        | 关闭时绑定输入值，为 false 时需要按回车键  | boolean | false                                                                                                       |  |
 | autoFocus | 自动获取焦点 | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | 选择器 className | string | '' |  |
@@ -47,15 +48,17 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | open | 控制弹层是否展开 | boolean | - |  |
 | picker | 设置选择器类型 | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
 | placeholder | 输入框提示文字 | string\|RangePicker\[] | - |  |
+| placement | 选择框弹出的位置 | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |
 | popupStyle | 额外的弹出日历样式 | CSSProperties | {} |  |
 | size | 输入框大小，`large` 高度为 40px，`small` 为 24px，默认是 32px | `large` \| `middle` \| `small` | 无 |  |
 | bordered | 是否有边框 | Boolean | true |  |
-| suffixIcon | 自定义的选择框后缀图标 | ReactNode | - |  |
+| SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
 | style | 自定义输入框样式 | CSSProperties | {} |  |
 | onOpenChange | 弹出日历和关闭日历的回调 | function(open) | 无 |  |
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |
 | OnClearClick | 清除按钮点击时的回调 | Action | - |  |
 | inputReadOnly | 设置输入框为只读（避免在移动设备上打开虚拟键盘） | boolean | false |  |
+| Mask | 指定输入格式，可使输入自动识别为时间值     | string  | - | |
 
 ### 共同的方法
 
@@ -78,7 +81,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | showToday | 是否展示“今天”按钮 | boolean | true |  |
 | value | 日期 | [moment](http://momentjs.com/) | 无 |  |
 | onChange | 时间发生变化的回调 | function(date: moment, dateString: string) | 无 |  |
-| onOk（TODO） | 点击确定按钮的回调 | function() | - |  |
+| onOk | 点击确定按钮的回调 | function() | - |  |
 | onPanelChange | 日期面板变化时的回调 | function(value, mode) | - |  |
 
 ### YearPicker

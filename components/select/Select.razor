@@ -26,7 +26,7 @@
                         {
                             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
                                 <div>
-                                    <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                    <div class="" role="listbox" style="@ListboxStyle">
                                         @if (CustomTagSelectOptionItem != null) 
                                         {
                                             <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
@@ -59,11 +59,11 @@
                                 </div>
                             </div>
                         }
-                        else if (SelectOptions == null)
+                        else if (SelectOptions == null && !AllOptionsHidden())
                         {
                             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;"  @ref="_scrollableSelectDiv">
                                 <div>
-                                    <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                    <div class="" role="listbox" style="@ListboxStyle">
                                         @{
                                             @if (!IsGroupingEnabled)
                                             {

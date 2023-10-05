@@ -126,7 +126,7 @@ namespace AntDesign
         /// <summary>
         /// The modal dialog's title of RenderFragment
         /// </summary>
-        public RenderFragment TitleTemplate { get; set; }
+        public RenderFragment TitleTemplate { get; set; } = null;
 
         /// <summary>
         /// Width of the modal dialog

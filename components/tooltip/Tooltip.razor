@@ -5,7 +5,7 @@
 
 @if (ChildContent != null)
 {
-<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
+    <div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
      @onclick="OnClickDiv"
      @onmouseenter="OnTriggerMouseEnter"
      @onmouseleave="OnTriggerMouseLeave"
@@ -14,8 +14,8 @@
      @onfocusout="OnTriggerFocusOut"
      @oncontextmenu:preventDefault
      tabindex="@TabIndex">
-    @ChildContent
-</div>
+        @ChildContent
+    </div>
 }
 @if (Unbound != null)
 {
@@ -30,24 +30,20 @@
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave"
                  OnOverlayMouseUp="OnOverlayMouseUp">
-            @if (Title.Value != null)
+            @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
             {
                 <div class="ant-tooltip-content">
                     <div class="ant-tooltip-arrow">
                         <span class="ant-tooltip-arrow-content"></span>
                     </div>
                     <div class="ant-tooltip-inner" role="tooltip">
-                        @if (Title.IsT0 && !string.IsNullOrWhiteSpace(Title.AsT0))
+                        @if (TitleTemplate != null)
                         {
-                            @Title.AsT0
+                            @TitleTemplate
                         }
-                        else if (Title.IsT1)
+                        else
                         {
-                            @Title.AsT1
-                        }
-                        else if (Title.IsT2)
-                        {
-                            @Title.AsT2
+                            @Title
                         }
                     </div>
                 </div>

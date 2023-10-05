@@ -4,7 +4,6 @@ using AntDesign;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,11 +26,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<NotificationService>();
+            services.TryAddScoped<INotificationService>(provider => provider.GetRequiredService<NotificationService>());
             services.TryAddScoped<MessageService>();
             services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+            services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
             services.TryAddSingleton<ReuseTabsService>();

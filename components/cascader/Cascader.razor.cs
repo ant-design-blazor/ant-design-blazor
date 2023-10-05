@@ -16,7 +16,7 @@ namespace AntDesign
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>
-        [Parameter] public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
+        [Parameter] public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         [Parameter] public bool ChangeOnSelect { get; set; }
 
@@ -31,6 +31,8 @@ namespace AntDesign
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
         [Parameter] public bool ShowSearch { get; set; }
+
+        [Parameter] public bool Disabled { get; set; }
 
         /// <summary>
         /// Please use SelectedNodesChanged instead.
@@ -96,9 +98,10 @@ namespace AntDesign
         {
             base.OnInitialized();
             string prefixCls = "ant-cascader";
+            string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-allow-clear ant-select-show-arrow")
+                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
                 .If("ant-select-open", () => _dropdownOpened)
@@ -107,7 +110,11 @@ namespace AntDesign
                 .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
                 .If($"ant-select-lg", () => Size == "large")
                 .If($"ant-select-sm", () => Size == "small")
-                .If("ant-select-status-error", () => ValidationMessages.Length > 0)
+                .If($"ant-select-disabled", () => Disabled)
+                .If("ant-select-allow-clear ", () => AllowClear)
+                .If($"{selectCls}-in-form-item ", () => FormItem != null)
+                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper
@@ -135,6 +142,9 @@ namespace AntDesign
         /// </summary>
         private async Task InputOnToggle()
         {
+            if (Disabled)
+                return;
+
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
             if (!_dropdownOpened)

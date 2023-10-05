@@ -12,7 +12,7 @@ namespace AntDesign
 
         public string FilterReset { get; set; } = "Reset";
 
-        public string FilterEmptyText { get; set; }
+        public string FilterEmptyText { get; set; } = "";
 
         public string SelectAll { get; set; } = "Select current page";
 

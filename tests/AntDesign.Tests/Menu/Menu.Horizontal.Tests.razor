@@ -4,34 +4,38 @@
     public Menu_Horizontal_Tests()
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());
+        .SetResult(new AntDesign.JsInterop.DomRect());
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
+        .SetResult(new HtmlElement { ClientWidth = 123 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
     }
-    
+
     private RenderFragment GetBasicHorizontalRender()
     {
-        return @<Menu Mode=MenuMode.Horizontal>
-                <MenuItem>Navigation One</MenuItem>
-                <SubMenu Title="Navigation Two">
-                    <MenuItemGroup Title="Item 1">
-                        <MenuItem Key="nest:2:1">Option 1</MenuItem>
-                        <MenuItem>Option 2</MenuItem>
-                    </MenuItemGroup>
-                    <MenuDivider />
-                    <MenuItemGroup Title="Item 2">
-                        <MenuItem>Option 3</MenuItem>
-                        <SubMenu Title="Option 4">
-                            <MenuItem Key="nest:2:2:4">Option 1</MenuItem>
-                            <SubMenu Title="Option 5">
-                                <MenuItem Key="nest:2:2:4:5:1">Option 1</MenuItem>
-                                <MenuItem Key="nest:2:2:4:5:2">Option 2</MenuItem>
-                            </SubMenu>
-                        </SubMenu>
-                    </MenuItemGroup>
+        return 
+    @<Menu Mode=MenuMode.Horizontal>
+        <MenuItem>Navigation One</MenuItem>
+        <SubMenu Title="Navigation Two">
+            <MenuItemGroup Title="Item 1">
+                <MenuItem Key="nest:2:1">Option 1</MenuItem>
+                <MenuItem>Option 2</MenuItem>
+            </MenuItemGroup>
+            <MenuDivider />
+            <MenuItemGroup Title="Item 2">
+                <MenuItem>Option 3</MenuItem>
+                <SubMenu Title="Option 4">
+                    <MenuItem Key="nest:2:2:4">Option 1</MenuItem>
+                    <SubMenu Title="Option 5">
+                        <MenuItem Key="nest:2:2:4:5:1">Option 1</MenuItem>
+                        <MenuItem Key="nest:2:2:4:5:2">Option 2</MenuItem>
+                    </SubMenu>
                 </SubMenu>
-                <MenuItem>Navigation Three</MenuItem>
-            </Menu>;
+            </MenuItemGroup>
+        </SubMenu>
+        <MenuItem>Navigation Three</MenuItem>
+        </Menu>;
     }
 
 
@@ -44,25 +48,40 @@
         //Act
         //Assert
         cut.MarkupMatches(@"
-            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-horizontal"" id:ignore direction=""ltr"" role=""menu"">        
+            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-horizontal"" id:ignore direction=""ltr"" role=""menu"">
 		        <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			        <span class=""ant-menu-title-content"">
-                        Navigation One	
+                        Navigation One
 			        </span>
-		        </li>       
-                <li class=""ant-menu-submenu ant-menu-submenu-horizontal"" role=""menuitem"" style=""position:relative;"">    
+		        </li>
+                <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                     <div class=""ant-menu-submenu-title"" role=""button"">
-                        <span>
+                        <span class=""ant-menu-title-content"">
                             Navigation Two
                         </span>
                     </div>
                 </li>
         		<li class=""ant-menu-item"" role=""menuitem"" style="""">
         			<span class=""ant-menu-title-content"">
-                        Navigation Three	
+                        Navigation Three
 			        </span>
 		        </li>
-            </ul>");             
+            </ul>");
+    }
+
+    [Fact]
+    public async Task Basic_horizontal_submenu_should_be_hidden_when_mouseleave()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
+        //Act
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseleave", EventArgs.Empty);
+        await cut.InvokeAsync(() => topExpandable.Instance.Show());
+        // Assert
+        var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
+        topOverlay.Find(".ant-menu-submenu").ClassList.Contains("ant-menu-submenu-hidden");
     }
 
     [Fact]
@@ -72,26 +91,27 @@
 
         var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
         //Act
-        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();        
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        cut.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
         await cut.InvokeAsync(() => topExpandable.Instance.Show());
         var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert
         topOverlay.MarkupMatches(@"
-            <div class=""ant-menu-submenu ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-menu-submenu-light"" style:ignore>                    
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">                        
+            <div class=""ant-menu-submenu ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"" style:ignore>
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item-group"">
                         <div class=""ant-menu-item-group-title"">
-                            Item 1    
+                            Item 1
                         </div>
-                        <ul class=""ant-menu-item-group-list"">        
+                        <ul class=""ant-menu-item-group-list"">
 		                    <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			                    <span class=""ant-menu-title-content"">
-                                    Option 1	
+                                    Option 1
 			                    </span>
-		                    </li>            
+		                    </li>
 		                    <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			                    <span class=""ant-menu-title-content"">
-                                    Option 2	
+                                    Option 2
 			                    </span>
 		                    </li>
                         </ul>
@@ -101,25 +121,25 @@
                         <div class=""ant-menu-item-group-title"">
                             Item 2
                         </div>
-                        <ul class=""ant-menu-item-group-list"">        
+                        <ul class=""ant-menu-item-group-list"">
 		                    <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			                    <span class=""ant-menu-title-content"">
-                                    Option 3	
+                                    Option 3
 			                    </span>
 		                    </li>
-                            <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">    
+                            <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                                 <div class=""ant-menu-submenu-title"" role=""button"">
-                                    <span>
+                                    <span class=""ant-menu-title-content"">
                                         Option 4
                                     </span>
                                     <i class=""ant-menu-submenu-arrow""></i>
-                                </div>                
+                                </div>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
-        ");             
+        ");
     }
 
     [Fact]
@@ -129,30 +149,32 @@
 
         var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
         //Act
-        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();        
-        await cut.InvokeAsync(() => topExpandable.Instance.Show());        
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await topExpandable.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => topExpandable.Instance.Show());
         var midExpandable = topExpandable.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await midExpandable.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
         await topExpandable.InvokeAsync(() => midExpandable.Instance.Show());
         var midOverlay = midExpandable.FindComponent<AntDesign.Internal.Overlay>();
-        //Assert        
+        //Assert
         midOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-menu-submenu-light"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">
+            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
-                            Option 1	
+                            Option 1
                 		</span>
 		            </li>
                     <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
                         <div class=""ant-menu-submenu-title"" role=""button"">
-                            <span>
+                            <span class=""ant-menu-title-content"">
                                 Option 5
                             </span>
                             <i class=""ant-menu-submenu-arrow""></i>
-                        </div>                
+                        </div>
                     </li>
                 </ul>
-            </div>");           
+            </div>");
     }
 
     [Fact]
@@ -162,20 +184,23 @@
 
         var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
         //Act
-        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();        
-        await cut.InvokeAsync(() => topExpandable.Instance.Show());        
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        cut.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => topExpandable.Instance.Show());
         var midExpandable = topExpandable.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        midExpandable.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
         await topExpandable.InvokeAsync(() => midExpandable.Instance.Show());
         var bottomExpandable = midExpandable.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        bottomExpandable.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
         await midExpandable.InvokeAsync(() => bottomExpandable.Instance.Show());
-        var bottomOverlay = bottomExpandable.FindComponent<AntDesign.Internal.Overlay>();              
-        //Assert        
+        var bottomOverlay = bottomExpandable.FindComponent<AntDesign.Internal.Overlay>();
+        //Assert
         bottomOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-menu-submenu-light"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style="""" role=""menu"">
+            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
-                            Option 1	
+                            Option 1
                 		</span>
 		            </li>
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">

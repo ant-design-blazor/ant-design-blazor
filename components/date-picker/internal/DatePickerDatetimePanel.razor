@@ -1,3 +1,5 @@
+@using AntDesign.Core.Extensions
+
 @namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
@@ -39,7 +41,7 @@
                             ShowFooter="@ShowToday"
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                            IsSelected="date => DateHelper.IsSameDay(date, Value)"
+                            IsSelected="date => DateHelper.IsSameDay(date, Value) || IsRange && DateHelper.IsSameDay(date, GetIndexValue(Math.Abs(PickerIndex-1)))"
                             GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
@@ -49,14 +51,13 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @for (var i = (int)Locale.FirstDayOfWeek; i < Locale.Lang.ShortWeekDays.Length; i++)
+                    @foreach(var dayName in Locale.Lang.ShortWeekDays.Scroll((int)Locale.FirstDayOfWeek))
                     {
-                        <th>@(Locale.Lang.ShortWeekDays[i])</th>
+                        <th>
+                            @dayName
+                        </th>
                     }
-                    @for (var i = 0; i < (int)Locale.FirstDayOfWeek; i++)
-                    {
-                        <th>@(Locale.Lang.ShortWeekDays[i])</th>
-                    }
+
                 </tr>
             </RenderTableHeader>
             <RenderColValue Context="currentColDate">
@@ -80,7 +81,7 @@
         bool isValueNull = Value is null;
         Func<int, int?, string> selected;
         string localValue;
-        if (Value is null)
+        if (isValueNull)
         {
             localValue = "";
             selected = (_, _) => "";
@@ -226,12 +227,12 @@
           }
         }
 
-        @if (IsShowTime)
+        @if (IsShowTime || Picker == DatePickerType.Time)
         {
-          @if (Ranges == null)
+          @if (ShowNow)
           {
             <li class="@(PrefixCls)-now">
-              <a class="@(PrefixCls)-now-btn" @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+              <a class="@(PrefixCls)-now-btn" @onclick="OnNowClick">
                 @Locale.Lang.Now
               </a>
             </li>
@@ -245,7 +246,7 @@
       </ul>
     }
 
-    @if (!IsShowTime && ShowToday)
+    @if (!IsShowTime && ShowToday && Picker != DatePickerType.Time)
     {
       <a class="@(PrefixCls)-today-btn" @onclick="e => { OnSelectTime(DateTime.Today); Close(); }">
         @Locale.Lang.Today

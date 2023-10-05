@@ -5,7 +5,7 @@ import * as enums from '../enums';
 
 
 let cachedScrollBarSize: number | undefined = undefined;
-
+const scrollIds = new Map<HTMLElement, number>();
 
 export class manipulationHelper {
   static addElementToBody(element) {
@@ -147,27 +147,35 @@ export class manipulationHelper {
     }    
   }  
 
-  static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number = 100) {
+  static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number) {
     const element = domInfoHelper.get(selector);
-    var to = element.offsetTop;
-
+    let to = element.offsetTop;
+    if (scrollIds.get(parentElement)) {
+        cancelAnimationFrame(scrollIds.get(parentElement)!);
+    }
+    // jump to target if duration zero
     if (duration <= 0) {
-        window.requestAnimationFrame(() => {
-            parentElement.scrollTop = to;
-        });
+        scrollIds.set(
+            parentElement,
+            requestAnimationFrame(() => {
+                parentElement.scrollTop = to;
+            }),
+        );
+
         return;
     }
+    const difference = to - parentElement.scrollTop;
+    const perTick = (difference / duration) * 10;
 
-    const animateScroll = () => {
-        const tick = ((to - parentElement.scrollTop) / duration) * 10;
-        window.requestAnimationFrame(() => {
-            parentElement.scrollTop += tick;
-            if (parentElement.scrollTop === to) return;
-            duration -= 10;
-            animateScroll();
-        });
-    };
-    setTimeout(() => animateScroll(), 10);
+    scrollIds.set(
+        parentElement,
+        requestAnimationFrame(() => {
+            parentElement.scrollTop += perTick;
+            if (parentElement.scrollTop !== to) {
+                manipulationHelper.smoothScrollTo(selector, parentElement, duration - 10);
+            }
+        }),
+    );
   }
 
   static slideTo(targetPageY) {
@@ -218,8 +226,12 @@ export class manipulationHelper {
     styleHelper.addCls(document.body, "ant-scrolling-effect");
   }
 
-  static enableBodyScroll() {
+  static enableBodyScroll(force: boolean | undefined) {
+    if (force) {
+        state.oldBodyCacheStack = [];
+    }
     let oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
+    
 
     styleHelper.css(document.body,
       {

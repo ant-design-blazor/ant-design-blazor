@@ -1,0 +1,25 @@
+﻿<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <Button Danger OnClick="@OnClick">
+            Click me to throw a error
+        </Button>
+    </ChildContent>
+    <ErrorContent Context="ex">
+        <Result Status="error"
+                Title="@ex.Message"
+                SubTitle="@ex.StackTrace">
+            <Extra>
+                <Button Type="primary" OnClick="errorBoundary.Recover"> Recover </Button>
+            </Extra>
+        </Result>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    ErrorBoundary errorBoundary;
+
+    void OnClick()
+    {
+        throw new Exception("An Uncaught Error");
+    }
+}

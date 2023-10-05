@@ -8,16 +8,26 @@ using AntDesign.Core.HashCodes;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
+using System.Reflection;
+using AntDesign.Table.Internal;
+
+#if NET5_0_OR_GREATER
+
+using Microsoft.AspNetCore.Components.Web.Virtualization;
+
+#endif
 
 namespace AntDesign
 {
-#if NET6_0
+#if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
     public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
@@ -34,7 +44,7 @@ namespace AntDesign
             set
             {
                 _waitingDataSourceReload = true;
-                _dataSourceCount = value?.Count() ?? 0;
+                _dataSourceCount = value is IQueryable<TItem> ? 0 : value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
         }
@@ -43,7 +53,13 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> RowTemplate { get; set; }
+        public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> ColumnDefinitions { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> HeaderTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
@@ -93,7 +109,7 @@ namespace AntDesign
         public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
-        public TableSize Size { get; set; }
+        public TableSize Size { get; set; } = TableSize.Default;
 
         [Parameter]
         public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
@@ -151,16 +167,28 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; }
 
+        [Parameter]
+        public RenderFragment EmptyTemplate { get; set; }
+
+        /// <summary>
+        /// Enable resizable column
+        /// </summary>
+        [Parameter] public bool Resizable { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
         /// </summary>
         [Parameter]
         public bool EnableVirtualization { get; set; }
+
 #endif
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
+
+        [Inject]
+        private ILogger<Table<TItem>> Logger { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -169,8 +197,6 @@ namespace AntDesign
         private IEnumerable<TItem> _dataSource;
 
         private IList<SummaryRow> _summaryRows;
-
-        private IFieldColumn[] _fieldColumns;
 
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
@@ -190,7 +216,26 @@ namespace AntDesign
         private ElementReference _tableBodyRef;
         private ElementReference _tableRef;
 
+        private decimal _tableWidth;
+
+        private bool _isVirtualizeEmpty;
+        private bool _afterFirstRender;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
+
+        private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
+
+        private bool UseItemsProvider
+        {
+            get
+            {
+#if NET5_0_OR_GREATER
+                return EnableVirtualization && (ServerSide || IsEntityFrameworkCore);
+#else
+                return false;
+#endif
+            }
+        }
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -200,6 +245,9 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        bool ITable.HasHeaderTemplate => HeaderTemplate != null;
+        bool ITable.HasRowTemplate => RowTemplate != null;
+
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
@@ -229,8 +277,6 @@ namespace AntDesign
             {
                 return;
             }
-
-            _fieldColumns = ColumnContext.HeaderColumns.Where(x => x is IFieldColumn field && field.FieldName is not null).Cast<IFieldColumn>().ToArray();
 
             ReloadAndInvokeChange();
             _hasInitialized = true;
@@ -272,14 +318,14 @@ namespace AntDesign
 
                 foreach (var sorter in queryModel.SortModel)
                 {
-                    var fieldColumn = _fieldColumns[sorter.ColumnIndex];
-                    fieldColumn.SetSortModel(sorter);
+                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetSortModel(sorter);
                 }
 
                 foreach (var filter in queryModel.FilterModel)
                 {
-                    var fieldColumn = _fieldColumns[filter.ColumnIndex];
-                    fieldColumn.SetFilterModel(filter);
+                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    fieldColumn?.SetFilterModel(filter);
                 }
 
                 this.ReloadAndInvokeChange();
@@ -314,7 +360,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -341,8 +387,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        void ITable.ReloadAndInvokeChange()
+        void ITable.ColumnFilterChange()
         {
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -356,11 +403,20 @@ namespace AntDesign
                 }
             }
 
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
         private void ReloadAndInvokeChange()
         {
+#if NET5_0_OR_GREATER
+            if (UseItemsProvider)
+            {
+                StateHasChanged();
+                return;
+            }
+#endif
+
             var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
@@ -369,8 +425,22 @@ namespace AntDesign
             }
         }
 
+        private async Task ReloadAndInvokeChangeAsync()
+        {
+            var queryModel = this.InternalReload();
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(queryModel);
+            }
+        }
+
         private QueryModel<TItem> InternalReload()
         {
+            if (HidePagination && _dataSourceCount > 0)
+            {
+                _pageSize = _dataSourceCount;
+            }
+
             var queryModel = BuildQueryModel();
             _currentQueryModel = queryModel;
 
@@ -386,7 +456,7 @@ namespace AntDesign
                     var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
 
                     _total = query.Count();
-                    _showItems = queryModel.CurrentPagedRecords(query);
+                    _showItems = queryModel.CurrentPagedRecords(query).ToList();
                 }
                 else
                 {
@@ -437,6 +507,41 @@ namespace AntDesign
             return queryModel;
         }
 
+#if NET5_0_OR_GREATER
+        private async ValueTask<ItemsProviderResult<(TItem, int)>> ItemsProvider(ItemsProviderRequest request)
+        {
+            _startIndex = request.StartIndex;
+            if (_total > 0)
+            {
+                PageSize = Math.Min(request.Count, _total - _startIndex);
+            }
+            else
+            {
+                PageSize = request.Count;
+            }
+
+            IEnumerable<TItem> items = Array.Empty<TItem>();
+
+            if (_dataSource is IQueryable<TItem> query)
+            {
+                _total = query.Count();
+                items = query.Skip(_startIndex).Take(PageSize).ToArray();
+            }
+            else
+            {
+                await ReloadAndInvokeChangeAsync();
+                items = _dataSource;
+            }
+
+            if (_startIndex == 0 && _total == 0)
+            {
+                _isVirtualizeEmpty = true;
+            }
+
+            return new ItemsProviderResult<(TItem, int)>(items.Select((data, index) => (data, index)), _total);
+        }
+#endif
+
         private void SetClass()
         {
             string prefixCls = "ant-table";
@@ -452,6 +557,7 @@ namespace AntDesign
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-resizable", () => Resizable)
                 ;
 
             _wrapperClassMapper
@@ -464,9 +570,9 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (RowTemplate != null)
+            if (ColumnDefinitions != null)
             {
-                ChildContent = RowTemplate;
+                ChildContent = ColumnDefinitions;
             }
 
             this.ColumnContext = new ColumnContext(this);
@@ -477,6 +583,13 @@ namespace AntDesign
             {
                 TableLayout = "fixed";
             }
+
+#if NET5_0_OR_GREATER
+            if (UseItemsProvider)
+            {
+                HidePagination = true;
+            }
+#endif
 
             InitializePagination();
 
@@ -579,11 +692,12 @@ namespace AntDesign
 
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null)
+                if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
@@ -628,22 +742,45 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void OnResize(DomRect domRect)
+        {
+            if (_tableWidth == domRect.Width)
+            {
+                return;
+            }
+
+            _tableWidth = domRect.Width;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+
         protected override void Dispose(bool disposing)
         {
             DomEventListener?.Dispose();
+
             base.Dispose(disposing);
         }
 
-        public async ValueTask DisposeAsync()
+        async ValueTask IAsyncDisposable.DisposeAsync()
         {
-            if (!_isReloading)
+            try
             {
-                if (ScrollY != null || ScrollX != null)
+                if (_afterFirstRender && !_isReloading)
                 {
-                    await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                    if (ScrollY != null || ScrollX != null)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                    }
                 }
+                DomEventListener?.Dispose();
             }
-            DomEventListener?.Dispose();
+#if NET6_0_OR_GREATER
+            catch (JSDisconnectedException) { }
+#endif
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "AntDesign: an exception was thrown at Table `DisposeAsync` method.");
+            }
         }
 
         bool ITable.RowExpandable(RowData rowData)

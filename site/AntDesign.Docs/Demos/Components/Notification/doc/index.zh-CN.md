@@ -20,16 +20,16 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
 
-- `NotificationService.Open(config:NotificationConfig)`
-- `NotificationService.Info(config:NotificationConfig)`
-- `NotificationService.Success(config:NotificationConfig)`
-- `NotificationService.Warning(config:NotificationConfig)`
-- `NotificationService.Warn(config:NotificationConfig)`
-- `NotificationService.Error(config:NotificationConfig)`
-- `NotificationService.Close(key:string)`
-- `NotificationService.Destroy()`
-- `NotificationService.CreateAsync()`
-- `NotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
+- `INotificationService.Open(config:NotificationConfig)`
+- `INotificationService.Info(config:NotificationConfig)`
+- `INotificationService.Success(config:NotificationConfig)`
+- `INotificationService.Warning(config:NotificationConfig)`
+- `INotificationService.Warn(config:NotificationConfig)`
+- `INotificationService.Error(config:NotificationConfig)`
+- `INotificationService.Close(key:string)`
+- `INotificationService.Destroy()`
+- `INotificationService.CreateAsync()`
+- `INotificationService.UpdateAsync(key:string, description:OneOf<string, RenderFragment>, message:OneOf<string, RenderFragment>? = null)`
 
 config 参数如下：
 
@@ -50,7 +50,7 @@ config 参数如下：
 
 还提供了一个全局配置方法，在调用前提前配置，全局一次生效。
 
-`NotificationService.Config(config:NotificationGlobalConfig)`
+`INotificationService.Config(config:NotificationGlobalConfig)`
 
 | 参数      | 说明                                                         | 类型                       | 默认值                            |
 | :-------- | :----------------------------------------------------------- | :------------------------- | :-------------------------------- |

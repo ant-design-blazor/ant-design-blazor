@@ -74,13 +74,13 @@
                 }
                 <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="@(StrokeColor.IsT1?$"url(#ant-progress-gradient-{Id})":StrokeColor.AsT0)" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
             </svg>
-            @if (Status == ProgressStatus.Success && !_format)
+            @if (Status == ProgressStatus.Success && Format == null)
             {
                 <span class="ant-progress-text">
                     <Icon Type="check-circle" Theme="@IconThemeType.Fill" />
                 </span>
             }
-            else if (Status == ProgressStatus.Exception && !_format)
+            else if (Status == ProgressStatus.Exception && Format == null)
             {
                 <span class="ant-progress-text">
                     <Icon Type="close-circle" Theme="@IconThemeType.Fill" />
@@ -103,13 +103,13 @@
                 }
                 <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
             </svg>
-            @if (Status == ProgressStatus.Success && !_format)
+            @if (Status == ProgressStatus.Success && Format == null)
             {
                 <span class="ant-progress-text">
                     <Icon Type="check-circle" Theme="@IconThemeType.Fill" />
                 </span>
             }
-            else if (Status == ProgressStatus.Exception && !_format)
+            else if (Status == ProgressStatus.Exception && Format == null)
             {
                 <span class="ant-progress-text">
                     <Icon Type="close-circle" Theme="@IconThemeType.Fill" />

@@ -13,6 +13,8 @@ namespace AntDesign
 
         private int CurrentColIndex { get; set; }
 
+        private int[] ColIndexOccupied { get; set; }
+
         private ITable _table;
 
         public ColumnContext(ITable table)
@@ -38,13 +40,37 @@ namespace AntDesign
                 return;
             }
 
-            if (++CurrentColIndex >= Columns.Count)
+            var columnSpan = column.HeaderColSpan;
+            if (column.RowSpan == 0) columnSpan = 0;
+
+            do
             {
-                CurrentColIndex = 0;
+                if (++CurrentColIndex >= Columns.Count)
+                {
+                    CurrentColIndex = 0;
+                    if (ColIndexOccupied != null)
+                    {
+                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        {
+                            if (item > 0) item--;
+                        }
+                    }
+                }
             }
+            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
+            CurrentColIndex += columnSpan - 1;
+
+            if (column.RowSpan > 1)
+            {
+                ColIndexOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                {
+                    ColIndexOccupied[i] = column.RowSpan;
+                }
+            }
         }
 
         public void AddColGroup(IColumn column)
@@ -88,12 +114,36 @@ namespace AntDesign
                 return;
             }
 
-            if (++CurrentColIndex >= Columns.Count)
+            var columnSpan = column.ColSpan;
+            if (column.RowSpan == 0) columnSpan = 0;
+
+            do
             {
-                CurrentColIndex = 0;
+                if (++CurrentColIndex >= Columns.Count)
+                {
+                    CurrentColIndex = 0;
+                    if (ColIndexOccupied != null)
+                    {
+                        foreach (ref var item in ColIndexOccupied.AsSpan())
+                        {
+                            if (item > 0) item--;
+                        }
+                    }
+                }
             }
+            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
+            CurrentColIndex += columnSpan - 1;
+
+            if (column.RowSpan > 1)
+            {
+                ColIndexOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                {
+                    ColIndexOccupied[i] = column.RowSpan;
+                }
+            }
         }
 
         internal void HeaderColumnInitialed(IColumn column)

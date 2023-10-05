@@ -19,7 +19,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
         /// </summary>
@@ -98,6 +97,12 @@ namespace AntDesign
         public string TabBarStyle { get; set; }
 
         /// <summary>
+        /// Tab bar css class
+        /// </summary>
+        [Parameter]
+        public string TabBarClass { get; set; }
+
+        /// <summary>
         /// Position of tabs
         /// </summary>
         [Parameter]
@@ -127,7 +132,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnClose { get; set; }
 
-
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
@@ -151,7 +155,6 @@ namespace AntDesign
 
         #endregion Parameters
 
-
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
 
@@ -171,20 +174,19 @@ namespace AntDesign
         private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
         private string _operationStyle = "visibility: hidden; order: 1;";
 
-        private double _scrollOffset;
-        private int _scrollListWidth;
-        private int _scrollListHeight;
-        private int _wrapperWidth;
-        private int _wrapperHeight;
+        private decimal _scrollOffset;
+        private decimal _scrollListWidth;
+        private decimal _scrollListHeight;
+        private decimal _wrapperWidth;
+        private decimal _wrapperHeight;
 
         private bool _shouldRender;
         private bool _afterFirstRender;
 
-        private string _contentAnimatedStyle;
-
         private readonly ClassMapper _inkClassMapper = new ClassMapper();
         private readonly ClassMapper _contentClassMapper = new ClassMapper();
         private readonly ClassMapper _tabsNavWarpPingClassMapper = new ClassMapper();
+        private readonly ClassMapper _tabBarClassMapper = new ClassMapper();
 
         private readonly List<TabPane> _panes = new List<TabPane>();
         private readonly List<TabPane> _tabs = new List<TabPane>();
@@ -236,6 +238,9 @@ namespace AntDesign
                 .If("ant-tabs-nav-wrap-ping-left", () => NavWrapPingLeft)
                 .If("ant-tabs-nav-wrap-ping-right", () => NavWrapPingRight);
 
+            _tabBarClassMapper
+                .Add($"{PrefixCls}-nav")
+                .If(TabBarClass, () => !string.IsNullOrWhiteSpace(TabBarClass));
         }
 
         protected override Task OnFirstAfterRenderAsync()
@@ -329,7 +334,6 @@ namespace AntDesign
                 tab.Close();
                 pane.Close();
 
-
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
@@ -339,6 +343,10 @@ namespace AntDesign
 
         internal void RemovePane(TabPane tab)
         {
+            // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
+            if (IsDisposed)
+                return;
+
             if (tab.IsTab)
             {
                 var index = _tabs.IndexOf(tab);
@@ -372,6 +380,26 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
+        internal async Task HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
+        {
+            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
+            switch (e.Code)
+            {
+                case "Enter" or "NumpadEnter": await NavigateToTab(tabPane); break;
+                case "ArrowLeft": await NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
+                case "ArrowRight": await NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
+                case "ArrowUp": await NavigateToTab(_tabs[0]); break;
+                case "ArrowDown": await NavigateToTab(_tabs[^1]); break;
+                default: return;
+            }
+        }
+
+        private async Task NavigateToTab(TabPane tabPane)
+        {
+            await HandleTabClick(tabPane);
+            await FocusAsync(_activeTab.TabBtnRef);
+        }
+
         private void ActivatePane(string key)
         {
             if (_panes.Count == 0)
@@ -384,7 +412,9 @@ namespace AntDesign
             if (tab == null || tabPane == null)
                 return;
 
-            if (tabPane.Disabled)
+            // Even if a TabPane is disabled, it is allowed to be activated at initial load time (at initial load time, _activeTab is null)
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/2732
+            if (_activeTab != null && tabPane.Disabled)
             {
                 return;
             }
@@ -412,8 +442,6 @@ namespace AntDesign
 
                 _activeKey = _activePane.Key;
             }
-
-            _contentAnimatedStyle = Animated && tabIndex > 0 ? $"margin-left: -{tabIndex * 100}%" : "";
 
             Card?.SetBody(_activePane.ChildContent);
 
@@ -491,7 +519,7 @@ namespace AntDesign
 
         private void OnWheel(string json)
         {
-            int maxOffset;
+            decimal maxOffset;
             if (IsHorizontal)
             {
                 maxOffset = _scrollListWidth - _wrapperWidth;
@@ -543,11 +571,6 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
-            if (_renderedActivePane == _activePane)
-            {
-                return;
-            }
-
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
@@ -603,16 +626,16 @@ namespace AntDesign
             }
 
             int invisibleHeadCount;
-            double tabSize, visibleCount;
+            decimal tabSize, visibleCount;
 
             if (IsHorizontal)
             {
-                tabSize = 1.0 * _scrollListWidth / _tabs.Count;
+                tabSize = _scrollListWidth / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
             }
             else
             {
-                tabSize = 1.0 * _scrollListHeight / _tabs.Count;
+                tabSize = _scrollListHeight / _tabs.Count;
                 visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
             }
 
@@ -671,6 +694,11 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             DomEventListener.DisposeExclusive();
+
+            _panes.Clear();
+            _tabs.Clear();
+            _invisibleTabs.Clear();
+
             base.Dispose(disposing);
         }
     }

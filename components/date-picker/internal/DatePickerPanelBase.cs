@@ -188,7 +188,7 @@ namespace AntDesign
 
         protected DateTime PickerValue { get => GetIndexPickerValue(PickerIndex); }
 
-        protected DateTime? Value { get => GetIndexValue(PickerIndex); }
+        protected DateTime? Value { get => GetIndexValue(GetPickerIndex()); }
 
         public void PopUpPicker(string type) => ChangePickerType(type, PickerIndex);
 
@@ -200,6 +200,6 @@ namespace AntDesign
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
-        private int GetPickerIndex() => IsRange && !IsShowTime ? DatePicker.GetOnFocusPickerIndex() : PickerIndex;
+        protected int GetPickerIndex() => IsRange && !IsShowTime ? DatePicker.GetOnFocusPickerIndex() : PickerIndex;
     }
 }

@@ -12,6 +12,8 @@ namespace AntDesign
         public AutoCompleteInput()
         {
             AutoComplete = false;
+            Type = "search";
+            BindOnInput = true;
         }
 
         [CascadingParameter]
@@ -36,7 +38,6 @@ namespace AntDesign
             if (Component != null) await Component?.InputFocus(e);
 
             await base.OnFocusAsync(e);
-
         }
 
         protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
@@ -46,14 +47,19 @@ namespace AntDesign
             if (Component != null) await Component?.InputKeyDown(args);
         }
 
-
-        protected override async void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
-            base.OnInputAsync(args);
+            await base.OnInputAsync(args);
 
             if (Component != null) await Component?.InputInput(args);
         }
 
+        protected override void OnValueChange(TValue value)
+        {
+            base.OnValueChange(value);
+
+            Component?.InputValueChange(value?.ToString());
+        }
 
         #region IAutoCompleteInput
 
@@ -62,6 +68,6 @@ namespace AntDesign
             this.CurrentValue = (TValue)value;
         }
 
-        #endregion
+        #endregion IAutoCompleteInput
     }
 }

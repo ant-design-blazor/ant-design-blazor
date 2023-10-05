@@ -13,11 +13,9 @@ namespace AntDesign
 
         protected const string PrefixCls = "ant-message";
 
-        private CultureInfo _cultureInfo = new CultureInfo("en-us", false);
-
         private string GetClassName()
         {
-            var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(_cultureInfo)}";
+            var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(CultureInfo.InvariantCulture)}";
 
             if (RTL)
             {

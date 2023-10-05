@@ -25,18 +25,16 @@
     </ChildContent>
 
     <PaginationTemplate>
-        <div style="display: flex; align-items: center">
-            <Pagination Class="my-custom-pagination"
-                        Total="context.Total"
-                        PageSize="context.PageSize"
-                        Current="context.PageIndex"
-                        ShowSizeChanger
-                        OnChange="context.HandlePageChange" />
-        </div>
+        <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                    Total="context.Total"
+                    PageSize="context.PageSize"
+                    Current="context.PageIndex"
+                    ShowSizeChanger
+                    OnChange="context.HandlePageChange" />
     </PaginationTemplate>
 </Table>
 
-@code{
+@code {
     Data[] data = new Data[]
     {
         new()

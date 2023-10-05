@@ -15,6 +15,491 @@ timeline: true
 
 ---
 
+### 0.15.5
+
+`2023-09-10`
+
+教师节快乐！
+
+- Table
+  - 🐞 修复 避免禁用了的行仍然可以被"全选"选中。[#3419](https://github.com/ant-design-blazor/ant-design-blazor/pull/3419) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在排序和筛选被修改时，重置页码。[#3397](https://github.com/ant-design-blazor/ant-design-blazor/pull/3397) [@ElderJames](https://github.com/ElderJames)
+  - 📖 更新 文档介绍列固定时的自定义行样式。[#3409](https://github.com/ant-design-blazor/ant-design-blazor/pull/3409) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Input Resizable TextArea空引用错误。[#3382](https://github.com/ant-design-blazor/ant-design-blazor/pull/3382) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 居中和最大化的样式冲突。[#3403](https://github.com/ant-design-blazor/ant-design-blazor/pull/3403) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 AutoComplete 下拉框的自动宽度调整。[#3402](https://github.com/ant-design-blazor/ant-design-blazor/pull/3402) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Notification 通知组件使用异步时异常。[#3400](https://github.com/ant-design-blazor/ant-design-blazor/pull/3400) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Progress 的 Line 类型进度条文本换行问题。[#3387](https://github.com/ant-design-blazor/ant-design-blazor/pull/3387) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Button 在 Loading 时禁止触发 `OnClick` 事件。[#3414](https://github.com/ant-design-blazor/ant-design-blazor/pull/3414) [@ElderJames](https://github.com/ElderJames)
+
+- 可访问性增强
+  - ⌨️ 增加 input 元素的 required 属性。[#3383](https://github.com/ant-design-blazor/ant-design-blazor/pull/3383) [@eizzn](https://github.com/eizzn)
+  - ⌨️ 可访问性增强，在验证失败时候增加 input 元素的 aria-invalid 属性。[#3378](https://github.com/ant-design-blazor/ant-design-blazor/pull/3378) [@eizzn](https://github.com/eizzn)
+  - ⌨️ 增加 Select 选项 aria-label 属性。[#3385](https://github.com/ant-design-blazor/ant-design-blazor/pull/3385) [@eizzn](https://github.com/eizzn)
+
+- 🌐 修复 Confim 和 Form 的韩文。[#3415](https://github.com/ant-design-blazor/ant-design-blazor/pull/3415) [@Jeongyong-park](https://github.com/Jeongyong-park)
+
+
+### 0.15.4
+
+`2023-07-31`
+
+- 🆕 新增 Select 的 AutoFocus 属性，自动获取焦点。[#3375](https://github.com/ant-design-blazor/ant-design-blazor/pull/3375) [@LuukGlorie](https://github.com/LuukGlorie)
+- 🐞 修复 Tree 设置了 CheckStrictly 后不触发 CheckedKeys 更新 。[#3379](https://github.com/ant-design-blazor/ant-design-blazor/pull/3379) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 不能从 CheckboxGroup 传递 Disabled 值给模板中的子项。[#3365](https://github.com/ant-design-blazor/ant-design-blazor/pull/3365) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DomEventListener 回调共享订阅时未检查 key 不存在。[#3364](https://github.com/ant-design-blazor/ant-design-blazor/pull/3364) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TextArea 显示图标的 HTML 结构。[#3367](https://github.com/ant-design-blazor/ant-design-blazor/pull/3367) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 缺失的 NULL 检查。[#3368](https://github.com/ant-design-blazor/ant-design-blazor/pull/3368) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 的 Help 消息文本更新。[#3373](https://github.com/ant-design-blazor/ant-design-blazor/pull/3373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 当设置了Base Url 时，访问加载不了页面。[#3362](https://github.com/ant-design-blazor/ant-design-blazor/pull/3362) [@ElderJames](https://github.com/ElderJames)
+- ⌨️ 增强 Icon role 属性的可访问性。[#3370](https://github.com/ant-design-blazor/ant-design-blazor/pull/3370) [@eizzn](https://github.com/eizzn)
+
+### 0.15.3
+
+`2023-07-13`
+
+- 🐞 修复 Tree 多选模式未使用 Ctrl 键。[#3350](https://github.com/ant-design-blazor/ant-design-blazor/pull/3350) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 Icons 与Bootstrap 样式冲突。[#3348](https://github.com/ant-design-blazor/ant-design-blazor/pull/3348) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Steps 的 RTL 样式。[#3343](https://github.com/ant-design-blazor/ant-design-blazor/pull/3343) [@ElderJames](https://github.com/ElderJames)
+- 🌐 修复 俄语 dateFormat 和 dateTimeFormat 格式。[#3342](https://github.com/ant-design-blazor/ant-design-blazor/pull/3342) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+- 📖 文档 优化demo渲染策略[#3347](https://github.com/ant-design-blazor/ant-design-blazor/pull/3347) [@ElderJames](https://github.com/ElderJames)
+
+### 0.15.2
+
+`2023-07-03`
+
+- Table
+  - 🐞 避免 DisposeAsync 中的异常。[#3337](https://github.com/ant-design-blazor/ant-design-blazor/pull/3337) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在 ParametersHashCodeChanged 模式下某些情况不渲染的问题。[#3313](https://github.com/ant-design-blazor/ant-design-blazor/pull/3313) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Menu 在收起时 MenuItem 切换又是无法取消选中的问题。[#3338](https://github.com/ant-design-blazor/ant-design-blazor/pull/3338) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 滚动条在页面路由发生变化时没有重置。[#3316](https://github.com/ant-design-blazor/ant-design-blazor/pull/3316) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Slider 在拖动释放时不触发OnAfterChange。[#3323](https://github.com/ant-design-blazor/ant-design-blazor/pull/3323) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复  Statistic  的 CountDown 在切换其他页面时会暂停的问题。[#3329](https://github.com/ant-design-blazor/ant-design-blazor/pull/3329) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Card 加载效果失效。[#3319](https://github.com/ant-design-blazor/ant-design-blazor/pull/3319) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TreeSelect 在移除最后一个选项时没有更新绑定的属性。[#3314](https://github.com/ant-design-blazor/ant-design-blazor/pull/3314) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: 俄语本地化文件 dateFormat 和 dateTimeFormat 改为 d.m.yyyy。[#3327](https://github.com/ant-design-blazor/ant-design-blazor/pull/3327) [@Life-is-Peachy](https://github.com/Life-is-Peachy)
+
+### 0.15.1
+
+`2023-06-18`
+
+父亲节快乐！
+
+- Table
+  - 🆕 增加 支持接口类型的 DataSource 子项。[#3297](https://github.com/ant-design-blazor/ant-design-blazor/pull/3297) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在列定义设置了 Fixed 和 Ellipsis 后，文本超长会超出单元格的问题。[#3291](https://github.com/ant-design-blazor/ant-design-blazor/pull/3291) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 空状态团在预渲染时定位不正确的问题，并进少了不必要的 ResizeObserver 订阅。[#3281](https://github.com/ant-design-blazor/ant-design-blazor/pull/3281) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🐞 修复 在使用 SearchExpression 匹配关键字后会抛出异常的问题。[#3274](https://github.com/ant-design-blazor/ant-design-blazor/pull/3274) [@ruyisee](https://github.com/ruyisee)
+  - 🐞 修复 拖拽节点不能修改 DataSource 的问题。[#3275](https://github.com/ant-design-blazor/ant-design-blazor/pull/3275) [@Jtfk](https://github.com/Jtfk)
+
+- 🐞 修复 DatePicker 的 RangePicker 在关闭时会触发两次 OnOpenChange。[#3307](https://github.com/ant-design-blazor/ant-design-blazor/pull/3307) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 Tabs 的 Reusetabs 当有固定标签时，再次导航改标签会重复的问题。[#3306](https://github.com/ant-design-blazor/ant-design-blazor/pull/3306) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 当绑定值变成不在选项中的值后会无限循环的问题。[#3287](https://github.com/ant-design-blazor/ant-design-blazor/pull/3287) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DomEventListener 移除不再订阅共享事件的事件列表，避免再次订阅时没创新事件监听器。[#3278](https://github.com/ant-design-blazor/ant-design-blazor/pull/3278) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 在 `SelectBase.Values` 被设置为null时， `EditContext.NotifyFieldChanged`  调用不正常的问题。[#3277](https://github.com/ant-design-blazor/ant-design-blazor/pull/3277) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 📖 更新 Statistic 文档，增加自定义数字分组和小数点符号的示例。[#3166](https://github.com/ant-design-blazor/ant-design-blazor/pull/3166) [@Alerinos](https://github.com/Alerinos)
+
+
+### 0.15.0
+
+`2023-05-21`
+
+小满
+
+- Table
+  - 🆕 增加虚拟化的 EF Core 支持。[#3270](https://github.com/ant-design-blazor/ant-design-blazor/pull/3270) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加虚拟化的 ItemsProvider 支持按需请求数据。[#3262](https://github.com/ant-design-blazor/ant-design-blazor/pull/3262) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 不打印异常并忽略 JSDisconnectedException。[#3216](https://github.com/ant-design-blazor/ant-design-blazor/pull/3216) [@LuukGlorie](https://github.com/LuukGlorie)
+  - 🐞 修复 Table 的 flags enum 类型列的 filter 展示位置错误。[#3168](https://github.com/ant-design-blazor/ant-design-blazor/pull/3168) [@ElderJames](https://github.com/ElderJames)
+
+- Layout
+  - 🆕 增加 Sider 新属性 DefaultCollapsed，默认收缩。[#3260](https://github.com/ant-design-blazor/ant-design-blazor/pull/3260) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在 Sider 初始是收缩时，菜单没有跟着收缩的问题。[#3268](https://github.com/ant-design-blazor/ant-design-blazor/pull/3268) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🆕 增加 Tree 的 HideUnmatched 属性,，用于隐藏没匹配 SearchValue 的节点。[#3242](https://github.com/ant-design-blazor/ant-design-blazor/pull/3242) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🆕 增加 Tree 的公开方法 GetNode(string key)。[#3243](https://github.com/ant-design-blazor/ant-design-blazor/pull/3243) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+
+- TreeSelect
+  - 🆕 增加 新属性 OnSearch 和 OnNodeLoadDelayAsync 来支持动态加载。[#3240](https://github.com/ant-design-blazor/ant-design-blazor/pull/3240) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🆕 增加 新属性 TreeAttributes 来传递属性给内部的 Tree 组件。[#3234](https://github.com/ant-design-blazor/ant-design-blazor/pull/3234) [@rhodon-jargon](https://github.com/rhodon-jargon)
+
+- Select
+  - 🆕 增加 accesskey 属性支持快捷键。[#3228](https://github.com/ant-design-blazor/ant-design-blazor/pull/3228) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在开启虚拟化时空状态显示不正常。[#3171](https://github.com/ant-design-blazor/ant-design-blazor/pull/3171) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 修复 Animated 属性导致显示不正常。[#3177](https://github.com/ant-design-blazor/ant-design-blazor/pull/3177) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 ReuseTabs 计算 Tab Key 的逻辑。[#3153](https://github.com/ant-design-blazor/ant-design-blazor/pull/3153) [@berkerdong](https://github.com/berkerdong)
+
+- Datepicker
+  - 🐞 修复 某些语言下 WeekPicker 的计算问题。[#3214](https://github.com/ant-design-blazor/ant-design-blazor/pull/3214) [@sebastian-wachsmuth](https://github.com/sebastian-wachsmuth)
+  - 🐞 修复 计算日期时，有时日期超出月天数的问题。[#3193](https://github.com/ant-design-blazor/ant-design-blazor/pull/3193) [@Alexbits](https://github.com/Alexbits)
+
+- 🆕 增加  Typography 可编辑文本支持。[#3173](https://github.com/ant-design-blazor/ant-design-blazor/pull/3173) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Mentions 自定义输入组件，添加 TextArea 支持。[#3178](https://github.com/ant-design-blazor/ant-design-blazor/pull/3178) [@wss-kroche](https://github.com/wss-kroche)
+- 🆕 新增 Menu 的 `ShowCollapsedTooltip` 属性来控制 Tooltip 的显示。[#3226](https://github.com/ant-design-blazor/ant-design-blazor/pull/3226) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Descriptions 的 `LabelStyle` 和 `ContentStyle` 来自定义 DescriptionItem 的样式。[#3186](https://github.com/ant-design-blazor/ant-design-blazor/pull/3186) [@ElderJames](https://github.com/ElderJames)
+- 🛠 增加 InputNumber 中 input 元素的 `id` 属性。[#3198](https://github.com/ant-design-blazor/ant-design-blazor/pull/3198) [@varbedi](https://github.com/varbedi)
+- 🛠 重构 Form 为 input component base 基类中公开FormItem 的一些属性。[#3227](https://github.com/ant-design-blazor/ant-design-blazor/pull/3227) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Dropdown 点击已选择的 MenuItem 后，不自动关闭的问题。[#3231](https://github.com/ant-design-blazor/ant-design-blazor/pull/3231) [@huangjia2107](https://github.com/huangjia2107)
+- 🐞 修复 Input 正确读取空字符串或空格。[#3190](https://github.com/ant-design-blazor/ant-design-blazor/pull/3190) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 Image 预览操作按钮被预览图片覆盖。[#3170](https://github.com/ant-design-blazor/ant-design-blazor/pull/3170) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 的 CheckboxGroup 在内部有 Checkbox 是 null 时引发异常的问题。[#3162](https://github.com/ant-design-blazor/ant-design-blazor/pull/3162) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 Pagination 的 mini 样式。[#3266](https://github.com/ant-design-blazor/ant-design-blazor/pull/3266) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 无法选中的问题 (#3252)。[7d24d09](https://github.com/ant-design-blazor/ant-design-blazor/commit/7d24d09) [@James Yeung](https://github.com/James Yeung)
+- 🐞 修复 Drawer 按钮会提交表单的问题，增加了 type="button" 属性避免。[#3233](https://github.com/ant-design-blazor/ant-design-blazor/pull/3233) [@trafium](https://github.com/trafium)
+
+### 0.14.4
+
+`2023-03-01`
+
+- 🐞 修复 Radio 避免当绑定值不在选项中时造成的无限循环。[#3123](https://github.com/ant-design-blazor/ant-design-blazor/pull/3123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 允许传递 Style 和 Id。[#3144](https://github.com/ant-design-blazor/ant-design-blazor/pull/3144) [@Epictek](https://github.com/Epictek)
+- 🐞 修复 Select 的 OnSelectedItemsChanged 在Form 中不触发。[#3129](https://github.com/ant-design-blazor/ant-design-blazor/pull/3129) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 给 oncontextmenu 事件增加 preventdefault。[#3076](https://github.com/ant-design-blazor/ant-design-blazor/pull/3076) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🐞 修复 Pagination 在大小没有变化时仍触发 ChangeSize，导致触发了 OnChange。[#3133](https://github.com/ant-design-blazor/ant-design-blazor/pull/3133) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Transfer 列表样式属性 ListStyle 来自定义每列的样式。[#3139](https://github.com/ant-design-blazor/ant-design-blazor/pull/3139) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 当 base url 不是默认时， ReuseTabs 会引发异常。[#3142](https://github.com/ant-design-blazor/ant-design-blazor/pull/3142) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 AutoComplete 只当 Backfill 为 true 时才回填值给输入框。[#3140](https://github.com/ant-design-blazor/ant-design-blazor/pull/3140) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Datepicker 的 DisabledDate 属性没有影响到键盘输入。[#3134](https://github.com/ant-design-blazor/ant-design-blazor/pull/3134) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 Input 避免 Textarea 在渲染前调用 JS 。[#3128](https://github.com/ant-design-blazor/ant-design-blazor/pull/3128) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.14.3
+
+`2023-02-19`
+
+- Popconfirm
+  - 🐞 修复 Popconfirm 图标颜色缺失。[#3093](https://github.com/ant-design-blazor/ant-design-blazor/pull/3093) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Popconfirm 补全内置的本地化。[#3095](https://github.com/ant-design-blazor/ant-design-blazor/pull/3095) [@ElderJames](https://github.com/ElderJames)
+
+- Pagination
+  - 🐞 修复  Pagination 的 `DefaultCurrent` 参数无作用。[#3085](https://github.com/ant-design-blazor/ant-design-blazor/pull/3085) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Pagination 在RTL模式跳转按钮图标的方向。[#3084](https://github.com/ant-design-blazor/ant-design-blazor/pull/3084) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 修复 每次在按键的时候重渲染content的问题。[#3099](https://github.com/ant-design-blazor/ant-design-blazor/pull/3099) [@zxyao145](https://github.com/zxyao145)
+  - 🛠 重构 ConfirmService 改为注入 IConfirmService。[#3083](https://github.com/ant-design-blazor/ant-design-blazor/pull/3083) [@wss-awachowicz](https://github.com/wss-awachowicz)
+
+- 🐞 修复 Drawer 中 popup 无法选择的问题。[#3106](https://github.com/ant-design-blazor/ant-design-blazor/pull/3106) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Textarea 不在 textarea 上渲染 maxlength。[#3108](https://github.com/ant-design-blazor/ant-design-blazor/pull/3108) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 修复 Tabs 支持修改 ReuseTabs 标签名。[#3088](https://github.com/ant-design-blazor/ant-design-blazor/pull/3088) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 在 RadioGroup 中的选项和绑定值同时被修改时，不能选中最新值的问题。[#3098](https://github.com/ant-design-blazor/ant-design-blazor/pull/3098) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmented 在 Labels 索引发送改变时抛出异常的问题。[#3096](https://github.com/ant-design-blazor/ant-design-blazor/pull/3096) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 分页器在 RTL 语言下的默认位置。[#3086](https://github.com/ant-design-blazor/ant-design-blazor/pull/3086) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 的 OnSelectedItemsChanged 事件不正常触发。[#3079](https://github.com/ant-design-blazor/ant-design-blazor/pull/3079) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 修复 Menu 标题在 RTL 语言时内边距的方向。[#3080](https://github.com/ant-design-blazor/ant-design-blazor/pull/3080) [@ElderJames](https://github.com/ElderJames)
+
+### 0.14.2
+
+`2023-02-06`
+
+开工大吉！
+
+- 🐞 修复 Menu 在RTL语言中错误的子菜单样式。[#3065](https://github.com/ant-design-blazor/ant-design-blazor/pull/3065) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 的 Reusetabs 在未打开过页面时会出现 null 引用异常。[#3060](https://github.com/ant-design-blazor/ant-design-blazor/pull/3060) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 drawe mask 不会消失的问题。[#3059](https://github.com/ant-design-blazor/ant-design-blazor/pull/3059) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Calendar 选中日期错误。[#3069](https://github.com/ant-design-blazor/ant-design-blazor/pull/3069) [@agolub-s](https://github.com/agolub-s)
+
+### 0.14.1
+
+`2023-02-01`
+
+- 🐞 修复 Notification 在 RTL 下显示异常问题，新增 top 和 bottom 位置支持[#3049](https://github.com/ant-design-blazor/ant-design-blazor/pull/3049) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Table 隐藏分页器时，更新数据源时行数不立刻刷新[#3052](https://github.com/ant-design-blazor/ant-design-blazor/pull/3052) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 修复 Tabs 保留 ReuseTabs 之前的用法。[#3051](https://github.com/ant-design-blazor/ant-design-blazor/pull/3051) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree OnContextMenu 事件不起作用。[#3042](https://github.com/ant-design-blazor/ant-design-blazor/pull/3042) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🐞 修复 Select 双向绑定选项的顺序问题。[#3037](https://github.com/ant-design-blazor/ant-design-blazor/pull/3037) [@CuteLeon](https://github.com/CuteLeon)
+- 🐞 修复 drawer 遮罩层不能立即关闭的问题。[#3047](https://github.com/ant-design-blazor/ant-design-blazor/pull/3047) [@zxyao145](https://github.com/zxyao145)
+- 🛠 将多个冗余参数标记为已过时以供将来删除: `Calendar.OnSelect`, `Card.Body`, `Sider.OnCollapse`, `PageHeader.PageHeaderTitle`, `PageHeader.PageHeaderSubtitle`, `Radio.CheckedChange`。[#3035](https://github.com/ant-design-blazor/ant-design-blazor/pull/3035) [@kooliokey](https://github.com/kooliokey)
+
+### 0.14.0
+
+`2023-01-26`
+
+新春快乐，兔年吉祥！
+
+- Table
+  - 🆕 支持根据表格的 `TItem` 类型自动生成列。[#2978](https://github.com/ant-design-blazor/ant-design-blazor/pull/2978) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 Table 头部和行的分组。[#2973](https://github.com/ant-design-blazor/ant-design-blazor/pull/2973) [@anranruye](https://github.com/anranruye)
+  - 🆕 增加 空状态模板，并使它在列滚动时固定。[#3031](https://github.com/ant-design-blazor/ant-design-blazor/pull/3031) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 选择列中的空引用异常。[#3028](https://github.com/ant-design-blazor/ant-design-blazor/pull/3028) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 列标题在可筛选时的对齐样式问题。[#3023](https://github.com/ant-design-blazor/ant-design-blazor/pull/3023) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🆕 增加 ShowCount 属性显示字数。[#3033](https://github.com/ant-design-blazor/ant-design-blazor/pull/3033) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 OnClear 事件回调。[#3020](https://github.com/ant-design-blazor/ant-design-blazor/pull/3020) [@Abin-Liu](https://github.com/Abin-Liu)
+
+- Menu
+  - 🆕 增加 `PopupClassName` 属性。[#3027](https://github.com/ant-design-blazor/ant-design-blazor/pull/3027) [@JustGentle](https://github.com/JustGentle)
+  - 🐞 修复 Menu 子菜单的动画和样式。[#3024](https://github.com/ant-design-blazor/ant-design-blazor/pull/3024) [@ElderJames](https://github.com/ElderJames)
+
+- Transfer
+  - 🐞 修复 在 Form 内抛异常的问题。[#3015](https://github.com/ant-design-blazor/ant-design-blazor/pull/3015) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 无法选中的问题。[#3011](https://github.com/ant-design-blazor/ant-design-blazor/pull/3011) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 DataSource 的刷新。[#2998](https://github.com/ant-design-blazor/ant-design-blazor/pull/2998) [@ElderJames](https://github.com/ElderJames)
+
+- InputNumber
+  - 🆕 增加 无边框样式。[#3019](https://github.com/ant-design-blazor/ant-design-blazor/pull/3019) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Step 回退和空引用异常。[#3018](https://github.com/ant-design-blazor/ant-design-blazor/pull/3018) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🛠 重构 ReuseTabs 移除 `ReuseTabsRouteView` 来降低跟原生组件的耦合，请使用 CsaCadingValue 传递 RouteData，[参考示例](https://github.com/ant-design-blazor/ant-design-blazor/blob/0.14.0/tests/AntDesign.TestApp/Client/App.razor#L4)。[#3009](https://github.com/ant-design-blazor/ant-design-blazor/pull/3009) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 ReuseTabs 关闭其他标签时的渲染错误。[#3002](https://github.com/ant-design-blazor/ant-design-blazor/pull/3002) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 当 Activekey  指定了一个禁用的 TabPane 时，或第一个 TabPane 就是禁用时，初次加载会抛异常的问题。[#2997](https://github.com/ant-design-blazor/ant-design-blazor/pull/2997) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 ThemeService 用于主题切换。[#2883](https://github.com/ant-design-blazor/ant-design-blazor/pull/2883) [@melinyi](https://github.com/melinyi)
+- 🆕 增加 Datepicker 已选星期范围的展示。[#2892](https://github.com/ant-design-blazor/ant-design-blazor/pull/2892) [@Alexbits](https://github.com/Alexbits)
+- 🆕 新增 Radio 的 RadioGroup 级联类型参数。[#3022](https://github.com/ant-design-blazor/ant-design-blazor/pull/3022) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 会在鼠标离开触发元素之后还打开。[#3025](https://github.com/ant-design-blazor/ant-design-blazor/pull/3025) [@JustGentle](https://github.com/JustGentle)
+- 🐞 修复 ResizeObserver 由于key类型的改动导致无效的问题。[#3030](https://github.com/ant-design-blazor/ant-design-blazor/pull/3030) [@ElderJames](https://github.com/ElderJames)
+- 🐞修复 Select 在搜索或清除搜索时即使将 HideSelected 设置为 true 也会显示所选选项的错误。[#3010](https://github.com/ant-design-blazor/ant-design-blazor/pull/3010) [@wss-kroche](https://github.com/wss-kroche)
+- 🐞 修复 Form 自定义校验的样式。[#3005](https://github.com/ant-design-blazor/ant-design-blazor/pull/3005) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Cascader 边界调整模式默认改为 InView。[#2999](https://github.com/ant-design-blazor/ant-design-blazor/pull/2999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 重构 Descriptions 删除控制台输出。[#3012](https://github.com/ant-design-blazor/ant-design-blazor/pull/3012) [@berkerdong](https://github.com/berkerdong)
+- 💄 同步 ant-design v4.24.2 样式。[#2877](https://github.com/ant-design-blazor/ant-design-blazor/pull/2877) [@ElderJames](https://github.com/ElderJames)
+
+#### 破环性更新
+
+- Table : `RowTemplate` 改为 `ColumnDefinitions`。`RowTemplate` 原来用于 `Column` 定义，这个版本之后改为用于定义行模板。
+- ReuseTabs: `ReuseTabsRouteView` 和 `AuthorizeReuseTabsRouteView` 已被标记为弃用。 请用`<CascadingValue Value="routeData">` 包裹 `<RouteView>` 或 `<AuthorizeRouteView>`。
+  
+  即：
+
+  ```diff
+  <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+  +   <CascadingValue Value="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+  +   </CascadingValue>
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+  </Router>
+  ```
+
+### 0.13.3
+
+`2023-01-09`
+
+- Select
+  - 🐞 修复 标签模式在数据源为空时不保留选中项的问题。[#2986](https://github.com/ant-design-blazor/ant-design-blazor/pull/2986) [@wss-javeney](https://github.com/wss-javeney)
+  - 🐞 修复 Select 下拉列表的边界调整模式为InView。[#2995](https://github.com/ant-design-blazor/ant-design-blazor/pull/2995) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Select 的搜索框字符被隐藏的问题。[#2994](https://github.com/ant-design-blazor/ant-design-blazor/pull/2994) [@ElderJames](https://github.com/ElderJames)
+
+- AutoComplete
+  - 🐞 修复 下拉列表会在页面刷新时自动打开。[#2992](https://github.com/ant-design-blazor/ant-design-blazor/pull/2992) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 输入框的拼写会话和防抖。[#2988](https://github.com/ant-design-blazor/ant-design-blazor/pull/2988) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 修复 当第一个 TabPane 设置了 Disabled 后，首次渲染异常的问题。[#2982](https://github.com/ant-design-blazor/ant-design-blazor/pull/2982) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 关闭异常，阻止在 disposed 后还触发渲染器。[#2981](https://github.com/ant-design-blazor/ant-design-blazor/pull/2981) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 关闭异常，移除了js 中对引用对象的 Dispose 调用。[#2980](https://github.com/ant-design-blazor/ant-design-blazor/pull/2980) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Transfer 在 SelectedKeys 或 TargetKeys 改变时刷新数据。[#2977](https://github.com/ant-design-blazor/ant-design-blazor/pull/2977) [@Magehernan](https://github.com/Magehernan)
+- 🐞 修复  TreeSelect 当绑定了默认值后，不能正确修改值的问题。[#2990](https://github.com/ant-design-blazor/ant-design-blazor/pull/2990) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input Search 组件设置了清除按钮的样式。[#2991](https://github.com/ant-design-blazor/ant-design-blazor/pull/2991) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 RangePicker 自定义禁用日期逻辑叠加默认禁用日期判断。[#2947](https://github.com/ant-design-blazor/ant-design-blazor/pull/2947) [@wss-kroche](https://github.com/wss-kroche)
+
+### 0.13.2
+
+`2022-12-31`
+
+- Table
+  - 📖 文档 查询和排序的 demo 中加入额外的查询框，并实现联合搜索。[#2955](https://github.com/ant-design-blazor/ant-design-blazor/pull/2955) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Selection 列 Hidden 属性不起作用的问题。[#2945](https://github.com/ant-design-blazor/ant-design-blazor/pull/2945) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 Table 的 ActionColumn 的 Hidden 属性不起作用的问题。[#2946](https://github.com/ant-design-blazor/ant-design-blazor/pull/2946) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当用了 AsNoTracking 的 IQueryable 作为 DataSource 时导致选中项重复的问题[#2944](https://github.com/ant-design-blazor/ant-design-blazor/pull/2944) [@berkerdong](https://github.com/berkerdong)
+  - 🐞 修复 不能恢复枚举类型的 Filter 的查询状态。[#2941](https://github.com/ant-design-blazor/ant-design-blazor/pull/2941) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当同时设置了 HidePagination 和 PageSize 且 DataSource 为空时导致无限循环。[#2919](https://github.com/ant-design-blazor/ant-design-blazor/pull/2919) [@ElderJames](https://github.com/ElderJames)
+
+- DatePicker
+  - 🆕 新增 RangePicker 的 SuffixIcon 属性以允许自定义后缀图标。[#2935](https://github.com/ant-design-blazor/ant-design-blazor/pull/2935) [@wss-javeney](https://github.com/wss-javeney)
+  - 🐞 修复 DatePicker 在启用时间选择且 Value 为 null 时，点击 input 框出现异常的问题[#2920](https://github.com/ant-design-blazor/ant-design-blazor/pull/2920) [@Alexbits](https://github.com/Alexbits)
+
+- Input
+  - 🐞 修复 `OnChange` 事件会被触发三次，以及清除按钮不能跟 `Suffix` 同时显示的问题。[#2970](https://github.com/ant-design-blazor/ant-design-blazor/pull/2970) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复在 Dispose 时的偶尔的 null 引用异常.[#2966](https://github.com/ant-design-blazor/ant-design-blazor/pull/2966) [@dracan](https://github.com/dracan)
+
+
+- 🆕 新增 TreeSelect 支持给节点设置 TitleTemplate[#2940](https://github.com/ant-design-blazor/ant-design-blazor/pull/2940) [@rhodon-jargon](https://github.com/rhodon-jargon)
+- 🆕 新增 Form 的 RequiredMark 属性以允许在必填、可选或无的字段旁边显示指示符。[#2930](https://github.com/ant-design-blazor/ant-design-blazor/pull/2930) [@wss-kroche](https://github.com/wss-kroche)
+
+- 🐞 修复 Tabs  的一些关于动态渲染的问题。[#2967](https://github.com/ant-design-blazor/ant-design-blazor/pull/2967) [@ElderJames](https://github.com/ElderJames)
+
+- 🛠 重构 Notification 的 `NotificationService` 增加了 `INotificationService` 接口。[#2948](https://github.com/ant-design-blazor/ant-design-blazor/pull/2948) [@wss-javeney](https://github.com/wss-javeney)
+- 🐞 修复 InputNumber 在某些场景下不停触发 递增/递减 的问题。[#2953](https://github.com/ant-design-blazor/ant-design-blazor/pull/2953) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复  Statistic 的 CountDown 再裁剪发布时格式化无效的问题。[#2943](https://github.com/ant-design-blazor/ant-design-blazor/pull/2943) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ClassMapper 的 css classes 出现两次。[#2934](https://github.com/ant-design-blazor/ant-design-blazor/pull/2934) [@berkerdong](https://github.com/berkerdong)
+- 🐞 修复 System.Text.Json 旧版本的bug，给 netstandard2.1 目标内置7.0版本[#2922](https://github.com/ant-design-blazor/ant-design-blazor/pull/2922) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.13.1
+
+`2022-11-29`
+
+- 🐞 修复 Input 在被从代码修改值时，再点击输入框会回退的问题。[#2906](https://github.com/ant-design-blazor/ant-design-blazor/pull/2906) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 同时设置 HidePagination 和PageSize 时导致的无限循环。[#2905](https://github.com/ant-design-blazor/ant-design-blazor/pull/2905) [@ElderJames](https://github.com/ElderJames)
+
+### 0.13.0
+
+`2022-11-22`
+
+- 🔥 新增 .NET 7 目标框架支持。[#2810](https://github.com/ant-design-blazor/ant-design-blazor/pull/2810) [@ElderJames](https://github.com/ElderJames)
+- 🔥 重构 Mentions 组件，修复定位和隐藏问题。[#2874](https://github.com/ant-design-blazor/ant-design-blazor/pull/2874) [@dingyanwu](https://github.com/dingyanwu)
+
+- DatePicker
+  - 🆕 新增 OnOk 事件。[#2840](https://github.com/ant-design-blazor/ant-design-blazor/pull/2840) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 星期选择模式中跨年选择星期范围时的禁用星期判断问题。[#2889](https://github.com/ant-design-blazor/ant-design-blazor/pull/2889) [@Alexbits](https://github.com/Alexbits)
+
+- Table
+  - 📖 新增 OData 查询示例。[#2861](https://github.com/ant-design-blazor/ant-design-blazor/pull/2861) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 如果设置了 `HidePagination=true`，PageSize 自动等于 DataSource 的数量。[#2476](https://github.com/ant-design-blazor/ant-design-blazor/pull/2476) [@CareyYang](https://github.com/CareyYang)
+
+- Modal
+  - 🆕 新增 内置仅有一个 OK 按钮的 Footer 和仅有一个 Cancel 按钮的 Footer。[#2812](https://github.com/ant-design-blazor/ant-design-blazor/pull/2812) [@zxyao145](https://github.com/zxyao145)
+  - 🆕 新增 初始化的时候最大化的支持。[#2834](https://github.com/ant-design-blazor/ant-design-blazor/pull/2834) [@zxyao145](https://github.com/zxyao145)
+
+- Input
+  - 🆕 新增 输入绑定属性 BindOnInput，默认绑定事件改为 onchange。[#2838](https://github.com/ant-design-blazor/ant-design-blazor/pull/2838) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 输入字符串类型转换错误的信息提示问题[#2846](https://github.com/ant-design-blazor/ant-design-blazor/pull/2846) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Tree 拖拽事件的属性 DropBelow 来标记拖拽后变为目标节点的兄弟节点或是子节点。[#2864](https://github.com/ant-design-blazor/ant-design-blazor/pull/2864) [@AndrewKaninchen](https://github.com/AndrewKaninchen)
+- 🌐 修复 cs-CZ 多语言 shortWeekDays 星期排序。[#2866](https://github.com/ant-design-blazor/ant-design-blazor/pull/2866) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 Cascader 禁用 Disabled 属性。[#2835](https://github.com/ant-design-blazor/ant-design-blazor/pull/2835) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Button 文件下载按钮 DownloadButton 组件。[#2819](https://github.com/ant-design-blazor/ant-design-blazor/pull/2819) [@LeaFrock](https://github.com/LeaFrock)
+- 🆕 新增 Drawer 的头部样式属性 HeaderStyle。[#2809](https://github.com/ant-design-blazor/ant-design-blazor/pull/2809) [@danielbotn](https://github.com/danielbotn)
+- 💄 新增 Dropdown 箭头样式。[#2795](https://github.com/ant-design-blazor/ant-design-blazor/pull/2795) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 InputNumber 精度属性 Precision。[#2774](https://github.com/ant-design-blazor/ant-design-blazor/pull/2774) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🆕 新增 Tooltip TitleTemplate属性，原 Title 属性改为 string 类型。[#2711](https://github.com/ant-design-blazor/ant-design-blazor/pull/2711) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🆕 新增 Select 虚拟化支持。[#2654](https://github.com/ant-design-blazor/ant-design-blazor/pull/2654) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🐞 修复 Menu 二级菜单的箭头展开和折叠时没有动画效果的问题。[#2876](https://github.com/ant-design-blazor/ant-design-blazor/pull/2876) [@wangj90](https://github.com/wangj90)
+- 🐞 修复 Segmented 绑定值类型会导致初始化选中错误。[#2869](https://github.com/ant-design-blazor/ant-design-blazor/pull/2869) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复 文档生成的demo 锚点。[#2826](https://github.com/ant-design-blazor/ant-design-blazor/pull/2826) [@kooliokey](https://github.com/kooliokey)
+
+### 0.12.7
+
+`2022-11-6`
+
+- DatePicker
+  - 🐞 修复 部分语言文件的星期排序，缺失的语言使用 Globalization 替代。[#2855](https://github.com/ant-design-blazor/ant-design-blazor/pull/2855) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 smoothScrollTo 方法导致无限循环的问题。[#2854](https://github.com/ant-design-blazor/ant-design-blazor/pull/2854) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 俄语 的星期排序[#2845](https://github.com/ant-design-blazor/ant-design-blazor/pull/2845) [@ocoka](https://github.com/ocoka)
+  - 🐞 修复 tab 键不确认值的问题。[#2847](https://github.com/ant-design-blazor/ant-design-blazor/pull/2847) [@Alexbits](https://github.com/Alexbits)
+
+- Core
+  - ✅ 增加核心模块的单元测试覆盖。[#2821](https://github.com/ant-design-blazor/ant-design-blazor/pull/2821) [@LeaFrock](https://github.com/LeaFrock)
+  - ⚡️ 优化 CssSizeLength 和CssStyleBuilder。[#2803](https://github.com/ant-design-blazor/ant-design-blazor/pull/2803) [@LeaFrock](https://github.com/LeaFrock)
+
+- 🐞 修复 `TabBarStyle` 和 `TabBarClass`。[#2844](https://github.com/ant-design-blazor/ant-design-blazor/pull/2844) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 BackTop 在隐藏时没有真正清除 dom。[#2831](https://github.com/ant-design-blazor/ant-design-blazor/pull/2831) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 如果 `Content` 是字符串而不是 RenderFragment，则内容不会渲染的错误。[#2833](https://github.com/ant-design-blazor/ant-design-blazor/pull/2833) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Title 属性没有渲染。[#2830](https://github.com/ant-design-blazor/ant-design-blazor/pull/2830) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Slider 可访问性 aria labels。[#2818](https://github.com/ant-design-blazor/ant-design-blazor/pull/2818) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Table 在页面切换时偶尔的异常[#2797](https://github.com/ant-design-blazor/ant-design-blazor/pull/2797) [@Kyojuro27](https://github.com/Kyojuro27)
+- 🐞 修复 Tag 渲染后标签颜色变化不总是正确更新样式。[#2816](https://github.com/ant-design-blazor/ant-design-blazor/pull/2816) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 Cascader 当 `AllowClear` 属性为false时清除无效的问题。[#2792](https://github.com/ant-design-blazor/ant-design-blazor/pull/2792) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 AutoComplete 搜索时下拉列表有时候不显示。[#2793](https://github.com/ant-design-blazor/ant-design-blazor/pull/2793) [@lyj0309](https://github.com/lyj0309)
+- 🐞 修复 Menu 子菜单展开图标的样式。[#2796](https://github.com/ant-design-blazor/ant-design-blazor/pull/2796) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Descriptions  缺少的div元素。[#2798](https://github.com/ant-design-blazor/ant-design-blazor/pull/2798) [@Weilence](https://github.com/Weilence)
+- 🐞 修复 Upload 返回错误时没有正确传出响应报文。[#2858](https://github.com/ant-design-blazor/ant-design-blazor/pull/2858) [@yosheng](https://github.com/yosheng)
+
+### 0.12.6
+
+`2022-10-11`
+
+- 🐞 修复 JS事件监听器注册问题。[#2783](https://github.com/ant-design-blazor/ant-design-blazor/pull/2783) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmented 的 Disabled 参数对项不起作用，也不能动态切换的问题。[#2778](https://github.com/ant-design-blazor/ant-design-blazor/pull/2778) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复打包时 patch.less 空文件缺失。[#2779](https://github.com/ant-design-blazor/ant-design-blazor/pull/2779) [@paulsuart](https://github.com/paulsuart)
+
+### 0.12.5
+
+`2022-10-09`
+
+- Datepicker
+  - 🐞 修复 手动输入时间时，CultureInfo 格式不识别导致无法绑定的问题。[#2715](https://github.com/ant-design-blazor/ant-design-blazor/pull/2715) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复一系列问题，使 Datepicker 和 RangePicker 的行为更接近 antd。[#2741](https://github.com/ant-design-blazor/ant-design-blazor/pull/2741) [@Alexbits](https://github.com/Alexbits)
+    - 修复 OnChange 事件传入旧值的问题。
+    - 修复 RangePicker 的头部无法切换年份。
+    - 修复 RangePicker 当开始和结束都在同一周期时，选择面板的显示问题。
+    - 修复 RangePicker 周选择模式时，结束日期不高亮显示的问题。
+    - 修复 RangePicker 在带有时间的日期选择器中输入结束日期时，开始日期不会高亮显示的问题。
+    - 其他一些小修复和重构
+
+- Modal
+  - 🐞 修复 当使用 Title 时，Maximizable 设置不生效。[#2750](https://github.com/ant-design-blazor/ant-design-blazor/pull/2750) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 Confirm 错误的响应 close icon 事件。[#2776](https://github.com/ant-design-blazor/ant-design-blazor/pull/2776) [@zxyao145](https://github.com/zxyao145)
+
+- 🐞 修复 底层 当组件 Dispose 时移除JS事件监听器。[#2738](https://github.com/ant-design-blazor/ant-design-blazor/pull/2738) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Radio 的 Disabled 属性在使用了 RadioOption 作为 options 的 RadioGroup 中不起作用的问题。[#2744](https://github.com/ant-design-blazor/ant-design-blazor/pull/2744) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 当所有selection都为Disabled=true，则头部的全选 Selection 也变为 Disable 状态。[#2737](https://github.com/ant-design-blazor/ant-design-blazor/pull/2737) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- ⚡️ 修复 Select 内部 CreateDeleteSelectOptions 方法的循环调用。[#2657](https://github.com/ant-design-blazor/ant-design-blazor/pull/2657) [@m-khrapunov](https://github.com/m-khrapunov)
+- 🛠 修复 Gulp 脚本，使LESS文件打包到NUGET包中。[#2730](https://github.com/ant-design-blazor/ant-design-blazor/pull/2730) [@paulsuart](https://github.com/paulsuart)
+
+### 0.12.4
+
+`2022-09-14`
+
+- 🐞 修复 Table 排序引起的异常。[#2710](https://github.com/ant-design-blazor/ant-design-blazor/pull/2710) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 AutoComplete 自动弹出浏览器的输入记忆的问题。[#2708](https://github.com/ant-design-blazor/ant-design-blazor/pull/2708) [@lyj0309](https://github.com/lyj0309)
+- 🐞 修复 RangePicker 几个问题[#2707](https://github.com/ant-design-blazor/ant-design-blazor/pull/2707) [@Alexbits](https://github.com/Alexbits)：
+  - 修复 RTL 模式第二个面板不弹出的问题
+  - 修复 预设范围在开启了时间输入时会被重置的问题
+  - 修复 停止输入后没有保持焦点的问题
+  - 修复 某个输入框有焦点时不能清除值的问题
+
+### 0.12.3
+
+`2022-09-13`
+
+🥮中秋节快乐！
+
+- 🐞 修复 TreeSelect 的查询支持。[#2686](https://github.com/ant-design-blazor/ant-design-blazor/pull/2686) [@Magehernan](https://github.com/Magehernan)
+- 🆕 增加 Grid 的 `GridRow` 别名，文档更新使用 `GridRow` 和 `GridCol`。[#2690](https://github.com/ant-design-blazor/ant-design-blazor/pull/2690) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 🐞 修复 Message 在 Invariant Globalization 模式下报错问题。[#2697](https://github.com/ant-design-blazor/ant-design-blazor/pull/2697) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Segmentd 的默认值回显。[#2699](https://github.com/ant-design-blazor/ant-design-blazor/pull/2699) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 的多重排序在EFCore上不生效的问题。[#2701](https://github.com/ant-design-blazor/ant-design-blazor/pull/2701) [@YongQuan-dotnet](https://github.com/YongQuan-dotnet)
+- 📖 增加 异常捕捉提示的 demo，分别位于 Alert、Result 以及 Notification。[#2706](https://github.com/ant-design-blazor/ant-design-blazor/pull/2706) [#2703](https://github.com/ant-design-blazor/ant-design-blazor/pull/2703) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.12.2
+
+`2022-09-08`
+
+- Table
+  - 🐞 修复 使用 EF Core 作为数据源时，排序报错[#2687](https://github.com/ant-design-blazor/ant-design-blazor/pull/2687) [@JamesGit-hash](https://github.com/JamesGit-hash)
+  - 🐞 修复 当 ActionColumn 放在数据列左边时的报错[#2683](https://github.com/ant-design-blazor/ant-design-blazor/pull/2683) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Tabs 没有 Animated 时，TabPane 样式问题[#2677](https://github.com/ant-design-blazor/ant-design-blazor/pull/2677) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Datepicker 给 RagePicker 的 Value 赋值 null 时的异常[#2688](https://github.com/ant-design-blazor/ant-design-blazor/pull/2688) [@ElderJames](https://github.com/ElderJames)
+
+### 0.12.1
+
+`2022-09-04`
+
+- Tabs
+  - 🐞 修复 Tabs 切换动效内容溢出问题[#2671](https://github.com/ant-design-blazor/ant-design-blazor/pull/2671) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 ReuseTabs 的 invaild uri 异常[#2663](https://github.com/ant-design-blazor/ant-design-blazor/pull/2663) [@ElderJames](https://github.com/ElderJames)
+
+- Icon
+  - 📖 修复 Icon文档遗漏的 ZoomOut Outline 图标[#2667](https://github.com/ant-design-blazor/ant-design-blazor/pull/2667) [@kooliokey](https://github.com/kooliokey)
+  - 🐞 修复 Icon 的状态更新，以及双色图标预渲染优化[#2666](https://github.com/ant-design-blazor/ant-design-blazor/pull/2666) [@ElderJames](https://github.com/ElderJames)
+  
+- 🐞 修复 Collapse 失效的 HTML 结构[#2668](https://github.com/ant-design-blazor/ant-design-blazor/pull/2668) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Breadcrumb 未同步HTML导致的样式问题，BreadcrumbItem增加OnClick事件[#2655](https://github.com/ant-design-blazor/ant-design-blazor/pull/2655) [@kooliokey](https://github.com/kooliokey)
+- 🐞 修复 TimePicker 会重置Value 的问题和错误的按钮[#2660](https://github.com/ant-design-blazor/ant-design-blazor/pull/2660) [@Alexbits](https://github.com/Alexbits)
+- 📖 修复 DatePicker 文档异常[#2659](https://github.com/ant-design-blazor/ant-design-blazor/pull/2659) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Avatar 让 Size 属性支持各种长度单位。[#2653](https://github.com/ant-design-blazor/ant-design-blazor/pull/2653) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复文档 无效的编辑URL[#2661](https://github.com/ant-design-blazor/ant-design-blazor/pull/2661) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.12.0
 
 `2022-08-29`

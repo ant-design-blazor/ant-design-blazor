@@ -122,7 +122,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                         FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
                         string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
 
-                        string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace("/", ".").Replace("\\", ".").Replace(razorFile.Extension, "")}";
+                        string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace(Path.DirectorySeparatorChar, '.').Replace(razorFile.Extension, "")}";
 
                         (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
 

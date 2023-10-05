@@ -28,6 +28,9 @@ namespace AntDesign
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         [Parameter]
+        public RenderFragment FilterDropdown { get; set; }
+
+        [Parameter]
         public TData Field
         {
             get
@@ -152,13 +155,17 @@ namespace AntDesign
             }
         }
 
-        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
+        private static readonly EventCallbackFactory _callbackFactory = new();
 
         private bool _filterOpened;
 
         private bool _hasFilterSelected;
 
         private string[] _selectedFilterValues;
+
+        private RenderFragment _renderDefaultFilterDropdown;
+
+        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
 
         protected override void OnInitialized()
         {
@@ -200,7 +207,10 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+                if (!Table.HasRowTemplate)
+                {
+                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                }
 
                 if (DataIndex != null)
                 {
@@ -212,6 +222,8 @@ namespace AntDesign
 
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
+
+            _filterable = _filterable || FilterDropdown != null;
 
             if (IsHeader)
             {
@@ -242,17 +254,13 @@ namespace AntDesign
                     {
                         _columnFilterType = TableFilterType.List;
 
-                        _filters = new List<TableFilter>();
-
-                        foreach (var enumValue in Enum.GetValues(_columnDataType))
+                        _filters = EnumHelper<TData>.GetValueLabelList().Select(item =>
                         {
-                            var enumName = Enum.GetName(_columnDataType, enumValue);
                             var filterOption = GetNewFilter();
-                            // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
-                            filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                            filterOption.Value = enumValue;
-                            ((List<TableFilter>)_filters).Add(filterOption);
-                        }
+                            filterOption.Text = item.Label;
+                            filterOption.Value = item.Value;
+                            return filterOption;
+                        }).ToList();
                     }
                     else
                     {
@@ -270,6 +278,8 @@ namespace AntDesign
                 }
 
                 Context.HeaderColumnInitialed(this);
+
+                _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
 
             ClassMapper
@@ -397,7 +407,7 @@ namespace AntDesign
             _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
             FilterModel = _hasFilterSelected ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
-            Table?.ReloadAndInvokeChange();
+            Table?.ColumnFilterChange();
         }
 
         private void ResetFilters()
@@ -454,15 +464,15 @@ namespace AntDesign
         {
             foreach (var filter in filterModel.Filters)
             {
-                if (filter.Value is JsonElement)
+                if (filter.Value is JsonElement jsonElement)
                 {
-                    filter.Value = JsonElementHelper<TData>.GetValue((JsonElement)filter.Value);
+                    filter.Value = JsonElementHelper<TData>.GetValue(jsonElement);
                 }
             }
 
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in filterModel.Filters.Where(filter => filterModel.Filters.Any(x => x.Value == filter.Value)))
+                foreach (var filter in _filters.Where(f => filterModel.Filters.Any(x => x.Value.Equals(f.Value))))
                 {
                     filter.Selected = true;
                 }

@@ -15,7 +15,7 @@ namespace AntDesign
         private const string FooterClass = "ant-transfer-list-with-footer";
 
         [Parameter]
-        public IList<TransferItem> DataSource { get; set; }
+        public IEnumerable<TransferItem> DataSource { get; set; }
 
         [Parameter]
         public string[] Titles { get; set; } = new string[2];
@@ -33,10 +33,10 @@ namespace AntDesign
         public bool ShowSelectAll { get; set; } = true;
 
         [Parameter]
-        public string[] TargetKeys { get; set; }
+        public IEnumerable<string> TargetKeys { get; set; }
 
         [Parameter]
-        public string[] SelectedKeys { get; set; }
+        public IEnumerable<string> SelectedKeys { get; set; }
 
         [Parameter]
         public EventCallback<TransferChangeArgs> OnChange { get; set; }
@@ -65,7 +65,14 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private List<string> _targetKeys;
+        /// <summary>
+        /// A custom CSS style used for rendering the transfer columns
+        /// </summary>
+        [Parameter]
+        public Func<TransferDirection, string> ListStyle { get; set; } = _ => string.Empty;
+
+        private List<string> _targetKeys = new List<string>();
+        private List<string> _selectedKeys = new List<string>();
 
         private bool _leftCheckAllState = false;
         private bool _leftCheckAllIndeterminate = false;
@@ -87,24 +94,83 @@ namespace AntDesign
         private string _leftFilterValue = string.Empty;
         private string _rightFilterValue = string.Empty;
 
+        private bool _initialized = false;
+
         protected override void OnInitialized()
         {
             ClassMapper
                 .Add(PrefixName)
                 .If($"{PrefixName}-rtl", () => RTL);
+        }
 
-            _targetKeys = TargetKeys.ToList();
-            var selectedKeys = SelectedKeys.ToList();
-            _sourceSelectedKeys = selectedKeys.Where(key => !_targetKeys.Contains(key)).ToList();
-            _targetSelectedKeys = selectedKeys.Where(key => _targetKeys.Contains(key)).ToList();
-            var count = _sourceSelectedKeys.Count;
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var needRefreshTargetKeys = false;
+            var needRefreshDataSource = false;
+            var needRefreshSelectedKeys = false;
+            if (parameters.TryGetValue(nameof(TargetKeys), out IEnumerable<string> newTargetKeys))
+            {
+                needRefreshTargetKeys |= TargetKeys != newTargetKeys;
+            }
 
-            InitData();
+            if (parameters.TryGetValue(nameof(SelectedKeys), out IEnumerable<string> newSelectedKeys))
+            {
+                needRefreshSelectedKeys |= SelectedKeys != newSelectedKeys;
+            }
+
+            if (parameters.TryGetValue(nameof(DataSource), out IEnumerable<TransferItem> dataSource))
+            {
+                needRefreshDataSource |= DataSource == null || dataSource == null || !DataSource.SequenceEqual(dataSource);
+            }
+
+            await base.SetParametersAsync(parameters);
+
+            if (needRefreshDataSource)
+            {
+                RefreshDataSource();
+
+                if (_initialized)
+                {
+                    MathTitleCount();
+                }
+
+                _initialized = true;
+            }
+
+            if (needRefreshTargetKeys)
+            {
+                _targetKeys = TargetKeys.ToList();
+                _selectedKeys.Clear();
+                RefreshSelectedKeys();
+            }
+
+            if (needRefreshSelectedKeys)
+            {
+                _selectedKeys = SelectedKeys.ToList();
+                RefreshSelectedKeys();
+            }
+        }
+
+        private void RefreshSelectedKeys()
+        {
+            var removeKeys = new List<string>();
+            foreach (var key in _selectedKeys)
+            {
+                if (DataSource.Any(x => x.Key == key && x.Disabled))
+                {
+                    removeKeys.Add(key);
+                }
+            }
+
+            removeKeys.ForEach(k => _selectedKeys.Remove(k));
+
+            _sourceSelectedKeys = _selectedKeys.Where(key => !_targetKeys.Contains(key)).ToList();
+            _targetSelectedKeys = _selectedKeys.Where(key => _targetKeys.Contains(key)).ToList();
 
             MathTitleCount();
         }
 
-        private void InitData()
+        private void RefreshDataSource()
         {
             _leftDataSource = DataSource.Where(a => !_targetKeys.Contains(a.Key));
             _rightDataSource = DataSource.Where(a => _targetKeys.Contains(a.Key));
@@ -112,14 +178,17 @@ namespace AntDesign
 
         private void MathTitleCount()
         {
-            _rightButtonDisabled = _sourceSelectedKeys.Count == 0;
-            _leftButtonDisabled = _targetSelectedKeys.Count == 0;
+            _rightButtonDisabled = _sourceSelectedKeys?.Count == 0;
+            _leftButtonDisabled = _targetSelectedKeys?.Count == 0;
 
-            var leftSuffix = _leftDataSource.Count() == 1 ? Locale.ItemUnit : Locale.ItemsUnit;
-            var rightSuffix = _rightDataSource.Count() == 1 ? Locale.ItemUnit : Locale.ItemsUnit;
+            var leftDataSourceCount = _leftDataSource?.Count() ?? 0;
+            var rightDataSourceCount = _rightDataSource?.Count() ?? 0;
 
-            var leftCount = _sourceSelectedKeys.Count == 0 ? $"{_leftDataSource.Count()}" : $"{_sourceSelectedKeys.Count}/{_leftDataSource.Count()}";
-            var rightCount = _targetSelectedKeys.Count == 0 ? $"{_rightDataSource.Count()}" : $"{_targetSelectedKeys.Count}/{_rightDataSource.Count()}";
+            var leftSuffix = leftDataSourceCount == 1 ? Locale.ItemUnit : Locale.ItemsUnit;
+            var rightSuffix = rightDataSourceCount == 1 ? Locale.ItemUnit : Locale.ItemsUnit;
+
+            var leftCount = _sourceSelectedKeys?.Count == 0 ? $"{leftDataSourceCount}" : $"{_sourceSelectedKeys.Count}/{leftDataSourceCount}";
+            var rightCount = _targetSelectedKeys?.Count == 0 ? $"{rightDataSourceCount}" : $"{_targetSelectedKeys.Count}/{rightDataSourceCount}";
 
             _leftCountText = $"{leftCount} {leftSuffix}";
             _rightCountText = $"{rightCount} {rightSuffix}";
@@ -127,7 +196,7 @@ namespace AntDesign
             CheckAllState();
         }
 
-        private async Task SelectItem(bool isCheck, string direction, string key)
+        private async Task SelectItem(bool isCheck, TransferDirection direction, string key)
         {
             var holder = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
             var index = Array.IndexOf(holder.ToArray(), key);
@@ -139,6 +208,8 @@ namespace AntDesign
             if (isCheck)
                 holder.Add(key);
 
+            _selectedKeys = _sourceSelectedKeys.Union(_targetSelectedKeys).ToList();
+
             HandleSelect(direction, holder);
 
             MathTitleCount();
@@ -149,7 +220,7 @@ namespace AntDesign
             }
         }
 
-        private async Task SelectAll(bool isCheck, string direction)
+        private async Task SelectAll(bool isCheck, TransferDirection direction)
         {
             var list = _leftDataSource;
             if (direction == TransferDirection.Right)
@@ -169,7 +240,7 @@ namespace AntDesign
             }
         }
 
-        private void HandleSelect(string direction, List<string> keys)
+        private void HandleSelect(TransferDirection direction, List<string> keys)
         {
             if (direction == TransferDirection.Left)
             {
@@ -181,7 +252,7 @@ namespace AntDesign
             }
         }
 
-        private async Task MoveItem(MouseEventArgs e, string direction)
+        private async Task MoveItem(MouseEventArgs e, TransferDirection direction)
         {
             var moveKeys = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
 
@@ -194,7 +265,7 @@ namespace AntDesign
                 _targetKeys.AddRange(moveKeys);
             }
 
-            InitData();
+            RefreshDataSource();
 
             var oppositeDirection = direction == TransferDirection.Right ? TransferDirection.Left : TransferDirection.Right;
 
@@ -243,7 +314,7 @@ namespace AntDesign
             _rightCheckAllIndeterminate = !_rightCheckAllState && _targetSelectedKeys.Count > 0;
         }
 
-        private async Task HandleScroll(string direction, EventArgs e)
+        private async Task HandleScroll(TransferDirection direction, EventArgs e)
         {
             if (OnScroll.HasDelegate)
             {
@@ -251,7 +322,7 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleSearch(ChangeEventArgs e, string direction, bool mathTileCount = true)
+        private async Task HandleSearch(ChangeEventArgs e, TransferDirection direction, bool mathTileCount = true)
         {
             if (direction == TransferDirection.Left)
             {
@@ -273,7 +344,7 @@ namespace AntDesign
             }
         }
 
-        private async Task ClearFilterValueAsync(string direction)
+        private async Task ClearFilterValueAsync(TransferDirection direction)
         {
             if (direction == TransferDirection.Left)
             {

@@ -105,7 +105,8 @@
                 TItemValue="string?"
                 Value="null"
                 AllowClear>
-        </AntDesign.Select>);
+        </AntDesign.Select>
+    );
         //Act
 
         //normally blazor would rerender and in Select.OnParametersSet() 
@@ -117,6 +118,41 @@
         //Assert
         cut.Invoking(c => c.Find("span.ant-select-clear"))
                 .Should().Throw<Bunit.ElementNotFoundException>();
-       
+
+    }
+
+    [Fact]
+    public void AutoFocus_focus_set_after_render()
+    {
+        //Arrange
+#if !NET6_0_OR_GREATER
+#pragma warning disable CS0618 // Type or member is obsolete
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
+#endif
+
+        var dataSource = new List<PersonNullable>()
+        {
+            new PersonNullable("2", "Test 2"),
+            new PersonNullable("3", "Test 3"),
+            new PersonNullable("4", "Test 4"),
+        };
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                TItem="PersonNullable"
+                TItemValue="string"
+                Value="null"
+                AutoFocus="true">
+        </AntDesign.Select>
+    );
+
+        //Assert
+#if NET6_0_OR_GREATER
+		JSInterop.VerifyFocusAsyncInvoke();
+#else
+        JSInterop.VerifyInvoke(JSInteropConstants.Focus);
+#endif
     }
 }

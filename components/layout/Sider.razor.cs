@@ -47,11 +47,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CollapsedChanged { get; set; }
 
+        [Obsolete("Use CollapsedChanged instead")]
         [Parameter]
         public EventCallback<bool> OnCollapse { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
+
+        [Parameter]
+        public bool DefaultCollapsed { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -102,12 +106,21 @@ namespace AntDesign
                 Trigger = DefaultTrigger;
             }
 
+            if (DefaultCollapsed)
+            {
+                Collapsed = true;
+            }
+
             SetClass();
         }
 
         internal void AddMenu(Menu menu)
         {
             _menu = menu;
+            if (_isCollapsed)
+            {
+                _menu.CollapseUpdated(true);
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -185,6 +198,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            _menu = null;
             DomEventListener?.Dispose();
             base.Dispose(disposing);
         }

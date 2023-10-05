@@ -64,7 +64,7 @@
       "quarterSelect": "Vybrat čtvrtletí",
       "week": "Týden",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Po", "Út", "St", "Čt", "Pá", "So", "Ne" ]
+      "shortWeekDays": [ "Ne", "Po", "Út", "St", "Čt", "Pá", "So" ]
     },
     "timePickerLocale": {
       "placeholder": "Vybrat čas",
@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Zpět" },
   "Form": {
+    "optional": "(nepovinné)",
     "defaultValidateMessages": {
       "default": "Chybně vyplněné pole ${label}",
       "required": "Prosím zadejte ${label}",

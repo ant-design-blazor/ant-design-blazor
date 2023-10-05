@@ -57,6 +57,14 @@ namespace AntDesign
 
         protected Action<TItem, TItemValue> _setValue;
 
+        internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
+
+        /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
         /// <summary>
         /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default
         /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
@@ -111,6 +119,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public EventCallback OnFocus { get; set; }
 
+        [Parameter] public bool AutoFocus { get; set; }
+
         /// <summary>
         /// The name of the property to be used as a group indicator.
         /// If the value is set, the entries are displayed in groups.
@@ -147,6 +157,11 @@ namespace AntDesign
         /// The custom prefix icon.
         /// </summary>
         [Parameter] public RenderFragment PrefixIcon { get; set; }
+
+        /// <summary>
+        /// The accesskey global attribute.
+        /// </summary>
+        [Parameter] public string AccessKey { get; set; }
 
         protected IEnumerable<TItemValue> _defaultValues;
         protected bool _defaultValuesHasItems;
@@ -203,8 +218,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
-        [Parameter] public string Status { get; set; }
-
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
         /// <summary>
@@ -241,29 +254,41 @@ namespace AntDesign
             get => _selectedValues;
             set
             {
-                if (value != null && _selectedValues != null)
+                if (value != null)
                 {
-                    var hasChanged = !value.SequenceEqual(_selectedValues);
-
-                    if (!hasChanged)
+                    if (_selectedValues != null)
                     {
+                        var hasChanged = !value.SequenceEqual(_selectedValues);
+
+                        if (!hasChanged)
+                        {
+                            return;
+                        }
+
+                        _selectedValues = value;
+                        _ = OnValuesChangeAsync(value);
+                    }
+                    else
+                    {
+                        _selectedValues = value;
+
+                        _ = OnValuesChangeAsync(value);
+                    }
+                }
+                else
+                {
+                    // value is null
+                    if (_selectedValues != null)
+                    {
+                        _selectedValues = null;
+
+                        _ = OnValuesChangeAsync(null);
+                    }
+                    else
+                    {
+                        // Don't notify that the field changed (as both values are null)
                         return;
                     }
-
-                    _selectedValues = value;
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value != null && _selectedValues == null)
-                {
-                    _selectedValues = value;
-
-                    _ = OnValuesChangeAsync(value);
-                }
-                else if (value == null && _selectedValues != null)
-                {
-                    _selectedValues = default;
-
-                    _ = OnValuesChangeAsync(default);
                 }
 
                 if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
@@ -431,10 +456,10 @@ namespace AntDesign
                 return;
             }
 
-            if (!SelectOptionItems.Any())
-            {
-                return;
-            }
+            //if (!SelectOptionItems.Any())
+            //{
+            //    return;
+            //}
 
             if (values == null)
             {
@@ -445,6 +470,12 @@ namespace AntDesign
 
             EvaluateValuesChangedOutsideComponent(values);
 
+            if (ValuesChanged.HasDelegate)
+                await ValuesChanged.InvokeAsync(Values);
+
+            if (OnSelectedItemsChanged.HasDelegate)
+                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
+
             if (_dropDown.IsOverlayShow())
             {
                 //A delay forces a refresh better than StateHasChanged().
@@ -454,9 +485,6 @@ namespace AntDesign
                 await Task.Delay(1);
                 await UpdateOverlayPositionAsync();
             }
-
-            await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
-            await ValuesChanged.InvokeAsync(Values);
         }
 
         /// <summary>
@@ -602,6 +630,12 @@ namespace AntDesign
         {
             SetClassMap();
 
+            var classPrefix = "ant-select";
+            ClassMapper
+                .If($"{classPrefix}-in-form-item ", () => FormItem != null)
+                .If($"{classPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{classPrefix}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
+
             if (string.IsNullOrWhiteSpace(Style))
             {
                 Style = DefaultWidth;
@@ -610,6 +644,16 @@ namespace AntDesign
             _isInitialized = true;
 
             base.OnInitialized();
+        }
+
+        protected override async Task OnFirstAfterRenderAsync()
+        {
+            if (AutoFocus)
+            {
+                await SetInputFocusAsync();
+            }
+
+            await base.OnFirstAfterRenderAsync();
         }
 
         protected void OnOverlayHide()
@@ -708,7 +752,7 @@ namespace AntDesign
                     SelectedOptionItems.Add(selectOption);
                 }
                 selectOption.IsSelected = true;
-                await ValueChanged.InvokeAsync(selectOption.Value);
+                CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
             }
             else
@@ -748,10 +792,7 @@ namespace AntDesign
                     {
                         SelectOptionItems.Remove(selectOption);
                         SelectedOptionItems.Remove(selectOption);
-                        if (selectOption.IsAddedTag && SelectOptions != null)
-                        {
-                            AddedTags.Remove(selectOption);
-                        }
+                        AddedTags.Remove(selectOption);
                     }
 
                     if (IsResponsive)
@@ -799,15 +840,7 @@ namespace AntDesign
                 }
             }
 
-            if (ValuesChanged.HasDelegate)
-            {
-                await ValuesChanged.InvokeAsync(newSelectedValues);
-            }
-            else
-            {
-                Values = newSelectedValues;
-                StateHasChanged();
-            }
+            Values = newSelectedValues;
         }
 
         protected void ClearSearch()
@@ -906,7 +939,7 @@ namespace AntDesign
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
-                Value = default;
+                CurrentValue = default;
                 await ClearSelectedAsync();
             }
             else if (_hasValueOnClear)
@@ -914,7 +947,6 @@ namespace AntDesign
                 var selectOption = SelectOptionItems.Where(o => EqualityComparer<TItemValue>.Default.Equals(o.Value, _valueOnClear)).FirstOrDefault();
                 if (selectOption != null)
                 {
-                    Value = selectOption.Value;
                     await SetValueAsync(selectOption);
                 }
                 else
@@ -924,8 +956,7 @@ namespace AntDesign
 
                     ActiveOption = SelectOptionItems.FirstOrDefault();
                     SelectedOptionItems.Clear();
-                    Value = _valueOnClear;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _valueOnClear;
                 }
             }
             else
@@ -935,8 +966,7 @@ namespace AntDesign
                     SelectedOptionItems[0].IsSelected = false;
                     SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
                     SelectedOptionItems[0].IsSelected = true;
-                    Value = _selectOptionEqualToTypeDefault.Value;
-                    await ValueChanged.InvokeAsync(_valueOnClear);
+                    CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
                 {
@@ -1009,6 +1039,19 @@ namespace AntDesign
             {
                 await OnSelectedItemsChanged.InvokeAsync(default);
                 await ValuesChanged.InvokeAsync(default);
+            }
+        }
+
+        /// <summary>
+        /// Unhide all select options, except any that are selected in the case that <see cref="HideSelected"/> is true
+        /// </summary>
+        protected void UnhideSelectOptions()
+        {
+            var hiddenOptions = SelectOptionItems.Where(x => x.IsHidden);
+
+            foreach (var option in hiddenOptions)
+            {
+                option.IsHidden = HideSelected && option.IsSelected;
             }
         }
 

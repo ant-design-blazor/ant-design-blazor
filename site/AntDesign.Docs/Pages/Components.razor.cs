@@ -40,35 +40,50 @@ namespace AntDesign.Docs.Pages
 
         private List<string> _filePaths;
 
-        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/blob/master/{_filePath}";
+        private bool _rendered;
 
-        protected override async Task OnInitializedAsync()
+        private bool _changed = true;
+
+        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
+
+        protected override void OnInitialized()
         {
             LanguageService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
-
-            await HandleNavigate();
         }
 
-        private async void OnLanguageChanged(object sender, CultureInfo args)
+        private void OnLanguageChanged(object sender, CultureInfo args)
         {
             if (!string.IsNullOrEmpty(Name))
             {
-                await InvokeAsync(HandleNavigate);
-                await InvokeAsync(StateHasChanged);
+                _changed = true;
+                InvokeAsync(StateHasChanged);
             }
         }
 
-        private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
-            Name = null;
-            await HandleNavigate();
+            _changed = true;
+            InvokeAsync(StateHasChanged);
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnParametersSetAsync();
-            await HandleNavigate();
+            if (firstRender)
+            {
+                _rendered = true;
+                await Task.Yield();
+                StateHasChanged();
+                return;
+            }
+
+            if (_rendered && _changed)
+            {
+                _changed = false;
+                _ = HandleNavigate();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task HandleNavigate()
@@ -98,7 +113,7 @@ namespace AntDesign.Docs.Pages
                 foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue) ?? Array.Empty<DemoItem>())
                 {
                     _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Name}.md");
-                    _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Type[(item.Type.LastIndexOf('.') + 1)..]}.razor");
+                    _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
                 }
                 StateHasChanged();
             }

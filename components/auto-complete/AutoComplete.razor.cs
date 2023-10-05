@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.JsInterop.ObservableApi;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -26,6 +27,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Backfill { get; set; } = false;
+
+        [Parameter]
+        public int DebounceMilliseconds { get; set; } = 250;
 
         /// <summary>
         /// 列表对象集合
@@ -164,7 +168,7 @@ namespace AntDesign
         public object ActiveValue { get; set; }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
         [Parameter]
@@ -173,9 +177,16 @@ namespace AntDesign
         [Parameter]
         public bool ShowPanel { get; set; } = false;
 
+        [Inject] private IDomEventListener DomEventListener { get; set; }
+
         private bool _isOptionsZero = true;
 
         private IAutoCompleteInput _inputComponent;
+
+        private IList<AutoCompleteDataItem<TOption>> _filteredOptions;
+
+        private string _minWidth = "";
+        private bool _parPanelVisible = false;
 
         public void SetInputComponent(IAutoCompleteInput input)
         {
@@ -184,19 +195,26 @@ namespace AntDesign
 
         #region 子控件触发事件 / Child controls trigger events
 
-        public async Task InputFocus(FocusEventArgs e)
+        public Task InputFocus(FocusEventArgs e)
         {
             if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
+
+            return Task.CompletedTask;
         }
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            SelectedValue = args?.Value;
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
-            StateHasChanged();
+        }
+
+        public Task InputValueChange(string value)
+        {
+            SelectedValue = value;
+            ResetActiveItem();
+            return Task.CompletedTask;
         }
 
         public async Task InputKeyDown(KeyboardEventArgs args)
@@ -234,12 +252,13 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            ResetActiveItem();
+            UpdateFilteredOptions();
         }
 
         protected override async Task OnFirstAfterRenderAsync()
         {
             await SetOverlayWidth();
+            await DomEventListener.AddResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             await base.OnFirstAfterRenderAsync();
         }
 
@@ -346,10 +365,16 @@ namespace AntDesign
                 _inputComponent.SetValue(this.ActiveValue);
         }
 
+        public void UpdateFilteredOptions()
+        {
+            _filteredOptions = GetOptionItems();
+            _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+        }
+
         private void ResetActiveItem()
         {
-            var items = GetOptionItems();
-            _isOptionsZero = items.Count == 0 && Options != null;
+            var items = _filteredOptions;
+
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {
                 // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
@@ -360,7 +385,7 @@ namespace AntDesign
                 }
                 else if (DefaultActiveFirstOption == true && items.Count > 0)
                 {
-                    this.ActiveValue = items.FirstOrDefault().Value;
+                    this.ActiveValue = items.FirstOrDefault()?.Value.ToString();
                 }
                 else
                 {
@@ -368,7 +393,7 @@ namespace AntDesign
                 }
             }
 
-            if (_overlayTrigger != null && ShowPanel)
+            if (_overlayTrigger != null)
             {
                 // if options count == 0 then close overlay
                 if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
@@ -396,8 +421,6 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        private bool _parPanelVisible = false;
-
         private async void OnOverlayTriggerVisibleChange(bool visible)
         {
             if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
@@ -412,31 +435,22 @@ namespace AntDesign
             }
         }
 
-        private string _minWidth = "";
+        private async void UpdateWidth(List<ResizeObserverEntry> entry)
+        {
+            await SetOverlayWidth();
+            InvokeStateHasChanged();
+        }
 
         private async Task SetOverlayWidth()
         {
-            string newWidth;
-            if (Width.Value != null)
-            {
-                var w = Width.Match<string>(f0 => $"{f0}px", f1 => f1);
-                newWidth = $"min-width:{w}";
-            }
-            else
-            {
-                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
-                //Element element;
-                //if (_divRef.Id != null)
-                //{
-                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
-                //}
-                //else
-                //{
-                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
-                //}
-                newWidth = $"min-width:{element.ClientWidth}px";
-            }
-            if (newWidth != _minWidth) _minWidth = newWidth;
+            HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
+            _minWidth = $"min-width:{element.ClientWidth}px";
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener.RemoveResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
+            base.Dispose(disposing);
         }
     }
 

@@ -46,6 +46,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
 
+        [Parameter]
+        public bool Disabled { get; set; }
+
         private string[] _selectedValues;
         private Func<string[]> _currentValue;
         private IList<Checkbox> _checkboxItems;
@@ -56,9 +59,6 @@ namespace AntDesign
         private int _indexConstructedOptionsOffset = -1;
         private int _indexSetOptionsOffset = -1;
         private CheckboxGroupMixedMode _mixedMode = CheckboxGroupMixedMode.ChildContentFirst;
-
-        [Parameter]
-        public bool Disabled { get; set; }
 
         public CheckboxGroup()
         {
@@ -173,7 +173,7 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                if (ChildContent is not null && _checkboxItems.Count > 0)
+                if (ChildContent is not null && _checkboxItems?.Count > 0)
                 {
                     _constructedOptions = CreateConstructedOptions();
                 }
@@ -211,7 +211,6 @@ namespace AntDesign
             return workWith.Match<Func<string[]>>(
                 opt => () => opt.Where(x => x.Checked).Select(x => x.Value).ToArray(),
                 arr => () => _selectedValues);
-
         }
 
         /// <summary>
@@ -235,7 +234,6 @@ namespace AntDesign
                 indexOffset = _indexConstructedOptionsOffset;
                 workWith = _constructedOptions;
             }
-
 
             workWith.Switch(opts =>
             {

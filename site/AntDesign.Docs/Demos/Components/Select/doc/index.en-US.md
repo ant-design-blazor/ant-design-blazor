@@ -19,8 +19,10 @@ Select component to select value from options.
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
+| AccessKey | The [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) global attribute.  | string | |
 | AllowClear | Show clear button. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
+| AutoFocus | get focus when component mounted                             | boolean        | false         |
 | Bordered | Toggle the border style. | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
@@ -44,6 +46,7 @@ Select component to select value from options.
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
 | Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
+| ListboxStyle | custom listbox styles | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
 | MaxTagPlaceholder | Placeholder for hidden tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | Max tag text length (number of characters) to show. | int | - |  |

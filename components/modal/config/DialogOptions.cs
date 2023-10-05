@@ -99,6 +99,16 @@ namespace AntDesign
         /// </summary>
         public RenderFragment RestoreBtnIcon { get; set; } = DefaultRestoreIcon;
 
+        /// <summary>
+        /// Maximize the dialog during component initialization, and it will ignore the Maximizable value.
+        /// </summary>
+        public bool DefaultMaximized { get; set; } = false;
+
+        /// <summary>
+        /// Resizable (Horizontal direction only)
+        /// </summary>
+        public bool Resizable { get; set; }
+
         #region internal
 
 
@@ -123,25 +133,15 @@ namespace AntDesign
             }
         }
 
-        internal string GetWrapClassNameExtended(Modal modal = null)
+        internal string GetWrapClassNameExtended(ModalStatus status)
         {
             var classNameArray = new List<string>();
-            if (modal == null)
-            {
-                classNameArray.AddIf(
-                        !string.IsNullOrWhiteSpace(WrapClassName),
-                        WrapClassName)
-                    .AddIf(Centered, $"{PrefixCls}-centered")
-                    .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
-
-                return string.Join(' ', classNameArray);
-            }
 
             classNameArray.AddIf(
-                    !string.IsNullOrWhiteSpace(modal.WrapClassName),
-                    modal.WrapClassName)
-                .AddIf(modal.Centered, $"{PrefixCls}-centered")
-                .AddIf(modal.Rtl, $"{PrefixCls}-wrap-rtl");
+                    !string.IsNullOrWhiteSpace(WrapClassName),
+                    WrapClassName)
+                .AddIf(Centered && status != ModalStatus.Max, $"{PrefixCls}-centered")
+                .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
 
             return string.Join(' ', classNameArray);
         }

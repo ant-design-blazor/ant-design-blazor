@@ -6,7 +6,9 @@
 
 @if (CanDraggable)
 {
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true" 
+      @oncontextmenu="OnContextMenu"  
+      @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate"
       @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
       @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
         @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
@@ -39,18 +41,31 @@
                 {
                     @SelfNode.TitleTemplate
                 }
-                else if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
-                {
-                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
-
-                    <span>
-                       @((MarkupString)SelfNode.Title.Replace(TreeComponent.SearchValue, value))
-                    </span>
-                }
                 else
                 {
-                    @SelfNode.Title
+                    bool shouldMarkup = SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue);
+                    int index = -1;
+                    if (shouldMarkup)
+                    {
+                        index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+                    }
+
+                    if (shouldMarkup && (index > -1))
+                    {
+                        var start = SelfNode.Title.Substring(0, index);
+                        var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+                        var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+                        var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
+                        <span>
+                            @((MarkupString)value)
+                        </span>
+                    }
+                    else
+                    {
+                        @SelfNode.Title
+                    }
                 }
+ 
             </span>
         }
         @if (SelfNode.DragTarget)
@@ -61,7 +76,8 @@
 }
 else
 {
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick">
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick"
+      @oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate">
         @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
         {
             <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
@@ -98,10 +114,13 @@ else
             <span class="ant-tree-title">
                 @if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
                 {
-                    var value = $"<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{TreeComponent.SearchValue}</span>";
-                    var regex = new Regex(TreeComponent.SearchValue);
+                    int index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+                    var start = SelfNode.Title.Substring(0, index);
+                    var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+                    var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+                    var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
                     <span>
-                        @((MarkupString)regex.Replace(SelfNode.Title,value,1))
+                       @((MarkupString)value)
                     </span>
                 }
                 else

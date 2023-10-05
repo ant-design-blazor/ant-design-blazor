@@ -13,6 +13,7 @@
                     OnVisibleChange="OverlayVisibleChange"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
+                    Placement="Placement"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
@@ -39,11 +40,13 @@
                                  OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
                                  OnBlur="e => OnBlur(0)"
+                                 Mask="@Mask"
                                  Onfocus="e => AutoFocus = true"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
                                  HtmlInputSize="@HtmlInputSize"
                                  SuffixIcon="@SuffixIcon"
+                                 FeedbackIcon="@FormItem?.FeedbackIcon"
                                  AllowClear="@AllowClear" />
             </div>
         </Unbound>

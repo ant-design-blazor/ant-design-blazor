@@ -12,19 +12,14 @@
                @onfocus="Onfocus"
                @onblur="OnBlur"
                @bind-value="@Value"
+               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
                readonly="@ReadOnly">
-        @if (ShowSuffixIcon)
+        @if (ShowSuffixIcon || FeedbackIcon != null)
         {
-            @if (ShowClear())
-            {
-                <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                    <Icon type="close-circle" theme="fill" />
-                </span>
-            }
-            <span class="@(PrefixCls)-suffix" onclick="@OnSuffixIconClick">
+            <span class="@(PrefixCls)-suffix" style="pointer-events: auto;" onclick="@OnSuffixIconClick">
 
                 @if (SuffixIcon != null)
                 {
@@ -32,20 +27,30 @@
                 }
                 else if (ShowTime)
                 {
-                    <Icon type="clock-circle" />
+                    <Icon Type="clock-circle"/>
                 }
                 else
                 {
-                    <Icon type="calendar" />
+                    <Icon Type="calendar"/>
                 }
 
+                @if (FeedbackIcon != null)
+                {
+                    @FeedbackIcon
+                }
+            </span>
+        }
+        @if (ShowClear())
+        {
+            <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
+                <Icon Type="close-circle" Theme="fill"/>
             </span>
         }
     </div>
 }
 else
 {
-    <div class="@(PrefixCls)-input">
+    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -54,38 +59,16 @@ else
                @onfocus="Onfocus"
                @onblur="OnBlur"
                @bind-value="@Value"
+               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
                readonly="@ReadOnly">
     </div>
-    @if (ShowSuffixIcon)
-    {
-        @if (ShowClear())
-        {
-            <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                <Icon type="close-circle" theme="fill" />
-            </span>
-        }
-        <span class="@(PrefixCls)-suffix" onclick="@OnSuffixIconClick">
-            @if (SuffixIcon != null)
-            {
-                @SuffixIcon
-            }
-            else if (ShowTime)
-            {
-                <Icon type="clock-circle" />
-            }
-            else
-            {
-                <Icon type="calendar" />
-            }
-        </span>
-    }
-
 }
 
 @code {
+
     [Parameter]
     public string PrefixCls { get; set; } = "ant-picker";
 
@@ -100,6 +83,9 @@ else
 
     [Parameter]
     public bool ReadOnly { get; set; }
+
+    [Parameter]
+    public string Mask { get; set; }
 
     [Parameter]
     public bool IsRange { get; set; } = false;
@@ -151,6 +137,12 @@ else
 
     [Parameter]
     public EventCallback OnSuffixIconClick { get; set; }
+
+    [Parameter]
+    public RenderFragment FeedbackIcon { get; set; }
+
+    [Parameter]
+    public bool Active { get; set; }
 
     public bool IsOnFocused { get; set; } = false;
 

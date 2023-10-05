@@ -1,14 +1,16 @@
 ﻿---
-order: 32
+order: 6.7
 title:
   en-US: Restore query state
-  zh-CN: 恢复筛选状态
+  zh-CN: 筛选状态
 ---
 
 ## zh-CN
 
-任何带有“过滤器”、“排序”、“页面大小”和“页面索引”的筛选状态都可以保存，并可以在以后重新恢复 Table 的分页、排序和过滤器。
+在调用 `ReloadData()` 时可以将包含 “分页”、“排序”、“过滤器” 等状态的 `QueryModel` 传递给 `Table` 恢复状态。
+另外也可以调用 `ResetData()` 重置 `Table` 状态。
 
 ## en-US
 
-Every table configuration with 'Filter', 'Sort', 'PageSize' and 'PageIndex' can be saved and later re-applied. Also applied sorting and filters can be reseted by one click.
+Every table configuration with 'Filter', 'Sort', 'PageSize' and 'PageIndex' can be saved and later re-applied by `ReloadData()`. 
+Also applied sorting and filters can be reseted by `ResetData()`.

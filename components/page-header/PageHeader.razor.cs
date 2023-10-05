@@ -1,4 +1,5 @@
-﻿using AntDesign.JsInterop;
+﻿using System;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -43,9 +44,11 @@ namespace AntDesign
         [Parameter]
         public RenderFragment PageHeaderAvatar { get; set; }
 
+        [Obsolete("Use TitleTemplate instead")]
         [Parameter]
         public RenderFragment PageHeaderTitle { get; set; }
 
+        [Obsolete("Use SubtitleTemplate instead")]
         [Parameter]
         public RenderFragment PageHeaderSubtitle { get; set; }
 

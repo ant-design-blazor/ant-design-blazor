@@ -53,22 +53,37 @@ namespace AntDesign.TableModels
             _sortDirection = sortDirection;
         }
 
-        IOrderedQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
+        IQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
         {
             if (_sortDirection == SortDirection.None)
             {
-                return source as IOrderedQueryable<TItem>;
+                return source;
             }
 
             var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
 
-            if (_sortDirection == SortDirection.Ascending)
+            if (source.Expression.Type == typeof(IOrderedQueryable<TItem>))
             {
-                return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
+                var orderedSource = source as IOrderedQueryable<TItem>;
+                if (_sortDirection == SortDirection.Ascending)
+                {
+                    return _comparer == null ? orderedSource.ThenBy(lambda) : orderedSource.ThenBy(lambda, this);
+                }
+                else
+                {
+                    return _comparer == null ? orderedSource.ThenByDescending(lambda) : orderedSource.ThenByDescending(lambda, this);
+                }
             }
             else
             {
-                return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
+                if (_sortDirection == SortDirection.Ascending)
+                {
+                    return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
+                }
+                else
+                {
+                    return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
+                }
             }
         }
 

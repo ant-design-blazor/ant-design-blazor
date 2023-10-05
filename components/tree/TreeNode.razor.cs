@@ -198,7 +198,11 @@ namespace AntDesign
             _selected = value;
             if (value == true)
             {
-                if (TreeComponent.Multiple == false) TreeComponent.DeselectAll();
+                if (!(TreeComponent.Multiple && TreeComponent.IsCtrlKeyDown))
+                {
+                    TreeComponent.DeselectAll();
+                }
+
                 TreeComponent.SelectedNodeAdd(this);
             }
             else
@@ -333,10 +337,39 @@ namespace AntDesign
         /// Expand the node
         /// </summary>
         /// <param name="expanded"></param>
-        public void Expand(bool expanded)
+        public async Task Expand(bool expanded)
         {
             if (Expanded == expanded) return;
             Expanded = expanded;
+
+            await TreeComponent?.OnNodeExpand(this, Expanded, new MouseEventArgs());
+        }
+
+        /// <summary>
+        /// Expand all child nodes
+        /// </summary>
+        internal async Task ExpandAll()
+        {
+            await SwitchAllNodes(this, true);
+        }
+
+        /// <summary>
+        /// Collapse all child nodes
+        /// </summary>
+        internal async Task CollapseAll()
+        {
+            await SwitchAllNodes(this, false);
+        }
+
+        /// <summary>
+        /// 节点展开关闭
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="expanded"></param>
+        private async Task SwitchAllNodes(TreeNode<TItem> node, bool expanded)
+        {
+            await node.Expand(expanded);
+            node.ChildNodes.ForEach(n => _ = SwitchAllNodes(n, expanded));
         }
 
         /// <summary>
@@ -346,6 +379,7 @@ namespace AntDesign
         {
             get
             {
+                if (Hidden) return false;
                 if (ParentNode == null) return true;
                 if (ParentNode.Expanded == false) return false;
                 return ParentNode.RealDisplay;
@@ -382,11 +416,13 @@ namespace AntDesign
         /// <summary>
         /// expaned parents
         /// </summary>
-        internal void OpenPropagation()
+        internal void OpenPropagation(bool unhide = false)
         {
             this.Expand(true);
+            if (unhide)
+                Hidden = false;
             if (this.ParentNode != null)
-                this.ParentNode.OpenPropagation();
+                this.ParentNode.OpenPropagation(unhide);
         }
 
         #endregion Switcher
@@ -438,23 +474,26 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if (!Disabled)
+            if (Disabled)
             {
-                if (TreeComponent.CheckStrictly)
-                {
-                    this.Checked = check;
-                }
-                else
-                {
-                    SetChildChecked(this, check);
-                    if (ParentNode != null)
-                        ParentNode.UpdateCheckState();
-                }
+                return;
+            }
+
+            if (TreeComponent.CheckStrictly)
+            {
+                this.Checked = check;
             }
             else
-                TreeComponent.AddOrRemoveCheckNode(this);
+            {
+                SetChildChecked(this, check);
+                if (ParentNode != null)
+                    ParentNode.UpdateCheckState();
+            }
+
+            TreeComponent.AddOrRemoveCheckNode(this);
             StateHasChanged();
         }
+
         /// <summary>
         /// Set the checkbox state when ini
         /// </summary>
@@ -489,6 +528,7 @@ namespace AntDesign
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
         }
+
         /// <summary>
         /// Sets the checkbox status of child nodes whern bind default
         /// </summary>
@@ -502,7 +542,7 @@ namespace AntDesign
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildCheckedDefault(child, check);
-        }        
+        }
 
         /// <summary>
         /// Update check status
@@ -567,6 +607,7 @@ namespace AntDesign
             if (ParentNode == null)
                 StateHasChanged();
         }
+
         /// <summary>
         /// Update check status when bind default
         /// </summary>
@@ -691,6 +732,8 @@ namespace AntDesign
         /// </summary>
         public bool Matched { get; set; }
 
+        public bool Hidden { get; set; }
+
         /// <summary>
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
         /// </summary>
@@ -708,7 +751,14 @@ namespace AntDesign
             get
             {
                 if (TreeComponent.ChildrenExpression != null)
-                    return TreeComponent.ChildrenExpression(this)?.ToList() ?? new List<TItem>();
+                {
+                    var childItems = TreeComponent.ChildrenExpression(this);
+                    if (childItems is IList<TItem> list)
+                    {
+                        return list;
+                    }
+                    return childItems?.ToList() ?? new List<TItem>();
+                }
                 else
                     return new List<TItem>();
             }
@@ -723,7 +773,7 @@ namespace AntDesign
             if (this.ParentNode != null)
                 return this.ParentNode.ChildDataItems;
             else
-                return this.TreeComponent.DataSource.ToList();
+                return this.TreeComponent.DataSource as IList<TItem> ?? this.TreeComponent.DataSource.ToList();
         }
 
         #endregion data binding

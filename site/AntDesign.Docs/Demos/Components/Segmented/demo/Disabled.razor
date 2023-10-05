@@ -1,10 +1,24 @@
 ﻿<Segmented TValue="string" Labels="@(new []{"Map", "Transit", "Satellite"})" Disabled />
 <br />
 <Segmented TValue="string" Options="@options" />
+<br />
+<Segmented @bind-Value="_value" Disabled>
+    <SegmentedItem Value="true" Label="True" />
+    <SegmentedItem Value="false" Label="False" />
+</Segmented>
+<br />
+<Segmented @bind-Value="_value" Disabled="_disabled">
+    <SegmentedItem Value="true" Label="True" />
+    <SegmentedItem Value="false" Label="False" />
+</Segmented>
+<br />
+<Switch @bind-Checked="_disabled" CheckedChildren="Disabled" UnCheckedChildren="Enable"/>
 
 @code {
+    bool _disabled;
+    bool _value;
 
-  SegmentedOption<string>[] options = {
+    SegmentedOption<string>[] options = {
         new("Daily"),
         new("Weekly",  "Weekly", true),
         new("Monthly"),

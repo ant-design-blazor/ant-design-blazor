@@ -1,11 +1,15 @@
+HideUnmatched: <Switch @bind-Value="hideUnmatched"></Switch>
+<br/>
 <div>
-    <Search @bind-Value="@searchKey" Placeholder="Search.." />
+    <Search @bind-Value="@searchKey" Placeholder="Search.." BindOnInput/>
     <Tree ShowIcon
           SearchValue="@searchKey"
           MatchedClass="site-tree-search-value"
+          HideUnmatched="hideUnmatched"
           DataSource="datas"
           TitleExpression="x => x.DataItem.Title"
-          ChildrenExpression="x => x.DataItem.Children"></Tree>
+          ChildrenExpression="x => x.DataItem.Children">
+      </Tree>
 </div>
 
 <style>
@@ -16,6 +20,7 @@
 
 @code {
     string searchKey;
+    bool hideUnmatched;
 
     List<Data> datas = new List<Data>()
     {

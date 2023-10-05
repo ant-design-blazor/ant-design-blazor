@@ -42,6 +42,7 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        [Obsolete("Use CheckedChanged instead")]
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 

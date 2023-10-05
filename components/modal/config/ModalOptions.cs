@@ -134,9 +134,19 @@ namespace AntDesign
         /// </summary>
         public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
 
+        /// <summary>
+        /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
+        /// </summary>
+        public bool DefaultMaximized { get; set; } = false;
+
+        /// <summary>
+        /// Resizable
+        /// </summary>
+        public bool Resizable { get; set; }
+
         #region internal
 
-        internal async Task DefaultOnCancelOrOk(MouseEventArgs e)
+        public async Task DefaultOnCancelOrOk(MouseEventArgs e)
         {
             await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }

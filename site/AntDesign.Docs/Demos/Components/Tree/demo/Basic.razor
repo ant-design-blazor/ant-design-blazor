@@ -4,7 +4,8 @@
 	  DefaultCheckedKeys="@(new[] {"0-0-0", "0-0-1" })"
 	  SelectedNodeChanged="SelectedNodeChanged"
 	  OnSelect="OnSelect"
-	  OnCheck="OnCheck">
+      OnCheck="OnCheck"
+      OnContextMenu="OnContextMenu">
 	<TreeNode Title="parent 1" Key="0-0" TItem="string">
 		<TreeNode Title="parent 1-0" Key="0-0-0" Disabled TItem="string">
 			<TreeNode Title="leaf" Key="0-0-0-0" DisableCheckbox TItem="string"></TreeNode>
@@ -30,6 +31,11 @@
     void OnCheck(TreeEventArgs<string> args)
     {
         Console.WriteLine($"OnCheck {args.Node.Key}");
+    }
+    
+    void OnContextMenu(TreeEventArgs<string> args)
+    {
+        Console.WriteLine($"OnContextMenu {args.Node.Key}");
     }
 
 	void SelectedNodeChanged(TreeNode<string> e)

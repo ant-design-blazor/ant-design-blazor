@@ -1,0 +1,35 @@
+﻿@inject INotificationService _notice
+
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <Button Danger OnClick=@OnClick>
+            Click me to throw a error
+        </Button>
+    </ChildContent>
+    <ErrorContent Context="ex">
+        @{
+           ShowNotification(ex);
+        }
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+
+    ErrorBoundary errorBoundary;
+
+    void OnClick()
+    {
+        throw new Exception("An Uncaught Error");
+    }
+
+    void ShowNotification(Exception ex)
+    {
+        _=_notice.Error(new()
+        {
+            Message = ex.Message,
+            Description = ex.StackTrace
+        });
+
+        errorBoundary.Recover();
+    }
+}
