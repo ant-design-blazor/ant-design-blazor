@@ -1,16 +1,16 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @using AntDesign.JsInterop
+@using System.Globalization
 @inherits AntDesignTestBase
 
 @code {
-        private const string DateFormat = "yyyy-MM-dd";
-
+    
     [Theory]
     [InlineData("Enter", true)]
     [InlineData("Tab", true)]
     [InlineData("Enter", false)]
     [InlineData("Tab", false)]
-    public void Key_applies_input_to_value(string key, bool showTime)
+    public async Task Key_applies_input_to_value(string key, bool showTime)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -24,18 +24,20 @@
         {
             expectedValue = expectedValue.AddHours(10).AddMinutes(30).AddSeconds(5);
         }
+        var format = showTime ? TimeFormat : DateFormat;
+        string expectedValueAsString = expectedValue.ToString(format, Culture);
+        var cut = Render<AntDesign.DatePicker<DateTime>>(
+            @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" ShowTime="showTime" CultureInfo="@Culture" Format="@format"/>
+            );
 
-        string expectedValueAsString = expectedValue.ToString(showTime ? "yyyy-MM-dd HH:mm:ss" : DateFormat);
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" ShowTime="showTime" />
-		);
-		//Act
-		var input = cut.Find("input");
-		input.Input(expectedValueAsString);
-		input.KeyDown(key);
-		//Assert
+        //Act
+        var input = cut.Find("input");
+        input.Input(expectedValueAsString);
+        input.KeyDown(key);
+        
+        //Assert
 		cut.Instance.Value.Should().Be(expectedValue);
-		value.Should().Be(expectedValue);
+        value.Should().Be(expectedValue);
 		input.GetAttribute("value").Should().Be(expectedValueAsString);
 	}
 
@@ -47,9 +49,9 @@
 
 		DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2020,1,1);		
-		string defaultValueAsString = defaultValue.ToString(DateFormat);
+		string defaultValueAsString = defaultValue.ToString(DateFormat, CultureInfo.InvariantCulture);
 		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
 		);
 		//Act
 		var input = cut.Find("input");
@@ -69,9 +71,9 @@
 
 		DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2020,1,1);
-        var defaultValueAsString = defaultValue.ToString(DateFormat);
+        var defaultValueAsString = defaultValue.ToString(DateFormat, Culture);
         var cut = Render<AntDesign.DatePicker<DateTime>>(
-        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
         );
         var newValue = defaultValue.AddDays(1);        
 		string newValueAsString = newValue.ToString(DateFormat);
@@ -95,9 +97,9 @@
 
 		DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2020,1,1);		
-		string defaultValueAsString = defaultValue.ToString(DateFormat);
+		string defaultValueAsString = defaultValue.ToString(DateFormat, Culture);
 		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+			@<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" CultureInfo="@Culture" Format="@DateFormat"/>
 		);
 		//Act
 		var input = cut.Find("input");
@@ -141,20 +143,18 @@
 
 		DateTime? value = null;
 		DateTime expectedValue = new DateTime(2021,4,5);
-		string expectedValueAsString = expectedValue.ToString(DateFormat);
-		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value"/>);
+		string expectedValueAsString = expectedValue.ToString(DateFormat, Culture);
+		var cut = Render<AntDesign.DatePicker<DateTime?>>(@<DatePicker @bind-Value="@value" CultureInfo="@Culture" Format="@DateFormat"/>);
 		//Act
 		var input = cut.Find("input");
 		input.Click();
-		//Task.Delay will force to wait for overlay to render the picker panel
-		await Task.Delay(1);
 		input.Input(expectedValueAsString);
 		//Assert
-		string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(expectedValue.Month);
+		string expectedMonth = Culture.DateTimeFormat.GetAbbreviatedMonthName(expectedValue.Month);
 		cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
 		cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(expectedValue.Year.ToString());
 		var selectedCell = cut.Find("td.ant-picker-cell-selected");
-		selectedCell.GetAttribute("title").Should().Be(expectedValueAsString);
+		selectedCell.GetAttribute("title").Should().Be(expectedValue.ToString(LocaleProvider.GetCurrentLocale().DatePicker.DateLocale.DateFormat));
 		selectedCell.Children[0].TextContent.Trim().Should().Be(expectedValue.Day.ToString());
 	}
     
@@ -193,22 +193,24 @@
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 
         DateTime value = DateTime.Now.Date;
-        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" ChangeOnClose />);
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" ChangeOnClose CultureInfo="@Culture" Format="@DateFormat"/>);
         
         //Act
         var input = cut.Find("input");
         var newDate = value.AddDays(20);
-        var newDateAsString = newDate.ToString(DateFormat);
+        var newDateAsString = newDate.ToString(DateFormat, Culture);
         input.Click();
-        await Task.Delay(100);
         input.Input(newDateAsString); 
         input.Blur();
-        await Task.Delay(100);
         
         //Assert
+        cut.WaitForAssertion(() =>
+        {
+            input = cut.Find("input");
+            input.GetAttribute("value").Should().Be(newDateAsString);
+        }, TimeSpan.FromSeconds(2));
         value.Should().Be(newDate);
         cut.Instance.Value.Should().Be(newDate);
-        input.GetAttribute("value").Should().Be(newDateAsString);
     }
 
 
@@ -226,7 +228,7 @@
         DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2023, 02, 24);
         DateTime maxValue = defaultValue.AddDays(-1);
-
+        var format = showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd";
         string Format(DateTime input) {
             return input.ToString(showTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd");
         }
@@ -234,7 +236,7 @@
         string inputValue = Format(maxValue.AddDays(-5));
 
 		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" DisabledDate="date=>date<=maxValue" DefaultValue="@defaultValue" ShowTime="showTime" />
+			@<DatePicker @bind-Value="@value" DisabledDate="date=>date<=maxValue" DefaultValue="@defaultValue" ShowTime="showTime" Format="@format" />
 		);
 		//Act
 		var input = cut.Find("input");

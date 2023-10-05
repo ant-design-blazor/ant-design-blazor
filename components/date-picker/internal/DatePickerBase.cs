@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
+using AntDesign.Core;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -16,6 +17,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
+        protected readonly IInputMaskConverter InputMaskConverter = new DateTimeInputMaskConverter();
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
@@ -98,6 +100,9 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowToday { get; set; } = true;
+
+        [Parameter]
+        public string Mask { get; set; }
 
         [Parameter]
         public DatePickerLocale Locale
@@ -442,6 +447,13 @@ namespace AntDesign
 
         protected string GetInputValue(int index = 0)
         {
+            var inputValue = index == 0 ? _inputStart?.Value : _inputEnd?.Value;
+
+            if (_duringManualInput && !string.IsNullOrEmpty(Mask))
+            {
+                return inputValue;
+            }
+
             DateTime? tryGetValue = GetIndexValue(index);
 
             if (tryGetValue == null)
@@ -472,6 +484,72 @@ namespace AntDesign
         {
             AutoFocus = true;
             return Task.CompletedTask;
+        }
+
+        protected virtual void OnInput(ChangeEventArgs args, int index = 0)
+        {
+            if (args == null)
+            {
+                return;
+            }
+
+            if (!_duringManualInput)
+            {
+                _duringManualInput = true;
+            }
+
+            var newValue = args.Value.ToString();
+            var hasMask = !string.IsNullOrEmpty(Mask);
+
+            if (hasMask)
+            {
+                newValue = InputMaskConverter.Convert(newValue, Mask);
+
+                if (index == 0)
+                {
+                    _inputStart.Value = newValue;
+                }
+                else
+                {
+                    _inputEnd.Value = newValue;
+                }
+            }
+
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime changeValue, IsNullable) ||
+                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
+            {
+                if (IsDisabledDate(changeValue))
+                {
+                    return;
+                }
+
+                _pickerStatus[index].SelectedValue = changeValue;
+                ChangePickerValue(changeValue, index);
+
+                if (hasMask)
+                {
+                    ChangeValue(changeValue, index);
+                }
+            }  
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
+        }
+
+        protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
+        {
+            var indexValue = value is Array array ? array.GetValue(index) : value;
+
+            if (indexValue is not null)
+            {
+                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
+
+                if (dateTime != DateTime.MinValue)
+                {
+                    notNullAction?.Invoke(dateTime);
+                }
+            }
         }
 
         protected virtual async Task OnSelect(DateTime date, int index)
@@ -848,7 +926,8 @@ namespace AntDesign
                     _ => InternalFormat,
                 };
             else
-                format = InternalFormat;
+                format = Format;
+
             return value.ToString(format, CultureInfo);
         }
 

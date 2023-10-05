@@ -212,34 +212,6 @@ namespace AntDesign
             }
         }
 
-        protected void OnInput(ChangeEventArgs args, int index = 0)
-        {
-            if (args == null)
-            {
-                return;
-            }
-
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-            }
-
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime parsedValue, false))
-            {
-                if (IsDisabledDate(parsedValue))
-                {
-                    return;
-                }
-
-                _pickerStatus[index].SelectedValue = parsedValue;
-                ChangePickerValue(parsedValue, index);
-            }
-            else
-            {
-                _pickerStatus[index].SelectedValue = null;
-            }
-        }
-
         /// <summary>
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>
@@ -574,25 +546,6 @@ namespace AntDesign
                 Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
                 DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
             });
-        }
-
-        private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
-        {
-            var array = value as Array;
-            var indexValue = array.GetValue(index);
-
-            if (!IsNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && indexValue != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(indexValue, CultureInfo));
-            }
         }
 
         private TValue CreateInstance()
