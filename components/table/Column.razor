@@ -214,7 +214,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                         @ColumnTitle()
 					}
 
-					<Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
+					<Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }" OnVisibleChange="FilterDropdownOnVisibleChange">
 						<Unbound>
 							<span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
 					  	@onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
@@ -390,56 +390,69 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 			}
 			else if (_columnDataType == typeof(byte))
 			{
-				<InputNumber Value="(byte?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="byte?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(byte?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="byte?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(decimal))
 			{
-				<InputNumber Value="(decimal?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="decimal?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(decimal?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="decimal?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(double))
 			{
-				<InputNumber Value="(double?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="double?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(double?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="double?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(short))
 			{
-				<InputNumber Value="(short?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="short?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(short?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="short?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(int))
 			{
-				<InputNumber Value="(int?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="int?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(int?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="int?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(long))
 			{
-				<InputNumber Value="(long?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="long?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(long?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="long?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(sbyte))
 			{
-				<InputNumber Value="(sbyte?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="sbyte?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(sbyte?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="sbyte?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(float))
 			{
-				<InputNumber Value="(float?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="float?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(float?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="float?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(ushort))
 			{
-				<InputNumber Value="(ushort?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="ushort?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(ushort?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="ushort?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(uint))
 			{
-				<InputNumber Value="(uint?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="uint?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(uint?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="uint?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(ulong))
 			{
-				<InputNumber Value="(ulong?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="ulong?" ValueChanged="value => SetFilterValue(filter, value)"></InputNumber>
+				<InputNumber Value="(ulong?)filter.Value" Formatter="number => NumberFormatter(number)" TValue="ulong?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef"></InputNumber>
 			}
 			else if (_columnDataType == typeof(Guid))
 			{
-				<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => SetFilterValue(filter, value)" />
+				<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef" />
 			}
 			else
 			{
-				<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => SetFilterValue(filter, value)" />
+				<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => SetFilterValue(filter, value)" @ref="@_filterInputRef" />
 			}
 		</Template>
 	;
+
+    private object _filterInputRef;
+
+    private async Task FilterDropdownOnVisibleChange(bool visible)
+    {
+        if (!visible ||
+            _filterInputRef is not AntDomComponentBase baseDomComponent ||
+            baseDomComponent.Ref.Context == null) return;
+
+        // implicit wait for component rendering
+        await Task.Delay(150);
+        await baseDomComponent.Ref.FocusAsync();
+    }
 }
