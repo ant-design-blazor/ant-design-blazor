@@ -447,12 +447,14 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     private async Task FilterDropdownOnVisibleChange(bool visible)
     {
-        if (!visible ||
-            _filterInputRef is not AntDomComponentBase baseDomComponent ||
-            baseDomComponent.Ref.Context == null) return;
+        #if NET5_0_OR_GREATER 
+            if (!visible ||
+                _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.Ref.Context == null) return;
 
-        // implicit wait for component rendering
-        await Task.Delay(150);
-        await baseDomComponent.Ref.FocusAsync();
+            // implicit wait for component rendering
+            await Task.Delay(150);
+            await baseDomComponent.Ref.FocusAsync();
+        #endif
     }
 }
