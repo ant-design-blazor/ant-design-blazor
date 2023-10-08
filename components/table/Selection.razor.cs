@@ -29,7 +29,7 @@ namespace AntDesign
 
         //private int[] _selectedIndexes;
 
-        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
 
         private bool? _selected;
 
