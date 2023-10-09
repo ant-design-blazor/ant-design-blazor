@@ -173,13 +173,10 @@ namespace AntDesign
             if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button
             this._animating = true;
 
-            await Task.Run(async () =>
-            {
-                await Task.Delay(RemoveAnimationAfter);
-                this._animating = false;
+            await Task.Delay(RemoveAnimationAfter);
+            this._animating = false;
 
-                await InvokeAsync(StateHasChanged);
-            });
+            await InvokeAsync(StateHasChanged);
         }
 
         private void SetButtonColorStyle()
