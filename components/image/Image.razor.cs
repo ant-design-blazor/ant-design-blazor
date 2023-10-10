@@ -43,10 +43,6 @@ namespace AntDesign
         }
 
         [Parameter]
-        public string DataSrc { get; set; }
-
-
-        [Parameter]
         public string Src
         {
             get => _src;
