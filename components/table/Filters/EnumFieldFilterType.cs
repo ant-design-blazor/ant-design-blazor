@@ -12,17 +12,21 @@ namespace AntDesign.Filters
 {
     public class EnumFieldFilterType<T> : BaseFieldFilterType
     {
-        private readonly MethodInfo _enumHasFlag = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
+        private static readonly MethodInfo _enumHasFlag = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
 
         public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; } = FilterInputs.Instance.GetEnumInput<T>();
 
-        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
         {
-            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
-                yield return baseCompareOperator;
+            TableFilterCompareOperator.Equals,
+            TableFilterCompareOperator.NotEquals,
+            TableFilterCompareOperator.Contains,
+            TableFilterCompareOperator.NotContains,
+        };
 
-            yield return TableFilterCompareOperator.Contains;
-            yield return TableFilterCompareOperator.NotContains;
+        public EnumFieldFilterType()
+        {
+            SupportedCompareOperators = _supportedCompareOperators;
         }
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)

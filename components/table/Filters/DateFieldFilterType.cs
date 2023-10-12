@@ -12,27 +12,32 @@ namespace AntDesign.Filters
 {
     public abstract class DateFieldFilterType : BaseFieldFilterType
     {
-        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
         {
-            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
-                yield return baseCompareOperator;
+            TableFilterCompareOperator.Equals,
+            TableFilterCompareOperator.NotEquals,
+            TableFilterCompareOperator.GreaterThan,
+            TableFilterCompareOperator.LessThan,
+            TableFilterCompareOperator.GreaterThanOrEquals,
+            TableFilterCompareOperator.LessThanOrEquals
+        };
 
-            yield return TableFilterCompareOperator.GreaterThan;
-            yield return TableFilterCompareOperator.LessThan;
-            yield return TableFilterCompareOperator.GreaterThanOrEquals;
-            yield return TableFilterCompareOperator.LessThanOrEquals;
+        public DateFieldFilterType()
+        {
+            SupportedCompareOperators = _supportedCompareOperators;
         }
 
         protected virtual Expression GetNonNullFilterExpression(TableFilterCompareOperator compareOperator,
             Expression leftExpr, Expression rightExpr)
             => base.GetFilterExpression(compareOperator, leftExpr, rightExpr);
 
-        public sealed override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
+        public override sealed Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:
                     return Expression.Equal(leftExpr, rightExpr);
+
                 case TableFilterCompareOperator.IsNotNull:
                     return Expression.NotEqual(leftExpr, rightExpr);
             }
@@ -41,7 +46,7 @@ namespace AntDesign.Filters
             {
                 Expression notNull = Expression.NotEqual(leftExpr, Expression.Constant(null));
                 Expression isNull = Expression.Equal(leftExpr, Expression.Constant(null));
-                leftExpr = Expression.Property(leftExpr,   nameof(Nullable<DateTime>.Value));
+                leftExpr = Expression.Property(leftExpr, nameof(Nullable<DateTime>.Value));
                 rightExpr = Expression.Property(rightExpr, nameof(Nullable<DateTime>.Value));
 
                 return compareOperator switch
@@ -70,7 +75,7 @@ namespace AntDesign.Filters
             return compareOperator switch
             {
                 TableFilterCompareOperator.TheSameDateWith => Expression.Equal(
-                    Expression.Property(leftExpr,  nameof(DateTime.Date)),
+                    Expression.Property(leftExpr, nameof(DateTime.Date)),
                     Expression.Property(rightExpr, nameof(DateTime.Date))),
                 _ => base.GetNonNullFilterExpression(compareOperator, leftExpr, rightExpr)
             };

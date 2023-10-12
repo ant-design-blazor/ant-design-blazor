@@ -19,19 +19,23 @@ namespace AntDesign.Filters
         public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; } =
             FilterInputs.Instance.GetInput<string>();
 
-        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
         {
-            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
-                yield return baseCompareOperator;
+            TableFilterCompareOperator.Equals,
+            TableFilterCompareOperator.NotEquals,
+            TableFilterCompareOperator.Contains,
+            TableFilterCompareOperator.StartsWith,
+            TableFilterCompareOperator.EndsWith,
+        };
 
-            yield return TableFilterCompareOperator.Contains;
-            yield return TableFilterCompareOperator.StartsWith;
-            yield return TableFilterCompareOperator.EndsWith;
+        public StringFieldFilterType()
+        {
+            SupportedCompareOperators = _supportedCompareOperators;
         }
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
-            MethodCallExpression lowerLeftExpr  = Expression.Call(leftExpr,  _stringToLower);
+            MethodCallExpression lowerLeftExpr = Expression.Call(leftExpr, _stringToLower);
             MethodCallExpression lowerRightExpr = Expression.Call(rightExpr, _stringToLower);
 
             return compareOperator switch

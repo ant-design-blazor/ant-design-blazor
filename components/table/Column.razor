@@ -292,7 +292,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                         <SpaceItem Style="flex:auto">
                             <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" DropdownMatchSelectWidth="false">
                                 <SelectOptions>
-                                    @foreach (TableFilterCompareOperator compareOperator in _fieldFilterType.GetSupportedCompareOperators()) {
+                                    @foreach (TableFilterCompareOperator compareOperator in _fieldFilterType.SupportedCompareOperators) {
                                         if (compareOperator is TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull
                                             && !(THelper.IsTypeNullable<TData>() || _columnDataType == typeof(string)))
                                             continue;

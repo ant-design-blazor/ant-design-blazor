@@ -14,15 +14,19 @@ namespace AntDesign.Filters
         public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; } =
             FilterInputs.Instance.GetNumberInput<T>();
 
-        public override IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
         {
-            foreach (TableFilterCompareOperator baseCompareOperator in base.GetSupportedCompareOperators())
-                yield return baseCompareOperator;
+            TableFilterCompareOperator.Equals,
+            TableFilterCompareOperator.NotEquals,
+            TableFilterCompareOperator.GreaterThan,
+            TableFilterCompareOperator.LessThan,
+            TableFilterCompareOperator.GreaterThanOrEquals,
+            TableFilterCompareOperator.LessThanOrEquals
+        };
 
-            yield return TableFilterCompareOperator.GreaterThan;
-            yield return TableFilterCompareOperator.LessThan;
-            yield return TableFilterCompareOperator.GreaterThanOrEquals;
-            yield return TableFilterCompareOperator.LessThanOrEquals;
+        public NumberFieldFilterType()
+        {
+            SupportedCompareOperators = _supportedCompareOperators;
         }
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)

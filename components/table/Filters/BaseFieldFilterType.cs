@@ -15,11 +15,13 @@ public abstract class BaseFieldFilterType : IFieldFilterType
 
     public abstract RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
 
-    public virtual IEnumerable<TableFilterCompareOperator> GetSupportedCompareOperators()
+    public virtual IEnumerable<TableFilterCompareOperator> SupportedCompareOperators { get; set; } = _supportedCompareOperators;
+
+    private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
     {
-        yield return TableFilterCompareOperator.Equals;
-        yield return TableFilterCompareOperator.NotEquals;
-    }
+        TableFilterCompareOperator.Equals,
+        TableFilterCompareOperator.NotEquals,
+    };
 
     public virtual Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr,
         Expression rightExpr)
