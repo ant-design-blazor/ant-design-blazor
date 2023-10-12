@@ -9,7 +9,7 @@ title:
 
 当列类型不是内置筛选器支持的类型时，或者您想修改筛选器的比较操作，可以使用自定义筛选器 `FieldFilterType`。
 
-在本示例中，Color 列可以按"亮度"筛选 （或按HUE值排序）。
+在本示例中，Color 列就是用自定义筛选器，可以按"亮度"筛选 （或按HUE值排序）。
 
 自定义筛选器需要实现 `IFieldFilterType`，或者继承 `BaseFieldFilterType` 或 `DateFieldFilterType` 来按需重写相关方法。
 
