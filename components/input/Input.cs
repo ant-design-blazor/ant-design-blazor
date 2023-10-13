@@ -691,6 +691,8 @@ namespace AntDesign
                 }
             }
 
+            builder.AddAttribute(46, "name", NameAttributeValue);
+
             builder.AddAttribute(50, "id", Id);
             builder.AddAttribute(51, "type", Type);
             if (!String.IsNullOrWhiteSpace(Placeholder))

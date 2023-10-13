@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
+using AntDesign.Core.Base;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -25,6 +26,8 @@ namespace AntDesign
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
         private PropertyReflector? _propertyReflector;
+        private string? _formattedValueExpression;
+        private bool _shouldGenerateFieldNames;
 
         private Action<object, TValue> _setValueDelegate;
 
@@ -36,6 +39,8 @@ namespace AntDesign
 
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
+
+        [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
 
         [CascadingParameter(Name = "Form")]
         protected IForm Form { get; set; }
@@ -309,6 +314,33 @@ namespace AntDesign
             Form?.AddControl(this);
 
             _firstValue = Value;
+        }
+
+        /// <summary>
+        /// Gets the value to be used for the input's "name" attribute.
+        /// </summary>
+        protected string NameAttributeValue
+        {
+            get
+            {
+                if (AdditionalAttributes?.TryGetValue("name", out var nameAttributeValue) ?? false)
+                {
+                    return Convert.ToString(nameAttributeValue, CultureInfo.InvariantCulture) ?? string.Empty;
+                }
+
+                if (_shouldGenerateFieldNames)
+                {
+                    if (_formattedValueExpression is null && ValueExpression is not null)
+                    {
+                        _formattedValueExpression = FieldPrefix != null ? FieldPrefix.GetFieldName(ValueExpression) :
+                            ExpressionFormatter.FormatLambda(ValueExpression);
+                    }
+
+                    return _formattedValueExpression ?? string.Empty;
+                }
+
+                return string.Empty;
+            }
         }
 
         /// <inheritdoc />
