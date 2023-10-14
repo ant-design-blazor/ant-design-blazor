@@ -56,6 +56,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | IndentSize | 展示树形数据时，每层缩进的宽度，以 px 为单位 | int | 15 |
 | ExpandIconColumnIndex | 自定义展开图标所在列索引 | int | - |
 | RowClassName | 表格行的类名 | Func<RowData<TItem>, string> | _ => "" |
+| RowKey | 设置比对 Key 来设置默认选中行。否则默认按引用来比对。 | Func<TItem, object> | - |
 | ExpandedRowClassName | 展开行的 className | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | 点击展开图标时触发 | EventCallback<RowData<TItem>> | - |
 | SortDirections | 支持的排序方式，覆盖 Table 中 sortDirections | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |

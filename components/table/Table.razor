@@ -238,7 +238,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
 
 Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TItem data, int index)>> bodyRow = 
             (table, level, rowDataCache) => tuple =>
-@<Template @key="tuple">
+@<Template @key="table.RowKey?.Invoke(tuple.data)??tuple">
     @{
         int rowIndex;
         if (level == 0) rowIndex = table.PageSize * (table.PageIndex - 1) + tuple.index + 1;
