@@ -207,13 +207,13 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                         @if (table._tableWidth>0)
                         {
                             <div class="ant-table-expanded-row-fixed" style="width: @(table._tableWidth)px; position: sticky; left: 0px; overflow: hidden;">
-                               @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                               @if (table.EmptyTemplate!=null) { @table.EmptyTemplate } else { <Empty Simple /> }
                             </div>
                         }
                      }
                      else
                      {
-                          @if (table.EmptyTemplate!=null) @table.EmptyTemplate else { <Empty Simple /> }
+                          @if (table.EmptyTemplate!=null) { @table.EmptyTemplate } else { <Empty Simple /> }
                      }
                  </td>
              </tr>

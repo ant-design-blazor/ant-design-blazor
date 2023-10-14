@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: Data Display
@@ -61,6 +61,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
 | Resizable | Enable resizable column | bool | false |
+| FieldFilterTypeResolver | Used to resolve filter types for columns | `IFilterTypeResolver` | Injected |
 
 ### Column
 
@@ -84,6 +85,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
 | FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
+| FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
 
 ### PropertyColumn
 

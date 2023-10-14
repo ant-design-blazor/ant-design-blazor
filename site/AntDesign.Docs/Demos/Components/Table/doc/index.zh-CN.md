@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: 数据展示
@@ -63,6 +63,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | OnRowClick | 行点击事件(于antd v3中已废弃) | EventCallback<RowData<TItem>> | - |
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
 | Resizable | 启用可伸缩列 | bool | false |
+| FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
 
 ### Column
 
@@ -85,6 +86,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
 | FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
+| FieldFilterType | 筛选器配置 ，可用于自定义额外的筛选器 | `IFieldFilterType` | 由 `FieldFilterTypeResolver` 根据类型解析内置筛选器 |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
 
 
