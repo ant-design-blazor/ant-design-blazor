@@ -294,7 +294,19 @@ namespace AntDesign.Datepicker.Locale
                 return _converter;
             }
         }
-
+        
+        public bool TryParseExact<TValue>(string pickerString, string format, out TValue changeValue, bool isDateTypeNullable)
+        {
+            if (DateTime.TryParseExact(pickerString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            {
+                return GetParsedValue(out changeValue, date, isDateTypeNullable);
+            }
+            
+            changeValue = default;
+            
+            return false;
+        }
+        
         public bool TryPickerStringConvert<TValue>(string pickerString, out TValue changeValue, bool isDateTypeNullable)
         {
             var resultTuple = Converter(pickerString);
@@ -383,9 +395,10 @@ namespace AntDesign.Datepicker.Locale
         private bool GetParsedValue<TValue>(out TValue changeValue, DateTime foundDate, bool isDateTypeNullable)
         {
             if (isDateTypeNullable)
-                changeValue = DataConvertionExtensions.Convert<DateTime?, TValue>(new DateTime?(foundDate));
+                changeValue = (TValue)(object)(foundDate);
             else
                 changeValue = DataConvertionExtensions.Convert<DateTime, TValue>(foundDate);
+            
             return true;
         }
     }

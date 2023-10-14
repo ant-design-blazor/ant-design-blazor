@@ -1,5 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Xml;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -8,9 +14,16 @@ namespace AntDesign
         [Parameter]
         public ImageRef ImageRef { get; set; }
 
-        private int _zoomOutTimes = 1;
+        [Inject]
+        protected IJSRuntime Js { get; set; }
+
+        private ElementReference _previewImg;
+        private double _zoomOutTimes = 1;
         private int _rotateTimes;
         private bool _visible = true;
+        private string _left = "50%";
+        private string _top = "50%";
+
 
         private async Task HandleClose()
         {
@@ -45,6 +58,21 @@ namespace AntDesign
             _rotateTimes--;
         }
 
+        private async Task WeelHandZoom(WheelEventArgs wheelEventArgs)
+        {
+            _left = await Js.InvokeAsync<string>(JSInteropConstants.GetStyle, _previewImg, "left");
+            _top = await Js.InvokeAsync<string>(JSInteropConstants.GetStyle, _previewImg, "top");
+
+            if (wheelEventArgs.DeltaY < 0)
+            {
+                _zoomOutTimes += 0.1;
+            }
+            else if (_zoomOutTimes > 0.5)
+            {
+                _zoomOutTimes -= 0.1;
+            }
+        }
+
         private DialogOptions GetDialogOptions()
         {
             return new DialogOptions()
@@ -58,6 +86,14 @@ namespace AntDesign
                     await HandleClose();
                 }
             };
+        }
+
+        protected override async void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Js.InvokeVoidAsync(JSInteropConstants.ImgDragAndDrop, _previewImg);
+            }
         }
     }
 }

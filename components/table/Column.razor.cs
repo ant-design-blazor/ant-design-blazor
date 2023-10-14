@@ -419,7 +419,7 @@ namespace AntDesign
                     _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType)
                 : null;
 
-            Table?.ReloadAndInvokeChange();
+            Table?.ColumnFilterChange();
         }
 
         private void ResetFilters()

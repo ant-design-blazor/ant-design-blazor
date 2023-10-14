@@ -171,6 +171,11 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        /// <summary>
+        /// Enable resizable column
+        /// </summary>
+        [Parameter] public bool Resizable { get; set; }
+
         [Parameter]
         public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
 
@@ -389,8 +394,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        void ITable.ReloadAndInvokeChange()
+        void ITable.ColumnFilterChange()
         {
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -404,6 +410,7 @@ namespace AntDesign
                 }
             }
 
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -557,6 +564,7 @@ namespace AntDesign
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-resizable", () => Resizable)
                 ;
 
             _wrapperClassMapper
@@ -696,9 +704,9 @@ namespace AntDesign
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null)
+                if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.

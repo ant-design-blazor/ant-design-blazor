@@ -58,7 +58,7 @@ namespace AntDesign
 
         internal void Refresh();
 
-        internal void ReloadAndInvokeChange();
+        internal void ColumnFilterChange();
 
         internal void HasFixLeft();
 

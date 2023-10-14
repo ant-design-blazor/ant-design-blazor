@@ -73,41 +73,21 @@ namespace AntDesign
 
             if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
-                GetIfNotNull(Value, notNullValue =>
+                GetIfNotNull(Value, 0, notNullValue =>
                 {
                     ChangePickerValue(notNullValue);
                 });
             }
         }
 
-        protected void OnInput(ChangeEventArgs args, int index = 0)
+        protected override void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (args == null)
-            {
-                return;
-            }
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-            }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
-            {
-                GetIfNotNull(changeValue, parsed =>
-                {
-                    if (IsDisabledDate(parsed))
-                    {
-                        return;
-                    }
-
-                    _pickerStatus[0].SelectedValue = parsed;
-                    ChangePickerValue(parsed, index);
-                });
-            }
+            base.OnInput(args, index);
         }
 
         protected override async Task OnBlur(int index)
@@ -211,7 +191,8 @@ namespace AntDesign
 
                 return Convert.ToDateTime(Value, CultureInfo);
             }
-            else if (DefaultValue != null)
+
+            if (DefaultValue != null)
             {
                 return Convert.ToDateTime(DefaultValue, CultureInfo);
             }
@@ -256,7 +237,7 @@ namespace AntDesign
 
             _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
 
-            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+            GetIfNotNull(CurrentValue, 0, (notNullValue) => PickerValues[0] = notNullValue);
 
             _dropDown?.SetShouldRender(true);
         }
@@ -291,22 +272,6 @@ namespace AntDesign
                 Date = GetIndexValue(0),
                 DateString = GetInputValue(0)
             });
-        }
-
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
-        {
-            if (!IsNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
         }
 
         private void OverlayVisibleChange(bool visible)
