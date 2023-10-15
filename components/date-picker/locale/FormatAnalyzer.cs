@@ -297,25 +297,16 @@ namespace AntDesign.Datepicker.Locale
             }
         }
 
-        public bool TryParseExact(string pickerString, string format, out DateTime parsedValue)
+        public bool TryPickerStringConvert(string pickerString, out DateTime parsedValue, string mask = null)
         {
-            if (DateTime.TryParseExact(pickerString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            if (!string.IsNullOrEmpty(mask) && !DateTime.TryParseExact(pickerString, mask, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
-                var resultTuple = Converter(pickerString);
-                parsedValue = resultTuple.Item1 ? resultTuple.Item2 : default;
+                parsedValue = default;
+                return false;
             }
 
-            parsedValue = default;
-
-            return false;
-        }
-
-        public bool TryPickerStringConvert(string pickerString, out DateTime parsedValue)
-        {
             var resultTuple = Converter(pickerString);
-
             parsedValue = resultTuple.Item1 ? resultTuple.Item2 : default;
-
             return resultTuple.Item1;
         }
 

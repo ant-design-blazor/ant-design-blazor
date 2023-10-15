@@ -256,12 +256,15 @@
 
         //Act
         var cut = Render<AntDesign.RangePicker<T>>
-                  (@<RangePicker @bind-Value="initialValue" ShowTime="showTime" Format="format" />              );
+                  (@<RangePicker @bind-Value="initialValue" ShowTime="showTime" Format=@format />);
 
         //Act
         var input = cut.FindAll("input");
 
-        await input[1].KeyDownAsync(new KeyboardEventArgs() { Key = key });
+        await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
+        await input[0].KeyDownAsync(new KeyboardEventArgs { Key = key });
+        await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
+        await input[1].KeyDownAsync(new KeyboardEventArgs { Key = key });
 
         //Assert
         AntDesign.Internal.InternalConvert.SequenceEqual(initialValue, expectedValue).Should().BeTrue();

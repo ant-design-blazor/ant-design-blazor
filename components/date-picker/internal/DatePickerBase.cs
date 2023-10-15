@@ -505,8 +505,7 @@ namespace AntDesign
                 }
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue) ||
-                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out parsedValue)))
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, Mask))
             {
                 if (IsDisabledDate(parsedValue))
                 {
