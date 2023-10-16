@@ -2,9 +2,12 @@
 
 <Dialog Config="@GetDialogOptions()" Visible="@_visible">
     <ChildContent>
-        <div class="ant-image-preview-img-wrapper" style="font-size:0; transform: translate3d(0px, 0px, 0px);">
-            <img class="ant-image-preview-img" src="@ImageRef.ImageSrc" style="transform: scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90*_rotateTimes)deg);">
+        <div class="ant-image-preview-img-wrapper" @onwheel="WeelHandZoom"
+             style="font-size:0; position: relative; height: 100%; width: 100%;">
+            <img id="preview-img" @ref="_previewImg" class="ant-image-preview-img" src="@ImageRef.ImageSrc"
+                 style="position: absolute; left: @_left; top: @_top; transform: translate(-50%, -50%) scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90*_rotateTimes)deg);">
         </div>
+
         @if (ImageRef.ImageCount > 1)
         {
             <div class="ant-image-preview-switch-left @(ImageRef.CurrentIndex==0?"ant-image-preview-switch-left-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex-1)" @onclick:stopPropagation>
@@ -20,7 +23,7 @@
             <ul class="ant-image-preview-operations">
                 @if (ImageRef.ImageCount > 1)
                 {
-                    <li class="ant-image-preview-operations-progress">@(ImageRef.CurrentIndex+1) / @ImageRef.ImageCount</li>
+                    <li class="ant-image-preview-operations-progress">@(ImageRef.CurrentIndex + 1) / @ImageRef.ImageCount</li>
                 }
                 <li class="ant-image-preview-operations-operation ant-image-preview-operations-operation-close" @onclick="HandleClose" @onclick:stopPropagation>
                     <Icon Type="close" Class="ant-image-preview-operations-icon" />

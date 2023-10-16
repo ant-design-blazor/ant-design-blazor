@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.Filters;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -25,7 +26,7 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -170,10 +171,16 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
+
+
         /// <summary>
         /// Enable resizable column
         /// </summary>
         [Parameter] public bool Resizable { get; set; }
+
+        [Parameter]
+        public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
 
 #if NET5_0_OR_GREATER
         /// <summary>
@@ -189,6 +196,9 @@ namespace AntDesign
 
         [Inject]
         private ILogger<Table<TItem>> Logger { get; set; }
+
+        [Inject]
+        private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -476,7 +486,7 @@ namespace AntDesign
             {
                 if (_outerSelectedRows != null)
                 {
-                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
+                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows, this).ToHashSet();
                     if (_selectedRows.Count != _outerSelectedRows.Count())
                     {
                         SelectedRowsChanged.InvokeAsync(_selectedRows);
@@ -594,6 +604,8 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
+
+            FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
         private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
@@ -817,6 +829,22 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement)
         {
             _isReloading = true;
+        }
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(x).Equals(RowKey(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(obj).GetHashCode();
         }
     }
 }
