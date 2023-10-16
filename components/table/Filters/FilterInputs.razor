@@ -34,7 +34,7 @@
                 }
              </text>;
         GuidInput = filter =>
-            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value"/>;
+            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
     }
 
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
@@ -48,7 +48,7 @@
          </text>;
 
     public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
-        @<InputNumber Value="(TData?)filter.Value" Formatter="number => NumberFormatter(number, filter.Format)" TValue="TData?" ValueChanged="value => filter.Value = value"/>;
+        @<InputNumber Value="(TData?)filter.Value" Formatter="number => NumberFormatter(number, filter.Format)" TValue="TData?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
 
     private string NumberFormatter(object value, string format)
     {
@@ -57,7 +57,7 @@
     }
 
     public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
-        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" />;
+        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
 
     // https://github.com/dotnet/aspnetcore/issues/24655
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);

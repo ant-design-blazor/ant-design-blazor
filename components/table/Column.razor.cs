@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using AntDesign.Core.Helpers;
 using AntDesign.Filters;
+using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -504,6 +505,21 @@ namespace AntDesign
         {
             SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
+        }
+
+        protected object _filterInputRef;
+
+        async Task FilterDropdownOnVisibleChange(bool visible)
+        {
+#if NET5_0_OR_GREATER
+            if (!visible ||
+                _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.Ref.Context == null) return;
+
+            // implicit wait for component rendering
+            await Task.Delay(150);
+            await baseDomComponent.Ref.FocusAsync();
+#endif
         }
     }
 }
