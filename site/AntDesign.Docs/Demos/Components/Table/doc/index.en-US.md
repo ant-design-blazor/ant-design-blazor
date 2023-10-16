@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: Data Display
@@ -54,6 +54,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | IndentSize | When displaying tree data, the width of each level of indentation, in px | int | 15 |
 | ExpandIconColumnIndex | Index of the column where the custom expand icon is located | int | - |
 | RowClassName | The class name of the table row | Func<RowData<TItem>, string> | _ => "" |
+| RowKey | Set the compare key to set default selection rows. Otherwise, the comparison is by reference by default. | Func<TItem, object> | - |
 | ExpandedRowClassName | The className of the expanded row | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | Triggered when the expand icon is clicked | EventCallback<RowData<TItem>> | - |
 | SortDirections | Supported sorting methods, covering sortDirections in Table | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
@@ -61,6 +62,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
 | Resizable | Enable resizable column | bool | false |
+| FieldFilterTypeResolver | Used to resolve filter types for columns | `IFilterTypeResolver` | Injected |
 
 ### Column
 
@@ -84,6 +86,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
 | FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
+| FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
 
 ### PropertyColumn
 
