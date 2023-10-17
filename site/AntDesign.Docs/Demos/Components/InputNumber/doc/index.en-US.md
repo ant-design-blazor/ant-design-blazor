@@ -34,3 +34,4 @@ Nullable types of the above types are also supported. For example, `ushort?`, `i
 | Step | The number to which the current value is increased or decreased. It can be an integer or decimal.                           | double        | -         |
 | Value            |	current value | string  | -         |
 | ValueChanged |The callback triggered when the value is changed.                     | function(double)        | -        |
+| MaxLength | The max length of the input.| int | - |
