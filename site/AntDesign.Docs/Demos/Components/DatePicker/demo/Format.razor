@@ -7,8 +7,8 @@
 <DatePicker @bind-Value="@_format4" Format="yyyy/MM/dd" />
 
 @code {
-	DateTime? _format1 = new DateTime(2015, 1, 1);
-	DateTime? _format2 = new DateTime(2015, 1, 1);
-	DateTime? _format3 = new DateTime(2015, 1, 1);
-	DateTime? _format4 = new DateTime(2015, 1, 1);
+	DateOnly? _format1 = new (2015, 1, 1);
+    DateOnly? _format2 = new (2015, 1, 1);
+    DateOnly? _format3 = new (2015, 1, 1);
+    DateOnly? _format4 = new (2015, 1, 1);
 }

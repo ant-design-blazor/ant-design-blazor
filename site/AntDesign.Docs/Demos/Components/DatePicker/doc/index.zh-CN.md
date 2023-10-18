@@ -21,7 +21,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 - RangePicker
 - WeekPicker
 - YearPicker
-- QuarterPicker (4.1.0 新增)
+- QuarterPicker
+
+目前已经支持 4 种类型的值:
+
+- DateTime
+- DateTimeOffset
+- DateOnly
+- TimeOnly
 
 ### 国际化配置
 
