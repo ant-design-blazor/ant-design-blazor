@@ -47,15 +47,7 @@ namespace AntDesign
             {
                 if (!_isNullableEvaluated)
                 {
-                    Type type = typeof(TValue);
-                    if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-                    {
-                        _isNullable = true;
-                    }
-                    else
-                    {
-                        _isNullable = false;
-                    }
+                    _isNullable = InternalConvert.IsNullable<TValue>();
                     _isNullableEvaluated = true;
                 }
                 return _isNullable;
@@ -245,7 +237,7 @@ namespace AntDesign
         public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
-        public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs<TValue>> OnPanelChange { get; set; }
 
         [Parameter]
         public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
@@ -279,7 +271,7 @@ namespace AntDesign
 
         public DateTime CurrentDate { get; set; } = DateTime.Today;
 
-        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
+        protected DateTime[] PickerValues { get; } = { DateTime.Today, DateTime.Today };
 
         public bool IsRange { get; protected set; }
 
@@ -454,16 +446,14 @@ namespace AntDesign
                 return inputValue;
             }
 
-            DateTime? tryGetValue = GetIndexValue(index);
+            var tryGetValue = GetIndexValue(index);
 
-            if (tryGetValue == null)
+            if (tryGetValue is null)
             {
-                return "";
+                return string.Empty;
             }
 
-            DateTime value = (DateTime)tryGetValue;
-
-            return GetFormatValue(value, index);
+            return GetFormatValue(tryGetValue.Value, index);
         }
 
         protected void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
@@ -515,22 +505,21 @@ namespace AntDesign
                 }
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime changeValue, IsNullable) ||
-                (hasMask && FormatAnalyzer.TryParseExact(newValue, Mask, out changeValue, IsNullable)))
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, Mask))
             {
-                if (IsDisabledDate(changeValue))
+                if (IsDisabledDate(parsedValue))
                 {
                     return;
                 }
 
-                _pickerStatus[index].SelectedValue = changeValue;
-                ChangePickerValue(changeValue, index);
+                _pickerStatus[index].SelectedValue = InternalConvert.SetKind<TValue>(parsedValue);
+                ChangePickerValue(parsedValue, index);
 
                 if (hasMask)
                 {
-                    ChangeValue(changeValue, index);
+                    ChangeValue(parsedValue, index);
                 }
-            }  
+            }
             else
             {
                 _pickerStatus[index].SelectedValue = null;
@@ -543,11 +532,11 @@ namespace AntDesign
 
             if (indexValue is not null)
             {
-                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
+                var dateTime = InternalConvert.ToDateTime(indexValue);
 
                 if (dateTime != DateTime.MinValue)
                 {
-                    notNullAction?.Invoke(dateTime);
+                    notNullAction?.Invoke(dateTime.Value);
                 }
             }
         }
@@ -647,14 +636,14 @@ namespace AntDesign
         internal void OnRangeItemOver(DateTime?[] range)
         {
             _swpValue = Value;
-            Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            Value = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
         }
 
         internal void OnRangeItemOut(DateTime?[] range) => Value = _swpValue;
 
         internal void OnRangeItemClicked(DateTime?[] range)
         {
-            _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            _swpValue = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             ChangeValue((DateTime)range[0], 0);
             ChangeValue((DateTime)range[1], 1);
             Close();
@@ -794,7 +783,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public DateTime GetIndexPickerValue(int index)
+        internal DateTime GetIndexPickerValue(int index)
         {
             int tempIndex = GetOnFocusPickerIndex();
 
@@ -942,6 +931,7 @@ namespace AntDesign
                 index = GetOnFocusPickerIndex();
 
             PickerValues[index.Value] = date;
+
             if (IsRange)
             {
                 if (!UseDefaultPickerValue[1] && !_pickerStatus[1].IsValueSelected && index == 0)
@@ -954,14 +944,7 @@ namespace AntDesign
                 }
             }
 
-            if (OnPanelChange.HasDelegate)
-            {
-                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = PickerValues[index.Value],
-                    DateString = _picker
-                });
-            }
+            InvokeOnPanelChange(date);
 
             StateHasChanged();
         }
@@ -976,14 +959,7 @@ namespace AntDesign
             _prePickerStack.Push(_picker);
             _picker = type;
 
-            if (OnPanelChange.HasDelegate)
-            {
-                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = PickerValues[index],
-                    DateString = _picker
-                });
-            }
+            InvokeOnPanelChange(PickerValues[index]);
 
             StateHasChanged();
         }
@@ -1006,26 +982,20 @@ namespace AntDesign
             {
                 return value;
             }
-            TValue orderedValue = value;
-            if (IsRange)
-            {
-                if (IsNullable)
-                {
-                    var tempValue = value as DateTime?[];
-                    if (tempValue[0] == null || tempValue[1] == null)
-                        return orderedValue;
 
-                    if ((tempValue[0] ?? DateTime.Now).CompareTo((tempValue[1] ?? DateTime.Now)) > 0)
-                        orderedValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { tempValue[1], tempValue[0] });
-                }
-                else
-                {
-                    var tempValue = value as DateTime[];
-                    if (tempValue[0].CompareTo(tempValue[1]) > 0)
-                        orderedValue = DataConvertionExtensions.Convert<DateTime[], TValue>(new DateTime[] { tempValue[1], tempValue[0] });
-                }
+            if (!IsRange)
+            {
+                return value;
             }
-            return orderedValue;
+
+            if (value is not Array valueArray)
+            {
+                return value;
+            }
+
+            Array.Sort(valueArray);
+
+            return value;
         }
 
         protected void InvokeInternalOverlayVisibleChanged(bool visible)
@@ -1120,5 +1090,32 @@ namespace AntDesign
         }
 
         protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
+
+        protected void ToDateTimeOffset(DateTime value, out DateTimeOffset? currentValue, out DateTimeOffset newValue)
+        {
+            var defaultValue = InternalConvert.ToDateTimeOffset(DefaultValue);
+
+            currentValue = InternalConvert.ToDateTimeOffset(CurrentValue);
+
+            var offset = defaultValue?.Offset ?? currentValue?.Offset ?? DateTimeOffset.Now.Offset;
+
+            newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), offset);
+        }
+
+        private void InvokeOnPanelChange(DateTime date)
+        {
+            if (!OnPanelChange.HasDelegate)
+            {
+                return;
+            }
+
+            ToDateTimeOffset(date, out _, out DateTimeOffset newValue);
+
+            OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
+            {
+                Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
+                DateString = _picker
+            });
+        }
     }
 }

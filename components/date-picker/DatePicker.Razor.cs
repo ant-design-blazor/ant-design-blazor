@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         [Parameter]
-        public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
 
         private DateTime _pickerValuesAfterInit;
 
@@ -24,7 +24,7 @@ namespace AntDesign
         private void ProcessDefaults()
         {
             UseDefaultPickerValue[0] = true;
-            if (DefaultPickerValue.Equals(default(TValue)))
+            if (DefaultPickerValue?.Equals(default(TValue)) == true)
             {
                 if ((IsNullable && Value != null) || (!IsNullable && !Value.Equals(default(TValue))))
                 {
@@ -47,9 +47,9 @@ namespace AntDesign
                     UseDefaultPickerValue[0] = false;
                 }
             }
-            if (UseDefaultPickerValue[0])
+            if (UseDefaultPickerValue[0] && DefaultPickerValue is not null)
             {
-                PickerValues[0] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
+                PickerValues[0] = InternalConvert.ToDateTime(DefaultPickerValue).Value;
             }
         }
 
@@ -179,7 +179,7 @@ namespace AntDesign
 
             if (_pickerStatus[index].SelectedValue is not null)
             {
-                return _pickerStatus[index].SelectedValue;
+                return _pickerStatus[index].SelectedValue.Value;
             }
 
             if (_pickerStatus[0].IsValueSelected)
@@ -189,12 +189,12 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(Value, CultureInfo);
+                return InternalConvert.ToDateTime(Value);
             }
 
             if (DefaultValue != null)
             {
-                return Convert.ToDateTime(DefaultValue, CultureInfo);
+                return InternalConvert.ToDateTime(DefaultValue);
             }
 
             return null;
@@ -219,13 +219,11 @@ namespace AntDesign
                 return;
             }
 
-            var currentValue = CurrentValue is not null ?
-                Convert.ToDateTime(CurrentValue, CultureInfo)
-                : (DateTime?)null;
+            ToDateTimeOffset(value, out DateTimeOffset? currentValue, out DateTimeOffset newValue);
 
-            if (currentValue != value)
+            if (currentValue != newValue)
             {
-                CurrentValue = THelper.ChangeType<TValue>(value);
+                CurrentValue = InternalConvert.FromDateTimeOffset<TValue>(newValue);
 
                 _ = InvokeOnChange();
             }
@@ -259,17 +257,17 @@ namespace AntDesign
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
 
             _dropDown.SetShouldRender(true);
 
-            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
         }
@@ -289,9 +287,9 @@ namespace AntDesign
 
         private async Task InvokeOnChange()
         {
-            await OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            await OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
         }

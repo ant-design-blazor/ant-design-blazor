@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -39,13 +41,14 @@ namespace AntDesign
 
                 TValue orderedValue = SortValue(value);
 
-                var hasChanged = _lastValue is null || (IsNullable ? !Enumerable.SequenceEqual(orderedValue as DateTime?[], _lastValue as DateTime?[]) :
-                                                            !Enumerable.SequenceEqual(orderedValue as DateTime[], _lastValue as DateTime[]));
+                var hasChanged = _lastValue is null || !InternalConvert.SequenceEqual(orderedValue, _lastValue);
+
                 if (hasChanged)
                 {
                     _value = orderedValue;
 
                     _lastValue ??= CreateInstance();
+
                     Array.Copy(orderedValue as Array, _lastValue as Array, 2);
 
                     GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
@@ -59,7 +62,7 @@ namespace AntDesign
         private readonly DateTime[] _pickerValuesAfterInit = new DateTime[2];
 
         [Parameter]
-        public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
+        public EventCallback<DateRangeChangedEventArgs<TValue>> OnChange { get; set; }
 
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 
@@ -109,7 +112,7 @@ namespace AntDesign
                     return false;
                 }
 
-                DateTime? value = GetIndexValue(index.Value);
+                var value = GetIndexValue(index.Value);
 
                 if (value is null)
                 {
@@ -117,7 +120,7 @@ namespace AntDesign
                 }
 
                 var date1 = date.Date;
-                var date2 = ((DateTime)value).Date;
+                var date2 = value.Value.Date;
 
                 if (Picker == DatePickerType.Week)
                 {
@@ -175,7 +178,7 @@ namespace AntDesign
             }
             else if (UseDefaultPickerValue[index] && DefaultPickerValue is not null)
             {
-                PickerValues[index] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
+                PickerValues[index] = InternalConvert.ToDateTimeOffset(DefaultPickerValue).Value.DateTime;
             }
             else
             {
@@ -415,7 +418,7 @@ namespace AntDesign
             }
             else if (!IsTypedValueNull(DefaultValue, index, out var defaultValue))
             {
-                return defaultValue;
+                return defaultValue?.DateTime;
             }
             return null;
         }
@@ -430,12 +433,13 @@ namespace AntDesign
                 return null;
             }
 
-            return Convert.ToDateTime(indexValue, CultureInfo);
+            return InternalConvert.ToDateTime(indexValue);
         }
 
-        private static bool IsTypedValueNull(TValue value, int index, out DateTime? outValue)
+        private bool IsTypedValueNull(TValue value, int index, out DateTimeOffset? outValue)
         {
-            outValue = (DateTime?)(value as Array)?.GetValue(index);
+            var dateValue = (value as Array)?.GetValue(index);
+            outValue = InternalConvert.ToDateTimeOffset(dateValue);
             return outValue == null;
         }
 
@@ -447,21 +451,63 @@ namespace AntDesign
             }
 
             bool isValueInstantiated = Value == null;
+
             if (isValueInstantiated)
             {
                 Value = CreateInstance();
             }
+
             UseDefaultPickerValue[index] = false;
 
-            var array = Value as Array;
+            var defaultValue = InternalConvert.ToDateTimeOffset((DefaultValue as Array)?.GetValue(index));
 
-            var currentValue = array.GetValue(index) as DateTime?;
+            var currentValueArray = Value as Array;
+            var currentIndexValue = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index));
 
-            var isValueChanged = currentValue != _pickerStatus[index].SelectedValue;
+            var newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), defaultValue?.Offset ?? currentIndexValue?.Offset ?? DateTimeOffset.Now.Offset);
+
+            var isValueChanged = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index)) != newValue;
 
             if (isValueChanged)
             {
-                array.SetValue(value, index);
+                if (currentValueArray is DateTime[] dateTimeArray)
+                {
+                    dateTimeArray.SetValue(newValue.DateTime, index);
+                }
+                else if (currentValueArray is DateTime?[] nullableDateTimeArray)
+                {
+                    nullableDateTimeArray.SetValue(newValue.DateTime, index);
+                }
+                else if (currentValueArray is DateTimeOffset[] dateTimeOffsetArray)
+                {
+                    dateTimeOffsetArray.SetValue(newValue, index);
+                }
+                else if (currentValueArray is DateTimeOffset?[] nullableDateTimeOffsetArray)
+                {
+                    nullableDateTimeOffsetArray.SetValue(newValue, index);
+                }
+#if NET6_0_OR_GREATER
+                else if (currentValueArray is DateOnly[] dateOnly)
+                {
+                    dateOnly.SetValue(DateOnly.FromDateTime(newValue.DateTime), index);
+                }
+                else if (currentValueArray is DateOnly?[] nullableDateOnly)
+                {
+                    nullableDateOnly.SetValue(DateOnly.FromDateTime(newValue.DateTime), index);
+                }
+                else if (currentValueArray is TimeOnly[] timeOnly)
+                {
+                    timeOnly.SetValue(TimeOnly.FromDateTime(newValue.DateTime), index);
+                }
+                else if (currentValueArray is TimeOnly?[] nullableTimeOnly)
+                {
+                    nullableTimeOnly.SetValue(TimeOnly.FromDateTime(newValue.DateTime), index);
+                }
+#endif
+                else
+                {
+                    throw new NotImplementedException("Type not supported");
+                }
             }
 
             var otherIndex = Math.Abs(index - 1);
@@ -470,11 +516,11 @@ namespace AntDesign
             if (isValueInstantiated && DefaultValue != null)
             {
                 var arrayDefault = DefaultValue as Array;
-                array.SetValue(arrayDefault.GetValue(otherIndex), otherIndex);
+                currentValueArray.SetValue(arrayDefault.GetValue(otherIndex), otherIndex);
             }
 
-            var startDate = array.GetValue(0) as DateTime?;
-            var endDate = array.GetValue(1) as DateTime?;
+            var startDate = currentValueArray.GetValue(0);
+            var endDate = currentValueArray.GetValue(1);
 
             if (isValueChanged && startDate is not null
                                     && endDate is not null)
@@ -540,10 +586,9 @@ namespace AntDesign
 
         private void InvokeOnChange()
         {
-            var array = Value as Array;
-            OnChange.InvokeAsync(new DateRangeChangedEventArgs
+            OnChange.InvokeAsync(new DateRangeChangedEventArgs<TValue>
             {
-                Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
+                Dates = Value,
                 DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
             });
         }
@@ -553,13 +598,57 @@ namespace AntDesign
             if (DefaultValue is not null)
                 return (TValue)(DefaultValue as Array).Clone();
 
+            var type = typeof(TValue);
+
             if (IsNullable)
             {
-                return (TValue)Array.CreateInstance(typeof(DateTime?), 2).Clone();
+                if (type.IsAssignableFrom(typeof(DateTime?[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateTime?), 2).Clone();
+                }
+                else if (type.IsAssignableFrom(typeof(DateTimeOffset?[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateTimeOffset?), 2).Clone();
+                }
+#if NET6_0_OR_GREATER
+                else if (type.IsAssignableFrom(typeof(DateOnly?[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateOnly?), 2).Clone();
+                }
+                else if (type.IsAssignableFrom(typeof(TimeOnly?[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(TimeOnly?), 2).Clone();
+                }
+#endif
+                else
+                {
+                    throw new NotSupportedException($"{type.FullName} not supported");
+                }
             }
             else
             {
-                return (TValue)Array.CreateInstance(typeof(DateTime), 2).Clone();
+                if (type.IsAssignableFrom(typeof(DateTime[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateTime), 2).Clone();
+                }
+                else if (type.IsAssignableFrom(typeof(DateTimeOffset[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateTimeOffset), 2).Clone();
+                }
+#if NET6_0_OR_GREATER
+                else if (type.IsAssignableFrom(typeof(DateOnly[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateOnly), 2).Clone();
+                }
+                else if (type.IsAssignableFrom(typeof(TimeOnly[])))
+                {
+                    return (TValue)Array.CreateInstance(typeof(DateOnly), 2).Clone();
+                }
+#endif
+                else
+                {
+                    throw new NotSupportedException($"{type.FullName} not supported");
+                }
             }
         }
 

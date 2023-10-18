@@ -22,6 +22,13 @@ There are six kinds of picker:
 - YearPicker
 - QuarterPicker
 
+There are four types of values supported:
+
+- DateTime
+- DateTimeOffset
+- DateOnly
+- TimeOnly
+
 ### Common API
 
 The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicker, WeekPicker.

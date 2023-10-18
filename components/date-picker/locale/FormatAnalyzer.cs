@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using AntDesign.core.Extensions;
 
 namespace AntDesign.Datepicker.Locale
 {
@@ -45,7 +44,7 @@ namespace AntDesign.Datepicker.Locale
             _analyzerType = analyzerType;
             _locale = locale;
             _cultureInfo = cultureInfo;
-            //Quarter and Week have individual appoaches, so no need to analyze format
+            //Quarter and Week have individual approaches, so no need to analyze format
             //if (!(_analyzerType == DatePickerType.Quarter || _analyzerType == DatePickerType.Week))
             AnalyzeFormat(format);
         }
@@ -168,7 +167,7 @@ namespace AntDesign.Datepicker.Locale
                 }
                 else
                 {
-                    //check if partial is pars-able and grater than 0                
+                    //check if partial is pars-able and grater than 0
                     if (int.TryParse(partial, out parsed))
                     {
                         if ((parsed <= 0 && _partialsOrder[i] >= DateTimePartialType.Day)
@@ -267,7 +266,7 @@ namespace AntDesign.Datepicker.Locale
             return true;
         }
 
-        Func<string, (bool, DateTime)> _converter;
+        private Func<string, (bool, DateTime)> _converter;
 
         private Func<string, (bool, DateTime)> Converter
         {
@@ -280,12 +279,15 @@ namespace AntDesign.Datepicker.Locale
                         case DatePickerType.Year:
                             _converter = (pickerString) => TryParseYear(pickerString);
                             break;
+
                         case DatePickerType.Quarter:
                             _converter = (pickerString) => TryParseQuarterString(pickerString);
                             break;
+
                         case DatePickerType.Week:
                             _converter = (pickerString) => TryParseWeekString(pickerString);
                             break;
+
                         default:
                             _converter = (pickerString) => TryParseDate(pickerString);
                             break;
@@ -294,28 +296,18 @@ namespace AntDesign.Datepicker.Locale
                 return _converter;
             }
         }
-        
-        public bool TryParseExact<TValue>(string pickerString, string format, out TValue changeValue, bool isDateTypeNullable)
+
+        public bool TryPickerStringConvert(string pickerString, out DateTime parsedValue, string mask = null)
         {
-            if (DateTime.TryParseExact(pickerString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            if (!string.IsNullOrEmpty(mask) && !DateTime.TryParseExact(pickerString, mask, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
-                return GetParsedValue(out changeValue, date, isDateTypeNullable);
+                parsedValue = default;
+                return false;
             }
-            
-            changeValue = default;
-            
-            return false;
-        }
-        
-        public bool TryPickerStringConvert<TValue>(string pickerString, out TValue changeValue, bool isDateTypeNullable)
-        {
+
             var resultTuple = Converter(pickerString);
-            if (resultTuple.Item1)
-            {
-                return GetParsedValue(out changeValue, resultTuple.Item2, isDateTypeNullable);
-            }
-            changeValue = default;
-            return false;
+            parsedValue = resultTuple.Item1 ? resultTuple.Item2 : default;
+            return resultTuple.Item1;
         }
 
         private (bool, DateTime) TryParseDate(string pickerString)
@@ -342,16 +334,19 @@ namespace AntDesign.Datepicker.Locale
                             return false;
                         year = item.Value;
                         break;
+
                     case DateTimePartialType.Month:
                         if (item.Value < 1 || item.Value > 12)
                             return false;
                         month = item.Value;
                         break;
+
                     case DateTimePartialType.Day:
                         if (item.Value < 1 || item.Value > 31)
                             return false;
                         day = item.Value;
                         break;
+
                     case DateTimePartialType.Hour:
                         if (item.Value < 0 || item.Value > 23)
                             return false;
@@ -359,16 +354,19 @@ namespace AntDesign.Datepicker.Locale
                             return false;
                         hour = item.Value;
                         break;
+
                     case DateTimePartialType.Minute:
                         if (item.Value < 0 || item.Value > 59)
                             return false;
                         minute = item.Value;
                         break;
+
                     case DateTimePartialType.Second:
                         if (item.Value < 0 || item.Value > 59)
                             return false;
                         second = item.Value;
                         break;
+
                     case DateTimePartialType.AmPmDesignator:
                         if (item.Value == 1)
                             hour += hour == 12 ? 0 : 12;
@@ -390,16 +388,6 @@ namespace AntDesign.Datepicker.Locale
                 return (true, new DateTime(_parsedMap[DateTimePartialType.Year], 1, 1, _cultureInfo.Calendar));
             }
             return (false, default);
-        }
-
-        private bool GetParsedValue<TValue>(out TValue changeValue, DateTime foundDate, bool isDateTypeNullable)
-        {
-            if (isDateTypeNullable)
-                changeValue = (TValue)(object)(foundDate);
-            else
-                changeValue = DataConvertionExtensions.Convert<DateTime, TValue>(foundDate);
-            
-            return true;
         }
     }
 }
