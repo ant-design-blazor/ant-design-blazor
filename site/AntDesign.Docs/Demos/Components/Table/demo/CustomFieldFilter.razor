@@ -51,7 +51,7 @@
 
         public RenderFragment GetFilterInput(TableFilterInputRenderOptions filter)
         {
-            return @<Slider TValue="double" Value="(float?)filter.Value ?? 0" ValueChanged="value => filter.Value = (float?)value" Style="width: 70px" Min="0" Max="1" Step=".01" />;
+            return @<Slider TValue="double" Value="(float?)filter.Value ?? 0" ValueChanged="value => filter.Value = (float?)value" Style="width: 70px" Min="0" Max="1" Step=".01" @ref="filter.InputRef"/>;
         }
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
