@@ -370,7 +370,7 @@ namespace AntDesign
             }
             ResetPlaceholder();
 
-            _initValue = Value;
+            _initValue = (TValue)(_value as Array).Clone();
         }
 
         /// <summary>
