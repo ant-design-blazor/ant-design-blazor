@@ -326,7 +326,7 @@ namespace AntDesign
 
             if (_placeholder.Value is null)
             {
-                _placeholder = IsRange ? new string[] { } : string.Empty;
+                _placeholder = IsRange ? Array.Empty<string>() : string.Empty;
             }
 
             this.SetClass();
@@ -432,14 +432,9 @@ namespace AntDesign
         {
             DateTime? tryGetValue = GetIndexValue(index);
 
-            if (tryGetValue == null)
-            {
-                return "";
-            }
-
-            DateTime value = (DateTime)tryGetValue;
-
-            return GetFormatValue(value, index);
+            return tryGetValue.HasValue
+                ? GetFormatValue(tryGetValue.Value, index)
+                : string.Empty;
         }
 
         protected void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
