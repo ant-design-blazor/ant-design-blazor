@@ -452,6 +452,8 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
+            ChangeValue(true);
+
             if (OnBlur.HasDelegate)
             {
                 await OnBlur.InvokeAsync(e);
@@ -544,7 +546,7 @@ namespace AntDesign
                 return;
             }
 
-            if (!_compositionInputting)
+            if (!_compositionInputting && CurrentValueAsString != _inputString)
             {
                 CurrentValueAsString = _inputString;
             }
