@@ -57,7 +57,8 @@ else
         </div>
         <div class="ant-input-number-input-wrap">
             <input id="@(Id)_input" @ref="Ref" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step" inputmode="@_inputNumberMode" placeholder="@PlaceHolder"
-               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onkeydown="OnKeyDown" @onfocus="@OnFocusAsync" @onblur="@OnBlurAsync" disabled="@Disabled" />
+               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onkeydown="OnKeyDown" @onfocus="@OnFocusAsync" @onblur="@OnBlurAsync" disabled="@Disabled" 
+               maxlength="@MaxLength" />
         </div>
     </div>;
     }
