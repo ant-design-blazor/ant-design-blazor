@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Encodings.Web;
 using AntDesign;
+using AntDesign.core.Extensions;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddAntDesign(this IServiceCollection services)
+        public static AntDesignBuilder AddAntDesign(this IServiceCollection services)
         {
             services.TryAddScoped<DomEventService>();
             services.TryAddTransient<IDomEventListener>((sp) =>
@@ -39,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 
-            return services;
+            return new AntDesignBuilder(services);
         }
     }
 }
