@@ -60,7 +60,7 @@ namespace AntDesign
         public TValue Min { get; set; }
 
         [Parameter]
-        public int MaxLength { get; set; }
+        public int? MaxLength { get; set; }
 
         [Parameter]
         public bool Disabled { get; set; }
