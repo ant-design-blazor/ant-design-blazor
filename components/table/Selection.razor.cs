@@ -22,8 +22,8 @@ namespace AntDesign
         //private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && !Table.AllSelected
-                                      && Table.AnySelected;
+                                   && Table.AnySelected
+                                   && !Table.AllSelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
@@ -50,12 +50,11 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table.SetSelection(new[] { Key });
+                    Table.SetSelection(this);
                 }
                 else
                 {
-                    RowData.Selected = selected;
-                    Table.Selection.StateHasChanged();
+                    DataItem.Selected = selected;
                 }
             }
         }
@@ -87,10 +86,10 @@ namespace AntDesign
             // avoid check the disabled one but allow default checked
             if (Disabled && _selected.HasValue)
             {
-                RowData.SetSelected(_selected.Value);
+                DataItem.SetSelected(_selected.Value);
             }
 
-            _selected = RowData.Selected;
+            _selected = DataItem.Selected;
         }
 
         void ISelectionColumn.StateHasChanged()

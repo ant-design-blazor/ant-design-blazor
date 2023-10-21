@@ -15,7 +15,7 @@ namespace AntDesign
 
         QueryModel GetQueryModel();
 
-        void SetSelection(string[] keys);
+        void SetSelection(ICollection<string> keys);
 
         void SelectAll();
 
@@ -42,6 +42,8 @@ namespace AntDesign
         internal bool HasExpandTemplate { get; }
 
         internal SortDirection[] SortDirections { get; }
+
+        internal void SetSelection(ISelectionColumn selectItem);
 
         internal bool AllSelected { get; }
 
