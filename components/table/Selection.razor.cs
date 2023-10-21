@@ -29,7 +29,9 @@ namespace AntDesign
 
         //private int[] _selectedIndexes;
 
-        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
+
+        private bool? _selected;
 
         private void OnCheckedChange(bool selected)
         {
@@ -77,17 +79,17 @@ namespace AntDesign
             }
         }
 
-        protected override void OnParametersSet()
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
+        private void HandleSelected()
         {
-            base.OnParametersSet();
-            //if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
-            //{
-            //    var first = RowSelections.FirstOrDefault(x => x.Checked);
-            //    if (first != null)
-            //    {
-            //        Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.SetSelected(false));
-            //    }
-            //}
+            // avoid check the disabled one but allow default checked
+            if (Disabled && _selected.HasValue)
+            {
+                DataItem.SetSelected(_selected.Value);
+            }
+
+            _selected = DataItem.Selected;
         }
 
         void ISelectionColumn.StateHasChanged()

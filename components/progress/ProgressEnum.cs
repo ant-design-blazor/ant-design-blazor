@@ -2,8 +2,8 @@
 {
     public sealed class ProgressSize : EnumValue<ProgressSize>
     {
-        public static readonly ProgressSize Small = new ProgressSize(nameof(Small), 1);
-        public static readonly ProgressSize Default = new ProgressSize(nameof(Default), 2);
+        public static readonly ProgressSize Small = new ProgressSize(nameof(Small), 6);
+        public static readonly ProgressSize Default = new ProgressSize(nameof(Default), 8);
 
         private ProgressSize(string name, int value) : base(name.ToLowerInvariant(), value)
         {

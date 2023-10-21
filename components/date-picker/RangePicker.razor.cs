@@ -11,6 +11,7 @@ namespace AntDesign
     {
         private TValue _value;
         private TValue _lastValue;
+        private TValue _initValue;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -63,7 +64,7 @@ namespace AntDesign
 
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 
-        private bool ShowRanges => Ranges?.Count > 0;
+        private bool ShowRanges => Ranges is { Count: > 0 };
 
         private readonly Func<DateTime, bool> _defaultDisabledDateCheck;
 
@@ -78,7 +79,7 @@ namespace AntDesign
             }
             set
             {
-                _disabledDate = (date) => (value is not null && value(date)) || _defaultDisabledDateCheck(date);
+                _disabledDate = (date) => (value?.Invoke(date) is true) || _defaultDisabledDateCheck(date);
             }
         }
 
@@ -154,7 +155,7 @@ namespace AntDesign
 
             var currentValue = GetIndexValue(index);
 
-            if (currentValue is not null)
+            if (currentValue.HasValue)
             {
                 if (index == 0 || IsShowTime)
                 {
@@ -368,6 +369,8 @@ namespace AntDesign
                 ValueChanged.InvokeAsync(_value);
             }
             ResetPlaceholder();
+
+            _initValue = (TValue)(_value as Array).Clone();
         }
 
         /// <summary>
@@ -483,13 +486,12 @@ namespace AntDesign
             var startDate = array.GetValue(0) as DateTime?;
             var endDate = array.GetValue(1) as DateTime?;
 
-            if (isValueChanged && startDate is not null
-                                    && endDate is not null)
+            if (isValueChanged && startDate.HasValue && endDate.HasValue)
             {
                 InvokeOnChange();
             }
 
-            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange is true))
             {
                 EditContext?.NotifyFieldChanged(FieldIdentifier);
             }
@@ -509,7 +511,15 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = CurrentValue as Array;
-            int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
+            ReadOnlySpan<int> indexToClear;
+            if (index == -1)
+            {
+                indexToClear = new[] { 0, 1 }; // For .NET 8+, using `ReadOnlySpan<int>` can avoid this array allocation
+            }
+            else
+            {
+                indexToClear = new[] { index };
+            }
 
             foreach (var i in indexToClear)
             {
@@ -543,6 +553,20 @@ namespace AntDesign
             OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
+        }
+
+        internal override void ResetValue()
+        {
+            if (CurrentValue is Array currentArray)
+            {
+                _isNotifyFieldChanged = false;
+                (_initValue as Array).CopyTo(currentArray, 0);
+                _isNotifyFieldChanged = true;
+            }
+            else
+            {
+                base.ResetValue();
+            }
         }
 
         private void InvokeOnChange()
@@ -599,7 +623,7 @@ namespace AntDesign
                 return false;
             }
 
-            string[] values = value.Split(",");
+            string[] values = value.Split(',');
 
             if (values.Length != 2)
             {
@@ -642,7 +666,7 @@ namespace AntDesign
 
         public bool ShowClear()
         {
-            return CurrentValue is Array array && (array.GetValue(0) != null || array.GetValue(1) != null) && AllowClear;
+            return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
         }
     }
 }

@@ -398,7 +398,7 @@ namespace AntDesign
             _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
             FilterModel = _hasFilterSelected ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
-            Table?.ReloadAndInvokeChange();
+            Table?.ColumnFilterChange();
         }
 
         private void ResetFilters()
