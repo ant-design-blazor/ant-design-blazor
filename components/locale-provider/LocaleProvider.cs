@@ -106,6 +106,8 @@ namespace AntDesign
             if (culture != null)
             {
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
             }
 
             if (locale != null)

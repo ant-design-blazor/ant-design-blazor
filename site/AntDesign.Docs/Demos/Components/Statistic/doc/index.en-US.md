@@ -18,24 +18,25 @@ Display statistic number.
 
 | Property         | Description                   | Type                 | Default | Version |
 | ---------------- | ----------------------------- | -------------------- | ------- | ------- |
-| decimalSeparator | decimal separator             | string               | .       |         |
-| formatter        | customize value display logic | (value) => ReactNode | -       |         |
-| groupSeparator   | group separator               | string               | ,       |         |
-| precision        | precision of input value      | number               | -       |         |
-| prefix           | prefix node of value          | string \| ReactNode  | -       |         |
-| suffix           | suffix node of value          | string \| ReactNode  | -       |         |
-| title            | Display title                 | string \| ReactNode  | -       |         |
-| value            | Display value                 | string \| number     | -       |         |
-| valueStyle       | Set value css style           | CSSProperties        | -       |         |
+| CultureInfo      | culture info for the number format | CultureInfo     | CurrentCultureInfo |  |
+| DecimalSeparator | decimal separator             | string               | .       |         |
+| Formatter        | customize value display logic | (value) => ReactNode | -       |         |
+| GroupSeparator   | group separator               | string               | ,       |         |
+| Precision        | precision of input value      | number               | -       |         |
+| Prefix           | prefix node of value          | string \| ReactNode  | -       |         |
+| Suffix           | suffix node of value          | string \| ReactNode  | -       |         |
+| Title            | Display title                 | string \| ReactNode  | -       |         |
+| Value            | Display value                 | string \| number     | -       |         |
+| ValueStyle       | Set value css style           | CSSProperties        | -       |         |
 
-#### Statistic.Countdown
+#### Countdown
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| format | Format as [moment](http://momentjs.com/) | string | 'HH:mm:ss' |  |
-| onFinish | Trigger when time's up | () => void | - |  |
-| prefix | prefix node of value | string \| ReactNode | - |  |
-| suffix | suffix node of value | string \| ReactNode | - |  |
-| title | Display title | string \| ReactNode | - |  |
-| value | Set target countdown time | number \| moment | - |  |
-| valueStyle | Set value css style | CSSProperties | - |  |
+| Format | Format as [TimeSpan](https://docs.microsoft.com/zh-cn/dotnet/standard/base-types/custom-timespan-format-strings?WT.mc_id=DT-MVP-5003987) | string | @"hh\:mm\:ss" |  |
+| OnFinish | Trigger when time's up | () => void | - |  |
+| Prefix | prefix node of value | string \| ReactNode | - |  |
+| Suffix | suffix node of value | string \| ReactNode | - |  |
+| Title | Display title | string \| ReactNode | - |  |
+| Value | Set target countdown time | number \| moment | - |  |
+| ValueStyle | Set value css style | CSSProperties | - |  |

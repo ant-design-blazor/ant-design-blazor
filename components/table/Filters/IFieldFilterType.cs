@@ -2,16 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
+using Microsoft.AspNetCore.Components;
 
-namespace AntDesign.FilterExpression
+namespace AntDesign.Filters
 {
-    public interface IFilterExpression
+    public interface IFieldFilterType
     {
-        TableFilterCompareOperator GetDefaultCompareOperator();
+        TableFilterCompareOperator DefaultCompareOperator { get; }
+        RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
+        IEnumerable<TableFilterCompareOperator> SupportedCompareOperators { get; set; }
+
         Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr);
     }
 }

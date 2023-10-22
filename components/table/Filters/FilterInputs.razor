@@ -1,0 +1,64 @@
+﻿@namespace AntDesign.Filters
+
+@using AntDesign
+
+@implements IHandleEvent
+
+@{
+    // This is a utility .razor page, and it should not be used as a component.
+    throw new InvalidOperationException();
+}
+
+@code {
+
+    // Unfortunately, the razor compiler currently doesn't allow setting EventCallbacks (e.g. ValueChanged) in static fields/properties
+    // (see https://github.com/dotnet/aspnetcore/issues/24655 and https://github.com/dotnet/aspnetcore/issues/18919)
+    // Therefore, we need to implement them as instance properties and use a singleton pattern
+    public static FilterInputs Instance { get; } = new();
+
+    public readonly RenderFragment<TableFilterInputRenderOptions> DateTimeInput, GuidInput;
+
+    private FilterInputs() {
+        DateTimeInput = filter =>
+            @<text>
+                @if (filter.FilterCompareOperator != TableFilterCompareOperator.TheSameDateWith) {
+                    <DatePicker Value="(DateTime?)filter.Value" ShowTime="true"
+                                TValue="DateTime?" ValueChanged="value => filter.Value = value?.AddMilliseconds(-value.Value.Millisecond)"
+                                PopupContainerSelector="@filter.PopupContainerSelector"
+                                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"/>
+                }
+                else {
+                    <DatePicker Value="(DateTime?)filter.Value" TValue="DateTime?" ValueChanged="value => filter.Value = value"
+                                PopupContainerSelector="@filter.PopupContainerSelector"
+                                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"/>
+                }
+             </text>;
+        GuidInput = filter =>
+            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
+    }
+
+    public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
+        @<text>
+            <EnumSelect TEnum="TData" Mode="multiple"
+                        @*Values="EnumHelper<TData>.Split(filter.Value)" workaround for https: //github.com/ant-design-blazor/ant-design-blazor/issues/3006 *@
+            PopupContainerSelector="@filter.PopupContainerSelector"
+            Style="width:180px;"
+            ValuesChanged="value => filter.Value = EnumHelper<TData>.Combine(value)"
+            BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" />
+         </text>;
+
+    public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
+        @<InputNumber Value="(TData?)filter.Value" Formatter="number => NumberFormatter(number, filter.Format)" TValue="TData?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
+
+    private string NumberFormatter(object value, string format)
+    {
+        if (value == null) return null;
+        return Convert.ToDouble(value).ToString(format);
+    }
+
+    public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
+        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" />;
+
+    // https://github.com/dotnet/aspnetcore/issues/24655
+    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);
+}

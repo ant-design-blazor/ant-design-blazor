@@ -2,6 +2,7 @@
 @typeparam TValue
 @inherits AntInputComponentBase<TValue>
 @using Microsoft.AspNetCore.Components.Web
+@using System.Globalization
 
 <div class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="Ref"
      @onmousedown="(e) => OnMouseDown(e)">
@@ -27,22 +28,22 @@
         {
             <Tooltip Title="@TipFormatter(_leftValue)" Style="display: inline;" Visible="_tooltipLeftVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipLeft">
                 <Unbound>
-                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(LeftValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_leftHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, false)">
+                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(LeftValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_leftHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, false)">
                     </div>
                 </Unbound>
             </Tooltip>
             <Tooltip Title="@TipFormatter(_rightValue)" Style="display: inline;" Visible="_tooltipRightVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipRight">
                 <Unbound>
-                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, true)">
+                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, true)">
                     </div>
                 </Unbound>
             </Tooltip>
         }
         else
         {
-            <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(LeftValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_leftHandleStyle" @ref="_leftHandle" @onmousedown="(e) => OnMouseDownEdge(e, false)">
+            <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(LeftValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_leftHandleStyle" @ref="_leftHandle" @onmousedown="(e) => OnMouseDownEdge(e, false)">
             </div>
-            <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e) => OnMouseDownEdge(e, true)">
+            <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e) => OnMouseDownEdge(e, true)">
             </div>
         }
     }
@@ -52,14 +53,14 @@
         {
             <Tooltip Title="@TipFormatter(_rightValue)" Style="display: inline;" Visible="_tooltipRightVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipRight">
                 <Unbound>
-                    <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
+                    <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
                     </div>
                 </Unbound>
             </Tooltip>
         }
         else
         {
-            <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2)) aria-valuemin=@(Math.Round(Min, 2)) aria-valuemax=@(Math.Round(Max, 2)) style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
+            <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow=@(Math.Round(RightValue, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemin=@(Math.Round(Min, 2).ToString(CultureInfo.InvariantCulture)) aria-valuemax=@(Math.Round(Max, 2).ToString(CultureInfo.InvariantCulture)) style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
                 </div>
         }
     }

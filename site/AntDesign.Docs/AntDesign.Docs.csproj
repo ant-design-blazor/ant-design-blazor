@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6;net7;net8</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Demos\Components\Table\demo\CustomFieldFilter.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Demos\Components\Table\demo\CustomFieldFilter.razor" />
   </ItemGroup>
   
 </Project>

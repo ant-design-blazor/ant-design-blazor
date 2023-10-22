@@ -185,9 +185,13 @@ namespace AntDesign
                 return cssStyleBuilder.Build();
             }
 
-            var fixedWidths = Array.Empty<string>();
-
             Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+            if (string.IsNullOrWhiteSpace(Fixed))
+            {
+                return cssStyleBuilder.Build();
+            }
+
+            var fixedWidths = Array.Empty<string>();
 
             if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
             {

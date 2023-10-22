@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\components\AntDesign.csproj" />
-    <ProjectReference Include="..\..\..\src\AntDesign.Components.Authentication\AntDesign.Components.Authentication.csproj" />
   </ItemGroup>
 
 </Project>

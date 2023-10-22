@@ -12,3 +12,12 @@ To select/input a time.
 ---
 
 By clicking the input box, you can select a time from a popup panel.
+
+## API
+
+There are four types of values supported:
+
+- DateTime
+- DateTimeOffset
+- DateOnly
+- TimeOnly
