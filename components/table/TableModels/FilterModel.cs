@@ -8,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using AntDesign.FilterExpression;
+using AntDesign.Filters;
 
 namespace AntDesign.TableModels
 {
@@ -24,12 +24,11 @@ namespace AntDesign.TableModels
 
         public int ColumnIndex => _columnIndex;
 
-        private readonly FilterExpressionResolver<TField> _filterExpressionResolver = new FilterExpressionResolver<TField>();
-
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        private LambdaExpression _getFieldExpression;
-        private int _columnIndex;
+        private readonly LambdaExpression _getFieldExpression;
+        private readonly int _columnIndex;
+        private readonly IFieldFilterType _fieldFilterType;
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
@@ -42,7 +41,8 @@ namespace AntDesign.TableModels
             this._columnIndex = columnIndex;
         }
 
-        public FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
+        public FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName,
+            Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType, IFieldFilterType fieldFilterType)
         {
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
@@ -54,13 +54,15 @@ namespace AntDesign.TableModels
             {
                 this.OnFilter = onFilter;
             }
+
             this.SelectedValues = filters.Select(x => x.Value?.ToString());
             this.Filters = filters;
             this.FilterType = filterType;
             this._columnIndex = column.ColIndex;
+            this._fieldFilterType = fieldFilterType;
         }
 
-        public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
+public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
         {
             if (Filters?.Any() != true)
             {
@@ -74,12 +76,7 @@ namespace AntDesign.TableModels
             {
                 lambda = Expression.Constant(false, typeof(bool));
             }
-
-            IFilterExpression filterExpression = null;
-            if (FilterType == TableFilterType.FieldType)
-            {
-                filterExpression = _filterExpressionResolver.GetFilterExpression();
-            }
+            
             foreach (var filter in Filters)
             {
                 if (this.FilterType == TableFilterType.List)
@@ -88,17 +85,16 @@ namespace AntDesign.TableModels
                 }
                 else // TableFilterType.FieldType
                 {
-                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
-                    Expression constantExpression = null;
-                    if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
-                    {
-                        constantExpression = Expression.Constant(null, typeof(TField));
-                    }
-                    else
-                    {
-                        constantExpression = Expression.Constant(filter.Value, typeof(TField));
-                    }
-                    var expression = filterExpression!.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
+                    if (filter.Value == null
+                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull)) 
+                        continue;
+
+                    Expression constantExpression = Expression.Constant(
+                        filter.FilterCompareOperator is TableFilterCompareOperator.IsNull
+                            or TableFilterCompareOperator.IsNotNull
+                            ? null
+                            : filter.Value);
+                    var expression = _fieldFilterType.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
                     if (lambda == null)
                     {
                         lambda = expression;

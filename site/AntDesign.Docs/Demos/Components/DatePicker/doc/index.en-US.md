@@ -22,6 +22,13 @@ There are six kinds of picker:
 - YearPicker
 - QuarterPicker
 
+There are four types of values supported:
+
+- DateTime
+- DateTimeOffset
+- DateOnly
+- TimeOnly
+
 ### Common API
 
 The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicker, WeekPicker.
@@ -29,6 +36,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | allowClear（TODO） | Whether to show clear button | boolean | true |  |
+| ChangeOnClose | Saving the input value after blur (when the mouse clicked outside the input)  | boolean | false                                                                                                       |  |
 | autoFocus | get focus when component mounted | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | picker className | string | '' |  |
@@ -42,6 +50,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | open | open state of picker | boolean | - |  |
 | picker | Set picker type | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
 | placeholder | placeholder of date input | string\|RangePicker\[] | - |  |
+| Placement | The position where the selection box pops up | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |
 | popupStyle | to customize the style of the popup calendar | CSSProperties | {} |  |
 | size | determine the size of the input box, the height of `large` and `small`, are 40px and 24px respectively, while default size is 32px | `large` \| `middle` \| `small` | - |  |
 | bordered | whether has border style | Boolean | true |  |
@@ -51,6 +60,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | onPanelChange | callback when picker panel mode is changed | function(value, mode) | - |  |
 | OnClearClick | callback when clear button is clicked | Action | - |  |
 | inputReadOnly | Set the `readonly` attribute of the input tag (avoids virtual keyboard on touch devices) | boolean | false |  |
+| mask | input value by mask     | string  | - | |
 
 ### Common Methods
 

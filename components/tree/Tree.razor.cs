@@ -439,6 +439,12 @@ namespace AntDesign
 
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -750,28 +756,23 @@ namespace AntDesign
         /// <summary>
         /// Expand all nodes
         /// </summary>
-        public void ExpandAll()
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, true));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+            else
+                ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
 
         /// <summary>
         /// Collapse all nodes
         /// </summary>
-        public void CollapseAll()
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, false));
-        }
-
-        /// <summary>
-        /// 节点展开关闭
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="expanded"></param>
-        private void Switch(TreeNode<TItem> node, bool expanded)
-        {
-            node.Expand(expanded);
-            node.ChildNodes.ForEach(n => Switch(n, expanded));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+            else
+                ChildNodes.ForEach(node => _ = node.CollapseAll());
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
@@ -782,6 +783,7 @@ namespace AntDesign
                 node.SetLoading(true);
                 await OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
                 node.SetLoading(false);
+                StateHasChanged();
             }
 
             if (OnExpandChanged.HasDelegate)

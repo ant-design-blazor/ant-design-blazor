@@ -104,6 +104,11 @@ namespace AntDesign
         /// </summary>
         public bool DefaultMaximized { get; set; } = false;
 
+        /// <summary>
+        /// Resizable (Horizontal direction only)
+        /// </summary>
+        public bool Resizable { get; set; }
+
         #region internal
 
 

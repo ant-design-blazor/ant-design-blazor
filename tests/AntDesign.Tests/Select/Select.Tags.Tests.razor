@@ -115,11 +115,10 @@
         input.Input("Tag2");
         await systemUnderTest.InvokeAsync(() => systemUnderTest.WaitForState(() => systemUnderTest.Instance.ActiveOption.Value.Equals("Tag2")));
         input.KeyUp("ENTER");
-
-        systemUnderTest.FindAll("span.ant-select-selection-item-content")
+        systemUnderTest.WaitForAssertion(() => systemUnderTest.FindAll("span.ant-select-selection-item-content")
             .Select(x => x.TextContent.Trim())
             .Should()
-            .BeEquivalentTo(new[] { "Tag1", "Tag2" });
+            .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
 }
 }

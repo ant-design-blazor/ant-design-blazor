@@ -12,6 +12,8 @@ namespace AntDesign
 
         internal event Action<string> OnCloseOther;
 
+        internal event Action<string> OnReloadPage;
+
         internal event Action OnCloseAll;
 
         internal event Action OnCloseCurrent;
@@ -43,6 +45,11 @@ namespace AntDesign
         public void Update()
         {
             OnUpdate?.Invoke();
+        }
+
+        public void ReloadPage(string url = null)
+        {
+            OnReloadPage?.Invoke(url);
         }
     }
 }

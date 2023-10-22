@@ -1,5 +1,5 @@
 ﻿---
-order: 18
+order: 180
 title:
   zh-CN: 自定义Modal的Footer
   en-US: Custom Modal's footer

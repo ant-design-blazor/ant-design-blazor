@@ -337,10 +337,39 @@ namespace AntDesign
         /// Expand the node
         /// </summary>
         /// <param name="expanded"></param>
-        public void Expand(bool expanded)
+        public async Task Expand(bool expanded)
         {
             if (Expanded == expanded) return;
             Expanded = expanded;
+
+            await TreeComponent?.OnNodeExpand(this, Expanded, new MouseEventArgs());
+        }
+
+        /// <summary>
+        /// Expand all child nodes
+        /// </summary>
+        internal async Task ExpandAll()
+        {
+            await SwitchAllNodes(this, true);
+        }
+
+        /// <summary>
+        /// Collapse all child nodes
+        /// </summary>
+        internal async Task CollapseAll()
+        {
+            await SwitchAllNodes(this, false);
+        }
+
+        /// <summary>
+        /// 节点展开关闭
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="expanded"></param>
+        private async Task SwitchAllNodes(TreeNode<TItem> node, bool expanded)
+        {
+            await node.Expand(expanded);
+            node.ChildNodes.ForEach(n => _ = SwitchAllNodes(n, expanded));
         }
 
         /// <summary>

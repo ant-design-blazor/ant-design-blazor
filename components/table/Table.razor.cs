@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.Filters;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -25,7 +26,7 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -170,6 +171,17 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
+
+
+        /// <summary>
+        /// Enable resizable column
+        /// </summary>
+        [Parameter] public bool Resizable { get; set; }
+
+        [Parameter]
+        public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -184,6 +196,9 @@ namespace AntDesign
 
         [Inject]
         private ILogger<Table<TItem>> Logger { get; set; }
+
+        [Inject]
+        private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -544,6 +559,7 @@ namespace AntDesign
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-resizable", () => Resizable)
                 ;
 
             _wrapperClassMapper
@@ -580,6 +596,8 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
+
+            FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
         private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
@@ -658,9 +676,9 @@ namespace AntDesign
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null)
+                if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
@@ -780,6 +798,22 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement)
         {
             _isReloading = true;
+        }
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(x).Equals(RowKey(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(obj).GetHashCode();
         }
     }
 }

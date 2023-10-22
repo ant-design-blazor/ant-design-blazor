@@ -21,7 +21,7 @@ namespace AntDesign.Tests.DatePicker
 
         [Theory]
         [MemberData(nameof(ProcessDefaultsWithNullableArrayScenarios))]
-        public void ProcessDefaults_ShouldEvalueateToExpected_WhenTypeIsNullableArray(
+        public void ProcessDefaults_ShouldEvaluateToExpected_WhenTypeIsNullableArray(
             DateTime?[] value, DateTime?[] defaultValue, DateTime?[] defaultPickerValue,
             ExpectedSource expectedFirstSource, ExpectedSource expectedSecondSource
             )
@@ -47,7 +47,7 @@ namespace AntDesign.Tests.DatePicker
                 DefaultPickerValue => defaultPickerValue[index],
                 Minimum => DateTime.MinValue,
                 Now => _now,
-                _ => throw new ThrowsException(typeof(ExpectedSource))
+                _ => throw new ArgumentException(typeof(ExpectedSource).ToString())
             };
         }
 
@@ -139,7 +139,7 @@ namespace AntDesign.Tests.DatePicker
 
         [Theory]
         [MemberData(nameof(ProcessDefaultsWithNotNullableArrayScenarios))]
-        public void ProcessDefaults_ShouldEvalueateToExpected_WhenTypeIsNotNullableArray(
+        public void ProcessDefaults_ShouldEvaluateToExpected_WhenTypeIsNotNullableArray(
             DateTime[] value, DateTime[] defaultValue, DateTime[] defaultPickerValue,
             ExpectedSource expectedFirstSource, ExpectedSource expectedSecondSource
             )
@@ -167,7 +167,7 @@ namespace AntDesign.Tests.DatePicker
                 DefaultPickerValue => defaultPickerValue[index],
                 Minimum => DateTime.MinValue,
                 Now => _now,
-                _ => throw new ThrowsException(typeof(ExpectedSource))
+                _ => throw new ArgumentException(typeof(ExpectedSource).ToString())
             };
         }
 
