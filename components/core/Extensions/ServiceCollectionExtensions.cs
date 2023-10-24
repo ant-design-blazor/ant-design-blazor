@@ -36,8 +36,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
-            services.TryAddSingleton<ReuseTabsService>();
-            services.TryAddSingleton<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
+            services.TryAddScoped<ReuseTabsService>();
+            services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

@@ -1,0 +1,42 @@
+﻿@inject ReuseTabsService ReuseTabsService;
+@implements IDisposable
+
+@namespace AntDesign
+
+@foreach (var item in ReuseTabsService.Pages)
+{
+    <div @key="item.Url" style="@(item.Url== ReuseTabsService.CurrentUrl?"": "display:none")">
+        @item.Body
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    private RouteData RouteData { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
+    }
+
+    private void OnStateHasChanged()
+    {
+        StateHasChanged();
+    }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
+        {
+            ReuseTabsService.TrySetRouteData(routeData);
+        }
+
+        return base.SetParametersAsync(parameters);
+    }
+}
