@@ -21,41 +21,46 @@ timeline: true
 
 1024 LoL
 
-- 🆕 数字输入框添加MaxLength属性。[#3455](https://github.com/ant-design-blazor/ant-design-blazor/pull/3455) [@chazikaifa](https://github.com/chazikaifa)
 - Table
-  - 🐞 修复当启用虚拟化时，'radio' 类型的选择列选中后不能反选其他行的问题。[#3282](https://github.com/ant-design-blazor/ant-design-blazor/pull/3282) [@rhodon-jargon](https://github.com/rhodon-jargon)
-  - 🆕 使列筛选面板打开后输入框获得焦点 (#3450)。[a2eb720](https://github.com/ant-design-blazor/ant-design-blazor/commit/a2eb720) [@m-khrapunov](https://github.com/m-khrapunov)
-  - 🆕 新增自定义字段类型筛选器，支持内置筛选器的操作类型配置。[#3279](https://github.com/ant-design-blazor/ant-design-blazor/pull/3279) [@rhodon-jargon](https://github.com/rhodon-jargon)
-  - 🐞 修复 选择列禁用时，还能被"全选"和代码选中。[#3436](https://github.com/ant-design-blazor/ant-design-blazor/pull/3436) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 自定义字段类型筛选器，支持内置筛选器的操作类型配置。[#3279](https://github.com/ant-design-blazor/ant-design-blazor/pull/3279) [@rhodon-jargon](https://github.com/rhodon-jargon)
   - 🆕 新增 列宽拖动。[#3340](https://github.com/ant-design-blazor/ant-design-blazor/pull/3340) [@ElderJames](https://github.com/ElderJames)
   - 🆕 新增 FilterTemplate 列属性来自定义筛选面板。[#3285](https://github.com/ant-design-blazor/ant-design-blazor/pull/3285) [@manuelelucchi](https://github.com/manuelelucchi)
-- 🐞 Fixed input can't change value onblur when composition inputting。[#3462](https://github.com/ant-design-blazor/ant-design-blazor/pull/3462) [@ElderJames](https://github.com/ElderJames)
-- 🐞 增加 DateTimeOffset, DateOnly, TimeOnly 的支持。[#3443](https://github.com/ant-design-blazor/ant-design-blazor/pull/3443) [@Alexbits](https://github.com/Alexbits)
-- 🐞 修复 Form 表单重置默认值值。[faa26e2](https://github.com/ant-design-blazor/ant-design-blazor/commit/faa26e2) [@LeaFrock](https://github.com/LeaFrock)
-- 🆕 新增 RowKey 属性用于指定行数据的对比依据值。[#3439](https://github.com/ant-design-blazor/ant-design-blazor/pull/3439) [@ElderJames](https://github.com/ElderJames)
-- 🐞 FormItem Label 读取 'DisplayAttribute.GetName()' 以支持Resx。[#3426](https://github.com/ant-design-blazor/ant-design-blazor/pull/3426) [@huhangfei](https://github.com/huhangfei)
-- 🆕 新增 预览图片支持拖拽移动和滚动缩放。[#3394](https://github.com/ant-design-blazor/ant-design-blazor/pull/3394) [@llp1520](https://github.com/llp1520)
-- 🐞 修复 点击动画在 wasm 多线程的出现的异常。[#3451](https://github.com/ant-design-blazor/ant-design-blazor/pull/3451) [@petertorocsik](https://github.com/petertorocsik)
+  - 🆕 新增 使列筛选面板打开后输入框获得焦点。[#3450](https://github.com/ant-design-blazor/ant-design-blazor/pull/3450) [@m-khrapunov](https://github.com/m-khrapunov)
+  - 🆕 新增 RowKey 属性用于指定行数据的对比依据值。[#3439](https://github.com/ant-design-blazor/ant-design-blazor/pull/3439) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复当启用虚拟化时，'radio' 类型的选择列选中后不能反选其他行的问题。[#3282](https://github.com/ant-design-blazor/ant-design-blazor/pull/3282) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🐞 修复 选择列禁用时，还能被"全选"和代码选中。[#3436](https://github.com/ant-design-blazor/ant-design-blazor/pull/3436) [@ElderJames](https://github.com/ElderJames)
+
 - Datepicker
   - 🆕 增加 输入格式掩码设置。[#3120](https://github.com/ant-design-blazor/ant-design-blazor/pull/3120) [@agolub-s](https://github.com/agolub-s)
   - 🆕 新增 支持指定打开方向。[#3345](https://github.com/ant-design-blazor/ant-design-blazor/pull/3345) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 泛型参数 DateTimeOffset, DateOnly, TimeOnly 的支持。[#3443](https://github.com/ant-design-blazor/ant-design-blazor/pull/3443) [@Alexbits](https://github.com/Alexbits)
+  - 🐞 修复 失去焦点后 提交更改。修复单击清理图标无效问题。[#3087](https://github.com/ant-design-blazor/ant-design-blazor/pull/3087) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 修复 RangePicker 在 Form 中重置默认值无效的问题。[#3458](https://github.com/ant-design-blazor/ant-design-blazor/pull/3458) [@LeaFrock](https://github.com/LeaFrock)
+
 - ReuseTabs
-  - 🗑 移除 AuthorizeReuseTabsRouteView 组件和Nuget包。[#3437](https://github.com/ant-design-blazor/ant-design-blazor/pull/3437) [@ElderJames](https://github.com/ElderJames)
-  - 🆕 新增 支持指定PinUrl 来固定打开带参数的路由。[fa29124](https://github.com/ant-design-blazor/ant-design-blazor/commit/fa29124) [@James Yeung](https://github.com/James Yeung)
+  - 🆕 新增 支持指定 PinUrl 来固定打开带参数的路由。[#3363](https://github.com/ant-design-blazor/ant-design-blazor/pull/3363) [@ElderJames](https://github.com/ElderJames)
   - 🆕 增加 Order 指定特殊标签的顺序。[#3335](https://github.com/ant-design-blazor/ant-design-blazor/pull/3335) [@ElderJames](https://github.com/ElderJames)
   - 🆕 增加 ReuseTabs KeepAlive属性，表示是否保持 Tab 页面的状态。[#3334](https://github.com/ant-design-blazor/ant-design-blazor/pull/3334) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 重新加载 页面支持。[#3396](https://github.com/ant-design-blazor/ant-design-blazor/pull/3396) [@ElderJames](https://github.com/ElderJames)
+  - 🗑 移除 AuthorizeReuseTabsRouteView 组件和 Nuget 包。[#3437](https://github.com/ant-design-blazor/ant-design-blazor/pull/3437) [@ElderJames](https://github.com/ElderJames)
+
 - Select
+  - 🆕 增加 ListboxStyle 属性来控制列表的样式。[#3288](https://github.com/ant-design-blazor/ant-design-blazor/pull/3288) [@dessli](https://github.com/dessli)
   - 🐞 修复了当模式为多个时在“选择内容”中显示箭头的问题。[#3430](https://github.com/ant-design-blazor/ant-design-blazor/pull/3430) [@agolub-s](https://github.com/agolub-s)
-  - 💄 增加 ListboxStyle 属性来控制列表的样式。[#3288](https://github.com/ant-design-blazor/ant-design-blazor/pull/3288) [@dessli](https://github.com/dessli)
-- 🆕 新增 重新加载 页面支持。[#3396](https://github.com/ant-design-blazor/ant-design-blazor/pull/3396) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Modal 组件新增resizable 参数，允许水平方向对modal进行宽度调整
-修复 modal 在组件用法中 id 和 class 参数不生效的问题。[#3311](https://github.com/ant-design-blazor/ant-design-blazor/pull/3311) [@zxyao145](https://github.com/zxyao145)
-- 🆕 新增支持方向键导航和回车键切换。[#3320](https://github.com/ant-design-blazor/ant-design-blazor/pull/3320) [@bweissronin](https://github.com/bweissronin)
-- 🆕 新增 Statistic 的 CultureInfo 属性来支持不同地区的数字格式。[#3299](https://github.com/ant-design-blazor/ant-design-blazor/pull/3299) [@ElderJames](https://github.com/ElderJames)
-- 🐞 在日历中模糊后添加提交更改。修复单击DatePicker输入中的后缀图标。[#3087](https://github.com/ant-design-blazor/ant-design-blazor/pull/3087) [@agolub-s](https://github.com/agolub-s)
+
+- 🆕 新增 Form 中 FormItem 的 Label 读取 'DisplayAttribute.GetName()' 以支持 Resx。[#3426](https://github.com/ant-design-blazor/ant-design-blazor/pull/3426) [@huhangfei](https://github.com/huhangfei)
+- 🆕 新增 预览图片支持拖拽移动和滚动缩放。[#3394](https://github.com/ant-design-blazor/ant-design-blazor/pull/3394) [@llp1520](https://github.com/llp1520)
+- 🆕 新增 InuptNumber 框添加MaxLength属性。[#3455](https://github.com/ant-design-blazor/ant-design-blazor/pull/3455) [@chazikaifa](https://github.com/chazikaifa)
 - 🆕 新增 Drawer 属性 VisibleChanged 以支持双向绑定。[#3333](https://github.com/ant-design-blazor/ant-design-blazor/pull/3333) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tabs 支持方向键导航和回车键切换。[#3320](https://github.com/ant-design-blazor/ant-design-blazor/pull/3320) [@bweissronin](https://github.com/bweissronin)
+- 🆕 新增 Modal 组件新增 resizable 参数，允许水平方向对modal进行宽度调整。修复 modal 在组件用法中 id 和 class 参数不生效的问题。[#3311](https://github.com/ant-design-blazor/ant-design-blazor/pull/3311) [@zxyao145](https://github.com/zxyao145)
+- 🆕 新增 Statistic 的 CultureInfo 属性来支持不同地区的数字格式。[#3299](https://github.com/ant-design-blazor/ant-design-blazor/pull/3299) [@ElderJames](https://github.com/ElderJames)
 - 🆕 新增 Collapse 展开动画。[#3389](https://github.com/ant-design-blazor/ant-design-blazor/pull/3389) [@ElderJames](https://github.com/ElderJames)
-- 🆕 新增 展开全部 和 收起全部 树节点。[#3336](https://github.com/ant-design-blazor/ant-design-blazor/pull/3336) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tree 展开全部 和 收起全部 树节点的方法。[#3336](https://github.com/ant-design-blazor/ant-design-blazor/pull/3336) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input 在输入法候选时失去焦点不能马上绑定值。[#3462](https://github.com/ant-design-blazor/ant-design-blazor/pull/3462) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Button 点击动画在 wasm 多线程的出现的异常。[#3451](https://github.com/ant-design-blazor/ant-design-blazor/pull/3451) [@petertorocsik](https://github.com/petertorocsik)
+
+
 
 ### 0.15.5
 
