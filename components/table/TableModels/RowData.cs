@@ -116,6 +116,11 @@ namespace AntDesign.TableModels
 
         internal void SetSelected(bool selected, bool triggersSelectedChanged = true)
         {
+            if (_selected == selected)
+            {
+                return;
+            }
+
             _selected = selected;
             if (triggersSelectedChanged)
                 SelectedChanged?.Invoke(this, _selected);
