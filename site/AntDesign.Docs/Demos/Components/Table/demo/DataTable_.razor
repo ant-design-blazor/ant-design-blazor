@@ -5,7 +5,7 @@
 <Table DataSource="data">
     @foreach(DataColumn column in _dataTable.Columns)
     {
-        <Column TData="object" Title="@column.ColumnName" DataIndex=@($"['{column.ColumnName}']")></Column>
+        <PropertyColumn Property="c=>c[column.ColumnName]" Title="@column.ColumnName" ></PropertyColumn>
     }
 </Table>
 
