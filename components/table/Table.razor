@@ -263,6 +263,7 @@ Func<Table<TItem>, int, IDictionary<TItem, RowData<TItem>>, RenderFragment<(TIte
         currentRowData.Level = level;
         currentRowData.RowIndex = rowIndex;
         currentRowData.PageIndex = table.PageIndex;
+        currentRowData.Selected = table.SelectedRows.Contains(data, table);
 
         <TableRowWrapper RowData="currentRowData">
             @{

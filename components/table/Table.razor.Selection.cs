@@ -99,20 +99,15 @@ namespace AntDesign
         /// </summary>
         public void SetSelection(ICollection<string> keys)
         {
-            if (_selection == null)
-            {
-                throw new InvalidOperationException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
-            }
-
             ClearSelectedRows();
             if (keys?.Count > 0)
             {
                 _preventRowDataTriggerSelectedRowsChanged = true;
-                _selection.RowSelections.ForEach(x => x.RowData.Selected = keys.Contains(x.Key));
+                _selection?.RowSelections.ForEach(x => x.RowData.Selected = keys.Contains(x.Key));
                 _preventRowDataTriggerSelectedRowsChanged = false;
             }
 
-            _selection.StateHasChanged();
+            _selection?.StateHasChanged();
             SelectionChanged();
         }
 
@@ -125,7 +120,7 @@ namespace AntDesign
             selectItem.RowData.Selected = true;
             _preventRowDataTriggerSelectedRowsChanged = false;
 
-            _selection.StateHasChanged();
+            _selection?.StateHasChanged();
             SelectionChanged();
         }
 
@@ -146,8 +141,6 @@ namespace AntDesign
             if (ReferenceEquals(items, _selectedRows))
                 return;
 
-            EnsureSelection();
-
             if (items is not null and not IReadOnlyCollection<TItem>)
                 // Ensure that the given enumerable doesn't change when we clear the current collection
                 // (which would happen when the given enumerable is based on _selectedRows with linq methods)
@@ -156,21 +149,19 @@ namespace AntDesign
             ClearSelectedRows();
             items?.ForEach(SelectItem);
 
-            _selection.StateHasChanged();
+            _selection?.StateHasChanged();
             SelectionChanged();
         }
 
         public void SetSelection(TItem item)
         {
-            EnsureSelection();
-
             ClearSelectedRows();
             if (item != null)
             {
                 SelectItem(item);
             }
 
-            _selection.StateHasChanged();
+            _selection?.StateHasChanged();
             SelectionChanged();
         }
 
