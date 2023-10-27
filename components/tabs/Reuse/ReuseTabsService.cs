@@ -11,19 +11,26 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class ReuseTabsService(NavigationManager navmgr)
+    public partial class ReuseTabsService
     {
+        private readonly NavigationManager _navmgr;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
 
         internal event Action OnStateHasChanged;
 
         internal string CurrentUrl
         {
-            get => "/" + navmgr.ToBaseRelativePath(navmgr.Uri);
-            set => navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+            get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
+            set => _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
         }
 
         internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
+
+        public ReuseTabsService(NavigationManager navmgr)
+        {
+            this._navmgr = navmgr;
+            ScanReuseTabsPageAttribute();
+        }
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
