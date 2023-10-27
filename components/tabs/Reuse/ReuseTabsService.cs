@@ -40,7 +40,7 @@ namespace AntDesign
             }
 
             reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
-            OnStateHasChanged.Invoke();
+            OnStateHasChanged?.Invoke();
         }
 
         private static RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
@@ -134,7 +134,6 @@ namespace AntDesign
             _pageMap[url] = reuseTabsPageItem;
         }
 
-
         public void ClosePage(string key)
         {
             var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
@@ -186,7 +185,7 @@ namespace AntDesign
             _pageMap[key].Body = null;
             if (CurrentUrl == key)
             {
-                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation. 
+                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
             }
             StateHasChanged();
         }
