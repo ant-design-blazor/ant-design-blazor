@@ -14,6 +14,9 @@
     [CascadingParameter]
     private RouteData RouteData { get; set; }
 
+    [Parameter]
+    public bool Reuse { get; set; } = true;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -34,7 +37,7 @@
     {
         if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
         {
-            ReuseTabsService.TrySetRouteData(routeData);
+            ReuseTabsService.TrySetRouteData(routeData, Reuse);
         }
 
         return base.SetParametersAsync(parameters);

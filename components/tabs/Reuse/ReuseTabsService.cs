@@ -25,8 +25,13 @@ namespace AntDesign
 
         internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
 
-        internal void TrySetRouteData(RouteData routeData)
+        internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
+            if (reuse)
+            {
+                _pageMap.Clear();
+            }
+
             var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
             if (reuseTabsPageItem == null)
             {

@@ -49,7 +49,7 @@ namespace AntDesign
         {
             if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
             {
-                ReuseTabsService.TrySetRouteData(routeData);
+                ReuseTabsService.TrySetRouteData(routeData, true);
             }
 
             return base.SetParametersAsync(parameters);
