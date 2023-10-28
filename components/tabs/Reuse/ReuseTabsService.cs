@@ -29,12 +29,19 @@ namespace AntDesign
         public ReuseTabsService(NavigationManager navmgr)
         {
             this._navmgr = navmgr;
-            ScanReuseTabsPageAttribute();
+        }
+
+        internal void Init(bool reuse)
+        {
+            if (reuse)
+            {
+                ScanReuseTabsPageAttribute();
+            }
         }
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
-            if (reuse)
+            if (!reuse)
             {
                 _pageMap.Clear();
             }

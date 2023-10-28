@@ -5,7 +5,7 @@
 
 @foreach (var item in ReuseTabsService.Pages)
 {
-    <div @key="item.Url" style="@(item.Url== ReuseTabsService.CurrentUrl?"": "display:none")">
+    <div class="@Class" @key="item.Url" style="@(item.Url== ReuseTabsService.CurrentUrl?"": "display:none;") @Style">
         @item.Body
     </div>
 }
@@ -17,9 +17,23 @@
     [Parameter]
     public bool Reuse { get; set; } = true;
 
+    [Parameter]
+    public bool Class { get; set; } = true;
+
+    [Parameter]
+    public bool Style { get; set; } = true;
+
+    [Parameter]
+    public string ActivedUri { get; set; }
+
+    [Parameter]
+
+    public EventCallback<string> ActivedUriChanged { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        ReuseTabsService.Init(Reuse);
         ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
     }
 
@@ -38,6 +52,16 @@
         if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
         {
             ReuseTabsService.TrySetRouteData(routeData, Reuse);
+
+            if (ActivedUriChanged.HasDelegate)
+            {
+                ActivedUriChanged.InvokeAsync(ReuseTabsService.CurrentUrl);
+            }
+        }
+
+        if (parameters.TryGetValue(nameof(ActivedUri), out string activedUri))
+        {
+            ReuseTabsService.CurrentUrl = activedUri;
         }
 
         return base.SetParametersAsync(parameters);

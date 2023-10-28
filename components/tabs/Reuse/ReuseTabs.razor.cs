@@ -35,7 +35,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
+            ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
         }
 

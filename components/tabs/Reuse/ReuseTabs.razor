@@ -4,28 +4,27 @@
 
 <Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.CurrentUrl" OnClose="@(key=>ReuseTabsService.ClosePage(key))" Draggable="Draggable" Size="Size">
      @if (ReuseTabsService.Pages?.Any() == true)
-    {
-        @foreach (var item in ReuseTabsService.Pages)
-        {
-            <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable"
-                  ForceRender>
-             <TabTemplate>
-                 @item.Title
-                </TabTemplate>
-                <TabContextMenu>
-                    <Menu>
-                        <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
-                            <MenuItem Disabled="!item.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(item.Url);})">@Locale.Close</MenuItem>
-                            <MenuItem OnClick="@(()=>ReuseTabsService.CloseAll())">@Locale.CloseAllTabs</MenuItem>
-                            <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
-                        </Menu>
-                    </TabContextMenu>
-                </TabPane>
-        }
-    }
+     {
+         @foreach (var item in ReuseTabsService.Pages)
+         {
+             <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
+                 <TabTemplate>
+                    @item.Title
+                 </TabTemplate>
+                 <TabContextMenu>
+                     <Menu>
+                         <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
+                         <MenuItem Disabled="!item.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(item.Url);})">@Locale.Close</MenuItem>
+                         <MenuItem OnClick="@(()=>ReuseTabsService.CloseAll())">@Locale.CloseAllTabs</MenuItem>
+                         <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
+                     </Menu>
+                 </TabContextMenu>
+             </TabPane>
+         }
+     }
 </Tabs>
 
 @if (!HidePages)
 {
-    <ReuseTabs />
+    <ReusePages />
 }
