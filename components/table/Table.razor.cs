@@ -28,7 +28,10 @@ namespace AntDesign
 
     public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
+            : !typeof(TItem).IsAbstract ? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
+            : default;
+
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
@@ -47,6 +50,7 @@ namespace AntDesign
                 _waitingDataSourceReload = true;
                 _dataSourceCount = value is IQueryable<TItem> ? 0 : value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
+                _fieldModel ??= _dataSource.FirstOrDefault();
             }
         }
 
@@ -172,7 +176,6 @@ namespace AntDesign
         public RenderFragment EmptyTemplate { get; set; }
 
         [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
-
 
         /// <summary>
         /// Enable resizable column

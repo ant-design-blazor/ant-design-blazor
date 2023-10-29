@@ -27,13 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Demos\Components\Table\demo\CustomFieldFilter.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Demos\Components\Table\demo\CustomFieldFilter.razor" />
-  </ItemGroup>
   
 </Project>
