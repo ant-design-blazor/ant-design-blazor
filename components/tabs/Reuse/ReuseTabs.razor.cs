@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
@@ -32,27 +33,37 @@ namespace AntDesign
         [Inject]
         private ReuseTabsService ReuseTabsService { get; set; }
 
+        [CascadingParameter(Name = "AntDesign.InReusePageContent")]
+        private bool InReusePageContent { get; set; }
+
         protected override void OnInitialized()
         {
+            if (InReusePageContent)
+            {
+                return;
+            }
             base.OnInitialized();
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
+            ReuseTabsService.TrySetRouteData(RouteData, true);
+
+            Navmgr.LocationChanged += OnLocationChanged;
         }
+
+        protected override bool ShouldRender() => !InReusePageContent;
 
         protected override void Dispose(bool disposing)
         {
             ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
+            Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
         }
 
-        public override Task SetParametersAsync(ParameterView parameters)
+        private void OnLocationChanged(object o, LocationChangedEventArgs _)
         {
-            if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
-            {
-                ReuseTabsService.TrySetRouteData(routeData, true);
-            }
+            ReuseTabsService.TrySetRouteData(RouteData, true);
 
-            return base.SetParametersAsync(parameters);
+            StateHasChanged();
         }
 
         private void OnStateHasChanged()

@@ -24,7 +24,11 @@ namespace AntDesign
             set => _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
         }
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
+        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore)
+            .OrderBy(x => x.CreatedAt)
+            .ThenByDescending(x => x.Pin ? 1 : 0)
+            .ThenBy(x => x.Order)
+            .ToArray();
 
         public ReuseTabsService(NavigationManager navmgr)
         {
@@ -153,6 +157,17 @@ namespace AntDesign
             _pageMap[url] = reuseTabsPageItem;
         }
 
+        //public void Pin(string key)
+        //{
+        //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
+        //    if (reuseTabsPageItem == null)
+        //    {
+        //        return;
+        //    }
+        //    reuseTabsPageItem.Pin = true;
+        //    StateHasChanged();
+        //}
+
         public void ClosePage(string key)
         {
             var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
@@ -190,7 +205,7 @@ namespace AntDesign
 
         public void StateHasChanged()
         {
-            OnStateHasChanged.Invoke();
+            OnStateHasChanged?.Invoke();
         }
 
         public void ReloadPage()
@@ -211,6 +226,7 @@ namespace AntDesign
 
         private void RemovePageBase(string key)
         {
+            _pageMap[key].Body = null;
             _pageMap.Remove(key);
         }
     }

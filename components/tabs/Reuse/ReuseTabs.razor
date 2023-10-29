@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @inject NavigationManager _navigationManager
 
-<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.CurrentUrl" OnClose="@(key=>ReuseTabsService.ClosePage(key))" Draggable="Draggable" Size="Size">
+<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.CurrentUrl" OnClose="@(key=>ReuseTabsService.ClosePage(key))" Draggable="@Draggable" Size="@Size">
      @if (ReuseTabsService.Pages?.Any() == true)
      {
          @foreach (var item in ReuseTabsService.Pages)
@@ -17,6 +17,7 @@
                          <MenuItem Disabled="!item.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(item.Url);})">@Locale.Close</MenuItem>
                          <MenuItem OnClick="@(()=>ReuseTabsService.CloseAll())">@Locale.CloseAllTabs</MenuItem>
                          <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
+                         @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(item.Url);})">@Locale.PinTab</MenuItem> *@
                      </Menu>
                  </TabContextMenu>
              </TabPane>

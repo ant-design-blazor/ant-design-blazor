@@ -1,18 +1,29 @@
 ﻿@inject ReuseTabsService ReuseTabsService;
+@inject NavigationManager NavigationManager;
+
 @implements IDisposable
 
 @namespace AntDesign
+@using Microsoft.AspNetCore.Components.Routing
 
-@foreach (var item in ReuseTabsService.Pages)
-{
-    <div class="@Class" @key="item.Url" style="@(item.Url== ReuseTabsService.CurrentUrl?"": "display:none;") @Style">
-        @item.Body
-    </div>
-}
+
+<CascadingValue Name="AntDesign.InReusePageContent" Value="true" IsFixed>
+
+    @foreach (var item in ReuseTabsService.Pages)
+    {
+        <div class="@Class" @key="item.Url" style="@(item.Url== ReuseTabsService.CurrentUrl?"": "display:none;") @Style">
+            @item.Body
+        </div>
+    }
+
+</CascadingValue>
 
 @code {
     [CascadingParameter]
     private RouteData RouteData { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.InReusePageContent")]
+    private bool InReusePageContent { get; set; }
 
     [Parameter]
     public bool Reuse { get; set; } = true;
@@ -32,38 +43,31 @@
 
     protected override void OnInitialized()
     {
+        if (InReusePageContent)
+            return;
         base.OnInitialized();
         ReuseTabsService.Init(Reuse);
-        ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
+        ReuseTabsService.TrySetRouteData(RouteData, Reuse);
+
+        NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     public void Dispose()
     {
-        ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
-    private void OnStateHasChanged()
+    private void OnLocationChanged(object o, LocationChangedEventArgs _)
     {
+        ReuseTabsService.TrySetRouteData(RouteData, Reuse);
+
+        if (ActivedUriChanged.HasDelegate)
+        {
+            ActivedUriChanged.InvokeAsync(ReuseTabsService.CurrentUrl);
+        }
+
         StateHasChanged();
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
-    {
-        if (parameters.TryGetValue(nameof(RouteData), out RouteData routeData))
-        {
-            ReuseTabsService.TrySetRouteData(routeData, Reuse);
-
-            if (ActivedUriChanged.HasDelegate)
-            {
-                ActivedUriChanged.InvokeAsync(ReuseTabsService.CurrentUrl);
-            }
-        }
-
-        if (parameters.TryGetValue(nameof(ActivedUri), out string activedUri))
-        {
-            ReuseTabsService.CurrentUrl = activedUri;
-        }
-
-        return base.SetParametersAsync(parameters);
-    }
+    protected override bool ShouldRender() => !InReusePageContent;
 }
