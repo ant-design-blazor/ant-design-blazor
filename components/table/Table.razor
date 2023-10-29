@@ -7,7 +7,7 @@
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading">
+    <Spin Spinning="Loading || (_fieldModel is null)">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
@@ -29,7 +29,10 @@
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>
                     <CascadingValue Name="IsInitialize" Value="true" IsFixed>
-                        @ChildContent(_fieldModel)
+                        @if (_fieldModel is not null)
+                        {
+                            @ChildContent(_fieldModel)
+                        }
                     </CascadingValue>
                     <div class="@ClassMapper.Class">
                         @if (TitleTemplate != null || Title != null)
@@ -53,7 +56,10 @@
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @ChildContent(_fieldModel)
+                                                    @if (_fieldModel is not null)
+                                                    {
+                                                        @ChildContent(_fieldModel)
+                                                    }
                                                 </CascadingValue>
                                             </tr>
                                             @body(this, _showItems, 0, _rootRowDataCache)
@@ -71,7 +77,10 @@
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @ChildContent(_fieldModel)
+                                                    @if (_fieldModel is not null)
+                                                    {
+                                                        @ChildContent(_fieldModel)
+                                                    }
                                                 </CascadingValue>
                                             </tr>
                                             @body(this, _showItems, 0, _rootRowDataCache)
@@ -135,15 +144,18 @@
                 <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
                     <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
                         <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
-                            @if (table.HeaderTemplate != null)
+                            @if (_fieldModel is not null)
                             {
-                                @table.HeaderTemplate(_fieldModel)
-                            }
-                            else
-                            {
-                                <TableRow>
-                                    @table.ChildContent(_fieldModel)
-                                </TableRow>
+                                @if (table.HeaderTemplate != null)
+                                {
+                                    @table.HeaderTemplate(_fieldModel)
+                                }
+                                else
+                                {
+                                    <TableRow>
+                                        @table.ChildContent(_fieldModel)
+                                    </TableRow>
+                                }
                             }
                         </CascadingValue>
                     </CascadingValue>
@@ -160,7 +172,10 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
             }
             <colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
+                @if (_fieldModel is not null)
+                {
                     @table.ChildContent(_fieldModel)
+                }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
         {
