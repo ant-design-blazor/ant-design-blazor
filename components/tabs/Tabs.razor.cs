@@ -160,7 +160,7 @@ namespace AntDesign
 
         private TabPane _activePane;
         private TabPane _activeTab;
-        private HtmlElement _activeTabElement;
+        //private HtmlElement _activeTabElement;
 
         private string _activeKey;
         private TabPane _renderedActivePane;
@@ -201,6 +201,7 @@ namespace AntDesign
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
+        private Dictionary<string, HtmlElement> _itemRefs;
 
         protected override void OnInitialized()
         {
@@ -481,7 +482,9 @@ namespace AntDesign
             var navList = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navListRef);
             var navWarp = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navWarpRef);
 
-            _activeTabElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
+            //_activeTabElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
+            var refs = _tabs.Select(x => x.TabRef);
+            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
 
             _scrollListWidth = navList.ClientWidth;
             _scrollListHeight = navList.ClientHeight;
@@ -571,25 +574,27 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
+            var activeId = $"rc-tabs-{_activeTab.Id}-tab-{_activeTab.Key}";
+            var activeTabElement = _itemRefs[activeId];
             if (IsHorizontal)
             {
-                _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
+                _inkStyle = $"left: {activeTabElement.OffsetLeft}px; width: {activeTabElement.ClientWidth}px";
 
                 var additionalWidth = HasAddButton ? _addBtnWidth : 0;
 
                 // need to scroll tab bars
-                if (_activeTabElement.OffsetLeft + _activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
+                if (activeTabElement.OffsetLeft + activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
                     || _scrollListWidth - _scrollOffset < _wrapperWidth)
                 {
                     // scroll　right
-                    _scrollOffset = _activeTabElement.OffsetLeft + _activeTabElement.ClientWidth - _wrapperWidth + additionalWidth;
+                    _scrollOffset = activeTabElement.OffsetLeft + activeTabElement.ClientWidth - _wrapperWidth + additionalWidth;
                     _scrollOffset = Math.Min(_scrollOffset, _scrollListWidth - _wrapperWidth);
                     _scrollOffset = Math.Max(_scrollOffset, 0);
                 }
-                else if (_activeTabElement.OffsetLeft < _scrollOffset)
+                else if (activeTabElement.OffsetLeft < _scrollOffset)
                 {
                     // scroll　left
-                    _scrollOffset = _activeTabElement.OffsetLeft;
+                    _scrollOffset = activeTabElement.OffsetLeft;
                     _scrollOffset = Math.Max(_scrollOffset, 0);
                 }
 
@@ -597,13 +602,13 @@ namespace AntDesign
             }
             else
             {
-                _inkStyle = $"top: {_activeTabElement.OffsetTop}px; height: {_activeTabElement.ClientHeight}px;";
+                _inkStyle = $"top: {activeTabElement.OffsetTop}px; height: {activeTabElement.ClientHeight}px;";
 
-                if (_activeTabElement.OffsetTop > _scrollOffset + _activeTabElement.ClientHeight
-                  || _activeTabElement.OffsetTop < _scrollOffset)
+                if (activeTabElement.OffsetTop > _scrollOffset + activeTabElement.ClientHeight
+                  || activeTabElement.OffsetTop < _scrollOffset)
                 {
                     // need to scroll tab bars
-                    _scrollOffset = _activeTabElement.OffsetTop + _activeTabElement.ClientHeight - _wrapperHeight;
+                    _scrollOffset = activeTabElement.OffsetTop + activeTabElement.ClientHeight - _wrapperHeight;
                     SetNavListStyle();
                 }
             }
@@ -628,18 +633,33 @@ namespace AntDesign
             int invisibleHeadCount;
             decimal tabSize, visibleCount;
 
+            int GetIndex(decimal[] lengths, decimal width)
+            {
+                var current = 0m;
+                for (int i = 0; i < lengths.Length; i++)
+                {
+                    current += lengths[i];
+
+                    if (current >= width)
+                        return i;
+                }
+
+                return lengths.Length;
+            }
+
             if (IsHorizontal)
             {
-                tabSize = _scrollListWidth / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
+                var widths = _itemRefs.Select(x => x.Value.ClientWidth).ToArray();
+                visibleCount = GetIndex(widths, _wrapperWidth);
+                invisibleHeadCount = GetIndex(widths, _scrollOffset);
             }
             else
             {
-                tabSize = _scrollListHeight / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
+                var heights = _itemRefs.Select(x => x.Value.ClientHeight).ToArray();
+                visibleCount = GetIndex(heights, _wrapperHeight);
+                invisibleHeadCount = GetIndex(heights, _scrollOffset);
             }
 
-            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / tabSize);
             visibleCount = Math.Min(visibleCount, _tabs.Count - invisibleHeadCount);
 
             _invisibleTabs = _tabs.ToList();
