@@ -242,19 +242,17 @@ namespace AntDesign
             return o;
         }
 
-        protected override Task OnFirstAfterRenderAsync()
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            if (Value != null)
+            // bind the option once after fetching the data source asynchronously
+            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
+            if (parameters.TryGetValue<IEnumerable<TItem>>(nameof(DataSource), out var dataSource) && DataSource == null && dataSource != null)
             {
-                UpdateValueAndSelection();
+                DataSource = dataSource;
+                UpdateValue();
             }
 
-            if (Values != null)
-            {
-                UpdateValuesSelection();
-            }
-
-            return base.OnFirstAfterRenderAsync();
+            await base.SetParametersAsync(parameters);
         }
 
         private void OnKeyDownAsync(KeyboardEventArgs args)
@@ -440,6 +438,19 @@ namespace AntDesign
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
+        }
+
+        private void UpdateValue()
+        {
+            if (Value != null)
+            {
+                UpdateValueAndSelection();
+            }
+
+            if (Values != null)
+            {
+                UpdateValuesSelection();
+            }
         }
 
         private void UpdateValueAndSelection()
