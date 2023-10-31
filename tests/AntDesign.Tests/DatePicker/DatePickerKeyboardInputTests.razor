@@ -51,20 +51,20 @@
 
     [Theory]
     [MemberData(nameof(DatePickerKeyboardTestData.ValidKeyedInputs), MemberType = typeof(DatePickerKeyboardTestData))]
-    public void Input_restored_to_previous_value_on_blur_if_not_confirmed_with_enter_key<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
+    public async Task Input_restored_to_previous_value_on_blur_if_not_confirmed_with_enter_key<T>(T value, T defaultValue, string format, string keyedInput) where T : struct, IFormattable
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 
         var defaultValueAsString = defaultValue.ToString(format, null);
         var cut = Render<AntDesign.DatePicker<T>>(
-        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
-    );
+            @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        );
 
         //Act
         var input = cut.Find("input");
         input.Input(keyedInput);
-        input.Blur();
+        await input.BlurAsync(new FocusEventArgs());
         //Assert
         cut.Instance.Value.Should().Be(defaultValue);
         value.Should().Be(defaultValue);

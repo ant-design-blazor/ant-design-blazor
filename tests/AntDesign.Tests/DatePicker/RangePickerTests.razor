@@ -57,14 +57,8 @@
     }
     
     [Theory]
-    [InlineData("11", "11/")]
-    [InlineData("111", "11/1")]
-    [InlineData("1111", "11/11/")]
-    [InlineData("11112111", "11/11/2111", true)]
-    [InlineData("111121111", "11/11/2111", true)]
-    [InlineData("11/11/2111", "11/11/2111", true)]
-    [InlineData("11/11/21111", "11/11/2111", true)]
-    public async Task Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false)
+    [MemberData(nameof(DatePickerTestData.MaskInputData), MemberType = typeof(DatePickerTestData))]
+    public async Task Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false, string mask = "dd/MM/yyyy")
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -75,18 +69,25 @@
             .SetResult(new OverlayPosition());
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
         var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
-            @<RangePicker TValue="DateTime?[]" Format="dd/MM/yyyy" Mask="dd/MM/yyyy" AllowClear="false"/>
+            @<RangePicker TValue="DateTime?[]" Format="@mask" Mask="@mask" AllowClear="false"/>
             );
         
         //Act
         var inputs = cut.FindAll("input", true);
-        for (var i = 0; i < inputs.Count; i++)
+        foreach (var input in inputs)
         {
-            var input = inputs[i];
-            input.Input(inputValue);
+            input.Click();
+            foreach (var symbol in inputValue)
+            {
+                await input.KeyDownAsync(new KeyboardEventArgs
+                {
+                    Key = symbol.ToString()
+                });
+            }
         }
-        
+
         //Assert
+        inputs = cut.FindAll("input", true);
         inputs.Select(x => x.GetAttribute("value")).Should().AllBe(expectedValue);
         
         if (validateValue)
@@ -96,37 +97,8 @@
                 await input.KeyDownAsync(new KeyboardEventArgs { Key = "ENTER" });
             }
             
-            cut.Instance.Value.Should().AllBeEquivalentTo(DateTime.ParseExact(expectedValue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+            cut.Instance.Value.Should().AllBeEquivalentTo(DateTime.ParseExact(expectedValue, mask, CultureInfo.InvariantCulture));
         }
-    }
-    
-    [Fact]
-    public async Task Enter_Full_Mask_Should_Apply_Date()
-    {
-        //Arrange
-        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
-        
-        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
-            @<RangePicker TValue="DateTime?[]" Mask="dd/MM/yyyy" Format="dd/MM/yyyy"/>
-            );
-        
-        //Act
-        var inputs = cut.FindAll("input");
-
-        for (var i = 0; i < inputs.Count; i++)
-        {
-            var input = inputs[i];
-            await input.InputAsync(new ChangeEventArgs { Value = "01012020" });
-            input.KeyDown("ENTER");
-        }
-
-        //Assert
-        inputs = cut.FindAll("input");
-        inputs.Select(x => x.GetAttribute("value")).Should().AllBe("01/01/2020");
-        cut.Instance.Value.Should().BeEquivalentTo(new[] { new DateTime(2020, 01, 01), new DateTime(2020, 01, 01) });
     }
 
     [Theory]
@@ -307,11 +279,11 @@
         var input = cut.FindAll("input");
         input[0].Click();
         await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
-        input[0].Blur();
+        await input[0].BlurAsync(new FocusEventArgs());
         
         input[1].Click();
         await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
-        input[1].Blur();
+        await input[1].BlurAsync(new FocusEventArgs());
 
         //Assert
         cut.WaitForState(() =>
