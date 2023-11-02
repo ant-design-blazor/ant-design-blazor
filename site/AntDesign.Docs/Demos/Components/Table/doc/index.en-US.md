@@ -33,7 +33,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 
 Since 0.16.0, Table has supported ordinary classes, record, interface, and abstract classes as DataSource types. But there are a few caveats:
 
-- When using record and some property values would be changed, please override the `GetHasCode()` method. Otherwise the state maintained internally for each column will not work correctly. [#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
+- When using record and some property values would be changed, please override the `GetHasCode()` method, or the `RowKey` of Table. Otherwise the state maintained internally for each column will not work correctly. [#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
 - When using abstract classes, the Table would waits for the DataSource to get the element and takes the first one to initialize at the first render. [#3471](https://github.com/ant-design-blazor/ant-design-blazor/issues/3471)
 
 ### Table
