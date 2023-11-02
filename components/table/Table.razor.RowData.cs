@@ -23,5 +23,21 @@ namespace AntDesign
 
             _selection?.StateHasChanged();
         }
+
+        public void ExpandAll()
+        {
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(true);
+            }
+        }
+
+        public void CollapseAll()
+        {
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(false);
+            }
+        }
     }
 }
