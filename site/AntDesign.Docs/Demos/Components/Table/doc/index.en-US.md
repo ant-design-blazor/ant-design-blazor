@@ -28,6 +28,16 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 - **Selection** for add checkboxes for row selection.
 
 ## API
+
+### The TItem Generic type parameter
+
+Since 0.16.0, Table has supported ordinary classes, record, interface, and abstract classes as DataSource types. But there are a few caveats:
+
+- When using record and some property values would be changed, please override the `GetHasCode()` method. Otherwise the state maintained internally for each column will not work correctly. [#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
+- When using abstract classes, the Table would waits for the DataSource to get the element and takes the first one to initialize at the first render. [#3471](https://github.com/ant-design-blazor/ant-design-blazor/issues/3471)
+
+### Table
+
 | Parameter             | Instruction             | Type                         | Defaults |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | RenderMode | Rendering mode | [RenderMode](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RenderMode.cs) | RenderMode.Always |
@@ -54,7 +64,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 | IndentSize | When displaying tree data, the width of each level of indentation, in px | int | 15 |
 | ExpandIconColumnIndex | Index of the column where the custom expand icon is located | int | - |
 | RowClassName | The class name of the table row | Func<RowData<TItem>, string> | _ => "" |
-| RowKey | Set the compare key to set default selection rows. Otherwise, the comparison is by reference by default. | Func<TItem, object> | - |
+| RowKey | Set the compare key to set default selection rows. It works the same way as `GetHashCode()`. Otherwise, the comparison is by reference by default. | Func<TItem, object> | - |
 | ExpandedRowClassName | The className of the expanded row | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | Triggered when the expand icon is clicked | EventCallback<RowData<TItem>> | - |
 | SortDirections | Supported sorting methods, covering sortDirections in Table | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
