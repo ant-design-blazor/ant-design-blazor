@@ -265,6 +265,12 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
+        public Table()
+        {
+            _dataSourceCache = new(this);
+            _rootRowDataCache = new(this);
+        }
+
         /// <summary>
         /// This method will be called when all columns have been set
         /// </summary>
