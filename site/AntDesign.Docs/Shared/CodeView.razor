@@ -1,0 +1,131 @@
+﻿@using System.Text.RegularExpressions;
+@using AntDesign.Docs.Services
+@inject IJSRuntime JSRuntime
+@inject CompilerService Compiler
+
+<Row Gutter="5" >
+    <Col>
+        <Space>
+            <Button Disabled=@isBusy OnClick="Run" Icon="play_circle_outline" Size="ButtonSize.ExtraSmall">Run</Button>
+            <Button OnClick="@CopyCode" >
+                <Icon Type="copy" />
+                Copy
+            </Button>
+            <Button Disabled=@isBusy OnClick="@Reset" Icon="refresh" Size="small" />
+        </Space>
+    </Col>
+</Row>
+<Alert Type="error" >
+    @((MarkupString)error)
+</Alert>
+
+<Monaco Value=@source Language="@language" ValueChanged=@OnValueChanged @ref="@monaco" ReadOnly=@ReadOnly />
+
+@code {
+    private string Copy => $"copy('{monaco?.Id}')";
+    private Monaco monaco;
+    private ElementReference pre;
+    private string source;
+    private string error;
+    private string language = "razor";
+
+    [Parameter]
+    public EventCallback<Type> Compiled { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public string PageName { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    /* Source */
+    [Parameter]
+    public string ComponentSource { get; set; }
+
+    [Parameter]
+    public string ComponentName { get; set; }
+
+    string ComponentSourceHref => ComponentSource ?? $"https://github.com/radzenhq/radzen-blazor/blob/master/Radzen.Blazor/Radzen{ComponentName}.razor.cs";
+
+    string PageSourceHref => $"https://raw.githubusercontent.com/radzenhq/radzen-blazor/master/RadzenBlazorDemos/Pages/{PageName}";
+    protected override async Task OnParametersSetAsync()
+    {
+        language = PageName == null ? "razor" :  PageName.EndsWith(".razor") ? "razor" : "csharp";
+
+        try
+        {
+            error = null;
+            source = Value ?? await Fetch();
+            source = Clean(source);
+        }
+        catch (Exception ex)
+        {
+            error = $"<p>Cannot fetch the example source code: <code>{ex.Message}</code></p><p>Make sure your browser has access to <a href=\"{PageSourceHref}\" target=\"_blank\">{PageSourceHref}</a></p>";
+        }
+    }
+
+    async Task<string> Fetch()
+    {
+        using var http = new HttpClient();
+
+        return await http.GetStringAsync(PageSourceHref);
+    }
+
+    string Clean(string source)
+    {
+        return Regex.Replace(source, "</?RadzenExample[^>]*>\n", "");
+    }
+
+    async Task OnValueChanged(string value)
+    {
+        source = value;
+
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    async Task Reset()
+    {
+        var source = await Fetch();
+
+        source = Clean(source);
+
+        await OnValueChanged(source);
+    }
+
+    async Task CopyCode()
+    {
+        await JSRuntime.InvokeVoidAsync(Copy);
+    }
+
+    bool isBusy;
+
+    async Task Run()
+    {
+        try
+        {
+            error = null;
+            isBusy = true;
+            await JSRuntime.InvokeVoidAsync("eval", $"instances['{monaco.Id}'].updateOptions({{domReadOnly: true, readOnly: true }})");
+
+            await Task.Yield();
+
+            var type = await Compiler.CompileAsync(source);
+
+            await Compiled.InvokeAsync(type);
+
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+
+        isBusy = false;
+        await JSRuntime.InvokeVoidAsync("eval", $"instances['{monaco.Id}'].updateOptions({{domReadOnly: false, readOnly: false }})");
+    }
+}

@@ -56,9 +56,10 @@
         </div>
     </section>
     <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
-        <div class="highlight">
+      @*   <div class="highlight">
             <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
-        </div>
+        </div> *@
+         <CodeView ComponentName="@ComponentName" @bind-Value="@Demo.Code" Compiled="OnCompiled" />
     </section>
     <style>
         @Demo.Style
@@ -86,6 +87,10 @@
 
     private bool _copied;
     private bool _rendered;
+    
+    [Parameter]
+    public EventCallback<Type> Compiled { get; set; }
+
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
@@ -130,5 +135,11 @@
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();
         }
+    }
+
+    void OnCompiled(Type type)
+    {
+        _demoType = type;
+         StateHasChanged();
     }
 }
