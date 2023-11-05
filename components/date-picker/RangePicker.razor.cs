@@ -145,7 +145,6 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
-            _duringFocus = false;
             if (_duringManualInput)
             {
                 return;
@@ -300,7 +299,6 @@ namespace AntDesign
 
         private async Task OnFocus(int index)
         {
-            _duringFocus = true;
             if (index == 0)
             {
                 if (!_inputStart.IsOnFocused)
@@ -339,16 +337,11 @@ namespace AntDesign
                 }
             }
 
-            if (_duringFocus)
-            {
-                _duringFocus = false;
-                _shouldRender = false;
-                return;
-            }
-            if (_openingOverlay)
+            if (_openingOverlay || _dropDown.IsOverlayShow())
             {
                 return;
             }
+
             _duringManualInput = false;
             AutoFocus = false;
         }
@@ -713,12 +706,16 @@ namespace AntDesign
             return false;
         }
 
-        private void OverlayVisibleChange(bool visible)
+        private async Task OverlayVisibleChange(bool isVisible)
         {
             _openingOverlay = false;
-            _duringFocus = false;
-            OnOpenChange.InvokeAsync(visible);
-            InvokeInternalOverlayVisibleChanged(visible);
+            await OnOpenChange.InvokeAsync(isVisible);
+            InvokeInternalOverlayVisibleChanged(isVisible);
+            if (!isVisible)
+            {
+                var index = GetOnFocusPickerIndex();
+                await Focus(index);
+            }
         }
 
         private async Task OnSuffixIconClick()
