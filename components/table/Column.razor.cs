@@ -97,6 +97,12 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public bool Grouping { get; set; }
+
+        [Parameter]
+        public virtual Func<TData, object> GroupBy { get; set; }
+
         private IEnumerable<TableFilter> _filters;
 
         private bool _hasFiltersAttribute;
@@ -213,6 +219,15 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
+
+                if (Grouping)
+                {
+                    Table.AddGroupColumn(this);
+                }
+                else
+                {
+                    Table.RemoveGroupColumn(this);
+                }
             }
             else if (IsBody)
             {
@@ -224,6 +239,11 @@ namespace AntDesign
                 if (DataIndex != null)
                 {
                     (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+
+                if (RowData.IsGrouping)
+                {
+                    ColSpan = ColIndex == Table.TreeExpandIconColumnIndex ? Context.Columns.Count + 1 : 0;
                 }
             }
 
@@ -368,6 +388,24 @@ namespace AntDesign
             }
         }
 
+        IQueryable<IGrouping<object, TItem>> IFieldColumn.Group<TItem>(IQueryable<TItem> source)
+        {
+            var param = Expression.Parameter(typeof(TItem), "item");
+
+            Expression field = Expression.Invoke(GetFieldExpression, param);
+
+            if (GroupBy != null)
+            {
+                var instance = Expression.Constant(GroupBy.Target);
+                field = Expression.Call(instance, GroupBy.Method, field);
+            }
+
+            var body = Expression.Convert(field, typeof(object));
+            var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
+
+            return source.GroupBy(lambda);
+        }
+
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
@@ -509,7 +547,7 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
-        async Task FilterDropdownOnVisibleChange(bool visible)
+        private async Task FilterDropdownOnVisibleChange(bool visible)
         {
 #if NET5_0_OR_GREATER
             if (!visible ||

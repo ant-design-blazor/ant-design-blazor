@@ -77,5 +77,9 @@ namespace AntDesign
         internal void OnColumnInitialized();
 
         IFieldFilterTypeResolver FieldFilterTypeResolver { get; }
+
+        internal void AddGroupColumn(IFieldColumn column);
+
+        internal void RemoveGroupColumn(IFieldColumn column);
     }
 }

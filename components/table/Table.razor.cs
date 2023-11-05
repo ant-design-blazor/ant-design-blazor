@@ -222,7 +222,9 @@ namespace AntDesign
         private int _treeExpandIconColumnIndex;
 
         private QueryModel _currentQueryModel;
-        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new();
+        private List<IGrouping<object, TItem>> _groups = [];
+
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
@@ -261,6 +263,10 @@ namespace AntDesign
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
 
+        void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
+
+        void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
+
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
@@ -270,6 +276,8 @@ namespace AntDesign
             _dataSourceCache = new(this);
             _rootRowDataCache = new(this);
         }
+
+        private List<IFieldColumn> _groupedColumns = [];
 
         /// <summary>
         /// This method will be called when all columns have been set
@@ -491,6 +499,11 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            if (_groupedColumns.Count > 0)
+            {
+                GroupItems();
+            }
+
             if (!_preventRender)
             {
                 if (_outerSelectedRows != null)
@@ -509,7 +522,7 @@ namespace AntDesign
                 }
             }
 
-            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
+            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
             if (_treeMode)
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
@@ -519,7 +532,7 @@ namespace AntDesign
         }
 
 #if NET5_0_OR_GREATER
-        private async ValueTask<ItemsProviderResult<(TItem, int)>> ItemsProvider(ItemsProviderRequest request)
+        private async ValueTask<ItemsProviderResult<RowData<TItem>>> ItemsProvider(ItemsProviderRequest request)
         {
             _startIndex = request.StartIndex;
             if (_total > 0)
@@ -549,9 +562,42 @@ namespace AntDesign
                 _isVirtualizeEmpty = true;
             }
 
-            return new ItemsProviderResult<(TItem, int)>(items.Select((data, index) => (data, index)), _total);
+            return new ItemsProviderResult<RowData<TItem>>(items.Select((data, index) => GetRowData(data, index, 0)), _total);
         }
 #endif
+
+        public void GroupItems()
+        {
+            if (_groupedColumns.Count == 0)
+            {
+                _groups = [];
+                StateHasChanged();
+                return;
+            }
+
+            var queryModel = BuildQueryModel();
+            var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
+
+            foreach (var column in _groupedColumns)
+            {
+                var grouping = column.Group(queryModel.CurrentPagedRecords(query));
+                _groups = [.. grouping];
+            }
+
+            StateHasChanged();
+        }
+
+        public void AddGroupColumn(IFieldColumn column)
+        {
+            this._groupedColumns.Add(column);
+            GroupItems();
+        }
+
+        public void RemoveGroupColumn(IFieldColumn column)
+        {
+            this._groupedColumns.Remove(column);
+            GroupItems();
+        }
 
         private void SetClass()
         {
@@ -823,6 +869,70 @@ namespace AntDesign
                 RowKey = data => data;
 
             return RowKey(obj).GetHashCode();
+        }
+
+        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level)
+        {
+            var groupRowData = new RowData<TItem>()
+            {
+                Key = grouping.Key.ToString(),
+                IsGrouping = true,
+                DataItem = new TableDataItem<TItem>
+                {
+                    HasChildren = true,
+                    Table = this,
+                    Children = grouping
+                },
+                Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => x.Data, x => x)
+            };
+
+            groupRowData.DataItem.RowData = groupRowData;
+            return groupRowData;
+        }
+
+        private RowData<TItem> GetRowData(TItem data, int index, int level)
+        {
+            int rowIndex;
+            if (level == 0)
+            {
+                rowIndex = PageSize * (PageIndex - 1) + index + 1;
+            }
+            else
+            {
+                rowIndex = index + 1;
+            }
+
+            if (!_dataSourceCache.TryGetValue(data, out var currentDataItem) || currentDataItem == null)
+            {
+                currentDataItem = new TableDataItem<TItem>(data, this);
+                currentDataItem.SetSelected(SelectedRows.Contains(data), triggersSelectedChanged: false);
+                _dataSourceCache.Add(data, currentDataItem);
+            }
+
+            // this row cache may be for children rows
+            var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
+
+            if (rowCache!.TryGetValue(data, out var currentRowData) || currentRowData == null)
+            {
+                currentRowData = new RowData<TItem>(currentDataItem)
+                {
+                    Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
+                };
+                rowCache[data] = currentRowData;
+
+                currentDataItem.RowData ??= currentRowData;
+            }
+
+            if (currentDataItem.HasChildren && currentRowData.Expanded)
+            {
+                currentRowData.Children = new(this);
+            }
+
+            currentRowData.Level = level;
+            currentRowData.RowIndex = rowIndex;
+            currentRowData.PageIndex = PageIndex;
+
+            return currentRowData;
         }
     }
 }
