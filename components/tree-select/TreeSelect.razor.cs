@@ -137,6 +137,7 @@ namespace AntDesign
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
 
+        [Parameter]
         public override string Value
         {
             get => base.Value;
@@ -151,11 +152,10 @@ namespace AntDesign
                 {
                     ClearOptions();
                 }
-
-                UpdateValueAndSelection();
             }
         }
 
+        [Parameter]
         public override IEnumerable<string> Values
         {
             get => base.Values;
@@ -179,8 +179,6 @@ namespace AntDesign
                     _selectedValues = default;
                     ClearOptions();
                 }
-
-                UpdateValuesSelection();
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
                 {
@@ -246,13 +244,16 @@ namespace AntDesign
         {
             // bind the option once after fetching the data source asynchronously
             // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
-            if (parameters.TryGetValue<IEnumerable<TItem>>(nameof(DataSource), out var dataSource) && DataSource == null && dataSource != null)
-            {
-                DataSource = dataSource;
-                UpdateValue();
-            }
+            var isDataSourceChanged = this.ParameterIsChanged(parameters, nameof(DataSource), DataSource);
+            var isValueChanged = this.ParameterIsChanged(parameters, nameof(Value), Value);
+            var isValuesChanged = this.ParameterIsChanged(parameters, nameof(Values), Values);
 
             await base.SetParametersAsync(parameters);
+
+            if (isDataSourceChanged || isValueChanged || isValuesChanged)
+            {
+                UpdateValue();
+            }
         }
 
         private void OnKeyDownAsync(KeyboardEventArgs args)
