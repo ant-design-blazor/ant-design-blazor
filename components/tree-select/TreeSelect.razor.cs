@@ -450,11 +450,13 @@ namespace AntDesign
             if (Value != null)
             {
                 UpdateValueAndSelection();
+                StateHasChanged();
             }
 
             if (Values != null)
             {
                 UpdateValuesSelection();
+                StateHasChanged();
             }
         }
 
