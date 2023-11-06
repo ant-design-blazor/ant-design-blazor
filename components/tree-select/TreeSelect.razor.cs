@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace AntDesign
 {
-    public partial class TreeSelect<TItem> : SelectBase<string, TItem> where TItem : class
+    public partial class TreeSelect<TItem> : SelectBase<string, TItem>
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
 
@@ -152,6 +152,8 @@ namespace AntDesign
                 {
                     ClearOptions();
                 }
+
+                UpdateValueAndSelection();
             }
         }
 
@@ -179,6 +181,8 @@ namespace AntDesign
                     _selectedValues = default;
                     ClearOptions();
                 }
+
+                UpdateValuesSelection();
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
                 {
@@ -252,7 +256,7 @@ namespace AntDesign
 
             if (isDataSourceChanged || isValueChanged || isValuesChanged)
             {
-                UpdateValue();
+                ///UpdateValue();
             }
         }
 
@@ -441,7 +445,7 @@ namespace AntDesign
                 ;
         }
 
-        private void UpdateValue()
+        internal void UpdateValue()
         {
             if (Value != null)
             {
