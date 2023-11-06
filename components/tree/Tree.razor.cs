@@ -158,7 +158,7 @@ namespace AntDesign
                 if (_nodeHasChanged)
                 {
                     _nodeHasChanged = false;
-                    TreeSelect?.UpdateValue();
+                    TreeSelect?.UpdateValueAfterDataSourceChanged();
                 }
             });
         }

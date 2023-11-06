@@ -747,8 +747,10 @@ namespace AntDesign
                     SelectedOptionItems[0].IsSelected = false;
                     SelectedOptionItems[0] = selectOption;
                 }
-
-                SelectedOptionItems.Add(selectOption);
+                else
+                {
+                    SelectedOptionItems.Add(selectOption);
+                }
 
                 selectOption.IsSelected = true;
                 CurrentValue = selectOption.Value;

@@ -244,20 +244,19 @@ namespace AntDesign
             return o;
         }
 
-        public override async Task SetParametersAsync(ParameterView parameters)
+        protected override Task OnFirstAfterRenderAsync()
         {
-            // bind the option once after fetching the data source asynchronously
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
-            var isDataSourceChanged = this.ParameterIsChanged(parameters, nameof(DataSource), DataSource);
-            var isValueChanged = this.ParameterIsChanged(parameters, nameof(Value), Value);
-            var isValuesChanged = this.ParameterIsChanged(parameters, nameof(Values), Values);
-
-            await base.SetParametersAsync(parameters);
-
-            if (isDataSourceChanged || isValueChanged || isValuesChanged)
+            if (Value != null)
             {
-                ///UpdateValue();
+                UpdateValueAndSelection();
             }
+
+            if (Values != null)
+            {
+                UpdateValuesSelection();
+            }
+
+            return base.OnFirstAfterRenderAsync();
         }
 
         private void OnKeyDownAsync(KeyboardEventArgs args)
@@ -445,7 +444,9 @@ namespace AntDesign
                 ;
         }
 
-        internal void UpdateValue()
+        // bind the option once after fetching the data source asynchronously
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
+        internal void UpdateValueAfterDataSourceChanged()
         {
             if (Value != null)
             {
