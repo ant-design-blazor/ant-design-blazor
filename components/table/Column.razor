@@ -65,9 +65,6 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
-
-	//var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field?.ToString();
-
 	@if (AppendExpandColumn)
 	{
 		<td class="ant-table-cell ant-table-row-expand-icon-cell">
@@ -81,19 +78,22 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     }
 
 	<CascadingValue Name="IsBody" Value="false" IsFixed>
-     @{
+        @{
             var cellAttributes = new Dictionary<string, object>();
             var cellData = new CellData<TData>(RowData, default, Format);
 
             var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+            var fieldText = string.Empty;
+
             @if (!RowData.IsGrouping )
             {
                 cellData = new CellData<TData>(RowData, Field, Format);
                 cellAttributes = OnCell?.Invoke(cellData);
+                fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field is string text ? text : string.Empty;
             }
         }
 
-		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title"  @attributes="cellAttributes">
+		<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title"  @attributes="cellAttributes">
 			@if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || RowData.IsGrouping ))
 		    {
 		    	<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
