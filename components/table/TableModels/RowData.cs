@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AntDesign.TableModels
@@ -7,13 +8,21 @@ namespace AntDesign.TableModels
     /// <inheritdoc />
     public class RowData<TItem> : RowData
     {
-        internal TableDataItem<TItem> DataItem { get; }
+        public TableDataItem<TItem> DataItem { get; set; }
+
         public override TableDataItem TableDataItem => DataItem;
 
         public TItem Data => DataItem.Data;
+
         public Table<TItem> Table => DataItem.Table;
 
-        internal Dictionary<TItem, RowData<TItem>> Children { get; set; }
+        /// <summary>
+        /// hold the state of children rows
+        /// </summary>
+        public Dictionary<TItem, RowData<TItem>> Children { get; set; }
+
+        public RowData()
+        { }
 
         public RowData(TableDataItem<TItem> dataItem)
         {
@@ -33,6 +42,10 @@ namespace AntDesign.TableModels
 
         public int PageIndex { get; set; }
 
+        public bool IsGrouping { get; set; }
+
+        public string Key { get; set; }
+
         public bool Expanded
         {
             get => _expanded;
@@ -51,7 +64,6 @@ namespace AntDesign.TableModels
         public abstract TableDataItem TableDataItem { get; }
 
         public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
-        public bool HasChildren { get => TableDataItem.HasChildren; set => TableDataItem.HasChildren = value; }
 
         public event Action<RowData, bool> ExpandedChanged;
 
@@ -66,11 +78,21 @@ namespace AntDesign.TableModels
     {
         public TItem Data { get; }
 
-        public Table<TItem> Table { get; }
+        public Table<TItem> Table { get; set; }
+
+        public IEnumerable<TItem> Children { get; set; }
+
+        public RowData<TItem> RowData { get; set; }
+
+        public TableDataItem()
+        {
+        }
 
         public TableDataItem(TItem data, Table<TItem> table)
         {
             this.Data = data;
+            Children = table.TreeChildren(data);
+            HasChildren = Children?.Any() == true;
             Table = table;
         }
 
@@ -89,7 +111,7 @@ namespace AntDesign.TableModels
     /// <br/>
     /// For row specific data, see <see cref="RowData"/>.
     /// </summary>
-    public abstract class TableDataItem
+    public class TableDataItem
     {
         private bool _selected;
 
@@ -105,7 +127,7 @@ namespace AntDesign.TableModels
             }
         }
 
-        public bool HasChildren { get; set; }
+        public virtual bool HasChildren { get; set; }
 
         public event Action<TableDataItem, bool> SelectedChanged;
 
