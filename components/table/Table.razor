@@ -271,8 +271,6 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
        
             return @<TableRowWrapper RowData="currentRowData">
             @{
-               
-
                 var currentDataItem = currentRowData.DataItem;
                 var rowAttributes = OnRow?.Invoke(currentRowData);
                 if (OnRowClick.HasDelegate)
