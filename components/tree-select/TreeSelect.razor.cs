@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace AntDesign
 {
-    public partial class TreeSelect<TItem> : SelectBase<string, TItem> where TItem : class
+    public partial class TreeSelect<TItem> : SelectBase<string, TItem>
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
 
@@ -137,6 +137,7 @@ namespace AntDesign
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
 
+        [Parameter]
         public override string Value
         {
             get => base.Value;
@@ -156,6 +157,7 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
         public override IEnumerable<string> Values
         {
             get => base.Values;
@@ -440,6 +442,23 @@ namespace AntDesign
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
+        }
+
+        // bind the option once after fetching the data source asynchronously
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
+        internal void UpdateValueAfterDataSourceChanged()
+        {
+            if (Value != null)
+            {
+                UpdateValueAndSelection();
+                StateHasChanged();
+            }
+
+            if (Values != null)
+            {
+                UpdateValuesSelection();
+                StateHasChanged();
+            }
         }
 
         private void UpdateValueAndSelection()
