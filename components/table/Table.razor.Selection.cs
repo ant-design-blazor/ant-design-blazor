@@ -28,7 +28,7 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private readonly HashSet<TItem> _selectedRows=new();
+        private readonly HashSet<TItem> _selectedRows;
         private bool _preventRowDataTriggerSelectedRowsChanged;
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
@@ -73,6 +73,8 @@ namespace AntDesign
             foreach (var dataItem in _dataSourceCache.Values)
             {
                 dataItem.SetSelected(RowSelectable(dataItem.Data));
+
+                _selectedRows.Add(dataItem.Data);
             }
 
             _selection?.StateHasChanged();
@@ -85,6 +87,7 @@ namespace AntDesign
             foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
                 dataItem.SetSelected(false);
+                _selectedRows.Remove(dataItem.Data);
             }
         }
 

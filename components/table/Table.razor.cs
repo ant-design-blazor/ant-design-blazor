@@ -275,6 +275,7 @@ namespace AntDesign
         {
             _dataSourceCache = new(this);
             _rootRowDataCache = new(this);
+            _selectedRows = new(this);
         }
 
         private List<IFieldColumn> _groupedColumns = [];
