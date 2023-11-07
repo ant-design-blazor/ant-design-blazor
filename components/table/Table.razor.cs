@@ -473,7 +473,7 @@ namespace AntDesign
 
             if (ServerSide)
             {
-                _showItems = _dataSource;
+                _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
             else
@@ -512,10 +512,10 @@ namespace AntDesign
                 }
                 else
                 {
-                    _selectedRows?.Clear();
+                    //_selectedRows?.Clear();
                 }
 
-                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
+                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems, this).ToArray();
                 foreach (var item in removedCacheItems)
                 {
                     _dataSourceCache.Remove(item);

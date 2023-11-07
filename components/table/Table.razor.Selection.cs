@@ -11,6 +11,9 @@ namespace AntDesign
     {
         private IEnumerable<TItem> _outerSelectedRows;
 
+        /// <summary>
+        /// Selected rows across pages
+        /// </summary>
         [Parameter]
         public IEnumerable<TItem> SelectedRows
         {
@@ -25,7 +28,7 @@ namespace AntDesign
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
-        private readonly HashSet<TItem> _selectedRows = new();
+        private readonly HashSet<TItem> _selectedRows=new();
         private bool _preventRowDataTriggerSelectedRowsChanged;
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
@@ -56,20 +59,20 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selectedRows.Count != 0 && _selectedRows.Count == GetAllItemsByTopLevelItems(_showItems, true).Count();
+        bool ITable.AllSelected => _selectedRows.Count != 0 && _pageSize == GetAllItemsByTopLevelItems(_showItems, true).Count();
 
         bool ITable.AnySelected => _selectedRows.Count > 0;
 
         public void SelectAll()
         {
-            _selectedRows.Clear();
-            foreach (var selectedRow in GetAllItemsByTopLevelItems(_showItems, true))
+            //_selectedRows.Clear();
+            //foreach (var selectedRow in GetAllItemsByTopLevelItems(_showItems, true))
+            //{
+            //    _selectedRows.Add(selectedRow);
+            //}
+            foreach (var dataItem in _dataSourceCache.Values)
             {
-                _selectedRows.Add(selectedRow);
-            }
-            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
-            {
-                dataItem.SetSelected(_selectedRows.Contains(dataItem.Data));
+                dataItem.SetSelected(RowSelectable(dataItem.Data));
             }
 
             _selection?.StateHasChanged();
@@ -78,7 +81,7 @@ namespace AntDesign
 
         private void ClearSelectedRows()
         {
-            _selectedRows.Clear();
+            //_selectedRows.Clear();
             foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
                 dataItem.SetSelected(false);
