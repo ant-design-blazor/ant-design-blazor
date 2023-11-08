@@ -59,7 +59,11 @@
       @*   <div class="highlight">
             <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
         </div> *@
-         <CodeView ComponentName="@ComponentName" @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+        @if (CodeExpand || _codeViewRendered)
+        {
+            _codeViewRendered = true;
+            <CodeView ComponentName="@ComponentName" @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+        }
     </section>
     <style>
         @Demo.Style
@@ -87,7 +91,8 @@
 
     private bool _copied;
     private bool _rendered;
-    
+    private bool _codeViewRendered;
+
     [Parameter]
     public EventCallback<Type> Compiled { get; set; }
 
