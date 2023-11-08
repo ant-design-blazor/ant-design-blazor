@@ -59,9 +59,9 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selectedRows.Count != 0 && _pageSize == GetAllItemsByTopLevelItems(_showItems, true).Count();
+        bool ITable.AllSelected => _selection.RowSelections.All(x => x.Disabled || x.Selected);
 
-        bool ITable.AnySelected => _selectedRows.Count > 0;
+        bool ITable.AnySelected => _selection.RowSelections.Any(x => x.Disabled || x.Selected);
 
         public void SelectAll()
         {

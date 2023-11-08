@@ -31,6 +31,8 @@ namespace AntDesign
 
         private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
 
+        public bool Selected => DataItem.Selected;
+
         private bool? _selected;
 
         private void OnCheckedChange(bool selected)

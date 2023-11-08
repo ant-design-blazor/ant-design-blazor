@@ -8,6 +8,8 @@ namespace AntDesign
 
         public string Key { get; }
 
+        public bool Selected { get; }
+
         public IList<ISelectionColumn> RowSelections { get; }
 
         public void StateHasChanged();
