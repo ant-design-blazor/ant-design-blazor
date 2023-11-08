@@ -3,31 +3,27 @@
 @inject IJSRuntime JSRuntime
 @inject CompilerService Compiler
 
-<Row Gutter="5" >
-    <Col>
-        <Space>
-            <Button Disabled=@isBusy OnClick="Run" Icon="play_circle_outline" Size="ButtonSize.ExtraSmall">Run</Button>
-            <Button OnClick="@CopyCode" >
-                <Icon Type="copy" />
-                Copy
-            </Button>
-            <Button Disabled=@isBusy OnClick="@Reset" Icon="refresh" Size="small" />
-        </Space>
-    </Col>
-</Row>
-<Alert Type="error" >
-    @((MarkupString)error)
-</Alert>
-
-<Monaco Value=@source Language="@language" ValueChanged=@OnValueChanged @ref="@monaco" ReadOnly=@ReadOnly />
+@if (_error != null)
+{
+    <Alert Type="error">
+        @((MarkupString)_error)
+    </Alert>
+}
+<Spin Spinning="_loading">
+    <Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" />
+</Spin>
 
 @code {
-    private string Copy => $"copy('{monaco?.Id}')";
-    private Monaco monaco;
+    private string Copy => $"copy('{_monaco?.Id}')";
+    private Monaco _monaco;
     private ElementReference pre;
-    private string source;
-    private string error;
-    private string language = "razor";
+
+    private string _error;
+    private string _language = "razor";
+    private string _source;
+    private string _initValue;
+
+    bool _loading;
 
     [Parameter]
     public EventCallback<Type> Compiled { get; set; }
@@ -38,64 +34,30 @@
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
-    [Parameter]
-    public string PageName { get; set; }
 
-    [Parameter]
-    public bool ReadOnly { get; set; }
-
-    /* Source */
-    [Parameter]
-    public string ComponentSource { get; set; }
-
-    [Parameter]
-    public string ComponentName { get; set; }
-
-    string ComponentSourceHref => ComponentSource ?? $"https://github.com/radzenhq/radzen-blazor/blob/master/Radzen.Blazor/Radzen{ComponentName}.razor.cs";
-
-    string PageSourceHref => $"https://raw.githubusercontent.com/radzenhq/radzen-blazor/master/RadzenBlazorDemos/Pages/{PageName}";
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        language = PageName == null ? "razor" :  PageName.EndsWith(".razor") ? "razor" : "csharp";
+        _language = "razor";
+        _initValue ??= Value;
+        _source = Value;
 
-        try
-        {
-            error = null;
-            source = Value ?? await Fetch();
-            source = Clean(source);
-        }
-        catch (Exception ex)
-        {
-            error = $"<p>Cannot fetch the example source code: <code>{ex.Message}</code></p><p>Make sure your browser has access to <a href=\"{PageSourceHref}\" target=\"_blank\">{PageSourceHref}</a></p>";
-        }
-    }
-
-    async Task<string> Fetch()
-    {
-        using var http = new HttpClient();
-
-        return await http.GetStringAsync(PageSourceHref);
-    }
-
-    string Clean(string source)
-    {
-        return Regex.Replace(source, "</?RadzenExample[^>]*>\n", "");
+        _error = null;
     }
 
     async Task OnValueChanged(string value)
     {
-        source = value;
-
+        _source = value;
+       
         await ValueChanged.InvokeAsync(value);
+
+        await Run();
     }
 
     async Task Reset()
     {
-        var source = await Fetch();
+        _source = _initValue;
 
-        source = Clean(source);
-
-        await OnValueChanged(source);
+        await OnValueChanged(_source);
     }
 
     async Task CopyCode()
@@ -103,29 +65,28 @@
         await JSRuntime.InvokeVoidAsync(Copy);
     }
 
-    bool isBusy;
-
     async Task Run()
     {
         try
         {
-            error = null;
-            isBusy = true;
-            await JSRuntime.InvokeVoidAsync("eval", $"instances['{monaco.Id}'].updateOptions({{domReadOnly: true, readOnly: true }})");
+            _error = null;
+            _loading = true;
+           // await _monaco.SetReadOnly(true);
 
             await Task.Yield();
 
-            var type = await Compiler.CompileAsync(source);
+            var type = await Compiler.CompileAsync(_source);
 
             await Compiled.InvokeAsync(type);
-
         }
         catch (Exception ex)
         {
-            error = ex.Message;
+            _error = ex.Message;
         }
-
-        isBusy = false;
-        await JSRuntime.InvokeVoidAsync("eval", $"instances['{monaco.Id}'].updateOptions({{domReadOnly: false, readOnly: false }})");
+        finally
+        {
+           // await _monaco.SetReadOnly(false);
+            _loading = false;
+        }
     }
 }

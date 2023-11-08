@@ -15,7 +15,17 @@
             {
                 @if (_demoType != null)
                 {
-                    <DynamicComponent Type="_demoType" />
+                     <ErrorBoundary @ref="_errorBoundary">
+                        <ChildContent>
+                              <DynamicComponent Type="_demoType" />
+                        </ChildContent>
+                        <ErrorContent Context="ex">
+                            <Alert Type="@AlertType.Error"
+                                   Message="@ex.Message"
+                                   Description="@ex.StackTrace">
+                            </Alert>
+                        </ErrorContent>
+                    </ErrorBoundary>
                 }
             }
         }
@@ -62,7 +72,7 @@
         @if (CodeExpand || _codeViewRendered)
         {
             _codeViewRendered = true;
-            <CodeView ComponentName="@ComponentName" @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+            <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
         }
     </section>
     <style>
@@ -92,6 +102,7 @@
     private bool _copied;
     private bool _rendered;
     private bool _codeViewRendered;
+    private ErrorBoundary _errorBoundary;
 
     [Parameter]
     public EventCallback<Type> Compiled { get; set; }
@@ -145,6 +156,7 @@
     void OnCompiled(Type type)
     {
         _demoType = type;
-         StateHasChanged();
+        _errorBoundary.Recover();
+        StateHasChanged();
     }
 }

@@ -1,11 +1,9 @@
 ﻿@implements IDisposable
 
-<div @ref="editor" style="height: 500px; width: 100%;"></div>
+<div @ref="_editor" style="height: 500px; width: 100%;"></div>
 
 @code {
-    IJSObjectReference monaco;
-    ElementReference editor;
-    DotNetObjectReference<Monaco> reference;
+
 
     [Inject]
     private IJSRuntime JSRuntime { get; set; }
@@ -22,9 +20,12 @@
     [Parameter]
     public string Language { get; set; }
 
+    IJSObjectReference _monaco;
+    ElementReference _editor;
+    DotNetObjectReference<Monaco> _reference;
     public string Id => _id;
-
     private string _id;
+    private string _value;
 
     protected override void OnInitialized()
     {
@@ -36,13 +37,13 @@
     {
         if (firstRender)
         {
-            reference = DotNetObjectReference.Create(this);
+            _reference = DotNetObjectReference.Create(this);
 
-            monaco = await JSRuntime.InvokeAsync<IJSObjectReference>("createEditor", editor, _id, reference, new
+            _monaco = await JSRuntime.InvokeAsync<IJSObjectReference>("createEditor", _editor, _id, _reference, new
             {
                 language = Language,
                 theme = "vs",
-                codeLens = false,
+                codeLens = true,
                 readOnly = ReadOnly,
                 minimap = new
                 {
@@ -51,20 +52,18 @@
                 automaticLaout = true
             });
 
-            interopValue = Value;
+            _value = Value;
 
-            await monaco.InvokeVoidAsync("setValue", interopValue);
+            await _monaco.InvokeVoidAsync("setValue", _value);
         }
     }
-
-    private string interopValue;
 
     [JSInvokable]
     public async Task OnChangeAsync(string value)
     {
         if (Value != value)
         {
-            interopValue = value;
+            _value = value;
             await ValueChanged.InvokeAsync(value);
         }
     }
@@ -76,28 +75,36 @@
 
         await base.SetParametersAsync(parameters);
 
-        if (monaco != null && valueChanged && interopValue != Value)
+        if (_monaco != null && valueChanged && _value != Value)
         {
-            interopValue = Value;
+            _value = Value;
 
-            await monaco.InvokeVoidAsync("setValue", interopValue);
+            await _monaco.InvokeVoidAsync("setValue", _value);
         }
 
-        if (monaco != null && readOnlyChanged)
+        if (_monaco != null && readOnlyChanged)
         {
-            await monaco.InvokeVoidAsync("setOptions", new { readOnly = ReadOnly });
+            await _monaco.InvokeVoidAsync("setOptions", new { readOnly = ReadOnly });
         }
     }
 
     public void Dispose()
     {
-        if (JSRuntime != null && monaco != null)
+        if (JSRuntime != null && _monaco != null)
         {
-            monaco.InvokeVoidAsync("dispose");
+            _monaco.InvokeVoidAsync("dispose");
         }
 
-        monaco?.DisposeAsync();
+        _monaco?.DisposeAsync();
 
-        reference?.Dispose();
+        _reference?.Dispose();
+    }
+
+    public async Task SetReadOnly(bool isReadOnly)
+    {
+        if (_monaco != null)
+        {
+            await _monaco.InvokeVoidAsync("updateOptions", new { domReadOnly = isReadOnly, readOnly = isReadOnly });
+        }
     }
 }
