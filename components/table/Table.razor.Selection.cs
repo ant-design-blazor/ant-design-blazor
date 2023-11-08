@@ -33,11 +33,11 @@ namespace AntDesign
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
         {
-            if (!RowSelectable(dataItem.Data))
-            {
-                dataItem.SetSelected(!selected, triggersSelectedChanged: false);
-                return;
-            }
+            //if (!RowSelectable(dataItem.Data))
+            //{
+            //    dataItem.SetSelected(!selected, triggersSelectedChanged: false);
+            //    return;
+            //}
             if (selected)
             {
                 _selectedRows.Add(dataItem.Data);
@@ -61,20 +61,17 @@ namespace AntDesign
 
         bool ITable.AllSelected => _selection.RowSelections.All(x => x.Disabled || x.Selected);
 
-        bool ITable.AnySelected => _selection.RowSelections.Any(x => x.Disabled || x.Selected);
+        bool ITable.AnySelected => _selection.RowSelections.Any(x => x.Selected);
 
         public void SelectAll()
         {
-            //_selectedRows.Clear();
-            //foreach (var selectedRow in GetAllItemsByTopLevelItems(_showItems, true))
-            //{
-            //    _selectedRows.Add(selectedRow);
-            //}
-            foreach (var dataItem in _dataSourceCache.Values)
+            foreach(var select in _selection.RowSelections)
             {
-                dataItem.SetSelected(RowSelectable(dataItem.Data));
+                if (select.Disabled)
+                    continue;
 
-                _selectedRows.Add(dataItem.Data);
+                select.RowData.TableDataItem.SetSelected(true);
+                _selectedRows.Add(((RowData<TItem>)select.RowData).Data);
             }
 
             _selection?.StateHasChanged();
@@ -132,9 +129,6 @@ namespace AntDesign
 
         private void SelectItem(TItem item)
         {
-            if (!RowSelectable(item))
-                return;
-
             _selectedRows.Add(item);
             if (_dataSourceCache.TryGetValue(item, out var rowData))
             {
@@ -170,18 +164,7 @@ namespace AntDesign
             _selection?.StateHasChanged();
             SelectionChanged();
         }
-
-#if NET5_0_OR_GREATER
-        [MemberNotNull(nameof(_selection))]
-#endif
-        private void EnsureSelection()
-        {
-            if (_selection == null)
-            {
-                throw new InvalidOperationException("To use the SetSelection method for a table, you should add a Selection component to the column definition.");
-            }
-        }
-
+         
         void ITable.SelectionChanged() => SelectionChanged();
 
         private void SelectionChanged()

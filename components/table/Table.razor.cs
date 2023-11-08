@@ -84,9 +84,6 @@ namespace AntDesign
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
         [Parameter]
-        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
-
-        [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         [Parameter]
@@ -654,33 +651,6 @@ namespace AntDesign
             FlushCache();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
-        }
-
-        private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
-        {
-            if (items?.Any() != true) return Array.Empty<TItem>();
-            if (TreeChildren != null)
-            {
-                var itemsSet = new HashSet<TItem>();
-                AddAllItemsAndChildren(items);
-                items = itemsSet;
-
-                void AddAllItemsAndChildren(IEnumerable<TItem> itemsToAdd)
-                {
-                    if (itemsToAdd is null)
-                        return;
-                    foreach (TItem item in itemsToAdd)
-                    {
-                        if (!itemsSet.Add(item))
-                            continue;
-
-                        AddAllItemsAndChildren(TreeChildren(item));
-                    }
-                }
-            }
-
-            if (onlySelectable) items = items.Where(x => RowSelectable(x));
-            return items;
         }
 
         protected override void OnParametersSet()
