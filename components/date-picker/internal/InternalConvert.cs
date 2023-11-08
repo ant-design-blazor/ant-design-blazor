@@ -293,6 +293,9 @@ internal static class InternalConvert
         if (input == DateTime.MaxValue)
             return DateTimeOffset.MaxValue;
 
+        if (input.Date == DateTime.MinValue.Date)
+            return new DateTimeOffset(DateTime.SpecifyKind(input, DateTimeKind.Unspecified));
+
         if (input.Kind == DateTimeKind.Unspecified)
             return new DateTimeOffset(input, TimeSpan.Zero);
 
