@@ -104,10 +104,6 @@
     private bool _codeViewRendered;
     private ErrorBoundary _errorBoundary;
 
-    [Parameter]
-    public EventCallback<Type> Compiled { get; set; }
-
-
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
     private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
