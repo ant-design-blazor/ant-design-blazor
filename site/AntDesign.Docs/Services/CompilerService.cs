@@ -152,7 +152,7 @@ namespace AntDesign.Docs.Services
                 await Task.WhenAll(
                     referencedAssemblies.Select(async assembly =>
                     {
-                        var result = await _httpClient.GetAsync($"/_framework/{assembly.GetName().Name}.wasm");
+                        var result = await _httpClient.GetAsync($"/_framework/{assembly.GetName().Name}.dll");
 
                         result.EnsureSuccessStatusCode();
 
