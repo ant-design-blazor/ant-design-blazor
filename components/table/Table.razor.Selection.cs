@@ -61,11 +61,11 @@ namespace AntDesign
 
         bool ITable.AllSelected => _selection.RowSelections.All(x => x.Disabled || x.Selected);
 
-        bool ITable.AnySelected => _selection.RowSelections.Any(x => x.Selected);
+        bool ITable.AnySelected => _selection.RowSelections.Any(x => !x.Disabled && x.Selected);
 
         public void SelectAll()
         {
-            foreach(var select in _selection.RowSelections)
+            foreach (var select in _selection.RowSelections)
             {
                 if (select.Disabled)
                     continue;
@@ -164,7 +164,7 @@ namespace AntDesign
             _selection?.StateHasChanged();
             SelectionChanged();
         }
-         
+
         void ITable.SelectionChanged() => SelectionChanged();
 
         private void SelectionChanged()
