@@ -33,11 +33,6 @@ namespace AntDesign
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
         {
-            //if (!RowSelectable(dataItem.Data))
-            //{
-            //    dataItem.SetSelected(!selected, triggersSelectedChanged: false);
-            //    return;
-            //}
             if (selected)
             {
                 _selectedRows.Add(dataItem.Data);
@@ -59,19 +54,19 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _selection.RowSelections.All(x => x.Disabled || x.Selected);
+        bool ITable.AllSelected => _dataSourceCache.Values.All(x => x.Disabled || x.Selected);
 
-        bool ITable.AnySelected => _selection.RowSelections.Any(x => !x.Disabled && x.Selected);
+        bool ITable.AnySelected => _dataSourceCache.Values.Any(x => !x.Disabled && x.Selected);
 
         public void SelectAll()
         {
-            foreach (var select in _selection.RowSelections)
+            foreach (var select in _dataSourceCache.Values)
             {
                 if (select.Disabled)
                     continue;
 
-                select.RowData.TableDataItem.SetSelected(true);
-                _selectedRows.Add(((RowData<TItem>)select.RowData).Data);
+                select.SetSelected(true);
+                _selectedRows.Add(select.RowData.Data);
             }
 
             _selection?.StateHasChanged();
@@ -80,7 +75,6 @@ namespace AntDesign
 
         private void ClearSelectedRows()
         {
-            //_selectedRows.Clear();
             foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
             {
                 dataItem.SetSelected(false);

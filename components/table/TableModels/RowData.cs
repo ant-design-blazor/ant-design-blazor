@@ -127,6 +127,8 @@ namespace AntDesign.TableModels
             }
         }
 
+        public bool Disabled { get; set; }
+
         public virtual bool HasChildren { get; set; }
 
         public event Action<TableDataItem, bool> SelectedChanged;

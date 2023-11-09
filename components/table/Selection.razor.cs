@@ -78,6 +78,7 @@ namespace AntDesign
             else if (IsBody)
             {
                 Table?.Selection?.RowSelections.Add(this);
+                DataItem.Disabled = Disabled;
             }
         }
 

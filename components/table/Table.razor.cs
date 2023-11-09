@@ -863,14 +863,11 @@ namespace AntDesign
 
         private RowData<TItem> GetRowData(TItem data, int index, int level)
         {
-            int rowIndex;
+            int rowIndex = index + 1;
+
             if (level == 0)
             {
-                rowIndex = PageSize * (PageIndex - 1) + index + 1;
-            }
-            else
-            {
-                rowIndex = index + 1;
+                rowIndex += PageSize * (PageIndex - 1);
             }
 
             if (!_dataSourceCache.TryGetValue(data, out var currentDataItem) || currentDataItem == null)
@@ -894,14 +891,22 @@ namespace AntDesign
                 currentDataItem.RowData ??= currentRowData;
             }
 
-            if (currentDataItem.HasChildren && currentRowData.Expanded)
-            {
-                currentRowData.Children = new(this);
-            }
-
             currentRowData.Level = level;
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
+
+            if (currentDataItem.HasChildren)
+            {
+                currentRowData.Children = new(this);
+
+                foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
+                {
+                    if (_dataSourceCache.ContainsKey(item))
+                        continue;
+
+                    currentRowData.Children.Add(item, GetRowData(item, i, level + 1));
+                }
+            }
 
             return currentRowData;
         }
