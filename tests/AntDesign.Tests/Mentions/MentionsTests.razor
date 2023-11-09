@@ -33,7 +33,7 @@
     [Theory]
     [InlineData("")]
     [InlineData("username")]
-    public async Task ItShouldCallLoadOptionsWithSearchValueWhenUserEntersValueAfterAtSymbol(string testEntry)
+    public async Task ItShouldCallLoadOptionsWithSearchValueWhenUserEntersValueAfterPrefix(string testEntry)
     {
         SetupJavascript();
         JSInterop.Setup<int>(
@@ -165,7 +165,7 @@
     }
 
     [Fact]
-    public void StandardRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingAtSymbol()
+    public void StandardRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingPrefix()
     {
         SetupJavascript();
         var systemUnderTest = GetStandardRenderSystemUnderTest();
@@ -178,14 +178,21 @@
     }
 
     [Fact]
-    public void TemplatedRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingAtSymbol()
+    public void ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingProvidedPrefix()
     {
+        const string prefix = "#";
+
         SetupJavascript();
-        var systemUnderTest = GetStandardRenderSystemUnderTest();
+        var systemUnderTest = Render<AntDesign.Mentions>(
+            @<AntDesign.Mentions Prefix="@prefix">
+                <AntDesign.MentionsOption Value="testUsername">Test User</AntDesign.MentionsOption>
+                <AntDesign.MentionsOption Value="anotherUsername">Another User</AntDesign.MentionsOption>
+            </AntDesign.Mentions>
+        );
 
         JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", true);
 
-        systemUnderTest.Find("textarea").Input("@");
+        systemUnderTest.Find("textarea").Input(prefix);
 
         JSInterop.VerifyInvoke("AntDesign.interop.mentionsHelper.setPopShowFlag", 1);
     }

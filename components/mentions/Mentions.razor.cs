@@ -54,7 +54,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<MentionsTextareaTemplateOptions> TextareaTemplate { get; set; }
 
-        private const string AtSymbol = "@";
+        [Parameter]
+        public string Prefix { get; set; } = "@";
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -180,7 +181,7 @@ namespace AntDesign
             Value = args.Value.ToString();
             await ValueChanged.InvokeAsync(Value);
 
-            if (Value.EndsWith(AtSymbol))
+            if (Value.EndsWith(Prefix))
             {
                 await LoadItems(string.Empty);
                 await ShowOrHideBasedOnAvailableShowOptions();
@@ -195,7 +196,7 @@ namespace AntDesign
             };
 
             var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
-            var lastIndex = v.LastIndexOf(AtSymbol);
+            var lastIndex = v.LastIndexOf(Prefix);
             if (lastIndex >= 0)
             {
                 var lastOption = v.Substring(lastIndex + 1);
@@ -241,7 +242,7 @@ namespace AntDesign
         {
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             var preText = Value.Substring(0, focusPosition);
-            preText = preText.LastIndexOf(AtSymbol) >= 0 ? Value.Substring(0, preText.LastIndexOf(AtSymbol)) : preText;
+            preText = preText.LastIndexOf(Prefix) >= 0 ? Value.Substring(0, preText.LastIndexOf(Prefix)) : preText;
             if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 1);
             var nextText = Value.Substring(focusPosition);
             if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
