@@ -158,7 +158,6 @@ internal static class InternalConvert
 
     public static bool IsNullable<TValue>()
     {
-
         Type type = typeof(TValue);
         if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[]))
             || type.IsAssignableFrom(typeof(DateTimeOffset?)) || type.IsAssignableFrom(typeof(DateTimeOffset?[])))
@@ -294,7 +293,7 @@ internal static class InternalConvert
             return DateTimeOffset.MaxValue;
 
         if (input.Date == DateTime.MinValue.Date)
-            return new DateTimeOffset(DateTime.SpecifyKind(input, DateTimeKind.Unspecified));
+            return new DateTimeOffset(DateTime.SpecifyKind(input, DateTimeKind.Utc), TimeSpan.Zero);
 
         if (input.Kind == DateTimeKind.Unspecified)
             return new DateTimeOffset(input, TimeSpan.Zero);
