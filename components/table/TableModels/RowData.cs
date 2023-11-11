@@ -28,6 +28,17 @@ namespace AntDesign.TableModels
         {
             DataItem = dataItem;
         }
+
+        protected override void CheckedChildren(bool isSelected, bool checkStrictly)
+        {
+            if (Children?.Any() != true)
+                return;
+
+            foreach (var item in Children)
+            {
+                item.Value.SetSelected(isSelected, checkStrictly);
+            }
+        }
     }
 
     /// <summary>
@@ -63,13 +74,25 @@ namespace AntDesign.TableModels
 
         public abstract TableDataItem TableDataItem { get; }
 
-        public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
+        public bool Selected { get => TableDataItem.Selected; }
 
         public event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {
             _expanded = expanded;
+        }
+
+        protected abstract void CheckedChildren(bool isSelected, bool checkStrictly);
+
+        internal void SetSelected(bool isSelected, bool checkStrictly)
+        {
+            TableDataItem.SetSelected(isSelected);
+
+            if (checkStrictly)
+            {
+                CheckedChildren(isSelected, checkStrictly);
+            }
         }
     }
 
@@ -81,8 +104,6 @@ namespace AntDesign.TableModels
         public Table<TItem> Table { get; set; }
 
         public IEnumerable<TItem> Children { get; set; }
-
-        public RowData<TItem> RowData { get; set; }
 
         public TableDataItem()
         {
@@ -118,13 +139,6 @@ namespace AntDesign.TableModels
         public bool Selected
         {
             get => _selected;
-            set
-            {
-                if (_selected != value)
-                {
-                    OnSelectedChanged(value);
-                }
-            }
         }
 
         public bool Disabled { get; set; }

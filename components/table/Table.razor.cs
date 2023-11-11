@@ -851,11 +851,11 @@ namespace AntDesign
                 Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => x.Data, x => x)
             };
 
-            groupRowData.DataItem.RowData = groupRowData;
+            //groupRowData.DataItem.RowData = groupRowData;
             return groupRowData;
         }
 
-        private RowData<TItem> GetRowData(TItem data, int index, int level)
+        private RowData<TItem> GetRowData(TItem data, int index, int level, Dictionary<TItem, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
 
@@ -872,7 +872,8 @@ namespace AntDesign
             }
 
             // this row cache may be for children rows
-            var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
+            //var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
+            rowCache ??= _rootRowDataCache;
 
             if (!rowCache.TryGetValue(data, out var currentRowData) || currentRowData == null)
             {
@@ -882,7 +883,7 @@ namespace AntDesign
                 };
                 rowCache[data] = currentRowData;
 
-                currentDataItem.RowData ??= currentRowData;
+                //currentDataItem.RowData ??= currentRowData;
             }
 
             currentRowData.Level = level;
@@ -891,14 +892,14 @@ namespace AntDesign
 
             if (currentDataItem.HasChildren)
             {
-                currentRowData.Children = new(this);
-
                 foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
                 {
                     if (_dataSourceCache.ContainsKey(item))
                         continue;
 
-                    currentRowData.Children.Add(item, GetRowData(item, i, level + 1));
+                    currentRowData.Children ??= new(this);
+
+                    GetRowData(item, i, level + 1, currentRowData.Children);
                 }
             }
 

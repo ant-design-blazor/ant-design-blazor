@@ -56,7 +56,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    DataItem.Selected = selected;
+                    RowData.SetSelected(selected, CheckStrictly);
                 }
             }
         }

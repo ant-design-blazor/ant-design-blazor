@@ -100,7 +100,7 @@ namespace AntDesign
             if (keys?.Count > 0)
             {
                 _preventRowDataTriggerSelectedRowsChanged = true;
-                _selection?.RowSelections.ForEach(x => x.RowData.Selected = keys.Contains(x.Key));
+                _selection?.RowSelections.ForEach(x => x.RowData.SetSelected(keys.Contains(x.Key), x.CheckStrictly));
                 _preventRowDataTriggerSelectedRowsChanged = false;
             }
 
@@ -114,7 +114,8 @@ namespace AntDesign
             ClearSelectedRows();
 
             _preventRowDataTriggerSelectedRowsChanged = true;
-            selectItem.RowData.Selected = true;
+
+            selectItem.RowData.SetSelected(true, selectItem.CheckStrictly);
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
