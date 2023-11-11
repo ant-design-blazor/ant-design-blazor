@@ -894,10 +894,9 @@ namespace AntDesign
             {
                 foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
                 {
-                    if (_dataSourceCache.ContainsKey(item))
-                        continue;
-
                     currentRowData.Children ??= new(this);
+                    if (currentRowData.Children.ContainsKey(item))
+                        continue;
 
                     GetRowData(item, i, level + 1, currentRowData.Children);
                 }
