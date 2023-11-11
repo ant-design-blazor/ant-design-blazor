@@ -66,7 +66,7 @@ namespace AntDesign
                     continue;
 
                 select.SetSelected(true);
-                _selectedRows.Add(select.RowData.Data);
+                _selectedRows.Add(select.Data);
             }
 
             _selection?.StateHasChanged();

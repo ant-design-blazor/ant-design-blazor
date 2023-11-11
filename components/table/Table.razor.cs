@@ -512,12 +512,6 @@ namespace AntDesign
                 {
                     //_selectedRows?.Clear();
                 }
-
-                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems, this).ToArray();
-                foreach (var item in removedCacheItems)
-                {
-                    _dataSourceCache.Remove(item);
-                }
             }
 
             _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
@@ -880,7 +874,7 @@ namespace AntDesign
             // this row cache may be for children rows
             var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
 
-            if (rowCache!.TryGetValue(data, out var currentRowData) || currentRowData == null)
+            if (!rowCache.TryGetValue(data, out var currentRowData) || currentRowData == null)
             {
                 currentRowData = new RowData<TItem>(currentDataItem)
                 {
