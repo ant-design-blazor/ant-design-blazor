@@ -15,7 +15,7 @@ namespace AntDesign.Docs.Routing
 
         public MatchResult Match(string[] segments, string relativeUri)
         {
-            var parameters = ParseQueryString(relativeUri);
+            Dictionary<string, object> parameters = []; //ParseQueryString(relativeUri);
 
             if (Template.Segments.Length != segments.Length)
             {
@@ -34,7 +34,6 @@ namespace AntDesign.Docs.Routing
                 {
                     if (segment.IsParameter)
                     {
-                        parameters ??= new Dictionary<string, object>(StringComparer.Ordinal);
                         parameters[segment.Value] = matchedParameterValue;
                     }
                 }
@@ -45,14 +44,13 @@ namespace AntDesign.Docs.Routing
             // are parameters supplied by other route entries matching the same handler.
             if (UnusedRouteParameterNames.Length > 0)
             {
-                parameters ??= new Dictionary<string, object>(StringComparer.Ordinal);
                 foreach (var name in UnusedRouteParameterNames)
                 {
                     parameters[name] = null;
                 }
             }
 
-            this.Parameters = parameters ?? new Dictionary<string, object>(StringComparer.Ordinal);
+            this.Parameters = parameters;
 
             return MatchResult.Match(this);
         }
