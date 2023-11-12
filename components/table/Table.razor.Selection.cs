@@ -125,7 +125,7 @@ namespace AntDesign
         private void SelectItem(TItem item)
         {
             _selectedRows.Add(item);
-            if (_dataSourceCache.TryGetValue(item, out var rowData))
+            if (_dataSourceCache.TryGetValue(GetHashCode(item), out var rowData))
             {
                 rowData.SetSelected(true);
             }

@@ -19,7 +19,7 @@ namespace AntDesign.TableModels
         /// <summary>
         /// hold the state of children rows
         /// </summary>
-        public Dictionary<TItem, RowData<TItem>> Children { get; set; }
+        public Dictionary<int, RowData<TItem>> Children { get; set; }
 
         public RowData()
         { }

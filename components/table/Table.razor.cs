@@ -270,8 +270,8 @@ namespace AntDesign
 
         public Table()
         {
-            _dataSourceCache = new(this);
-            _rootRowDataCache = new(this);
+            _dataSourceCache = new();
+            _rootRowDataCache = new();
             _selectedRows = new(this);
         }
 
@@ -828,7 +828,9 @@ namespace AntDesign
             return RowKey(x).Equals(RowKey(y));
         }
 
-        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj) => GetHashCode(obj);
+
+        private int GetHashCode(TItem obj)
         {
             if (RowKey == null)
                 RowKey = data => data;
@@ -848,14 +850,13 @@ namespace AntDesign
                     Table = this,
                     Children = grouping
                 },
-                Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => x.Data, x => x)
+                Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => GetHashCode(x.Data), x => x)
             };
 
-            //groupRowData.DataItem.RowData = groupRowData;
             return groupRowData;
         }
 
-        private RowData<TItem> GetRowData(TItem data, int index, int level, Dictionary<TItem, RowData<TItem>> rowCache = null)
+        private RowData<TItem> GetRowData(TItem data, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
 
@@ -864,38 +865,37 @@ namespace AntDesign
                 rowIndex += PageSize * (PageIndex - 1);
             }
 
-            if (!_dataSourceCache.TryGetValue(data, out var currentDataItem) || currentDataItem == null)
+            var dataHashCode = GetHashCode(data);
+
+            if (!_dataSourceCache.TryGetValue(dataHashCode, out var currentDataItem) || currentDataItem == null)
             {
                 currentDataItem = new TableDataItem<TItem>(data, this);
                 currentDataItem.SetSelected(SelectedRows.Contains(data), triggersSelectedChanged: false);
-                _dataSourceCache.Add(data, currentDataItem);
+                _dataSourceCache.Add(dataHashCode, currentDataItem);
             }
 
             // this row cache may be for children rows
-            //var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
             rowCache ??= _rootRowDataCache;
 
-            if (!rowCache.TryGetValue(data, out var currentRowData) || currentRowData == null)
+            if (!rowCache.TryGetValue(dataHashCode, out var currentRowData) || currentRowData == null)
             {
                 currentRowData = new RowData<TItem>(currentDataItem)
                 {
                     Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
                 };
-                rowCache[data] = currentRowData;
-
-                //currentDataItem.RowData ??= currentRowData;
+                rowCache.Add(dataHashCode, currentRowData);
             }
 
             currentRowData.Level = level;
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
 
-            if (currentDataItem.HasChildren)
+            if (currentDataItem.HasChildren && level < DefaultExpandMaxLevel)
             {
                 foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
                 {
-                    currentRowData.Children ??= new(this);
-                    if (currentRowData.Children.ContainsKey(item))
+                    currentRowData.Children ??= [];
+                    if (currentRowData.Children.ContainsKey(GetHashCode(item)))
                         continue;
 
                     GetRowData(item, i, level + 1, currentRowData.Children);

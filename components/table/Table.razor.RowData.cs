@@ -7,8 +7,8 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        private Dictionary<TItem, TableDataItem<TItem>> _dataSourceCache;
-        private Dictionary<TItem, RowData<TItem>> _rootRowDataCache;
+        private Dictionary<int, TableDataItem<TItem>> _dataSourceCache;
+        private Dictionary<int, RowData<TItem>> _rootRowDataCache;
 
         private void FlushCache()
         {
