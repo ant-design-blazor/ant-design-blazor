@@ -54,7 +54,7 @@ namespace AntDesign
             set => _selection = value;
         }
 
-        bool ITable.AllSelected => _dataSourceCache.Values.All(x => x.Disabled || x.Selected);
+        bool ITable.AllSelected => _selectedRows.Any() && _dataSourceCache.Values.All(x => x.Disabled || x.Selected);
 
         bool ITable.AnySelected => _dataSourceCache.Values.Any(x => !x.Disabled && x.Selected);
 

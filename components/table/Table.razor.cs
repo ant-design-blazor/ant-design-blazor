@@ -890,7 +890,12 @@ namespace AntDesign
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
 
-            if (currentDataItem.HasChildren && level < DefaultExpandMaxLevel)
+            if (level >= DefaultExpandMaxLevel)
+            {
+                return currentRowData;
+            }
+
+            if (currentDataItem.HasChildren)
             {
                 foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
                 {
