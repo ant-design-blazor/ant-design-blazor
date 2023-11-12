@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -1096,7 +1096,12 @@ namespace AntDesign
 
             currentValue = InternalConvert.ToDateTimeOffset(CurrentValue);
 
-            var offset = defaultValue?.Offset ?? currentValue?.Offset ?? DateTimeOffset.Now.Offset;
+            var offset = TimeSpan.Zero;
+
+            if (InternalConvert.IsDateTimeOffsetType<TValue>())
+            {
+                offset = defaultValue?.Offset ?? currentValue?.Offset ?? TimeSpan.Zero;
+            }
 
             newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), offset);
         }

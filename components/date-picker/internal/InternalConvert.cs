@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace AntDesign.Internal;
@@ -158,7 +158,6 @@ internal static class InternalConvert
 
     public static bool IsNullable<TValue>()
     {
-
         Type type = typeof(TValue);
         if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[]))
             || type.IsAssignableFrom(typeof(DateTimeOffset?)) || type.IsAssignableFrom(typeof(DateTimeOffset?[])))
@@ -253,6 +252,16 @@ internal static class InternalConvert
         throw new NotSupportedException($"{type.FullName} not supported");
     }
 
+    internal static bool IsDateTimeOffsetType<TValue>()
+    {
+        var type = typeof(TValue);
+
+        return type.IsAssignableFrom(typeof(DateTimeOffset))
+                || type.IsAssignableFrom(typeof(DateTimeOffset?))
+                || type.IsAssignableFrom(typeof(DateTimeOffset[]))
+                || type.IsAssignableFrom(typeof(DateTimeOffset?[]));
+    }
+
     public static DateTime SetKind<TValue>(DateTime input)
     {
         var type = typeof(TValue);
@@ -293,9 +302,13 @@ internal static class InternalConvert
         if (input == DateTime.MaxValue)
             return DateTimeOffset.MaxValue;
 
+        if (input.Date == DateTime.MinValue.Date)
+            return new DateTimeOffset(DateTime.SpecifyKind(input, DateTimeKind.Unspecified), TimeSpan.Zero);
+
         if (input.Kind == DateTimeKind.Unspecified)
             return new DateTimeOffset(input, TimeSpan.Zero);
 
         return new DateTimeOffset(input);
     }
+
 }
