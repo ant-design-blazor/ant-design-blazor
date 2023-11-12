@@ -838,19 +838,27 @@ namespace AntDesign
             return RowKey(obj).GetHashCode();
         }
 
-        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level)
+        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
+            int rowIndex = index + 1;
+
+            if (level == 0)
+            {
+                rowIndex += PageSize * (PageIndex - 1);
+            }
+
             var groupRowData = new RowData<TItem>()
             {
                 Key = grouping.Key.ToString(),
                 IsGrouping = true,
+                RowIndex = rowIndex,
                 DataItem = new TableDataItem<TItem>
                 {
                     HasChildren = true,
                     Table = this,
                     Children = grouping
                 },
-                Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => GetHashCode(x.Data), x => x)
+                Children = grouping.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
             };
 
             return groupRowData;
@@ -890,12 +898,7 @@ namespace AntDesign
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
 
-            if (level >= DefaultExpandMaxLevel)
-            {
-                return currentRowData;
-            }
-
-            if (currentDataItem.HasChildren)
+            if (currentDataItem.HasChildren && (level < DefaultExpandMaxLevel || currentRowData.Expanded))
             {
                 foreach (var (item, i) in currentDataItem.Children.Select((item, index) => (item, index)))
                 {
