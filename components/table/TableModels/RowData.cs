@@ -119,7 +119,6 @@ namespace AntDesign.TableModels
 
         protected override void OnSelectedChanged(bool value)
         {
-            base.OnSelectedChanged(value);
             Table.DataItemSelectedChanged(this, value);
         }
     }
@@ -132,7 +131,7 @@ namespace AntDesign.TableModels
     /// <br/>
     /// For row specific data, see <see cref="RowData"/>.
     /// </summary>
-    public class TableDataItem
+    public abstract class TableDataItem
     {
         private bool _selected;
 
@@ -147,10 +146,7 @@ namespace AntDesign.TableModels
 
         public event Action<TableDataItem, bool> SelectedChanged;
 
-        protected virtual void OnSelectedChanged(bool value)
-        {
-            SetSelected(value);
-        }
+        protected abstract void OnSelectedChanged(bool value);
 
         internal void SetSelected(bool selected, bool triggersSelectedChanged = true)
         {
@@ -160,6 +156,9 @@ namespace AntDesign.TableModels
             }
 
             _selected = selected;
+
+            OnSelectedChanged(_selected);
+
             if (triggersSelectedChanged)
                 SelectedChanged?.Invoke(this, _selected);
         }
