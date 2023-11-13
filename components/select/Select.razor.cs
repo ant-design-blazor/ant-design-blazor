@@ -444,6 +444,10 @@ namespace AntDesign
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
+                else
+                {
+                    OnValueChange(_selectedValue);
+                }
             }
             base.OnParametersSet();
         }
