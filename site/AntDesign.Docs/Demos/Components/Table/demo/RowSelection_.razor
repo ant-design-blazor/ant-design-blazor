@@ -17,7 +17,7 @@
     </h5>
 
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Age==33)" />
+        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
         </PropertyColumn>
@@ -25,8 +25,6 @@
         <PropertyColumn Property="c=>c.Address" />
     </Table>
 </div>
-
-<Button OnClick="Select">Select 33</Button>
 
 @code {
 
@@ -66,25 +64,7 @@
             Name = "Disabled User",
             Age = 99,
             Address = "Sidney No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Joe Black5",
-            Age = 33,
-            Address = "Sidney No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Joe Black6",
-            Age = 32,
-            Address = "Sidney No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Joe Black7",
-            Age = 12,
-            Address = "Sidney No. 1 Lake Park",
-        },
+        }
     };
 
     IEnumerable<Column> selectedRows;
@@ -92,27 +72,11 @@
 
     protected override void OnInitialized()
     {
-        selectedRows = [new Column()
-            {
-                Name = "Joe Black5",
-                Age = 33,
-                Address = "Sidney No. 1 Lake Park",
-            }];
     }
 
     public void RemoveSelection(string key)
     {
         var selected = selectedRows.Where(x => x.Name != key).ToList();
         table.SetSelection(selected.Select(x => x.Name).ToArray());
-    }
-
-    void Select()
-    {
-        selectedRows = [new Column()
-            {
-                Name = "Joe Black5",
-                Age = 33,
-                Address = "Sidney No. 1 Lake Park",
-            }];
     }
 }

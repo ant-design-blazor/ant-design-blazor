@@ -508,10 +508,6 @@ namespace AntDesign
                 {
                     SetSelection(_outerSelectedRows);
                 }
-                else
-                {
-                    //_selectedRows?.Clear();
-                }
             }
 
             _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
