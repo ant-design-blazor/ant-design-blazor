@@ -41,11 +41,9 @@ namespace AntDesign
             {
                 _selectedRows.Remove(dataItem.Data);
             }
-            if (!_preventRowDataTriggerSelectedRowsChanged)
-            {
-                SelectionChanged();
-                _selection?.StateHasChanged();
-            }
+
+            SelectionChanged();
+            _selection?.StateHasChanged();
         }
 
         ISelectionColumn ITable.Selection
@@ -60,6 +58,8 @@ namespace AntDesign
 
         public void SelectAll()
         {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
             foreach (var select in _dataSourceCache.Values)
             {
                 if (select.Disabled)
@@ -68,6 +68,7 @@ namespace AntDesign
                 select.SetSelected(true);
                 _selectedRows.Add(select.Data);
             }
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
@@ -84,7 +85,11 @@ namespace AntDesign
 
         public void UnselectAll()
         {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
             ClearSelectedRows();
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
@@ -96,14 +101,15 @@ namespace AntDesign
         /// </summary>
         public void SetSelection(ICollection<string> keys)
         {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
             ClearSelectedRows();
             if (keys?.Count > 0)
             {
-                _preventRowDataTriggerSelectedRowsChanged = true;
                 _selection?.RowSelections.ForEach(x => x.RowData.SetSelected(keys.Contains(x.Key), x.CheckStrictly));
-                _preventRowDataTriggerSelectedRowsChanged = false;
             }
 
+            _preventRowDataTriggerSelectedRowsChanged = false;
             _selection?.StateHasChanged();
             SelectionChanged();
         }
@@ -111,11 +117,11 @@ namespace AntDesign
         // Only select the given row (for radio selection)
         void ITable.SetSelection(ISelectionColumn selectItem)
         {
-            ClearSelectedRows();
-
             _preventRowDataTriggerSelectedRowsChanged = true;
 
+            ClearSelectedRows();
             selectItem.RowData.SetSelected(true, selectItem.CheckStrictly);
+
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
@@ -124,16 +130,20 @@ namespace AntDesign
 
         private void SelectItem(TItem item)
         {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
             _selectedRows.Add(item);
             if (_dataSourceCache.TryGetValue(GetHashCode(item), out var rowData))
             {
                 rowData.SetSelected(true);
             }
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
         }
 
         public void SetSelection(IEnumerable<TItem> items)
         {
-            if (ReferenceEquals(items, _selectedRows))
+            if (items.SequenceEqual(_selectedRows, this))
                 return;
 
             if (items is not null and not IReadOnlyCollection<TItem>)
@@ -141,30 +151,35 @@ namespace AntDesign
                 // (which would happen when the given enumerable is based on _selectedRows with linq methods)
                 items = items.ToArray();
 
+            _preventRowDataTriggerSelectedRowsChanged = true;
             ClearSelectedRows();
             items?.ForEach(SelectItem);
 
             _selection?.StateHasChanged();
-            SelectionChanged();
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
         }
 
         public void SetSelection(TItem item)
         {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
             ClearSelectedRows();
             if (item != null)
             {
                 SelectItem(item);
             }
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
         }
 
-        void ITable.SelectionChanged() => SelectionChanged();
+        //void ITable.SelectionChanged() => SelectionChanged();
 
         private void SelectionChanged()
         {
-            if (SelectedRowsChanged.HasDelegate)
+            if (SelectedRowsChanged.HasDelegate && !_preventRowDataTriggerSelectedRowsChanged)
             {
                 _preventRender = true;
                 _outerSelectedRows = _selectedRows;
