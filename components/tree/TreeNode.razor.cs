@@ -933,11 +933,12 @@ namespace AntDesign
                 ParentNode.AddNode(this);
             else
             {
-                TreeComponent.AddNode(this);
+                TreeComponent.AddChildNode(this);
                 if (!TreeComponent.DefaultExpandAll && TreeComponent.DefaultExpandParent)
                     Expand(true);
             }
-            TreeComponent._allNodes.Add(this);
+
+            TreeComponent.AddNode(this);
 
             if (TreeComponent.DisabledExpression != null)
                 Disabled = TreeComponent.DisabledExpression(this);
