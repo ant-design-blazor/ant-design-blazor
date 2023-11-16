@@ -1,17 +1,17 @@
 ﻿namespace AntDesign
 {
     /// <summary>
-    /// Rendering mode
+    /// Rerender strategy
     /// </summary>
-    public enum RenderMode
+    public enum RerenderStrategy
     {
         /// <summary>
-        /// Always to render
+        /// Always to rerender
         /// </summary>
         Always,
 
         /// <summary>
-        /// Render when the hashCode of the parameter value changes
+        /// Rerender only when any of the component's parameter values are changed
         /// </summary>
         ParametersHashCodeChanged,
     }

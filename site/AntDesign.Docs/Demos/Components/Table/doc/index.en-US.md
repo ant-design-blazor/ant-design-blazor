@@ -40,7 +40,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 
 | Parameter             | Instruction             | Type                         | Defaults |
 | ---------------- | ---------------- | ---------------------------- | ------ |
-| RenderMode | Rendering mode | [RenderMode](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RenderMode.cs) | RenderMode.Always |
+| RerenderStrategy | Used to control the ShouldRender property. Can be used to specify that a property should be rerendered only when it has been modified | [RerenderStrategy](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RerenderStrategy.cs) | RerenderStrategy.Always |
 | RowTemplate | Row template | RenderFragment | - |
 | ExpandTemplate | Expand content template | RenderFragment<RowData<TItem>> | - |
 | DataSource | Data Sources | IEnumerable<TItem> | - |
