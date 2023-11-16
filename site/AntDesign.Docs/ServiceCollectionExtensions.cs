@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IconListService>();
             services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
-
+            services.AddScoped<CompilerService>();
             return services;
         }
     }

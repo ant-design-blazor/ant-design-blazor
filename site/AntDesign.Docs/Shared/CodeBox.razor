@@ -15,7 +15,17 @@
             {
                 @if (_demoType != null)
                 {
-                    <DynamicComponent Type="_demoType" />
+                     <ErrorBoundary @ref="_errorBoundary">
+                        <ChildContent>
+                              <DynamicComponent Type="_demoType" />
+                        </ChildContent>
+                        <ErrorContent Context="ex">
+                            <Alert Type="@AlertType.Error"
+                                   Message="@ex.Message"
+                                   Description="@ex.StackTrace">
+                            </Alert>
+                        </ErrorContent>
+                    </ErrorBoundary>
                 }
             }
         }
@@ -56,9 +66,14 @@
         </div>
     </section>
     <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
-        <div class="highlight">
+      @*   <div class="highlight">
             <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
-        </div>
+        </div> *@
+        @if (CodeExpand || _codeViewRendered)
+        {
+            _codeViewRendered = true;
+            <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+        }
     </section>
     <style>
         @Demo.Style
@@ -86,6 +101,8 @@
 
     private bool _copied;
     private bool _rendered;
+    private bool _codeViewRendered;
+    private ErrorBoundary _errorBoundary;
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
@@ -130,5 +147,12 @@
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();
         }
+    }
+
+    void OnCompiled(Type type)
+    {
+        _demoType = type;
+        _errorBoundary.Recover();
+        StateHasChanged();
     }
 }
