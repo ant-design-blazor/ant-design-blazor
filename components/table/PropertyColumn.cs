@@ -29,7 +29,7 @@ namespace AntDesign
                 else if (IsBody)
                 {
                     var compliedProperty = Property.Compile();
-                    GetValue = rowData => compliedProperty.Invoke(((RowData<TItem>)rowData).Data);
+                    GetValue = rowData => compliedProperty.Invoke(((RowData<TItem>)rowData).DataItem.Data);
                 }
                 base.OnInitialized();
             }

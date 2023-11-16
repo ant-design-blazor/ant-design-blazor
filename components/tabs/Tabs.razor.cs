@@ -380,6 +380,26 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
+        internal async Task HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
+        {
+            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
+            switch (e.Code)
+            {
+                case "Enter" or "NumpadEnter": await NavigateToTab(tabPane); break;
+                case "ArrowLeft": await NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
+                case "ArrowRight": await NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
+                case "ArrowUp": await NavigateToTab(_tabs[0]); break;
+                case "ArrowDown": await NavigateToTab(_tabs[^1]); break;
+                default: return;
+            }
+        }
+
+        private async Task NavigateToTab(TabPane tabPane)
+        {
+            await HandleTabClick(tabPane);
+            await FocusAsync(_activeTab.TabBtnRef);
+        }
+
         private void ActivatePane(string key)
         {
             if (_panes.Count == 0)
@@ -428,7 +448,7 @@ namespace AntDesign
             _needUpdateScrollListPosition = true;
 
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

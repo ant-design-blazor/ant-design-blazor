@@ -10,6 +10,10 @@ namespace AntDesign.Tests
 {
     public class AntDesignTestBase : TestContext, IDisposable
     {
+        protected string DateFormat => "dd/MM/yyyy";
+        protected string TimeFormat = "yyyy-MM-dd HH:mm:ss";
+        protected readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+        
         public TestContext Context => this;
         public NavigationManager NavigationManager => Services.GetRequiredService<NavigationManager>();
 

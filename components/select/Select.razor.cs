@@ -327,6 +327,8 @@ namespace AntDesign
             }
         }
 
+        [Parameter] public string ListboxStyle { get; set; } = "display: flex; flex-direction: column;";
+
         #endregion Parameters
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
@@ -355,7 +357,7 @@ namespace AntDesign
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
-        private bool _waittingStateChange;
+        private bool _waitingForStateChange;
         private bool _isValueEnum;
         private bool _isToken;
         private bool _defaultActiveFirstOption;
@@ -438,10 +440,13 @@ namespace AntDesign
             if (_valueHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
-                OnValueChange(_selectedValue);
                 if (Form?.ValidateOnChange == true)
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
+                else
+                {
+                    OnValueChange(_selectedValue);
                 }
             }
             base.OnParametersSet();
@@ -589,9 +594,9 @@ namespace AntDesign
                 _optionsHasInitialized = true;
             }
 
-            if (_waittingStateChange)
+            if (_waitingForStateChange)
             {
-                _waittingStateChange = false;
+                _waitingForStateChange = false;
                 StateHasChanged();
             }
 
@@ -910,7 +915,7 @@ namespace AntDesign
                     if (HideSelected)
                         result.IsHidden = true;
 
-                    _waittingStateChange = true;
+                    _waitingForStateChange = true;
                     if (SelectedOptionItems.Count == 0)
                     {
                         SelectedOptionItems.Add(result);
@@ -971,7 +976,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _waittingStateChange = true;
+                    _waitingForStateChange = true;
 
                     await InvokeValuesChanged();
                 }

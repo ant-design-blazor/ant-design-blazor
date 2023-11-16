@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.Filters;
 using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -25,9 +26,12 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
-    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
     {
-        private static readonly TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>() : (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
+            : !typeof(TItem).IsAbstract ? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
+            : default;
+
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _preventRender = false;
@@ -46,6 +50,7 @@ namespace AntDesign
                 _waitingDataSourceReload = true;
                 _dataSourceCount = value is IQueryable<TItem> ? 0 : value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
+                _fieldModel ??= _dataSource.FirstOrDefault();
             }
         }
 
@@ -77,9 +82,6 @@ namespace AntDesign
 
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
-
-        [Parameter]
-        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
 
         [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
@@ -170,6 +172,16 @@ namespace AntDesign
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
+
+        /// <summary>
+        /// Enable resizable column
+        /// </summary>
+        [Parameter] public bool Resizable { get; set; }
+
+        [Parameter]
+        public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -184,6 +196,9 @@ namespace AntDesign
 
         [Inject]
         private ILogger<Table<TItem>> Logger { get; set; }
+
+        [Inject]
+        private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -204,7 +219,9 @@ namespace AntDesign
         private int _treeExpandIconColumnIndex;
 
         private QueryModel _currentQueryModel;
-        private readonly ClassMapper _wrapperClassMapper = new ClassMapper();
+        private readonly ClassMapper _wrapperClassMapper = new();
+        private List<IGrouping<object, TItem>> _groups = [];
+
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
@@ -243,9 +260,22 @@ namespace AntDesign
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
 
+        void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
+
+        void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
+
         TableLocale ITable.Locale => this.Locale;
 
         SortDirection[] ITable.SortDirections => SortDirections;
+
+        public Table()
+        {
+            _dataSourceCache = new();
+            _rootRowDataCache = new();
+            _selectedRows = new(this);
+        }
+
+        private List<IFieldColumn> _groupedColumns = [];
 
         /// <summary>
         /// This method will be called when all columns have been set
@@ -382,8 +412,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        void ITable.ReloadAndInvokeChange()
+        void ITable.ColumnFilterChange()
         {
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -397,6 +428,7 @@ namespace AntDesign
                 }
             }
 
+            ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
@@ -439,7 +471,7 @@ namespace AntDesign
 
             if (ServerSide)
             {
-                _showItems = _dataSource;
+                _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
             else
@@ -465,33 +497,20 @@ namespace AntDesign
                 _shouldRender = true;
             }
 
+            if (_groupedColumns.Count > 0)
+            {
+                GroupItems();
+            }
+
             if (!_preventRender)
             {
                 if (_outerSelectedRows != null)
                 {
-                    _selectedRows = GetAllItemsByTopLevelItems(_showItems, true).Intersect(_outerSelectedRows).ToHashSet();
-                    if (_selectedRows.Count != _outerSelectedRows.Count())
-                    {
-                        SelectedRowsChanged.InvokeAsync(_selectedRows);
-                    }
-                }
-                else
-                {
-                    _selectedRows?.Clear();
-                }
-
-                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
-                if (removedCacheItems.Length > 0)
-                {
-                    foreach (var item in removedCacheItems)
-                    {
-                        _dataSourceCache.Remove(item);
-                    }
-                    _allRowDataCache.Clear();
+                    SetSelection(_outerSelectedRows);
                 }
             }
 
-            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
+            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
             if (_treeMode)
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
@@ -501,7 +520,7 @@ namespace AntDesign
         }
 
 #if NET5_0_OR_GREATER
-        private async ValueTask<ItemsProviderResult<(TItem, int)>> ItemsProvider(ItemsProviderRequest request)
+        private async ValueTask<ItemsProviderResult<RowData<TItem>>> ItemsProvider(ItemsProviderRequest request)
         {
             _startIndex = request.StartIndex;
             if (_total > 0)
@@ -531,9 +550,42 @@ namespace AntDesign
                 _isVirtualizeEmpty = true;
             }
 
-            return new ItemsProviderResult<(TItem, int)>(items.Select((data, index) => (data, index)), _total);
+            return new ItemsProviderResult<RowData<TItem>>(items.Select((data, index) => GetRowData(data, index, 0)), _total);
         }
 #endif
+
+        public void GroupItems()
+        {
+            if (_groupedColumns.Count == 0)
+            {
+                _groups = [];
+                StateHasChanged();
+                return;
+            }
+
+            var queryModel = BuildQueryModel();
+            var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
+
+            foreach (var column in _groupedColumns)
+            {
+                var grouping = column.Group(queryModel.CurrentPagedRecords(query));
+                _groups = [.. grouping];
+            }
+
+            StateHasChanged();
+        }
+
+        public void AddGroupColumn(IFieldColumn column)
+        {
+            this._groupedColumns.Add(column);
+            GroupItems();
+        }
+
+        public void RemoveGroupColumn(IFieldColumn column)
+        {
+            this._groupedColumns.Remove(column);
+            GroupItems();
+        }
 
         private void SetClass()
         {
@@ -550,6 +602,7 @@ namespace AntDesign
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .If($"{prefixCls}-resizable", () => Resizable)
                 ;
 
             _wrapperClassMapper
@@ -586,56 +639,8 @@ namespace AntDesign
             InitializePagination();
 
             FlushCache();
-        }
 
-        private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
-        {
-            if (items?.Any() != true) return Array.Empty<TItem>();
-            if (TreeChildren == null) return items;
-            var result = GetAllDataItemsWithParent(items.Select(x => new DataItemWithParent<TItem>
-            {
-                Data = x,
-                Parent = null
-            })).Select(x => x.Data);
-            if (onlySelectable) result = result.Where(x => RowSelectable(x));
-            return result.ToHashSet();
-
-            IEnumerable<DataItemWithParent<TItem>> GetAllDataItemsWithParent(IEnumerable<DataItemWithParent<TItem>> dataItems)
-            {
-                if (dataItems?.Any() != true) return Array.Empty<DataItemWithParent<TItem>>();
-                if (TreeChildren == null) return dataItems ?? Array.Empty<DataItemWithParent<TItem>>();
-                return dataItems.Union(
-                    dataItems.SelectMany(
-                        x1 =>
-                        {
-                            var ancestors = x1.GetAllAncestors().Select(x2 => x2.Data).ToHashSet();
-                            return GetAllDataItemsWithParent(TreeChildren(x1.Data)?.Select(x2 => new DataItemWithParent<TItem>
-                            {
-                                Data = x2,
-                                Parent = x1
-                            }).Where(x2 => !ancestors.Contains(x2.Data) && x2.Data?.Equals(x1.Data) == false));
-                        })
-                    ).ToList();
-            }
-        }
-
-        private class DataItemWithParent<T>
-        {
-            public T Data { get; set; }
-
-            public DataItemWithParent<T> Parent { get; set; }
-
-            public IEnumerable<DataItemWithParent<T>> GetAllAncestors()
-            {
-                var result = new HashSet<DataItemWithParent<T>>();
-                var parent = Parent;
-                while (parent != null)
-                {
-                    result.Add(parent);
-                    parent = parent.Parent;
-                }
-                return result;
-            }
+            FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
         protected override void OnParametersSet()
@@ -687,9 +692,9 @@ namespace AntDesign
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null)
+                if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
@@ -809,6 +814,24 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement)
         {
             _isReloading = true;
+        }
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(x).Equals(RowKey(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj) => GetHashCode(obj);
+
+        private int GetHashCode(TItem obj)
+        {
+            if (RowKey == null)
+                RowKey = data => data;
+
+            return RowKey(obj).GetHashCode();
         }
     }
 }

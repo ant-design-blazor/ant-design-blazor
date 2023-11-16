@@ -257,6 +257,12 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// EventCallback trigger on Visible was changed.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
+
+        /// <summary>
         /// <para>
         /// 在 Drawer 打开前的回调事件
         /// </para>
@@ -410,6 +416,11 @@ namespace AntDesign
                             await OnOpen.Invoke();
                         }
 
+                        if (Visible == false && VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(true);
+                        }
+
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {
@@ -443,7 +454,6 @@ namespace AntDesign
             await base.OnAfterRenderAsync(isFirst);
         }
 
-        private Timer _timer;
         private int _zIndex = DefaultZIndez;
         private string _zIndexStyle = "";
 
@@ -453,7 +463,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task MaskClick(MouseEventArgs _)
         {
-            if (MaskClosable && Mask && OnClose.HasDelegate)
+            if (MaskClosable && Mask)
             {
                 await HandleClose();
             }
@@ -465,12 +475,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task CloseClick()
         {
-            if (OnClose.HasDelegate)
-            {
-                _timer?.Dispose();
-
-                await HandleClose();
-            }
+            await HandleClose();
         }
 
         /// <summary>
@@ -481,9 +486,13 @@ namespace AntDesign
         private async Task HandleClose(bool isChangeByParamater = false)
         {
             _hasInvokeClosed = true;
-            if (!isChangeByParamater)
+            if (!isChangeByParamater && OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(this);
+            }
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(false);
             }
             await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
         }
@@ -510,8 +519,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _timer?.Dispose();
-
             if (_isOpen)
             {
                 _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);

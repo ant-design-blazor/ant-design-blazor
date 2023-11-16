@@ -43,20 +43,17 @@ namespace AntDesign
             set => Navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
         }
 
-        private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ToArray();
-
-        public ReuseTabs()
-        {
-            this.ScanReuseTabsPageAttribute();
-        }
+        private ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore).OrderBy(x => x.CreatedAt).ThenBy(x => x.Order).ToArray();
 
         protected override void OnInitialized()
         {
+            this.ScanReuseTabsPageAttribute();
             ReuseTabsService.OnClosePage += RemovePage;
             ReuseTabsService.OnCloseOther += RemoveOther;
             ReuseTabsService.OnCloseAll += RemoveAll;
             ReuseTabsService.OnCloseCurrent += RemoveCurrent;
             ReuseTabsService.OnUpdate += UpdateState;
+            ReuseTabsService.OnReloadPage += ReloadPage;
         }
 
         protected override void Dispose(bool disposing)
@@ -66,6 +63,7 @@ namespace AntDesign
             ReuseTabsService.OnCloseAll -= RemoveAll;
             ReuseTabsService.OnCloseCurrent -= RemoveCurrent;
             ReuseTabsService.OnUpdate -= UpdateState;
+            ReuseTabsService.OnReloadPage -= ReloadPage;
 
             base.Dispose(disposing);
         }
@@ -81,7 +79,6 @@ namespace AntDesign
                     {
                         Url = CurrentUrl,
                         CreatedAt = DateTime.Now,
-                        Ignore = false
                     };
 
                     _pageMap[CurrentUrl] = reuseTabsPageItem;
@@ -132,6 +129,8 @@ namespace AntDesign
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
+                pageItem.KeepAlive = attr.KeepAlive;
+                pageItem.Order = attr.Order;
             }
 
             pageItem.Title ??= url.ToRenderFragment();
@@ -141,19 +140,13 @@ namespace AntDesign
         /// 获取所有程序集
         /// </summary>
         /// <returns></returns>
-        protected IEnumerable<Assembly> GetAllAssembly()
+        private IEnumerable<Assembly> GetAllAssembly()
         {
             IEnumerable<Assembly> assemblies = new List<Assembly>();
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly == null) return assemblies;
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
-
-            var paths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
-                .Where(w => w.EndsWith(".dll") && !w.Contains(nameof(Microsoft)))
-                .Select(w => w)
-             ;
-
             return assemblies;
         }
 
@@ -170,21 +163,20 @@ namespace AntDesign
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
-                    var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
-                    var reuseTabsPageAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
-
-                    this.AddReuseTabsPageItem(routeAttribute.Template, pageType);
+                    this.AddReuseTabsPageItem(pageType);
                 }
             }
         }
 
-        public void AddReuseTabsPageItem(string url, Type pageType)
+        private void AddReuseTabsPageItem(Type pageType)
         {
-            if (_pageMap.ContainsKey(url)) return;
+            var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
+            var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
+            var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
             var reuseTabsPageItem = new ReuseTabsPageItem();
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
-            reuseTabsPageItem.CreatedAt = DateTime.Now;
+            reuseTabsPageItem.CreatedAt = DateTime.MinValue;
             reuseTabsPageItem.Url = url;
             _pageMap[url] = reuseTabsPageItem;
         }
@@ -229,14 +221,23 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void ReloadPage(string key)
+        {
+            key ??= CurrentUrl;
+            _pageMap[key].Body = null;
+            if (CurrentUrl == key)
+            {
+                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation. 
+            }
+            StateHasChanged();
+        }
 
-
-        public void RemovePageBase(string key)
+        private void RemovePageBase(string key)
         {
             _pageMap.Remove(key);
         }
 
-        public void RemovePageWithRegex(string pattern)
+        private void RemovePageWithRegex(string pattern)
         {
             foreach (var key in _pageMap.Keys)
             {

@@ -1,0 +1,50 @@
+﻿@using System.ComponentModel
+@using AntDesign.TableModels
+
+<Table DataSource="@data" Resizable>
+    <PropertyColumn Property="c=>c.Date" />
+    <PropertyColumn Property="c=>c.Amount" SorterCompare="(a,b)=>a-b"/>
+    <PropertyColumn Property="c=>c.Type" />
+    <PropertyColumn Property="c=>c.Note" />
+    <ActionColumn Title="Action">
+        <a>Delete</a>
+    </ActionColumn>
+</Table>
+
+@code {
+    Data[] data = new Data[]
+    {
+        new()
+        {
+            Date = "2018-02-11",
+            Amount = 120,
+            Type="income",
+            Note="transfer"
+        },
+        new()
+        {
+            Date = "2018-03-11",
+            Amount = 243,
+            Type="income",
+            Note="transfer"
+        },
+        new()
+        {
+            Date = "2018-04-11",
+            Amount = 98,
+            Type="income",
+            Note="transfer"
+        }
+    };
+
+    public class Data
+    {
+        public string Date { get; set; }
+
+        public int Amount { get; set; }
+
+        public string Type { get; set; }
+
+        public string Note { get; set; }
+    }
+}

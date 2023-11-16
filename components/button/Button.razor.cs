@@ -24,11 +24,10 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-
                 Size = value;
             }
         }
-        
+
         /// <summary>
         /// Sets the value of the aria-label attribute
         /// </summary>
@@ -82,7 +81,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
-        
+
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
@@ -160,6 +159,9 @@ namespace AntDesign
 
         private async Task HandleOnClick(MouseEventArgs args)
         {
+            if (Loading)
+                return;
+
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(args);
@@ -171,13 +173,10 @@ namespace AntDesign
             if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button
             this._animating = true;
 
-            await Task.Run(async () =>
-            {
-                await Task.Delay(RemoveAnimationAfter);
-                this._animating = false;
+            await Task.Delay(RemoveAnimationAfter);
+            this._animating = false;
 
-                await InvokeAsync(StateHasChanged);
-            });
+            await InvokeAsync(StateHasChanged);
         }
 
         private void SetButtonColorStyle()

@@ -92,7 +92,7 @@ export class resizeObserver {
 
           }
 
-          mEntry.target = entry.target
+          //mEntry.target = entry.target
           mappedEntries.push(mEntry)
         }
       })

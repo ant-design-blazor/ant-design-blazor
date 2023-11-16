@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: 数据展示
@@ -29,6 +29,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 - **Selection** 用来开启选择列，并提供选择框。
 
 ## API
+
+### TItem 泛型类型
+
+从 0.16.0 开始，Table 已支持普通类、record、接口和抽象类作为 DataSource 的类型。但有几点需要说明：
+
+- 当使用 record 且有属性值变化，请重写 `GetHasCode()` 方法，或者用 Table 的 `RowKey`，否则内部对每列保持的状态会无法正确工作。[#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
+- 当使用抽象类时，首次渲染会等待 DataSource 获得元素，并取第一个来初始化。[#3471](https://github.com/ant-design-blazor/ant-design-blazor/issues/3471)
+
 ### Table
 | 参数             | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
@@ -56,13 +64,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | IndentSize | 展示树形数据时，每层缩进的宽度，以 px 为单位 | int | 15 |
 | ExpandIconColumnIndex | 自定义展开图标所在列索引 | int | - |
 | RowClassName | 表格行的类名 | Func<RowData<TItem>, string> | _ => "" |
+| RowKey | 设置比对 Key 来设置默认选中行，作用跟给 TItem 实现重写 `GetHashCode()` 一致。否则默认按引用来比对。 | Func<TItem, object> | - |
 | ExpandedRowClassName | 展开行的 className | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | 点击展开图标时触发 | EventCallback<RowData<TItem>> | - |
 | SortDirections | 支持的排序方式，覆盖 Table 中 sortDirections | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
 | TableLayout | 表格元素的 table-layout 属性，设为 fixed 表示内容不会影响列的布局 | string | - |
 | OnRowClick | 行点击事件(于antd v3中已废弃) | EventCallback<RowData<TItem>> | - |
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
-
+| Resizable | 启用可伸缩列 | bool | false |
+| FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
 
 ### Column
 
@@ -84,7 +94,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filterable | 是否显示筛选器 | bool | false |
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
+| FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
+| FieldFilterType | 筛选器配置 ，可用于自定义额外的筛选器 | `IFieldFilterType` | 由 `FieldFilterTypeResolver` 根据类型解析内置筛选器 |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
+
 
 ### PropertyColumn
 
@@ -93,7 +106,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | 参数              | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
-
 
 
 ### 响应式

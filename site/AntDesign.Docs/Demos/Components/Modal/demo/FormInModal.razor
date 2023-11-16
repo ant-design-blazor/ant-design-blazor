@@ -4,10 +4,10 @@
     Open Modal with a Form
 </Button>
 <Modal Title="@("BasicModal")"
-       Visible="@_visible"
+       @bind-Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@model"
+    <Form Model="@model"
           LabelColSpan="8"
           WrapperColSpan="16"
           OnFinish="OnFinish"
@@ -24,7 +24,12 @@
 
 @code {
 
-    #region original form coding
+    bool _visible = false;
+    bool _submitting = false;
+    private Form<Model> _form;
+
+    private Model model = new Model();
+
     public class Model
     {
         [Required]
@@ -34,43 +39,26 @@
         public bool RememberMe { get; set; } = true;
     }
 
-    private Model model = new Model();
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
-    }
-
-    bool loading = false;
-
-    void toggle(bool value) => loading = value;
-
-    #endregion
-
-    #region original modal coding
-
-    bool _visible = false;
-
     private void ShowModal()
     {
         _visible = true;
     }
 
-    private void HandleCancel(MouseEventArgs e)
+    /// <summary>
+    /// on modal OK button is click, submit form manually
+    /// </summary>
+    /// <param name="e"></param>
+    private async Task HandleOk(MouseEventArgs e)
     {
-        Console.WriteLine("e");
-        _visible = false;
+        _submitting = true;
+        await Task.Delay(1000);
+        _form.Submit();
     }
 
-    #endregion
-
-    /*
-     * Careful! 
-     * 
-     * next bind submit event to modal OK button 
-     */
-
-    private Form<Model> _form;
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+    }
 
     /// <summary>
     /// when form is submited, close the modal
@@ -78,16 +66,12 @@
     /// <param name="args"></param>
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine("e");
+        _submitting = false;
         _visible = false;
     }
 
-    /// <summary>
-    /// on modal OK button is click, submit form manually
-    /// </summary>
-    /// <param name="e"></param>
-    private void HandleOk(MouseEventArgs e)
+    private void OnFinishFailed(EditContext editContext)
     {
-        _form.Submit();
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
     }
 }

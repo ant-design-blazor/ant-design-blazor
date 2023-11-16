@@ -1,20 +1,25 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data" OnRow="OnRow" RowClassName="@(x => x.Data.RowClass)">
-    <PropertyColumn Property="c=>c.Name">
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" ScrollX="1000" RowClassName="@(x => x.Data.Score < 70 ? "danger" : "" )">
+    <PropertyColumn Property="c=>c.Name" Fixed="left">
         <a>@context.Name</a>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Score"></PropertyColumn>
 </Table>
 
 <style>
-    .danger {
-        background-color: #fff1f0;
+    .danger, .danger > td {
+        background-color: #ffccc7 !important;
     }
+
+        .danger:hover, .danger:hover > td {
+            background-color: #ffa39e !important;
+        }
 </style>
 
-@code{
+
+@code {
     Data[] data = new Data[]
     {
         new()
@@ -47,8 +52,6 @@
 
         [DisplayName("Score")]
         public int Score { get; set; }
-
-        public string RowClass => Score < 70 ? "danger" : "";
     }
 
     Dictionary<string, object> OnRow(RowData<Data> row)

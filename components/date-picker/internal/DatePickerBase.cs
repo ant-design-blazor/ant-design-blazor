@@ -4,10 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
+using AntDesign.Core;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using OneOf;
 
@@ -15,6 +17,7 @@ namespace AntDesign
 {
     public abstract class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
+        protected readonly IInputMaskConverter InputMaskConverter = new DateTimeInputMaskConverter();
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
@@ -23,6 +26,12 @@ namespace AntDesign
 
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
+
+        /// <summary>
+        /// Saving the input value after blur
+        /// </summary>
+        [Parameter]
+        public bool ChangeOnClose { get; set; }
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -38,15 +47,7 @@ namespace AntDesign
             {
                 if (!_isNullableEvaluated)
                 {
-                    Type type = typeof(TValue);
-                    if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-                    {
-                        _isNullable = true;
-                    }
-                    else
-                    {
-                        _isNullable = false;
-                    }
+                    _isNullable = InternalConvert.IsNullable<TValue>();
                     _isNullableEvaluated = true;
                 }
                 return _isNullable;
@@ -91,6 +92,9 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowToday { get; set; } = true;
+
+        [Parameter]
+        public string Mask { get; set; }
 
         [Parameter]
         public DatePickerLocale Locale
@@ -233,7 +237,7 @@ namespace AntDesign
         public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
-        public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs<TValue>> OnPanelChange { get; set; }
 
         [Parameter]
         public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
@@ -260,16 +264,20 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        /// <summary>
+        /// The position where the selection box pops up
+        /// </summary>
+        [Parameter] public Placement Placement { get; set; } = Placement.BottomLeft;
+
         public DateTime CurrentDate { get; set; } = DateTime.Today;
 
-        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Today, DateTime.Today };
+        protected DateTime[] PickerValues { get; } = { DateTime.Today, DateTime.Today };
 
         public bool IsRange { get; protected set; }
 
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
-        protected bool _duringFocus;
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -326,7 +334,7 @@ namespace AntDesign
 
             if (_placeholder.Value is null)
             {
-                _placeholder = IsRange ? new string[] { } : string.Empty;
+                _placeholder = IsRange ? Array.Empty<string>() : string.Empty;
             }
 
             this.SetClass();
@@ -430,16 +438,21 @@ namespace AntDesign
 
         protected string GetInputValue(int index = 0)
         {
-            DateTime? tryGetValue = GetIndexValue(index);
+            var inputValue = index == 0 ? _inputStart?.Value : _inputEnd?.Value;
 
-            if (tryGetValue == null)
+            if (_duringManualInput && !string.IsNullOrEmpty(Mask))
             {
-                return "";
+                return inputValue;
             }
 
-            DateTime value = (DateTime)tryGetValue;
+            var tryGetValue = GetIndexValue(index);
 
-            return GetFormatValue(value, index);
+            if (tryGetValue is null)
+            {
+                return string.Empty;
+            }
+
+            return GetFormatValue(tryGetValue.Value, index);
         }
 
         protected void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
@@ -462,6 +475,71 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
+        protected virtual void OnInput(ChangeEventArgs args, int index = 0)
+        {
+            if (args == null)
+            {
+                return;
+            }
+
+            if (!_duringManualInput)
+            {
+                _duringManualInput = true;
+            }
+
+            var newValue = args.Value.ToString();
+            var hasMask = !string.IsNullOrEmpty(Mask);
+
+            if (hasMask)
+            {
+                newValue = InputMaskConverter.Convert(newValue, Mask);
+
+                if (index == 0)
+                {
+                    _inputStart.Value = newValue;
+                }
+                else
+                {
+                    _inputEnd.Value = newValue;
+                }
+            }
+
+            if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, Mask))
+            {
+                if (IsDisabledDate(parsedValue))
+                {
+                    return;
+                }
+
+                _pickerStatus[index].SelectedValue = InternalConvert.SetKind<TValue>(parsedValue);
+                ChangePickerValue(parsedValue, index);
+
+                if (hasMask)
+                {
+                    ChangeValue(parsedValue, index);
+                }
+            }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
+        }
+
+        protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
+        {
+            var indexValue = value is Array array ? array.GetValue(index) : value;
+
+            if (indexValue is not null)
+            {
+                var dateTime = InternalConvert.ToDateTime(indexValue);
+
+                if (dateTime != DateTime.MinValue)
+                {
+                    notNullAction?.Invoke(dateTime.Value);
+                }
+            }
+        }
+
         protected virtual async Task OnSelect(DateTime date, int index)
         {
             _duringManualInput = false;
@@ -478,7 +556,6 @@ namespace AntDesign
                     {
                         if (IsValidRange(date, index))
                         {
-
                             ChangeValue(date, index, false);
 
                             var otherIndex = Math.Abs(index - 1);
@@ -558,14 +635,14 @@ namespace AntDesign
         internal void OnRangeItemOver(DateTime?[] range)
         {
             _swpValue = Value;
-            Value = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            Value = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
         }
 
         internal void OnRangeItemOut(DateTime?[] range) => Value = _swpValue;
 
         internal void OnRangeItemClicked(DateTime?[] range)
         {
-            _swpValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            _swpValue = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             ChangeValue((DateTime)range[0], 0);
             ChangeValue((DateTime)range[1], 1);
             Close();
@@ -593,7 +670,13 @@ namespace AntDesign
             return true;
         }
 
-        protected abstract Task OnBlur(int index);
+        protected virtual async Task OnBlur(int index)
+        {
+            if (ChangeOnClose && _duringManualInput)
+            {
+                ChangeValue(_pickerStatus[index].SelectedValue.Value);
+            }
+        }
 
         protected void InitPicker(string picker)
         {
@@ -699,7 +782,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public DateTime GetIndexPickerValue(int index)
+        internal DateTime GetIndexPickerValue(int index)
         {
             int tempIndex = GetOnFocusPickerIndex();
 
@@ -831,7 +914,8 @@ namespace AntDesign
                     _ => InternalFormat,
                 };
             else
-                format = InternalFormat;
+                format = Format;
+
             return value.ToString(format, CultureInfo);
         }
 
@@ -846,6 +930,7 @@ namespace AntDesign
                 index = GetOnFocusPickerIndex();
 
             PickerValues[index.Value] = date;
+
             if (IsRange)
             {
                 if (!UseDefaultPickerValue[1] && !_pickerStatus[1].IsValueSelected && index == 0)
@@ -858,14 +943,7 @@ namespace AntDesign
                 }
             }
 
-            if (OnPanelChange.HasDelegate)
-            {
-                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = PickerValues[index.Value],
-                    DateString = _picker
-                });
-            }
+            InvokeOnPanelChange(date);
 
             StateHasChanged();
         }
@@ -880,14 +958,7 @@ namespace AntDesign
             _prePickerStack.Push(_picker);
             _picker = type;
 
-            if (OnPanelChange.HasDelegate)
-            {
-                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = PickerValues[index],
-                    DateString = _picker
-                });
-            }
+            InvokeOnPanelChange(PickerValues[index]);
 
             StateHasChanged();
         }
@@ -897,6 +968,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
+        /// <param name="closeDropdown"></param>
         public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
         public abstract void ClearValue(int index = 0, bool closeDropdown = true);
@@ -909,33 +981,41 @@ namespace AntDesign
             {
                 return value;
             }
-            TValue orderedValue = value;
-            if (IsRange)
-            {
-                if (IsNullable)
-                {
-                    var tempValue = value as DateTime?[];
-                    if (tempValue[0] == null || tempValue[1] == null)
-                        return orderedValue;
 
-                    if ((tempValue[0] ?? DateTime.Now).CompareTo((tempValue[1] ?? DateTime.Now)) > 0)
-                        orderedValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { tempValue[1], tempValue[0] });
-                }
-                else
-                {
-                    var tempValue = value as DateTime[];
-                    if (tempValue[0].CompareTo(tempValue[1]) > 0)
-                        orderedValue = DataConvertionExtensions.Convert<DateTime[], TValue>(new DateTime[] { tempValue[1], tempValue[0] });
-                }
+            if (!IsRange)
+            {
+                return value;
             }
-            return orderedValue;
+
+            if (value is not Array valueArray)
+            {
+                return value;
+            }
+
+            Array.Sort(valueArray);
+
+            return value;
         }
 
         protected void InvokeInternalOverlayVisibleChanged(bool visible)
         {
             var index = GetOnFocusPickerIndex();
 
-            _pickerStatus[index].SelectedValue = null;
+            if (!visible && ChangeOnClose)
+            {
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else
+                {
+                    ClearValue(index);
+                }
+            }
+            else
+            {
+                _pickerStatus[index].SelectedValue = null;
+            }
 
             if (IsRange)
             {
@@ -1009,5 +1089,37 @@ namespace AntDesign
         }
 
         protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
+
+        protected void ToDateTimeOffset(DateTime value, out DateTimeOffset? currentValue, out DateTimeOffset newValue)
+        {
+            var defaultValue = InternalConvert.ToDateTimeOffset(DefaultValue);
+
+            currentValue = InternalConvert.ToDateTimeOffset(CurrentValue);
+
+            var offset = TimeSpan.Zero;
+
+            if (InternalConvert.IsDateTimeOffsetType<TValue>())
+            {
+                offset = defaultValue?.Offset ?? currentValue?.Offset ?? TimeSpan.Zero;
+            }
+
+            newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), offset);
+        }
+
+        private void InvokeOnPanelChange(DateTime date)
+        {
+            if (!OnPanelChange.HasDelegate)
+            {
+                return;
+            }
+
+            ToDateTimeOffset(date, out _, out DateTimeOffset newValue);
+
+            OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
+            {
+                Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
+                DateString = _picker
+            });
+        }
     }
 }
