@@ -15,6 +15,25 @@ timeline: true
 
 ---
 
+### 0.16.2
+
+`2023-11-17`
+
+- 🔥 更新 .NET 8 依赖库。[#3514](https://github.com/ant-design-blazor/ant-design-blazor/pull/3514) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 新增 Table 行分组（实验性）。[#3487](https://github.com/ant-design-blazor/ant-design-blazor/pull/3487) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 Table 把 RenderMode t重命名为 RerenderStrategy。[#3515](https://github.com/ant-design-blazor/ant-design-blazor/pull/3515) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 行选择的多个问题。[#3502](https://github.com/ant-design-blazor/ant-design-blazor/pull/3502) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 设置 RowKey 用于行缓存的数据比较器。[#3483](https://github.com/ant-design-blazor/ant-design-blazor/pull/3483) [@ElderJames](https://github.com/ElderJames)
+  - 📖 修复 文档中路由翻页的demo。[#3507](https://github.com/ant-design-blazor/ant-design-blazor/pull/3507) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 在被封装并在设置了 ValidateOnChange 的Form中时，已选项会被重置的问题。[#3508](https://github.com/ant-design-blazor/ant-design-blazor/pull/3508) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 TimePicker 设置了 TiemOnly 类型值时，修改时间时的 ArgumentOutOfRangeException 异常。[#3501](https://github.com/ant-design-blazor/ant-design-blazor/pull/3501) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 TreeSelect 当数据源变更时恢复绑定项。[#3492](https://github.com/ant-design-blazor/ant-design-blazor/pull/3492) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 RangePicker 焦点样式不清除和Tab/Enter按键会清除选中值的问题 。[#3488](https://github.com/ant-design-blazor/ant-design-blazor/pull/3488) [@Alexbits](https://github.com/Alexbits)
+
+
 ### 0.16.1
 
 `2023-10-30`
