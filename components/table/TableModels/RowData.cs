@@ -19,7 +19,7 @@ namespace AntDesign.TableModels
         /// <summary>
         /// hold the state of children rows
         /// </summary>
-        public Dictionary<TItem, RowData<TItem>> Children { get; set; }
+        public Dictionary<int, RowData<TItem>> Children { get; set; }
 
         public RowData()
         { }
@@ -27,6 +27,17 @@ namespace AntDesign.TableModels
         public RowData(TableDataItem<TItem> dataItem)
         {
             DataItem = dataItem;
+        }
+
+        protected override void CheckedChildren(bool isSelected, bool checkStrictly)
+        {
+            if (Children?.Any() != true)
+                return;
+
+            foreach (var item in Children)
+            {
+                item.Value.SetSelected(isSelected, checkStrictly);
+            }
         }
     }
 
@@ -63,13 +74,25 @@ namespace AntDesign.TableModels
 
         public abstract TableDataItem TableDataItem { get; }
 
-        public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
+        public bool Selected { get => TableDataItem.Selected; }
 
         public event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {
             _expanded = expanded;
+        }
+
+        protected abstract void CheckedChildren(bool isSelected, bool checkStrictly);
+
+        internal void SetSelected(bool isSelected, bool checkStrictly)
+        {
+            TableDataItem.SetSelected(isSelected);
+
+            if (checkStrictly)
+            {
+                CheckedChildren(isSelected, checkStrictly);
+            }
         }
     }
 
@@ -81,8 +104,6 @@ namespace AntDesign.TableModels
         public Table<TItem> Table { get; set; }
 
         public IEnumerable<TItem> Children { get; set; }
-
-        public RowData<TItem> RowData { get; set; }
 
         public TableDataItem()
         {
@@ -98,7 +119,6 @@ namespace AntDesign.TableModels
 
         protected override void OnSelectedChanged(bool value)
         {
-            base.OnSelectedChanged(value);
             Table.DataItemSelectedChanged(this, value);
         }
     }
@@ -111,30 +131,22 @@ namespace AntDesign.TableModels
     /// <br/>
     /// For row specific data, see <see cref="RowData"/>.
     /// </summary>
-    public class TableDataItem
+    public abstract class TableDataItem
     {
         private bool _selected;
 
         public bool Selected
         {
             get => _selected;
-            set
-            {
-                if (_selected != value)
-                {
-                    OnSelectedChanged(value);
-                }
-            }
         }
+
+        public bool Disabled { get; set; }
 
         public virtual bool HasChildren { get; set; }
 
         public event Action<TableDataItem, bool> SelectedChanged;
 
-        protected virtual void OnSelectedChanged(bool value)
-        {
-            SetSelected(value);
-        }
+        protected abstract void OnSelectedChanged(bool value);
 
         internal void SetSelected(bool selected, bool triggersSelectedChanged = true)
         {
@@ -144,6 +156,9 @@ namespace AntDesign.TableModels
             }
 
             _selected = selected;
+
+            OnSelectedChanged(_selected);
+
             if (triggersSelectedChanged)
                 SelectedChanged?.Invoke(this, _selected);
         }

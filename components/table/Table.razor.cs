@@ -84,9 +84,6 @@ namespace AntDesign
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
         [Parameter]
-        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
-
-        [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         [Parameter]
@@ -273,8 +270,9 @@ namespace AntDesign
 
         public Table()
         {
-            _dataSourceCache = new(this);
-            _rootRowDataCache = new(this);
+            _dataSourceCache = new();
+            _rootRowDataCache = new();
+            _selectedRows = new(this);
         }
 
         private List<IFieldColumn> _groupedColumns = [];
@@ -473,7 +471,7 @@ namespace AntDesign
 
             if (ServerSide)
             {
-                _showItems = _dataSource;
+                _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
             else
@@ -509,16 +507,6 @@ namespace AntDesign
                 if (_outerSelectedRows != null)
                 {
                     SetSelection(_outerSelectedRows);
-                }
-                else
-                {
-                    _selectedRows?.Clear();
-                }
-
-                var removedCacheItems = _dataSourceCache.Keys.Except(_showItems).ToArray();
-                foreach (var item in removedCacheItems)
-                {
-                    _dataSourceCache.Remove(item);
                 }
             }
 
@@ -653,33 +641,6 @@ namespace AntDesign
             FlushCache();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
-        }
-
-        private IEnumerable<TItem> GetAllItemsByTopLevelItems(IEnumerable<TItem> items, bool onlySelectable = false)
-        {
-            if (items?.Any() != true) return Array.Empty<TItem>();
-            if (TreeChildren != null)
-            {
-                var itemsSet = new HashSet<TItem>();
-                AddAllItemsAndChildren(items);
-                items = itemsSet;
-
-                void AddAllItemsAndChildren(IEnumerable<TItem> itemsToAdd)
-                {
-                    if (itemsToAdd is null)
-                        return;
-                    foreach (TItem item in itemsToAdd)
-                    {
-                        if (!itemsSet.Add(item))
-                            continue;
-
-                        AddAllItemsAndChildren(TreeChildren(item));
-                    }
-                }
-            }
-
-            if (onlySelectable) items = items.Where(x => RowSelectable(x));
-            return items;
         }
 
         protected override void OnParametersSet()
@@ -863,76 +824,14 @@ namespace AntDesign
             return RowKey(x).Equals(RowKey(y));
         }
 
-        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj) => GetHashCode(obj);
+
+        private int GetHashCode(TItem obj)
         {
             if (RowKey == null)
                 RowKey = data => data;
 
             return RowKey(obj).GetHashCode();
-        }
-
-        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level)
-        {
-            var groupRowData = new RowData<TItem>()
-            {
-                Key = grouping.Key.ToString(),
-                IsGrouping = true,
-                DataItem = new TableDataItem<TItem>
-                {
-                    HasChildren = true,
-                    Table = this,
-                    Children = grouping
-                },
-                Children = grouping.Select((data, index) => GetRowData(data, index, level)).ToDictionary(x => x.Data, x => x)
-            };
-
-            groupRowData.DataItem.RowData = groupRowData;
-            return groupRowData;
-        }
-
-        private RowData<TItem> GetRowData(TItem data, int index, int level)
-        {
-            int rowIndex;
-            if (level == 0)
-            {
-                rowIndex = PageSize * (PageIndex - 1) + index + 1;
-            }
-            else
-            {
-                rowIndex = index + 1;
-            }
-
-            if (!_dataSourceCache.TryGetValue(data, out var currentDataItem) || currentDataItem == null)
-            {
-                currentDataItem = new TableDataItem<TItem>(data, this);
-                currentDataItem.SetSelected(SelectedRows.Contains(data), triggersSelectedChanged: false);
-                _dataSourceCache.Add(data, currentDataItem);
-            }
-
-            // this row cache may be for children rows
-            var rowCache = currentDataItem.RowData?.Children ?? _rootRowDataCache;
-
-            if (rowCache!.TryGetValue(data, out var currentRowData) || currentRowData == null)
-            {
-                currentRowData = new RowData<TItem>(currentDataItem)
-                {
-                    Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
-                };
-                rowCache[data] = currentRowData;
-
-                currentDataItem.RowData ??= currentRowData;
-            }
-
-            if (currentDataItem.HasChildren && currentRowData.Expanded)
-            {
-                currentRowData.Children = new(this);
-            }
-
-            currentRowData.Level = level;
-            currentRowData.RowIndex = rowIndex;
-            currentRowData.PageIndex = PageIndex;
-
-            return currentRowData;
         }
     }
 }
