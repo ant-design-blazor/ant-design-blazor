@@ -31,6 +31,8 @@ namespace AntDesign
 
         private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
 
+        public bool Selected => DataItem.Selected;
+
         private bool? _selected;
 
         private void OnCheckedChange(bool selected)
@@ -54,7 +56,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    DataItem.Selected = selected;
+                    RowData.SetSelected(selected, CheckStrictly);
                 }
             }
         }
@@ -76,6 +78,7 @@ namespace AntDesign
             else if (IsBody)
             {
                 Table?.Selection?.RowSelections.Add(this);
+                DataItem.Disabled = Disabled;
             }
         }
 
