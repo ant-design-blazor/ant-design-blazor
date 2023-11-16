@@ -16,7 +16,7 @@ Ant Design of Blazor 致力于提供给程序员**愉悦**的开发体验。
 
 ### 创建一个 Blazor WebAssembly 项目
 
-> 在创建项目之前，请确保 `.NET Core SDK 3.1.300+` 已被成功安装。
+> 在创建项目之前，请确保 `.NET Core SDK 8.0.100+` 已被成功安装。
 
 执行以下命令，`dotnet cli` 会在当前目录下新建一个名称为 `PROJECT-NAME` 的文件夹，并自动安装好相应依赖。
 
