@@ -10,9 +10,7 @@
             Open Modal
         </Button>
         <Modal Title="@_title"
-               Visible="@_visible"
-               OnOk="@HandleOk"
-               OnCancel="@HandleCancel"
+               @bind-Visible="@_visible"
                OkText="@_okText"
                CancelText="@_cancelText"
                >
@@ -47,17 +45,6 @@
     string _title = "Override Locale";
     bool _visible = false;
 
-    private void HandleOk(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
 
     private async Task OpenConfirm()
     {

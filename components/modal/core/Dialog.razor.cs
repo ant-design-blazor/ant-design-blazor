@@ -31,6 +31,9 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; }
 
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
+
 #pragma warning restore 1591
 
         #endregion Parameters
@@ -229,6 +232,10 @@ namespace AntDesign
             {
                 return;
             }
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(false);
+            }
             if (Config.OnCancel != null)
             {
                 await Config.OnCancel.Invoke(null);
@@ -330,11 +337,17 @@ namespace AntDesign
             {
                 _hasShow = false;
 
+                if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+
                 _maskAnimationClsName = ModalAnimation.MaskLeave;
                 _modalAnimationClsName = ModalAnimation.ModalLeave;
                 await Task.Delay(200);
                 _wrapStyle = "display: none;";
                 _maskHideClsName = "ant-modal-mask-hidden";
+
                 await InvokeStateHasChangedAsync();
                 if (Config.OnClosed != null)
                 {

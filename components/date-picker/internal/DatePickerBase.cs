@@ -278,7 +278,6 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
-        protected bool _duringFocus;
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -1097,7 +1096,12 @@ namespace AntDesign
 
             currentValue = InternalConvert.ToDateTimeOffset(CurrentValue);
 
-            var offset = defaultValue?.Offset ?? currentValue?.Offset ?? DateTimeOffset.Now.Offset;
+            var offset = TimeSpan.Zero;
+
+            if (InternalConvert.IsDateTimeOffsetType<TValue>())
+            {
+                offset = defaultValue?.Offset ?? currentValue?.Offset ?? TimeSpan.Zero;
+            }
 
             newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), offset);
         }

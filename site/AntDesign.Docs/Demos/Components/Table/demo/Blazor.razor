@@ -9,7 +9,9 @@
        @bind-PageSize="_pageSize"
        @bind-SelectedRows="selectedRows"
        OnChange="OnChange"
-       Size="TableSize.Small">
+       Size="TableSize.Small"
+       RowKey="x=>x.Id"
+      >
   <Selection Key="@(context.Id.ToString())" />
   <PropertyColumn Property="c=>c.Id" Sortable />
   <PropertyColumn Property="c=>c.Date" Format="yyyy-MM-dd" Sortable />

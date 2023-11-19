@@ -29,10 +29,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 - **Selection** 用来开启选择列，并提供选择框。
 
 ## API
+
+### TItem 泛型类型
+
+从 0.16.0 开始，Table 已支持普通类、record、接口和抽象类作为 DataSource 的类型。但有几点需要说明：
+
+- 当使用 record 且有属性值变化，请重写 `GetHasCode()` 方法，或者用 Table 的 `RowKey`，否则内部对每列保持的状态会无法正确工作。[#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
+- 当使用抽象类时，首次渲染会等待 DataSource 获得元素，并取第一个来初始化。[#3471](https://github.com/ant-design-blazor/ant-design-blazor/issues/3471)
+
 ### Table
 | 参数             | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
-| RenderMode | 渲染模式 | [RenderMode](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RenderMode.cs) | RenderMode.Always |
+| RerenderStrategy | 重新渲染策略。可用来指定只有当有组件属性被修改时才重新渲染。 | [RerenderStrategy](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RerenderStrategy.cs) | RerenderStrategy.Always |
 | RowTemplate | 行模板 | RenderFragment | - |
 | ExpandTemplate | 展开内容模板 | RenderFragment<RowData<TItem>> | - |
 | DataSource | 数据来源 | IEnumerable<TItem> | - |
@@ -56,7 +64,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | IndentSize | 展示树形数据时，每层缩进的宽度，以 px 为单位 | int | 15 |
 | ExpandIconColumnIndex | 自定义展开图标所在列索引 | int | - |
 | RowClassName | 表格行的类名 | Func<RowData<TItem>, string> | _ => "" |
-| RowKey | 设置比对 Key 来设置默认选中行。否则默认按引用来比对。 | Func<TItem, object> | - |
+| RowKey | 设置比对 Key 来设置默认选中行，作用跟给 TItem 实现重写 `GetHashCode()` 一致。否则默认按引用来比对。 | Func<TItem, object> | - |
 | ExpandedRowClassName | 展开行的 className | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | 点击展开图标时触发 | EventCallback<RowData<TItem>> | - |
 | SortDirections | 支持的排序方式，覆盖 Table 中 sortDirections | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
