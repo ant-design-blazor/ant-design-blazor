@@ -29,6 +29,39 @@
 	<TreeNode Title="0-2" Key="0-2" TItem="string"></TreeNode>
 </Tree>
 
+<br/>
+
+<Tree
+	  Checkable
+	  TItem="string"
+	  @bind-ExpandedKeys="expandedKeys"
+	  @bind-CheckedKeys="checkedKeys"
+	  @bind-SelectedKeys="selectedKeys"
+	  OnExpand="OnExpand"
+	  OnSelect="OnSelect"
+	  OnCheck="OnCheck"
+	  AutoExpandParent="autoExpandParent">
+	<TreeNode Title="0-0" Key="0-0" TItem="string">
+		<TreeNode Title="0-0-0" Key="0-0-0" TItem="string">
+			<TreeNode Title="0-0-0-0" Key="0-0-0-0" TItem="string"></TreeNode>
+			<TreeNode Title="0-0-0-1" Key="0-0-0-1" TItem="string"></TreeNode>
+			<TreeNode Title="0-0-0-2" Key="0-0-0-2" TItem="string"></TreeNode>
+		</TreeNode>
+		<TreeNode Title="0-0-1" Key="0-0-1" TItem="string">
+			<TreeNode Title="0-0-1-0" Key="0-0-1-0" TItem="string"></TreeNode>
+			<TreeNode Title="0-0-1-1" Key="0-0-1-1" TItem="string"></TreeNode>
+			<TreeNode Title="0-0-1-2" Key="0-0-1-2" TItem="string"></TreeNode>
+		</TreeNode>
+		<TreeNode Title="0-0-2" Key="0-0-2" TItem="string"></TreeNode>
+	</TreeNode>
+	<TreeNode Title="0-1" Key="0-1" TItem="string">
+		<TreeNode Title="0-1-0-0" Key="0-1-0-0" TItem="string"></TreeNode>
+		<TreeNode Title="0-1-0-1" Key="0-1-0-1" DisableCheckbox TItem="string"></TreeNode>
+		<TreeNode Title="0-1-0-2" Key="0-1-0-2" Disabled TItem="string"></TreeNode>
+	</TreeNode>
+	<TreeNode Title="0-2" Key="0-2" TItem="string"></TreeNode>
+</Tree>
+
 <br />
 @*<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>*@
 
