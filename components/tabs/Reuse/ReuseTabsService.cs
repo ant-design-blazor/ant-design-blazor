@@ -142,6 +142,11 @@ namespace AntDesign
                     this.AddReuseTabsPageItem(pageType);
                 }
             }
+
+            if (_pageMap.Any())
+            {
+                CurrentUrl = Pages[0].Url;
+            }
         }
 
         private void AddReuseTabsPageItem(Type pageType)
