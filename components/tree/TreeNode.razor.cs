@@ -339,7 +339,10 @@ namespace AntDesign
         /// <param name="expanded"></param>
         public async Task Expand(bool expanded)
         {
-            if (Expanded == expanded) return;
+            if (Expanded == expanded)
+            {
+                return;
+            }
             Expanded = expanded;
 
             await TreeComponent?.OnNodeExpand(this, Expanded, new MouseEventArgs());
@@ -466,6 +469,17 @@ namespace AntDesign
             SetChecked(!Checked);
             if (TreeComponent.OnCheck.HasDelegate)
                 await TreeComponent.OnCheck.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
+        }
+
+        public void SetSingleNodeChecked(bool check)
+        {
+            if (Disabled)
+            {
+                return;
+            }
+
+            Checked = check;
+            StateHasChanged();
         }
 
         /// <summary>
@@ -951,7 +965,6 @@ namespace AntDesign
 
             if (TreeComponent.DefaultExpandAll)
                 Expand(true);
-
             else if (TreeComponent.ExpandedKeys != null)
             {
                 Expand(TreeComponent.ExpandedKeys.Any(k => k == this.Key));

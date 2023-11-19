@@ -31,9 +31,7 @@ namespace AntDesign
         /// </summary>
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
 
-
-        bool _nodeHasChanged;
-
+        private bool _nodeHasChanged;
 
         #endregion fields
 
@@ -409,7 +407,7 @@ namespace AntDesign
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
 
-            _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
+            _checkedKeys = _checkedNodes.OrderBy(x => x.Value.NodeId).Select(x => x.Value.Key).ToArray();
 
             if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
                 CheckedKeysChanged.InvokeAsync(_checkedKeys);
@@ -705,10 +703,19 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            var isChanged = (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys) ||
+                 parameters.IsParameterChanged(nameof(CheckedKeys), CheckedKeys) ||
+                 parameters.IsParameterChanged(nameof(ExpandedKeys), ExpandedKeys)
+                 );
+
             await base.SetParametersAsync(parameters);
 
-            UpdateState();
+            if (isChanged)
+            {
+                UpdateState();
+            }
         }
+
         /// <summary>
         /// Get TreeNode from Key
         /// </summary>
@@ -882,9 +889,9 @@ namespace AntDesign
         {
             foreach (var node in _allNodes)
             {
-                node.SetChecked(CheckedKeys?.Contains(node.Key) == true);
-                node.SetSelected(SelectedKeys?.Contains(node.Key) == true);
-                node.Expand(ExpandedKeys?.Contains(node.Key) == true);
+                node.SetSingleNodeChecked(CheckedKeys?.Contains(node.Key) == true);
+                node.Selected = SelectedKeys?.Contains(node.Key) == true;
+                node.Expanded = ExpandedKeys?.Contains(node.Key) == true;
             }
         }
     }
