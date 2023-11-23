@@ -145,7 +145,7 @@ namespace AntDesign
 
             if (_pageMap.Any())
             {
-                CurrentUrl = Pages[0].Url;
+                //CurrentUrl = Pages[0].Url;
             }
         }
 

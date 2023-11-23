@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -22,14 +23,11 @@ namespace AntDesign
         {
             return builder =>
             {
-                var pageType = Assembly.Load(PageAssembly).GetType(PageType);
-                if (pageType == null)
-                {
+                if (RouteData.PageType == null)
                     return;
-                }
 
-                builder.OpenComponent(0, pageType);
-                foreach (var routeValue in RouteValues)
+                builder.OpenComponent(0, RouteData.PageType);
+                foreach (var routeValue in RouteData.RouteValues)
                 {
                     builder.AddAttribute(1, routeValue.Key, routeValue.Value);
                 }
@@ -37,7 +35,21 @@ namespace AntDesign
             };
         }
 
-        public ReuseTabsRouteData() { }
+        [JsonConstructor]
+        public ReuseTabsRouteData(IReadOnlyDictionary<string, object> routeValues, string pageType, string pageAssembly)
+        {
+            RouteValues = routeValues;
+            PageType = pageType;
+            PageAssembly = pageAssembly;
+            var type = Assembly.Load(pageAssembly).GetType(pageType);
+            _routeData = new RouteData(type, routeValues);
+        }
+
+        [JsonIgnore]
+        private RouteData _routeData;
+
+        [JsonIgnore]
+        public RouteData RouteData => _routeData;
 
         public ReuseTabsRouteData(RouteData routeData)
         {
