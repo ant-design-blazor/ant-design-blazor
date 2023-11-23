@@ -1,6 +1,5 @@
 ---
 order: 3
-debug: true
 title:
   zh-CN: 可勾选
   en-US: Checkable

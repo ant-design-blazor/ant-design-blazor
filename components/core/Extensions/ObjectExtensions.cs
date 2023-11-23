@@ -15,5 +15,14 @@ namespace AntDesign.Core.Extensions
             var property = obj.GetType().GetProperty(name);
             property?.SetValue(obj, value);
         }
+
+        public static bool AllNullOrEquals(this object obj, object other)
+        {
+            if (obj == null && other == null) return true;
+
+            if (obj == null || other == null) return false;
+
+            return obj.Equals(other);
+        }
     }
 }

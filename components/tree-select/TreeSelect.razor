@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits SelectBase<string, TItem>
+@inherits SelectBase<TValue, TItem>
+@typeparam TValue
 @typeparam TItem
 
 @using AntDesign.Internal
@@ -41,7 +42,7 @@
                         ShowLine="ShowTreeLine"
                         TitleExpression="TitleExpression"
                         TitleTemplate="TitleTemplate"
-                        KeyExpression="KeyExpression"
+                        KeyExpression="x=> KeyExpression?.Invoke(x)?.ToString()"
                         IconExpression="IconExpression"
                         IsLeafExpression="IsLeafExpression"
                         ChildrenExpression="ChildrenExpression"
@@ -76,7 +77,7 @@
                   <SelectContent Prefix="@ClassPrefix"
                                  RefBack="@context"
                                  @ref="_selectContent"
-                                 TItemValue="string"
+                                 TItemValue="TValue"
                                  TItem="TItem"
                                  SearchValue="@_searchValue"
                                  SearchDebounceMilliseconds="@SearchDebounceMilliseconds"

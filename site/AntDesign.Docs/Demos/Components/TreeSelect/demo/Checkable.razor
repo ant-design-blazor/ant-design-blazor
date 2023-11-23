@@ -1,4 +1,5 @@
 ﻿<TreeSelect TItem="Data"
+            TValue="int"
             Style="width:100%;"
             DataSource="treeData"
             @bind-Value="@value"
@@ -13,45 +14,46 @@
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
 
+value: @value
 
 @code {
-  private string value;
+  private int value;
 
   Data[] treeData = new Data[]
   {
         new()
         {
             Title = "Node1",
-            Key="0-0",
+            Key="1",
             Children = new Data[]
             {
                 new()
                 {
                     Title = "Child Node1",
-                    Key="0-0-0",
+                    Key="11",
                 },
             }
         },
         new()
         {
             Title = "Node2",
-            Key="0-1",
+            Key="2",
             Children = new Data[]
             {
                 new()
                 {
                     Title ="Child Node3",
-                    Key="0-1-0"
+                    Key="21"
                 },
                 new()
                 {
                     Title ="Child Node4",
-                    Key="0-1-1",
+                    Key="22",
                 },
                 new()
                 {
                     Title ="Child Node5",
-                    Key="0-1-2",
+                    Key="23",
                 }
             }
         }
