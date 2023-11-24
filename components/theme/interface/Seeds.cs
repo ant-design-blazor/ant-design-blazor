@@ -272,4 +272,8 @@
         public bool Motion { get; set; }
     }
 
+    public class SeedToken : PresetColorType
+    {
+
+    }
 }

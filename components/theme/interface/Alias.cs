@@ -1,4 +1,4 @@
-namespace AntDesign
+﻿namespace AntDesign
 {
 
     // ======================================================================
@@ -631,4 +631,8 @@ namespace AntDesign
         public string BoxShadowTabsOverflowBottom { get; set; }
     }
 
+    public class AliasToken : MapToken
+    {
+
+    }
 }
