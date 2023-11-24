@@ -45,6 +45,10 @@ namespace AntDesign
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
+            if (routeData == null)
+            {
+                return;
+            }
             if (!reuse)
             {
                 _pageMap.Clear();
@@ -145,7 +149,7 @@ namespace AntDesign
 
             if (_pageMap.Any())
             {
-                //CurrentUrl = Pages[0].Url;
+                CurrentUrl = Pages[0].Url;
             }
         }
 
