@@ -149,7 +149,12 @@ namespace AntDesign
 
             if (_pageMap.Any())
             {
-                CurrentUrl = Pages[0].Url;
+#if NET8_0_OR_GREATER
+                if (OperatingSystem.IsBrowser())
+                {
+                    CurrentUrl = Pages[0].Url;
+                }
+#endif
             }
         }
 
