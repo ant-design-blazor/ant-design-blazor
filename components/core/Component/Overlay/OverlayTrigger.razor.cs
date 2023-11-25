@@ -479,8 +479,13 @@ namespace AntDesign.Internal
             }
         }
 
-        protected virtual void OnMouseUp(JsonElement element)
+        /// <summary>
+        /// on document mouse up
+        /// </summary>
+        /// <param name="element"></param>
+        protected virtual async void OnMouseUp(JsonElement element)
         {
+            await Task.Delay(4);
             if (_mouseUpInOverlay)
             {
                 _mouseUpInOverlay = false;
