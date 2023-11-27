@@ -22,7 +22,8 @@ namespace AntDesign
          *  });
          *
          * note:
-         *  style cache using tokenKey + tokenValue as cacheKey
+         *  style cache using tokenKey + tokenValue as cacheKey,
+         *  need to keep the order of properties.
          */
         public GlobalToken()
         {
@@ -45,6 +46,7 @@ namespace AntDesign
             ColorWarning = "#faad14";
             ColorError = "#ff4d4f";
             ColorInfo = "#1677ff";
+            ColorLink = "#1677ff";
             ColorTextBase = "#000";
             ColorBgBase = "#fff";
             // Font
@@ -55,7 +57,7 @@ namespace AntDesign
             LineWidth = 1;
             LineType = "solid";
             // Motion
-            MotionUnit = 0.1f;
+            MotionUnit = 0.1;
             MotionBase = 0;
             MotionEaseOutCirc = "cubic-bezier(0.08, 0.82, 0.17, 1)";
             MotionEaseInOutCirc = "cubic-bezier(0.78, 0.14, 0.15, 0.86)";
@@ -423,14 +425,14 @@ namespace AntDesign
             FontSizeHeading3 = 24;
             FontSizeHeading4 = 20;
             FontSizeHeading5 = 16;
-            LineHeight = 1.5714285714285714f;
-            LineHeightLG = 1.5f;
-            LineHeightSM = 1.6666666666666667f;
-            LineHeightHeading1 = 1.2105263157894737f;
-            LineHeightHeading2 = 1.2666666666666666f;
-            LineHeightHeading3 = 1.3333333333333333f;
-            LineHeightHeading4 = 1.4f;
-            LineHeightHeading5 = 1.5f;
+            LineHeight = 1.5714285714285714;
+            LineHeightLG = 1.5;
+            LineHeightSM = 1.6666666666666667;
+            LineHeightHeading1 = 1.2105263157894737;
+            LineHeightHeading2 = 1.2666666666666666;
+            LineHeightHeading3 = 1.3333333333333333;
+            LineHeightHeading4 = 1.4;
+            LineHeightHeading5 = 1.5;
             SizeXXL = 48;
             SizeXL = 32;
             SizeLG = 24;
@@ -553,7 +555,15 @@ namespace AntDesign
             foreach (var item in token)
             {
                 sb.Append(item.Key);
-                sb.Append(item.Value);
+                if (item.Value.GetType() == typeof(bool))
+                {
+                    sb.Append(item.Value.ToString().ToLower());
+                }
+                else
+                {
+                    sb.Append(item.Value);
+                }
+
             }
             return sb.ToString();
         }
@@ -592,8 +602,7 @@ namespace AntDesign
             h ^= (int)h >>> 13;
             h = ((h & 0xffff) * 0x5bd1e995) + (((int)(h >>> 16) * 0xe995) << 16);
             var val = ((int)(h ^ ((int)h >>> 15)));
-            var code = Convert.ToInt64(Convert.ToString((val >>> 0), toBase: 2), 2);
-            return code.ToString(36);
+            return Convert.ToInt64(Convert.ToString((val >>> 0), toBase: 2), 2).ToString(36);
         }
     }
 

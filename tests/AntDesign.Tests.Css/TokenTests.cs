@@ -15,11 +15,7 @@ namespace AntDesign.Tests.Css
             var tokens = token.GetToken();
             var tokenStr = token.FlattenToken(tokens);
             var tokenKey = token.Hash($"{salt}_{tokenStr}");
-
-            if (true)
-            {
-
-            }
+            Assert.Equal(tokenKey, "1iw360o");
         }
     }
 }

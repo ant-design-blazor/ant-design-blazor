@@ -133,7 +133,7 @@ namespace AntDesign
             set => _tokens["opacityImage"] = value;
         }
 
-        public float MotionUnit
+        public double MotionUnit
         {
             get => (float)_tokens["motionUnit"];
             set => _tokens["motionUnit"] = value;

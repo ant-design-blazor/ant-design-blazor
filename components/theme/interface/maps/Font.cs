@@ -61,51 +61,51 @@ namespace AntDesign
             set => _tokens["fontSizeHeading5"] = value;
         }
 
-        public float LineHeight
+        public double LineHeight
         {
-            get => (float)_tokens["lineHeight"];
+            get => (double)_tokens["lineHeight"];
             set => _tokens["lineHeight"] = value;
         }
 
-        public float LineHeightLG
+        public double LineHeightLG
         {
-            get => (float)_tokens["lineHeightLG"];
+            get => (double)_tokens["lineHeightLG"];
             set => _tokens["lineHeightLG"] = value;
         }
 
-        public float LineHeightSM
+        public double LineHeightSM
         {
-            get => (float)_tokens["lineHeightSM"];
+            get => (double)_tokens["lineHeightSM"];
             set => _tokens["lineHeightSM"] = value;
         }
 
-        public float LineHeightHeading1
+        public double LineHeightHeading1
         {
-            get => (float)_tokens["lineHeightHeading1"];
+            get => (double)_tokens["lineHeightHeading1"];
             set => _tokens["lineHeightHeading1"] = value;
         }
 
-        public float LineHeightHeading2
+        public double LineHeightHeading2
         {
-            get => (float)_tokens["lineHeightHeading2"];
+            get => (double)_tokens["lineHeightHeading2"];
             set => _tokens["lineHeightHeading2"] = value;
         }
 
-        public float LineHeightHeading3
+        public double LineHeightHeading3
         {
-            get => (float)_tokens["lineHeightHeading3"];
+            get => (double)_tokens["lineHeightHeading3"];
             set => _tokens["lineHeightHeading3"] = value;
         }
 
-        public float LineHeightHeading4
+        public double LineHeightHeading4
         {
-            get => (float)_tokens["lineHeightHeading4"];
+            get => (double)_tokens["lineHeightHeading4"];
             set => _tokens["lineHeightHeading4"] = value;
         }
 
-        public float LineHeightHeading5
+        public double LineHeightHeading5
         {
-            get => (float)_tokens["lineHeightHeading5"];
+            get => (double)_tokens["lineHeightHeading5"];
             set => _tokens["lineHeightHeading5"] = value;
         }
 
