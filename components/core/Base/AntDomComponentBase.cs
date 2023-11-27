@@ -92,13 +92,31 @@ namespace AntDesign
         [Inject]
         public IOptions<GlobalToken> Options { get; set; }
 
-        public CSSObject[] UseStyle(string prefixCls, Func<TokenWithCommonCls, CSSInterpolation> func)
+        public CSSObject[] UseStyle(string componentName, Func<TokenWithCommonCls, CSSInterpolation> func)
         {
-            // todo: more parameters.
-            var token = JsonSerializer.Deserialize<TokenWithCommonCls>(JsonSerializer.Serialize(Options.Value));
-            token.ComponentCls = $".{prefixCls}";
-            var css = func(token);
-            return css.ToCssArray();
+
+            return UseStyle(new [] { componentName, componentName }, func);
+        }
+
+        public CSSObject[] UseStyle(string[] componentNames, Func<TokenWithCommonCls, CSSInterpolation> func)
+        {
+            var concatComponent = string.Join("-", componentNames);
+
+            // Generate style for all a tags in antd component.
+
+
+
+            // Generate style for icons
+
+
+
+            // // todo: more parameters.
+            // var token = JsonSerializer.Deserialize<TokenWithCommonCls>(JsonSerializer.Serialize(Options.Value));
+            // token.ComponentCls = $".{prefixCls}";
+            // var css = func(token);
+            // return css.ToCssArray();
+
+            return new CSSObject[] { };
         }
     }
 }

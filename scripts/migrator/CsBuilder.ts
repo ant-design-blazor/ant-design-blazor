@@ -20,6 +20,7 @@ export type CsOptions = {
     defaultTab: string;
     typeMap?: TypeMap[];
     transforms?: Transform[];
+    propertyMap?: string;
 }
 
 export enum CsKinds {
@@ -143,13 +144,24 @@ export class CsProperty {
     name: string;
     type: string;
     access: string;
-    constructor(name: string, type: string, access: string = 'public') {
+    propMap?: string;
+    constructor(name: string, type: string, access: string = 'public', propMap?: string) {
         this.name = name;
         this.type = type;
         this.access = access;
+        this.propMap = propMap;
     }
 
     public format(tab: string = ''): string[] {
+        if (this.propMap) {
+            const code: string[] = [];
+            code.push(`${tab}${this.access} ${castType(this.type)} ${toPascalCase(this.name)}`);
+            code.push(`${tab}{`);
+            code.push(`${tab}    get => (${castType(this.type)})${this.propMap}["${this.name}"];`);
+            code.push(`${tab}    set => ${this.propMap}["${this.name}"] = value;`);
+            code.push(`${tab}}`);
+            return code;
+        }
         return [`${tab}${this.access} ${castType(this.type)} ${toPascalCase(this.name)} { get; set; }`];
     }
 }
@@ -377,8 +389,8 @@ export class CsClass {
         this.partial = partial;
     }
 
-    public addProperty(name: string, type: string) {
-        this.props.push(new CsProperty(name, type));
+    public addProperty(name: string, type: string, propMap?: string) {
+        this.props.push(new CsProperty(name, type, 'public', propMap));
     }
 
     public addFunction(func: CsFunction) {
@@ -432,7 +444,7 @@ export class CsBuilder {
     }
 
     public addClassProperty(className: string, propName: string, propType: string) {
-        this.classes[className].addProperty(propName, propType);
+        this.classes[className].addProperty(propName, propType, this.options.propertyMap);
     }
 
     public addFunction(func: CsFunction) {

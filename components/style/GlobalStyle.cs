@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using CssInCs;
 
 namespace AntDesign
 {
-    internal class GlobalStyle
+    public class GlobalStyle
     {
         public static CSSObject TextEllipsis = new()
         {
@@ -33,7 +32,47 @@ namespace AntDesign
 
         public static CSSObject GenLinkStyle(GlobalToken token)
         {
-            return new CSSObject();
+            return new CSSObject
+            {
+                ["a"] = new CSSObject
+                {
+                    Color = token.ColorLink,
+                    TextDecoration = token.LinkDecoration,
+                    BackgroundColor = "transparent",
+                    Outline = "none",
+                    Cursor = "pointer",
+                    Transition = $"color {token.MotionDurationSlow}",
+                    WebkitTextDecorationSkip = "objects",
+
+                    ["&:hover"] = new CSSObject
+                    {
+                        Color = token.ColorLinkHover,
+                    },
+
+                    ["&:active"] = new CSSObject
+                    {
+                        Color = token.ColorLinkActive,
+                    },
+
+                    ["&:active,&:hover"] = new CSSObject
+                    {
+                        TextDecoration = token.LinkHoverDecoration,
+                        Outline = 0,
+                    },
+
+                    ["&:focus"] = new CSSObject
+                    {
+                        TextDecoration = token.LinkFocusDecoration,
+                        Outline = 0,
+                    },
+
+                    ["&[disabled]"] = new CSSObject
+                    {
+                        Color = token.ColorTextDisabled,
+                        Cursor = "not-allowed",
+                    },
+                }
+            };
         }
 
         public static CSSObject GenCommonStyle(GlobalToken token)

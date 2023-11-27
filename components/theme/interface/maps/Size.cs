@@ -1,80 +1,88 @@
+using System;
+using CssInCs;
+using static AntDesign.GlobalStyle;
+using static AntDesign.Theme;
+
 namespace AntDesign
 {
     public partial class GlobalToken
     {
-        /**
-        * @nameZH XXL
-        * @default 48
-        */
-        public int SizeXXL { get; set; }
-        /**
-        * @nameZH XL
-        * @default 32
-        */
-        public int SizeXL { get; set; }
-        /**
-        * @nameZH LG
-        * @default 24
-        */
-        public int SizeLG { get; set; }
-        /**
-        * @nameZH MD
-        * @default 20
-        */
-        public int SizeMD { get; set; }
-        /** Same as size by default, but could be larger in compact mode */
-        public int SizeMS { get; set; }
-        /**
-        * @nameZH 默认
-        * @desc 默认尺寸
-        * @default 16
-        */
-        public int Size { get; set; }
-        /**
-        * @nameZH SM
-        * @default 12
-        */
-        public int SizeSM { get; set; }
-        /**
-        * @nameZH XS
-        * @default 8
-        */
-        public int SizeXS { get; set; }
-        /**
-        * @nameZH XXS
-        * @default 4
-        */
-        public int SizeXXS { get; set; }
+        public int SizeXXL
+        {
+            get => (int)_tokens["sizeXXL"];
+            set => _tokens["sizeXXL"] = value;
+        }
+
+        public int SizeXL
+        {
+            get => (int)_tokens["sizeXL"];
+            set => _tokens["sizeXL"] = value;
+        }
+
+        public int SizeLG
+        {
+            get => (int)_tokens["sizeLG"];
+            set => _tokens["sizeLG"] = value;
+        }
+
+        public int SizeMD
+        {
+            get => (int)_tokens["sizeMD"];
+            set => _tokens["sizeMD"] = value;
+        }
+
+        public int SizeMS
+        {
+            get => (int)_tokens["sizeMS"];
+            set => _tokens["sizeMS"] = value;
+        }
+
+        public int Size
+        {
+            get => (int)_tokens["size"];
+            set => _tokens["size"] = value;
+        }
+
+        public int SizeSM
+        {
+            get => (int)_tokens["sizeSM"];
+            set => _tokens["sizeSM"] = value;
+        }
+
+        public int SizeXS
+        {
+            get => (int)_tokens["sizeXS"];
+            set => _tokens["sizeXS"] = value;
+        }
+
+        public int SizeXXS
+        {
+            get => (int)_tokens["sizeXXS"];
+            set => _tokens["sizeXXS"] = value;
+        }
+
     }
 
     public partial class GlobalToken
     {
-        // Control
-        /** Only Used for control inside component like Multiple Select inner selection item */
+        public int ControlHeightXS
+        {
+            get => (int)_tokens["controlHeightXS"];
+            set => _tokens["controlHeightXS"] = value;
+        }
 
-        /**
-        * @nameZH 更小的组件高度
-        * @nameEN XS component height
-        * @desc 更小的组件高度
-        * @descEN XS component height
-        */
-        public int ControlHeightXS { get; set; }
+        public int ControlHeightSM
+        {
+            get => (int)_tokens["controlHeightSM"];
+            set => _tokens["controlHeightSM"] = value;
+        }
 
-        /**
-        * @nameZH 较小的组件高度
-        * @nameEN SM component height
-        * @desc 较小的组件高度
-        * @descEN SM component height
-        */
-        public int ControlHeightSM { get; set; }
+        public int ControlHeightLG
+        {
+            get => (int)_tokens["controlHeightLG"];
+            set => _tokens["controlHeightLG"] = value;
+        }
 
-        /**
-        * @nameZH 较高的组件高度
-        * @nameEN LG component height
-        * @desc 较高的组件高度
-        * @descEN LG component height
-        */
-        public int ControlHeightLG { get; set; }
     }
 
 }

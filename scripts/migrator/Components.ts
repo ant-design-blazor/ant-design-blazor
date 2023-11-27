@@ -1219,69 +1219,170 @@ export const data2: Component[] = [
 
 export const components: Component[] = [
     {
-        name: 'Button',
+        name: 'ColorNeutralMapToken',
         src: [
-            'components/button/style/index.ts',
-            'components/button/style/group.ts'
+            'components/theme/interface/maps/colors.ts'
         ],
-        dist: 'components/button/Style.cs',
+        dist: 'components/theme/interface/maps/Colors.cs',
         csOptions: {
             ...defaultOptions,
-            defaultClass: 'Button',
-            typeMap: [
-                { from: 'Unknown1', to: 'ButtonToken', includes: [1] },
-                { from: 'Unknown3', to: 'CSSObject', includes: [1, 3] },
-                { from: 'Unknown3', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown4', to: 'CSSObject', includes: [1, 3] },
-                { from: 'Unknown4', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown5', to: 'CSSObject', includes: [1, 3] },
-                { from: 'Unknown5', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown6', to: 'CSSObject', includes: [1, 2] },
-                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 4]] },
-                { from: 'Unknown7', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown8', to: 'CSSObject', includes: [1, 3] },
-                { from: 'Unknown8', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 4]] },
-                { from: 'Unknown9', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 8]] },
-                { from: 'Unknown10', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown11', to: 'CSSObject', ranges: [[1, 12]] },
-                { from: 'Unknown11', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown12', to: 'CSSObject', includes: [1, 3] },
-                { from: 'Unknown12', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 8]] },
-                { from: 'Unknown13', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 8]] },
-                { from: 'Unknown14', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown15', to: 'CSSObject', ranges: [[1, 4]] },
-                { from: 'Unknown15', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown16', to: 'CSSObject', ranges: [[1, 3]] },
-                { from: 'Unknown16', to: 'ButtonToken', includes: [2] },
-                { from: 'CSSInterpolation', to: 'CSSInterpolation[]' },
-                { from: 'Unknown17', to: 'CSSObject', ranges: [[1, 9]] },
-                { from: 'Unknown18', to: 'CSSInterpolation', includes: [1] },
-                { from: 'Unknown18', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown19', to: 'CSSInterpolation', includes: [1] },
-                { from: 'Unknown19', to: 'ButtonToken', includes: [2, 3] },
-                { from: 'Unknown20', to: 'CSSInterpolation', includes: [1] },
-                { from: 'Unknown20', to: 'ButtonToken', includes: [2, 3] },
-                { from: 'Unknown21', to: 'CSSObject', ranges: [[1, 5]] },
-                { from: 'Unknown21', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown22', to: 'CSSInterpolation', includes: [1] },
-                { from: 'Unknown22', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown22', to: 'ButtonToken', includes: [3] },
-                { from: 'Unknown22', to: 'CSSInterpolation[]', includes: [4] },
-                { from: 'Unknown23', to: 'CSSObject', ranges: [[1, 9]] },
-                { from: 'Unknown24', to: 'CSSObject', includes: [1, 3], ranges: [[5, 14]] },
-                { from: 'Unknown24', to: 'ButtonToken', includes: [2] },
-                { from: 'Unknown24', to: 'CSSInterpolation[]', includes: [4] },
-            ],
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
             transforms: [
-                { source: 'class ButtonToken', target: 'partial class ButtonToken : TokenWithCommonCls' },
-                { source: 'class Button', target: 'partial class Button' },
-                { source: 'public CSSObject[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-                { source: 'CSSObject hoverStyle, CSSObject activeStyle', target: 'CSSObject hoverStyle = default, CSSObject activeStyle = default' }
+                { source: 'class ColorNeutralMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorPrimaryMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorSuccessMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorWarningMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorInfoMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorErrorMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorLinkMapToken', target: 'partial class GlobalToken' },
+                { source: 'class ColorMapToken', target: 'partial class GlobalToken' },
             ]
         }
     },
+    {
+        name: 'FontMapToken',
+        src: [
+            'components/theme/interface/maps/font.ts'
+        ],
+        dist: 'components/theme/interface/maps/Font.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
+            transforms: [
+                { source: 'class FontMapToken', target: 'partial class GlobalToken' },
+            ]
+        }
+    },
+    {
+        name: 'SizeMapToken',
+        src: [
+            'components/theme/interface/maps/size.ts'
+        ],
+        dist: 'components/theme/interface/maps/Size.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
+            transforms: [
+                { source: 'class SizeMapToken', target: 'partial class GlobalToken' },
+                { source: 'class HeightMapToken', target: 'partial class GlobalToken' },
+            ]
+        }
+    },
+    {
+        name: 'StyleMapToken',
+        src: [
+            'components/theme/interface/maps/style.ts'
+        ],
+        dist: 'components/theme/interface/maps/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
+            transforms: [
+                { source: 'class StyleMapToken', target: 'partial class GlobalToken' },
+            ]
+        }
+    },
+    {
+        name: 'AliasToken',
+        src: [
+            'components/theme/interface/alias.ts'
+        ],
+        dist: 'components/theme/interface/Alias.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'TextDecoration<string | number>', to: 'string' },
+            ],
+            transforms: [
+                { source: 'class AliasToken', target: 'partial class GlobalToken' },
+            ]
+        }
+    },
+    {
+        name: 'SeedToken',
+        src: [
+            'components/theme/interface/seeds.ts'
+        ],
+        dist: 'components/theme/interface/Seeds.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GlobalToken',
+            propertyMap: '_tokens',
+            transforms: [
+                { source: 'class SeedToken', target: 'partial class GlobalToken' },
+            ]
+        }
+    }
+    // {
+    //     name: 'Button',
+    //     src: [
+    //         'components/button/style/index.ts',
+    //         'components/button/style/group.ts'
+    //     ],
+    //     dist: 'components/button/Style.cs',
+    //     csOptions: {
+    //         ...defaultOptions,
+    //         defaultClass: 'Button',
+    //         typeMap: [
+    //             { from: 'Unknown1', to: 'ButtonToken', includes: [1] },
+    //             { from: 'Unknown3', to: 'CSSObject', includes: [1, 3] },
+    //             { from: 'Unknown3', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown4', to: 'CSSObject', includes: [1, 3] },
+    //             { from: 'Unknown4', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown5', to: 'CSSObject', includes: [1, 3] },
+    //             { from: 'Unknown5', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown6', to: 'CSSObject', includes: [1, 2] },
+    //             { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 4]] },
+    //             { from: 'Unknown7', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown8', to: 'CSSObject', includes: [1, 3] },
+    //             { from: 'Unknown8', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 4]] },
+    //             { from: 'Unknown9', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 8]] },
+    //             { from: 'Unknown10', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown11', to: 'CSSObject', ranges: [[1, 12]] },
+    //             { from: 'Unknown11', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown12', to: 'CSSObject', includes: [1, 3] },
+    //             { from: 'Unknown12', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 8]] },
+    //             { from: 'Unknown13', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 8]] },
+    //             { from: 'Unknown14', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown15', to: 'CSSObject', ranges: [[1, 4]] },
+    //             { from: 'Unknown15', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown16', to: 'CSSObject', ranges: [[1, 3]] },
+    //             { from: 'Unknown16', to: 'ButtonToken', includes: [2] },
+    //             { from: 'CSSInterpolation', to: 'CSSInterpolation[]' },
+    //             { from: 'Unknown17', to: 'CSSObject', ranges: [[1, 9]] },
+    //             { from: 'Unknown18', to: 'CSSInterpolation', includes: [1] },
+    //             { from: 'Unknown18', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown19', to: 'CSSInterpolation', includes: [1] },
+    //             { from: 'Unknown19', to: 'ButtonToken', includes: [2, 3] },
+    //             { from: 'Unknown20', to: 'CSSInterpolation', includes: [1] },
+    //             { from: 'Unknown20', to: 'ButtonToken', includes: [2, 3] },
+    //             { from: 'Unknown21', to: 'CSSObject', ranges: [[1, 5]] },
+    //             { from: 'Unknown21', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown22', to: 'CSSInterpolation', includes: [1] },
+    //             { from: 'Unknown22', to: 'TokenWithCommonCls', includes: [2] },
+    //             { from: 'Unknown22', to: 'ButtonToken', includes: [3] },
+    //             { from: 'Unknown22', to: 'CSSInterpolation[]', includes: [4] },
+    //             { from: 'Unknown23', to: 'CSSObject', ranges: [[1, 9]] },
+    //             { from: 'Unknown24', to: 'CSSObject', includes: [1, 3], ranges: [[5, 14]] },
+    //             { from: 'Unknown24', to: 'ButtonToken', includes: [2] },
+    //             { from: 'Unknown24', to: 'CSSInterpolation[]', includes: [4] },
+    //         ],
+    //         transforms: [
+    //             { source: 'class ButtonToken', target: 'partial class ButtonToken : TokenWithCommonCls' },
+    //             { source: 'class Button', target: 'partial class Button' },
+    //             { source: 'public CSSObject[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+    //             { source: 'CSSObject hoverStyle, CSSObject activeStyle', target: 'CSSObject hoverStyle = default, CSSObject activeStyle = default' }
+    //         ]
+    //     }
+    // },
 ]
