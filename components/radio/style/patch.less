@@ -1,5 +1,19 @@
+@import './index.less';
+
 .ant-radio + span {
   &:empty {
     display: none;
+  }
+}
+
+.@{radio-prefix-cls} {
+  &-input:checked + .@{radio-inner-prefix-cls} {
+    border-color: @radio-dot-color;
+
+    &::after {
+        transform: scale((unit(@radio-dot-size) / unit(@radio-size)));
+        opacity: 1;
+        transition: all @radio-duration @ease-in-out-circ;
+    }
   }
 }
