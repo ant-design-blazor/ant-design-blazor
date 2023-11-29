@@ -37,7 +37,7 @@ English | [简体中文](README-zh_CN.md)
 
 ## 🌈 Online Examples
 
-WebAssembly static hosting on 
+WebAssembly static hosting on:
 
 - [Document site](https://antblazor.com/)
 - [Enterprise system dashboard](https://pro.antblazor.com/)

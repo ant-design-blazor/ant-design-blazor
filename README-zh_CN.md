@@ -108,7 +108,7 @@ WebAssembly 静态托管页面示例
 - 进入应用的项目文件夹，安装 Nuget 包引用
 
   ```bash
-  $ dotnet add package AntDesign --version
+  $ dotnet add package AntDesign
   ```
 
 - 在项目的 `Program.cs` 中注册相关服务：
@@ -141,7 +141,7 @@ WebAssembly 静态托管页面示例
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
 
-  - 如果是 Blazor WebApp 项目，还需要为 `Routes` 指定渲染模式来支持交互性。
+  - 对于 Blazor WebApp 项目，还需要为 `Routes` 指定渲染模式来支持交互性。
 
   ```diff
   <Routes @rendermode="RenderMode.InteractiveAuto" />           <-- 指定渲染模式 ✨
