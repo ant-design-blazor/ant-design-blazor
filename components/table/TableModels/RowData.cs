@@ -74,7 +74,11 @@ namespace AntDesign.TableModels
 
         public abstract TableDataItem TableDataItem { get; }
 
-        public bool Selected { get => TableDataItem.Selected; }
+        public bool Selected
+        {
+            get => TableDataItem.Selected;
+            set => TableDataItem.SetSelected(value);
+        }
 
         public event Action<RowData, bool> ExpandedChanged;
 
@@ -99,7 +103,7 @@ namespace AntDesign.TableModels
     /// <inheritdoc />
     public class TableDataItem<TItem> : TableDataItem
     {
-        public TItem Data { get; }
+        public TItem Data { get; set; }
 
         public Table<TItem> Table { get; set; }
 
