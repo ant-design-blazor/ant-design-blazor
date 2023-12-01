@@ -1,7 +1,9 @@
 ﻿using System;
 using CssInCs;
+using Microsoft.AspNetCore.Components;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleHook;
 
 namespace AntDesign
 {
@@ -548,31 +550,35 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenComponentStyleHook(TokenWithCommonCls token)
+        public RenderFragment GenButtonStyle()
         {
-            var controlTmpOutline = token.ControlTmpOutline;
-            var paddingContentHorizontal = token.PaddingContentHorizontal;
-            var buttonToken = MergeToken(
-                token,
-                new ButtonToken()
-                {
-                    ColorOutlineDefault = controlTmpOutline,
-                    ButtonPaddingHorizontal = paddingContentHorizontal,
-                    ButtonIconOnlyFontSize = token.FontSizeLG,
-                    ButtonFontWeight = 400,
-                });
-            return new CSSInterpolation[]
+            return GenComponentStyleHook("Button", (token) =>
             {
-                GenSharedButtonStyle(buttonToken),
-                GenSizeSmallButtonStyle(buttonToken),
-                GenSizeBaseButtonStyle(buttonToken),
-                GenSizeLargeButtonStyle(buttonToken),
-                GenBlockButtonStyle(buttonToken),
-                GenTypeButtonStyle(buttonToken),
-                GenGroupStyle(buttonToken),
-                GenCompactItemStyle(token),
-                GenCompactItemVerticalStyle(token)
-            };
+                token.ComponentCls = PrefixCls;
+                var controlTmpOutline = token.ControlTmpOutline;
+                var paddingContentHorizontal = token.PaddingContentHorizontal;
+                var buttonToken = MergeToken(
+                    token,
+                    new ButtonToken()
+                    {
+                        ColorOutlineDefault = controlTmpOutline,
+                        ButtonPaddingHorizontal = paddingContentHorizontal,
+                        ButtonIconOnlyFontSize = token.FontSizeLG,
+                        ButtonFontWeight = 400,
+                    });
+                return new CSSInterpolation[]
+                {
+                    GenSharedButtonStyle(buttonToken),
+                    GenSizeSmallButtonStyle(buttonToken),
+                    GenSizeBaseButtonStyle(buttonToken),
+                    GenSizeLargeButtonStyle(buttonToken),
+                    GenBlockButtonStyle(buttonToken),
+                    GenTypeButtonStyle(buttonToken),
+                    GenGroupStyle(buttonToken),
+                    GenCompactItemStyle(token),
+                    GenCompactItemVerticalStyle(token)
+                };
+            });
         }
 
         public CSSObject GenButtonBorderStyle(string buttonTypeCls, string borderColor)
@@ -663,7 +669,6 @@ namespace AntDesign
                 }
             };
         }
-
     }
 
 }

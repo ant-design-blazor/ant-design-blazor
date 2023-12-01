@@ -9,7 +9,7 @@ namespace AntDesign
         public string ComponentCls { get; set; }
         public string PrefixCls { get; set; }
         public string IconCls { get; set; } = "anticon";
-        public string AntCls { get; set; }
+        public string AntCls { get; set; } = "ant";
 
         public void Merge(TokenWithCommonCls source)
         {

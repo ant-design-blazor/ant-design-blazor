@@ -22,7 +22,28 @@ namespace AntDesign
 
         public static CSSObject ResetIcon()
         {
-            return new CSSObject();
+            return new CSSObject
+            {
+                Display = "inline-flex",
+                AlignItems = "center",
+                Color = "inherit",
+                FontStyle = "normal",
+                LineHeight = 0,
+                TextAlign = "center",
+                TextTransform = "none",
+                VerticalAlign = "-0.125em",
+                TextRendering = "optimizeLegibility",
+                WebkitFontSmoothing = "antialiased",
+                MozOsxFontSmoothing = "grayscale",
+                ["> *"] = new CSSObject
+                {
+                    LineHeight = 1,
+                },
+                ["svg"] = new CSSObject
+                {
+                    Display = "inline-block",
+                }
+            };
         }
 
         public static CSSObject ClearFix()

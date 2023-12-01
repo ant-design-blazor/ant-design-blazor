@@ -5,14 +5,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
 
 namespace AntDesign
 {
+    public record TokenHash(string TokenKey, string HashId);
+
     public partial class GlobalToken
     {
         private readonly Dictionary<string, object> _tokens = new();
-
+        private TokenHash _tokenHash;
+#if DEBUG
+        private const string HashPrefix = "css-dev-only-do-not-override";
+#else
+        private const string HashPrefix = "css";
+#endif
         /*
          * todo: using AddAntDesign() method instead.
          * eg:
@@ -542,20 +548,32 @@ namespace AntDesign
             BoxShadowTabsOverflowBottom = "inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08)";
         }
 
+        public TokenHash GetTokenHash(string version, bool hashed = true)
+        {
+            if (_tokenHash == null)
+            {
+                var hashFlag = hashed ? "true" : "";
+                var salt = $"{version}-{hashFlag}";
+                var tokenKey = TokenToKey(_tokens, salt);
+                var hashId = $"{HashPrefix}-{Hash(tokenKey)}";
+                _tokenHash = new TokenHash(tokenKey, hashId);
+            }
+
+            return _tokenHash;
+        }
+
         public string TokenToKey(Dictionary<string, object> token, string salt)
         {
             return Hash($"{salt}_{FlattenToken(token)}");
         }
 
-        public Dictionary<string, object> GetToken() => _tokens;
-
-        public string FlattenToken(Dictionary<string, object> token)
+        private string FlattenToken(Dictionary<string, object> token)
         {
             var sb = new StringBuilder();
             foreach (var item in token)
             {
                 sb.Append(item.Key);
-                if (item.Value.GetType() == typeof(bool))
+                if (item.Value is bool)
                 {
                     sb.Append(item.Value.ToString().ToLower());
                 }
@@ -563,12 +581,11 @@ namespace AntDesign
                 {
                     sb.Append(item.Value);
                 }
-
             }
             return sb.ToString();
         }
 
-        public string Hash(string str)
+        private string Hash(string str)
         {
             long h = 0;
             int k = 0;
