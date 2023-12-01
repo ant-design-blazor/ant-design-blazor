@@ -56,7 +56,8 @@
             class="@ClassMapper.Class"
             style="@Style"
             @ref="Ref"
-            @attributes="@dataOrAriaAttributeProps">
+            @attributes="@dataOrAriaAttributeProps"
+			title="@HtmlTitle" >
             <li
                 title="@(ShowTitle ? Locale.PrevPage : null)"
                 @onclick="Prev"

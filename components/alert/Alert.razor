@@ -3,7 +3,7 @@
 
 @if (!_isClosed)
 {
-    <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
+	<div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref" title="@HtmlTitle">
         @if (IsShowIcon)
         {
             @if (Icon != null)

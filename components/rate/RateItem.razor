@@ -3,7 +3,7 @@
 
 @{ 
     RenderFragment<RateItem> template = item =>
-    @<div role="radio" aria-checked="true" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="5" tabindex="@item.IndexOfGroup">
+	@<div role="radio" aria-checked="true" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="5" tabindex="@item.IndexOfGroup" title="@HtmlTitle">
         <div class="ant-rate-star-first" @onclick="@(async e => await item.OnClick(true))" @onmouseover="@(async e => await item.OnHover(true))">
             @if (@item.Character != null)
             {

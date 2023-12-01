@@ -11,7 +11,8 @@
         @onmouseover="HandleMouseOver"
         @onmouseout="HandleMouseOut"
         @onclick="HandleClick"
-        @ref="Ref">
+        @ref="Ref"
+		title="@HtmlTitle">
     <div class="@($"{_prefixCls}-handle")">
         @if (Loading)
         {

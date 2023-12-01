@@ -2,7 +2,7 @@
 @inherits StatisticComponentBase<DateTime>
 @using AntDesign.Core.Helpers;
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
+<div class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id" title="@HtmlTitle">
     <div class="ant-statistic-title">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>

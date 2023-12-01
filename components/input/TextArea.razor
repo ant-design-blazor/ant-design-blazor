@@ -41,7 +41,7 @@
 
 @if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
-    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
+	<div class="@ClassMapper.Class" style="@Style" data-count="@Count" title="@HtmlTitle">
         <span class="@_warpperClassMapper.Class">
             <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
             @if (AllowClear)

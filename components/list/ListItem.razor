@@ -3,7 +3,7 @@
 
 @if (Grid == null)
 {
-    <li class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+	<li class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref" title="@HtmlTitle">
         @itemChildren(this)
     </li>
 }
@@ -11,7 +11,7 @@ else
 {
 	<div style="width: @(AntList.ColumnWidth)%; max-width: @(AntList.ColumnWidth)%;">
 		<AntDesign.Col Flex="1" >
-		    <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+			<div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref" title="@HtmlTitle">
 		        @itemChildren(this)
 		    </div>
 		</AntDesign.Col>
