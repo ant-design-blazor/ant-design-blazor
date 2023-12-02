@@ -1,5 +1,5 @@
 ﻿using System;
-using CssInCs;
+using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 

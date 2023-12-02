@@ -548,7 +548,7 @@ namespace AntDesign
             BoxShadowTabsOverflowBottom = "inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08)";
         }
 
-        public TokenHash GetTokenHash(string version, bool hashed = true)
+        public TokenHash GetTokenHash(string version = "5.11.4", bool hashed = true)
         {
             if (_tokenHash == null)
             {
@@ -560,6 +560,11 @@ namespace AntDesign
             }
 
             return _tokenHash;
+        }
+
+        public string GetHashId()
+        {
+            return GetTokenHash().HashId;
         }
 
         public string TokenToKey(Dictionary<string, object> token, string salt)

@@ -10,8 +10,8 @@ npm run migrate
 ### Config
 ```ts
 const config = {
-    version: '5.5.0',
-    gitHash: '1a2906941f551028677379ba3c47fbe4e9969a2f',
+    version: '5.11.4',
+    gitHash: '3fbed04e4b03ef1754a78a9245a2bb59f8b72fd1',
     remotePath: 'https://github.com/ant-design/ant-design.git',
     localPath: '../ant-design'
 }

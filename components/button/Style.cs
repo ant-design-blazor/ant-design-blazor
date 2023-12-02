@@ -1,9 +1,9 @@
 ﻿using System;
-using CssInCs;
+using CssInCSharp;
 using Microsoft.AspNetCore.Components;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
-using static AntDesign.StyleHook;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
@@ -550,11 +550,10 @@ namespace AntDesign
             };
         }
 
-        public RenderFragment GenButtonStyle()
+        public RenderFragment UseStyle(TokenWithCommonCls token)
         {
-            return GenComponentStyleHook("Button", (token) =>
+            return GenComponentStyleHook("Button", token, () =>
             {
-                token.ComponentCls = PrefixCls;
                 var controlTmpOutline = token.ControlTmpOutline;
                 var paddingContentHorizontal = token.PaddingContentHorizontal;
                 var buttonToken = MergeToken(
