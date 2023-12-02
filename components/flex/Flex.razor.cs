@@ -54,8 +54,13 @@ namespace AntDesign
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
-        private string CustomizeGapStyle => Gap.IsIn("small", "middle", "large") ? "" : $"gap: {Gap}px;";
-        private string FlexStyle => !string.IsNullOrWhiteSpace(FlexCss) ? $"flex: {FlexCss};" : "";
+        private string FlexStyle => new CssStyleBuilder()
+            .AddStyle("flex-wrap", Wrap)
+            .AddStyle("align-items", Align)
+            .AddStyle("justify-content", Justify)
+            .AddStyle("flex", FlexCss)
+            .AddStyle("gap", Gap.IsIn(null, "small", "middle", "large") ? "" : (CssSizeLength)Gap)
+            .Build();
 
         protected override void OnInitialized()
         {
@@ -80,10 +85,10 @@ namespace AntDesign
             builder.OpenElement(1, Component ?? "div");
 
             builder.AddAttribute(2, "class", ClassMapper.Class);
-            builder.AddAttribute(3, "style", $"{CustomizeGapStyle} {FlexStyle} {Style}");
+            builder.AddAttribute(3, "style", $"{FlexStyle} {Style} ");
             builder.AddAttribute(4, "id", $"{Id}");
-            builder.AddComponentReferenceCapture(5, r => Ref = (ElementReference)r);
-
+            builder.AddElementReferenceCapture(5, r => Ref = r);
+            builder.AddContent(6, ChildContent);
             builder.CloseElement();
         }
     }
