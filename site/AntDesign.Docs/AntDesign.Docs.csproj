@@ -27,5 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Demos\Components\Tour\demo\" />
+    <Folder Include="Demos\Components\Tour\doc\" />
+  </ItemGroup>
   
 </Project>
