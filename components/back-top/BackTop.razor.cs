@@ -68,8 +68,9 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            string prefixCls = "ant-back-top";
-            ClassMapper.Add(prefixCls);
+            string prefixCls = _token.PrefixCls;
+            ClassMapper.Add(prefixCls)
+                .Add(_token.GetHashId());
 
             BackTopContentClassMapper
                 .If($"{prefixCls}-content", () => ChildContent == null)

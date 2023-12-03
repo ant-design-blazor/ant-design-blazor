@@ -1,7 +1,9 @@
 ﻿using System;
 using CssInCSharp;
+using Microsoft.AspNetCore.Components;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
@@ -13,6 +15,8 @@ namespace AntDesign
 
     public partial class Affix
     {
+        private TokenWithCommonCls _token = new TokenWithCommonCls { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}" };
+
         public CSSObject GenSharedAffixStyle(AffixToken token)
         {
             var componentCls = token.ComponentCls;
@@ -26,17 +30,19 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenComponentStyleHook(TokenWithCommonCls token)
+        public RenderFragment UseStyle(TokenWithCommonCls token)
         {
-            var affixToken = MergeToken(
-                token,
-                new AffixToken()
-                {
-                    ZIndexPopup = token.ZIndexBase + 10,
-                });
-            return new CSSInterpolation[] { GenSharedAffixStyle(affixToken) };
+            return GenComponentStyleHook("Affix", token, () =>
+            {
+                var affixToken = MergeToken(
+                    token,
+                    new AffixToken()
+                    {
+                        ZIndexPopup = token.ZIndexBase + 10,
+                    });
+                return new CSSInterpolation[] { GenSharedAffixStyle(affixToken) };
+            });
         }
-
     }
 
 }

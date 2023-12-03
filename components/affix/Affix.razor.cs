@@ -69,7 +69,8 @@ namespace AntDesign
             base.OnInitialized();
 
             ClassMapper
-               .If(PrefixCls, () => _affixed);
+               .If(PrefixCls, () => _affixed)
+               .Add(_token.GetHashId());
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

@@ -116,8 +116,9 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            string prefixCls = "ant-anchor";
+            string prefixCls = _token.PrefixCls;
             ClassMapper.Add(prefixCls)
+                .Add(_token.GetHashId())
                 .If($"{prefixCls}-rtl", () => RTL);
         }
 

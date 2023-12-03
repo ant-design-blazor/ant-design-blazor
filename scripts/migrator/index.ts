@@ -9,7 +9,7 @@ const config = {
     version: '5.11.4',
     gitHash: '3fbed04e4b03ef1754a78a9245a2bb59f8b72fd1',
     remotePath: 'https://github.com/ant-design/ant-design.git',
-    localPath: '../ant-design-v5'
+    localPath: '../ant-design'
 }
 
 /**

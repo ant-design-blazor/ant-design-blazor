@@ -10,9 +10,11 @@ export type Component = {
 const defaultOptions = {
     usings: [
         'using System;',
-        'using CssInCs;',
+        'using CssInCSharp;',
         'using static AntDesign.GlobalStyle;',
         'using static AntDesign.Theme;',
+        'using static AntDesign.StyleUtil;',
+        'using Microsoft.AspNetCore.Components;',
     ],
     namespace: 'AntDesign',
     defaultTab: '    '
@@ -130,7 +132,6 @@ export const data0: Component[] = [
     }
 ]
 
-
 // 未完成测试的组件
 export const data1: Component[] = [
     {
@@ -141,16 +142,17 @@ export const data1: Component[] = [
             ...defaultOptions,
             defaultClass: 'Alert',
             typeMap: [
+                { from: 'Padding<string | number>', to: 'string' },
                 { from: 'CSSInterpolation', to: 'CSSObject[]' },
                 { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown6', to: 'GlobalToken', includes: [2] },
+                { from: 'Unknown6', to: 'TokenWithCommonCls', includes: [2] },
                 { from: 'Unknown6', to: 'AlertToken', includes: [3] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class AlertToken : TokenWithCommonCls' },
                 { source: 'class AlertToken', target: 'partial class AlertToken' },
                 { source: 'class Alert', target: 'partial class Alert' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'public RenderFragment UseStyle' },
             ]
         }
     },
@@ -165,14 +167,14 @@ export const data1: Component[] = [
                 { from: 'Unknown1', to: 'AnchorToken', includes: [1] },
                 { from: 'Unknown2', to: 'AnchorToken', includes: [1] },
                 { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown3', to: 'GlobalToken', includes: [2] },
+                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
                 { from: 'Unknown3', to: 'AnchorToken', includes: [3] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class AnchorToken : TokenWithCommonCls' },
                 { source: 'class AnchorToken', target: 'partial class AnchorToken' },
                 { source: 'class Anchor', target: 'partial class Anchor' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'public RenderFragment UseStyle' },
                 { source: 'textEllipsis', target: 'TextEllipsis' }, // 无法推导这个是局部变量还是全局变量，手动映射
             ]
         },
@@ -187,50 +189,23 @@ export const data1: Component[] = [
             typeMap: [
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 9]] },
                 { from: 'Unknown1', to: 'AvatarToken', includes: [2] },
-                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 6]] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 8]] },
                 { from: 'Unknown2', to: 'AvatarToken', includes: [2] },
                 { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown3', to: 'GlobalToken', includes: [2] },
+                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
                 { from: 'Unknown3', to: 'AvatarToken', includes: [3] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class AvatarToken : TokenWithCommonCls' },
                 { source: 'class AvatarToken', target: 'partial class AvatarToken' },
                 { source: 'class Avatar', target: 'partial class Avatar' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'public RenderFragment UseStyle' },
                 { source: 'AvatarSizeStyle', target: 'avatarSizeStyle' },
                 { source: 'Math.Round(', target: '(int)Math.Round((double)' }
             ]
         }
     },
-    {
-        name: 'BackTop',
-        src: ['components/back-top/style/index.ts'],
-        dist: 'components/back-top/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'BackTop',
-            typeMap: [
-                { from: 'Unknown1', to: 'BackTopToken', includes: [1] },
-                { from: 'Unknown2', to: 'BackTopToken', includes: [1] },
-                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown3', to: 'GlobalToken', includes: [2] },
-                { from: 'Unknown3', to: 'BackTopToken', includes: [3] },
-                { from: 'Unknown4', to: 'BackTopToken', includes: [1, 3] },
-                { from: 'Unknown4', to: 'GlobalToken', includes: [2] },
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class BackTopToken : TokenWithCommonCls' },
-                { source: 'class BackTopToken', target: 'partial class BackTopToken' },
-                { source: 'class BackTop', target: 'partial class BackTop' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook(GlobalToken token)', target: 'protected override CSSInterpolation[] UseStyle(GlobalToken token)' },
-                { source: 'controlHeightLG * 1.25', target: '(int)(controlHeightLG * 1.25)' },
-                { source: 'controlHeightLG * 2.5', target: '(int)(controlHeightLG * 2.5)' },
-                { source: 'controlHeightLG * 1.5', target: '(int)(controlHeightLG * 1.5)' },
-                { source: 'controlHeightLG * 0.5', target: '(int)(controlHeightLG * 0.5)' },
-            ]
-        }
-    },
+    
     {
         name: 'Badge',
         src: ['components/badge/style/index.ts'],
@@ -1392,70 +1367,32 @@ export const data2: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    // {
-    //     name: 'Button',
-    //     src: [
-    //         'components/button/style/index.ts',
-    //         'components/button/style/group.ts'
-    //     ],
-    //     dist: 'components/button/Style.cs',
-    //     csOptions: {
-    //         ...defaultOptions,
-    //         defaultClass: 'Button',
-    //         typeMap: [
-    //             { from: 'Unknown1', to: 'ButtonToken', includes: [1] },
-    //             { from: 'Unknown3', to: 'CSSObject', includes: [1, 3] },
-    //             { from: 'Unknown3', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown4', to: 'CSSObject', includes: [1, 3] },
-    //             { from: 'Unknown4', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown5', to: 'CSSObject', includes: [1, 3] },
-    //             { from: 'Unknown5', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown6', to: 'CSSObject', includes: [1, 2] },
-    //             { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 4]] },
-    //             { from: 'Unknown7', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown8', to: 'CSSObject', includes: [1, 3] },
-    //             { from: 'Unknown8', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 4]] },
-    //             { from: 'Unknown9', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 8]] },
-    //             { from: 'Unknown10', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown11', to: 'CSSObject', ranges: [[1, 12]] },
-    //             { from: 'Unknown11', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown12', to: 'CSSObject', includes: [1, 3] },
-    //             { from: 'Unknown12', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 8]] },
-    //             { from: 'Unknown13', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 8]] },
-    //             { from: 'Unknown14', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown15', to: 'CSSObject', ranges: [[1, 4]] },
-    //             { from: 'Unknown15', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown16', to: 'CSSObject', ranges: [[1, 3]] },
-    //             { from: 'Unknown16', to: 'ButtonToken', includes: [2] },
-    //             { from: 'CSSInterpolation', to: 'CSSInterpolation[]' },
-    //             { from: 'Unknown17', to: 'CSSObject', ranges: [[1, 9]] },
-    //             { from: 'Unknown18', to: 'CSSInterpolation', includes: [1] },
-    //             { from: 'Unknown18', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown19', to: 'CSSInterpolation', includes: [1] },
-    //             { from: 'Unknown19', to: 'ButtonToken', includes: [2, 3] },
-    //             { from: 'Unknown20', to: 'CSSInterpolation', includes: [1] },
-    //             { from: 'Unknown20', to: 'ButtonToken', includes: [2, 3] },
-    //             { from: 'Unknown21', to: 'CSSObject', ranges: [[1, 5]] },
-    //             { from: 'Unknown21', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown22', to: 'CSSInterpolation', includes: [1] },
-    //             { from: 'Unknown22', to: 'TokenWithCommonCls', includes: [2] },
-    //             { from: 'Unknown22', to: 'ButtonToken', includes: [3] },
-    //             { from: 'Unknown22', to: 'CSSInterpolation[]', includes: [4] },
-    //             { from: 'Unknown23', to: 'CSSObject', ranges: [[1, 9]] },
-    //             { from: 'Unknown24', to: 'CSSObject', includes: [1, 3], ranges: [[5, 14]] },
-    //             { from: 'Unknown24', to: 'ButtonToken', includes: [2] },
-    //             { from: 'Unknown24', to: 'CSSInterpolation[]', includes: [4] },
-    //         ],
-    //         transforms: [
-    //             { source: 'class ButtonToken', target: 'partial class ButtonToken : TokenWithCommonCls' },
-    //             { source: 'class Button', target: 'partial class Button' },
-    //             { source: 'public CSSObject[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-    //             { source: 'CSSObject hoverStyle, CSSObject activeStyle', target: 'CSSObject hoverStyle = default, CSSObject activeStyle = default' }
-    //         ]
-    //     }
-    // }
+    {
+        name: 'BackTop',
+        src: ['components/back-top/style/index.ts'],
+        dist: 'components/back-top/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'BackTop',
+            typeMap: [
+                { from: 'Unknown1', to: 'BackTopToken', includes: [1] },
+                { from: 'Unknown2', to: 'BackTopToken', includes: [1] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
+                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
+                { from: 'Unknown3', to: 'BackTopToken', includes: [3] },
+                { from: 'Unknown4', to: 'BackTopToken', includes: [1, 3] },
+                { from: 'Unknown4', to: 'TokenWithCommonCls', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class BackTopToken : TokenWithCommonCls' },
+                { source: 'class BackTopToken', target: 'partial class BackTopToken' },
+                { source: 'class BackTop', target: 'partial class BackTop' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook(TokenWithCommonCls token)', target: 'public RenderFragment UseStyle(TokenWithCommonCls token)' },
+                { source: 'controlHeightLG * 1.25', target: '(int)(controlHeightLG * 1.25)' },
+                { source: 'controlHeightLG * 2.5', target: '(int)(controlHeightLG * 2.5)' },
+                { source: 'controlHeightLG * 1.5', target: '(int)(controlHeightLG * 1.5)' },
+                { source: 'controlHeightLG * 0.5', target: '(int)(controlHeightLG * 0.5)' },
+            ]
+        }
+    },
 ]
