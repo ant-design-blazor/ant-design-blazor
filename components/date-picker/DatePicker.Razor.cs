@@ -140,10 +140,6 @@ namespace AntDesign
                     {
                         await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
                     }
-                    else if (AllowClear)
-                    {
-                        ClearValue();
-                    }
                     else if (isOverlayShown)
                     {
                         Close();

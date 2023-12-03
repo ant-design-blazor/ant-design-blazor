@@ -134,7 +134,7 @@ namespace AntDesign
             }
         }
 
-        private void OnResize(Window window)
+        internal void OnResize(Window window)
         {
             OptimizeSize(window.InnerWidth);
         }
@@ -193,7 +193,7 @@ namespace AntDesign
                 }
             }
 
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override void Dispose(bool disposing)

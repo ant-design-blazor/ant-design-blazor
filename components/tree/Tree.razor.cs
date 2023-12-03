@@ -16,8 +16,8 @@ namespace AntDesign
 {
     public partial class Tree<TItem> : AntDomComponentBase
     {
-        [CascadingParameter(Name = "IsTreeSelect")]
-        public bool IsTreeSelect { get; set; }
+        [CascadingParameter(Name = "TreeSelect")]
+        public TreeSelect<TItem> TreeSelect { get; set; }
 
         #region fields
 
@@ -30,6 +30,10 @@ namespace AntDesign
         /// All the checked nodes
         /// </summary>
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
+
+
+        bool _nodeHasChanged;
+
 
         #endregion fields
 
@@ -139,10 +143,24 @@ namespace AntDesign
         /// Add a node
         /// </summary>
         /// <param name="treeNode"></param>
-        internal void AddNode(TreeNode<TItem> treeNode)
+        internal void AddChildNode(TreeNode<TItem> treeNode)
         {
             treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
+        }
+
+        internal void AddNode(TreeNode<TItem> treeNode)
+        {
+            _allNodes.Add(treeNode);
+            _nodeHasChanged = true;
+            CallAfterRender(async () =>
+            {
+                if (_nodeHasChanged)
+                {
+                    _nodeHasChanged = false;
+                    TreeSelect?.UpdateValueAfterDataSourceChanged();
+                }
+            });
         }
 
         #endregion Node
@@ -818,7 +836,7 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                if (IsTreeSelect)
+                if (TreeSelect is not null)
                 {
                     IsCtrlKeyDown = true;
                 }

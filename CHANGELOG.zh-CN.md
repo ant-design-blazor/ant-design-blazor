@@ -15,6 +15,37 @@ timeline: true
 
 ---
 
+### 0.16.2
+
+`2023-11-17`
+
+- 🔥 更新 .NET 8 依赖库。[#3514](https://github.com/ant-design-blazor/ant-design-blazor/pull/3514) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 新增 Table 行分组（实验性）。[#3487](https://github.com/ant-design-blazor/ant-design-blazor/pull/3487) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 Table 把 RenderMode t重命名为 RerenderStrategy。[#3515](https://github.com/ant-design-blazor/ant-design-blazor/pull/3515) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 行选择的多个问题。[#3502](https://github.com/ant-design-blazor/ant-design-blazor/pull/3502) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 设置 RowKey 用于行缓存的数据比较器。[#3483](https://github.com/ant-design-blazor/ant-design-blazor/pull/3483) [@ElderJames](https://github.com/ElderJames)
+  - 📖 修复 文档中路由翻页的demo。[#3507](https://github.com/ant-design-blazor/ant-design-blazor/pull/3507) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 在被封装并在设置了 ValidateOnChange 的Form中时，已选项会被重置的问题。[#3508](https://github.com/ant-design-blazor/ant-design-blazor/pull/3508) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 TimePicker 设置了 TiemOnly 类型值时，修改时间时的 ArgumentOutOfRangeException 异常。[#3501](https://github.com/ant-design-blazor/ant-design-blazor/pull/3501) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 TreeSelect 当数据源变更时恢复绑定项。[#3492](https://github.com/ant-design-blazor/ant-design-blazor/pull/3492) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 RangePicker 焦点样式不清除和Tab/Enter按键会清除选中值的问题 。[#3488](https://github.com/ant-design-blazor/ant-design-blazor/pull/3488) [@Alexbits](https://github.com/Alexbits)
+
+
+### 0.16.1
+
+`2023-10-30`
+
+- Table
+  - 🆕 新增 支持抽象类数据源。[#3475](https://github.com/ant-design-blazor/ant-design-blazor/pull/3475) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 绑定 SelecetdRows 强制要求设置 Selection 列的问题。[#3465](https://github.com/ant-design-blazor/ant-design-blazor/pull/3465) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 modal Visible 属性支持双向绑定。[#3466](https://github.com/ant-design-blazor/ant-design-blazor/pull/3466) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input 验证信息显示问题。[#3474](https://github.com/ant-design-blazor/ant-design-blazor/pull/3474) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Layout 当 CollapsedWidth  等于0时，Sider 的 NoTrigger 不生效。[#3476](https://github.com/ant-design-blazor/ant-design-blazor/pull/3476) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.16.0
 
 `2023-10-24`
@@ -60,7 +91,9 @@ timeline: true
 - 🐞 修复 Input 在输入法候选时失去焦点不能马上绑定值。[#3462](https://github.com/ant-design-blazor/ant-design-blazor/pull/3462) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Button 点击动画在 wasm 多线程的出现的异常。[#3451](https://github.com/ant-design-blazor/ant-design-blazor/pull/3451) [@petertorocsik](https://github.com/petertorocsik)
 
+#### 破环性更新：
 
+- RangePicker 的 `OnChange` 事件参数从 `DateRangeChangedEventArgs` 改为 `DateRangeChangedEventArgs<TValue>`, 其中的 `Dates` 类型改为 `TValue`。
 
 ### 0.15.5
 

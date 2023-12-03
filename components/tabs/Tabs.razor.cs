@@ -448,7 +448,7 @@ namespace AntDesign
             _needUpdateScrollListPosition = true;
 
             _shouldRender = true;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

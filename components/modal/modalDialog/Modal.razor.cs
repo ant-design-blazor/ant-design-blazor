@@ -151,6 +151,13 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; }
 
+
+        /// <summary>
+        /// Specify a function invoke when the modal dialog is visible or not
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
+
         /// <summary>
         /// Width of the modal dialog, the default value is 520
         /// </summary>
@@ -302,6 +309,11 @@ namespace AntDesign
                     {
                         await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
 
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
+
                         if (OnCancel.HasDelegate)
                         {
                             await OnCancel.InvokeAsync(e);
@@ -318,6 +330,11 @@ namespace AntDesign
                     if (!args.Cancel)
                     {
                         await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
 
                         if (OnOk.HasDelegate)
                         {

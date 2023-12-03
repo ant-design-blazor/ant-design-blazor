@@ -58,7 +58,7 @@ namespace AntDesign
 
         internal bool HasRowTemplate { get; }
 
-        internal void SelectionChanged();
+        //internal void SelectionChanged();
 
         internal void OnExpandChange(RowData rowData);
 
@@ -81,5 +81,9 @@ namespace AntDesign
         internal void OnColumnInitialized();
 
         IFieldFilterTypeResolver FieldFilterTypeResolver { get; }
+
+        internal void AddGroupColumn(IFieldColumn column);
+
+        internal void RemoveGroupColumn(IFieldColumn column);
     }
 }
