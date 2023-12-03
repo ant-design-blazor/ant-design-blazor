@@ -15,6 +15,22 @@ timeline: true
 
 ---
 
+### 0.16.3
+
+`2023-12-04`
+
+- Table
+  - 🛠 重构 Table 将一些内部组件改为渲染片段。[#3545](https://github.com/ant-design/ant-design/pull/3545) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在客户端模式翻页不清除已选行的问题。[#3546](https://github.com/ant-design/ant-design/pull/3546) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在使用RowKey后不会立即刷新单元格的问题。[#3544](https://github.com/ant-design/ant-design/pull/3544) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 当默认绑定值不在DataSource中时，应清空选项。[#3529](https://github.com/ant-design/ant-design/pull/3529) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 勾选、选中、展开状态的双向绑定。[#3520](https://github.com/ant-design/ant-design/pull/3520) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 核心 枚举从 DisplayAttribute 获取名称支持本地化。 [#3536](https://github.com/ant-design/ant-design/pull/3536) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Radio 静态渲染时的选中样式。[#3532](https://github.com/ant-design/ant-design/pull/3532) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Checkbox 静态渲染时的选中样式。[#3535](https://github.com/ant-design/ant-design/pull/3535) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.16.2
 
 `2023-11-17`
@@ -33,6 +49,20 @@ timeline: true
 - 🐞 修复 TreeSelect 当数据源变更时恢复绑定项。[#3492](https://github.com/ant-design-blazor/ant-design-blazor/pull/3492) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 RangePicker 焦点样式不清除和Tab/Enter按键会清除选中值的问题 。[#3488](https://github.com/ant-design-blazor/ant-design-blazor/pull/3488) [@Alexbits](https://github.com/Alexbits)
 
+#### 破环性更新
+
+由于 Table 的 `RowSelectable` 属性跟 `Selection.Disabled`功能重复，并且又没有禁用样式，所以在这个版本中去除。请使用 Disabled 来实现行选择禁用。
+
+```diff
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
++        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <PropertyColumn Property="c=>c.Name">
+            <a>@context.Name</a>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age" />
+        <PropertyColumn Property="c=>c.Address" />
+    </Table>
+```
 
 ### 0.16.1
 
