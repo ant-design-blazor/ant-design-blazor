@@ -549,7 +549,7 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
-        async void FilterDropdownOnVisibleChange(bool visible)
+        private void FilterDropdownOnVisibleChange(bool visible)
         {
 #if NET5_0_OR_GREATER
             if (!visible ||
