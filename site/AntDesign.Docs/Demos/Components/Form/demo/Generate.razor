@@ -1,0 +1,36 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using System.ComponentModel
+
+    <Form Model="@model"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+          LabelColSpan="8"
+          WrapperColSpan="16">
+
+        <GenerateFormItems />
+
+    </Form>
+@code
+{
+    public class Model
+    {
+        [Required, DisplayName("User Name")]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool RememberMe { get; set; } = true;
+    }
+
+    private Model model = new Model();
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}

@@ -1,0 +1,29 @@
+﻿@inherits ComponentBase
+@namespace AntDesign
+
+@using AntDesign.Form.Dynamic
+@using AntDesign.Internal
+
+@typeparam TModel
+
+@foreach (var field in Fields)
+{
+    <FormItem Label="@field.Label">
+        @field.InputComponentTemplate
+    </FormItem>
+}
+
+@code {
+
+    [CascadingParameter(Name = "Form")]
+    private IForm Form { get; set; }
+
+    internal List<FormField<TModel>> Fields { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+
+        Fields = FormField<TModel>.FromForm((Form<TModel>)Form).ToList();
+        base.OnInitialized();
+    }
+}

@@ -12,13 +12,17 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TModel))]
+#endif
+
     public partial class Form<TModel> : AntDomComponentBase, IForm
     {
         private readonly string _prefixCls = "ant-form";
 
         /// <summary>
         /// Change how required/optional field labels are displayed on the form.
-        /// 
+        ///
         /// <list type="bullet">
         ///     <item>Required - Will mark required fields</item>
         ///     <item>Optional - Will mark optional fields</item>
@@ -132,7 +136,6 @@ namespace AntDesign
         [Parameter]
         public FormValidateErrorMessages ValidateMessages { get; set; }
 
-
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
@@ -189,9 +192,10 @@ namespace AntDesign
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
-        private void OnValidationRequestedHandler(object sender, ValidationRequestedEventArgs e) => InvokeAsync(() => OnValidationRequested.InvokeAsync(e));
-        private void OnValidationStateChangedHandler(object sender, ValidationStateChangedEventArgs e) => InvokeAsync(() => OnValidationStateChanged.InvokeAsync(e));
 
+        private void OnValidationRequestedHandler(object sender, ValidationRequestedEventArgs e) => InvokeAsync(() => OnValidationRequested.InvokeAsync(e));
+
+        private void OnValidationStateChangedHandler(object sender, ValidationStateChangedEventArgs e) => InvokeAsync(() => OnValidationStateChanged.InvokeAsync(e));
 
         protected override void Dispose(bool disposing)
         {
@@ -362,14 +366,14 @@ namespace AntDesign
             _editContext = newContext;
         }
 
-        static BindingFlags AllBindings
+        private static BindingFlags AllBindings
         {
             get { return BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance; }
         }
 
-        static Dictionary<string, (FieldInfo fi, EventInfo ei)> _eventInfos;
+        private static Dictionary<string, (FieldInfo fi, EventInfo ei)> _eventInfos;
 
-        static Dictionary<string, (FieldInfo fi, EventInfo ei)> GetEventInfos()
+        private static Dictionary<string, (FieldInfo fi, EventInfo ei)> GetEventInfos()
         {
             if (_eventInfos is null)
             {
