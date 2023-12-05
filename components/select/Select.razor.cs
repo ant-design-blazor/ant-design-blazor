@@ -923,13 +923,12 @@ namespace AntDesign
                     else
                         SelectedOptionItems[0] = result;
                     await ValueChanged.InvokeAsync(result.Value);
-                }
-                else
-                {
-                    await SetDefaultActiveFirstItemAsync();
+
+                    _defaultValueApplied = true;
+                    return;
                 }
             }
-            else if (DefaultActiveFirstOption)
+            if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }

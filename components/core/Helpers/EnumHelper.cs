@@ -61,7 +61,7 @@ namespace AntDesign
         {
             var enumName = Enum.GetName(_enumType, enumValue);
             var fieldInfo = _enumType.GetField(enumName);
-            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ?? enumName;
+            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? enumName;
         }
 
         private static Func<T, T, T> BuildAggregateFunction()

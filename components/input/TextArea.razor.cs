@@ -160,8 +160,8 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
                 ;
 
-                ClassMapper
-                    .Add("ant-input-textarea ")
+            ClassMapper
+                .Add("ant-input-textarea ")
                 .If("ant-input-textarea-show-count", () => ShowCount)
                 .If("ant-input-textarea-in-form-item", () => FormItem != null)
                 .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)
