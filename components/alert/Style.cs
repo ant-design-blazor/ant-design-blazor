@@ -23,9 +23,6 @@ namespace AntDesign
 
     public partial class Alert
     {
-        private const string PrefixCls = "ant-alert";
-        private TokenWithCommonCls _token = new TokenWithCommonCls { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}"};
-
         public CSSObject GenAlertTypeStyle(string bgColor, string borderColor, string iconColor, AlertToken token, string alertCls)
         {
             return new CSSObject()
@@ -235,9 +232,9 @@ namespace AntDesign
             };
         }
 
-        public RenderFragment UseStyle(TokenWithCommonCls token)
+        protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Affix", token, () =>
+            return GenComponentStyleHook("Alert", (token) =>
             {
                 var paddingHorizontal = 12;
                 var alertToken = MergeToken(

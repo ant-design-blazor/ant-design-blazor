@@ -3,7 +3,6 @@ using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -37,9 +36,6 @@ namespace AntDesign
 
     public partial class BackTop
     {
-        private const string PrefixCls = "ant-back-top";
-        private TokenWithCommonCls _token = new TokenWithCommonCls { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}" };
-
         public CSSObject GenSharedBackTopStyle(BackTopToken token)
         {
             var componentCls = token.ComponentCls;
@@ -109,9 +105,9 @@ namespace AntDesign
             };
         }
 
-        public RenderFragment UseStyle(TokenWithCommonCls token)
+        protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("BackTop", token, () =>
+            return GenComponentStyleHook("BackTop", (token) =>
             {
                 var fontSizeHeading3 = token.FontSizeHeading3;
                 var colorTextDescription = token.ColorTextDescription;

@@ -41,9 +41,6 @@ namespace AntDesign
 
     public partial class Avatar
     {
-        private const string PrefixCls = "ant-avatar";
-        private TokenWithCommonCls _token = new TokenWithCommonCls { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}" };
-
         public CSSObject GenBaseStyle(AvatarToken token)
         {
             var antCls = token.AntCls;
@@ -165,9 +162,9 @@ namespace AntDesign
             };
         }
 
-        public RenderFragment UseStyle(TokenWithCommonCls token)
+        protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Avatar", token, () =>
+            return GenComponentStyleHook("Avatar", (token) =>
             {
                 var colorTextLightSolid = token.ColorTextLightSolid;
                 var colorTextPlaceholder = token.ColorTextPlaceholder;

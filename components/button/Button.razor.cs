@@ -11,8 +11,6 @@ namespace AntDesign
 {
     public partial class Button : AntDomComponentBase
     {
-        private const string PrefixCls = "ant-btn";
-        private static readonly TokenWithCommonCls _token = new() { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}" };
         private string _formSize;
         public static readonly int RemoveAnimationAfter = 500;
 
@@ -135,11 +133,12 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
-            var prefixName = _token.PrefixCls;
+            var prefixName = "ant-btn";
+            var hashId = UseStyle(prefixName);
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .Add(_token.GetHashId())
+                .Add(hashId)
                 .GetIf(() => $"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
                 .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))

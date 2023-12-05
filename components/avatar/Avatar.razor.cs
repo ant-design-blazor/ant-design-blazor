@@ -143,10 +143,11 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            var prefixCls = _token.PrefixCls;
+            var prefixCls = "ant-avatar";
+            var hashId = UseStyle(prefixCls);
             ClassMapper
                 .Add(prefixCls)
-                .Add(_token.GetHashId())
+                .Add(hashId)
                 .GetIf(() => $"{prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
                 .GetIf(() => $"{prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))

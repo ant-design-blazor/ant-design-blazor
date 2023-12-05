@@ -29,9 +29,6 @@ namespace AntDesign
 
     public partial class Anchor
     {
-        private const string PrefixCls = "ant-anchor";
-        private TokenWithCommonCls _token = new TokenWithCommonCls { PrefixCls = PrefixCls, ComponentCls = $".{PrefixCls}" };
-
         public CSSObject GenSharedAnchorStyle(AnchorToken token)
         {
             var componentCls = token.ComponentCls;
@@ -171,11 +168,10 @@ namespace AntDesign
             };
         }
 
-        public RenderFragment UseStyle(TokenWithCommonCls token)
+        protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Anchor", token, () =>
+            return GenComponentStyleHook("Anchor", (token) =>
             {
-
                 var fontSize = token.FontSize;
                 var fontSizeLG = token.FontSizeLG;
                 var paddingXXS = token.PaddingXXS;

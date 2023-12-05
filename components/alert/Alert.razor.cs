@@ -117,10 +117,11 @@ namespace AntDesign
         /// </summary>
         private void SetClassMap()
         {
-            string prefixName = _token.PrefixCls;
+            string prefixName = "ant-alert";
+            var hashId = UseStyle(prefixName);
             ClassMapper
                 .Add(prefixName)
-                .Add(_token.GetHashId())
+                .Add(hashId)
                 .GetIf(() => $"{prefixName}-{CalcType}", () => !string.IsNullOrEmpty(CalcType))
                 .If($"{prefixName}-no-icon", () => !IsShowIcon)
                 .If($"{prefixName}-closable", () => Closable)

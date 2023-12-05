@@ -84,5 +84,21 @@ namespace AntDesign
 
         private string _class;
         private string _style;
+
+        protected string UseStyle(string prefixCls)
+        {
+            var action = UseComponentStyle();
+            if (action != null)
+            {
+                return action(prefixCls);
+            }
+
+            return string.Empty;
+        }
+
+        protected virtual UseComponentStyleResult UseComponentStyle()
+        {
+            return null;
+        }
     }
 }

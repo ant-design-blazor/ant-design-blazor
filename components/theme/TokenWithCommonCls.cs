@@ -13,6 +13,7 @@ namespace AntDesign
 
         public void Merge(TokenWithCommonCls source)
         {
+            base.Merge(source);
             ComponentCls = source.ComponentCls;
             PrefixCls = source.PrefixCls;
             IconCls = source.IconCls;

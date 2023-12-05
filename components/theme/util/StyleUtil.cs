@@ -4,70 +4,75 @@
 
 using System;
 using CssInCSharp;
-using Microsoft.AspNetCore.Components;
 using static CssInCSharp.StyleHelper;
 
 namespace AntDesign
 {
+    public delegate string UseComponentStyleResult(string prefixCls);
+
     internal class StyleUtil
     {
-        internal static RenderFragment GenComponentStyleHook(string componentName, TokenWithCommonCls token, Func<CSSInterpolation> func)
+        internal static UseComponentStyleResult GenComponentStyleHook(string componentName, Func<TokenWithCommonCls, CSSInterpolation> styleFn, Func<IToken> getDefaultToken = null)
         {
-            return GenComponentStyleHook(new[] { componentName, componentName }, token, func);
+            return GenComponentStyleHook(new[] { componentName, componentName }, styleFn, getDefaultToken);
         }
 
-        /*
-         * 注：
-         * 样式渲染一定只能传样式渲染的Func，不要传CSSObject对象。
-         * CSSObject构建会消耗内存，而Func只有一个引用外加闭包参数，内存开销少几乎无性能损耗。
-         * 只有当缓存未命中，渲染组件才会调用Func去创建CSSObject对象并编译生成样式内容。
-         */
-        internal static RenderFragment GenComponentStyleHook(string[] componentNames, TokenWithCommonCls token, Func<CSSInterpolation> func)
+        internal static UseComponentStyleResult GenComponentStyleHook(string[] componentNames, Func<TokenWithCommonCls, CSSInterpolation> styleFn, Func<IToken> getDefaultToken = null)
         {
             var concatComponent = string.Join("-", componentNames);
-            var hash = token.GetTokenHash();
-            return UseStyleRegister(new StyleInfo[]
+            return (prefixCls) =>
             {
+                var token = Seed.DefaultSeedToken;
+                var hash = token.GetTokenHash();
+                var componentToken = new TokenWithCommonCls();
+                componentToken.Merge(token);
+                componentToken.PrefixCls = prefixCls;
+                componentToken.ComponentCls = $".{prefixCls}";
+                if (getDefaultToken != null)
+                {
+                    var defaultToken = getDefaultToken();
+                    componentToken.Merge(defaultToken);
+                }
+
                 // Generate style for all a tags in antd component.
-                new ()
+                UseStyleRegister(new StyleInfo()
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { "Shared", token.AntCls },
-                    StyleFn = () => new CSSObject
-                    {
-                        ["&"] = GlobalStyle.GenLinkStyle(token)
-                    },
-                },
+                    Path = new[] { "Shared", componentToken.AntCls },
+                    StyleFn = () => new CSSObject { ["&"] = GlobalStyle.GenLinkStyle(token) },
+                });
 
                 // Generate style for icons
-                new ()
+                UseStyleRegister(new StyleInfo()
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { "ant-design-icons", token.IconCls },
+                    Path = new[] { "ant-design-icons", componentToken.IconCls },
                     StyleFn = () => new CSSObject
                     {
-                        [$".{token.IconCls}"] = new CSSObject
+                        [$".{componentToken.IconCls}"] = new CSSObject
                         {
                             ["..."] = GlobalStyle.ResetIcon(),
-                            [$".{token.IconCls} .{token.IconCls}-icon"] = new CSSObject
+                            [$".{componentToken.IconCls} .{componentToken.IconCls}-icon"] = new CSSObject
                             {
                                 Display = "block"
                             }
                         }
                     },
-                },
+                });
 
                 // Generate current component style
-                new ()
+                UseStyleRegister(new StyleInfo()
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { concatComponent, token.PrefixCls, token.IconCls },
-                    StyleFn = func,
-                }
-            });
+                    Path = new[] { concatComponent, componentToken.PrefixCls, componentToken.IconCls },
+                    StyleFn = () => styleFn(componentToken),
+                });
+
+                return hash.HashId;
+            };
         }
     }
 }
