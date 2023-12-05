@@ -209,7 +209,8 @@ export class CsFunction {
                     codes.push(`${tab}}${end}`);
                 } else {
                     const ps = this.paramaters.map(x => `${x.name}`).join(', '); // reset parameters
-                    codes.push(`${tab}(${ps}) => {`); // anonymous func
+                    codes.push(`${tab}(${ps}) =>`); // anonymous func
+                    codes.push(`${tab}{`)
                     bindingParamaters();
                     codes.push(...this.createBody(tab + '    '));
                     codes.push(`${tab}}${end}`);
@@ -344,6 +345,10 @@ export class CsFunction {
                         case CsKinds.Func:
                             const funcCodes = (x as CsFunction).format(tab + '    ', end);
                             codes.push(...funcCodes);
+                            break;
+                        case CsKinds.Method:
+                            const callCodes = (x as CsFunction).format(tab + '    ', end);
+                            codes.push(...callCodes);
                             break;
                     }
                 }

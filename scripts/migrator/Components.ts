@@ -14,7 +14,6 @@ const defaultOptions = {
         'using static AntDesign.GlobalStyle;',
         'using static AntDesign.Theme;',
         'using static AntDesign.StyleUtil;',
-        'using Microsoft.AspNetCore.Components;',
     ],
     namespace: 'AntDesign',
     defaultTab: '    '
@@ -134,28 +133,7 @@ export const data0: Component[] = [
 
 // 未完成测试的组件
 export const data1: Component[] = [
-    {
-        name: 'Alert',
-        src: ['components/alert/style/index.ts'],
-        dist: 'components/alert/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Alert',
-            typeMap: [
-                { from: 'Padding<string | number>', to: 'string' },
-                { from: 'CSSInterpolation', to: 'CSSObject[]' },
-                { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown6', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown6', to: 'AlertToken', includes: [3] },
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class AlertToken : TokenWithCommonCls' },
-                { source: 'class AlertToken', target: 'partial class AlertToken' },
-                { source: 'class Alert', target: 'partial class Alert' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'public RenderFragment UseStyle' },
-            ]
-        }
-    },
+    
     {
         name: 'Anchor',
         src: ['components/anchor/style/index.ts'],
@@ -205,7 +183,34 @@ export const data1: Component[] = [
             ]
         }
     },
-    
+    {
+        name: 'BackTop',
+        src: ['components/back-top/style/index.ts'],
+        dist: 'components/back-top/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'BackTop',
+            typeMap: [
+                { from: 'Unknown1', to: 'BackTopToken', includes: [1] },
+                { from: 'Unknown2', to: 'BackTopToken', includes: [1] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
+                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
+                { from: 'Unknown3', to: 'BackTopToken', includes: [3] },
+                { from: 'Unknown4', to: 'BackTopToken', includes: [1, 3] },
+                { from: 'Unknown4', to: 'TokenWithCommonCls', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class BackTopToken : TokenWithCommonCls' },
+                { source: 'class BackTopToken', target: 'partial class BackTopToken' },
+                { source: 'class BackTop', target: 'partial class BackTop' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook(TokenWithCommonCls token)', target: 'public RenderFragment UseStyle(TokenWithCommonCls token)' },
+                { source: 'controlHeightLG * 1.25', target: '(int)(controlHeightLG * 1.25)' },
+                { source: 'controlHeightLG * 2.5', target: '(int)(controlHeightLG * 2.5)' },
+                { source: 'controlHeightLG * 1.5', target: '(int)(controlHeightLG * 1.5)' },
+                { source: 'controlHeightLG * 0.5', target: '(int)(controlHeightLG * 0.5)' },
+            ]
+        }
+    },
     {
         name: 'Badge',
         src: ['components/badge/style/index.ts'],
@@ -1352,14 +1357,13 @@ export const data2: Component[] = [
             defaultClass: 'Affix',
             typeMap: [
                 { from: 'Unknown1', to: 'AffixToken', includes: [1] },
-                { from: 'Unknown2', to: 'CSSInterpolation', includes: [1] },
-                { from: 'Unknown2', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown2', to: 'AffixToken', includes: [3] },
-                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [4] },
+                { from: 'Unknown2', to: 'AffixToken', includes: [1] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
                 { source: 'class AffixToken', target: 'class AffixToken : TokenWithCommonCls' },
                 { source: 'class Affix', target: 'partial class Affix' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -1367,31 +1371,25 @@ export const data2: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
+    
     {
-        name: 'BackTop',
-        src: ['components/back-top/style/index.ts'],
-        dist: 'components/back-top/Style.cs',
+        name: 'Alert',
+        src: ['components/alert/style/index.ts'],
+        dist: 'components/alert/Style.cs',
         csOptions: {
             ...defaultOptions,
-            defaultClass: 'BackTop',
+            defaultClass: 'Alert',
             typeMap: [
-                { from: 'Unknown1', to: 'BackTopToken', includes: [1] },
-                { from: 'Unknown2', to: 'BackTopToken', includes: [1] },
-                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown3', to: 'BackTopToken', includes: [3] },
-                { from: 'Unknown4', to: 'BackTopToken', includes: [1, 3] },
-                { from: 'Unknown4', to: 'TokenWithCommonCls', includes: [2] },
+                { from: 'Padding<string | number>', to: 'string' },
+                { from: 'CSSInterpolation', to: 'CSSObject[]' },
+                { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [1, 4] },
+                { from: 'Unknown6', to: 'TokenWithCommonCls', includes: [2] },
+                { from: 'Unknown6', to: 'AlertToken', includes: [3] },
             ],
             transforms: [
-                { source: 'class ComponentToken', target: 'partial class BackTopToken : TokenWithCommonCls' },
-                { source: 'class BackTopToken', target: 'partial class BackTopToken' },
-                { source: 'class BackTop', target: 'partial class BackTop' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook(TokenWithCommonCls token)', target: 'public RenderFragment UseStyle(TokenWithCommonCls token)' },
-                { source: 'controlHeightLG * 1.25', target: '(int)(controlHeightLG * 1.25)' },
-                { source: 'controlHeightLG * 2.5', target: '(int)(controlHeightLG * 2.5)' },
-                { source: 'controlHeightLG * 1.5', target: '(int)(controlHeightLG * 1.5)' },
-                { source: 'controlHeightLG * 0.5', target: '(int)(controlHeightLG * 0.5)' },
+                { source: 'class ComponentToken', target: 'partial class AlertToken : TokenWithCommonCls' },
+                { source: 'class AlertToken', target: 'partial class AlertToken' },
+                { source: 'class Alert', target: 'partial class Alert' },
             ]
         }
     },

@@ -1,4 +1,5 @@
-﻿using CssInCSharp;
+using System;
+using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
@@ -28,17 +29,20 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Affix", (token) =>
-            {
-                var affixToken = MergeToken(
-                    token,
-                    new AffixToken()
-                    {
-                        ZIndexPopup = token.ZIndexBase + 10,
-                    });
-                return new CSSInterpolation[] { GenSharedAffixStyle(affixToken) };
-            });
+            return GenComponentStyleHook(
+                "Affix",
+                (token) =>
+                {
+                    var affixToken = MergeToken(
+                        token,
+                        new AffixToken()
+                        {
+                            ZIndexPopup = token.ZIndexBase + 10,
+                        });
+                    return new CSSInterpolation[] { GenSharedAffixStyle(affixToken) };
+                });
         }
+
     }
 
 }

@@ -282,12 +282,24 @@ function convertExportAssignment(context: Context<ts.ExportAssignment>) {
         case ts.SyntaxKind.CallExpression:
             const callExp = context.node.expression as ts.CallExpression;
             const funcName = callExp.expression.getText();
+            const parameters: any[] = [];
             callExp.arguments.forEach(x => {
                 if (x.kind === ts.SyntaxKind.ArrowFunction) {
-                    const func = createArrowFunction(funcName, x as ts.ArrowFunction);
-                    context.csBuilder.addFunction(func);
+                    const funBody = createArrowFunction('', x as ts.ArrowFunction, CsKinds.Func);
+                    parameters.push(funBody);
+                } else if (x.kind === ts.SyntaxKind.StringLiteral) {
+                    parameters.push(x.getText());
                 }
             });
+            const callExpression: CallExpression = {
+                kind: CsKinds.CallExpression,
+                assignment: '',
+                funcName: funcName,
+                paramaters: parameters,
+                returnFlag: 'return '
+            };
+            const func = new CsFunction("ExportDefault", [], "UseComponentStyleResult", { statements: [callExpression] }, CsKinds.Method);
+            context.csBuilder.addFunction(func);
             break;
     }
 }
