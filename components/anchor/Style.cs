@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -170,29 +169,38 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Anchor", (token) =>
-            {
-                var fontSize = token.FontSize;
-                var fontSizeLG = token.FontSizeLG;
-                var paddingXXS = token.PaddingXXS;
-                var anchorToken = MergeToken(
-                    token,
-                    new AnchorToken()
+            return GenComponentStyleHook(
+                "Anchor",
+                (token) =>
+                {
+                    var fontSize = token.FontSize;
+                    var fontSizeLG = token.FontSizeLG;
+                    var paddingXXS = token.PaddingXXS;
+                    var anchorToken = MergeToken(
+                        token,
+                        new AnchorToken()
+                        {
+                            HolderOffsetBlock = paddingXXS,
+                            AnchorPaddingBlockSecondary = paddingXXS / 2,
+                            AnchorTitleBlock = (fontSize / 14) * 3,
+                            AnchorBallSize = fontSizeLG / 2,
+                        });
+                    return new CSSInterpolation[]
                     {
-                        HolderOffsetBlock = paddingXXS,
-                        AnchorPaddingBlockSecondary = paddingXXS / 2,
-                        AnchorTitleBlock = (fontSize / 14) * 3,
-                        AnchorBallSize = fontSizeLG / 2,
+                        GenSharedAnchorStyle(anchorToken),
+                        GenSharedAnchorHorizontalStyle(anchorToken)
+                    };
+                },
+                (token) =>
+                {
+                    return new AnchorToken()
+                    {
                         LinkPaddingBlock = token.PaddingXXS,
                         LinkPaddingInlineStart = token.Padding,
-                    });
-                return new CSSInterpolation[]
-                {
-                    GenSharedAnchorStyle(anchorToken),
-                    GenSharedAnchorHorizontalStyle(anchorToken)
-                };
-            });
+                    };
+                });
         }
+
     }
 
 }

@@ -13,13 +13,14 @@ namespace AntDesign
     public interface IToken
     {
         Dictionary<string, object> GetTokens();
-        void Merge(IToken source);
+        void Merge(IToken token);
+        void Merge(params IToken[] tokens);
         TokenHash GetTokenHash(string version = "5.11.4", bool hashed = true);
     }
 
     public partial class GlobalToken : IToken
     {
-        private readonly Dictionary<string, object> _tokens = new();
+        protected readonly Dictionary<string, object> _tokens = new();
         private TokenHash _tokenHash;
 #if DEBUG
         private const string HashPrefix = "css-dev-only-do-not-override";
@@ -46,6 +47,14 @@ namespace AntDesign
             foreach (var token in tokens)
             {
                 _tokens[token.Key] = token.Value;
+            }
+        }
+
+        public void Merge(params IToken[] tokens)
+        {
+            foreach (var token in tokens)
+            {
+                Merge(token);
             }
         }
 

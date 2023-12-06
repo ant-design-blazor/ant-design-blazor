@@ -6,18 +6,34 @@ namespace AntDesign
 {
     public class TokenWithCommonCls : GlobalToken
     {
-        public string ComponentCls { get; set; }
-        public string PrefixCls { get; set; }
-        public string IconCls { get; set; } = "anticon";
-        public string AntCls { get; set; } = "ant";
-
-        public void Merge(TokenWithCommonCls source)
+        public string ComponentCls
         {
-            base.Merge(source);
-            ComponentCls = source.ComponentCls;
-            PrefixCls = source.PrefixCls;
-            IconCls = source.IconCls;
-            AntCls = source.AntCls;
+            get => (string)_tokens["componentCls"];
+            set => _tokens["componentCls"] = value;
+        }
+
+        public string PrefixCls
+        {
+            get => (string)_tokens["prefixCls"];
+            set => _tokens["prefixCls"] = value;
+        }
+
+        public string IconCls
+        {
+            get => (string)_tokens["iconCls"];
+            set => _tokens["iconCls"] = value;
+        }
+
+        public string AntCls
+        {
+            get => (string)_tokens["iconCls"];
+            set => _tokens["iconCls"] = value;
+        }
+
+        public TokenWithCommonCls()
+        {
+            IconCls = "anticon";
+            AntCls = "ant";
         }
     }
 }

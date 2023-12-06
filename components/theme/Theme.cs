@@ -17,7 +17,7 @@ namespace AntDesign
 
     internal class Theme
     {
-        public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : TokenWithCommonCls
+        public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : IToken
         {
             value.Merge(token);
             return value;

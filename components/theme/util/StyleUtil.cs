@@ -12,27 +12,35 @@ namespace AntDesign
 
     internal class StyleUtil
     {
-        internal static UseComponentStyleResult GenComponentStyleHook(string componentName, Func<TokenWithCommonCls, CSSInterpolation> styleFn, Func<IToken> getDefaultToken = null)
+        internal static UseComponentStyleResult GenComponentStyleHook(
+            string componentName,
+            Func<TokenWithCommonCls, CSSInterpolation> styleFn)
+        {
+            return GenComponentStyleHook<TokenWithCommonCls>(componentName, styleFn);
+        }
+
+        internal static UseComponentStyleResult GenComponentStyleHook<T>(
+            string componentName,
+            Func<T, CSSInterpolation> styleFn,
+            Func<GlobalToken, T> getDefaultToken = null) where T : IToken, new()
+
         {
             return GenComponentStyleHook(new[] { componentName, componentName }, styleFn, getDefaultToken);
         }
 
-        internal static UseComponentStyleResult GenComponentStyleHook(string[] componentNames, Func<TokenWithCommonCls, CSSInterpolation> styleFn, Func<IToken> getDefaultToken = null)
+        internal static UseComponentStyleResult GenComponentStyleHook<T>(
+            string[] componentNames,
+            Func<T, CSSInterpolation> styleFn,
+            Func<GlobalToken, T> getDefaultToken = null) where T : IToken, new()
         {
             var concatComponent = string.Join("-", componentNames);
             return (prefixCls) =>
             {
                 var token = Seed.DefaultSeedToken;
                 var hash = token.GetTokenHash();
-                var componentToken = new TokenWithCommonCls();
-                componentToken.Merge(token);
-                componentToken.PrefixCls = prefixCls;
-                componentToken.ComponentCls = $".{prefixCls}";
-                if (getDefaultToken != null)
-                {
-                    var defaultToken = getDefaultToken();
-                    componentToken.Merge(defaultToken);
-                }
+                var mergedToken = getDefaultToken != null ? getDefaultToken(token) : new T();
+                var componentToken = new TokenWithCommonCls() { PrefixCls = prefixCls, ComponentCls = $".{prefixCls}" };
+                mergedToken.Merge(token, componentToken);
 
                 // Generate style for all a tags in antd component.
                 UseStyleRegister(new StyleInfo()
@@ -68,7 +76,7 @@ namespace AntDesign
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
                     Path = new[] { concatComponent, componentToken.PrefixCls, componentToken.IconCls },
-                    StyleFn = () => styleFn(componentToken),
+                    StyleFn = () => styleFn(mergedToken),
                 });
 
                 return hash.HashId;

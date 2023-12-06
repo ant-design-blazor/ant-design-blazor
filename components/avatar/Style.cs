@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -164,26 +163,39 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Avatar", (token) =>
-            {
-                var colorTextLightSolid = token.ColorTextLightSolid;
-                var colorTextPlaceholder = token.ColorTextPlaceholder;
-                var controlHeight = token.ControlHeight;
-                var controlHeightLG = token.ControlHeightLG;
-                var controlHeightSM = token.ControlHeightSM;
-                var fontSize = token.FontSize;
-                var fontSizeLG = token.FontSizeLG;
-                var fontSizeXL = token.FontSizeXL;
-                var fontSizeHeading3 = token.FontSizeHeading3;
-                var marginXS = token.MarginXS;
-                var marginXXS = token.MarginXXS;
-                var colorBorderBg = token.ColorBorderBg;
-                var avatarToken = MergeToken(
-                    token,
-                    new AvatarToken()
+            return GenComponentStyleHook(
+                "Avatar",
+                (token) =>
+                {
+                    var colorTextLightSolid = token.ColorTextLightSolid;
+                    var colorTextPlaceholder = token.ColorTextPlaceholder;
+                    var avatarToken = MergeToken(
+                        token,
+                        new AvatarToken()
+                        {
+                            AvatarBg = colorTextPlaceholder,
+                            AvatarColor = colorTextLightSolid,
+                        });
+                    return new CSSInterpolation[]
                     {
-                        AvatarBg = colorTextPlaceholder,
-                        AvatarColor = colorTextLightSolid,
+                        GenBaseStyle(avatarToken),
+                        GenGroupStyle(avatarToken)
+                    };
+                },
+                (token) =>
+                {
+                    var controlHeight = token.ControlHeight;
+                    var controlHeightLG = token.ControlHeightLG;
+                    var controlHeightSM = token.ControlHeightSM;
+                    var fontSize = token.FontSize;
+                    var fontSizeLG = token.FontSizeLG;
+                    var fontSizeXL = token.FontSizeXL;
+                    var fontSizeHeading3 = token.FontSizeHeading3;
+                    var marginXS = token.MarginXS;
+                    var marginXXS = token.MarginXXS;
+                    var colorBorderBg = token.ColorBorderBg;
+                    return new AvatarToken()
+                    {
                         ContainerSize = controlHeight,
                         ContainerSizeLG = controlHeightLG,
                         ContainerSizeSM = controlHeightSM,
@@ -193,14 +205,10 @@ namespace AntDesign
                         GroupSpace = marginXXS,
                         GroupOverlapping = -marginXS,
                         GroupBorderColor = colorBorderBg,
-                    });
-                return new CSSInterpolation[]
-                {
-                    GenBaseStyle(avatarToken),
-                    GenGroupStyle(avatarToken)
-                };
-            });
+                    };
+                });
         }
+
     }
 
 }

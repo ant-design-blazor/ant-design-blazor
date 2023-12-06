@@ -133,30 +133,6 @@ export const data0: Component[] = [
 
 // 未完成测试的组件
 export const data1: Component[] = [
-    
-    {
-        name: 'Anchor',
-        src: ['components/anchor/style/index.ts'],
-        dist: 'components/anchor/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Anchor',
-            typeMap: [
-                { from: 'Unknown1', to: 'AnchorToken', includes: [1] },
-                { from: 'Unknown2', to: 'AnchorToken', includes: [1] },
-                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown3', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown3', to: 'AnchorToken', includes: [3] },
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class AnchorToken : TokenWithCommonCls' },
-                { source: 'class AnchorToken', target: 'partial class AnchorToken' },
-                { source: 'class Anchor', target: 'partial class Anchor' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'public RenderFragment UseStyle' },
-                { source: 'textEllipsis', target: 'TextEllipsis' }, // 无法推导这个是局部变量还是全局变量，手动映射
-            ]
-        },
-    },
     {
         name: 'Avatar',
         src: ['components/avatar/style/index.ts'],
@@ -1367,11 +1343,6 @@ export const data2: Component[] = [
             ]
         }
     },
-];
-
-// 用于生成的实例，将需要生成的组件配置放到这里
-export const components: Component[] = [
-    
     {
         name: 'Alert',
         src: ['components/alert/style/index.ts'],
@@ -1381,16 +1352,69 @@ export const components: Component[] = [
             defaultClass: 'Alert',
             typeMap: [
                 { from: 'Padding<string | number>', to: 'string' },
-                { from: 'CSSInterpolation', to: 'CSSObject[]' },
-                { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [1, 4] },
-                { from: 'Unknown6', to: 'TokenWithCommonCls', includes: [2] },
-                { from: 'Unknown6', to: 'AlertToken', includes: [3] },
+                { from: 'Unknown6', to: 'CSSInterpolation', includes: [1] },
+                { from: 'Unknown6', to: 'AlertToken', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class AlertToken : TokenWithCommonCls' },
                 { source: 'class AlertToken', target: 'partial class AlertToken' },
                 { source: 'class Alert', target: 'partial class Alert' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                { source: 'new CSSInterpolation', target: 'new CSSInterpolation[]' }
             ]
         }
     },
+    {
+        name: 'Anchor',
+        src: ['components/anchor/style/index.ts'],
+        dist: 'components/anchor/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Anchor',
+            typeMap: [
+                { from: 'Unknown1', to: 'AnchorToken', includes: [1] },
+                { from: 'Unknown2', to: 'AnchorToken', includes: [1] },
+                { from: 'Unknown3', to: 'AnchorToken', includes: [1] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown3', to: 'AnchorToken', includes: [3] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class AnchorToken : TokenWithCommonCls' },
+                { source: 'class AnchorToken', target: 'partial class AnchorToken' },
+                { source: 'class Anchor', target: 'partial class Anchor' },
+                { source: 'textEllipsis', target: 'TextEllipsis' }, // 无法推导这个是局部变量还是全局变量，手动映射
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' }
+            ]
+        },
+    },
+    {
+        name: 'Avatar',
+        src: ['components/avatar/style/index.ts'],
+        dist: 'components/avatar/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Avatar',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 9]] },
+                { from: 'Unknown1', to: 'AvatarToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown2', to: 'AvatarToken', includes: [2] },
+                { from: 'Unknown3', to: 'AvatarToken', includes: [1] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown3', to: 'AvatarToken', includes: [3] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class AvatarToken : TokenWithCommonCls' },
+                { source: 'class AvatarToken', target: 'partial class AvatarToken' },
+                { source: 'class Avatar', target: 'partial class Avatar' },
+                { source: 'AvatarSizeStyle', target: 'avatarSizeStyle' },
+                { source: 'Math.Round(', target: '(int)Math.Round((double)' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' }
+            ]
+        }
+    },
+];
+
+// 用于生成的实例，将需要生成的组件配置放到这里
+export const components: Component[] = [
 ]

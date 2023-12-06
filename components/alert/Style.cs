@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -222,7 +221,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GenAlertStyle(AlertToken token)
+        public CSSInterpolation GenAlertStyle(AlertToken token)
         {
             return new CSSInterpolation[]
             {
@@ -234,20 +233,24 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Alert", (token) =>
-            {
-                var paddingHorizontal = 12;
-                var alertToken = MergeToken(
-                    token,
-                    new AlertToken()
+            return GenComponentStyleHook(
+                "Alert",
+                (token) =>
+                {
+                    return new CSSInterpolation[] { GenAlertStyle(token) };
+                },
+                (token) =>
+                {
+                    var paddingHorizontal = 12;
+                    return new AlertToken()
                     {
                         WithDescriptionIconSize = token.FontSizeHeading3,
                         DefaultPadding = @$"{token.PaddingContentVerticalSM}px {paddingHorizontal}px",
                         WithDescriptionPadding = @$"{token.PaddingMD}px {token.PaddingContentHorizontalLG}px",
-                    });
-                return new CSSInterpolation[] { GenAlertStyle(alertToken) };
-            });
+                    };
+                });
         }
+
     }
 
 }
