@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -107,35 +107,44 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("BackTop", (token) =>
-            {
-                var fontSizeHeading3 = token.FontSizeHeading3;
-                var colorTextDescription = token.ColorTextDescription;
-                var colorTextLightSolid = token.ColorTextLightSolid;
-                var colorText = token.ColorText;
-                var controlHeightLG = token.ControlHeightLG;
-                var backTopToken = MergeToken(
-                    token,
-                    new BackTopToken()
-                    {
-                        BackTopBackground = colorTextDescription,
-                        BackTopColor = colorTextLightSolid,
-                        BackTopHoverBackground = colorText,
-                        BackTopFontSize = fontSizeHeading3,
-                        BackTopSize = controlHeightLG,
-                        BackTopBlockEnd = (int)(controlHeightLG * 1.25),
-                        BackTopInlineEnd = (int)(controlHeightLG * 2.5),
-                        BackTopInlineEndMD = (int)(controlHeightLG * 1.5),
-                        BackTopInlineEndXS = (int)(controlHeightLG * 0.5),
-                        ZIndexPopup = token.ZIndexBase + 10,
-                    });
-                return new CSSInterpolation[]
+            return GenComponentStyleHook(
+                "BackTop",
+                (token) =>
                 {
-                    GenSharedBackTopStyle(backTopToken),
-                    GenMediaBackTopStyle(backTopToken)
-                };
-            });
+                    var fontSizeHeading3 = token.FontSizeHeading3;
+                    var colorTextDescription = token.ColorTextDescription;
+                    var colorTextLightSolid = token.ColorTextLightSolid;
+                    var colorText = token.ColorText;
+                    var controlHeightLG = token.ControlHeightLG;
+                    var backTopToken = MergeToken(
+                        token,
+                        new BackTopToken()
+                        {
+                            BackTopBackground = colorTextDescription,
+                            BackTopColor = colorTextLightSolid,
+                            BackTopHoverBackground = colorText,
+                            BackTopFontSize = fontSizeHeading3,
+                            BackTopSize = controlHeightLG,
+                            BackTopBlockEnd = (int)(controlHeightLG * 1.25),
+                            BackTopInlineEnd = (int)(controlHeightLG * 2.5),
+                            BackTopInlineEndMD = (int)(controlHeightLG * 1.5),
+                            BackTopInlineEndXS = (int)(controlHeightLG * 0.5),
+                        });
+                    return new CSSInterpolation[]
+                    {
+                        GenSharedBackTopStyle(backTopToken),
+                        GenMediaBackTopStyle(backTopToken)
+                    };
+                },
+                (token) =>
+                {
+                    return new BackTopToken()
+                    {
+                        ZIndexPopup = token.ZIndexBase + 10,
+                    };
+                });
         }
+
     }
 
 }

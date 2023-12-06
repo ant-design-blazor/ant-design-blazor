@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -150,7 +150,8 @@ namespace AntDesign
             var numberPrefixCls = @$"{antCls}-scroll-number";
             var colorPreset = GenPresetColor(
                 token,
-                (colorKey, args) => {
+                (colorKey, args) =>
+                {
                     var darkColor = args.DarkColor;
                     return new CSSObject()
                     {
@@ -387,52 +388,67 @@ namespace AntDesign
             };
         }
 
+        public BadgeToken PrepareToken(BadgeToken token)
+        {
+            var fontSize = token.FontSize;
+            var lineHeight = token.LineHeight;
+            var lineWidth = token.LineWidth;
+            var marginXS = token.MarginXS;
+            var colorBorderBg = token.ColorBorderBg;
+            var badgeFontHeight = (int)Math.Round((double)fontSize * lineHeight);
+            var badgeShadowSize = lineWidth;
+            var badgeTextColor = token.ColorBgContainer;
+            var badgeColor = token.ColorError;
+            var badgeColorHover = token.ColorErrorHover;
+            var badgeToken = MergeToken(
+                token,
+                new BadgeToken()
+                {
+                    BadgeFontHeight = badgeFontHeight,
+                    BadgeShadowSize = badgeShadowSize,
+                    BadgeTextColor = badgeTextColor,
+                    BadgeColor = badgeColor,
+                    BadgeColorHover = badgeColorHover,
+                    BadgeShadowColor = colorBorderBg,
+                    BadgeProcessingDuration = "1.2s",
+                    BadgeRibbonOffset = marginXS,
+                    BadgeRibbonCornerTransform = "scaleY(0.75)",
+                    BadgeRibbonCornerFilter = @$"brightness(75%)",
+                });
+            return badgeToken;
+        }
+
+        public BadgeToken PrepareComponentToken(GlobalToken token)
+        {
+            var fontSize = token.FontSize;
+            var lineHeight = token.LineHeight;
+            var fontSizeSM = token.FontSizeSM;
+            var lineWidth = token.LineWidth;
+            return new BadgeToken()
+            {
+                IndicatorZIndex = "auto",
+                IndicatorHeight = (int)Math.Round((double)fontSize * lineHeight) - 2 * lineWidth,
+                IndicatorHeightSM = fontSize,
+                DotSize = fontSizeSM / 2,
+                TextFontSize = fontSizeSM,
+                TextFontSizeSM = fontSizeSM,
+                TextFontWeight = "normal",
+                StatusSize = fontSizeSM / 2,
+            };
+        }
+
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Badge", (token) =>
-            {
-                var fontSize = token.FontSize;
-                var lineHeight = token.LineHeight;
-                var lineWidth = token.LineWidth;
-                var marginXS = token.MarginXS;
-                var colorBorderBg = token.ColorBorderBg;
-                var badgeFontHeight = (int)Math.Round((double)fontSize * lineHeight);
-                var badgeShadowSize = lineWidth;
-                var badgeTextColor = token.ColorBgContainer;
-                var badgeColor = token.ColorError;
-                var badgeColorHover = token.ColorErrorHover;
-                var fontSizeSM = token.FontSizeSM;
-
-                var badgeToken = MergeToken(
-                    token,
-                    new BadgeToken()
-                    {
-                        BadgeFontHeight = badgeFontHeight,
-                        BadgeShadowSize = badgeShadowSize,
-                        BadgeTextColor = badgeTextColor,
-                        BadgeColor = badgeColor,
-                        BadgeColorHover = badgeColorHover,
-                        BadgeShadowColor = colorBorderBg,
-                        BadgeProcessingDuration = "1.2s",
-                        BadgeRibbonOffset = marginXS,
-                        BadgeRibbonCornerTransform = "scaleY(0.75)",
-                        BadgeRibbonCornerFilter = @$"brightness(75%)",
-
-                        IndicatorZIndex = "auto",
-                        IndicatorHeight = (int)Math.Round((double)fontSize * lineHeight) - 2 * lineWidth,
-                        IndicatorHeightSM = fontSize,
-                        DotSize = fontSizeSM / 2,
-                        TextFontSize = fontSizeSM,
-                        TextFontSizeSM = fontSizeSM,
-                        TextFontWeight = "normal",
-                        StatusSize = fontSizeSM / 2,
-                    });
-                return new CSSInterpolation[]
+            return GenComponentStyleHook(
+                "Badge",
+                (token) =>
                 {
-                    GenSharedBadgeStyle(badgeToken)
-                };
-            });
+                    var badgeToken = PrepareToken(token);
+                    return new CSSInterpolation[] { GenSharedBadgeStyle(badgeToken) };
+                },
+                PrepareComponentToken);
         }
+
     }
 
 }

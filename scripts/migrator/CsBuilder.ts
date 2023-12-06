@@ -3,7 +3,7 @@ import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, 
 export type Transform = {
     source: string;
     target: string;
-    regex?: string;
+    regex?: RegExp;
 }
 
 export type TypeMap = {
@@ -32,6 +32,7 @@ export enum CsKinds {
     Func = 5,
     Action = 6,
     VariableDeclaration = 7,
+    Identifier = 8,
 }
 
 export type ParameterType = {
@@ -243,6 +244,9 @@ export class CsFunction {
                 case CsKinds.VariableDeclaration:
                     codes.push(...this.createVariableDeclaration(tab, x));
                     break;
+                case CsKinds.Identifier:
+                    codes.push(`${tab}${x.text}`);
+                    break;
             }
         });
         return codes;
@@ -347,7 +351,11 @@ export class CsFunction {
                             codes.push(...funcCodes);
                             break;
                         case CsKinds.Method:
-                            const callCodes = (x as CsFunction).format(tab + '    ', end);
+                            const methodCodes = (x as CsFunction).format(tab + '    ', end);
+                            codes.push(...methodCodes);
+                            break;
+                        case CsKinds.CallExpression:
+                            const callCodes = this.createCallExpression(tab + '    ', x as CallExpression, ');');
                             codes.push(...callCodes);
                             break;
                     }
@@ -493,7 +501,11 @@ export class CsBuilder {
             if (code == '') continue;
             const item = this.options.transforms.find(x => code.includes(x.source));
             if (!item) continue;
-            codes[i] = code.replace(item.source, item.target);
+            if (item.regex) {
+                codes[i] = code.replace(item.regex, item.target);
+            } else {
+                codes[i] = code.replace(item.source, item.target);
+            }
         }
     }
 }

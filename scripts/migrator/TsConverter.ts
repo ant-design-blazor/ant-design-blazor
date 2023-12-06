@@ -162,6 +162,10 @@ function createCallExpression(assignment: string, returnType: string, callExp: t
                 const func = createArrowFunction('', arg as ts.ArrowFunction, CsKinds.Func);
                 callExpression.paramaters.push(func);
                 break;
+            case ts.SyntaxKind.CallExpression:
+                const callExp = createCallExpression('', '', arg as ts.CallExpression);
+                callExpression.paramaters.push(callExp);
+                break;
             default:
                 callExpression.paramaters.push(arg.getText());
                 break;
@@ -238,6 +242,8 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                         statements.push(createArrayExpression(returnType, (rs.expression as any).elements));
                     } else if (rs.expression?.kind === ts.SyntaxKind.CallExpression) {
                         statements.push(createCallExpression('', '', rs.expression as ts.CallExpression, 'return '));
+                    } else {
+                        statements.push({ kind: CsKinds.Identifier, text: x.getText() });
                     }
                     break;
             }
@@ -254,6 +260,9 @@ function convertVariableStatement(context: Context<ts.VariableStatement>) {
     switch (declaration.initializer?.kind) {
         case ts.SyntaxKind.ArrowFunction:
             const funcName = declaration.name.getText();
+            if(funcName === 'genSizeBaseButtonStyle') {
+                console.log('')
+            }
             const func = createArrowFunction(funcName, declaration.initializer as ts.ArrowFunction);
             context.csBuilder.addFunction(func);
             break;
@@ -288,6 +297,8 @@ function convertExportAssignment(context: Context<ts.ExportAssignment>) {
                     const funBody = createArrowFunction('', x as ts.ArrowFunction, CsKinds.Func);
                     parameters.push(funBody);
                 } else if (x.kind === ts.SyntaxKind.StringLiteral) {
+                    parameters.push(x.getText());
+                } else{
                     parameters.push(x.getText());
                 }
             });

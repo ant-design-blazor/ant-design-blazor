@@ -6,19 +6,65 @@ using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
-    public class ComponentToken
+    public partial class ButtonToken
     {
+        public int FontWeight { get; set; }
+
+        public string DefaultShadow { get; set; }
+
+        public string PrimaryShadow { get; set; }
+
+        public string DangerShadow { get; set; }
+
+        public string PrimaryColor { get; set; }
+
+        public string DefaultColor { get; set; }
+
+        public string DefaultBg { get; set; }
+
+        public string DefaultBorderColor { get; set; }
+
+        public string DangerColor { get; set; }
+
+        public string BorderColorDisabled { get; set; }
+
+        public string DefaultGhostColor { get; set; }
+
+        public string GhostBg { get; set; }
+
+        public string DefaultGhostBorderColor { get; set; }
+
+        public int PaddingInline { get; set; }
+
+        public int PaddingInlineLG { get; set; }
+
+        public int PaddingInlineSM { get; set; }
+
+        public int OnlyIconSize { get; set; }
+
+        public int OnlyIconSizeLG { get; set; }
+
+        public int OnlyIconSizeSM { get; set; }
+
+        public string GroupBorderColor { get; set; }
+
+        public string LinkHoverBg { get; set; }
+
+        public string TextHoverBg { get; set; }
+
+        public int ContentFontSize { get; set; }
+
+        public int ContentFontSizeLG { get; set; }
+
+        public int ContentFontSizeSM { get; set; }
+
     }
 
     public partial class ButtonToken : TokenWithCommonCls
     {
-        public string ColorOutlineDefault { get; set; }
-
         public int ButtonPaddingHorizontal { get; set; }
 
         public int ButtonIconOnlyFontSize { get; set; }
-
-        public int ButtonFontWeight { get; set; }
 
     }
 
@@ -28,7 +74,7 @@ namespace AntDesign
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
-            var buttonFontWeight = token.ButtonFontWeight;
+            var fontWeight = token.FontWeight;
             return new CSSObject()
             {
                 [componentCls] = new CSSObject()
@@ -36,7 +82,7 @@ namespace AntDesign
                     Outline = "none",
                     Position = "relative",
                     Display = "inline-block",
-                    FontWeight = buttonFontWeight,
+                    FontWeight = fontWeight,
                     WhiteSpace = "nowrap",
                     TextAlign = "center",
                     BackgroundImage = "none",
@@ -48,6 +94,10 @@ namespace AntDesign
                     TouchAction = "manipulation",
                     LineHeight = token.LineHeight,
                     Color = token.ColorText,
+                    ["&:disabled > *"] = new CSSObject()
+                    {
+                        PointerEvents = "none",
+                    },
                     ["> span"] = new CSSObject()
                     {
                         Display = "inline-block",
@@ -56,16 +106,16 @@ namespace AntDesign
                     {
                         LineHeight = 0,
                     },
+                    [$"> {iconCls} + span, > span + {iconCls}"] = new CSSObject()
+                    {
+                        MarginInlineStart = token.MarginXS,
+                    },
                     [$"&:not({componentCls}-icon-only) > {componentCls}-icon"] = new CSSObject()
                     {
                         [$"&{componentCls}-loading-icon, &:not(:last-child)"] = new CSSObject()
                         {
                             MarginInlineEnd = token.MarginXS,
                         },
-                    },
-                    [$"> span + {iconCls}"] = new CSSObject()
-                    {
-                        MarginInlineStart = token.MarginXS,
                     },
                     ["> a"] = new CSSObject()
                     {
@@ -74,6 +124,15 @@ namespace AntDesign
                     ["&:not(:disabled)"] = new CSSObject()
                     {
                         ["..."] = GenFocusStyle(token)
+                    },
+                    [$"&{componentCls}-two-chinese-chars::first-letter"] = new CSSObject()
+                    {
+                        LetterSpacing = "0.34em",
+                    },
+                    [$"&{componentCls}-two-chinese-chars > *:not({iconCls})"] = new CSSObject()
+                    {
+                        MarginInlineEnd = "-0.34em",
+                        LetterSpacing = "0.34em",
                     },
                     [$"&-icon-only{componentCls}-compact-item"] = new CSSObject()
                     {
@@ -122,11 +181,11 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenHoverActiveButtonStyle(CSSObject hoverStyle = default, CSSObject activeStyle = default)
+        public CSSObject GenHoverActiveButtonStyle(string btnCls, CSSObject hoverStyle = default, CSSObject activeStyle = default)
         {
             return new CSSObject()
             {
-                ["&:not(:disabled)"] = new CSSObject()
+                [$"&:not(:disabled):not({btnCls}-disabled)"] = new CSSObject()
                 {
                     ["&:hover"] = hoverStyle,
                     ["&:active"] = activeStyle,
@@ -160,32 +219,33 @@ namespace AntDesign
             return new CSSObject()
             {
                 Cursor = "not-allowed",
-                BorderColor = token.ColorBorder,
+                BorderColor = token.BorderColorDisabled,
                 Color = token.ColorTextDisabled,
                 BackgroundColor = token.ColorBgContainerDisabled,
                 BoxShadow = "none",
             };
         }
 
-        public CSSObject GenGhostButtonStyle(string btnCls, string textColor, string borderColor, string textColorDisabled, string borderColorDisabled, CSSObject hoverStyle = default, CSSObject activeStyle = default)
+        public CSSObject GenGhostButtonStyle(string btnCls, string background, string textColor, string borderColor, string textColorDisabled, string borderColorDisabled, CSSObject hoverStyle = default, CSSObject activeStyle = default)
         {
             return new CSSObject()
             {
                 [$"&{btnCls}-background-ghost"] = new CSSObject()
                 {
                     Color = textColor,
-                    BackgroundColor = "transparent",
+                    BackgroundColor = background,
                     BorderColor = borderColor,
                     BoxShadow = "none",
                     ["..."] = GenHoverActiveButtonStyle(
+                        btnCls,
                         new CSSObject()
                         {
-                            BackgroundColor = "transparent",
+                            BackgroundColor = background,
                             ["..."] = hoverStyle,
                         },
                         new CSSObject()
                         {
-                            BackgroundColor = "transparent",
+                            BackgroundColor = background,
                             ["..."] = activeStyle,
                         }),
                     ["&:disabled"] = new CSSObject()
@@ -202,7 +262,7 @@ namespace AntDesign
         {
             return new CSSObject()
             {
-                ["&:disabled"] = new CSSObject()
+                [$"&:disabled, &{token.ComponentCls}-disabled"] = new CSSObject()
                 {
                     ["..."] = GenDisabledStyle(token)
                 },
@@ -221,7 +281,7 @@ namespace AntDesign
         {
             return new CSSObject()
             {
-                ["&:disabled"] = new CSSObject()
+                [$"&:disabled, &{token.ComponentCls}-disabled"] = new CSSObject()
                 {
                     Cursor = "not-allowed",
                     Color = token.ColorTextDisabled,
@@ -234,10 +294,12 @@ namespace AntDesign
             return new CSSObject()
             {
                 ["..."] = GenSolidButtonStyle(token),
-                BackgroundColor = token.ColorBgContainer,
-                BorderColor = token.ColorBorder,
-                BoxShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ControlTmpOutline}",
+                BackgroundColor = token.DefaultBg,
+                BorderColor = token.DefaultBorderColor,
+                Color = token.DefaultColor,
+                BoxShadow = token.DefaultShadow,
                 ["..."] = GenHoverActiveButtonStyle(
+                    token.ComponentCls,
                     new CSSObject()
                     {
                         Color = token.ColorPrimaryHover,
@@ -248,12 +310,13 @@ namespace AntDesign
                         Color = token.ColorPrimaryActive,
                         BorderColor = token.ColorPrimaryActive,
                     }),
-                ["..."] = GenGhostButtonStyle(token.ComponentCls, token.ColorBgContainer, token.ColorBgContainer, token.ColorTextDisabled, token.ColorBorder),
+                ["..."] = GenGhostButtonStyle(token.ComponentCls, token.GhostBg, token.DefaultGhostColor, token.DefaultGhostBorderColor, token.ColorTextDisabled, token.ColorBorder),
                 [$"&{token.ComponentCls}-dangerous"] = new CSSObject()
                 {
                     Color = token.ColorError,
                     BorderColor = token.ColorError,
                     ["..."] = GenHoverActiveButtonStyle(
+                        token.ComponentCls,
                         new CSSObject()
                         {
                             Color = token.ColorErrorHover,
@@ -264,7 +327,7 @@ namespace AntDesign
                             Color = token.ColorErrorActive,
                             BorderColor = token.ColorErrorActive,
                         }),
-                    ["..."] = GenGhostButtonStyle(token.ComponentCls, token.ColorError, token.ColorError, token.ColorTextDisabled, token.ColorBorder),
+                    ["..."] = GenGhostButtonStyle(token.ComponentCls, token.GhostBg, token.ColorError, token.ColorError, token.ColorTextDisabled, token.ColorBorder),
                     ["..."] = GenSolidDisabledButtonStyle(token)
                 },
             };
@@ -275,10 +338,11 @@ namespace AntDesign
             return new CSSObject()
             {
                 ["..."] = GenSolidButtonStyle(token),
-                Color = token.ColorTextLightSolid,
+                Color = token.PrimaryColor,
                 BackgroundColor = token.ColorPrimary,
-                BoxShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ControlOutline}",
+                BoxShadow = token.PrimaryShadow,
                 ["..."] = GenHoverActiveButtonStyle(
+                    token.ComponentCls,
                     new CSSObject()
                     {
                         Color = token.ColorTextLightSolid,
@@ -291,6 +355,7 @@ namespace AntDesign
                     }),
                 ["..."] = GenGhostButtonStyle(
                     token.ComponentCls,
+                    token.GhostBg,
                     token.ColorPrimary,
                     token.ColorPrimary,
                     token.ColorTextDisabled,
@@ -308,8 +373,10 @@ namespace AntDesign
                 [$"&{token.ComponentCls}-dangerous"] = new CSSObject()
                 {
                     BackgroundColor = token.ColorError,
-                    BoxShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ColorErrorOutline}",
+                    BoxShadow = token.DangerShadow,
+                    Color = token.DangerColor,
                     ["..."] = GenHoverActiveButtonStyle(
+                        token.ComponentCls,
                         new CSSObject()
                         {
                             BackgroundColor = token.ColorErrorHover,
@@ -320,6 +387,7 @@ namespace AntDesign
                         }),
                     ["..."] = GenGhostButtonStyle(
                         token.ComponentCls,
+                        token.GhostBg,
                         token.ColorError,
                         token.ColorError,
                         token.ColorTextDisabled,
@@ -354,9 +422,11 @@ namespace AntDesign
             {
                 Color = token.ColorLink,
                 ["..."] = GenHoverActiveButtonStyle(
+                    token.ComponentCls,
                     new CSSObject()
                     {
                         Color = token.ColorLinkHover,
+                        BackgroundColor = token.LinkHoverBg,
                     },
                     new CSSObject()
                     {
@@ -367,6 +437,7 @@ namespace AntDesign
                 {
                     Color = token.ColorError,
                     ["..."] = GenHoverActiveButtonStyle(
+                        token.ComponentCls,
                         new CSSObject()
                         {
                             Color = token.ColorErrorHover,
@@ -385,10 +456,11 @@ namespace AntDesign
             return new CSSObject()
             {
                 ["..."] = GenHoverActiveButtonStyle(
+                    token.ComponentCls,
                     new CSSObject()
                     {
                         Color = token.ColorText,
-                        BackgroundColor = token.ColorBgTextHover,
+                        BackgroundColor = token.TextHoverBg,
                     },
                     new CSSObject()
                     {
@@ -401,6 +473,7 @@ namespace AntDesign
                     Color = token.ColorError,
                     ["..."] = GenPureDisabledButtonStyle(token),
                     ["..."] = GenHoverActiveButtonStyle(
+                        token.ComponentCls,
                         new CSSObject()
                         {
                             Color = token.ColorErrorHover,
@@ -415,18 +488,6 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDisabledButtonStyle(ButtonToken token)
-        {
-            return new CSSObject()
-            {
-                ["..."] = GenDisabledStyle(token),
-                [$"&{token.ComponentCls}:hover"] = new CSSObject()
-                {
-                    ["..."] = GenDisabledStyle(token)
-                },
-            };
-        }
-
         public CSSObject GenTypeButtonStyle(ButtonToken token)
         {
             var componentCls = token.ComponentCls;
@@ -437,7 +498,7 @@ namespace AntDesign
                 [$"{componentCls}-dashed"] = GenDashedButtonStyle(token),
                 [$"{componentCls}-link"] = GenLinkButtonStyle(token),
                 [$"{componentCls}-text"] = GenTextButtonStyle(token),
-                [$"{componentCls}-disabled"] = GenDisabledButtonStyle(token)
+                [$"{componentCls}-ghost"] = GenGhostButtonStyle(token.ComponentCls, token.GhostBg, token.ColorBgContainer, token.ColorBgContainer, token.ColorTextDisabled, token.ColorBorder)
             };
         }
 
@@ -452,7 +513,6 @@ namespace AntDesign
             var buttonPaddingHorizontal = token.ButtonPaddingHorizontal;
             var iconCls = token.IconCls;
             var paddingVertical = Math.Max(0, (controlHeight - fontSize * lineHeight) / 2 - lineWidth);
-            var paddingHorizontal = buttonPaddingHorizontal - lineWidth;
             var iconOnlyCls = @$"{componentCls}-icon-only";
             return new CSSInterpolation[]
             {
@@ -462,7 +522,7 @@ namespace AntDesign
                     {
                         FontSize = fontSize,
                         Height = controlHeight,
-                        Padding = @$"{paddingVertical}px {paddingHorizontal}px",
+                        Padding = @$"{paddingVertical}px {buttonPaddingHorizontal}px",
                         BorderRadius = borderRadius,
                         [$"&{iconOnlyCls}"] = new CSSObject()
                         {
@@ -502,7 +562,13 @@ namespace AntDesign
 
         public CSSInterpolation GenSizeBaseButtonStyle(ButtonToken token)
         {
-            return GenSizeButtonStyle(token);
+            return GenSizeButtonStyle(
+                MergeToken(
+                    token,
+                    new ButtonToken()
+                    {
+                        FontSize = token.ContentFontSize,
+                    }));
         }
 
         public CSSInterpolation GenSizeSmallButtonStyle(ButtonToken token)
@@ -512,10 +578,11 @@ namespace AntDesign
                 new ButtonToken()
                 {
                     ControlHeight = token.ControlHeightSM,
+                    FontSize = token.ContentFontSizeSM,
                     Padding = token.PaddingXS,
-                    ButtonPaddingHorizontal = 8,
+                    ButtonPaddingHorizontal = token.PaddingInlineSM,
                     BorderRadius = token.BorderRadiusSM,
-                    ButtonIconOnlyFontSize = token.FontSizeLG - 2,
+                    ButtonIconOnlyFontSize = token.OnlyIconSizeSM,
                 });
             return GenSizeButtonStyle(smallToken, $"{token.ComponentCls}-sm");
         }
@@ -527,9 +594,10 @@ namespace AntDesign
                 new ButtonToken()
                 {
                     ControlHeight = token.ControlHeightLG,
-                    FontSize = token.FontSizeLG,
+                    FontSize = token.ContentFontSizeLG,
+                    ButtonPaddingHorizontal = token.PaddingInlineLG,
                     BorderRadius = token.BorderRadiusLG,
-                    ButtonIconOnlyFontSize = token.FontSizeLG + 2,
+                    ButtonIconOnlyFontSize = token.OnlyIconSizeLG,
                 });
             return GenSizeButtonStyle(largeToken, $"{token.ComponentCls}-lg");
         }
@@ -549,34 +617,72 @@ namespace AntDesign
             };
         }
 
+        public ButtonToken PrepareToken(ButtonToken token)
+        {
+            var paddingInline = token.PaddingInline;
+            var onlyIconSize = token.OnlyIconSize;
+            var buttonToken = MergeToken(
+                token,
+                new ButtonToken()
+                {
+                    ButtonPaddingHorizontal = paddingInline,
+                    ButtonIconOnlyFontSize = onlyIconSize,
+                });
+            return buttonToken;
+        }
+
+        public ButtonToken PrepareComponentToken(GlobalToken token)
+        {
+            return new ButtonToken()
+            {
+                FontWeight = 400,
+                DefaultShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ControlTmpOutline}",
+                PrimaryShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ControlOutline}",
+                DangerShadow = @$"0 {token.ControlOutlineWidth}px 0 {token.ColorErrorOutline}",
+                PrimaryColor = token.ColorTextLightSolid,
+                DangerColor = token.ColorTextLightSolid,
+                BorderColorDisabled = token.ColorBorder,
+                DefaultGhostColor = token.ColorBgContainer,
+                GhostBg = "transparent",
+                DefaultGhostBorderColor = token.ColorBgContainer,
+                PaddingInline = token.PaddingContentHorizontal - token.LineWidth,
+                PaddingInlineLG = token.PaddingContentHorizontal - token.LineWidth,
+                PaddingInlineSM = 8 - token.LineWidth,
+                OnlyIconSize = token.FontSizeLG,
+                OnlyIconSizeSM = token.FontSizeLG - 2,
+                OnlyIconSizeLG = token.FontSizeLG + 2,
+                GroupBorderColor = token.ColorPrimaryHover,
+                LinkHoverBg = "transparent",
+                TextHoverBg = token.ColorBgTextHover,
+                DefaultColor = token.ColorText,
+                DefaultBg = token.ColorBgContainer,
+                DefaultBorderColor = token.ColorBorder,
+                // DefaultBorderColorDisabled = token.ColorBorder,
+                ContentFontSize = token.FontSize,
+                ContentFontSizeSM = token.FontSize,
+                ContentFontSizeLG = token.FontSizeLG,
+            };
+        }
+
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Button", (token) =>
-            {
-                var controlTmpOutline = token.ControlTmpOutline;
-                var paddingContentHorizontal = token.PaddingContentHorizontal;
-                var buttonToken = MergeToken(
-                    token,
-                    new ButtonToken()
-                    {
-                        ColorOutlineDefault = controlTmpOutline,
-                        ButtonPaddingHorizontal = paddingContentHorizontal,
-                        ButtonIconOnlyFontSize = token.FontSizeLG,
-                        ButtonFontWeight = 400,
-                    });
-                return new CSSInterpolation[]
+            return GenComponentStyleHook(
+                "Button",
+                (token) =>
                 {
-                    GenSharedButtonStyle(buttonToken),
-                    GenSizeSmallButtonStyle(buttonToken),
-                    GenSizeBaseButtonStyle(buttonToken),
-                    GenSizeLargeButtonStyle(buttonToken),
-                    GenBlockButtonStyle(buttonToken),
-                    GenTypeButtonStyle(buttonToken),
-                    GenGroupStyle(buttonToken),
-                    GenCompactItemStyle(token),
-                    GenCompactItemVerticalStyle(token)
-                };
-            });
+                    var buttonToken = PrepareToken(token);
+                    return new CSSInterpolation[]
+                    {
+                        GenSharedButtonStyle(buttonToken),
+                        GenSizeSmallButtonStyle(buttonToken),
+                        GenSizeBaseButtonStyle(buttonToken),
+                        GenSizeLargeButtonStyle(buttonToken),
+                        GenBlockButtonStyle(buttonToken),
+                        GenTypeButtonStyle(buttonToken),
+                        GenGroupStyle(buttonToken)
+                    };
+                },
+                PrepareComponentToken);
         }
 
         public CSSObject GenButtonBorderStyle(string buttonTypeCls, string borderColor)
@@ -614,7 +720,7 @@ namespace AntDesign
             var componentCls = token.ComponentCls;
             var fontSize = token.FontSize;
             var lineWidth = token.LineWidth;
-            var colorPrimaryHover = token.ColorPrimaryHover;
+            var groupBorderColor = token.GroupBorderColor;
             var colorErrorHover = token.ColorErrorHover;
             return new CSSObject()
             {
@@ -662,11 +768,12 @@ namespace AntDesign
                             FontSize = fontSize,
                         },
                     },
-                    GenButtonBorderStyle($"{componentCls}-primary", colorPrimaryHover),
+                    GenButtonBorderStyle($"{componentCls}-primary", groupBorderColor),
                     GenButtonBorderStyle($"{componentCls}-danger", colorErrorHover)
                 }
             };
         }
+
     }
 
 }

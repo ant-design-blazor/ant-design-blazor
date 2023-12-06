@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -59,7 +59,7 @@ namespace AntDesign
                         Transition = @$"color {token.MotionDurationMid}",
                         Padding = @$"0 {token.PaddingXXS}px",
                         BorderRadius = token.BorderRadiusSM,
-                        Height = (int)token.LineHeight * token.FontSize,
+                        Height = (int)(token.LineHeight * token.FontSize),
                         Display = "inline-block",
                         MarginInline = -token.MarginXXS,
                         ["&:hover"] = new CSSObject()
@@ -88,7 +88,7 @@ namespace AntDesign
                     [$"{componentCls}-overlay-link"] = new CSSObject()
                     {
                         BorderRadius = token.BorderRadiusSM,
-                        Height = (int)token.LineHeight * token.FontSize,
+                        Height = (int)(token.LineHeight * token.FontSize),
                         Display = "inline-block",
                         Padding = @$"0 {token.PaddingXXS}px",
                         MarginInline = -token.MarginXXS,
@@ -124,11 +124,20 @@ namespace AntDesign
 
         protected override UseComponentStyleResult UseComponentStyle()
         {
-            return GenComponentStyleHook("Breadcrumb", (token) =>
-            {
-                var breadcrumbToken = MergeToken(
-                    token,
-                    new BreadcrumbToken()
+            return GenComponentStyleHook(
+                "Breadcrumb",
+                (token) =>
+                {
+                    var breadcrumbToken = MergeToken(
+                        token,
+                        new BreadcrumbToken()
+                        {
+                        });
+                    return new CSSInterpolation[] { GenBreadcrumbStyle(breadcrumbToken) };
+                },
+                (token) =>
+                {
+                    return new BreadcrumbToken()
                     {
                         ItemColor = token.ColorTextDescription,
                         LastItemColor = token.ColorText,
@@ -137,9 +146,10 @@ namespace AntDesign
                         LinkHoverColor = token.ColorText,
                         SeparatorColor = token.ColorTextDescription,
                         SeparatorMargin = token.MarginXS,
-                    });
-                return new CSSInterpolation[] { GenBreadcrumbStyle(breadcrumbToken) };
-            });
+                    };
+                });
         }
+
     }
+
 }
