@@ -9,45 +9,117 @@ namespace AntDesign
 {
     public partial class BadgeToken
     {
-        public string IndicatorZIndex { get; set; }
+        public string IndicatorZIndex
+        {
+            get => (string)_tokens["indicatorZIndex"];
+            set => _tokens["indicatorZIndex"] = value;
+        }
 
-        public int IndicatorHeight { get; set; }
+        public int IndicatorHeight
+        {
+            get => (int)_tokens["indicatorHeight"];
+            set => _tokens["indicatorHeight"] = value;
+        }
 
-        public int IndicatorHeightSM { get; set; }
+        public int IndicatorHeightSM
+        {
+            get => (int)_tokens["indicatorHeightSM"];
+            set => _tokens["indicatorHeightSM"] = value;
+        }
 
-        public int DotSize { get; set; }
+        public int DotSize
+        {
+            get => (int)_tokens["dotSize"];
+            set => _tokens["dotSize"] = value;
+        }
 
-        public int TextFontSize { get; set; }
+        public int TextFontSize
+        {
+            get => (int)_tokens["textFontSize"];
+            set => _tokens["textFontSize"] = value;
+        }
 
-        public int TextFontSizeSM { get; set; }
+        public int TextFontSizeSM
+        {
+            get => (int)_tokens["textFontSizeSM"];
+            set => _tokens["textFontSizeSM"] = value;
+        }
 
-        public string TextFontWeight { get; set; }
+        public string TextFontWeight
+        {
+            get => (string)_tokens["textFontWeight"];
+            set => _tokens["textFontWeight"] = value;
+        }
 
-        public int StatusSize { get; set; }
+        public int StatusSize
+        {
+            get => (int)_tokens["statusSize"];
+            set => _tokens["statusSize"] = value;
+        }
 
     }
 
     public partial class BadgeToken : TokenWithCommonCls
     {
-        public int BadgeFontHeight { get; set; }
+        public int BadgeFontHeight
+        {
+            get => (int)_tokens["badgeFontHeight"];
+            set => _tokens["badgeFontHeight"] = value;
+        }
 
-        public string BadgeTextColor { get; set; }
+        public string BadgeTextColor
+        {
+            get => (string)_tokens["badgeTextColor"];
+            set => _tokens["badgeTextColor"] = value;
+        }
 
-        public string BadgeColor { get; set; }
+        public string BadgeColor
+        {
+            get => (string)_tokens["badgeColor"];
+            set => _tokens["badgeColor"] = value;
+        }
 
-        public string BadgeColorHover { get; set; }
+        public string BadgeColorHover
+        {
+            get => (string)_tokens["badgeColorHover"];
+            set => _tokens["badgeColorHover"] = value;
+        }
 
-        public int BadgeShadowSize { get; set; }
+        public int BadgeShadowSize
+        {
+            get => (int)_tokens["badgeShadowSize"];
+            set => _tokens["badgeShadowSize"] = value;
+        }
 
-        public string BadgeShadowColor { get; set; }
+        public string BadgeShadowColor
+        {
+            get => (string)_tokens["badgeShadowColor"];
+            set => _tokens["badgeShadowColor"] = value;
+        }
 
-        public string BadgeProcessingDuration { get; set; }
+        public string BadgeProcessingDuration
+        {
+            get => (string)_tokens["badgeProcessingDuration"];
+            set => _tokens["badgeProcessingDuration"] = value;
+        }
 
-        public int BadgeRibbonOffset { get; set; }
+        public int BadgeRibbonOffset
+        {
+            get => (int)_tokens["badgeRibbonOffset"];
+            set => _tokens["badgeRibbonOffset"] = value;
+        }
 
-        public string BadgeRibbonCornerTransform { get; set; }
+        public string BadgeRibbonCornerTransform
+        {
+            get => (string)_tokens["badgeRibbonCornerTransform"];
+            set => _tokens["badgeRibbonCornerTransform"] = value;
+        }
 
-        public string BadgeRibbonCornerFilter { get; set; }
+        public string BadgeRibbonCornerFilter
+        {
+            get => (string)_tokens["badgeRibbonCornerFilter"];
+            set => _tokens["badgeRibbonCornerFilter"] = value;
+        }
 
     }
 

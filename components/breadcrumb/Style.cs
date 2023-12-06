@@ -8,19 +8,47 @@ namespace AntDesign
 {
     public partial class BreadcrumbToken
     {
-        public string ItemColor { get; set; }
+        public string ItemColor
+        {
+            get => (string)_tokens["itemColor"];
+            set => _tokens["itemColor"] = value;
+        }
 
-        public int IconFontSize { get; set; }
+        public int IconFontSize
+        {
+            get => (int)_tokens["iconFontSize"];
+            set => _tokens["iconFontSize"] = value;
+        }
 
-        public string LinkColor { get; set; }
+        public string LinkColor
+        {
+            get => (string)_tokens["linkColor"];
+            set => _tokens["linkColor"] = value;
+        }
 
-        public string LinkHoverColor { get; set; }
+        public string LinkHoverColor
+        {
+            get => (string)_tokens["linkHoverColor"];
+            set => _tokens["linkHoverColor"] = value;
+        }
 
-        public string LastItemColor { get; set; }
+        public string LastItemColor
+        {
+            get => (string)_tokens["lastItemColor"];
+            set => _tokens["lastItemColor"] = value;
+        }
 
-        public int SeparatorMargin { get; set; }
+        public int SeparatorMargin
+        {
+            get => (int)_tokens["separatorMargin"];
+            set => _tokens["separatorMargin"] = value;
+        }
 
-        public string SeparatorColor { get; set; }
+        public string SeparatorColor
+        {
+            get => (string)_tokens["separatorColor"];
+            set => _tokens["separatorColor"] = value;
+        }
 
     }
 

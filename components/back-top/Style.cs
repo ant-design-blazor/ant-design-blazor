@@ -8,29 +8,69 @@ namespace AntDesign
 {
     public partial class BackTopToken : TokenWithCommonCls
     {
-        public int ZIndexPopup { get; set; }
+        public int ZIndexPopup
+        {
+            get => (int)_tokens["zIndexPopup"];
+            set => _tokens["zIndexPopup"] = value;
+        }
 
     }
 
     public partial class BackTopToken
     {
-        public string BackTopBackground { get; set; }
+        public string BackTopBackground
+        {
+            get => (string)_tokens["backTopBackground"];
+            set => _tokens["backTopBackground"] = value;
+        }
 
-        public string BackTopColor { get; set; }
+        public string BackTopColor
+        {
+            get => (string)_tokens["backTopColor"];
+            set => _tokens["backTopColor"] = value;
+        }
 
-        public string BackTopHoverBackground { get; set; }
+        public string BackTopHoverBackground
+        {
+            get => (string)_tokens["backTopHoverBackground"];
+            set => _tokens["backTopHoverBackground"] = value;
+        }
 
-        public int BackTopFontSize { get; set; }
+        public int BackTopFontSize
+        {
+            get => (int)_tokens["backTopFontSize"];
+            set => _tokens["backTopFontSize"] = value;
+        }
 
-        public int BackTopSize { get; set; }
+        public int BackTopSize
+        {
+            get => (int)_tokens["backTopSize"];
+            set => _tokens["backTopSize"] = value;
+        }
 
-        public int BackTopBlockEnd { get; set; }
+        public int BackTopBlockEnd
+        {
+            get => (int)_tokens["backTopBlockEnd"];
+            set => _tokens["backTopBlockEnd"] = value;
+        }
 
-        public int BackTopInlineEnd { get; set; }
+        public int BackTopInlineEnd
+        {
+            get => (int)_tokens["backTopInlineEnd"];
+            set => _tokens["backTopInlineEnd"] = value;
+        }
 
-        public int BackTopInlineEndMD { get; set; }
+        public int BackTopInlineEndMD
+        {
+            get => (int)_tokens["backTopInlineEndMD"];
+            set => _tokens["backTopInlineEndMD"] = value;
+        }
 
-        public int BackTopInlineEndXS { get; set; }
+        public int BackTopInlineEndXS
+        {
+            get => (int)_tokens["backTopInlineEndXS"];
+            set => _tokens["backTopInlineEndXS"] = value;
+        }
 
     }
 

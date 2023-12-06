@@ -1169,6 +1169,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Affix',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'AffixToken', includes: [1] },
                 { from: 'Unknown2', to: 'AffixToken', includes: [1] },
@@ -1188,6 +1189,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Alert',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Padding<string | number>', to: 'string' },
                 { from: 'Unknown6', to: 'CSSInterpolation', includes: [1] },
@@ -1209,6 +1211,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Anchor',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'AnchorToken', includes: [1] },
                 { from: 'Unknown2', to: 'AnchorToken', includes: [1] },
@@ -1232,6 +1235,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Avatar',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 9]] },
                 { from: 'Unknown1', to: 'AvatarToken', includes: [2] },
@@ -1258,6 +1262,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'BackTop',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'BackTopToken', includes: [1] },
                 { from: 'Unknown2', to: 'BackTopToken', includes: [1] },
@@ -1285,6 +1290,7 @@ export const data2: Component[] = [
             ...defaultOptions,
             usings: defaultOptions.usings.concat(['using Keyframes = CssInCSharp.Keyframe;']),
             defaultClass: 'Badge',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Keyframes', to: 'CSSObject' },
                 { from: 'Unknown7', to: 'CSSObject', includes: [1, 2, 3] },
@@ -1316,6 +1322,7 @@ export const data2: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Breadcrumb',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 19]] },
                 { from: 'Unknown1', to: 'BreadcrumbToken', includes: [2] },
@@ -1333,10 +1340,6 @@ export const data2: Component[] = [
             ]
         }
     },
-];
-
-// 用于生成的实例，将需要生成的组件配置放到这里
-export const components: Component[] = [
     {
         name: 'Button',
         src: [
@@ -1347,6 +1350,7 @@ export const components: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Button',
+            propertyMap: '_tokens',
             typeMap: [
                 { from: 'FontWeight', to: 'int' },
                 { from: 'PaddingInline<string | number>', to: 'int' },
@@ -1406,4 +1410,9 @@ export const components: Component[] = [
             ]
         }
     },
-]
+];
+
+// 用于生成的实例，将需要生成的组件配置放到这里
+export const components: Component[] = [
+    
+];

@@ -8,21 +8,45 @@ namespace AntDesign
 {
     public partial class AnchorToken : TokenWithCommonCls
     {
-        public int LinkPaddingBlock { get; set; }
+        public int LinkPaddingBlock
+        {
+            get => (int)_tokens["linkPaddingBlock"];
+            set => _tokens["linkPaddingBlock"] = value;
+        }
 
-        public int LinkPaddingInlineStart { get; set; }
+        public int LinkPaddingInlineStart
+        {
+            get => (int)_tokens["linkPaddingInlineStart"];
+            set => _tokens["linkPaddingInlineStart"] = value;
+        }
 
     }
 
     public partial class AnchorToken
     {
-        public int HolderOffsetBlock { get; set; }
+        public int HolderOffsetBlock
+        {
+            get => (int)_tokens["holderOffsetBlock"];
+            set => _tokens["holderOffsetBlock"] = value;
+        }
 
-        public int AnchorPaddingBlockSecondary { get; set; }
+        public int AnchorPaddingBlockSecondary
+        {
+            get => (int)_tokens["anchorPaddingBlockSecondary"];
+            set => _tokens["anchorPaddingBlockSecondary"] = value;
+        }
 
-        public int AnchorBallSize { get; set; }
+        public int AnchorBallSize
+        {
+            get => (int)_tokens["anchorBallSize"];
+            set => _tokens["anchorBallSize"] = value;
+        }
 
-        public int AnchorTitleBlock { get; set; }
+        public int AnchorTitleBlock
+        {
+            get => (int)_tokens["anchorTitleBlock"];
+            set => _tokens["anchorTitleBlock"] = value;
+        }
 
     }
 

@@ -8,11 +8,23 @@ namespace AntDesign
 {
     public partial class AlertToken : TokenWithCommonCls
     {
-        public string DefaultPadding { get; set; }
+        public string DefaultPadding
+        {
+            get => (string)_tokens["defaultPadding"];
+            set => _tokens["defaultPadding"] = value;
+        }
 
-        public string WithDescriptionPadding { get; set; }
+        public string WithDescriptionPadding
+        {
+            get => (string)_tokens["withDescriptionPadding"];
+            set => _tokens["withDescriptionPadding"] = value;
+        }
 
-        public int WithDescriptionIconSize { get; set; }
+        public int WithDescriptionIconSize
+        {
+            get => (int)_tokens["withDescriptionIconSize"];
+            set => _tokens["withDescriptionIconSize"] = value;
+        }
 
     }
 

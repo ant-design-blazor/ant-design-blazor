@@ -8,33 +8,81 @@ namespace AntDesign
 {
     public partial class AvatarToken : TokenWithCommonCls
     {
-        public int ContainerSize { get; set; }
+        public int ContainerSize
+        {
+            get => (int)_tokens["containerSize"];
+            set => _tokens["containerSize"] = value;
+        }
 
-        public int ContainerSizeLG { get; set; }
+        public int ContainerSizeLG
+        {
+            get => (int)_tokens["containerSizeLG"];
+            set => _tokens["containerSizeLG"] = value;
+        }
 
-        public int ContainerSizeSM { get; set; }
+        public int ContainerSizeSM
+        {
+            get => (int)_tokens["containerSizeSM"];
+            set => _tokens["containerSizeSM"] = value;
+        }
 
-        public int TextFontSize { get; set; }
+        public int TextFontSize
+        {
+            get => (int)_tokens["textFontSize"];
+            set => _tokens["textFontSize"] = value;
+        }
 
-        public int TextFontSizeLG { get; set; }
+        public int TextFontSizeLG
+        {
+            get => (int)_tokens["textFontSizeLG"];
+            set => _tokens["textFontSizeLG"] = value;
+        }
 
-        public int TextFontSizeSM { get; set; }
+        public int TextFontSizeSM
+        {
+            get => (int)_tokens["textFontSizeSM"];
+            set => _tokens["textFontSizeSM"] = value;
+        }
 
-        public int GroupSpace { get; set; }
+        public int GroupSpace
+        {
+            get => (int)_tokens["groupSpace"];
+            set => _tokens["groupSpace"] = value;
+        }
 
-        public int GroupOverlapping { get; set; }
+        public int GroupOverlapping
+        {
+            get => (int)_tokens["groupOverlapping"];
+            set => _tokens["groupOverlapping"] = value;
+        }
 
-        public string GroupBorderColor { get; set; }
+        public string GroupBorderColor
+        {
+            get => (string)_tokens["groupBorderColor"];
+            set => _tokens["groupBorderColor"] = value;
+        }
 
     }
 
     public partial class AvatarToken
     {
-        public string AvatarBgColor { get; set; }
+        public string AvatarBgColor
+        {
+            get => (string)_tokens["avatarBgColor"];
+            set => _tokens["avatarBgColor"] = value;
+        }
 
-        public string AvatarBg { get; set; }
+        public string AvatarBg
+        {
+            get => (string)_tokens["avatarBg"];
+            set => _tokens["avatarBg"] = value;
+        }
 
-        public string AvatarColor { get; set; }
+        public string AvatarColor
+        {
+            get => (string)_tokens["avatarColor"];
+            set => _tokens["avatarColor"] = value;
+        }
 
     }
 

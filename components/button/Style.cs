@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -8,63 +8,171 @@ namespace AntDesign
 {
     public partial class ButtonToken
     {
-        public int FontWeight { get; set; }
+        public int FontWeight
+        {
+            get => (int)_tokens["fontWeight"];
+            set => _tokens["fontWeight"] = value;
+        }
 
-        public string DefaultShadow { get; set; }
+        public string DefaultShadow
+        {
+            get => (string)_tokens["defaultShadow"];
+            set => _tokens["defaultShadow"] = value;
+        }
 
-        public string PrimaryShadow { get; set; }
+        public string PrimaryShadow
+        {
+            get => (string)_tokens["primaryShadow"];
+            set => _tokens["primaryShadow"] = value;
+        }
 
-        public string DangerShadow { get; set; }
+        public string DangerShadow
+        {
+            get => (string)_tokens["dangerShadow"];
+            set => _tokens["dangerShadow"] = value;
+        }
 
-        public string PrimaryColor { get; set; }
+        public string PrimaryColor
+        {
+            get => (string)_tokens["primaryColor"];
+            set => _tokens["primaryColor"] = value;
+        }
 
-        public string DefaultColor { get; set; }
+        public string DefaultColor
+        {
+            get => (string)_tokens["defaultColor"];
+            set => _tokens["defaultColor"] = value;
+        }
 
-        public string DefaultBg { get; set; }
+        public string DefaultBg
+        {
+            get => (string)_tokens["defaultBg"];
+            set => _tokens["defaultBg"] = value;
+        }
 
-        public string DefaultBorderColor { get; set; }
+        public string DefaultBorderColor
+        {
+            get => (string)_tokens["defaultBorderColor"];
+            set => _tokens["defaultBorderColor"] = value;
+        }
 
-        public string DangerColor { get; set; }
+        public string DangerColor
+        {
+            get => (string)_tokens["dangerColor"];
+            set => _tokens["dangerColor"] = value;
+        }
 
-        public string BorderColorDisabled { get; set; }
+        public string BorderColorDisabled
+        {
+            get => (string)_tokens["borderColorDisabled"];
+            set => _tokens["borderColorDisabled"] = value;
+        }
 
-        public string DefaultGhostColor { get; set; }
+        public string DefaultGhostColor
+        {
+            get => (string)_tokens["defaultGhostColor"];
+            set => _tokens["defaultGhostColor"] = value;
+        }
 
-        public string GhostBg { get; set; }
+        public string GhostBg
+        {
+            get => (string)_tokens["ghostBg"];
+            set => _tokens["ghostBg"] = value;
+        }
 
-        public string DefaultGhostBorderColor { get; set; }
+        public string DefaultGhostBorderColor
+        {
+            get => (string)_tokens["defaultGhostBorderColor"];
+            set => _tokens["defaultGhostBorderColor"] = value;
+        }
 
-        public int PaddingInline { get; set; }
+        public int PaddingInline
+        {
+            get => (int)_tokens["paddingInline"];
+            set => _tokens["paddingInline"] = value;
+        }
 
-        public int PaddingInlineLG { get; set; }
+        public int PaddingInlineLG
+        {
+            get => (int)_tokens["paddingInlineLG"];
+            set => _tokens["paddingInlineLG"] = value;
+        }
 
-        public int PaddingInlineSM { get; set; }
+        public int PaddingInlineSM
+        {
+            get => (int)_tokens["paddingInlineSM"];
+            set => _tokens["paddingInlineSM"] = value;
+        }
 
-        public int OnlyIconSize { get; set; }
+        public int OnlyIconSize
+        {
+            get => (int)_tokens["onlyIconSize"];
+            set => _tokens["onlyIconSize"] = value;
+        }
 
-        public int OnlyIconSizeLG { get; set; }
+        public int OnlyIconSizeLG
+        {
+            get => (int)_tokens["onlyIconSizeLG"];
+            set => _tokens["onlyIconSizeLG"] = value;
+        }
 
-        public int OnlyIconSizeSM { get; set; }
+        public int OnlyIconSizeSM
+        {
+            get => (int)_tokens["onlyIconSizeSM"];
+            set => _tokens["onlyIconSizeSM"] = value;
+        }
 
-        public string GroupBorderColor { get; set; }
+        public string GroupBorderColor
+        {
+            get => (string)_tokens["groupBorderColor"];
+            set => _tokens["groupBorderColor"] = value;
+        }
 
-        public string LinkHoverBg { get; set; }
+        public string LinkHoverBg
+        {
+            get => (string)_tokens["linkHoverBg"];
+            set => _tokens["linkHoverBg"] = value;
+        }
 
-        public string TextHoverBg { get; set; }
+        public string TextHoverBg
+        {
+            get => (string)_tokens["textHoverBg"];
+            set => _tokens["textHoverBg"] = value;
+        }
 
-        public int ContentFontSize { get; set; }
+        public int ContentFontSize
+        {
+            get => (int)_tokens["contentFontSize"];
+            set => _tokens["contentFontSize"] = value;
+        }
 
-        public int ContentFontSizeLG { get; set; }
+        public int ContentFontSizeLG
+        {
+            get => (int)_tokens["contentFontSizeLG"];
+            set => _tokens["contentFontSizeLG"] = value;
+        }
 
-        public int ContentFontSizeSM { get; set; }
+        public int ContentFontSizeSM
+        {
+            get => (int)_tokens["contentFontSizeSM"];
+            set => _tokens["contentFontSizeSM"] = value;
+        }
 
     }
 
     public partial class ButtonToken : TokenWithCommonCls
     {
-        public int ButtonPaddingHorizontal { get; set; }
+        public int ButtonPaddingHorizontal
+        {
+            get => (int)_tokens["buttonPaddingHorizontal"];
+            set => _tokens["buttonPaddingHorizontal"] = value;
+        }
 
-        public int ButtonIconOnlyFontSize { get; set; }
+        public int ButtonIconOnlyFontSize
+        {
+            get => (int)_tokens["buttonIconOnlyFontSize"];
+            set => _tokens["buttonIconOnlyFontSize"] = value;
+        }
 
     }
 
