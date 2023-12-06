@@ -355,7 +355,7 @@ export class CsFunction {
                             codes.push(...methodCodes);
                             break;
                         case CsKinds.CallExpression:
-                            const callCodes = this.createCallExpression(tab + '    ', x as CallExpression, ');');
+                            const callCodes = this.createCallExpression(tab + '    ', x as CallExpression, end);
                             codes.push(...callCodes);
                             break;
                     }
