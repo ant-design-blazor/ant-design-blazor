@@ -3,12 +3,19 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using CssInCSharp;
 using static CssInCSharp.StyleHelper;
 
 namespace AntDesign
 {
     public delegate string UseComponentStyleResult(string prefixCls);
+
+    internal class GenOptions
+    {
+        public bool ResetStyle { get; set; }
+        public List<Tuple<string, string>> DeprecatedTokens { get; set; }
+    }
 
     internal class StyleUtil
     {
@@ -22,7 +29,8 @@ namespace AntDesign
         internal static UseComponentStyleResult GenComponentStyleHook<T>(
             string componentName,
             Func<T, CSSInterpolation> styleFn,
-            Func<GlobalToken, T> getDefaultToken = null) where T : IToken, new()
+            Func<GlobalToken, T> getDefaultToken = null,
+            GenOptions options = null) where T : IToken, new()
 
         {
             return GenComponentStyleHook(new[] { componentName, componentName }, styleFn, getDefaultToken);

@@ -317,13 +317,21 @@ function convertExportAssignment(context: Context<ts.ExportAssignment>) {
             const funcName = callExp.expression.getText();
             const parameters: any[] = [];
             callExp.arguments.forEach(x => {
-                if (x.kind === ts.SyntaxKind.ArrowFunction) {
-                    const funBody = createArrowFunction('', x as ts.ArrowFunction, CsKinds.Func);
-                    parameters.push(funBody);
-                } else if (x.kind === ts.SyntaxKind.StringLiteral) {
-                    parameters.push(x.getText());
-                } else {
-                    parameters.push(x.getText());
+                switch (x.kind) {
+                    case ts.SyntaxKind.ArrowFunction:
+                        const funBody = createArrowFunction('', x as ts.ArrowFunction, CsKinds.Func);
+                        parameters.push(funBody);
+                        break;
+                    case ts.SyntaxKind.StringLiteral:
+                        parameters.push(x.getText());
+                        break;
+                    case ts.SyntaxKind.ObjectLiteralExpression:
+                        const objectExp = createObjectExpression('', x as ts.ObjectLiteralExpression);
+                        parameters.push(objectExp);
+                        break;
+                    default:
+                        parameters.push(x.getText());
+                        break;
                 }
             });
             const callExpression: CallExpression = {

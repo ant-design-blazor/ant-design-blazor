@@ -99,9 +99,11 @@ namespace AntDesign
             base.OnInitialized();
             string prefixCls = "ant-cascader";
             string selectCls = "ant-select";
+            var hashId = UseStyle(prefixCls);
 
             ClassMapper
                 .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
+                .Add(hashId)
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
                 .If("ant-select-open", () => _dropdownOpened)

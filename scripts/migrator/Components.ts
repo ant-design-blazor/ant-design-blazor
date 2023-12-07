@@ -452,12 +452,16 @@ const letterC: Component[] = [
                 { from: 'Unknown3', to: 'CarouselToken', includes: [2] },
                 { from: 'Unknown4', to: 'CarouselToken', includes: [1, 3] },
                 { from: 'Unknown4', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown4', to: 'GenOptions', includes: [4] },
+                { from: 'Unknown4', to: '()', includes: [5] },
 
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class CarouselToken : TokenWithCommonCls' },
                 { source: 'class CarouselToken', target: 'partial class CarouselToken' },
                 { source: 'class Carousel', target: 'partial class Carousel' },
+                { source: '() =>', target: '(token) =>' },
+                { source: '["dotWidthActive", "dotActiveWidth"]', target: 'new ("dotWidthActive", "dotActiveWidth")' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -471,10 +475,12 @@ const letterC: Component[] = [
             defaultClass: 'Cascader',
             propertyMap: '_tokens',
             typeMap: [
-                { from: 'FontWeight', to: 'int' },
+                { from: 'FontWeight', to: 'double' },
+                { from: 'Padding<string | number>', to: 'string' },
                 { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [1, 3, 7] },
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[4, 11]] },
                 { from: 'Unknown1', to: 'CascaderToken', includes: [2] },
+                { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [7] },
                 { from: 'Unknown2', to: 'CascaderToken', includes: [1, 2] },
                 { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1] },
             ],
@@ -483,7 +489,11 @@ const letterC: Component[] = [
                 { source: 'class CascaderToken', target: 'partial class CascaderToken' },
                 { source: 'class Cascader', target: 'partial class Cascader' },
                 { source: 'prepareComponentToken', target: 'PrepareComponentToken' },
+                { source: 'string MenuPadding', target: 'double MenuPadding' },
+                { source: '(string)_tokens["menuPadding"]', target: '(double)_tokens["menuPadding"]' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                // todo: 临时注释不可用代码
+                { source: 'GetColumnsStyle(token),', target: '// GetColumnsStyle(token),' },
             ]
         }
     },
@@ -500,7 +510,7 @@ const letterC: Component[] = [
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[4, 43]] },
                 { from: 'Unknown1', to: 'CheckboxToken', includes: [2] },
                 { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1, 3] },
-                { from: 'Unknown2', to: 'CheckboxToken', includes: [1] },
+                { from: 'Unknown2', to: 'CheckboxToken', includes: [2] },
                 { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1] },
             ],
             transforms: [
@@ -509,6 +519,7 @@ const letterC: Component[] = [
                 { source: 'class Checkbox', target: 'partial class Checkbox' },
                 { source: '(token, args)', target: '(token)' },
                 { source: 'args.PrefixCls', target: 'token.PrefixCls' },
+                { source: `FullToken<'Checkbox'>`, target: 'TokenWithCommonCls' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -539,6 +550,8 @@ const letterC: Component[] = [
                 { source: 'class CollapseToken', target: 'partial class CollapseToken' },
                 { source: 'class Collapse', target: 'partial class Collapse' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                // todo: 临时注释不可用代码
+                { source: 'GenCollapseMotion(collapseToken),', target: '// GenCollapseMotion(collapseToken),' },
             ]
         }
     },
@@ -1433,5 +1446,5 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    // ...letterC
+    ...letterC
 ];
