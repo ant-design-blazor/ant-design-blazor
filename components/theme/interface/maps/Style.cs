@@ -1,39 +1,40 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
     public partial class GlobalToken
     {
-        public int LineWidthBold
+        public double LineWidthBold
         {
-            get => (int)_tokens["lineWidthBold"];
+            get => (double)_tokens["lineWidthBold"];
             set => _tokens["lineWidthBold"] = value;
         }
 
-        public int BorderRadiusXS
+        public double BorderRadiusXS
         {
-            get => (int)_tokens["borderRadiusXS"];
+            get => (double)_tokens["borderRadiusXS"];
             set => _tokens["borderRadiusXS"] = value;
         }
 
-        public int BorderRadiusSM
+        public double BorderRadiusSM
         {
-            get => (int)_tokens["borderRadiusSM"];
+            get => (double)_tokens["borderRadiusSM"];
             set => _tokens["borderRadiusSM"] = value;
         }
 
-        public int BorderRadiusLG
+        public double BorderRadiusLG
         {
-            get => (int)_tokens["borderRadiusLG"];
+            get => (double)_tokens["borderRadiusLG"];
             set => _tokens["borderRadiusLG"] = value;
         }
 
-        public int BorderRadiusOuter
+        public double BorderRadiusOuter
         {
-            get => (int)_tokens["borderRadiusOuter"];
+            get => (double)_tokens["borderRadiusOuter"];
             set => _tokens["borderRadiusOuter"] = value;
         }
 

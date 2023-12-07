@@ -221,7 +221,6 @@ const letterA: Component[] = [
                 { source: 'class AvatarToken', target: 'partial class AvatarToken' },
                 { source: 'class Avatar', target: 'partial class Avatar' },
                 { source: 'AvatarSizeStyle', target: 'avatarSizeStyle' },
-                { source: 'Math.Round(', target: '(int)Math.Round((double)' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' }
             ]
         }
@@ -249,10 +248,6 @@ const letterB: Component[] = [
                 { source: 'class ComponentToken', target: 'partial class BackTopToken : TokenWithCommonCls' },
                 { source: 'class BackTopToken', target: 'partial class BackTopToken' },
                 { source: 'class BackTop', target: 'partial class BackTop' },
-                { source: 'controlHeightLG * 1.25', target: '(int)(controlHeightLG * 1.25)' },
-                { source: 'controlHeightLG * 2.5', target: '(int)(controlHeightLG * 2.5)' },
-                { source: 'controlHeightLG * 1.5', target: '(int)(controlHeightLG * 1.5)' },
-                { source: 'controlHeightLG * 0.5', target: '(int)(controlHeightLG * 0.5)' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' }
             ]
         }
@@ -280,11 +275,9 @@ const letterB: Component[] = [
                 { source: 'antNoWrapperZoomBadgeIn', target: '_antNoWrapperZoomBadgeIn' },
                 { source: 'antNoWrapperZoomBadgeOut', target: '_antNoWrapperZoomBadgeOut' },
                 { source: 'antBadgeLoadingCircle', target: '_antBadgeLoadingCircle' },
-                { source: 'Bdi', target: '["bdi"]' },
                 { source: 'class ComponentToken', target: 'partial class BadgeToken' },
                 { source: 'class BadgeToken', target: 'partial class BadgeToken : TokenWithCommonCls' },
                 { source: 'class Badge', target: 'partial class Badge' },
-                { source: 'Math.Round(fontSize * lineHeight)', target: '(int)Math.Round((double)fontSize * lineHeight)' },
                 { source: 'prepareComponentToken', target: 'PrepareComponentToken' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' }
             ]
@@ -308,7 +301,6 @@ const letterB: Component[] = [
                 { source: 'class ComponentToken', target: 'partial class BreadcrumbToken' },
                 { source: 'class BreadcrumbToken', target: 'partial class BreadcrumbToken : TokenWithCommonCls' },
                 { source: 'class Breadcrumb', target: 'partial class Breadcrumb' },
-                { source: 'token.LineHeight * token.FontSize', target: '(int)(token.LineHeight * token.FontSize)' },
                 { source: 'var BreadcrumbToken', target: 'var breadcrumbToken' },
                 { source: '(BreadcrumbToken)', target: '(breadcrumbToken)' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
@@ -327,8 +319,8 @@ const letterB: Component[] = [
             defaultClass: 'Button',
             propertyMap: '_tokens',
             typeMap: [
-                { from: 'FontWeight', to: 'int' },
-                { from: 'PaddingInline<string | number>', to: 'int' },
+                { from: 'FontWeight', to: 'double' },
+                { from: 'PaddingInline<string | number>', to: 'double' },
                 { from: 'Unknown1', to: 'ButtonToken', includes: [1] },
                 { from: 'Unknown3', to: 'CSSObject', includes: [1, 3] },
                 { from: 'Unknown3', to: 'ButtonToken', includes: [2] },
@@ -564,11 +556,11 @@ const letterD: Component[] = [
             defaultClass: 'DatePicker',
             propertyMap: '_tokens',
             typeMap: [
-                // { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 12]] },
-                // { from: 'Unknown4', to: 'DatePickerToken', includes: [2] },
-                // { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 80]] },
-                // { from: 'Unknown5', to: 'CSSObject[]', includes: [1, 3] },
-                // { from: 'Unknown5', to: 'DatePickerToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 14]] },
+                { from: 'Unknown4', to: 'DatePickerToken', includes: [2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 80]] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [1, 3] },
+                { from: 'Unknown5', to: 'DatePickerToken', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class DatePickerToken : TokenWithCommonCls' },
@@ -577,8 +569,7 @@ const letterD: Component[] = [
                 { source: 'class SharedPickerToken', target: 'class SharedPickerToken : PickerToken' },
                 { source: 'class DatePickerToken', target: 'partial class DatePickerToken' },
                 { source: 'class DatePicker', target: 'partial class DatePicker' },
-                // { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-                // { source: 'textEllipsis', target: 'TextEllipsis' }
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -591,16 +582,17 @@ const letterD: Component[] = [
             defaultClass: 'Descriptions',
             propertyMap: '_tokens',
             typeMap: [
-                // { from: 'Unknown', to: 'CSSObject', includes: [1], ranges: [[3, 29]] },
-                // { from: 'Unknown', to: 'DescriptionsToken', includes: [31] },
-                // { from: 'Unknown', to: 'CSSInterpolation[]', includes: [2, 32] },
-                // { from: 'Unknown', to: 'GlobalToken', includes: [30] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown2', to: 'DescriptionsToken', includes: [2] },
+                { from: 'Unknown3', to: 'DescriptionsToken', includes: [1, 3] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
+                { source: 'class ComponentToken', target: 'partial class DescriptionsToken' },
                 { source: 'class DescriptionsToken', target: 'partial class DescriptionsToken : TokenWithCommonCls' },
                 { source: 'class Descriptions', target: 'partial class Descriptions' },
-                // { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-                // { source: 'textEllipsis', target: 'TextEllipsis' }
+                { source: 'textEllipsis', target: 'TextEllipsis' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -613,15 +605,17 @@ const letterD: Component[] = [
             defaultClass: 'Divider',
             propertyMap: '_tokens',
             typeMap: [
-                // { from: 'Unknown', to: 'DividerToken', includes: [2, 4] },
-                // { from: 'Unknown', to: 'CSSInterpolation[]', includes: [1, 5] },
-                // { from: 'Unknown', to: 'GlobalToken', includes: [3] },
+                { from: 'MarginInline<string | number>', to: 'int' },
+                { from: 'PaddingInline<string | number>', to: 'int' },
+                { from: 'Unknown1', to: 'DividerToken', includes: [1] },
+                { from: 'Unknown2', to: 'DividerToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class DividerToken' },
                 { source: 'class DividerToken', target: 'partial class DividerToken : TokenWithCommonCls' },
                 { source: 'class Divider', target: 'partial class Divider' },
-                // { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -637,22 +631,16 @@ const letterD: Component[] = [
             defaultClass: 'Drawer',
             propertyMap: '_tokens',
             typeMap: [
-                // { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 29]] },
-                // { from: 'Unknown1', to: 'PropertySkip', includes: [14, 16] },
-                // { from: 'Unknown2', to: 'GlobalToken', includes: [2] },
-                // { from: 'Unknown2', to: 'DrawerToken', includes: [3] },
-                // { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1, 4] },
-                // { from: 'Unknown3', to: 'GlobalToken', includes: [2] },
-                // { from: 'Unknown3', to: 'DrawerToken', includes: [1, 3] },
-                // { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 43]] },
-                // { from: 'Unknown4', to: 'CSSObject[]', includes: [16, 23, 30, 37] },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown2', to: 'DrawerToken', includes: [1, 2] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 43]] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class DrawerToken' },
                 { source: 'class DrawerToken', target: 'partial class DrawerToken : TokenWithCommonCls' },
                 { source: 'class Drawer', target: 'partial class Drawer' },
-                // { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-                // { source: 'SharedPanelMotion', target: 'sharedPanelMotion' }
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -673,7 +661,7 @@ const letterD: Component[] = [
                 { source: 'class ComponentToken', target: 'partial class DropdownToken' },
                 { source: 'class DropdownToken', target: 'partial class DropdownToken : TokenWithCommonCls' },
                 { source: 'class Dropdown', target: 'partial class Dropdown' },
-                // { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -1428,5 +1416,7 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    ...letterD
+    ...token,
+    ...letterA,
+    ...letterB,
 ];

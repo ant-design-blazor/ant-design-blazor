@@ -8,9 +8,9 @@ namespace AntDesign
 {
     public partial class BackTopToken : TokenWithCommonCls
     {
-        public int ZIndexPopup
+        public double ZIndexPopup
         {
-            get => (int)_tokens["zIndexPopup"];
+            get => (double)_tokens["zIndexPopup"];
             set => _tokens["zIndexPopup"] = value;
         }
 
@@ -36,39 +36,39 @@ namespace AntDesign
             set => _tokens["backTopHoverBackground"] = value;
         }
 
-        public int BackTopFontSize
+        public double BackTopFontSize
         {
-            get => (int)_tokens["backTopFontSize"];
+            get => (double)_tokens["backTopFontSize"];
             set => _tokens["backTopFontSize"] = value;
         }
 
-        public int BackTopSize
+        public double BackTopSize
         {
-            get => (int)_tokens["backTopSize"];
+            get => (double)_tokens["backTopSize"];
             set => _tokens["backTopSize"] = value;
         }
 
-        public int BackTopBlockEnd
+        public double BackTopBlockEnd
         {
-            get => (int)_tokens["backTopBlockEnd"];
+            get => (double)_tokens["backTopBlockEnd"];
             set => _tokens["backTopBlockEnd"] = value;
         }
 
-        public int BackTopInlineEnd
+        public double BackTopInlineEnd
         {
-            get => (int)_tokens["backTopInlineEnd"];
+            get => (double)_tokens["backTopInlineEnd"];
             set => _tokens["backTopInlineEnd"] = value;
         }
 
-        public int BackTopInlineEndMD
+        public double BackTopInlineEndMD
         {
-            get => (int)_tokens["backTopInlineEndMD"];
+            get => (double)_tokens["backTopInlineEndMD"];
             set => _tokens["backTopInlineEndMD"] = value;
         }
 
-        public int BackTopInlineEndXS
+        public double BackTopInlineEndXS
         {
-            get => (int)_tokens["backTopInlineEndXS"];
+            get => (double)_tokens["backTopInlineEndXS"];
             set => _tokens["backTopInlineEndXS"] = value;
         }
 
@@ -165,10 +165,10 @@ namespace AntDesign
                             BackTopHoverBackground = colorText,
                             BackTopFontSize = fontSizeHeading3,
                             BackTopSize = controlHeightLG,
-                            BackTopBlockEnd = (int)(controlHeightLG * 1.25),
-                            BackTopInlineEnd = (int)(controlHeightLG * 2.5),
-                            BackTopInlineEndMD = (int)(controlHeightLG * 1.5),
-                            BackTopInlineEndXS = (int)(controlHeightLG * 0.5),
+                            BackTopBlockEnd = controlHeightLG * 1.25,
+                            BackTopInlineEnd = controlHeightLG * 2.5,
+                            BackTopInlineEndMD = controlHeightLG * 1.5,
+                            BackTopInlineEndXS = controlHeightLG * 0.5,
                         });
                     return new CSSInterpolation[]
                     {

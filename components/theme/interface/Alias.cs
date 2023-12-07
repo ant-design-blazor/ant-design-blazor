@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
@@ -127,21 +128,21 @@ namespace AntDesign
             set => _tokens["colorErrorOutline"] = value;
         }
 
-        public int FontSizeIcon
+        public double FontSizeIcon
         {
-            get => (int)_tokens["fontSizeIcon"];
+            get => (double)_tokens["fontSizeIcon"];
             set => _tokens["fontSizeIcon"] = value;
         }
 
-        public int FontWeightStrong
+        public double FontWeightStrong
         {
-            get => (int)_tokens["fontWeightStrong"];
+            get => (double)_tokens["fontWeightStrong"];
             set => _tokens["fontWeightStrong"] = value;
         }
 
-        public int ControlOutlineWidth
+        public double ControlOutlineWidth
         {
-            get => (int)_tokens["controlOutlineWidth"];
+            get => (double)_tokens["controlOutlineWidth"];
             set => _tokens["controlOutlineWidth"] = value;
         }
 
@@ -163,9 +164,9 @@ namespace AntDesign
             set => _tokens["controlItemBgActiveHover"] = value;
         }
 
-        public int ControlInteractiveSize
+        public double ControlInteractiveSize
         {
-            get => (int)_tokens["controlInteractiveSize"];
+            get => (double)_tokens["controlInteractiveSize"];
             set => _tokens["controlInteractiveSize"] = value;
         }
 
@@ -175,141 +176,141 @@ namespace AntDesign
             set => _tokens["controlItemBgActiveDisabled"] = value;
         }
 
-        public int LineWidthFocus
+        public double LineWidthFocus
         {
-            get => (int)_tokens["lineWidthFocus"];
+            get => (double)_tokens["lineWidthFocus"];
             set => _tokens["lineWidthFocus"] = value;
         }
 
-        public int PaddingXXS
+        public double PaddingXXS
         {
-            get => (int)_tokens["paddingXXS"];
+            get => (double)_tokens["paddingXXS"];
             set => _tokens["paddingXXS"] = value;
         }
 
-        public int PaddingXS
+        public double PaddingXS
         {
-            get => (int)_tokens["paddingXS"];
+            get => (double)_tokens["paddingXS"];
             set => _tokens["paddingXS"] = value;
         }
 
-        public int PaddingSM
+        public double PaddingSM
         {
-            get => (int)_tokens["paddingSM"];
+            get => (double)_tokens["paddingSM"];
             set => _tokens["paddingSM"] = value;
         }
 
-        public int Padding
+        public double Padding
         {
-            get => (int)_tokens["padding"];
+            get => (double)_tokens["padding"];
             set => _tokens["padding"] = value;
         }
 
-        public int PaddingMD
+        public double PaddingMD
         {
-            get => (int)_tokens["paddingMD"];
+            get => (double)_tokens["paddingMD"];
             set => _tokens["paddingMD"] = value;
         }
 
-        public int PaddingLG
+        public double PaddingLG
         {
-            get => (int)_tokens["paddingLG"];
+            get => (double)_tokens["paddingLG"];
             set => _tokens["paddingLG"] = value;
         }
 
-        public int PaddingXL
+        public double PaddingXL
         {
-            get => (int)_tokens["paddingXL"];
+            get => (double)_tokens["paddingXL"];
             set => _tokens["paddingXL"] = value;
         }
 
-        public int PaddingContentHorizontalLG
+        public double PaddingContentHorizontalLG
         {
-            get => (int)_tokens["paddingContentHorizontalLG"];
+            get => (double)_tokens["paddingContentHorizontalLG"];
             set => _tokens["paddingContentHorizontalLG"] = value;
         }
 
-        public int PaddingContentHorizontal
+        public double PaddingContentHorizontal
         {
-            get => (int)_tokens["paddingContentHorizontal"];
+            get => (double)_tokens["paddingContentHorizontal"];
             set => _tokens["paddingContentHorizontal"] = value;
         }
 
-        public int PaddingContentHorizontalSM
+        public double PaddingContentHorizontalSM
         {
-            get => (int)_tokens["paddingContentHorizontalSM"];
+            get => (double)_tokens["paddingContentHorizontalSM"];
             set => _tokens["paddingContentHorizontalSM"] = value;
         }
 
-        public int PaddingContentVerticalLG
+        public double PaddingContentVerticalLG
         {
-            get => (int)_tokens["paddingContentVerticalLG"];
+            get => (double)_tokens["paddingContentVerticalLG"];
             set => _tokens["paddingContentVerticalLG"] = value;
         }
 
-        public int PaddingContentVertical
+        public double PaddingContentVertical
         {
-            get => (int)_tokens["paddingContentVertical"];
+            get => (double)_tokens["paddingContentVertical"];
             set => _tokens["paddingContentVertical"] = value;
         }
 
-        public int PaddingContentVerticalSM
+        public double PaddingContentVerticalSM
         {
-            get => (int)_tokens["paddingContentVerticalSM"];
+            get => (double)_tokens["paddingContentVerticalSM"];
             set => _tokens["paddingContentVerticalSM"] = value;
         }
 
-        public int MarginXXS
+        public double MarginXXS
         {
-            get => (int)_tokens["marginXXS"];
+            get => (double)_tokens["marginXXS"];
             set => _tokens["marginXXS"] = value;
         }
 
-        public int MarginXS
+        public double MarginXS
         {
-            get => (int)_tokens["marginXS"];
+            get => (double)_tokens["marginXS"];
             set => _tokens["marginXS"] = value;
         }
 
-        public int MarginSM
+        public double MarginSM
         {
-            get => (int)_tokens["marginSM"];
+            get => (double)_tokens["marginSM"];
             set => _tokens["marginSM"] = value;
         }
 
-        public int Margin
+        public double Margin
         {
-            get => (int)_tokens["margin"];
+            get => (double)_tokens["margin"];
             set => _tokens["margin"] = value;
         }
 
-        public int MarginMD
+        public double MarginMD
         {
-            get => (int)_tokens["marginMD"];
+            get => (double)_tokens["marginMD"];
             set => _tokens["marginMD"] = value;
         }
 
-        public int MarginLG
+        public double MarginLG
         {
-            get => (int)_tokens["marginLG"];
+            get => (double)_tokens["marginLG"];
             set => _tokens["marginLG"] = value;
         }
 
-        public int MarginXL
+        public double MarginXL
         {
-            get => (int)_tokens["marginXL"];
+            get => (double)_tokens["marginXL"];
             set => _tokens["marginXL"] = value;
         }
 
-        public int MarginXXL
+        public double MarginXXL
         {
-            get => (int)_tokens["marginXXL"];
+            get => (double)_tokens["marginXXL"];
             set => _tokens["marginXXL"] = value;
         }
 
-        public float OpacityLoading
+        public double OpacityLoading
         {
-            get => (float)_tokens["opacityLoading"];
+            get => (double)_tokens["opacityLoading"];
             set => _tokens["opacityLoading"] = value;
         }
 
@@ -349,117 +350,117 @@ namespace AntDesign
             set => _tokens["linkFocusDecoration"] = value;
         }
 
-        public int ControlPaddingHorizontal
+        public double ControlPaddingHorizontal
         {
-            get => (int)_tokens["controlPaddingHorizontal"];
+            get => (double)_tokens["controlPaddingHorizontal"];
             set => _tokens["controlPaddingHorizontal"] = value;
         }
 
-        public int ControlPaddingHorizontalSM
+        public double ControlPaddingHorizontalSM
         {
-            get => (int)_tokens["controlPaddingHorizontalSM"];
+            get => (double)_tokens["controlPaddingHorizontalSM"];
             set => _tokens["controlPaddingHorizontalSM"] = value;
         }
 
-        public int ScreenXS
+        public double ScreenXS
         {
-            get => (int)_tokens["screenXS"];
+            get => (double)_tokens["screenXS"];
             set => _tokens["screenXS"] = value;
         }
 
-        public int ScreenXSMin
+        public double ScreenXSMin
         {
-            get => (int)_tokens["screenXSMin"];
+            get => (double)_tokens["screenXSMin"];
             set => _tokens["screenXSMin"] = value;
         }
 
-        public int ScreenXSMax
+        public double ScreenXSMax
         {
-            get => (int)_tokens["screenXSMax"];
+            get => (double)_tokens["screenXSMax"];
             set => _tokens["screenXSMax"] = value;
         }
 
-        public int ScreenSM
+        public double ScreenSM
         {
-            get => (int)_tokens["screenSM"];
+            get => (double)_tokens["screenSM"];
             set => _tokens["screenSM"] = value;
         }
 
-        public int ScreenSMMin
+        public double ScreenSMMin
         {
-            get => (int)_tokens["screenSMMin"];
+            get => (double)_tokens["screenSMMin"];
             set => _tokens["screenSMMin"] = value;
         }
 
-        public int ScreenSMMax
+        public double ScreenSMMax
         {
-            get => (int)_tokens["screenSMMax"];
+            get => (double)_tokens["screenSMMax"];
             set => _tokens["screenSMMax"] = value;
         }
 
-        public int ScreenMD
+        public double ScreenMD
         {
-            get => (int)_tokens["screenMD"];
+            get => (double)_tokens["screenMD"];
             set => _tokens["screenMD"] = value;
         }
 
-        public int ScreenMDMin
+        public double ScreenMDMin
         {
-            get => (int)_tokens["screenMDMin"];
+            get => (double)_tokens["screenMDMin"];
             set => _tokens["screenMDMin"] = value;
         }
 
-        public int ScreenMDMax
+        public double ScreenMDMax
         {
-            get => (int)_tokens["screenMDMax"];
+            get => (double)_tokens["screenMDMax"];
             set => _tokens["screenMDMax"] = value;
         }
 
-        public int ScreenLG
+        public double ScreenLG
         {
-            get => (int)_tokens["screenLG"];
+            get => (double)_tokens["screenLG"];
             set => _tokens["screenLG"] = value;
         }
 
-        public int ScreenLGMin
+        public double ScreenLGMin
         {
-            get => (int)_tokens["screenLGMin"];
+            get => (double)_tokens["screenLGMin"];
             set => _tokens["screenLGMin"] = value;
         }
 
-        public int ScreenLGMax
+        public double ScreenLGMax
         {
-            get => (int)_tokens["screenLGMax"];
+            get => (double)_tokens["screenLGMax"];
             set => _tokens["screenLGMax"] = value;
         }
 
-        public int ScreenXL
+        public double ScreenXL
         {
-            get => (int)_tokens["screenXL"];
+            get => (double)_tokens["screenXL"];
             set => _tokens["screenXL"] = value;
         }
 
-        public int ScreenXLMin
+        public double ScreenXLMin
         {
-            get => (int)_tokens["screenXLMin"];
+            get => (double)_tokens["screenXLMin"];
             set => _tokens["screenXLMin"] = value;
         }
 
-        public int ScreenXLMax
+        public double ScreenXLMax
         {
-            get => (int)_tokens["screenXLMax"];
+            get => (double)_tokens["screenXLMax"];
             set => _tokens["screenXLMax"] = value;
         }
 
-        public int ScreenXXL
+        public double ScreenXXL
         {
-            get => (int)_tokens["screenXXL"];
+            get => (double)_tokens["screenXXL"];
             set => _tokens["screenXXL"] = value;
         }
 
-        public int ScreenXXLMin
+        public double ScreenXXLMin
         {
-            get => (int)_tokens["screenXXLMin"];
+            get => (double)_tokens["screenXXLMin"];
             set => _tokens["screenXXLMin"] = value;
         }
 

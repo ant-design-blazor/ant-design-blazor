@@ -2,6 +2,7 @@
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
@@ -48,7 +49,7 @@ namespace AntDesign
         //     get => (string)_tokens["colorBgBase"];
         //     set => _tokens["colorBgBase"] = value;
         // }
-        //
+
         // public string ColorLink
         // {
         //     get => (string)_tokens["colorLink"];
@@ -67,15 +68,15 @@ namespace AntDesign
             set => _tokens["fontFamilyCode"] = value;
         }
 
-        // public int FontSize
+        // public double FontSize
         // {
-        //     get => (int)_tokens["fontSize"];
+        //     get => (double)_tokens["fontSize"];
         //     set => _tokens["fontSize"] = value;
         // }
 
-        public int LineWidth
+        public double LineWidth
         {
-            get => (int)_tokens["lineWidth"];
+            get => (double)_tokens["lineWidth"];
             set => _tokens["lineWidth"] = value;
         }
 
@@ -85,63 +86,63 @@ namespace AntDesign
             set => _tokens["lineType"] = value;
         }
 
-        public int BorderRadius
+        public double BorderRadius
         {
-            get => (int)_tokens["borderRadius"];
+            get => (double)_tokens["borderRadius"];
             set => _tokens["borderRadius"] = value;
         }
 
-        public int SizeUnit
+        public double SizeUnit
         {
-            get => (int)_tokens["sizeUnit"];
+            get => (double)_tokens["sizeUnit"];
             set => _tokens["sizeUnit"] = value;
         }
 
-        public int SizeStep
+        public double SizeStep
         {
-            get => (int)_tokens["sizeStep"];
+            get => (double)_tokens["sizeStep"];
             set => _tokens["sizeStep"] = value;
         }
 
-        public int SizePopupArrow
+        public double SizePopupArrow
         {
-            get => (int)_tokens["sizePopupArrow"];
+            get => (double)_tokens["sizePopupArrow"];
             set => _tokens["sizePopupArrow"] = value;
         }
 
-        public int ControlHeight
+        public double ControlHeight
         {
-            get => (int)_tokens["controlHeight"];
+            get => (double)_tokens["controlHeight"];
             set => _tokens["controlHeight"] = value;
         }
 
-        public int ZIndexBase
+        public double ZIndexBase
         {
-            get => (int)_tokens["zIndexBase"];
+            get => (double)_tokens["zIndexBase"];
             set => _tokens["zIndexBase"] = value;
         }
 
-        public int ZIndexPopupBase
+        public double ZIndexPopupBase
         {
-            get => (int)_tokens["zIndexPopupBase"];
+            get => (double)_tokens["zIndexPopupBase"];
             set => _tokens["zIndexPopupBase"] = value;
         }
 
-        public int OpacityImage
+        public double OpacityImage
         {
-            get => (int)_tokens["opacityImage"];
+            get => (double)_tokens["opacityImage"];
             set => _tokens["opacityImage"] = value;
         }
 
         public double MotionUnit
         {
-            get => (float)_tokens["motionUnit"];
+            get => (double)_tokens["motionUnit"];
             set => _tokens["motionUnit"] = value;
         }
 
-        public int MotionBase
+        public double MotionBase
         {
-            get => (int)_tokens["motionBase"];
+            get => (double)_tokens["motionBase"];
             set => _tokens["motionBase"] = value;
         }
 

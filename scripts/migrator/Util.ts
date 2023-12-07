@@ -17,6 +17,7 @@ let htmlTag: { [key: string]: string } = {
     'td': `["td"]`,
     'ul': `["ul"]`,
     'table': `["table"]`,
+    'bdi': `["bdi"]`,
 }
 
 export const spFieldName = '_skip_check_';
@@ -40,7 +41,7 @@ export const init = (ops: CsOptions) => {
     emptyMap = {};
     options = { ...ops };
     typeMap = {
-        'number': 'int',
+        'number': 'double', // use double for all number types
         'string': 'string',
         'boolean': 'bool',
         // todo: add union type support.

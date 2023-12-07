@@ -1,63 +1,64 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
     public partial class GlobalToken
     {
-        public int SizeXXL
+        public double SizeXXL
         {
-            get => (int)_tokens["sizeXXL"];
+            get => (double)_tokens["sizeXXL"];
             set => _tokens["sizeXXL"] = value;
         }
 
-        public int SizeXL
+        public double SizeXL
         {
-            get => (int)_tokens["sizeXL"];
+            get => (double)_tokens["sizeXL"];
             set => _tokens["sizeXL"] = value;
         }
 
-        public int SizeLG
+        public double SizeLG
         {
-            get => (int)_tokens["sizeLG"];
+            get => (double)_tokens["sizeLG"];
             set => _tokens["sizeLG"] = value;
         }
 
-        public int SizeMD
+        public double SizeMD
         {
-            get => (int)_tokens["sizeMD"];
+            get => (double)_tokens["sizeMD"];
             set => _tokens["sizeMD"] = value;
         }
 
-        public int SizeMS
+        public double SizeMS
         {
-            get => (int)_tokens["sizeMS"];
+            get => (double)_tokens["sizeMS"];
             set => _tokens["sizeMS"] = value;
         }
 
-        public int Size
+        public double Size
         {
-            get => (int)_tokens["size"];
+            get => (double)_tokens["size"];
             set => _tokens["size"] = value;
         }
 
-        public int SizeSM
+        public double SizeSM
         {
-            get => (int)_tokens["sizeSM"];
+            get => (double)_tokens["sizeSM"];
             set => _tokens["sizeSM"] = value;
         }
 
-        public int SizeXS
+        public double SizeXS
         {
-            get => (int)_tokens["sizeXS"];
+            get => (double)_tokens["sizeXS"];
             set => _tokens["sizeXS"] = value;
         }
 
-        public int SizeXXS
+        public double SizeXXS
         {
-            get => (int)_tokens["sizeXXS"];
+            get => (double)_tokens["sizeXXS"];
             set => _tokens["sizeXXS"] = value;
         }
 
@@ -65,21 +66,21 @@ namespace AntDesign
 
     public partial class GlobalToken
     {
-        public int ControlHeightXS
+        public double ControlHeightXS
         {
-            get => (int)_tokens["controlHeightXS"];
+            get => (double)_tokens["controlHeightXS"];
             set => _tokens["controlHeightXS"] = value;
         }
 
-        public int ControlHeightSM
+        public double ControlHeightSM
         {
-            get => (int)_tokens["controlHeightSM"];
+            get => (double)_tokens["controlHeightSM"];
             set => _tokens["controlHeightSM"] = value;
         }
 
-        public int ControlHeightLG
+        public double ControlHeightLG
         {
-            get => (int)_tokens["controlHeightLG"];
+            get => (double)_tokens["controlHeightLG"];
             set => _tokens["controlHeightLG"] = value;
         }
 

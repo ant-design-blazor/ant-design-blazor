@@ -14,9 +14,9 @@ namespace AntDesign
             set => _tokens["itemColor"] = value;
         }
 
-        public int IconFontSize
+        public double IconFontSize
         {
-            get => (int)_tokens["iconFontSize"];
+            get => (double)_tokens["iconFontSize"];
             set => _tokens["iconFontSize"] = value;
         }
 
@@ -38,9 +38,9 @@ namespace AntDesign
             set => _tokens["lastItemColor"] = value;
         }
 
-        public int SeparatorMargin
+        public double SeparatorMargin
         {
-            get => (int)_tokens["separatorMargin"];
+            get => (double)_tokens["separatorMargin"];
             set => _tokens["separatorMargin"] = value;
         }
 
@@ -87,7 +87,7 @@ namespace AntDesign
                         Transition = @$"color {token.MotionDurationMid}",
                         Padding = @$"0 {token.PaddingXXS}px",
                         BorderRadius = token.BorderRadiusSM,
-                        Height = (int)(token.LineHeight * token.FontSize),
+                        Height = token.LineHeight * token.FontSize,
                         Display = "inline-block",
                         MarginInline = -token.MarginXXS,
                         ["&:hover"] = new CSSObject()
@@ -116,7 +116,7 @@ namespace AntDesign
                     [$"{componentCls}-overlay-link"] = new CSSObject()
                     {
                         BorderRadius = token.BorderRadiusSM,
-                        Height = (int)(token.LineHeight * token.FontSize),
+                        Height = token.LineHeight * token.FontSize,
                         Display = "inline-block",
                         Padding = @$"0 {token.PaddingXXS}px",
                         MarginInline = -token.MarginXXS,

@@ -8,9 +8,9 @@ namespace AntDesign
 {
     public class AffixToken : TokenWithCommonCls
     {
-        public int ZIndexPopup
+        public double ZIndexPopup
         {
-            get => (int)_tokens["zIndexPopup"];
+            get => (double)_tokens["zIndexPopup"];
             set => _tokens["zIndexPopup"] = value;
         }
 

@@ -1,63 +1,64 @@
-﻿using System;
+using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
+using static AntDesign.StyleUtil;
 
 namespace AntDesign
 {
     public partial class GlobalToken
     {
-        public int FontSizeSM
+        public double FontSizeSM
         {
-            get => (int)_tokens["fontSizeSM"];
+            get => (double)_tokens["fontSizeSM"];
             set => _tokens["fontSizeSM"] = value;
         }
 
-        public int FontSize
+        public double FontSize
         {
-            get => (int)_tokens["fontSize"];
+            get => (double)_tokens["fontSize"];
             set => _tokens["fontSize"] = value;
         }
 
-        public int FontSizeLG
+        public double FontSizeLG
         {
-            get => (int)_tokens["fontSizeLG"];
+            get => (double)_tokens["fontSizeLG"];
             set => _tokens["fontSizeLG"] = value;
         }
 
-        public int FontSizeXL
+        public double FontSizeXL
         {
-            get => (int)_tokens["fontSizeXL"];
+            get => (double)_tokens["fontSizeXL"];
             set => _tokens["fontSizeXL"] = value;
         }
 
-        public int FontSizeHeading1
+        public double FontSizeHeading1
         {
-            get => (int)_tokens["fontSizeHeading1"];
+            get => (double)_tokens["fontSizeHeading1"];
             set => _tokens["fontSizeHeading1"] = value;
         }
 
-        public int FontSizeHeading2
+        public double FontSizeHeading2
         {
-            get => (int)_tokens["fontSizeHeading2"];
+            get => (double)_tokens["fontSizeHeading2"];
             set => _tokens["fontSizeHeading2"] = value;
         }
 
-        public int FontSizeHeading3
+        public double FontSizeHeading3
         {
-            get => (int)_tokens["fontSizeHeading3"];
+            get => (double)_tokens["fontSizeHeading3"];
             set => _tokens["fontSizeHeading3"] = value;
         }
 
-        public int FontSizeHeading4
+        public double FontSizeHeading4
         {
-            get => (int)_tokens["fontSizeHeading4"];
+            get => (double)_tokens["fontSizeHeading4"];
             set => _tokens["fontSizeHeading4"] = value;
         }
 
-        public int FontSizeHeading5
+        public double FontSizeHeading5
         {
-            get => (int)_tokens["fontSizeHeading5"];
+            get => (double)_tokens["fontSizeHeading5"];
             set => _tokens["fontSizeHeading5"] = value;
         }
 

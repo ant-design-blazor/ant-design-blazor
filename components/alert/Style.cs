@@ -20,9 +20,9 @@ namespace AntDesign
             set => _tokens["withDescriptionPadding"] = value;
         }
 
-        public int WithDescriptionIconSize
+        public double WithDescriptionIconSize
         {
-            get => (int)_tokens["withDescriptionIconSize"];
+            get => (double)_tokens["withDescriptionIconSize"];
             set => _tokens["withDescriptionIconSize"] = value;
         }
 

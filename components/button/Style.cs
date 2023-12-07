@@ -8,9 +8,9 @@ namespace AntDesign
 {
     public partial class ButtonToken
     {
-        public int FontWeight
+        public double FontWeight
         {
-            get => (int)_tokens["fontWeight"];
+            get => (double)_tokens["fontWeight"];
             set => _tokens["fontWeight"] = value;
         }
 
@@ -86,39 +86,39 @@ namespace AntDesign
             set => _tokens["defaultGhostBorderColor"] = value;
         }
 
-        public int PaddingInline
+        public double PaddingInline
         {
-            get => (int)_tokens["paddingInline"];
+            get => (double)_tokens["paddingInline"];
             set => _tokens["paddingInline"] = value;
         }
 
-        public int PaddingInlineLG
+        public double PaddingInlineLG
         {
-            get => (int)_tokens["paddingInlineLG"];
+            get => (double)_tokens["paddingInlineLG"];
             set => _tokens["paddingInlineLG"] = value;
         }
 
-        public int PaddingInlineSM
+        public double PaddingInlineSM
         {
-            get => (int)_tokens["paddingInlineSM"];
+            get => (double)_tokens["paddingInlineSM"];
             set => _tokens["paddingInlineSM"] = value;
         }
 
-        public int OnlyIconSize
+        public double OnlyIconSize
         {
-            get => (int)_tokens["onlyIconSize"];
+            get => (double)_tokens["onlyIconSize"];
             set => _tokens["onlyIconSize"] = value;
         }
 
-        public int OnlyIconSizeLG
+        public double OnlyIconSizeLG
         {
-            get => (int)_tokens["onlyIconSizeLG"];
+            get => (double)_tokens["onlyIconSizeLG"];
             set => _tokens["onlyIconSizeLG"] = value;
         }
 
-        public int OnlyIconSizeSM
+        public double OnlyIconSizeSM
         {
-            get => (int)_tokens["onlyIconSizeSM"];
+            get => (double)_tokens["onlyIconSizeSM"];
             set => _tokens["onlyIconSizeSM"] = value;
         }
 
@@ -140,21 +140,21 @@ namespace AntDesign
             set => _tokens["textHoverBg"] = value;
         }
 
-        public int ContentFontSize
+        public double ContentFontSize
         {
-            get => (int)_tokens["contentFontSize"];
+            get => (double)_tokens["contentFontSize"];
             set => _tokens["contentFontSize"] = value;
         }
 
-        public int ContentFontSizeLG
+        public double ContentFontSizeLG
         {
-            get => (int)_tokens["contentFontSizeLG"];
+            get => (double)_tokens["contentFontSizeLG"];
             set => _tokens["contentFontSizeLG"] = value;
         }
 
-        public int ContentFontSizeSM
+        public double ContentFontSizeSM
         {
-            get => (int)_tokens["contentFontSizeSM"];
+            get => (double)_tokens["contentFontSizeSM"];
             set => _tokens["contentFontSizeSM"] = value;
         }
 
@@ -162,15 +162,15 @@ namespace AntDesign
 
     public partial class ButtonToken : TokenWithCommonCls
     {
-        public int ButtonPaddingHorizontal
+        public double ButtonPaddingHorizontal
         {
-            get => (int)_tokens["buttonPaddingHorizontal"];
+            get => (double)_tokens["buttonPaddingHorizontal"];
             set => _tokens["buttonPaddingHorizontal"] = value;
         }
 
-        public int ButtonIconOnlyFontSize
+        public double ButtonIconOnlyFontSize
         {
-            get => (int)_tokens["buttonIconOnlyFontSize"];
+            get => (double)_tokens["buttonIconOnlyFontSize"];
             set => _tokens["buttonIconOnlyFontSize"] = value;
         }
 

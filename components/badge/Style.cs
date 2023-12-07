@@ -15,33 +15,33 @@ namespace AntDesign
             set => _tokens["indicatorZIndex"] = value;
         }
 
-        public int IndicatorHeight
+        public double IndicatorHeight
         {
-            get => (int)_tokens["indicatorHeight"];
+            get => (double)_tokens["indicatorHeight"];
             set => _tokens["indicatorHeight"] = value;
         }
 
-        public int IndicatorHeightSM
+        public double IndicatorHeightSM
         {
-            get => (int)_tokens["indicatorHeightSM"];
+            get => (double)_tokens["indicatorHeightSM"];
             set => _tokens["indicatorHeightSM"] = value;
         }
 
-        public int DotSize
+        public double DotSize
         {
-            get => (int)_tokens["dotSize"];
+            get => (double)_tokens["dotSize"];
             set => _tokens["dotSize"] = value;
         }
 
-        public int TextFontSize
+        public double TextFontSize
         {
-            get => (int)_tokens["textFontSize"];
+            get => (double)_tokens["textFontSize"];
             set => _tokens["textFontSize"] = value;
         }
 
-        public int TextFontSizeSM
+        public double TextFontSizeSM
         {
-            get => (int)_tokens["textFontSizeSM"];
+            get => (double)_tokens["textFontSizeSM"];
             set => _tokens["textFontSizeSM"] = value;
         }
 
@@ -51,9 +51,9 @@ namespace AntDesign
             set => _tokens["textFontWeight"] = value;
         }
 
-        public int StatusSize
+        public double StatusSize
         {
-            get => (int)_tokens["statusSize"];
+            get => (double)_tokens["statusSize"];
             set => _tokens["statusSize"] = value;
         }
 
@@ -61,9 +61,9 @@ namespace AntDesign
 
     public partial class BadgeToken : TokenWithCommonCls
     {
-        public int BadgeFontHeight
+        public double BadgeFontHeight
         {
-            get => (int)_tokens["badgeFontHeight"];
+            get => (double)_tokens["badgeFontHeight"];
             set => _tokens["badgeFontHeight"] = value;
         }
 
@@ -85,9 +85,9 @@ namespace AntDesign
             set => _tokens["badgeColorHover"] = value;
         }
 
-        public int BadgeShadowSize
+        public double BadgeShadowSize
         {
-            get => (int)_tokens["badgeShadowSize"];
+            get => (double)_tokens["badgeShadowSize"];
             set => _tokens["badgeShadowSize"] = value;
         }
 
@@ -103,9 +103,9 @@ namespace AntDesign
             set => _tokens["badgeProcessingDuration"] = value;
         }
 
-        public int BadgeRibbonOffset
+        public double BadgeRibbonOffset
         {
-            get => (int)_tokens["badgeRibbonOffset"];
+            get => (double)_tokens["badgeRibbonOffset"];
             set => _tokens["badgeRibbonOffset"] = value;
         }
 
@@ -467,7 +467,7 @@ namespace AntDesign
             var lineWidth = token.LineWidth;
             var marginXS = token.MarginXS;
             var colorBorderBg = token.ColorBorderBg;
-            var badgeFontHeight = (int)Math.Round((double)fontSize * lineHeight);
+            var badgeFontHeight = Math.Round(fontSize * lineHeight);
             var badgeShadowSize = lineWidth;
             var badgeTextColor = token.ColorBgContainer;
             var badgeColor = token.ColorError;
@@ -499,7 +499,7 @@ namespace AntDesign
             return new BadgeToken()
             {
                 IndicatorZIndex = "auto",
-                IndicatorHeight = (int)Math.Round((double)fontSize * lineHeight) - 2 * lineWidth,
+                IndicatorHeight = Math.Round(fontSize * lineHeight) - 2 * lineWidth,
                 IndicatorHeightSM = fontSize,
                 DotSize = fontSizeSM / 2,
                 TextFontSize = fontSizeSM,

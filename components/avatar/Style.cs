@@ -8,51 +8,51 @@ namespace AntDesign
 {
     public partial class AvatarToken : TokenWithCommonCls
     {
-        public int ContainerSize
+        public double ContainerSize
         {
-            get => (int)_tokens["containerSize"];
+            get => (double)_tokens["containerSize"];
             set => _tokens["containerSize"] = value;
         }
 
-        public int ContainerSizeLG
+        public double ContainerSizeLG
         {
-            get => (int)_tokens["containerSizeLG"];
+            get => (double)_tokens["containerSizeLG"];
             set => _tokens["containerSizeLG"] = value;
         }
 
-        public int ContainerSizeSM
+        public double ContainerSizeSM
         {
-            get => (int)_tokens["containerSizeSM"];
+            get => (double)_tokens["containerSizeSM"];
             set => _tokens["containerSizeSM"] = value;
         }
 
-        public int TextFontSize
+        public double TextFontSize
         {
-            get => (int)_tokens["textFontSize"];
+            get => (double)_tokens["textFontSize"];
             set => _tokens["textFontSize"] = value;
         }
 
-        public int TextFontSizeLG
+        public double TextFontSizeLG
         {
-            get => (int)_tokens["textFontSizeLG"];
+            get => (double)_tokens["textFontSizeLG"];
             set => _tokens["textFontSizeLG"] = value;
         }
 
-        public int TextFontSizeSM
+        public double TextFontSizeSM
         {
-            get => (int)_tokens["textFontSizeSM"];
+            get => (double)_tokens["textFontSizeSM"];
             set => _tokens["textFontSizeSM"] = value;
         }
 
-        public int GroupSpace
+        public double GroupSpace
         {
-            get => (int)_tokens["groupSpace"];
+            get => (double)_tokens["groupSpace"];
             set => _tokens["groupSpace"] = value;
         }
 
-        public int GroupOverlapping
+        public double GroupOverlapping
         {
-            get => (int)_tokens["groupOverlapping"];
+            get => (double)_tokens["groupOverlapping"];
             set => _tokens["groupOverlapping"] = value;
         }
 
@@ -106,7 +106,7 @@ namespace AntDesign
             var borderRadiusSM = token.BorderRadiusSM;
             var lineWidth = token.LineWidth;
             var lineType = token.LineType;
-            var avatarSizeStyle = (int size, int fontSize, int radius) => {
+            var avatarSizeStyle = (double size, double fontSize, double radius) => {
                 return new CSSObject()
                 {
                     Width = size,
@@ -247,7 +247,7 @@ namespace AntDesign
                         ContainerSize = controlHeight,
                         ContainerSizeLG = controlHeightLG,
                         ContainerSizeSM = controlHeightSM,
-                        TextFontSize = (int)Math.Round((double)(fontSizeLG + fontSizeXL) / 2),
+                        TextFontSize = Math.Round((fontSizeLG + fontSizeXL) / 2),
                         TextFontSizeLG = fontSizeHeading3,
                         TextFontSizeSM = fontSize,
                         GroupSpace = marginXXS,
