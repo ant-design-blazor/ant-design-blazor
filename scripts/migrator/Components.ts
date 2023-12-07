@@ -398,6 +398,10 @@ const letterC: Component[] = [
                 { source: 'class CalendarToken', target: 'partial class CalendarToken' },
                 { source: 'class Calendar', target: 'partial class Calendar' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                // todo: 临时注释不可用代码
+                { source: 'InitPickerPanelToken(token),', target: '// InitPickerPanelToken(token),' },
+                { source: 'InitPanelComponentToken(token),', target: '// InitPanelComponentToken(token),' },
+                { source: 'PickerCellInnerCls = @$"{token.ComponentCls}-cell-inner",', target: '// PickerCellInnerCls = @$"{token.ComponentCls}-cell-inner",' },
             ]
         }
     },
@@ -1429,4 +1433,5 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
+    // ...letterC
 ];
