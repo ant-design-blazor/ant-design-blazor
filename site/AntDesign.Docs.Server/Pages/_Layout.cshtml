@@ -37,16 +37,15 @@
   <script src="@polyfillPath"></script>
   <script src="_content/AntDesign.Charts/g2plot.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+  @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
   <script src="_content/AntDesign.Docs/js/prism.js"></script>
-  <script src="_framework/blazor.server.js"></script>
   <script>
-    window.AntDesign.Prism = {};
-    window.AntDesign.Prism.highlight = function (code, language) {
+    window.Prism = {};
+    window.Prism.highlight = function (code, language) {
         return Prism.highlight(code, Prism.languages[language], language);
     }
 
-    window.AntDesign.Prism.highlightAll = function () {
+    window.Prism.highlightAll = function () {
         Prism.highlightAll();
     }
   </script>
@@ -56,5 +55,7 @@
   {
     <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
   }
+
+  <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
