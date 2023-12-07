@@ -77,6 +77,7 @@ export type ObjectBinding = {
     kind: CsKinds;
     initializer: string;
     bindings: BindingItem[];
+    callExp?: CallExpression;
 }
 
 export type FunctionBody = {
@@ -255,9 +256,13 @@ export class CsFunction {
     private createObjectBinding(tab: string, objectBinding: ObjectBinding): string[] {
         const codes: string[] = [];
         if (!objectBinding.bindings || objectBinding.bindings.length <= 0) return codes;
+        if (objectBinding.callExp) {
+            codes.push(...this.createCallExpression(tab, objectBinding.callExp))
+        }
         objectBinding.bindings.forEach((item) => {
+            const initializer = objectBinding.initializer === 'unknown' ? castType(unknown()) : objectBinding.initializer;
             const name = item.propertyName ? item.propertyName : item.name;
-            codes.push(`${tab}var ${item.name} = ${objectBinding.initializer}.${toPascalCase(name)};`);
+            codes.push(`${tab}var ${item.name} = ${initializer}.${toPascalCase(name)};`);
         });
         return codes;
     }
@@ -299,7 +304,7 @@ export class CsFunction {
     private createArrayExpression(tab: string, arrayExpression: ArrayExpression, rootEnd: string = ';', returnFlag: string = 'return '): string[] {
         const codes: string[] = [];
         const precode = `${returnFlag}new ${castType(arrayExpression.type || unknown())}`;
-        if (arrayExpression.items.length > 1) {
+        if (arrayExpression.items.length >= 1) {
             codes.push(`${tab}${precode}`);
             codes.push(`${tab}{`);
             arrayExpression.items.forEach((x, i) => {
@@ -311,11 +316,21 @@ export class CsFunction {
                         case CsKinds.ObjectExpression:
                             codes.push(...this.createObjectExpression(tab + '    ', x as ObjectExpression, ',', ''));
                             break;
+                        case CsKinds.CallExpression:
+                            /**
+                             * 示例：在数组中调用方法
+                             * return [
+                             *     getToken(param1, { param2: xxxxx }),
+                             * ]
+                             */
+                            codes.push(...this.createCallExpression(tab + '    ', x as CallExpression, ','));
+                            break;
                     }
                 }
             });
             codes.push(`${tab}}${rootEnd}`);
         } else {
+            // todo: 需要添加注释，该功能作用不明, 不能按items的长度判断，需要重构。
             const args = arrayExpression.items.map(x => toPascalCase(x)).join(',');
             codes.push(`${tab}${precode} { ${args} }${rootEnd}`);
         }
@@ -328,7 +343,7 @@ export class CsFunction {
         const multiLine = callExpression.paramaters.findIndex(x => !isString(x)) >= 0;
         const name = castFunName(callExpression.funcName);
         const precode = callExpression.assignment ?
-            `var ${callExpression.assignment} = ${name}` :
+            `var ${callExpression.assignment === 'unknown' ? castType(unknown()) : callExpression.assignment} = ${name}` :
             `${callExpression.returnFlag}${name}`;
         if (!multiLine) {
             const args = callExpression.paramaters.map(x => castParameter(x)).join(', ');

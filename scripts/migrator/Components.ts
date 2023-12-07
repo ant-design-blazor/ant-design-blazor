@@ -454,7 +454,6 @@ const letterC: Component[] = [
                 { source: 'class ComponentToken', target: 'partial class CarouselToken : TokenWithCommonCls' },
                 { source: 'class CarouselToken', target: 'partial class CarouselToken' },
                 { source: 'class Carousel', target: 'partial class Carousel' },
-                { source: '-carouselArrowSize * 1.25', target: '(int)(-carouselArrowSize * 1.25)' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -605,8 +604,8 @@ const letterD: Component[] = [
             defaultClass: 'Divider',
             propertyMap: '_tokens',
             typeMap: [
-                { from: 'MarginInline<string | number>', to: 'int' },
-                { from: 'PaddingInline<string | number>', to: 'int' },
+                { from: 'MarginInline<string | number>', to: 'double' },
+                { from: 'PaddingInline<string | number>', to: 'string' },
                 { from: 'Unknown1', to: 'DividerToken', includes: [1] },
                 { from: 'Unknown2', to: 'DividerToken', includes: [1, 3] },
                 { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
@@ -632,14 +631,17 @@ const letterD: Component[] = [
             propertyMap: '_tokens',
             typeMap: [
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 29]] },
-                { from: 'Unknown2', to: 'DrawerToken', includes: [1, 2] },
+                { from: 'Unknown1', to: 'PropertySkip', includes: [14, 16] },
+                { from: 'Unknown2', to: 'DrawerToken', includes: [1, 3] },
                 { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
                 { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 43]] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [16, 23, 30, 37] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class DrawerToken' },
                 { source: 'class DrawerToken', target: 'partial class DrawerToken : TokenWithCommonCls' },
                 { source: 'class Drawer', target: 'partial class Drawer' },
+                { source: 'SharedPanelMotion', target: 'sharedPanelMotion' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -656,6 +658,17 @@ const letterD: Component[] = [
             defaultClass: 'Dropdown',
             propertyMap: '_tokens',
             typeMap: [
+                { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [1, 3] },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[4, 50]] },
+                { from: 'Unknown1', to: 'DropdownToken', includes: [2] },
+                { from: 'Unknown1', to: 'PropertySkip', includes: [6] },
+                { from: 'Unknown1', to: 'TokenWithCommonCls', includes: [20] },
+                { from: 'Unknown2', to: 'arrowToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'TokenWithCommonCls', includes: [2] },
+                { from: 'Unknown2', to: 'DropdownToken', includes: [4, 6] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [5] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown3', to: 'DropdownToken', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class DropdownToken' },
@@ -1416,7 +1429,4 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    ...token,
-    ...letterA,
-    ...letterB,
 ];

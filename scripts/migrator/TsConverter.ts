@@ -120,6 +120,10 @@ function createArrayExpression(type: string, elements: any[]) {
                 const obj = createObjectExpression('', x);
                 arrayExpression.items.push(obj);
                 break;
+            case ts.SyntaxKind.CallExpression:
+                const callExp = createCallExpression('', '', x, '');
+                arrayExpression.items.push(callExp);
+                break;
             default:
                 arrayExpression.items.push(x.getText());
                 break;
@@ -215,9 +219,32 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                 case ts.SyntaxKind.VariableStatement:
                     const declaration = (x as ts.VariableStatement).declarationList.declarations[0];
                     if (declaration.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
-                        const initializerName = declaration.initializer?.getText() || '';
-                        const objectBinding = createObjectBinding(initializerName, (declaration.name as any).elements)
-                        statements.push(objectBinding);
+                        if (declaration.initializer?.kind === ts.SyntaxKind.CallExpression) {
+                            /**
+                             * 这里无法直接映射成C#调用方式
+                             * 源代码示例：
+                             * const { propA, propB } = getProps(a, b);
+                             * 只能转换成
+                             * var xxx = getProps(a, b);
+                             * var propA = xxx.PropA;
+                             * var propB = xxx.PropB;
+                             */
+                            const objectBinding = createObjectBinding('unknown', (declaration.name as any).elements);
+                            objectBinding.callExp = createCallExpression('unknown', '', declaration.initializer as ts.CallExpression);
+                            statements.push(objectBinding);
+                        } else {
+                            /**
+                             * 对象绑定
+                             * 示例：
+                             * const { propA, propB } = token;
+                             * 转换示例：
+                             * var propA = token.PropA;
+                             * var propB = token.PropB;
+                             */
+                            const initializerName = declaration.initializer?.getText() || '';
+                            const objectBinding = createObjectBinding(initializerName, (declaration.name as any).elements)
+                            statements.push(objectBinding);
+                        }
                     } else if (declaration.initializer?.kind === ts.SyntaxKind.CallExpression) {
                         const assignment = declaration.name.getText();
                         const callExp = declaration.initializer as ts.CallExpression;
@@ -260,9 +287,6 @@ function convertVariableStatement(context: Context<ts.VariableStatement>) {
     switch (declaration.initializer?.kind) {
         case ts.SyntaxKind.ArrowFunction:
             const funcName = declaration.name.getText();
-            if(funcName === 'genSizeBaseButtonStyle') {
-                console.log('')
-            }
             const func = createArrowFunction(funcName, declaration.initializer as ts.ArrowFunction);
             context.csBuilder.addFunction(func);
             break;
@@ -298,7 +322,7 @@ function convertExportAssignment(context: Context<ts.ExportAssignment>) {
                     parameters.push(funBody);
                 } else if (x.kind === ts.SyntaxKind.StringLiteral) {
                     parameters.push(x.getText());
-                } else{
+                } else {
                     parameters.push(x.getText());
                 }
             });
