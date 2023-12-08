@@ -22,6 +22,10 @@ namespace AntDesign
 
         void UnselectAll();
 
+        void ExpandAll();
+
+        void CollapseAll();
+
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }

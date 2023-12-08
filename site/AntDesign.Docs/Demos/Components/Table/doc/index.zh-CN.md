@@ -108,6 +108,22 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
 
 
+### 公开方法
+
+可以使用 `@ref` 绑定 `ITable` 的实例中提供的方法操作 Table。
+
+| 方法名             | 说明                                       | 
+| ---------------- | ------------------------------------------- | 
+| ReloadData       | 重新加载数据，有三个重载，可指定分页、筛选和排序   | 
+| ResetData        | 重置表格分页、筛选、排序状态                    |
+| GetQueryModel    | 获取表格状态，可用于持久化和恢复                |
+| SetSelection     | 设置选择列                                   |
+| SelectAll        | 全选                                        |
+| UnselectAll      | 取消全选                                     |
+| ExpandAll        | 展开全部列                                   |
+| CollapseAll      | 收起所有展开的的列                            |
+
+
 ### 响应式
 
 表格默认支持响应式，当屏幕宽度小于 960px 时，表格的数据列变为小屏模式。
