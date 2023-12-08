@@ -53,6 +53,7 @@ namespace AntDesign
 
         public ReuseTabsRouteData(RouteData routeData)
         {
+            _routeData = routeData;
             RouteValues = routeData.RouteValues;
             PageType = routeData.PageType.FullName;
             PageAssembly = routeData.PageType.Assembly.FullName;
