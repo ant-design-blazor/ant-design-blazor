@@ -34,8 +34,10 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-normal", () => Simple)
                 .If($"{PrefixCls}-small", () => Small)
                 .If($"{PrefixCls}-rtl", () => RTL)

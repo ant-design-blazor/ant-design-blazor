@@ -697,8 +697,7 @@ const letterD: Component[] = [
     },
 ]
 
-// 未完成测试的组件
-export const data1: Component[] = [
+const letterE_G: Component[] = [
     {
         name: 'Empty',
         src: ['components/empty/style/index.ts'],
@@ -707,12 +706,15 @@ export const data1: Component[] = [
             ...defaultOptions,
             defaultClass: 'Empty',
             typeMap: [
+                { from: 'Unknown1', to: 'EmptyToken', includes: [1] },
+                { from: 'Unknown2', to: 'EmptyToken', includes: [1] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class EmptyToken' },
                 { source: 'class EmptyToken', target: 'partial class EmptyToken : TokenWithCommonCls' },
                 { source: 'class Empty', target: 'partial class Empty' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -753,6 +755,9 @@ export const data1: Component[] = [
             ]
         }
     },
+]
+
+const letterI: Component[] = [
     {
         name: 'Image',
         src: ['components/image/style/index.ts'],
@@ -761,12 +766,19 @@ export const data1: Component[] = [
             ...defaultOptions,
             defaultClass: 'Image',
             typeMap: [
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [1, 2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[3, 19]] },
+                { from: 'Unknown6', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown7', to: 'CSSObject', includes: [1, 3] },
+                { from: 'Unknown7', to: 'ImageToken', includes: [2] },
+                { from: 'Unknown8', to: 'ImageToken', includes: [1, 3, 4] },
+                { from: 'Unknown8', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class ImageToken' },
                 { source: 'class ImageToken', target: 'partial class ImageToken : TokenWithCommonCls' },
                 { source: 'class Image', target: 'partial class Image' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -778,12 +790,28 @@ export const data1: Component[] = [
             ...defaultOptions,
             defaultClass: 'Input',
             typeMap: [
+                { from: 'Unknown3', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown4', to: 'InputToken', includes: [1] },
+                { from: 'Unknown7', to: 'InputToken', includes: [1, 2] },
+                { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown12', to: 'CSSObject', ranges: [[1, 21]] },
+                { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 22]] },
+                { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown15', to: 'CSSObject', ranges: [[1, 18]] },
+                { from: 'Unknown15', to: 'InputToken', includes: [2] },
+                { from: 'Unknown16', to: 'CSSObject', ranges: [[1, 5]] },
+                { from: 'Unknown16', to: 'InputToken', includes: [2] },
+                { from: 'Unknown17', to: 'InputToken', includes: [1] },
+                { from: 'Unknown19', to: 'CSSInterpolation[]', includes: [1] },
             ],
             transforms: [
+                { source: 'class SharedComponentToken', target: 'partial class InputToken' },
                 { source: 'class ComponentToken', target: 'partial class InputToken' },
                 { source: 'class InputToken', target: 'partial class InputToken : TokenWithCommonCls' },
                 { source: 'class Input', target: 'partial class Input' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'initComponentToken', target: 'InitComponentToken' },
+                { source: 'SharedComponentToken', target: 'InputToken' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -795,15 +823,30 @@ export const data1: Component[] = [
             ...defaultOptions,
             defaultClass: 'InputNumber',
             typeMap: [
+                { from: 'true | "auto"', to: 'bool' },
+                { from: `'lg' | 'sm'`, to: 'string' },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1, 2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[3, 46]] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 17]] },
+                { from: 'Unknown4', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown4', to: 'CSSObject', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class InputNumberToken' },
                 { source: 'class InputNumberToken', target: 'partial class InputNumberToken : TokenWithCommonCls' },
                 { source: 'class InputNumber', target: 'partial class InputNumber' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
+]
+
+// 未完成测试的组件
+export const data1: Component[] = [
+
+
+
     {
         name: 'Layout',
         src: [
@@ -1446,5 +1489,5 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    ...letterC
+    
 ];
