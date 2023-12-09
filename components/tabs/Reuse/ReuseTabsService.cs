@@ -21,7 +21,17 @@ namespace AntDesign
         internal string CurrentUrl
         {
             get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
-            set => _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+            set
+            {
+                try
+                {
+                    _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+                }
+                catch (NavigationException)
+                {
+                    // would throw exception during static rendering
+                }
+            }
         }
 
         internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore)
@@ -149,12 +159,7 @@ namespace AntDesign
 
             if (_pageMap.Any())
             {
-#if NET8_0_OR_GREATER
-                if (OperatingSystem.IsBrowser())
-                {
-                    CurrentUrl = Pages[0].Url;
-                }
-#endif
+                CurrentUrl = Pages[0].Url;
             }
         }
 
