@@ -840,6 +840,39 @@ const letterI: Component[] = [
             ]
         }
     },
+
+    {
+        name: 'Layout',
+        src: [
+            'components/layout/style/index.ts',
+            'components/layout/style/light.ts',
+        ],
+        dist: 'components/layout/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Layout',
+            typeMap: [
+                { from: 'Padding<string | number>', to: 'string' },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 25]] },
+                { from: 'Unknown1', to: 'LayoutToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown2', to: 'LayoutToken', includes: [2] },
+                { from: 'Unknown2', to: 'GenOptions', includes: [3] },
+                { from: 'Unknown2', to: '()', includes: [4] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 6]] },
+                { from: 'Unknown3', to: 'LayoutToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class LayoutToken' },
+                { source: 'class LayoutToken', target: 'partial class LayoutToken : TokenWithCommonCls' },
+                { source: 'class Layout', target: 'partial class Layout' },
+                { source: '["colorBgBody", "bodyBg"],', target: 'new ("colorBgBody", "bodyBg"),' },
+                { source: '["colorBgHeader", "headerBg"],', target: 'new ("colorBgHeader", "headerBg"),' },
+                { source: '["colorBgTrigger", "triggerBg"]', target: 'new ("colorBgTrigger", "triggerBg")' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
 ]
 
 // 未完成测试的组件
@@ -879,29 +912,7 @@ export const data1: Component[] = [
             ]
         }
     },
-    {
-        name: 'Menu',
-        src: [
-            'components/menu/style/index.tsx',
-            'components/menu/style/horizontal.tsx',
-            'components/menu/style/vertical.tsx',
-            'components/menu/style/rtl.tsx',
-            'components/menu/style/theme.tsx',
-        ],
-        dist: 'components/menu/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Menu',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class MenuToken' },
-                { source: 'class MenuToken', target: 'partial class MenuToken : TokenWithCommonCls' },
-                { source: 'class Menu', target: 'partial class Menu' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
+
     {
         name: 'Message',
         src: ['components/message/style/index.tsx'],
@@ -1468,33 +1479,35 @@ export const data1: Component[] = [
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
     {
-        name: 'Layout',
+        name: 'Menu',
         src: [
-            'components/layout/style/index.ts',
-            'components/layout/style/light.ts',
+            'components/menu/style/index.tsx',
+            // 'components/menu/style/horizontal.tsx',
+            // 'components/menu/style/vertical.tsx',
+            // 'components/menu/style/rtl.tsx',
+            // 'components/menu/style/theme.tsx',
         ],
-        dist: 'components/layout/Style.cs',
+        dist: 'components/menu/Style.cs',
         csOptions: {
             ...defaultOptions,
-            defaultClass: 'Layout',
+            defaultClass: 'Menu',
             typeMap: [
-                { from: 'Padding<string | number>', to: 'string' },
-                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 25]] },
-                { from: 'Unknown1', to: 'LayoutToken', includes: [2] },
-                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1] },
-                { from: 'Unknown2', to: 'LayoutToken', includes: [2] },
-                { from: 'Unknown2', to: 'GenOptions', includes: [3] },
-                { from: 'Unknown2', to: '()', includes: [4] },
-                { from: 'Unknown3', to: 'CSSObject', ranges: [[1,6]] },
-                { from: 'Unknown3', to: 'LayoutToken', includes: [2] },
+                { from: 'LineHeight<string | number>', to: 'string' },
+                { from: 'MarginBlock<string | number>', to: 'string' },
+                { from: 'PaddingInline<string | number>', to: 'string' },
+                { from: 'LineHeight<string | number>', to: 'string' },
+                { from: 'MarginInlineEnd<string | number>', to: 'string' },
+                { from: 'Unknown1', to: 'string[]', includes: [1, 2, 3] },
+                { from: 'Unknown2', to: 'string[]', includes: [1] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 55]] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1, 3] },
+                { from: 'Unknown3', to: 'MenuToken', includes: [2] },
+                { from: 'Unknown3', to: 'string[]', includes: [17, 19, 21] },
             ],
             transforms: [
-                { source: 'class ComponentToken', target: 'partial class LayoutToken' },
-                { source: 'class LayoutToken', target: 'partial class LayoutToken : TokenWithCommonCls' },
-                { source: 'class Layout', target: 'partial class Layout' },
-                { source: '["colorBgBody", "bodyBg"],', target: 'new ("colorBgBody", "bodyBg"),' },
-                { source: '["colorBgHeader", "headerBg"],', target: 'new ("colorBgHeader", "headerBg"),' },
-                { source: '["colorBgTrigger", "triggerBg"]', target: 'new ("colorBgTrigger", "triggerBg")' },
+                { source: 'class ComponentToken', target: 'partial class MenuToken' },
+                { source: 'class MenuToken', target: 'partial class MenuToken : TokenWithCommonCls' },
+                { source: 'class Menu', target: 'partial class Menu' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }

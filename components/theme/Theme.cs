@@ -4,6 +4,7 @@
 
 using CssInCSharp;
 using System;
+using System.Collections.Generic;
 
 namespace AntDesign
 {
@@ -15,7 +16,7 @@ namespace AntDesign
         public string TextColor { get; set; }
     }
 
-    internal class Theme
+    internal static class Theme
     {
         public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : IToken
         {
@@ -26,6 +27,11 @@ namespace AntDesign
         public static CSSObject GenPresetColor(GlobalToken token, Func<PresetColor, CalcColor, CSSObject> func)
         {
             return new CSSObject();
+        }
+
+        public static string Join(this IEnumerable<string> arr, string separator)
+        {
+            return string.Join(separator, arr);
         }
     }
 }

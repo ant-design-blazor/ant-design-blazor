@@ -63,6 +63,7 @@ export type ArrayExpression = {
     kind: CsKinds;
     type: string;
     items: any[];
+    endInsert?: string;
 }
 
 export type CallExpression = {
@@ -328,7 +329,8 @@ export class CsFunction {
                     }
                 }
             });
-            codes.push(`${tab}}${rootEnd}`);
+            const endInsert = arrayExpression.endInsert ? arrayExpression.endInsert : '';
+            codes.push(`${tab}}${endInsert}${rootEnd}`);
         } else {
             // todo: 需要添加注释，该功能作用不明, 不能按items的长度判断，需要重构。
             const args = arrayExpression.items.map(x => toPascalCase(x)).join(',');

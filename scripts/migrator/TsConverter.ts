@@ -61,23 +61,33 @@ function createObjectExpression(type: string, expression: ts.ObjectLiteralExpres
                     const initializer = (item as any).initializer;
                     const fieldName = item.name?.getText() || '';
                     let fieldValue: string | ObjectExpression | ArrayExpression | CallExpression = '';
-                    switch (initializer.kind) {
-                        case ts.SyntaxKind.Identifier:
-                            fieldValue = initializer.getText();
-                            break;
-                        case ts.SyntaxKind.ObjectLiteralExpression:
-                            fieldValue = { type: type, properties: [] }
-                            recursion(fieldValue, initializer.properties);
-                            break;
-                        case ts.SyntaxKind.CallExpression:
-                            fieldValue = createCallExpression('', '', initializer as ts.CallExpression);
-                            break;
-                        case ts.SyntaxKind.ArrayLiteralExpression:
-                            fieldValue = createArrayExpression('', initializer.elements);
-                            break;
-                        default:
-                            fieldValue = initializer.getText() as string;
-                            break;
+
+                    if (initializer.expression && initializer.expression.kind === ts.SyntaxKind.PropertyAccessExpression) {
+                        const propAccessExp = initializer.expression as ts.PropertyAccessExpression;
+                        switch (propAccessExp.expression.kind) {
+                            case ts.SyntaxKind.ArrayLiteralExpression:
+                                fieldValue = createArrayExpression('', (propAccessExp.expression as any).elements, '.Join(",")');
+                                break;
+                        }
+                    } else {
+                        switch (initializer.kind) {
+                            case ts.SyntaxKind.Identifier:
+                                fieldValue = initializer.getText();
+                                break;
+                            case ts.SyntaxKind.ObjectLiteralExpression:
+                                fieldValue = { type: type, properties: [] }
+                                recursion(fieldValue, initializer.properties);
+                                break;
+                            case ts.SyntaxKind.CallExpression:
+                                fieldValue = createCallExpression('', '', initializer as ts.CallExpression);
+                                break;
+                            case ts.SyntaxKind.ArrayLiteralExpression:
+                                fieldValue = createArrayExpression('', initializer.elements);
+                                break;
+                            default:
+                                fieldValue = initializer.getText() as string;
+                                break;
+                        }
                     }
                     objectExp.properties.push({ fieldName, fieldValue });
                     break;
@@ -108,11 +118,12 @@ function createObjectExpression(type: string, expression: ts.ObjectLiteralExpres
     return objectExpression;
 }
 
-function createArrayExpression(type: string, elements: any[]) {
+function createArrayExpression(type: string, elements: any[], endInsert?: string) {
     const arrayExpression: ArrayExpression = {
         kind: CsKinds.ArrayExpression,
         type: type,
-        items: []
+        items: [],
+        endInsert: endInsert,
     }
     elements.forEach((x: any) => {
         switch (x.kind) {
