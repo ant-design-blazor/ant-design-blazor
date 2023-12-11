@@ -10,7 +10,7 @@
              <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
                  <TabTemplate>
                     @item.Title
-                 </TabTemplate>
+                </TabTemplate>
                  <TabContextMenu>
                      <Menu>
                          <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
@@ -20,12 +20,19 @@
                          @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(item.Url);})">@Locale.PinTab</MenuItem> *@
                      </Menu>
                  </TabContextMenu>
+                 <ChildContent>
+                    @if (!HidePages)
+                    {
+                        @item.Body
+                    }
+                 </ChildContent>
              </TabPane>
          }
      }
 </Tabs>
 
-@if (!HidePages)
+@* @if (!HidePages)
 {
     <ReusePages />
 }
+ *@
