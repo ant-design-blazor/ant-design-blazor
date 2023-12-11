@@ -85,15 +85,19 @@ namespace AntDesign
         private string _class;
         private string _style;
 
+        protected RenderFragment _styleContent;
+
         protected string UseStyle(string prefixCls)
         {
             var action = UseComponentStyle();
             if (action != null)
             {
-                return action(prefixCls);
+                var (render, hashId) = action(prefixCls);
+                _styleContent = render;
+                return hashId;
             }
 
-            return string.Empty;
+            return null;
         }
 
         protected virtual UseComponentStyleResult UseComponentStyle()

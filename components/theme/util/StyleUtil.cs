@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using CssInCSharp;
+using Microsoft.AspNetCore.Components;
 using static CssInCSharp.StyleHelper;
 
 namespace AntDesign
 {
-    public delegate string UseComponentStyleResult(string prefixCls);
+    public delegate (RenderFragment, string) UseComponentStyleResult(string prefixCls);
 
     internal class GenOptions
     {
@@ -79,7 +80,7 @@ namespace AntDesign
                 });
 
                 // Generate current component style
-                UseStyleRegister(new StyleInfo()
+                var render = UseStyleRegister(new StyleInfo()
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
@@ -87,7 +88,7 @@ namespace AntDesign
                     StyleFn = () => styleFn(mergedToken),
                 });
 
-                return hash.HashId;
+                return (render, hash.HashId);
             };
         }
     }

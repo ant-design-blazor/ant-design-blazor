@@ -19,10 +19,12 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        var prefixCls = "ant-layout";
+        UseStyle(prefixCls);
         ClassMapper
-            .Add("ant-layout")
-            .If("ant-layout-has-sider", () => _hasSider)
-            .If("ant-layout-rtl", () => RTL);
+            .Add(prefixCls)
+            .If($"{prefixCls}-has-sider", () => _hasSider)
+            .If($"{prefixCls}-rtl", () => RTL);
     }
 
     internal void HasSider()
