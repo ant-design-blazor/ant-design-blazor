@@ -289,6 +289,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// the option label getter delegate, if use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, string> LabelGetter { get => _getLabel; set => _getLabel = value; }
+        /// <summary>
+        /// the option value getter delegate, if use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ValueGetter { get => _getValue; set => _getValue = value; }
+
         private bool _valueHasChanged;
 
         /// <summary>
@@ -402,7 +411,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueGetter == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -655,10 +664,9 @@ namespace AntDesign
                 processedSelectedCount = 1;
             else if (SelectMode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
-
             foreach (var item in _datasource)
             {
-                TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
+                TItemValue value = ValueGetter == null ? (TItemValue)(object)item : ValueGetter(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -677,7 +685,7 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
+                var label = LabelGetter == null ? GetLabel(item) : LabelGetter(item);
 
                 bool isSelected = false;
                 if (processedSelectedCount > 0)
