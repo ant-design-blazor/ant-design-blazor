@@ -323,6 +323,10 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                         statements.push({ kind: CsKinds.Identifier, text: x.getText() });
                     }
                     break;
+                default:
+                    const codes = x.getText().split(/\r?\n/);
+                    statements.push({ kind: CsKinds.Block, blocks: codes });
+                    break;
             }
         });
     }

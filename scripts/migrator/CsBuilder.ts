@@ -1,4 +1,4 @@
-import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue, increaseIndex, castOperator } from "./Util";
+import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue, increaseIndex, castOperator, formatCode } from "./Util";
 
 export type Transform = {
     source: string;
@@ -34,6 +34,7 @@ export enum CsKinds {
     VariableDeclaration = 7,
     Identifier = 8,
     ConditionalExpression = 9,
+    Block = 10,
 }
 
 export type ParameterType = {
@@ -89,6 +90,11 @@ export type ObjectBinding = {
     initializer: string;
     bindings: BindingItem[];
     callExp?: CallExpression;
+}
+
+export type CodeBlock = {
+    kind: CsKinds;
+    blocks: string[];
 }
 
 export type FunctionBody = {
@@ -262,6 +268,9 @@ export class CsFunction {
                     break;
                 case CsKinds.Identifier:
                     codes.push(`${tab}${x.text}`);
+                    break;
+                case CsKinds.Block:
+                    codes.push(...this.createBlock(tab, x));
                     break;
             }
         });
@@ -455,7 +464,7 @@ export class CsFunction {
         return codes;
     }
 
-    private createConditional(tab: string, conditional: ConditionalExpression) {
+    private createConditional(tab: string, conditional: ConditionalExpression): string[] {
         const codes: string[] = [];
         codes.push(`${tab}${conditional.left} ${castOperator(conditional.operator)} ${castParameter(conditional.right)}`);
         const parse = (when: any, operator: string) => {
@@ -472,6 +481,15 @@ export class CsFunction {
         }
         parse(conditional.whenTrue, '?');
         parse(conditional.whenFalse, ':');
+        return codes;
+    }
+
+    private createBlock(tab: string, block: CodeBlock): string[] {
+        const codes: string[] = [];
+        for (const code of block.blocks) {
+            if (code.trim().startsWith('//')) continue;
+            codes.push(`${tab}${formatCode(code)}`);
+        }
         return codes;
     }
 }

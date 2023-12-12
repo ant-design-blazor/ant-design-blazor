@@ -192,6 +192,17 @@ export const castOperator = (operator: string) => {
     else return operator;
 }
 
+export const formatCode = (code: string) => {
+    let str = code
+        .replace(/\$/g, '')    // 剔除$
+        .replace(/'/g, '"');    // 单引号转双引号
+
+    if (str.includes('`')) {
+        str = str.replace('`', `@$"`).replace('`', `"`);
+    }
+    return str;
+}
+
 export const unknown = () => {
     const key = `Unknown${blockIndex}`;
     if (!(key in emptyMap)) {
