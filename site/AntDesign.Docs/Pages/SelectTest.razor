@@ -1,0 +1,43 @@
+﻿@page "/selecttest"
+
+<Select TItem="KeyValuePair<string, int>" TItemValue="int" AllowClear DefaultValue="selected" OnSelectedItemChanged="NotifyChanged">
+     <SelectOptions>
+         @* @foreach (var item in Source ?? Enumerable.Empty<TItem>())
+        {
+        <CascadingValue TValue="@(SelectOptionItem<TValue, TItem>)" Name="Model" Value="CreateModel(item)">
+        </CascadingValue>
+        <SelectOption TItem="TItem"
+        TItemValue="TItem"
+        Label="@LabelExpression?.Invoke(item)"
+        Value=@item></SelectOption>
+        }*@
+         <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize Items=@((Source ?? Enumerable.Empty<KeyValuePair<string, int>>()).ToList())
+                                                                        ChildContent="optionRender()" />
+     </SelectOptions>
+     @* <ItemTemplate>
+    @LabelExpression(context)
+    </ItemTemplate> *@
+ </Select>
+ @selected
+ @code {
+    int selected;
+    Dictionary<string, int> Source = new()
+        {
+            ["Hello"] = 1,
+            ["World"] = 2
+        };
+    RenderFragment<KeyValuePair<string, int>> optionRender() =>
+         item =>
+    @<SelectOption TItemValue="int"
+                      TItem="KeyValuePair<string, int>"
+                      Item=item
+                      Label=@(item.Key)
+                      Value=@(item.Value)>
+        </SelectOption>
+    ;
+
+    void NotifyChanged(KeyValuePair<string, int> n)
+    {
+        selected = n.Value;
+    }
+}
