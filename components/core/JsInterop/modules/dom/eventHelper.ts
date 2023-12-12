@@ -10,7 +10,7 @@ export class eventHelper {
     return element.dispatchEvent(evt);
   }
 
-  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any) {
+    static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
     const callback = args => {
       const obj = {};
       for (let k in args) {
@@ -27,6 +27,9 @@ export class eventHelper {
       setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
       if (preventDefault === true) {
         args.preventDefault();
+      }
+      if (stopPropagation) {
+          args.stopPropagation();
       }
     };
 
