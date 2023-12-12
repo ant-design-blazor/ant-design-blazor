@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import { ArrayExpression, CallExpression, CsBuilder, CsFunction, CsKinds, CsOptions, CsVariable, ObjectBinding, ObjectExpression, ParameterType } from "./CsBuilder";
+import { ArrayExpression, CallExpression, CsBuilder, CsFunction, CsKinds, CsOptions, CsVariable, ObjectBinding, ObjectExpression, ConditionalExpression, ParameterType } from "./CsBuilder";
 
 type Context<T> = {
     node: T;
@@ -60,13 +60,16 @@ function createObjectExpression(type: string, expression: ts.ObjectLiteralExpres
                 case ts.SyntaxKind.PropertyAssignment:
                     const initializer = (item as any).initializer;
                     const fieldName = item.name?.getText() || '';
-                    let fieldValue: string | ObjectExpression | ArrayExpression | CallExpression = '';
+                    let fieldValue: string | ObjectExpression | ArrayExpression | CallExpression | ConditionalExpression = '';
 
                     if (initializer.expression && initializer.expression.kind === ts.SyntaxKind.PropertyAccessExpression) {
                         const propAccessExp = initializer.expression as ts.PropertyAccessExpression;
                         switch (propAccessExp.expression.kind) {
                             case ts.SyntaxKind.ArrayLiteralExpression:
                                 fieldValue = createArrayExpression('', (propAccessExp.expression as any).elements, '.Join(",")');
+                                break;
+                            case ts.SyntaxKind.CallExpression:
+                                fieldValue = createCallExpression('', '', propAccessExp.expression as any);
                                 break;
                         }
                     } else {
@@ -84,6 +87,9 @@ function createObjectExpression(type: string, expression: ts.ObjectLiteralExpres
                             case ts.SyntaxKind.ArrayLiteralExpression:
                                 fieldValue = createArrayExpression('', initializer.elements);
                                 break;
+                            case ts.SyntaxKind.ConditionalExpression:
+                                fieldValue = createConditionalExpression(initializer as ts.ConditionalExpression);
+                                break;
                             default:
                                 fieldValue = initializer.getText() as string;
                                 break;
@@ -100,6 +106,15 @@ function createObjectExpression(type: string, expression: ts.ObjectLiteralExpres
                         case ts.SyntaxKind.CallExpression:
                             const callExp = createCallExpression('', '', item.expression as ts.CallExpression);
                             objectExp.properties.push({ fieldName: `['...']`, fieldValue: callExp });
+                            break;
+                        case ts.SyntaxKind.ParenthesizedExpression:
+                            const parentExp = item.expression as ts.ParenthesizedExpression;
+                            switch (parentExp.expression.kind) {
+                                case ts.SyntaxKind.ConditionalExpression:
+                                    const conExp = createConditionalExpression(parentExp.expression as ts.ConditionalExpression);
+                                    objectExp.properties.push({ fieldName: `['...']`, fieldValue: conExp });
+                                    break
+                            }
                             break;
                         default:
                             const exp = item.expression.getText();
@@ -135,6 +150,10 @@ function createArrayExpression(type: string, elements: any[], endInsert?: string
                 const callExp = createCallExpression('', '', x, '');
                 arrayExpression.items.push(callExp);
                 break;
+            case ts.SyntaxKind.ArrayLiteralExpression:
+                const arrExp = createArrayExpression('', x.elements);
+                arrayExpression.items.push(arrExp);
+                break;
             default:
                 arrayExpression.items.push(x.getText());
                 break;
@@ -154,6 +173,26 @@ function createObjectBinding(initializer: string, elements: any[]): ObjectBindin
     });
 
     return objectBinding;
+}
+
+function createConditionalExpression(exp: ts.ConditionalExpression): ConditionalExpression {
+    const cond = exp.condition as any;
+    const condition: ConditionalExpression = {
+        kind: CsKinds.ConditionalExpression,
+        left: cond.left.getText(),
+        right: cond.right.getText(),
+        operator: cond.operatorToken.getText()
+    }
+    const getWhenCond = (exp: ts.Expression) => {
+        if (!exp) return undefined;
+        switch (exp.kind) {
+            case ts.SyntaxKind.ObjectLiteralExpression:
+                return createObjectExpression('', exp as ts.ObjectLiteralExpression);
+        }
+    }
+    condition.whenTrue = getWhenCond(exp.whenTrue);
+    condition.whenFalse = getWhenCond(exp.whenFalse);
+    return condition;
 }
 
 function createCallExpression(assignment: string, returnType: string, callExp: ts.CallExpression, returnFlag: string = ''): CallExpression {
@@ -322,6 +361,7 @@ function convertVariableStatement(context: Context<ts.VariableStatement>) {
 }
 
 function convertExportAssignment(context: Context<ts.ExportAssignment>) {
+    const func = new CsFunction("ExportDefault", [], "UseComponentStyleResult", { statements: [] }, CsKinds.Method);
     switch (context.node.expression.kind) {
         case ts.SyntaxKind.CallExpression:
             const callExp = context.node.expression as ts.CallExpression;
@@ -352,9 +392,15 @@ function convertExportAssignment(context: Context<ts.ExportAssignment>) {
                 paramaters: parameters,
                 returnFlag: 'return '
             };
-            const func = new CsFunction("ExportDefault", [], "UseComponentStyleResult", { statements: [callExpression] }, CsKinds.Method);
-            context.csBuilder.addFunction(func);
+            func.body.statements.push(callExpression);
             break;
+        case ts.SyntaxKind.ArrowFunction:
+            const arrayFunc = createArrowFunction('', context.node.expression as ts.ArrowFunction);
+            func.body.statements = arrayFunc.body.statements;
+            break;
+    }
+    if (func.body.statements.length > 0) {
+        context.csBuilder.addFunction(func);
     }
 }
 

@@ -20,6 +20,11 @@ let htmlTag: { [key: string]: string } = {
     'bdi': `["bdi"]`,
 }
 
+let operatorMap: { [key: string]: string } = {
+    '===': '==',
+    '==': '=='
+}
+
 export const spFieldName = '_skip_check_';
 
 export const increaseIndex = (reset: boolean) => {
@@ -169,13 +174,22 @@ export const castParameter = (value: string) => {
 }
 
 export const castFunName = (name: string) => {
-    let str = toPascalCase(name);
-    for (const match of str.matchAll(/(\w+)\.(\w+)/g)) {
-        if (match[2]) {
-            str = str.replace(match[2], toPascalCase(match[2]));
-        }
+    let str = name;
+    if (!name.startsWith('new')) {
+        str = toPascalCase(name);
+    }
+    // 方法连缀 a.b().c();
+    const matches = str.matchAll(/\.(\w+)\(*/g);
+    for (const m of matches) {
+        str = str.replace(m[1], toPascalCase(m[1]));
     }
     return str;
+}
+
+export const castOperator = (operator: string) => {
+    if (operatorMap[operator])
+        return operatorMap[operator];
+    else return operator;
 }
 
 export const unknown = () => {

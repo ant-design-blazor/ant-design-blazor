@@ -213,9 +213,11 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             ClassMapper
                 .Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .Add($"{PrefixCls}-root")
                 .If($"{PrefixCls}-{MenuTheme.Dark}", () => Theme == MenuTheme.Dark)
                 .If($"{PrefixCls}-{MenuTheme.Light}", () => Theme == MenuTheme.Light)

@@ -15,7 +15,7 @@ namespace AntDesign
     internal class GenOptions
     {
         public bool ResetStyle { get; set; }
-        public List<Tuple<string, string>> DeprecatedTokens { get; set; }
+        public List<(string, string)> DeprecatedTokens { get; set; }
     }
 
     internal class StyleUtil

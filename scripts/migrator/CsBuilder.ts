@@ -1,4 +1,4 @@
-import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue, increaseIndex } from "./Util";
+import { isString, toPascalCase, castType, castFieldName, castFieldValue, init, unknown, castParameter, castFunName, defaultValue, increaseIndex, castOperator } from "./Util";
 
 export type Transform = {
     source: string;
@@ -33,6 +33,7 @@ export enum CsKinds {
     Action = 6,
     VariableDeclaration = 7,
     Identifier = 8,
+    ConditionalExpression = 9,
 }
 
 export type ParameterType = {
@@ -44,7 +45,7 @@ export type ParameterType = {
 
 export type PropertyAssignment = {
     fieldName: string;
-    fieldValue: string | ObjectExpression | ArrayExpression | CallExpression;
+    fieldValue: string | ObjectExpression | ArrayExpression | CallExpression | ConditionalExpression;
 }
 
 export type BindingItem = {
@@ -72,6 +73,15 @@ export type CallExpression = {
     funcName: string;
     paramaters: any[];
     returnFlag?: string;
+}
+
+export type ConditionalExpression = {
+    kind: CsKinds;
+    left: string;
+    right: string;
+    operator: string;
+    whenFalse?: any;
+    whenTrue?: any;
 }
 
 export type ObjectBinding = {
@@ -198,9 +208,13 @@ export class CsFunction {
         }
         switch (this.kind) {
             case CsKinds.Method:
+                const bps = this.paramaters.filter(x => x.bindings !== undefined);
                 const ps = () => this.paramaters.map(x => `${castType(x.type || unknown())} ${defaultValue(x.name, x.defaultValue)}`).join(', ');
                 codes.push(`${tab}public ${castType(this.returnType || unknown())} ${toPascalCase(this.name)}(${ps()})`);
                 codes.push(`${tab}{`);
+                if (bps && bps.length > 0) {
+                    bindingParamaters();
+                }
                 codes.push(...this.createBody(tab + '    '));
                 codes.push(`${tab}}`);
                 break;
@@ -280,20 +294,43 @@ export class CsFunction {
                 const value = item.fieldValue as any;
                 if (isString(value)) {
                     codes.push(`${rootTab}    ${name} = ${castFieldValue(value as string)},`);
-                } else if (value.kind === CsKinds.ArrayExpression) {
-                    const end = i === exp.properties.length - 1 ? '' : ',';
-                    const arrExp = this.createArrayExpression(rootTab + '    ', value as ArrayExpression, end, '');
-                    codes.push(`${rootTab}    ${name} = ${arrExp[0].trimStart()}`);
-                    codes.push(...arrExp.slice(1));
-                } else if (value.kind === CsKinds.CallExpression) {
-                    const end = i === exp.properties.length - 1 ? '' : ',';
-                    const callExp = this.createCallExpression(rootTab + '    ', value as CallExpression, end);
-                    codes.push(`${rootTab}    ${name} = ${callExp[0].trimStart()}`);
-                    if (callExp.length > 1) {
-                        codes.push(...callExp.slice(1));
-                    }
                 } else {
-                    recursion(rootTab + '    ', name, value as ObjectExpression);
+                    switch (value.kind) {
+                        case CsKinds.ArrayExpression:
+                            {
+                                const end = i === exp.properties.length - 1 ? '' : ',';
+                                const arrExp = this.createArrayExpression(rootTab + '    ', value as ArrayExpression, end, '');
+                                codes.push(`${rootTab}    ${name} = ${arrExp[0].trimStart()}`);
+                                codes.push(...arrExp.slice(1));
+                            }
+                            break;
+                        case CsKinds.CallExpression:
+                            {
+                                const end = i === exp.properties.length - 1 ? '' : ',';
+                                const callExp = this.createCallExpression(rootTab + '    ', value as CallExpression, end);
+                                codes.push(`${rootTab}    ${name} = ${callExp[0].trimStart()}`);
+                                if (callExp.length > 1) {
+                                    codes.push(...callExp.slice(1));
+                                }
+                            }
+                            break;
+                        case CsKinds.ConditionalExpression:
+                            {
+                                const end = i === exp.properties.length - 1 ? '' : ',';
+                                const conCodes = this.createConditional(rootTab + '    ', value);
+                                if (conCodes.length > 1) {
+                                    codes.push(`${rootTab}    ${name} = (${conCodes[0].trim()}`);
+                                    codes.push(...conCodes.slice(1, conCodes.length - 1));
+                                    codes.push(`${conCodes[conCodes.length - 1]})${end}`);
+                                } else {
+                                    codes.push(`${rootTab}    ${name} = ${conCodes[0]}${end}`);
+                                }
+                            }
+                            break;
+                        default:
+                            recursion(rootTab + '    ', name, value as ObjectExpression);
+                            break;
+                    }
                 }
             });
             codes.push(`${rootTab}}${end}`);
@@ -325,6 +362,24 @@ export class CsFunction {
                              * ]
                              */
                             codes.push(...this.createCallExpression(tab + '    ', x as CallExpression, ','));
+                            break;
+                        case CsKinds.ArrayExpression:
+                            /**
+                             * 数组套数组,
+                             * 示例
+                             * [
+                             *   ["xxxx", "xxxx"],
+                             *   ["xxxx", "xxxx"],
+                             * ]
+                             * 转换为：
+                             * [
+                             *   ("", ""),
+                             *   ("", ""),
+                             * ]
+                             * 不使用二维数组，直接用tuple类型，因为无法判断类型
+                             */
+                            const arrItems = (x as ArrayExpression).items.map(y => castParameter(y));
+                            codes.push(`${tab}    (${arrItems.join(', ')}),`);
                             break;
                     }
                 }
@@ -397,6 +452,26 @@ export class CsFunction {
             }
         }
 
+        return codes;
+    }
+
+    private createConditional(tab: string, conditional: ConditionalExpression) {
+        const codes: string[] = [];
+        codes.push(`${tab}${conditional.left} ${castOperator(conditional.operator)} ${castParameter(conditional.right)}`);
+        const parse = (when: any, operator: string) => {
+            if (!when) return;
+            switch (when.kind) {
+                case CsKinds.ObjectExpression:
+                    const objCodes = this.createObjectExpression(tab, when, '', '');
+                    if (objCodes.length > 1) {
+                        codes.push(`${tab}${operator} ${objCodes[0].trim()}`);
+                        codes.push(...objCodes.slice(1));
+                    }
+                    break;
+            }
+        }
+        parse(conditional.whenTrue, '?');
+        parse(conditional.whenFalse, ':');
         return codes;
     }
 }
