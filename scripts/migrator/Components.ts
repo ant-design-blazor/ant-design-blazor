@@ -812,12 +812,16 @@ const letterI: Component[] = [
                 { from: 'Unknown19', to: 'CSSInterpolation[]', includes: [1] },
             ],
             transforms: [
-                { source: 'class SharedComponentToken', target: 'partial class InputToken' },
+                { source: 'class SharedComponentToken', target: 'partial class SharedComponentToken : TokenWithCommonCls' },
+                { source: 'class SharedInputToken', target: 'partial class InputToken' },
                 { source: 'class ComponentToken', target: 'partial class InputToken' },
-                { source: 'class InputToken', target: 'partial class InputToken : TokenWithCommonCls' },
-                { source: 'class Input', target: 'partial class Input' },
+                { source: 'class InputToken', target: 'partial class InputToken : SharedComponentToken' },
+                { source: 'class Input', target: 'partial class Input<TValue>' },
                 { source: 'initComponentToken', target: 'InitComponentToken' },
-                { source: 'SharedComponentToken', target: 'InputToken' },
+                { source: '"col-"', target: '\\"col-\\"' },
+                { source: `'"\\\\a0"'`, target: `"'\\\\\\\\a0'"`, },
+                { source: 'FIXED_CHROME_COLOR_HEIGHT', target: 'fixedChromeColorHeight' },
+                { source: 'SharedInputToken', target: 'InputToken' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -883,6 +887,29 @@ const letterI: Component[] = [
         }
     },
     {
+        name: 'Mentions',
+        src: ['components/mentions/style/index.ts'],
+        dist: 'components/mentions/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            usings: defaultOptions.usings.concat(['using static AntDesign.InputStyle;']),
+            defaultClass: 'Mentions',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 20]] },
+                { from: 'Unknown1', to: 'MentionsToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown2', to: 'MentionsToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class MentionsToken' },
+                { source: 'class MentionsToken', target: 'partial class MentionsToken : InputToken' },
+                { source: 'class Mentions', target: 'partial class Mentions' },
+                { source: 'textEllipsis', target: 'TextEllipsis' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
         name: 'Menu',
         src: [
             'components/menu/style/index.tsx',
@@ -941,7 +968,6 @@ const letterI: Component[] = [
             ]
         }
     },
-
     {
         name: 'Radio',
         src: ['components/radio/style/index.tsx'],
@@ -993,41 +1019,9 @@ export const data1: Component[] = [
             ]
         }
     },
-    {
-        name: 'Mentions',
-        src: ['components/mentions/style/index.ts'],
-        dist: 'components/mentions/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Mentions',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class MentionsToken' },
-                { source: 'class MentionsToken', target: 'partial class MentionsToken : TokenWithCommonCls' },
-                { source: 'class Mentions', target: 'partial class Mentions' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
 
-    {
-        name: 'Message',
-        src: ['components/message/style/index.tsx'],
-        dist: 'components/message/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Message',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class MessageToken' },
-                { source: 'class MessageToken', target: 'partial class MessageToken : TokenWithCommonCls' },
-                { source: 'class Message', target: 'partial class Message' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
+
+
     {
         name: 'Modal',
         src: ['components/modal/style/index.tsx'],
@@ -1560,4 +1554,22 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
+    {
+        name: 'Message',
+        src: ['components/message/style/index.tsx'],
+        dist: 'components/message/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Message',
+            typeMap: [
+                { from: 'Padding<string | number>', to: 'string' },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class MessageToken' },
+                { source: 'class MessageToken', target: 'partial class MessageToken : TokenWithCommonCls' },
+                { source: 'class Message', target: 'partial class Message' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+            ]
+        }
+    },
 ];

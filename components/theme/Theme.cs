@@ -24,6 +24,22 @@ namespace AntDesign
             return value;
         }
 
+        public static T MergeToken<T>(GlobalToken token, T value) where T : IToken
+        {
+            value.Merge(token);
+            return value;
+        }
+
+        public static T MergeToken<T>(params IToken[] tokens) where T : IToken, new()
+        {
+            var token = new T();
+            foreach (var item in tokens)
+            {
+                token.Merge(item);
+            }
+            return token;
+        }
+
         public static CSSObject GenPresetColor(GlobalToken token, Func<PresetColor, CalcColor, CSSObject> func)
         {
             return new CSSObject();

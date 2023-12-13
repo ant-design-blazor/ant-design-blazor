@@ -12,13 +12,29 @@ namespace AntDesign
 
     public partial class EmptyToken : TokenWithCommonCls
     {
-        public string EmptyImgCls { get; set; }
+        public string EmptyImgCls
+        {
+            get => (string)_tokens["emptyImgCls"];
+            set => _tokens["emptyImgCls"] = value;
+        }
 
-        public double EmptyImgHeight { get; set; }
+        public double EmptyImgHeight
+        {
+            get => (double)_tokens["emptyImgHeight"];
+            set => _tokens["emptyImgHeight"] = value;
+        }
 
-        public double EmptyImgHeightSM { get; set; }
+        public double EmptyImgHeightSM
+        {
+            get => (double)_tokens["emptyImgHeightSM"];
+            set => _tokens["emptyImgHeightSM"] = value;
+        }
 
-        public double EmptyImgHeightMD { get; set; }
+        public double EmptyImgHeightMD
+        {
+            get => (double)_tokens["emptyImgHeightMD"];
+            set => _tokens["emptyImgHeightMD"] = value;
+        }
 
     }
 
