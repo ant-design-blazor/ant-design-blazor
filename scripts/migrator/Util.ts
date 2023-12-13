@@ -18,6 +18,7 @@ let htmlTag: { [key: string]: string } = {
     'ul': `["ul"]`,
     'table': `["table"]`,
     'bdi': `["bdi"]`,
+    'span': `["span"]`,
 }
 
 let operatorMap: { [key: string]: string } = {

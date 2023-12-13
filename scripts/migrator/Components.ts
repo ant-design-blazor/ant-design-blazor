@@ -1560,14 +1560,21 @@ export const components: Component[] = [
         dist: 'components/message/Style.cs',
         csOptions: {
             ...defaultOptions,
+            usings: defaultOptions.usings.concat(['using Keyframes = CssInCSharp.Keyframe;']),
             defaultClass: 'Message',
             typeMap: [
                 { from: 'Padding<string | number>', to: 'string' },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 30]] },
+                { from: 'Unknown1', to: 'MessageToken', includes: [2] },
+                { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [1, 16] },
+                { from: 'Unknown2', to: 'MessageToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class MessageToken' },
                 { source: 'class MessageToken', target: 'partial class MessageToken : TokenWithCommonCls' },
                 { source: 'class Message', target: 'partial class Message' },
+                { source: 'CONTAINER_MAX_OFFSET', target: '1000' },
                 { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
             ]
         }
