@@ -139,11 +139,11 @@ namespace AntDesign
                   gridColumnsStyle[@$"{componentCls}{sizeCls}-{i}"] = new CSSInterpolation []
                   {
                     new CSSObject {
-                      // ["--ant-display"] = "block",
+                      ["--ant-display"] = "block",
                       Display = "block",
                     },
                     new CSSObject {
-                      Display = "block", // "var(--ant-display)",
+                      Display = "var(--ant-display)",
                       Flex = @$"0 0 {(i / gridColumns) * 100}%",
                       MaxWidth = @$"{(i / gridColumns) * 100}%",
                     },
@@ -204,7 +204,7 @@ namespace AntDesign
         {
             return GenComponentStyleHook("Grid", (token) =>
             {
-                var gridToken = MergeToken<GridColToken>(token, new GridColToken 
+                var gridToken = MergeToken<GridColToken>(token, new GridColToken
                 {
                     GridColumns = 24,
                 });

@@ -78,9 +78,10 @@ export type CallExpression = {
 
 export type ConditionalExpression = {
     kind: CsKinds;
-    left: string;
-    right: string;
-    operator: string;
+    condition?: string;
+    left?: string;
+    right?: string;
+    operator?: string;
     whenFalse?: any;
     whenTrue?: any;
 }
@@ -458,6 +459,12 @@ export class CsFunction {
                     codes.push(`${tab}var ${declaration.name} = ${objCodes[0].trimStart()}`);
                     codes.push(...objCodes.slice(1));
                     break;
+                case CsKinds.ConditionalExpression:
+                    const condExp = this.createConditional(tab, value as ConditionalExpression);
+                    const rootEnd = condExp.length <= 1 ? ";" : "";
+                    codes.push(`${tab}var ${declaration.name} = ${condExp[0]}${rootEnd}`);
+                    codes.push(...condExp.slice(1));
+                    break;
             }
         }
 
@@ -466,7 +473,11 @@ export class CsFunction {
 
     private createConditional(tab: string, conditional: ConditionalExpression): string[] {
         const codes: string[] = [];
-        codes.push(`${tab}${conditional.left} ${castOperator(conditional.operator)} ${castParameter(conditional.right)}`);
+        if (conditional.condition) {
+            codes.push(`${conditional.condition}`);
+        } else {
+            codes.push(`${tab}${conditional.left} ${castOperator(conditional.operator!)} ${castParameter(conditional.right!)}`);
+        }
         const parse = (when: any, operator: string) => {
             if (!when) return;
             switch (when.kind) {
@@ -479,8 +490,14 @@ export class CsFunction {
                     break;
             }
         }
-        parse(conditional.whenTrue, '?');
-        parse(conditional.whenFalse, ':');
+
+        if (isString(conditional.whenTrue) && isString(conditional.whenFalse)) {
+            const condLine = codes.length - 1;
+            codes[condLine] = `${codes[condLine]} ? ${conditional.whenTrue} : ${conditional.whenFalse}`;
+        } else {
+            parse(conditional.whenTrue, '?');
+            parse(conditional.whenFalse, ':');
+        }
         return codes;
     }
 

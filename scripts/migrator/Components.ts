@@ -740,7 +740,26 @@ const letterE_G: Component[] = [
             ]
         }
     },
-
+    {
+        name: 'Grid',
+        src: ['components/grid/style/index.ts'],
+        dist: 'components/grid/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'GridStyle',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'GridRowToken', includes: [1] },
+                { from: 'Unknown2', to: 'GridColToken', includes: [1] },
+                { from: 'Unknown3', to: 'CSSObject', includes: [1] },
+            ],
+            transforms: [
+                { source: 'class GridRowToken', target: 'class GridRowToken : TokenWithCommonCls' },
+                { source: 'class GridColToken', target: 'class GridColToken : TokenWithCommonCls' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+            ]
+        }
+    },
 ]
 
 const letterI: Component[] = [
@@ -922,6 +941,36 @@ const letterI: Component[] = [
             ]
         }
     },
+
+    {
+        name: 'Radio',
+        src: ['components/radio/style/index.tsx'],
+        dist: 'components/radio/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Radio',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown1', to: 'RadioToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 27]] },
+                { from: 'Unknown2', to: 'RadioToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 34]] },
+                { from: 'Unknown3', to: 'RadioToken', includes: [2] },
+                { from: 'Unknown3', to: 'string[]', includes: [5] },
+                { from: 'Unknown5', to: 'RadioToken', includes: [1, 3] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class RadioToken' },
+                { source: 'class RadioToken', target: 'partial class RadioToken : TokenWithCommonCls' },
+                { source: 'class Radio', target: 'partial class Radio<TValue>' },
+                { source: `'"\\\\a0"'`, target: `"'\\\\\\\\a0'"`, },
+                { source: 'getDotSize', target: 'GetDotSize' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
 ]
 
 // 未完成测试的组件
@@ -1084,23 +1133,7 @@ export const data1: Component[] = [
             ]
         }
     },
-    {
-        name: 'Radio',
-        src: ['components/radio/style/index.tsx'],
-        dist: 'components/radio/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Radio',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class RadioToken' },
-                { source: 'class RadioToken', target: 'partial class RadioToken : TokenWithCommonCls' },
-                { source: 'class Radio', target: 'partial class Radio' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
+
     {
         name: 'Rate',
         src: ['components/rate/style/index.tsx'],
@@ -1527,24 +1560,4 @@ export const data1: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    {
-        name: 'Grid',
-        src: ['components/grid/style/index.ts'],
-        dist: 'components/grid/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'GridStyle',
-            propertyMap: '_tokens',
-            typeMap: [
-                { from: 'Unknown1', to: 'GridRowToken', includes: [1] },
-                { from: 'Unknown2', to: 'GridColToken', includes: [1] },
-                { from: 'Unknown3', to: 'CSSObject', includes: [1] },
-            ],
-            transforms: [
-                { source: 'class GridRowToken', target: 'class GridRowToken : TokenWithCommonCls' },
-                { source: 'class GridColToken', target: 'class GridColToken : TokenWithCommonCls' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
 ];

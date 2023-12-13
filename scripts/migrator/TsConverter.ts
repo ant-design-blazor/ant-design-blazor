@@ -178,16 +178,22 @@ function createObjectBinding(initializer: string, elements: any[]): ObjectBindin
 function createConditionalExpression(exp: ts.ConditionalExpression): ConditionalExpression {
     const cond = exp.condition as any;
     const condition: ConditionalExpression = {
-        kind: CsKinds.ConditionalExpression,
-        left: cond.left.getText(),
-        right: cond.right.getText(),
-        operator: cond.operatorToken.getText()
+        kind: CsKinds.ConditionalExpression
+    }
+    if (cond.kind === ts.SyntaxKind.Identifier) {
+        condition.condition = cond.getText();
+    } else {
+        condition.left = cond.left.getText();
+        condition.right = cond.right.getText();
+        condition.operator = cond.operatorToken.getText();
     }
     const getWhenCond = (exp: ts.Expression) => {
         if (!exp) return undefined;
         switch (exp.kind) {
             case ts.SyntaxKind.ObjectLiteralExpression:
                 return createObjectExpression('', exp as ts.ObjectLiteralExpression);
+            default:
+                return exp.getText();
         }
     }
     condition.whenTrue = getWhenCond(exp.whenTrue);
@@ -306,6 +312,9 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                     } else if (declaration.initializer?.kind === ts.SyntaxKind.ObjectLiteralExpression) {
                         const objExp = createObjectExpression('', declaration.initializer as ts.ObjectLiteralExpression);
                         statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: objExp });
+                    } else if (declaration.initializer?.kind === ts.SyntaxKind.ConditionalExpression) {
+                        const condExp = createConditionalExpression(declaration.initializer as ts.ConditionalExpression);
+                        statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: condExp });
                     } else {
                         statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: declaration.initializer?.getText() });
                     }
