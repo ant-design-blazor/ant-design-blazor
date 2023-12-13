@@ -35,6 +35,7 @@ export enum CsKinds {
     Identifier = 8,
     ConditionalExpression = 9,
     Block = 10,
+    NewExpression = 11,
 }
 
 export type ParameterType = {
@@ -96,6 +97,13 @@ export type ObjectBinding = {
 export type CodeBlock = {
     kind: CsKinds;
     blocks: string[];
+}
+
+export type NewExpression = {
+    kind: CsKinds;
+    type: string;
+    args?: any[];
+    initializer?: any;
 }
 
 export type FunctionBody = {
@@ -465,6 +473,11 @@ export class CsFunction {
                     codes.push(`${tab}var ${declaration.name} = ${condExp[0]}${rootEnd}`);
                     codes.push(...condExp.slice(1));
                     break;
+                case CsKinds.NewExpression:
+                    const newExpCode = this.createNewExpression('', tab, value);
+                    codes.push(`${tab}var ${declaration.name} = ${newExpCode[0]}`);
+                    codes.push(...newExpCode.slice(1));
+                    break;
             }
         }
 
@@ -506,6 +519,35 @@ export class CsFunction {
         for (const code of block.blocks) {
             if (code.trim().startsWith('//')) continue;
             codes.push(`${tab}${formatCode(code)}`);
+        }
+        return codes;
+    }
+
+    private createNewExpression(tab: string, initialTab: string, newExpression: NewExpression, end: string = ';'): string[] {
+        const codes: string[] = [];
+        if (newExpression.args && newExpression.args.length > 0) {
+            const inlineArgs: string[] = [];
+            const multilineArgs: string[] = [];
+            for (const arg of newExpression.args) {
+                if (isString(arg)) {
+                    inlineArgs.push(castParameter(arg));
+                } else {
+                    switch (arg.kind) {
+                        case CsKinds.ObjectExpression:
+                            const objCodes = this.createObjectExpression(initialTab + '    ', arg, '', '');
+                            multilineArgs.push(...objCodes);
+                            break;
+                    }
+                }
+            }
+            if (multilineArgs.length <= 0) {
+                codes.push(`${tab}new ${newExpression.type}(${inlineArgs.join(', ')})${end}`);
+            } else {
+                codes.push(`${tab}new ${newExpression.type}(${inlineArgs.join(', ')},`);
+                codes.push(...multilineArgs);
+                const last = codes.length - 1;
+                codes[last] = `${codes[last]})${end}`;
+            }
         }
         return codes;
     }

@@ -1,5 +1,18 @@
 import * as ts from 'typescript';
-import { ArrayExpression, CallExpression, CsBuilder, CsFunction, CsKinds, CsOptions, CsVariable, ObjectBinding, ObjectExpression, ConditionalExpression, ParameterType } from "./CsBuilder";
+import {
+    ArrayExpression,
+    CallExpression,
+    CsBuilder,
+    CsFunction,
+    CsKinds,
+    CsOptions,
+    CsVariable,
+    ObjectBinding,
+    ObjectExpression,
+    ConditionalExpression,
+    ParameterType,
+    NewExpression
+} from "./CsBuilder";
 
 type Context<T> = {
     node: T;
@@ -315,6 +328,9 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                     } else if (declaration.initializer?.kind === ts.SyntaxKind.ConditionalExpression) {
                         const condExp = createConditionalExpression(declaration.initializer as ts.ConditionalExpression);
                         statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: condExp });
+                    } else if (declaration.initializer?.kind === ts.SyntaxKind.NewExpression) {
+                        const newExp = createNewExpression(declaration.initializer as ts.NewExpression);
+                        statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: newExp });
                     } else {
                         statements.push({ kind: CsKinds.VariableDeclaration, name: declaration.name.getText(), value: declaration.initializer?.getText() });
                     }
@@ -343,6 +359,25 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
         statements.push(createArrayExpression(returnType, funcBody.elements));
     }
     return new CsFunction(funcName, parameters, returnType, { statements }, kind);
+}
+
+function createNewExpression(exp: ts.NewExpression): NewExpression {
+    const newExp: NewExpression = {
+        kind: CsKinds.NewExpression,
+        type: exp.expression.getText(),
+        args: [],
+    }
+    exp.arguments?.forEach(x => {
+        switch (x.kind) {
+            case ts.SyntaxKind.ObjectLiteralExpression:
+                newExp.args?.push(createObjectExpression('', x as ts.ObjectLiteralExpression));
+                break;
+            default:
+                newExp.args?.push(x.getText())
+                break;
+        }
+    });
+    return newExp;
 }
 
 function convertVariableStatement(context: Context<ts.VariableStatement>) {
