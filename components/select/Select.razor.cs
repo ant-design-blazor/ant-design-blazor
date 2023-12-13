@@ -312,11 +312,11 @@ namespace AntDesign
         /// <summary>
         /// the option label getter delegate, if use this property, should not use <see cref="LabelName"/>
         /// </summary>
-        [Parameter] public Func<TItem, string> OptionLabelExpression { get => _getLabel; set => _getLabel = value; }
+        [Parameter] public Func<TItem, string> OptionLabelProperty { get => _getLabel; set => _getLabel = value; }
         /// <summary>
         /// the option value getter delegate, if use this property, should not use <see cref="ValueName"/>
         /// </summary>
-        [Parameter] public Func<TItem, TItemValue> OptionValueExpression { get => _getValue; set => _getValue = value; }
+        [Parameter] public Func<TItem, TItemValue> OptionValueProperty { get => _getValue; set => _getValue = value; }
 
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
@@ -411,7 +411,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && OptionValueExpression == null && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && OptionValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -667,7 +667,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = OptionValueExpression == null ? (TItemValue)(object)item : OptionValueExpression(item);
+                TItemValue value = OptionValueProperty == null ? (TItemValue)(object)item : OptionValueProperty(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -686,7 +686,7 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = OptionLabelExpression == null ? GetLabel(item) : OptionLabelExpression(item);
+                var label = OptionLabelProperty == null ? GetLabel(item) : OptionLabelProperty(item);
 
                 bool isSelected = false;
                 if (processedSelectedCount > 0)

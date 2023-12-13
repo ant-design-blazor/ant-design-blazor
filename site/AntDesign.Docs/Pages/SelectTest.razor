@@ -3,8 +3,8 @@
 <Select DataSource="Source"
         AllowClear
          @bind-Value="selected"
-         OptionLabelExpression=@(i => i.Key)
-         OptionValueExpression="@(i=>i.Value)">
+         OptionLabelProperty=@(i => i.Key)
+         OptionValueProperty="@(i=>i.Value)">
  </Select>
  @selected
 @code {
