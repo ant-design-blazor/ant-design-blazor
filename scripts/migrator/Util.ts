@@ -19,6 +19,10 @@ let htmlTag: { [key: string]: string } = {
     'table': `["table"]`,
     'bdi': `["bdi"]`,
     'span': `["span"]`,
+    'input': `["input"]`,
+    'to': `["to"]`,
+    'stroke': `["stroke"]`,
+    'fill': `["fill"]`,
 }
 
 let operatorMap: { [key: string]: string } = {
@@ -51,8 +55,8 @@ export const init = (ops: CsOptions) => {
         'string': 'string',
         'boolean': 'bool',
         // todo: add union type support.
-        'string | number': 'string',
-        'string | false': 'string',
+        // 'string | number': 'string',
+        // 'string | false': 'string',
     }
     if (options.typeMap) {
         for (const item of options.typeMap) {

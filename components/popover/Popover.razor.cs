@@ -35,6 +35,11 @@ namespace AntDesign
             Placement = Placement.Top;
         }
 
+        protected override void OnInitialized()
+        {
+            var hashId = UseStyle(PrefixCls);
+        }
+
         internal override string GetOverlayEnterClass()
         {
             return "ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big";

@@ -104,7 +104,9 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             ClassMapper.Add(PrefixCls)
+                .Add(hashId)
                 .Get(() => $"{PrefixCls}-{Status}")
                 .If($"{PrefixCls}-rtl", () => RTL);
 

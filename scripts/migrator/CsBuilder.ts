@@ -136,6 +136,9 @@ export class CsVariable {
                 case CsKinds.ObjectExpression:
                     codes.push(...this.createObjectExpression(tab, this.value));
                     break;
+                case CsKinds.NewExpression:
+                    codes.push(...this.createNewExpression(tab, tab, this.value, '', ';'));
+                    break;
             }
         }
         return codes;
@@ -164,6 +167,39 @@ export class CsVariable {
             codes.push(`${rootTab}}${end}`);
         }
         recursion(tab, '', objectExpression);
+        return codes;
+    }
+
+    private createNewExpression(tab: string, initialTab: string, newExpression: NewExpression, returnFlag: string, end: string): string[] {
+        const codes: string[] = [];
+        const fun = new CsFunction("", [], "", { statements: [] });
+        if (newExpression.args && newExpression.args.length > 0) {
+            const inlineArgs: string[] = [];
+            const multilineArgs: string[] = [];
+            for (const arg of newExpression.args) {
+                if (isString(arg)) {
+                    inlineArgs.push(castParameter(arg));
+                } else {
+                    switch (arg.kind) {
+                        case CsKinds.ObjectExpression:
+                            const objCodes = fun.createObjectExpression(initialTab + '    ', arg as ObjectExpression, '', '');
+                            multilineArgs.push(...objCodes);
+                            break;
+                    }
+                }
+            }
+            if (multilineArgs.length <= 0) {
+                codes.push(`${tab}${returnFlag}new ${newExpression.type}(${inlineArgs.join(', ')})${end}`);
+            } else {
+                codes.push(`${tab}${returnFlag}new ${newExpression.type}(${inlineArgs.join(', ')},`);
+                codes.push(...multilineArgs);
+                const last = codes.length - 1;
+                codes[last] = `${codes[last]})${end}`;
+            }
+        }
+
+        const last = codes.length - 1;
+        codes[0] = `${tab}private ${this.type} ${this.name} = ${codes[0].trim()}`;
         return codes;
     }
 }
@@ -281,6 +317,9 @@ export class CsFunction {
                 case CsKinds.Block:
                     codes.push(...this.createBlock(tab, x));
                     break;
+                case CsKinds.NewExpression:
+                    codes.push(...this.createNewExpression(tab, tab, x, ";", "return "));
+                    break;
             }
         });
         return codes;
@@ -300,7 +339,7 @@ export class CsFunction {
         return codes;
     }
 
-    private createObjectExpression(tab: string, objectExpression: ObjectExpression, rootEnd: string = ';', returnFlag: string = 'return '): string[] {
+    public createObjectExpression(tab: string, objectExpression: ObjectExpression, rootEnd: string = ';', returnFlag: string = 'return '): string[] {
         const codes: string[] = [];
         const recursion = (rootTab: string, fieldName: string, exp: ObjectExpression) => {
             const end = fieldName ? ',' : rootEnd;
@@ -489,7 +528,7 @@ export class CsFunction {
         if (conditional.condition) {
             codes.push(`${conditional.condition}`);
         } else {
-            codes.push(`${tab}${conditional.left} ${castOperator(conditional.operator!)} ${castParameter(conditional.right!)}`);
+            codes.push(`${tab}${castParameter(conditional.left!)} ${castOperator(conditional.operator!)} ${castParameter(conditional.right!)}`);
         }
         const parse = (when: any, operator: string) => {
             if (!when) return;
@@ -506,7 +545,7 @@ export class CsFunction {
 
         if (isString(conditional.whenTrue) && isString(conditional.whenFalse)) {
             const condLine = codes.length - 1;
-            codes[condLine] = `${codes[condLine]} ? ${conditional.whenTrue} : ${conditional.whenFalse}`;
+            codes[condLine] = `${codes[condLine]} ? ${castParameter(conditional.whenTrue)} : ${castParameter(conditional.whenFalse)}`;
         } else {
             parse(conditional.whenTrue, '?');
             parse(conditional.whenFalse, ':');
@@ -523,7 +562,7 @@ export class CsFunction {
         return codes;
     }
 
-    private createNewExpression(tab: string, initialTab: string, newExpression: NewExpression, end: string = ';'): string[] {
+    private createNewExpression(tab: string, initialTab: string, newExpression: NewExpression, end: string = ';', returnFlag: string = ''): string[] {
         const codes: string[] = [];
         if (newExpression.args && newExpression.args.length > 0) {
             const inlineArgs: string[] = [];
@@ -541,9 +580,9 @@ export class CsFunction {
                 }
             }
             if (multilineArgs.length <= 0) {
-                codes.push(`${tab}new ${newExpression.type}(${inlineArgs.join(', ')})${end}`);
+                codes.push(`${tab}${returnFlag}new ${newExpression.type}(${inlineArgs.join(', ')})${end}`);
             } else {
-                codes.push(`${tab}new ${newExpression.type}(${inlineArgs.join(', ')},`);
+                codes.push(`${tab}${returnFlag}new ${newExpression.type}(${inlineArgs.join(', ')},`);
                 codes.push(...multilineArgs);
                 const last = codes.length - 1;
                 codes[last] = `${codes[last]})${end}`;

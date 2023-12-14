@@ -15,6 +15,13 @@ namespace AntDesign
             TextOverflow = "ellipsis"
         };
 
+        public static CSSObject SegmentedTextEllipsisCss = new()
+        {
+            Overflow = "hidden",
+            // handle text ellipsis
+            ["..."] = TextEllipsis,
+        };
+
         public static CSSObject ResetComponent(GlobalToken token)
         {
             return new CSSObject();

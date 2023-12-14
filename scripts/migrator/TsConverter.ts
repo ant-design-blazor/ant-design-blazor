@@ -344,6 +344,8 @@ function createArrowFunction(funcName: string, arrowFunc: ts.ArrowFunction, kind
                         statements.push(createArrayExpression(returnType, (rs.expression as any).elements));
                     } else if (rs.expression?.kind === ts.SyntaxKind.CallExpression) {
                         statements.push(createCallExpression('', '', rs.expression as ts.CallExpression, 'return '));
+                    } else if (rs.expression?.kind === ts.SyntaxKind.NewExpression) {
+                        statements.push(createNewExpression(rs.expression as ts.NewExpression));
                     } else {
                         statements.push({ kind: CsKinds.Identifier, text: x.getText() });
                     }
@@ -392,15 +394,15 @@ function convertVariableStatement(context: Context<ts.VariableStatement>) {
             const name = declaration.name.getText();
             const initializer = declaration.initializer as ts.NewExpression;
             const type = initializer.expression.getText();
-            let value: any;
-            let args: string[] = [];
-            initializer.arguments?.forEach(x => {
-                if (x.kind === ts.SyntaxKind.ObjectLiteralExpression) {
-                    value = createObjectExpression(type, x as ts.ObjectLiteralExpression, args);
-                } else if (x.kind === ts.SyntaxKind.StringLiteral) {
-                    args.push(x.getText());
-                }
-            });
+            const value = createNewExpression(initializer);
+            // let args: string[] = [];
+            // initializer.arguments?.forEach(x => {
+            //     if (x.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+            //         value = createObjectExpression(type, x as ts.ObjectLiteralExpression, args);
+            //     } else if (x.kind === ts.SyntaxKind.StringLiteral) {
+            //         args.push(x.getText());
+            //     }
+            // });
             context.csBuilder.addVariable(new CsVariable(name, type, value));
             break;
         default:

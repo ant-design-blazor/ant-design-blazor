@@ -200,9 +200,10 @@ namespace AntDesign
         protected void SetClass()
         {
             var clsPrefix = "ant-rate";
-
+            var hashId = UseStyle(clsPrefix);
             ClassMapper.Clear()
                 .Add(clsPrefix)
+                .Add(hashId)
                 .If($"{clsPrefix}-disabled", () => Disabled)
                 .If($"{clsPrefix}-rtl", () => RTL);
         }
