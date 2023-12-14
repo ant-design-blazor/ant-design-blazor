@@ -23,6 +23,7 @@ let htmlTag: { [key: string]: string } = {
     'to': `["to"]`,
     'stroke': `["stroke"]`,
     'fill': `["fill"]`,
+    'i': `["i"]`,
 }
 
 let operatorMap: { [key: string]: string } = {

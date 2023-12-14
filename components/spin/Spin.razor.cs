@@ -47,12 +47,15 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             WrapperClassMapper
                 .If(WrapperClassName, () => !string.IsNullOrWhiteSpace(WrapperClassName))
+                .Add(hashId)
                 .If($"{PrefixCls}-nested-loading", () => !Simple);
 
             ClassMapper
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-spinning", () => _isLoading)
                 .If($"{PrefixCls}-lg", () => Size == "large")
                 .If($"{PrefixCls}-sm", () => Size == "small")

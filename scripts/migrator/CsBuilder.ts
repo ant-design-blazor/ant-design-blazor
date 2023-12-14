@@ -508,9 +508,13 @@ export class CsFunction {
                     break;
                 case CsKinds.ConditionalExpression:
                     const condExp = this.createConditional(tab, value as ConditionalExpression);
-                    const rootEnd = condExp.length <= 1 ? ";" : "";
-                    codes.push(`${tab}var ${declaration.name} = ${condExp[0]}${rootEnd}`);
-                    codes.push(...condExp.slice(1));
+                    if (condExp.length <= 1) {
+                        codes.push(`${tab}var ${declaration.name} = ${condExp[0]};`);
+                    } else {
+                        codes.push(`${tab}var ${declaration.name} = ${condExp[0]}`);
+                        codes.push(...condExp.slice(1));
+                        codes[codes.length - 1] = `${codes[codes.length - 1]};`;
+                    }
                     break;
                 case CsKinds.NewExpression:
                     const newExpCode = this.createNewExpression('', tab, value);
@@ -661,7 +665,10 @@ export class CsBuilder {
     }
 
     public addClass(name: string): CsClass {
-        return this.classes[name] = new CsClass(name);
+        if (!this.classes[name]) {
+            return this.classes[name] = new CsClass(name);
+        }
+        return this.classes[name];
     }
 
     public addClassProperty(className: string, propName: string, propType: string) {

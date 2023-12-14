@@ -1148,6 +1148,164 @@ const completed: Component[] = [
             ]
         }
     },
+    {
+        name: 'Slider',
+        src: ['components/slider/style/index.tsx'],
+        dist: 'components/slider/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Slider',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 34]] },
+                { from: 'Unknown1', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 5]] },
+                { from: 'Unknown3', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 4]] },
+                { from: 'Unknown4', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown5', to: 'SliderToken', includes: [1, 3] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SliderToken' },
+                { source: 'class SliderToken', target: 'partial class SliderToken : TokenWithCommonCls' },
+                { source: 'class Slider', target: 'partial class Slider<TValue>' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Slider',
+        src: ['components/slider/style/index.tsx'],
+        dist: 'components/slider/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Slider',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 34]] },
+                { from: 'Unknown1', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 5]] },
+                { from: 'Unknown3', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 4]] },
+                { from: 'Unknown4', to: 'SliderToken', includes: [2] },
+                { from: 'Unknown5', to: 'SliderToken', includes: [1, 3] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SliderToken' },
+                { source: 'class SliderToken', target: 'partial class SliderToken : TokenWithCommonCls' },
+                { source: 'class Slider', target: 'partial class Slider<TValue>' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Space',
+        src: [
+            'components/space/style/index.ts',
+            'components/space/style/compact.ts',
+        ],
+        dist: 'components/space/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Space',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 12]] },
+                { from: 'Unknown1', to: 'SpaceToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 10]] },
+                { from: 'Unknown2', to: 'SpaceToken', includes: [2] },
+                { from: 'Unknown3', to: 'SpaceToken', includes: [1, 3] },
+                { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown3', to: 'GenOptions', includes: [4] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 6]] },
+                { from: 'Unknown4', to: 'SpaceToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SpaceToken' },
+                { source: 'class SpaceToken', target: 'partial class SpaceToken : TokenWithCommonCls' },
+                { source: 'class Space', target: 'partial class Space' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Spin',
+        src: ['components/spin/style/index.ts'],
+        dist: 'components/spin/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            usings: defaultOptions.usings.concat(['using Keyframes = CssInCSharp.Keyframe;']),
+            defaultClass: 'Spin',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown3', to: 'double', includes: [1] },
+                { from: 'Unknown5', to: 'SpinToken', includes: [1, 3] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SpinToken' },
+                { source: 'class SpinToken', target: 'partial class SpinToken : TokenWithCommonCls' },
+                { source: 'class Spin', target: 'partial class Spin' },
+                { source: 'antSpinMove', target: '_antSpinMove' },
+                { source: 'antRotate', target: '_antRotate' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Statistic',
+        src: ['components/statistic/style/index.tsx'],
+        dist: 'components/statistic/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Statistic',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown2', to: 'StatisticToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class StatisticToken' },
+                { source: 'class StatisticToken', target: 'partial class StatisticToken : TokenWithCommonCls' },
+                { source: 'class Statistic', target: 'partial class Statistic<TValue>' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Switch',
+        src: ['components/switch/style/index.ts'],
+        dist: 'components/switch/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Switch',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 20]] },
+                { from: 'Unknown1', to: 'SwitchToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 6]] },
+                { from: 'Unknown2', to: 'SwitchToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 11]] },
+                { from: 'Unknown3', to: 'SwitchToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 16]] },
+                { from: 'Unknown4', to: 'SwitchToken', includes: [2] },
+                { from: 'Unknown6', to: 'SwitchToken', includes: [1, 3] },
+                { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SwitchToken' },
+                { source: 'class SwitchToken', target: 'partial class SwitchToken : TokenWithCommonCls' },
+                { source: 'class Switch', target: 'partial class Switch' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
 ]
 
 // 未完成迁移
@@ -1311,107 +1469,8 @@ const uncompleted: Component[] = [
             ]
         }
     },
-
-
-    {
-        name: 'Space',
-        src: [
-            'components/space/style/index.tsx',
-            'components/space/style/compact.tsx',
-        ],
-        dist: 'components/space/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Space',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class SpaceToken' },
-                { source: 'class SpaceToken', target: 'partial class SpaceToken : TokenWithCommonCls' },
-                { source: 'class Space', target: 'partial class Space' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Spin',
-        src: ['components/spin/style/index.tsx'],
-        dist: 'components/spin/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Spin',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class SpinToken' },
-                { source: 'class SpinToken', target: 'partial class SpinToken : TokenWithCommonCls' },
-                { source: 'class Spin', target: 'partial class Spin' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Statistic',
-        src: ['components/statistic/style/index.tsx'],
-        dist: 'components/statistic/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Statistic',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class StatisticToken' },
-                { source: 'class StatisticToken', target: 'partial class StatisticToken : TokenWithCommonCls' },
-                { source: 'class Statistic', target: 'partial class Statistic' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Steps',
-        src: [
-            'components/steps/style/index.tsx',
-            'components/steps/style/custom-icon.ts',
-            'components/steps/style/inline.ts',
-            'components/steps/style/label-placement.ts',
-            'components/steps/style/nav.ts',
-            'components/steps/style/progress-dot.ts',
-            'components/steps/style/progress.ts',
-            'components/steps/style/rtl.ts',
-            'components/steps/style/small.ts',
-            'components/steps/style/vertical.ts',
-        ],
-        dist: 'components/steps/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Steps',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class StepsToken' },
-                { source: 'class StepsToken', target: 'partial class StepsToken : TokenWithCommonCls' },
-                { source: 'class Steps', target: 'partial class Steps' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Switch',
-        src: ['components/switch/style/index.ts'],
-        dist: 'components/switch/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Switch',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class SwitchToken' },
-                { source: 'class SwitchToken', target: 'partial class SwitchToken : TokenWithCommonCls' },
-                { source: 'class Switch', target: 'partial class Switch' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
+    
+    
     {
         name: 'Table',
         src: [
@@ -1616,20 +1675,30 @@ const uncompleted: Component[] = [
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
     {
-        name: 'Slider',
-        src: ['components/slider/style/index.tsx'],
-        dist: 'components/slider/Style.cs',
+        name: 'Steps',
+        src: [
+            'components/steps/style/index.tsx',
+            'components/steps/style/custom-icon.ts',
+            'components/steps/style/inline.ts',
+            'components/steps/style/label-placement.ts',
+            'components/steps/style/nav.ts',
+            'components/steps/style/progress-dot.ts',
+            'components/steps/style/progress.ts',
+            'components/steps/style/rtl.ts',
+            'components/steps/style/small.ts',
+            'components/steps/style/vertical.ts',
+        ],
+        dist: 'components/steps/Style.cs',
         csOptions: {
             ...defaultOptions,
-            defaultClass: 'Slider',
+            defaultClass: 'Steps',
+            propertyMap: '_tokens',
             typeMap: [
-                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 34]] },
-                { from: 'Unknown1', to: 'SliderToken', includes: [2] },
             ],
             transforms: [
-                { source: 'class ComponentToken', target: 'partial class SliderToken' },
-                { source: 'class SliderToken', target: 'partial class SliderToken : TokenWithCommonCls' },
-                { source: 'class Slider', target: 'partial class Slider' },
+                { source: 'class ComponentToken', target: 'partial class StepsToken' },
+                { source: 'class StepsToken', target: 'partial class StepsToken : TokenWithCommonCls' },
+                { source: 'class Steps', target: 'partial class Steps' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
