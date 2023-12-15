@@ -11,7 +11,7 @@ namespace AntDesign
 {
     internal class CollapseMotion
     {
-        public static CSSObject GenCollapseMotion(object token)
+        public static CSSObject GenCollapseMotion(GlobalToken token)
         {
             return new CSSObject();
         }

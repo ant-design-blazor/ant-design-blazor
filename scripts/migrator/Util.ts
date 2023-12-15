@@ -24,6 +24,13 @@ let htmlTag: { [key: string]: string } = {
     'stroke': `["stroke"]`,
     'fill': `["fill"]`,
     'i': `["i"]`,
+    'code': '["code"]',
+    'kbd': '["kbd"]',
+    'mark': '["mark"]',
+    'strong': '["strong"]',
+    'pre': '["pre"]',
+    'blockquote': '["blockquote"]',
+    'textarea': '["Textarea"]',
 }
 
 let operatorMap: { [key: string]: string } = {
@@ -164,6 +171,8 @@ export const castFieldValue = (value: string) => {
 }
 
 export const castParameter = (value: string) => {
+    if (!value) return value;
+    if (!isString(value)) return value;
     let str = value
         .replace(/\$/g, '')    // 剔除$
         .replace(/'/g, '"');    // 单引号转双引号

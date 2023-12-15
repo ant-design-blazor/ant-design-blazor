@@ -426,9 +426,11 @@ namespace AntDesign
 
         protected override void SetClassMap()
         {
+            var hashId = UseStyle(ClassPrefix);
             ClassMapper
                 .Add("ant-tree-select")
                 .Add($"{ClassPrefix}")
+                .Add(hashId)
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)

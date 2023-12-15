@@ -1279,6 +1279,64 @@ const completed: Component[] = [
         }
     },
     {
+        name: 'Steps',
+        src: [
+            'components/steps/style/index.tsx',
+            'components/steps/style/custom-icon.ts',
+            'components/steps/style/inline.ts',
+            'components/steps/style/label-placement.ts',
+            'components/steps/style/nav.ts',
+            'components/steps/style/progress-dot.ts',
+            'components/steps/style/progress.ts',
+            'components/steps/style/rtl.ts',
+            'components/steps/style/small.ts',
+            'components/steps/style/vertical.ts',
+        ],
+        dist: 'components/steps/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Steps',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'MaxWidth<string | number>', to: 'string' },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 21]] },
+                { from: 'Unknown2', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 22]] },
+                { from: 'Unknown3', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 4]] },
+                { from: 'Unknown4', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown5', to: 'StepsToken', includes: [1, 3] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown6', to: 'CSSObject', ranges: [[1, 9]] },
+                { from: 'Unknown6', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown7', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 14]] },
+                { from: 'Unknown8', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 30]] },
+                { from: 'Unknown9', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 26]] },
+                { from: 'Unknown10', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown11', to: 'CSSObject', ranges: [[1, 15]] },
+                { from: 'Unknown11', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown12', to: 'CSSObject', ranges: [[1, 14]] },
+                { from: 'Unknown12', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 13]] },
+                { from: 'Unknown13', to: 'StepsToken', includes: [2] },
+                { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 17]] },
+                { from: 'Unknown14', to: 'StepsToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class StepsToken' },
+                { source: 'class StepsToken', target: 'partial class StepsToken : TokenWithCommonCls' },
+                { source: 'class Steps', target: 'partial class Steps' },
+                { source: 'StepItemStatusEnum status', target: 'string status' },
+                { source: 'textEllipsis', target: 'TextEllipsis' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
         name: 'Switch',
         src: ['components/switch/style/index.ts'],
         dist: 'components/switch/Style.cs',
@@ -1302,6 +1360,235 @@ const completed: Component[] = [
                 { source: 'class ComponentToken', target: 'partial class SwitchToken' },
                 { source: 'class SwitchToken', target: 'partial class SwitchToken : TokenWithCommonCls' },
                 { source: 'class Switch', target: 'partial class Switch' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Tabs',
+        src: [
+            'components/tabs/style/index.ts',
+            'components/tabs/style/motion.ts',
+        ],
+        dist: 'components/tabs/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            usings: defaultOptions.usings.concat(['using static AntDesign.Slide;']),
+            defaultClass: 'Tabs',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 19]] },
+                { from: 'Unknown5', to: 'PropertySkip', includes: [8, 9, 18, 20] },
+                { from: 'Unknown6', to: 'CSSObject', ranges: [[1, 30]] },
+                { from: 'Unknown6', to: 'PropertySkip', includes: [6, 8, 10, 11, 13, 14, 25, 26, 30] },
+                { from: 'Unknown8', to: 'TabsToken', includes: [1, 3] },
+                { from: 'Unknown8', to: 'CSSInterpolation[]', includes: [2] },
+                { from: 'Unknown9', to: 'CSSObject', ranges: [[4, 12]] },
+                { from: 'Unknown9', to: 'CSSInterpolation[]', includes: [1, 3] },
+                { from: 'Unknown9', to: 'TabsToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TabsToken' },
+                { source: 'class TabsToken', target: 'partial class TabsToken : TokenWithCommonCls' },
+                { source: 'class Tabs', target: 'partial class Tabs' },
+                { source: 'textEllipsis', target: 'TextEllipsis' },
+                { source: `"{componentCls}-nav-wrap-ping"`, target: `\\"{componentCls}-nav-wrap-ping\\"` },
+                { source: `Token.CardPadding`, target: `token.CardPadding ?? $"{(token.CardHeight - Math.Round(token.FontSize * token.LineHeight)) / 2 - token.LineWidth}px {token.Padding}px"` },
+                { source: `([object Object], [object Object])`, target: `InitSlideMotion(token, "slide-up"), InitSlideMotion(token, "slide-down")` },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Tag',
+        src: ['components/tag/style/index.ts'],
+        dist: 'components/tag/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Tag',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'React.CSSProperties', to: 'string' },
+                { from: 'CSSInterpolation', to: 'CSSObject' },
+                { from: 'Unknown2', to: 'TagToken', includes: [1, 2, 3] },
+                { from: 'Unknown3', to: 'TagToken', includes: [1, 3] },
+                { from: 'Unknown3', to: 'GlobalToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TagToken' },
+                { source: 'class TagToken', target: 'partial class TagToken : TokenWithCommonCls' },
+                { source: 'class Tag', target: 'partial class Tag' },
+                { source: 'prepareCommonToken', target: 'PrepareCommonToken' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Timeline',
+        src: ['components/timeline/style/index.ts'],
+        dist: 'components/timeline/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Timeline',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 43]] },
+                { from: 'Unknown1', to: 'TimelineToken', includes: [2] },
+                { from: 'Unknown2', to: 'TimelineToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TimelineToken' },
+                { source: 'class TimelineToken', target: 'partial class TimelineToken : TokenWithCommonCls' },
+                { source: 'class Timeline', target: 'partial class Timeline' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Tooltip',
+        src: ['components/tooltip/style/index.ts'],
+        dist: 'components/tooltip/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            usings: defaultOptions.usings.concat([
+                'using static AntDesign.Zoom;',
+                'using static AntDesign.PlacementArrow;',
+            ]),
+            defaultClass: 'Tooltip',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[4, 19]] },
+                { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [1, 3] },
+                { from: 'Unknown1', to: 'TooltipToken', includes: [2, 16] },
+                { from: 'Unknown1', to: 'PlacementArrowOptions', includes: [17] },
+                { from: 'Unknown2', to: 'TooltipToken', includes: [1, 3] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TooltipToken' },
+                { source: 'class TooltipToken', target: 'partial class TooltipToken : TokenWithCommonCls' },
+                { source: 'class Tooltip', target: 'partial class Tooltip' },
+                {
+                    source: '["&-placement-left","&-placement-leftTop","&-placement-leftBottom","&-placement-right","&-placement-rightTop","&-placement-rightBottom",].join(",")',
+                    target: 'new []{"&-placement-left","&-placement-leftTop","&-placement-leftBottom","&-placement-right","&-placement-rightTop","&-placement-rightBottom"}.Join(",")'
+                },
+                { source: 'new UseComponentStyleResult()', target: 'new GenOptions()' },
+                { source: 'var TooltipToken', target: 'var tooltipToken' },
+                { source: 'GenTooltipStyle(TooltipToken)', target: 'GenTooltipStyle(tooltipToken)' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Transfer',
+        src: ['components/transfer/style/index.ts'],
+        dist: 'components/transfer/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Transfer',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown7', to: 'TransferToken', includes: [1, 3] },
+                { from: 'Unknown7', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TransferToken' },
+                { source: 'class TransferToken', target: 'partial class TransferToken : TokenWithCommonCls' },
+                { source: 'class Transfer', target: 'partial class Transfer' },
+                { source: 'textEllipsis', target: 'TextEllipsis' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Tree',
+        src: ['components/tree/style/index.ts'],
+        dist: 'components/tree/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            usings: defaultOptions.usings.concat([
+                'using static AntDesign.CollapseMotion;',
+                'using Keyframes = CssInCSharp.Keyframe;',
+            ]),
+            defaultClass: 'Tree',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'DerivativeToken', to: 'GlobalToken' },
+                { from: 'Unknown1', to: 'CSSObject', includes: [1, 2, 3] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 4]] },
+                { from: 'CSSInterpolation', to: 'CSSInterpolation[]' },
+                { from: 'AliasToken & TreeSharedToken', to: 'TreeSharedToken' },
+                { from: 'Unknown8', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown8', to: 'CSSObject', includes: [2] },
+                { from: 'Unknown8', to: 'TreeToken', includes: [3] },
+                { from: 'AliasToken', to: 'GlobalToken' },
+            ],
+            transforms: [
+                { source: 'class TreeSharedToken', target: 'partial class TreeSharedToken : TokenWithCommonCls' },
+                { source: 'class ComponentToken', target: 'partial class TreeToken' },
+                { source: 'class TreeToken', target: 'partial class TreeToken : TreeSharedToken' },
+                { source: 'class Tree', target: 'partial class Tree<TItem>' },
+                { source: 'treeNodeFX', target: '_treeNodeFX' },
+                { source: 'new CSSInterpolation[]()', target: 'new TreeToken()' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'TreeSelect',
+        src: ['components/tree-select/style/index.ts'],
+        dist: 'components/tree-select/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'TreeSelect',
+            usings: defaultOptions.usings.concat([
+                'using static AntDesign.TreeStyle;',
+            ]),
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 16]] },
+                { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [1, 3, 5] },
+                { from: 'Unknown1', to: 'TreeSelectToken', includes: [2] },
+                { from: 'Unknown1', to: 'TreeSharedToken', includes: [7] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TreeSelectToken' },
+                { source: 'class TreeSelectToken', target: 'partial class TreeSelectToken : TokenWithCommonCls' },
+                { source: 'class TreeSelect', target: 'partial class TreeSelect' },
+            ]
+        }
+    },
+    {
+        name: 'Typography',
+        src: [
+            'components/typography/style/index.ts',
+            'components/typography/style/mixins.ts',
+        ],
+        dist: 'components/typography/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Typography',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'string | number', to: 'string' },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 17]] },
+                { from: 'Unknown1', to: 'TypographyToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown2', to: 'TypographyToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown5', to: 'TypographyToken', includes: [2] },
+                { from: 'Unknown6', to: 'TypographyToken', includes: [1] },
+                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown7', to: 'TypographyToken', includes: [2] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 5]] },
+                { from: 'Unknown8', to: 'TypographyToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TypographyToken' },
+                { source: 'class TypographyToken', target: 'partial class TypographyToken : TokenWithCommonCls' },
+                { source: 'class Typography', target: 'partial class TypographyBase' },
+                { source: 'WebkitBoxOrient', target: '["-web-kit-box-orient"]' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -1469,8 +1756,6 @@ const uncompleted: Component[] = [
             ]
         }
     },
-    
-    
     {
         name: 'Table',
         src: [
@@ -1505,148 +1790,6 @@ const uncompleted: Component[] = [
         }
     },
     {
-        name: 'Tabs',
-        src: [
-            'components/tabs/style/index.ts',
-            'components/tabs/style/motion.ts',
-        ],
-        dist: 'components/tabs/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Tabs',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TabsToken' },
-                { source: 'class TabsToken', target: 'partial class TabsToken : TokenWithCommonCls' },
-                { source: 'class Tabs', target: 'partial class Tabs' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Tag',
-        src: ['components/tag/style/index.ts'],
-        dist: 'components/tag/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Tag',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TagToken' },
-                { source: 'class TagToken', target: 'partial class TagToken : TokenWithCommonCls' },
-                { source: 'class Tag', target: 'partial class Tag' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Timeline',
-        src: ['components/timeline/style/index.ts'],
-        dist: 'components/timeline/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Timeline',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TimelineToken' },
-                { source: 'class TimelineToken', target: 'partial class TimelineToken : TokenWithCommonCls' },
-                { source: 'class Timeline', target: 'partial class Timeline' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Tooltip',
-        src: ['components/tooltip/style/index.ts'],
-        dist: 'components/tooltip/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Tooltip',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TooltipToken' },
-                { source: 'class TooltipToken', target: 'partial class TooltipToken : TokenWithCommonCls' },
-                { source: 'class Tooltip', target: 'partial class Tooltip' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Transfer',
-        src: ['components/transfer/style/index.ts'],
-        dist: 'components/transfer/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Transfer',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TransferToken' },
-                { source: 'class TransferToken', target: 'partial class TransferToken : TokenWithCommonCls' },
-                { source: 'class Transfer', target: 'partial class Transfer' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Tree',
-        src: ['components/tree/style/index.ts'],
-        dist: 'components/tree/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Tree',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TreeToken' },
-                { source: 'class TreeToken', target: 'partial class TreeToken : TokenWithCommonCls' },
-                { source: 'class Tree', target: 'partial class Tree' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'TreeSelect',
-        src: ['components/tree-select/style/index.ts'],
-        dist: 'components/tree-select/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'TreeSelect',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TreeSelectToken' },
-                { source: 'class TreeSelectToken', target: 'partial class TreeSelectToken : TokenWithCommonCls' },
-                { source: 'class TreeSelect', target: 'partial class TreeSelect' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Typography',
-        src: [
-            'components/typography/style/index.ts',
-            'components/typography/style/mixins.ts',
-        ],
-        dist: 'components/typography/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Typography',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TypographyToken' },
-                { source: 'class TypographyToken', target: 'partial class TypographyToken : TokenWithCommonCls' },
-                { source: 'class Typography', target: 'partial class Typography' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
         name: 'Upload',
         src: [
             'components/upload/style/index.ts',
@@ -1674,33 +1817,5 @@ const uncompleted: Component[] = [
 
 // 用于生成的实例，将需要生成的组件配置放到这里
 export const components: Component[] = [
-    {
-        name: 'Steps',
-        src: [
-            'components/steps/style/index.tsx',
-            'components/steps/style/custom-icon.ts',
-            'components/steps/style/inline.ts',
-            'components/steps/style/label-placement.ts',
-            'components/steps/style/nav.ts',
-            'components/steps/style/progress-dot.ts',
-            'components/steps/style/progress.ts',
-            'components/steps/style/rtl.ts',
-            'components/steps/style/small.ts',
-            'components/steps/style/vertical.ts',
-        ],
-        dist: 'components/steps/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Steps',
-            propertyMap: '_tokens',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class StepsToken' },
-                { source: 'class StepsToken', target: 'partial class StepsToken : TokenWithCommonCls' },
-                { source: 'class Steps', target: 'partial class Steps' },
-                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
-            ]
-        }
-    },
+    
 ];

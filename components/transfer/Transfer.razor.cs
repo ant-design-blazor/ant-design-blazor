@@ -98,8 +98,10 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            var hashId = UseStyle(PrefixName);
             ClassMapper
                 .Add(PrefixName)
+                .Add(hashId)
                 .If($"{PrefixName}-rtl", () => RTL);
         }
 

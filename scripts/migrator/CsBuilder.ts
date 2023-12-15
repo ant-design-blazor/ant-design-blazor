@@ -530,7 +530,7 @@ export class CsFunction {
     private createConditional(tab: string, conditional: ConditionalExpression): string[] {
         const codes: string[] = [];
         if (conditional.condition) {
-            codes.push(`${conditional.condition}`);
+            codes.push(`${castParameter(conditional.condition)}`);
         } else {
             codes.push(`${tab}${castParameter(conditional.left!)} ${castOperator(conditional.operator!)} ${castParameter(conditional.right!)}`);
         }
@@ -591,6 +591,47 @@ export class CsFunction {
                 const last = codes.length - 1;
                 codes[last] = `${codes[last]})${end}`;
             }
+        }
+        return codes;
+    }
+}
+
+export type EnumItem = {
+    name: string;
+    value?: string;
+}
+
+export class CsEnum {
+    name: string;
+    members: EnumItem[];
+    constructor(name: string, members: EnumItem[]) {
+        this.name = name;
+        this.members = members;
+    }
+    public format(tab: string): string[] {
+        const codes: string[] = [];
+        // 字符串枚举
+        if (this.members.filter(x => x.value && x.value.startsWith(`'`)).length > 0) {
+            codes.push(`${tab}public class ${this.name}`);
+            codes.push(`${tab}{`);
+            for (let i = 0; i < this.members.length; i++) {
+                const mem = this.members[i];
+                codes.push(`${tab}    public const string ${castFieldName(mem.name)} = ${castFieldValue(mem.value!)};`);
+            }
+            codes.push(`${tab}}`);
+        } else {
+            codes.push(`${tab}public enum ${this.name}`);
+            codes.push(`${tab}{`);
+            for (let i = 0; i < this.members.length; i++) {
+                const mem = this.members[i];
+                const end = i === this.members.length - 1 ? '' : ',';
+                if (mem.value) {
+                    codes.push(`${tab}    ${mem.name} = ${mem.value}${end}`);
+                } else {
+                    codes.push(`${tab}    ${mem.name}${end}`);
+                }
+            }
+            codes.push(`${tab}}`);
         }
         return codes;
     }
@@ -657,7 +698,7 @@ export class CsClass {
 
 export class CsBuilder {
     options: CsOptions;
-    classes: { [key: string]: CsClass } = {};
+    classes: { [key: string]: CsClass | CsEnum } = {};
 
     constructor(options: CsOptions) {
         this.options = options;
@@ -668,11 +709,15 @@ export class CsBuilder {
         if (!this.classes[name]) {
             return this.classes[name] = new CsClass(name);
         }
-        return this.classes[name];
+        return this.classes[name] as CsClass;
+    }
+
+    public addEnum(csEnum: CsEnum) {
+        this.classes[csEnum.name] = csEnum;
     }
 
     public addClassProperty(className: string, propName: string, propType: string) {
-        this.classes[className].addProperty(propName, propType, this.options.propertyMap);
+        (this.classes[className] as CsClass).addProperty(propName, propType, this.options.propertyMap);
     }
 
     public addFunction(func: CsFunction) {
@@ -704,7 +749,7 @@ export class CsBuilder {
 
     private getDefaultClass(): CsClass {
         if (this.options.defaultClass in this.classes) {
-            return this.classes[this.options.defaultClass];
+            return this.classes[this.options.defaultClass] as CsClass;
         }
         return this.classes[this.options.defaultClass] = new CsClass(this.options.defaultClass);
     }

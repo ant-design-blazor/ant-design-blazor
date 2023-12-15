@@ -49,5 +49,10 @@ namespace AntDesign
         {
             return string.Join(separator, arr);
         }
+
+        public static T To<T>(this object property)
+        {
+            return (T)property;
+        }
     }
 }

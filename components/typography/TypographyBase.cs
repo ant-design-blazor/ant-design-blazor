@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public abstract class TypographyBase : AntDomComponentBase
+    public abstract partial class TypographyBase : AntDomComponentBase
     {
         [Parameter]
         public bool Code { get; set; } = false;
@@ -187,6 +187,7 @@ namespace AntDesign
 
             builder.AddElementReferenceCapture(47, r => Ref = r);
             builder.CloseElement();
+            _styleContent(builder);
         }
 
         private async Task Copy()

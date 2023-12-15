@@ -9,10 +9,16 @@ namespace AntDesign
     public class PlacementArrowOptions
     {
         public string ColorBg { get; set; }
+        public string ShowArrowCls { get; set; }
+        public double ContentRadius { get; set; }
+        public bool LimitVerticalRadius { get; set; }
+        public double ArrowDistance { get; set; }
     }
 
     public class PlacementArrow
     {
+        public const double MAX_VERTICAL_CONTENT_RADIUS = 8;
+
         public static CSSObject GetArrowStyle(TokenWithCommonCls token, PlacementArrowOptions options)
         {
             return new CSSObject();

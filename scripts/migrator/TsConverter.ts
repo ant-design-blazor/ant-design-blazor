@@ -11,7 +11,9 @@ import {
     ObjectExpression,
     ConditionalExpression,
     ParameterType,
-    NewExpression
+    NewExpression,
+    CsEnum,
+    EnumItem
 } from "./CsBuilder";
 
 type Context<T> = {
@@ -196,9 +198,13 @@ function createConditionalExpression(exp: ts.ConditionalExpression): Conditional
     if (cond.kind === ts.SyntaxKind.Identifier) {
         condition.condition = cond.getText();
     } else {
-        condition.left = cond.left.getText();
-        condition.right = cond.right.getText();
-        condition.operator = cond.operatorToken.getText();
+        if (condition.kind && condition.right) {
+            condition.left = cond.left.getText();
+            condition.right = cond.right.getText();
+            condition.operator = cond.operatorToken.getText();
+        } else {
+            condition.condition = cond.getText();
+        }
     }
     const getWhenCond = (exp: ts.Expression) => {
         if (!exp) return undefined;
@@ -460,6 +466,14 @@ function convertFunctionDeclaration(context: Context<ts.FunctionDeclaration>) {
     context.csBuilder.addFunction(func);
 }
 
+function convertEnumDeclaration(context: Context<ts.EnumDeclaration>) {
+    const node = context.node;
+    const name = node.name.getText();
+    const members = node.members.map(x => ({ name: x.name.getText(), value: x.initializer?.getText() } as EnumItem));
+    context.csBuilder.addEnum(new CsEnum(name, members));
+}
+
+
 export function convert(files: string[], csOptions: CsOptions): string {
     const options: ts.CompilerOptions = {};
     let program = ts.createProgram(files, options);
@@ -491,6 +505,8 @@ export function convert(files: string[], csOptions: CsOptions): string {
             // function declaration
             else if (ts.isFunctionDeclaration(node)) {
                 convertFunctionDeclaration({ ...context, node });
+            } else if (ts.isEnumDeclaration(node)) {
+                convertEnumDeclaration({ ...context, node });
             }
         });
     }
