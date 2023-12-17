@@ -35,6 +35,14 @@ namespace AntDesign
             };
         }
 
+        public ReuseTabsRouteData(RouteData routeData)
+        {
+            _routeData = routeData;
+            RouteValues = routeData.RouteValues;
+            PageType = routeData.PageType.FullName;
+            PageAssembly = routeData.PageType.Assembly.FullName;
+        }
+
         [JsonConstructor]
         public ReuseTabsRouteData(IReadOnlyDictionary<string, object> routeValues, string pageType, string pageAssembly)
         {
@@ -51,12 +59,5 @@ namespace AntDesign
         [JsonIgnore]
         public RouteData RouteData => _routeData;
 
-        public ReuseTabsRouteData(RouteData routeData)
-        {
-            _routeData = routeData;
-            RouteValues = routeData.RouteValues;
-            PageType = routeData.PageType.FullName;
-            PageAssembly = routeData.PageType.Assembly.FullName;
-        }
     }
 }
