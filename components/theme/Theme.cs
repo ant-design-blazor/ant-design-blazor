@@ -52,6 +52,10 @@ namespace AntDesign
 
         public static T To<T>(this object property)
         {
+            if (property == default)
+            {
+                return default(T);
+            }
             return (T)property;
         }
     }

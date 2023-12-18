@@ -71,8 +71,10 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var hashId = UseStyle(PrefixName);
             ClassMapper
                 .Add(PrefixName)
+                .Add(hashId)
                 .GetIf(() => $"{PrefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
                 .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)

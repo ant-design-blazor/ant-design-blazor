@@ -30,7 +30,7 @@ namespace AntDesign
 
         public object this[string key]
         {
-            get => _tokens[key].ToString();
+            get => _tokens[key];
             set => _tokens[key] = value;
         }
 
