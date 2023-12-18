@@ -21,8 +21,10 @@ namespace AntDesign
                 MessageService.OnConfig += Config;
             }
 
+            var hashId = UseStyle(PrefixCls);
             ClassMapper
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 

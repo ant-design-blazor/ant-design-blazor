@@ -110,8 +110,11 @@ namespace AntDesign
 
         private void SetClassMapper()
         {
+            var prefixCls = "ant-tree";
+            var hashId = UseStyle(prefixCls);
             ClassMapper
-                .Add("ant-tree")
+                .Add(prefixCls)
+                .Add(hashId)
                 .If("ant-tree-show-line", () => ShowLine)
                 .If("ant-tree-icon-hide", () => ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)

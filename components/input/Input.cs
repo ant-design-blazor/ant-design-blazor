@@ -13,7 +13,7 @@ namespace AntDesign
     /// <summary>
     /// Base class for input type components.
     /// </summary>
-    public class Input<TValue> : AntInputComponentBase<TValue>
+    public partial class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -310,6 +310,7 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
+            var hashId = UseStyle(PrefixCls);
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
@@ -321,6 +322,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
+                .Add(hashId)
                 .If($"{PrefixCls}-borderless", () => !Bordered)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
@@ -612,7 +614,8 @@ namespace AntDesign
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-
+            // attach style
+            _styleContent(builder);
             string container = "input";
             var hasSuffix = Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
 

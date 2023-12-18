@@ -47,8 +47,10 @@ namespace AntDesign
 
         public void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             ClassMapper
                 .Add(PrefixCls)
+                .Add(hashId)
                 .GetIf(() => $"{PrefixCls}-{Direction.Name.ToLowerInvariant()}", () => Direction.IsIn(DirectionVHType.Horizontal, DirectionVHType.Vertical))
                 .GetIf(() => $"{PrefixCls}-align-{Align}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == DirectionVHType.Horizontal)

@@ -59,11 +59,14 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var prefixCls = "ant-skeleton";
+            var hashId = UseStyle(prefixCls);
             ClassMapper
-                .Add("ant-skeleton")
-                .If("ant-skeleton-with-avatar", () => this.Avatar)
-                .If("ant-skeleton-active", () => this.Active)
-                .If("ant-skeleton-rtl", () => RTL);
+                .Add(prefixCls)
+                .Add(hashId)
+                .If($"{prefixCls}-with-avatar", () => this.Avatar)
+                .If($"{prefixCls}-active", () => this.Active)
+                .If($"{prefixCls}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

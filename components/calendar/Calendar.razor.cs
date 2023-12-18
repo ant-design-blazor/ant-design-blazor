@@ -125,8 +125,11 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            // todo: move to OnInitialized.
+            var hashId = UseStyle(PrefixCls);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-full", () => FullScreen)
                 .If($"{PrefixCls}-rtl", () => RTL)
                ;

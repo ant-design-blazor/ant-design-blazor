@@ -130,8 +130,10 @@ namespace AntDesign
         protected void SetClassMap()
         {
             var prefix = "ant-timeline";
+            var hashId = UseStyle(prefix);
             ClassMapper.Clear()
                 .Add(prefix)
+                .Add(hashId)
                 .If($"{prefix}-right", () => Mode == TimelineMode.Right && !_hasLabel)
                 .If($"{prefix}-alternate", () => Mode == TimelineMode.Alternate && !_hasLabel)
                 .If($"{prefix}-pending", () => Pending.Value != null)

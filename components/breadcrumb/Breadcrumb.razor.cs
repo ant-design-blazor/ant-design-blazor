@@ -25,9 +25,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             var prefixCls = "ant-breadcrumb";
-
+            var hashId = UseStyle(prefixCls);
             ClassMapper
                 .Add(prefixCls)
+                .Add(hashId)
                 .If($"{prefixCls}-rtl", () => RTL);
 
             base.OnInitialized();

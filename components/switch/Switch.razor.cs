@@ -43,8 +43,10 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var hashId = UseStyle(_prefixCls);
             ClassMapper.Clear()
                 .Add(_prefixCls)
+                .Add(hashId)
                 .If($"{_prefixCls}-checked", () => CurrentValue)
                 .If($"{_prefixCls}-disabled", () => Disabled || Loading)
                 .If($"{_prefixCls}-loading", () => Loading)

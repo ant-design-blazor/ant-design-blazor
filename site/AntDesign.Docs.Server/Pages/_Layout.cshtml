@@ -1,10 +1,11 @@
-﻿@using Microsoft.AspNetCore.Components.Web
+﻿@using CssInCSharp
 @namespace blazorserver.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <component type="typeof(StyleOutlet)" render-mode="ServerPrerendered" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <base href="~/" />
@@ -12,7 +13,6 @@
   <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
   <link rel="stylesheet" href="@("https://unpkg.com/@docsearch/css@3.0.0/dist/style.css")" />
   <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
-  <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
   <app>

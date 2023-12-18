@@ -30,6 +30,12 @@ namespace AntDesign
             Placement = Placement.Top;
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            var hashId = UseStyle(PrefixCls);
+        }
+
         internal override string GetOverlayEnterClass()
         {
             return "ant-zoom-big-fast-enter ant-zoom-big-fast-enter-active ant-zoom-big-fast";

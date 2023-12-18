@@ -143,7 +143,9 @@ namespace AntDesign
         
         private void UpdateClassMap()
         {
+            var hashId = UseStyle(_prefix);
             this.ClassMapper.Add(_prefix)
+                .Add(hashId)
                 .If($"{_prefix}-has-color", () => _isCustomColor)
                 .If($"{_prefix}-hidden", () => Visible == false)
                 .GetIf(() => $"{_prefix}-{_color}", () => _isPresetColor)
