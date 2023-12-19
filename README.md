@@ -110,60 +110,84 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services in `Program.cs`
+- Register the services in `Program.cs` (Blazor Web)
 
   ```csharp
   builder.Services.AddAntDesign();
   ```
 
-  or `Startup.cs`
+- or in `MauiProgram.cs` (MAUI Blazor)
 
   ```csharp
-  services.AddAntDesign();
+  builder.Services.AddAntDesign();
   ```
 
 - Link the static files in 
-
-  - `App.razor` (Blazor WebApp) 
-  - `wwwroot/index.html` (client-side WebAssembly Blazor) 
-  - `Pages/_Host.cshtml` (server-side Blazor)
+  - `Components/App.razor` (Blazor Web) 
+  - `wwwroot/index.html` (MAUI Blazor or client-side WebAssembly Blazor) 
 
   ```html
   <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
   <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
-- Add namespace in `_Imports.razor`
+- Add namespace in
+  - `Components/_Imports.razor` (Blazor Web)
+  - `_Imports.razor` (MAUI Blazor or Razor Class Libraries) 
 
   ```csharp
   @using AntDesign
   ```
 
-- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.
-
-  - For Blazor WebApp, you also need to specify render mode  to `<Routes />` for interactivity.
-
+- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in
+  - `Components/Routes.razor` (Blazor Web)
+  - `Routes.razor` (MAUI Blazor)
   ```diff
-  <Routes @rendermode="RenderMode.InteractiveAuto" />            <-- specify the rendermode ✨
-  + <AntContainer @rendermode="RenderMode.InteractiveAuto" />    <-- add this component ✨
-  ```
- 
-  - For legacy blazor apps just add a line of code:
-
-  ```diff
-  <Router AppAssembly="@typeof(MainLayout).Assembly">
-      <Found Context="routeData">
-          <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
-      </Found>
-      <NotFound>
-          <LayoutView Layout="@typeof(MainLayout)">
-              <Result Status="404" />
-          </LayoutView>
-      </NotFound>
+  <Router AppAssembly="@typeof(MauiProgram).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Components.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
   </Router>
 
-  +  <AntContainer />   <-- add this component ✨
+  <AntContainer />
   ```
+
+  - Xou also need to specify render mode for interactivity.
+    - `Components/App.razor` (Blazor Web)
+    ```diff
+    <body>
+        @* <Routes /> *@
+        <Routes @rendermode="RenderMode.InteractiveServer" />
+    
+        <script src="_framework/blazor.web.js"></script>
+    
+        @* Ant *@
+        <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    
+    </body>
+    ```
+    or on each page
+    ```diff
+    @* @rendermode InteractiveServer *@
+    
+    <PageTitle>Counter</PageTitle>
+    
+    <h1>Counter</h1>
+    
+    <p role="status">Current count: @currentCount</p>
+    
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    
+    @code {
+        private int currentCount = 0;
+    
+        private void IncrementCount()
+        {
+            currentCount++;
+        }
+    }
+    ```
 
 - Finally, it can be referenced in the `.razor` component!
 
@@ -172,6 +196,13 @@ Options for the template：
   ```
 
 ## 🔨 Development
+
+### One code base for desktop, mobile and web
+If you use MAUI Blazor, you can implement MAUI Blazor and Blazor Web projects in Visual Studio with the help of Razor Class Libraries (RCL), for example, so that you only have one codesais for the pages (Ant-Blazor). You can then choose to publish your project to a desktop, mobile or web app (e.g. like Flutter). 
+
+Typically, you would set up the projects so that you have all specific Page components (e.g. login form), base classes, Models, ViewModels, Services and Utility classes in the RCL project. For reasons of simplicity, you would keep the Pages in the MAUI Blazor project and link (do not import) them to the Blazor Web project. For each page in MAUI Blazor but also Blazor Web you have to create a codebehind file in which you would implement platform-specific methods (e.g. reading an Excel file via desktop app with MAUI classes or web app via JavaScript Interop).
+
+The inheritance hierarchy then looks like this: Base class -> ViewModel -> Codebehind.
 
 ### Gitpod
 
