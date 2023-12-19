@@ -20,12 +20,11 @@ namespace AntDesign.Docs.Shared
         {
             _themeFileUrl = $"_content/AntDesign.Docs/css/{theme}.css";
 
-            await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "body", new Dictionary<string, string>
+            _ = JS.InvokeVoidAsync(JSInteropConstants.AddElementToBody, _linkRef);
+            _ = JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "html", new Dictionary<string, string>
             {
                 ["data-theme"] = theme
             });
-
-            await JS.InvokeVoidAsync(JSInteropConstants.AddElementToBody, _linkRef);
         }
     }
 }
