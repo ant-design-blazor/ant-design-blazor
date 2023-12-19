@@ -654,6 +654,8 @@ namespace AntDesign
                 if (_hasInitialized)
                 {
                     _waitingDataSourceReload = false;
+
+                    FlushCache(); // clear the selection state after pages was changed outside
                     ReloadAndInvokeChange();
                 }
             }
