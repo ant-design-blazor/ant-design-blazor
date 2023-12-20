@@ -23,6 +23,7 @@ When requiring users to interact with the application, but without jumping to a 
 | CloseIcon         | custom close icon                                            | RenderFragment                | -             |
 | ConfirmLoading    | Whether to apply loading  visual effect for OK button or not | bool                          | false         |
 | DestroyOnClose    | Whether to unmount child  components on onClose              | bool                          | false         |
+| Header            | Header content                                               | RenderFragment                | -             |
 | Footer            | Footer content, set as  footer={null} when you don't need default buttons | string\|RenderFragment        | 确定取消按钮  |
 | ForceRender       | Force render Modal                                           | bool                          | false         |
 | GetContainer      | Return the mount node for  Modal                             | ElementReference?             | document.body |

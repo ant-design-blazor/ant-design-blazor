@@ -20,48 +20,59 @@
                  >
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                 <div class=@($"{Config.PrefixCls}-content") style="@(Config.Resizable ? "resize:horizontal; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
-                    @if (Config.Closable)
+                    @if (Config.Header == null)
                     {
-                        <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@OnCloserClick">
-                            <span class=@($"{Config.PrefixCls}-close-x")>
-                                <span role="img" aria-label="close" class=@($"anticon anticon-close {Config.PrefixCls}-close-icon")>
-                                    @Config.CloseIcon
+                        @if (Config.Closable)
+                        {
+                            <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@OnCloserClick">
+                                <span class=@($"{Config.PrefixCls}-close-x")>
+                                    <span role="img" aria-label="close" class=@($"anticon anticon-close {Config.PrefixCls}-close-icon")>
+                                        @Config.CloseIcon
+                                    </span>
                                 </span>
-                            </span>
-                        </button>
-                    }
-                    @if (Config.Maximizable)
-                    {
-                        <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@OnMaxBtnClick">
-                            <span class=@($"{Config.PrefixCls}-max-btn-x")>
-                                <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
-                                    @if(Status == ModalStatus.Default)
-                                    {
-                                        @(Config.MaximizeBtnIcon)
-                                    }
-                                    else
-                                    {
-                                        @(Config.RestoreBtnIcon)
-                                    }
+                            </button>
+                        }
+                        @if (Config.Maximizable)
+                        {
+                            <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@OnMaxBtnClick">
+                                <span class=@($"{Config.PrefixCls}-max-btn-x")>
+                                    <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
+                                        @if (Status == ModalStatus.Default)
+                                        {
+                                            @(Config.MaximizeBtnIcon)
+                                        }
+                                        else
+                                        {
+                                            @(Config.RestoreBtnIcon)
+                                        }
+                                    </span>
                                 </span>
-                            </span>
-                        </button>
-                    }
-                    @if (Config.TitleTemplate != null)
-                    {
-                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title")>
-                                @Config.TitleTemplate
+                            </button>
+                        }
+                        @if (Config.TitleTemplate != null)
+                        {
+                            <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                                <div class=@($"{Config.PrefixCls}-title")>
+                                    @Config.TitleTemplate
+                                </div>
                             </div>
-                        </div>
-                    }
-                    else if (!string.IsNullOrWhiteSpace(Config.Title))
-                    {
-                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title")>
-                                @Config.Title
+                        }
+                        else if (!string.IsNullOrWhiteSpace(Config.Title))
+                        {
+                            <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                                <div class=@($"{Config.PrefixCls}-title")>
+                                    @Config.Title
+                                </div>
                             </div>
-                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <CascadingValue Value="@Config">
+                            <CascadingValue Name="Parent" Value="@this">
+                                @(Config.Header)
+                            </CascadingValue>
+                        </CascadingValue>
                     }
                     <div class=@($"{Config.PrefixCls}-body") style="@GetBodyStyle()">
                         @ChildContent

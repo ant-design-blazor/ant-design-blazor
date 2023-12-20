@@ -48,6 +48,11 @@ namespace AntDesign
         public bool ConfirmLoading { get; set; }
 
         /// <summary>
+        /// modal header
+        /// </summary>
+        public RenderFragment Header { get; set; }
+
+        /// <summary>
         /// modal footer
         /// </summary>
         public OneOf<string, RenderFragment>? Footer { get; set; } = DefaultFooter;
