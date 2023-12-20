@@ -122,17 +122,6 @@ Options for the template：
   services.AddAntDesign();
   ```
 
-- Link the static files in 
-
-  - `App.razor` (Blazor WebApp) 
-  - `wwwroot/index.html` (client-side WebAssembly Blazor) 
-  - `Pages/_Host.cshtml` (server-side Blazor)
-
-  ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-  ```
-
 - Add namespace in `_Imports.razor`
 
   ```csharp

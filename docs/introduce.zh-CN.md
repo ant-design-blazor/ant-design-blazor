@@ -114,16 +114,6 @@ title: Ant Design of Blazor
   services.AddAntDesign();
   ```
 
-- 引入静态样式和脚本文件
-  - Blazor WebApp 项目在 `App.razor` 文件引入
-  - Blazor WebAssembly 项目在 `wwwroot/index.html` 文件引入
-  - Blazor Server 项目在 `Pages/_Host.cshtml` 文件引入
-
-  ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-  ```
-
 - 在 `_Imports.razor` 中加入命名空间
 
   ```
