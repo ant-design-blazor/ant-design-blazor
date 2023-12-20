@@ -27,6 +27,9 @@ namespace AntDesign
         [CascadingParameter]
         private RouteData RouteData { get; set; }
 
+        [Parameter]
+        public ReuseTabsRouteData ReuseTabsRouteData { get; set; }
+
         [Inject]
         private NavigationManager Navmgr { get; set; }
 
@@ -45,7 +48,15 @@ namespace AntDesign
             base.OnInitialized();
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
-            ReuseTabsService.TrySetRouteData(RouteData, true);
+
+            if (RouteData!= null)
+            {
+                ReuseTabsService.TrySetRouteData(RouteData, true);
+            }
+            else if (ReuseTabsRouteData!= null)
+            {
+                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
+            }
 
             Navmgr.LocationChanged += OnLocationChanged;
         }
@@ -61,7 +72,14 @@ namespace AntDesign
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
         {
-            ReuseTabsService.TrySetRouteData(RouteData, true);
+            if (RouteData != null)
+            {
+                ReuseTabsService.TrySetRouteData(RouteData, true);
+            }
+            else if (ReuseTabsRouteData != null)
+            {
+                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
+            }
 
             StateHasChanged();
         }

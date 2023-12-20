@@ -21,7 +21,17 @@ namespace AntDesign
         internal string CurrentUrl
         {
             get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
-            set => _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+            set
+            {
+                try
+                {
+                    _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+                }
+                catch (NavigationException)
+                {
+                    // would throw exception during static rendering
+                }
+            }
         }
 
         internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore)
@@ -45,6 +55,10 @@ namespace AntDesign
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
+            if (routeData == null)
+            {
+                return;
+            }
             if (!reuse)
             {
                 _pageMap.Clear();
