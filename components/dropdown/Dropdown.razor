@@ -9,7 +9,7 @@
         <div class="@ClassMapper.Class"
      style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
      id="@Id"
-     @ref="Ref">
+		@ref="Ref" title="@HtmlTitle">
             @buttons((this, ChildContent))
         </div>
     }
@@ -23,7 +23,8 @@
      @onmouseenter="OnTriggerMouseEnter"
      @onmouseleave="OnTriggerMouseLeave"
      @oncontextmenu="OnTriggerContextmenu"
-     @oncontextmenu:preventDefault>
+     @oncontextmenu:preventDefault
+			 title="@HtmlTitle">
             @ChildContent
         </div>
     }

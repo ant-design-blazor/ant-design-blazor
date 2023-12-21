@@ -12,7 +12,8 @@
          @oncontextmenu="OnTriggerContextmenu"
          @onfocusin="OnTriggerFocusIn"
          @onfocusout="OnTriggerFocusOut"
-         @oncontextmenu:preventDefault>
+         @oncontextmenu:preventDefault
+		 title="@HtmlTitle">
         @ChildContent
     </div>
 }
@@ -30,7 +31,7 @@
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave"
                  OnOverlayMouseUp="OnOverlayMouseUp">
-            <div class="ant-popover-content">
+			<div class="ant-popover-content" title="@HtmlTitle">
                 <div class="ant-popover-arrow">
                     <span class="ant-popover-arrow-content"></span>
                 </div>

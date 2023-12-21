@@ -12,6 +12,9 @@ namespace AntDesign
         [Parameter]
         public ForwardRef RefBack { get; set; } = new ForwardRef();
 
+        [Parameter]
+        public string HtmlTitle { get; set; }
+
         private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 
         protected void CallAfterRender(Func<Task> action)

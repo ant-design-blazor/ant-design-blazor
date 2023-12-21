@@ -21,7 +21,8 @@
      class="@ClassMapper.Class"
      draggable="@Parent.Draggable.ToString()"
      id="@($"rc-tabs-{Id}-tab-{Key}")"
-     ondragover="event.preventDefault();">
+     ondragover="event.preventDefault();"
+		 title="@HtmlTitle">
         <div @onkeydown="@HandleKeydown"
              @ref="_tabBtnRef"
              role="tab"

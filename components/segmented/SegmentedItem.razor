@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TValue
 
-<label class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<label class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" title="@HtmlTitle">
   <input class="ant-segmented-item-input" type="radio" checked="@_selected">
   <div class="ant-segmented-item-label" title="@Label" @onclick="OnClick">
     @if (ChildContent != null)

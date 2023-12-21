@@ -6,7 +6,8 @@
         @onblur="@Blur"
         @onfocus="@Focus"
         @onkeydown="@KeyDown" @onkeydown:preventDefault
-        @onmouseout="@MouseLeave" @onmouseout:stopPropagation>
+        @onmouseout="@MouseLeave" @onmouseout:stopPropagation
+		title="@HtmlTitle">
         @foreach (RateMetaData item in RateMetaDatas)
         {
             <CascadingValue Value="@Character" Name="Character">

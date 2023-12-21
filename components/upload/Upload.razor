@@ -9,7 +9,8 @@
      @ondrop="@HandleDrag"
      @ondragover:stopPropagation
      @ondragleave:stopPropagation
-     @ondrop:stopPropagation>
+     @ondrop:stopPropagation
+	  title="@HtmlTitle">
         @if (!IsPictureCard || !ShowUploadList)
         {
             <CascadingValue Value="this" IsFixed>

@@ -8,7 +8,7 @@
     var className = GetClassName(placement);
     var style = GetStyle(placement);
     <div @key="placement">
-        <div @key="placement" class="@className" style="@style" @ref="Ref">
+		<div @key="placement" class="@className" style="@style" @ref="Ref" title="@HtmlTitle">
             <div>
                 @foreach (var itemConfig in configs)
                 {

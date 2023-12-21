@@ -11,7 +11,8 @@
       aria-label="@(ItemTemplate != null ? ItemTemplate(Model.Item) : InternalLabel)"
       style="@InnerStyle"
       @onclick="@OnClick"
-      @onmouseenter="@OnMouseEnter">
+      @onmouseenter="@OnMouseEnter"
+	 title="@HtmlTitle">
     <div class="@ClassPrefix-content">
         @if (ItemTemplate != null)
         {

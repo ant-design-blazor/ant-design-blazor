@@ -13,7 +13,7 @@
                 }
                 else
                 {
-                    <label class=@GetLabelClass() style="@LabelStyle">
+					<label class=@GetLabelClass() style="@LabelStyle" title="@HtmlTitle">
                         @Label
                         @if (Form.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                         {

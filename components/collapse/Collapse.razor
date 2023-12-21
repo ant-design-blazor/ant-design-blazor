@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+	<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" title="@HtmlTitle">
         @ChildContent
     </div>
 </CascadingValue>
