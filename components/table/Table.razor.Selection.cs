@@ -20,7 +20,7 @@ namespace AntDesign
             get => _selectedRows;
             set
             {
-                _outerSelectedRows = value;
+                _outerSelectedRows = value ?? [];
             }
         }
 
@@ -56,6 +56,9 @@ namespace AntDesign
 
         bool ITable.AnySelected => _dataSourceCache.Values.Any(x => !x.Disabled && x.Selected);
 
+        /// <summary>
+        /// Select all rows of current page
+        /// </summary>
         public void SelectAll()
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
@@ -74,15 +77,9 @@ namespace AntDesign
             SelectionChanged();
         }
 
-        private void ClearSelectedRows()
-        {
-            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
-            {
-                dataItem.SetSelected(false);
-                _selectedRows.Remove(dataItem.Data);
-            }
-        }
-
+        /// <summary>
+        /// Unselect all rows of current page
+        /// </summary>
         public void UnselectAll()
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
@@ -141,6 +138,11 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = false;
         }
 
+
+        /// <summary>
+        /// Set all selected items
+        /// </summary>
+        /// <param name="items"></param>
         public void SetSelection(IEnumerable<TItem> items)
         {
             if (items.SequenceEqual(_selectedRows, this))
@@ -152,14 +154,20 @@ namespace AntDesign
                 items = items.ToArray();
 
             _preventRowDataTriggerSelectedRowsChanged = true;
-            ClearSelectedRows();
+
+            ClearAllSelectedRows();
             items?.ForEach(SelectItem);
 
-            _selection?.StateHasChanged();
-
             _preventRowDataTriggerSelectedRowsChanged = false;
+
+            _selection?.StateHasChanged();
+            SelectionChanged();
         }
 
+        /// <summary>
+        /// Select one item
+        /// </summary>
+        /// <param name="item"></param>
         public void SetSelection(TItem item)
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
@@ -175,7 +183,26 @@ namespace AntDesign
             SelectionChanged();
         }
 
-        //void ITable.SelectionChanged() => SelectionChanged();
+        /// <summary>
+        /// clear current pages' selected rows
+        /// </summary>
+        private void ClearSelectedRows()
+        {
+            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
+            {
+                dataItem.SetSelected(false);
+                _selectedRows.Remove(dataItem.Data);
+            }
+        }
+
+        private void ClearAllSelectedRows()
+        {
+            foreach (TableDataItem<TItem> dataItem in _dataSourceCache.Values)
+            {
+                dataItem.SetSelected(false);
+            }
+            _selectedRows.Clear();
+        }
 
         private void SelectionChanged()
         {

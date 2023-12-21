@@ -68,6 +68,8 @@ namespace AntDesign
                 _dataSourceCache.Add(dataHashCode, currentDataItem);
             }
 
+            currentDataItem.Data = data;
+
             // this row cache may be for children rows
             rowCache ??= _rootRowDataCache;
 
