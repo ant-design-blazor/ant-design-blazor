@@ -156,7 +156,9 @@ namespace AntDesign
                 .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
                 .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL);
+                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
+                ;
 
             ClassMapper
                 .Add("ant-input-textarea ")

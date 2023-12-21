@@ -42,6 +42,27 @@
         value.Should().Be(default(int?));
     }
 
+    [Fact]
+    public void DefaultNoSelectWithAllowClear()
+    {
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+        .SetResult(new DomRect());
+        int? value = 5;
+        var cut = Render<Select<int?, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                  ValueName="@nameof(Person.Id)"
+                  LabelName="@nameof(Person.Name)"
+                  @bind-Value="@value"
+                  DefaultValue="5"
+                  AllowClear />
+    );
+        var input = cut.Find("input");
+
+        value.Should().Be(default(int?));
+        input.GetAttribute("value").Should().Be("");
+    }
+
+
     IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };
 
     [Fact]
