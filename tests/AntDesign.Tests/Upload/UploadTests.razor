@@ -1,4 +1,7 @@
-﻿@inherits AntDesignTestBase
+﻿@using System.IO
+@using AngleSharp.Html.Dom
+@using AngleSharp.Io.Dom
+@inherits AntDesignTestBase
 @code {
     [Fact]
     public void Renders_basic_upload()
@@ -59,5 +62,22 @@
               <div class="ant-upload-list ant-upload-list-text">
               </div>
           </span>);
+    }
+
+    [Fact]
+    public async Task Handles_filenames_without_extension()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.UploadFile, _ => true).SetCanceled();
+        JSInterop.SetupVoid(JSInteropConstants.ClearFile, _ => true);
+
+        JSInterop.Setup<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _ => true).SetResult(new List<UploadFileItem> { new UploadFileItem { FileName = "test" } });
+
+        var cut = Context.Render(@<Upload>some content</Upload>);
+
+        var inputElement = ((AngleSharpWrappers.HtmlInputElementWrapper)cut.Find("input")).WrappedElement;
+        
+        Func<Task> act = () => inputElement.ChangeAsync(new ChangeEventArgs() { Value = "ignored" });
+        await act.Should().NotThrowAsync();
     }
 }

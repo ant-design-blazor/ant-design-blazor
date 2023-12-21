@@ -15,6 +15,58 @@ timeline: true
 
 ---
 
+### 0.16.3
+
+`2023-12-04`
+
+- Table
+  - 🛠 Refactor some internal components to render fragments, reducing allocation and avoid side effects cause by life cycle. [#3545](https://github.com/ant-design/ant-design/pull/3545) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the row clearing state after page index was changed in client resource mode. [#3546](https://github.com/ant-design/ant-design/pull/3546) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the data of row did't update after it's data source was changed. [#3544](https://github.com/ant-design/ant-design/pull/3544) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Select clear selectd option when the default value isn't in the options. [#3529](https://github.com/ant-design/ant-design/pull/3529) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree two-way binding for check/select/expand. [#3520](https://github.com/ant-design/ant-design/pull/3520) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed core enum name supports localization. [#3536](https://github.com/ant-design/ant-design/pull/3536) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Radio checked effect in ssr. [#3532](https://github.com/ant-design/ant-design/pull/3532) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Checkbox checked effect in ssr. [#3535](https://github.com/ant-design/ant-design/pull/3535) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.16.2
+
+`2023-11-17`
+
+- 🔥 update Blazor to .NET 8. [#3514](https://github.com/ant-design-blazor/ant-design-blazor/pull/3514) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 Add row grouping (experimental). [#3487](https://github.com/ant-design-blazor/ant-design-blazor/pull/3487) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor: rename RenderMode to RerenderStrategy. [#3515](https://github.com/ant-design-blazor/ant-design-blazor/pull/3515) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Refactor: reorganize the selection of rows. [#3502](https://github.com/ant-design-blazor/ant-design-blazor/pull/3502) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed setup RowKey EqualityComparer for caches. [#3483](https://github.com/ant-design-blazor/ant-design-blazor/pull/3483) [@ElderJames](https://github.com/ElderJames)
+  - 📖 docs: fix router paging demo. [#3507](https://github.com/ant-design-blazor/ant-design-blazor/pull/3507) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Select that selected value will be reset when ValidateOnChange is on. [#3508](https://github.com/ant-design-blazor/ant-design-blazor/pull/3508) [@ldsenow](https://github.com/ldsenow)
+- 🐞 Fixed TimePicker ArgumentOutOfRangeException with TiemOnly value. [#3501](https://github.com/ant-design-blazor/ant-design-blazor/pull/3501) [@Alexbits](https://github.com/Alexbits)
+- 🐞 Fixed TreeSelect value binding on datasource was changed. [#3492](https://github.com/ant-design-blazor/ant-design-blazor/pull/3492) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Datepicker that RangePicker focus not cleared. [#3488](https://github.com/ant-design-blazor/ant-design-blazor/pull/3488) [@Alexbits](https://github.com/Alexbits)
+
+
+#### Breaking Changes
+
+Because the `RowSelectable` duplicated the function of `Selection.Disabled` and did not use the disabled style, so it was removed. Please feel free to give us feedback if you have any suggestions.
+
+You can set the disabled parameter to achieve the same functionality.
+
+```diff
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
++        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <PropertyColumn Property="c=>c.Name">
+            <a>@context.Name</a>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age" />
+        <PropertyColumn Property="c=>c.Address" />
+    </Table>
+```
+
 ### 0.16.1
 
 `2023-10-30`

@@ -46,13 +46,13 @@
                             {
                                 <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
-                                        @colGroup((this, true))
-                                        @header(this)
+                                        @colGroup(this, true)
+                                        @header()
                                     </table>
                                 </div>
                                 <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
                                     <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
-                                        @colGroup((this, false))
+                                        @colGroup(this, false)
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
@@ -64,7 +64,7 @@
                                             </tr>
                                             @body(_showItems)
                                         </tbody>
-                                        @tfoot(this)
+                                        @tfoot()
                                     </table>
                                 </div>
                             }
@@ -72,8 +72,8 @@
                             {
                                 <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
                                     <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;" @ref="_tableRef">
-                                        @colGroup((this, true))
-                                        @header(this)
+                                        @colGroup(this, true)
+                                        @header()
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
@@ -85,7 +85,7 @@
                                             </tr>
                                             @body(_showItems)
                                         </tbody>
-                                        @tfoot(this)
+                                        @tfoot()
                                     </table>
                                 </div>
                             }
@@ -93,12 +93,12 @@
                             {
                                 <div class="ant-table-content">
                                     <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);" @ref="_tableRef">
-                                        @colGroup((this, true))
-                                        @header(this)
+                                        @colGroup(this, true)
+                                        @header()
                                         <tbody class="ant-table-tbody">
                                             @body( _showItems)
                                         </tbody>
-                                        @tfoot(this)
+                                        @tfoot()
                                     </table>
                                 </div>
                             }
@@ -134,26 +134,24 @@
 
 @code
 {
-    RenderFragment<Table<TItem>> header = table =>
-  @<Template>
-       @{
-            var headerRowAttributes = table.OnHeaderRow?.Invoke();
-        }
-        <thead class="ant-table-thead">
+    RenderFragment header()
+    {
+        var headerRowAttributes = OnHeaderRow?.Invoke();
+        return @<thead class="ant-table-thead">
             <CascadingValue Name="IsHeader" Value="true" IsFixed>
-                <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
-                    <CascadingValue Value="table._hasFixRight" Name="AntDesign.TableRow.HasFixRight">
-                        <CascadingValue Value="table.ScrollY" Name="AntDesign.TableRow.ScrollY">
-                            @if (_fieldModel is not null)
+             <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
+                 <CascadingValue Value="_hasFixRight" Name="AntDesign.TableRow.HasFixRight">
+                     <CascadingValue Value="ScrollY" Name="AntDesign.TableRow.ScrollY">
+                         @if (_fieldModel is not null)
                             {
-                                @if (table.HeaderTemplate != null)
+                                @if (HeaderTemplate != null)
                                 {
-                                    @table.HeaderTemplate(_fieldModel)
+                                    @HeaderTemplate(_fieldModel)
                                 }
                                 else
                                 {
                                     <TableRow>
-                                        @table.ChildContent(_fieldModel)
+                                        @ChildContent(_fieldModel)
                                     </TableRow>
                                 }
                             }
@@ -161,16 +159,12 @@
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
-        </thead>
-    </Template>;
+        </thead>;
+    }
 
-RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
-  @<Template>
-            @{
-        var table = ctx.table;
-        var header = ctx.header;
-            }
-            <colgroup>
+    static RenderFragment colGroup(Table<TItem> table, bool header)
+    {
+        return @<colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                 @if (_fieldModel is not null)
                 {
@@ -178,12 +172,12 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                 }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
-        {
+                {
                     <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
-        }
-            </colgroup>
-  </Template>
-        ;
+                }
+            </colgroup>;
+    }
+     
 
     RenderFragment body(IEnumerable<TItem> showItems, RowData<TItem> parentRowData = null)
     {
@@ -239,11 +233,8 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
         }
         else if (_groupedColumns.Count>0 && level==0)
         {
-            return@<ForeachLoop
-                TItem="RowData<TItem>"
-                Items="_groups.Select((data,index)=> GetGroupRowData(data,index,level, parentRowData?.Children ))"
-                ChildContent="bodyRow()"></ForeachLoop>;
-
+            return _groups.Select((data, index) => GetGroupRowData(data, index, level, parentRowData?.Children))
+                .ForeachLoop(bodyRow());
         }
 #if NET5_0_OR_GREATER
         else if (EnableVirtualization)
@@ -258,13 +249,9 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
         else
         {
             { @*Build will fail without this block*@ }
-            return 
-            @<ForeachLoop TItem="RowData<TItem>"
-                 Items="showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children))"
-                 ChildContent="bodyRow()" />;
+            return showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children))
+                .ForeachLoop(bodyRow());
         }
-
-        return builder => { };
     }
 
     RenderFragment<RowData<TItem>> bodyRow()
@@ -315,25 +302,27 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                     </tr>
                 }
             }
-        </TableRowWrapper>
-    ;
+            </TableRowWrapper>;
         };
     }
-  
 
-    RenderFragment<Table<TItem>> tfoot = table =>@<Template>
-            @if (table._summaryRows?.Any() == true)
+
+    RenderFragment tfoot()
     {
-                <CascadingValue Value="true" Name="IsSummary" IsFixed>
-                    <tfoot class="ant-table-summary">
-                        @foreach (var row in table._summaryRows)
-                {
+        @if (_summaryRows?.Any() == true)
+        {
+            return@<CascadingValue Value="true" Name="IsSummary" IsFixed>
+                 <tfoot class="ant-table-summary">
+                     @foreach (var row in _summaryRows)
+                        {
                             <tr>
                                 @row.ChildContent
                             </tr>
-                }
+                        }
                     </tfoot>
-                </CascadingValue>
+                </CascadingValue>;
+        }
+
+        return builder => { };
     }
-  </Template>;
 }

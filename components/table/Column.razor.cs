@@ -12,6 +12,8 @@ using System.Text.Json;
 using AntDesign.Core.Helpers;
 using AntDesign.Filters;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -547,16 +549,39 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
-        private async Task FilterDropdownOnVisibleChange(bool visible)
+        private void FilterDropdownOnVisibleChange(bool visible)
         {
 #if NET5_0_OR_GREATER
             if (!visible ||
                 _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
                 baseDomComponent.Ref.Context == null) return;
 
-            // implicit wait for component rendering
-            await Task.Delay(150);
-            await baseDomComponent.Ref.FocusAsync();
+            _ = Task.Run(async () =>
+            {
+                var filterInputFocused = false;
+                var attemptCount = 0;
+
+                do
+                {
+                    await Task.Delay(50);
+                    try
+                    {
+                        await Js.FocusAsync(baseDomComponent.Ref, FocusBehavior.FocusAtLast);
+                        await Task.Delay(50);
+                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Ref.Id;
+                    }
+                    catch (JSException jsex)
+                    {
+                        Console.WriteLine(jsex.ToString());
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+
+                } while (!filterInputFocused || attemptCount++ >= 3);
+            });
 #endif
         }
     }

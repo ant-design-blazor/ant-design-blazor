@@ -39,7 +39,7 @@ namespace AntDesign
         private int _parametersHashCode;
 
         [Parameter]
-        public RenderMode RenderMode { get; set; } = RenderMode.Always;
+        public RerenderStrategy RerenderStrategy { get; set; } = RerenderStrategy.Always;
 
         [Parameter]
         public IEnumerable<TItem> DataSource
@@ -654,6 +654,8 @@ namespace AntDesign
                 if (_hasInitialized)
                 {
                     _waitingDataSourceReload = false;
+
+                    FlushCache(); // clear the selection state after pages was changed outside
                     ReloadAndInvokeChange();
                 }
             }
@@ -671,7 +673,7 @@ namespace AntDesign
                 _shouldRender = false;
                 _preventRender = false;
             }
-            else if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            else if (this.RerenderStrategy == RerenderStrategy.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
                 this._shouldRender = this._parametersHashCode != hashCode;

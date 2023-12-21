@@ -15,6 +15,55 @@ timeline: true
 
 ---
 
+### 0.16.3
+
+`2023-12-04`
+
+- Table
+  - 🛠 重构 Table 将一些内部组件改为渲染片段。[#3545](https://github.com/ant-design/ant-design/pull/3545) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在客户端模式翻页不清除已选行的问题。[#3546](https://github.com/ant-design/ant-design/pull/3546) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在使用RowKey后不会立即刷新单元格的问题。[#3544](https://github.com/ant-design/ant-design/pull/3544) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 当默认绑定值不在DataSource中时，应清空选项。[#3529](https://github.com/ant-design/ant-design/pull/3529) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 勾选、选中、展开状态的双向绑定。[#3520](https://github.com/ant-design/ant-design/pull/3520) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 核心 枚举从 DisplayAttribute 获取名称支持本地化。 [#3536](https://github.com/ant-design/ant-design/pull/3536) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Radio 静态渲染时的选中样式。[#3532](https://github.com/ant-design/ant-design/pull/3532) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Checkbox 静态渲染时的选中样式。[#3535](https://github.com/ant-design/ant-design/pull/3535) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.16.2
+
+`2023-11-17`
+
+- 🔥 更新 .NET 8 依赖库。[#3514](https://github.com/ant-design-blazor/ant-design-blazor/pull/3514) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 新增 Table 行分组（实验性）。[#3487](https://github.com/ant-design-blazor/ant-design-blazor/pull/3487) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 Table 把 RenderMode t重命名为 RerenderStrategy。[#3515](https://github.com/ant-design-blazor/ant-design-blazor/pull/3515) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 行选择的多个问题。[#3502](https://github.com/ant-design-blazor/ant-design-blazor/pull/3502) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 设置 RowKey 用于行缓存的数据比较器。[#3483](https://github.com/ant-design-blazor/ant-design-blazor/pull/3483) [@ElderJames](https://github.com/ElderJames)
+  - 📖 修复 文档中路由翻页的demo。[#3507](https://github.com/ant-design-blazor/ant-design-blazor/pull/3507) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 在被封装并在设置了 ValidateOnChange 的Form中时，已选项会被重置的问题。[#3508](https://github.com/ant-design-blazor/ant-design-blazor/pull/3508) [@ldsenow](https://github.com/ldsenow)
+- 🐞 修复 TimePicker 设置了 TiemOnly 类型值时，修改时间时的 ArgumentOutOfRangeException 异常。[#3501](https://github.com/ant-design-blazor/ant-design-blazor/pull/3501) [@Alexbits](https://github.com/Alexbits)
+- 🐞 修复 TreeSelect 当数据源变更时恢复绑定项。[#3492](https://github.com/ant-design-blazor/ant-design-blazor/pull/3492) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 RangePicker 焦点样式不清除和Tab/Enter按键会清除选中值的问题 。[#3488](https://github.com/ant-design-blazor/ant-design-blazor/pull/3488) [@Alexbits](https://github.com/Alexbits)
+
+#### 破环性更新
+
+由于 Table 的 `RowSelectable` 属性跟 `Selection.Disabled`功能重复，并且又没有禁用样式，所以在这个版本中去除。请使用 Disabled 来实现行选择禁用。
+
+```diff
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
++        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <PropertyColumn Property="c=>c.Name">
+            <a>@context.Name</a>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age" />
+        <PropertyColumn Property="c=>c.Address" />
+    </Table>
+```
+
 ### 0.16.1
 
 `2023-10-30`

@@ -10,7 +10,7 @@
     <title>Ant Design of Blazor</title>
     <base href="~/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="@("https://unpkg.com/@docsearch/css@3.0.0/dist/style.css")" />
+    <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
     <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
     <script src="@("https://unpkg.com/@antv/g2plot@latest/dist/g2plot.js")"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
@@ -20,7 +20,7 @@
         <component type="typeof(App)" render-mode="ServerPrerendered"/>
     </app>
 
-    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
@@ -33,7 +33,7 @@
             Prism.highlightAll();
         }
     </script>
-     <script src=@("https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js")></script>
+     <script src=@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>
 </html>
