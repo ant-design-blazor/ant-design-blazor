@@ -102,6 +102,20 @@
     }
 
     [Fact]
+    public void TextArea_Rows_creates_attribute()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Rows="1" Value="@("0123456789")" />);
+        //Act
+        var textAreaElement = cut.Find("textarea");
+        //Assert
+        textAreaElement.GetAttribute("rows").Should().Be("1");
+    }
+
+    [Fact]
     public void TextArea_MaxLength_Adds_Attribute_To_Textarea()
     {
         JSCommonMock();
