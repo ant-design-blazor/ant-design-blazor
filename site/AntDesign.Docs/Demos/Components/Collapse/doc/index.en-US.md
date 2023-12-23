@@ -22,6 +22,7 @@ A content area which can be collapsed and expanded.
 | `Accordion`          | Accordion mode           | `boolean`           | `false` |
 | `Bordered`           | Set border style         | `boolean`           | `true`  |
 | `ExpandIconPosition` | Set expand icon position | `'left' \| 'right'` | `left`  |
+| `Animation`          | Whether enable the animation | `boolean` | `false` |
 
 ### Panel
 
