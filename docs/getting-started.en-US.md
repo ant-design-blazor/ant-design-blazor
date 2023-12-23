@@ -61,17 +61,6 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### Import Styles
-
-#### Use styles and JS
-
-- Import the styles and script in `wwwroot/index.html`
-
-  ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-  ```
-
 - Add namespace in `_Imports.razor`
 
   ```csharp
