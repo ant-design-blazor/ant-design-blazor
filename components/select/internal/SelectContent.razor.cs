@@ -423,11 +423,6 @@ namespace AntDesign.Select.Internal
             }
         }
 
-        private async Task OnClearClickAsync(MouseEventArgs args)
-        {
-            await OnClearClick.InvokeAsync(args);
-        }
-
         private async Task RemoveClicked(MouseEventArgs e, SelectOptionItem<TItemValue, TItem> selectedOption)
         {
             if (e.Button == 0)
