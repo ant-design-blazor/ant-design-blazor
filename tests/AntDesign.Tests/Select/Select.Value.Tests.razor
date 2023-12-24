@@ -261,7 +261,7 @@
 
     #if NET6_0_OR_GREATER
     [Fact]
-    public void Work_With_ValueProperty_and_LabelProperty()
+    public async Task Work_With_ValueProperty_and_LabelProperty()
     {
         JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
         JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
@@ -289,8 +289,8 @@
         var items = cut.FindAll(".ant-select-item");
         var defaultSelection = cut.Find(".ant-select-selection-item").TextContent.Trim();
         
-        var arrow = cut.Find("span.ant-select-arrow");
-        arrow.Click();
+        var overlay = cut.FindComponent<AntDesign.Internal.OverlayTrigger>();
+        await cut.InvokeAsync(() => overlay.Instance.Show());
 
         cut.FindAll(".ant-select-item-option")[1].Click();
         cut.WaitForState(() => value == 2);
