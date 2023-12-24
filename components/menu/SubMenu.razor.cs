@@ -204,7 +204,11 @@ namespace AntDesign
         public void Close()
         {
             IsOpen = false;
-            HandleCollapse();
+
+            if (RootMenu.Animation)
+            {
+                HandleCollapse();
+            }
         }
 
         public void Open()
@@ -215,7 +219,11 @@ namespace AntDesign
             }
 
             IsOpen = true;
-            HandleExpand();
+
+            if (RootMenu.Animation)
+            {
+                HandleExpand();
+            }
 
             Parent?.Open();
         }
