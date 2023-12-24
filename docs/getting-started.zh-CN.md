@@ -16,7 +16,7 @@ Ant Design of Blazor 致力于提供给程序员**愉悦**的开发体验。
 
 ### 创建一个 Blazor WebAssembly 项目
 
-> 在创建项目之前，请确保 `.NET Core SDK 3.1.300+` 已被成功安装。
+> 在创建项目之前，请确保 `.NET Core SDK 8.0.100+` 已被成功安装。
 
 执行以下命令，`dotnet cli` 会在当前目录下新建一个名称为 `PROJECT-NAME` 的文件夹，并自动安装好相应依赖。
 
@@ -59,26 +59,31 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### 引入样式
-
-#### 使用样式与脚本
-
-在 `wwwroot/index.html` 中引入了
-
-```html
-<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-```
-
 - 在 `_Imports.razor` 中加入命名空间
 
   ```
   @using AntDesign
   ```
 
-然后在 Razor 模板中使用：
+- 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
+
+  ```
+  <Router AppAssembly="@typeof(MainLayout).Assembly">
+      <Found Context="routeData">
+          <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
+      </Found>
+      <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+              <Result Status="404" />
+          </LayoutView>
+      </NotFound>
+  </Router>
+
+  <AntContainer />   <-- 在这里添加 ✨
+  ```
+
+- 最后就可以在`.razor`组件中引用啦！
 
 ```html
 <Button Type="primary">Primary</Button>
 ```
-

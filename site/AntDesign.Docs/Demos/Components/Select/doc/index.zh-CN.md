@@ -46,6 +46,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |
 | Loading | 显示加载指示器。 必须编写加载逻辑. | bool | false |  |
+| ListboxStyle | 自定义下拉列表样式 | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
 | MaxTagPlaceholder | 隐藏 tag 时显示的内容.如果与 ResponsiveTag.Responsive 一起使用，请实现处理逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | 最大显示的 tag 文本长度. | int | - |  |

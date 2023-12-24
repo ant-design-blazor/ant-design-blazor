@@ -16,7 +16,7 @@
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowSelectable="@(x => x.Name!="Disabled User")">
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
         <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
@@ -25,7 +25,6 @@
         <PropertyColumn Property="c=>c.Address" />
     </Table>
 </div>
-
 
 @code {
 
@@ -73,8 +72,6 @@
 
     protected override void OnInitialized()
     {
-        selectedRows = data[..1]; // default selected
-        base.OnInitialized();
     }
 
     public void RemoveSelection(string key)

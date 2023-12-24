@@ -452,6 +452,8 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
+            ChangeValue(true);
+
             if (OnBlur.HasDelegate)
             {
                 await OnBlur.InvokeAsync(e);
@@ -544,7 +546,7 @@ namespace AntDesign
                 return;
             }
 
-            if (!_compositionInputting)
+            if (!_compositionInputting && CurrentValueAsString != _inputString)
             {
                 CurrentValueAsString = _inputString;
             }
@@ -703,7 +705,7 @@ namespace AntDesign
 
             if (FormItem?.IsRequiredByValidation ?? false)
             {
-                builder.AddAttribute(65, "required", "required");
+                builder.AddAttribute(65, "aria-required", true);
             }
 
             // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,6 +30,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Visible { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
 #pragma warning restore 1591
 
@@ -228,6 +232,10 @@ namespace AntDesign
             {
                 return;
             }
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(false);
+            }
             if (Config.OnCancel != null)
             {
                 await Config.OnCancel.Invoke(null);
@@ -329,11 +337,17 @@ namespace AntDesign
             {
                 _hasShow = false;
 
+                if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+
                 _maskAnimationClsName = ModalAnimation.MaskLeave;
                 _modalAnimationClsName = ModalAnimation.ModalLeave;
                 await Task.Delay(200);
                 _wrapStyle = "display: none;";
                 _maskHideClsName = "ant-modal-mask-hidden";
+
                 await InvokeStateHasChangedAsync();
                 if (Config.OnClosed != null)
                 {
@@ -364,9 +378,15 @@ namespace AntDesign
 
         private string GetModalClsName()
         {
-            var clsName = Config.ClassName;
-            return clsName + _modalAnimationClsName
-                + (Status == ModalStatus.Max ? " ant-modal-max" : "");
+            var clsList = new List<string>()
+            {
+                Config.ClassName,
+                _modalAnimationClsName,
+                Status == ModalStatus.Max ? "ant-modal-max" : "",
+                Class
+            };
+
+            return string.Join(" ", clsList.Where(x => !string.IsNullOrWhiteSpace(x)));
         }
 
         #endregion build element's class name

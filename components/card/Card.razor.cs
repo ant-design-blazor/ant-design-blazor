@@ -88,7 +88,7 @@ namespace AntDesign
         internal void SetBody(RenderFragment body)
         {
             this.Body = body;
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         internal void AddCardAction(CardAction action)

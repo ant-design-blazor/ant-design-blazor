@@ -19,7 +19,7 @@ namespace AntDesign.Core.Reflection
         {
             this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
             this.DisplayName = propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
-                propertyInfo?.GetCustomAttribute<DisplayAttribute>(true)?.Name;
+                propertyInfo?.GetCustomAttribute<DisplayAttribute>(true)?.GetName();
 
             this.PropertyName = propertyInfo?.Name;
         }

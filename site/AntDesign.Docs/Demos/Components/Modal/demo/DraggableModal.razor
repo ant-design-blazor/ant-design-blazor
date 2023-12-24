@@ -13,7 +13,7 @@
 </Space>
 
 <Modal Title="@("DraggableModal")"
-       Visible="@_visible1"
+       @bind-Visible="@_visible1"
        OnOk="(e)=>{_visible1 = false;}"
        Draggable="@(true)"
        OnCancel="(e)=>{_visible1 = false;}">
@@ -23,7 +23,7 @@
 </Modal>
 
 <Modal Title="@("DraggableModal")"
-       Visible="@_visible2"
+       @bind-Visible="@_visible2"
        OnOk="(e)=>{_visible2 = false;}"
        Draggable="@(true)"
        DragInViewport="@(false)"

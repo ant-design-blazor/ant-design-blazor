@@ -23,6 +23,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg
 | `Accordion`          | 是否每次只打开一个tab | `boolean`           | `false` |
 | `Bordered`           | 是否有边框            | `boolean`           | `true`  |
 | `ExpandIconPosition` | 设置图标位置          | `'left' \| 'right'` | `left`  |
+| `Animation`          | 是否开启动画          | `boolean` | `false` |
 
 ### Panel
 

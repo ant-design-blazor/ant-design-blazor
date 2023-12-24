@@ -51,6 +51,22 @@
         attribute.Should().Be($"{value.Length}");
     }
 
+    //Check wrapper marks as disabled when TextArea disabled state
+    [Fact]
+    public void TextArea_Wrapper_Disabled()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        .SetResult(_textAreaInfo);
+        string value = "0123456789";
+        var cut = Render(@<AntDesign.TextArea ShowCount Value=@value Disabled/>);
+        //Act
+        var span= cut.Find("span");
+        //Assert
+        span.ClassList.Should().Contain("ant-input-affix-wrapper-disabled");
+    }
+
     [Fact]
     public void TextArea_ShowCount_increase()
     {
@@ -83,6 +99,20 @@
         var textAreaElement = cut.Find("textarea");
         //Assert
         textAreaElement.HasAttribute("readonly");
+    }
+
+    [Fact]
+    public void TextArea_Rows_creates_attribute()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Rows="1" Value="@("0123456789")" />);
+        //Act
+        var textAreaElement = cut.Find("textarea");
+        //Assert
+        textAreaElement.GetAttribute("rows").Should().Be("1");
     }
 
     [Fact]

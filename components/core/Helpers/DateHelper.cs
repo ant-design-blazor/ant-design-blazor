@@ -164,7 +164,7 @@ namespace AntDesign
             var daysInMonth = DateTime.DaysInMonth(yearValue, monthValue);
             dayValue = dayValue > daysInMonth ? daysInMonth : dayValue;
 
-            return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second);
+            return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second, date.Kind);
         }
 
         public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)

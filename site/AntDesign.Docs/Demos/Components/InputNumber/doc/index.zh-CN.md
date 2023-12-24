@@ -34,6 +34,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg
 | Step | 每次改变步数，可以为小数                            | double        | -         |
 | Value            |当前值 | string  | -         |
 | ValueChanged |输入框内容变化时的回调                     | function(double)        | -        |
-
+| MaxLength | 输入框最大长度 | int | - |
 
 

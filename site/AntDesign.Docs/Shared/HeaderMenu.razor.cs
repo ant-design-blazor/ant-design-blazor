@@ -46,14 +46,14 @@ namespace AntDesign.Docs.Shared
         {
             if (firstRender)
             {
-                await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
+                await JsInterop.InvokeVoidAsync("window.DocSearch.init", CurrentLanguage);
             }
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
             _menuItems = await DemoService.GetMenuAsync();
-            await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", culture.Name);
+            await JsInterop.InvokeVoidAsync("window.DocSearch.init", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 

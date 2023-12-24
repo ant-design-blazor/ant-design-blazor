@@ -1,4 +1,5 @@
 ﻿@using System.Text.RegularExpressions
+@using System.Globalization
 @inherits AntDesignTestBase
 @code {
 
@@ -57,7 +58,7 @@
 
         var bindValue = 0d;
         var cut = Render<AntDesign.InputNumber<double>>(
-        @<AntDesign.InputNumber @ref="@input" Precision="@precision" @bind-Value="bindValue" />
+        @<AntDesign.InputNumber @ref="@input" Precision="@precision" @bind-Value="bindValue" CultureInfo="CultureInfo.InvariantCulture" />
     );
         //Act
         var inputElement = cut.Find("input");
@@ -66,6 +67,6 @@
 
         //Assert
         inputElement.GetAttribute("value").Should().Be($"{expected}");
-        bindValue.Should().Equals(double.Parse(expected));
+        bindValue.Should().Equals(double.Parse(expected, CultureInfo.InvariantCulture));
     }
 }

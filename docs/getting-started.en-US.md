@@ -61,13 +61,31 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### Import Styles
+- Add namespace in `_Imports.razor`
 
-#### Use styles and JS
+  ```csharp
+  @using AntDesign
+  ```
 
-Import the styles and script in `wwwroot/index.html`
+- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`. 
 
-```html
-<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-```
+  ```
+  <Router AppAssembly="@typeof(MainLayout).Assembly">
+      <Found Context="routeData">
+          <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
+      </Found>
+      <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+              <Result Status="404" />
+          </LayoutView>
+      </NotFound>
+  </Router>
+
+  <AntContainer />   <-- add this component ✨
+  ```
+
+- Finally, it can be referenced in the `.razor' component!
+
+  ```html
+  <Button Type="primary">Hello World!</Button>
+  ```
