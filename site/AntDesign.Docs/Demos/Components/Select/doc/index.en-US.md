@@ -33,6 +33,7 @@ Select component to select value from options.
 | DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
 | Disabled | Whether the Select component is disabled. | bool | false |  |
 | DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
+| DisabledPredicate | Specifies predicate for disabled options |  -  |  -  |
 | DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
@@ -45,6 +46,7 @@ Select component to select value from options.
 | LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
+| LabelProperty | Specifies the label property in the option object. | Func<TItem, string> | - |
 | Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
 | ListboxStyle | custom listbox styles | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
@@ -83,6 +85,7 @@ Select component to select value from options.
 | ValuesChanged | Used for the two-way binding. | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
 | ValueName | The name of the property to be used for the value. | string | - |  |
 | ValueOnClear | When Clear button is pressed, Value will be set to whatever is set in ValueOnClear. | TItemValue | - | 0.11 |
+| ValueProperty | Specifies the value property in the option object. | Func<TItem, TItemValue> | - |
 
 ### SelectOption props
 
@@ -92,3 +95,4 @@ Select component to select value from options.
 | Disabled  | Disable this option                                 | Boolean        | false  |      |
 | Label     | Label of Select after selecting this Option | string         | -      |      |
 | Value     | Value of Select after selecting this Option | TItemValue          | -      |      |
+| Item      | Item of the option                          | TItem          |  -  |    |

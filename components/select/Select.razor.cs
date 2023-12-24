@@ -18,6 +18,11 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+    [CascadingTypeParameter(nameof(TItemValue))]
+#endif
+
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
         #region Parameters
@@ -310,14 +315,19 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// the option label getter delegate, if use this property, should not use <see cref="LabelName"/>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
         /// </summary>
-        [Parameter] public Func<TItem, string> OptionLabelProperty { get => _getLabel; set => _getLabel = value; }
-        /// <summary>
-        /// the option value getter delegate, if use this property, should not use <see cref="ValueName"/>
-        /// </summary>
-        [Parameter] public Func<TItem, TItemValue> OptionValueProperty { get => _getValue; set => _getValue = value; }
+        [Parameter] public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
 
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// Specifies predicate for disabled options
+        /// </summary>
+        [Parameter] public Func<TItem, bool> DisabledPredicate { get => _getDisabled; set => _getDisabled = value; }
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
         /// </summary>
@@ -411,7 +421,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && OptionValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -667,7 +677,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = OptionValueProperty == null ? (TItemValue)(object)item : OptionValueProperty(item);
+                TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -686,7 +696,7 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = OptionLabelProperty == null ? GetLabel(item) : OptionLabelProperty(item);
+                var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
 
                 bool isSelected = false;
                 if (processedSelectedCount > 0)
@@ -697,7 +707,7 @@ namespace AntDesign
                         isSelected = _selectedValues.Contains(value);
                 }
 
-                if (!string.IsNullOrWhiteSpace(DisabledName))
+                if (_getDisabled != default)
                     disabled = _getDisabled(item);
 
                 if (!string.IsNullOrWhiteSpace(GroupName))

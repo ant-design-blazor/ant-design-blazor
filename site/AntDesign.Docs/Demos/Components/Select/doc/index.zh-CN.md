@@ -33,6 +33,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | DefaultValues | 当`Mode = multiple` \| `tags` - 在初始化期间和在表单中按下重置按钮时使用这些值. | IEnumerable&lt;TItemValues> | - |  |
 | Disabled | 是否禁用 | bool | false |  |
 | DisabledName | 用作禁用指示器的属性名称. | string |  |  |
+| DisabledPredicate | 指定禁用选项的判断条件 |  -  |  -  |
 | DropdownMatchSelectWidth |  将匹配下拉宽度： <br/>- for boolean: `true` - 下拉列表中最宽的项目 <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | 不允许下拉菜单的宽度超过此处的值（例如“768px”）. | string | "auto" |  |
 | DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
@@ -45,6 +46,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | LabelInValue | 是否在 value 中嵌入标签，将 value 的格式从 `TItemValue` 转换为 string (JSON) e.g. { "value": `TItemValue`, "label": "`标签值`" } | bool | false |  |
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |
+| LabelProperty | 指定 option 对象的 label属性 | `Func<TItem, string>` | - |
 | Loading | 显示加载指示器。 必须编写加载逻辑. | bool | false |  |
 | ListboxStyle | 自定义下拉列表样式 | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
@@ -83,12 +85,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | ValuesChanged | 用于双向绑定(多选). | EventCallback&lt;IEnumerable&lt;TItemValue>> | - |  |
 | ValueName | 用于值的属性的名称. | string | - |  |
 | ValueOnClear | 按下清除按钮时，值将设置为 ValueOnClear 中设置的值. | TItemValue | - | 0.11 |
+| ValueProperty | 指定 option 对象的 value 属性. | `Func<TItem, TItemValue>` | - |
 
 ### SelectOption props
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| Class | Option 器类名                  | string          | -      |      |
-| Disabled  | 是否禁用                                 | Boolean        | false  |      |
-| Label     |选择此选项后选择的标签内容 | string         | -      |      |
-| Value     |选择此选项后的 Select 值| TItemValue          | -      |      |
+| Class | Option 类名                  | string          | -      |      |
+| Disabled  | 是否禁用                     | Boolean        | false  |      |
+| Label     | 选择此选项后选择的标签内容    | string         | -      |      |
+| Value     | 选择此选项后的 Select 值    | TItemValue          | -      |      |
+| Item      | option 对象                | TItem          |  -  |    |

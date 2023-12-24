@@ -1,5 +1,7 @@
-﻿@inherits AntDesignTestBase
+﻿@using AntDesign.Core.JsInterop.Modules.Components;
+@inherits AntDesignTestBase
 @code {
+
     record Person(int Id, string Name);
     public record PersonNullable(string? Id, string Name);
     class PersonClass 
@@ -298,7 +300,8 @@
                         <SelectOption TItemValue="string?" TItem="string" Value="@item.Id" Label="@item.Name" />
                     }
                 </SelectOptions>
-        </AntDesign.Select>);
+        </AntDesign.Select>
+    );
         //Act
 
         //normally blazor would rerender and in Select.OnParametersSet() 
@@ -339,4 +342,47 @@
 
     }
 
+    #if NET6_0_OR_GREATER
+    [Fact]
+    public void Work_With_ValueProperty_and_LabelProperty()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+            .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition
+                {
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10,
+                    Top = 10,
+                    Placement = Placement.TopLeft,
+                    ZIndex = 100
+                });
+
+        Dictionary<string, int> dict = new()
+        {
+            ["Hello"] = 1,
+            ["World"] = 2,
+            ["Disabled"] = 3,
+        };
+        int value = 1;
+        var cut = Render<AntDesign.Select<int, KeyValuePair<string, int>>>(@<AntDesign.Select DataSource="@dict" LabelProperty="c=>c.Key" ValueProperty="c=>c.Value" @bind-Value="value" DisabledPredicate="@(c=> c.Key == "Disabled")" />);
+        cut.Render();
+        var items = cut.FindAll(".ant-select-item");
+        var defaultSelection = cut.Find(".ant-select-selection-item").TextContent.Trim();
+        
+        var arrow = cut.Find("span.ant-select-arrow");
+        arrow.Click();
+
+        cut.FindAll(".ant-select-item-option")[1].Click();
+        cut.WaitForState(() => value == 2);
+
+        defaultSelection.Should().Be("Hello");
+        value.Should().Be(2);
+        
+        items.Count.Should().Be(3);
+        items[2].ClassList.Should().Contain("ant-select-item-option-disabled");
+    }
+    #endif
 }
