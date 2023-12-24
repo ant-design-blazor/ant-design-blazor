@@ -423,7 +423,7 @@ namespace AntDesign.Internal
         /// </summary>
         /// <param name="args">MouseEventArgs</param>
         /// <returns></returns>
-        public virtual async Task OnClickDiv(MouseEventArgs args)
+        protected virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
             {
@@ -479,6 +479,10 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// on document mouse up
+        /// </summary>
+        /// <param name="element"></param>
         protected virtual void OnMouseUp(JsonElement element)
         {
             if (_mouseUpInOverlay)
@@ -491,10 +495,10 @@ namespace AntDesign.Internal
             {
                 if (OnMaskClick.HasDelegate)
                 {
-                    OnMaskClick.InvokeAsync(null);
+                    _ = OnMaskClick.InvokeAsync(null);
                 }
 
-                Hide();
+                _ = Hide();
             }
         }
 

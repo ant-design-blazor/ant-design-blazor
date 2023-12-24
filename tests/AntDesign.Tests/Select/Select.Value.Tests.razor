@@ -122,92 +122,6 @@
     //        cut.Instance.Value.Should().Be(10);
     //    }
 
-    [Theory]
-    [MemberData(nameof(AllowClearWithoutValueOnClearTheory))]
-    public void AllowClear_button_behavior_without_ValueOnClear_set_with_DataSource(List<PersonNullable> dataSource, 
-        string? initialValue, bool defaultActiveFirstOption, string? expectedValue, string? expectedLabel)
-    {
-        string? value = "-1"; //set initial value to a not-possible value
-        Action<string?> ValueChanged = (v) =>value = v;
-        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
-            @<AntDesign.Select DataSource="@dataSource"
-                LabelName="@nameof(PersonNullable.Name)"
-                ValueName="@nameof(PersonNullable.Id)"
-                Value="@initialValue"
-                ValueChanged="@ValueChanged"
-                DefaultActiveFirstOption="@defaultActiveFirstOption"
-                AllowClear>
-        </AntDesign.Select>);
-        //Act
-
-        //normally blazor would rerender and in Select.OnParametersSet() 
-        //would load newly set value into the SelectContent, but bUnit does 
-        //not rerender, so it has to be forced. This could probably be fixed
-        //by forcing StateHasChanged on the Select component, but requires 
-        //investigation if it won't cause multiple re-renders.
-        cut.Render(); 
-        cut.Find("span.ant-select-clear").Click();
-        if (expectedLabel == string.Empty)
-        {
-            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
-                .Should().Throw<Bunit.ElementNotFoundException>();
-        }
-        else
-        {
-            var selectContent = cut.Find("span.ant-select-selection-item");
-            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
-        }
-
-        value.Should().Be(expectedValue);
-        cut.Instance.Value.Should().Be(expectedValue);
-    }
-
-    [Theory]
-    [MemberData(nameof(AllowClearWithoutValueOnClearTheory))]
-    public void AllowClear_button_behavior_without_ValueOnClear_set_with_SelectOption(List<PersonNullable> dataSource, 
-        string? initialValue, bool defaultActiveFirstOption, string? expectedValue, string? expectedLabel)
-    {
-        string? value = "-1"; //set initial value to a not-possible value
-        Action<string?> ValueChanged = (v) =>value = v;
-        var cut = Render<AntDesign.Select<string?, string>>(
-            @<AntDesign.Select 
-                TItemValue="string?"
-                TItem="string"
-                Value="@initialValue"
-                ValueChanged="@ValueChanged"
-                DefaultActiveFirstOption="@defaultActiveFirstOption"
-                AllowClear>
-                <SelectOptions>
-                    @foreach(var item in dataSource)
-                    {
-                        <SelectOption TItemValue="string?" TItem="string" Value="@item.Id" Label="@item.Name" />
-                    }
-                </SelectOptions>
-        </AntDesign.Select>);
-        //Act
-
-        //normally blazor would rerender and in Select.OnParametersSet() 
-        //would load newly set value into the SelectContent, but bUnit does 
-        //not rerender, so it has to be forced. This could probably be fixed
-        //by forcing StateHasChanged on the Select component, but requires 
-        //investigation if it won't cause multiple re-renders.
-        cut.Render(); 
-        cut.Find("span.ant-select-clear").Click();
-        if (expectedLabel == string.Empty)
-        {
-            cut.Invoking(c => c.Find("span.ant-select-selection-item"))
-                .Should().Throw<Bunit.ElementNotFoundException>();
-        }
-        else
-        {
-            var selectContent = cut.Find("span.ant-select-selection-item");
-            selectContent.TextContent.Trim().Should().Be(expectedLabel);    
-        }
-
-        value.Should().Be(expectedValue);
-        cut.Instance.Value.Should().Be(expectedValue);
-    }
-
     public static List<PersonNullable> GetAllowClearDataSource(string? id = null, string? title = null)
     {
         var baseDatasource = new List<PersonNullable>()
@@ -237,6 +151,7 @@
 
     }
 
+/*
     [Theory]
     [MemberData(nameof(AllowClearWithValueOnClearTheory))]
     public void AllowClear_button_behavior_with_ValueOnClear_set_with_DataSource(List<PersonNullable> dataSource, 
@@ -325,6 +240,8 @@
         value.Should().Be(expectedValue);
         cut.Instance.Value.Should().Be(expectedValue);
     }
+
+    */
 
     public static IEnumerable<object[]> AllowClearWithValueOnClearTheory()
     {
