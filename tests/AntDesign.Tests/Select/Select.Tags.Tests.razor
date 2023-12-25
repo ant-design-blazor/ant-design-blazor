@@ -27,7 +27,7 @@
         var cut = Render<AntDesign.Select<string, string>>(
         @<AntDesign.Select Mode="tags"
 			TItemValue="string"
-			TItem="string"		
+			TItem="string"
 			EnableSearch>
 			<SelectOptions>						
 				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
@@ -38,13 +38,13 @@
         var input = cut.Find("input.ant-select-selection-search-input");        
         //Act
         await cut.InvokeAsync(() => input.Input("A"));
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null, TimeSpan.FromMilliseconds(250)));
         input.KeyUp("ENTER");
         input.Input("B");
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "B"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "B", TimeSpan.FromMilliseconds(250)));
         input.KeyUp("ENTER");
         input.Input("C");		
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "C"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "C", TimeSpan.FromMilliseconds(250)));
         input.KeyUp("ENTER");        
         //Assert
         var addedTags = cut.FindAll("span.ant-select-selection-item-content")
@@ -103,7 +103,7 @@
         var datasource = new List<string>();
 
         var systemUnderTest = Render<Select<string, string>>(
-            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch />
+            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
         );
 
         var input = systemUnderTest.Find("input.ant-select-selection-search-input");
