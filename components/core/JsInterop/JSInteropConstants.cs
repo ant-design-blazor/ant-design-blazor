@@ -300,5 +300,12 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "downloadHelper.";
             public static string TriggerFileDownload => $"{FUNC_PREFIX}triggerFileDownload";
         }
+
+        public static class WatermarkHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";
+
+            public static string GenerateBase64Url => $"{FUNC_PREFIX}generateBase64Url";
+        }
     }
 }

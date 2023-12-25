@@ -1,5 +1,6 @@
 ﻿@using AntDesign.TestApp.Client.Pages
 @inherits LayoutComponentBase
+@inject ReuseTabsService ReuseTabsService;
 
 <Layout Style="height: 100vh;">
     <Sider Collapsible Collapsed=@collapsed NoTrigger>
@@ -8,13 +9,17 @@
     </Sider>
     <Layout>
         <Header>
+            <Button Shape="@ButtonShape.Circle" Icon="@IconType.Outline.Reload" OnClick="Reload" />
             <LoginDisplay />
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </Header>
         <Content>
             <div>
-                <ReuseTabs Draggable Size="TabSize.Small" />
-            </div>
+                <ReuseTabs Draggable Size="TabSize.Small"/>
+             </div>
+        @*     <div>
+                 <ReusePages Reuse="false"></ReusePages>
+            </div> *@
         </Content>
         <Footer>Footer</Footer>
     </Layout>
@@ -29,9 +34,9 @@
         collapsed = !collapsed;
     }
 
-    protected override Task OnInitializedAsync()
+    public void Reload()
     {
-        return base.OnInitializedAsync();
+        ReuseTabsService.ReloadPage();
     }
 
 }

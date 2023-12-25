@@ -122,6 +122,9 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowCollapsedTooltip { get; set; } = true;
+       
+        [Parameter]
+        public bool Animation { get; set; }
 
         internal MenuMode InternalMode { get; private set; }
 

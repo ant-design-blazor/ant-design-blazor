@@ -104,4 +104,3 @@
     <InternalsVisibleTo Include="AntDesign.Tests" />
   </ItemGroup>
 </Project>
-

@@ -1,0 +1,73 @@
+﻿@inject ReuseTabsService ReuseTabsService;
+@inject NavigationManager NavigationManager;
+
+@implements IDisposable
+
+@namespace AntDesign
+@using Microsoft.AspNetCore.Components.Routing
+
+
+<CascadingValue Name="AntDesign.InReusePageContent" Value="true" IsFixed>
+
+    @foreach (var item in ReuseTabsService.Pages)
+    {
+        <div class="ant-reuse-tabs-content @Class" @key="item.Url" style="@(item.Url == ReuseTabsService.CurrentUrl? "": "display:none;") @Style">
+            @item.Body
+        </div>
+    }
+
+</CascadingValue>
+
+@code {
+    [CascadingParameter]
+    private RouteData RouteData { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.InReusePageContent")]
+    private bool InReusePageContent { get; set; }
+
+    [Parameter]
+    public bool Reuse { get; set; } = true;
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    [Parameter]
+    public string ActivedUri { get; set; }
+
+    [Parameter]
+
+    public EventCallback<string> ActivedUriChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (InReusePageContent)
+            return;
+        base.OnInitialized();
+        ReuseTabsService.Init(Reuse);
+        ReuseTabsService.TrySetRouteData(RouteData, Reuse);
+
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object o, LocationChangedEventArgs _)
+    {
+        ReuseTabsService.TrySetRouteData(RouteData, Reuse);
+
+        if (ActivedUriChanged.HasDelegate)
+        {
+            ActivedUriChanged.InvokeAsync(ReuseTabsService.CurrentUrl);
+        }
+
+        StateHasChanged();
+    }
+
+    protected override bool ShouldRender() => !InReusePageContent;
+}

@@ -24,6 +24,22 @@ namespace AntDesign
             _selection?.StateHasChanged();
         }
 
+        public void ExpandAll()
+        {
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(true);
+            }
+        }
+
+        public void CollapseAll()
+        {
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(false);
+            }
+        }
+
         private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
