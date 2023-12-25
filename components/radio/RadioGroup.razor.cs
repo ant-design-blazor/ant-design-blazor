@@ -34,7 +34,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public RadioButtonStyle ButtonStyle { get; set; } = RadioButtonStyle.Outline;
+        public RadioButtonStyle? ButtonStyle { get; set; }
 
         [Parameter]
         public string Name { get; set; }
@@ -55,6 +55,8 @@ namespace AntDesign
 
         [Parameter]
         public OneOf<string[], RadioOption<TValue>[]> Options { get; set; }
+
+        private bool IsButton => ButtonStyle.HasValue;
 
         private bool _disabled;
         private Action<bool> OnDisabledValueChanged { get; set; }
@@ -79,7 +81,7 @@ namespace AntDesign
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
-                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle]}", () => ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
+                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle.Value]}", () => ButtonStyle.HasValue && ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
