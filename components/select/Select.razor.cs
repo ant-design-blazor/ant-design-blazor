@@ -18,6 +18,11 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+    [CascadingTypeParameter(nameof(TItemValue))]
+#endif
+
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
         #region Parameters
@@ -310,6 +315,20 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
+
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// Specifies predicate for disabled options
+        /// </summary>
+        [Parameter] public Func<TItem, bool> DisabledPredicate { get => _getDisabled; set => _getDisabled = value; }
+        /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
         /// </summary>
         [Parameter]
@@ -402,7 +421,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -688,7 +707,7 @@ namespace AntDesign
                         isSelected = _selectedValues.Contains(value);
                 }
 
-                if (!string.IsNullOrWhiteSpace(DisabledName))
+                if (_getDisabled != default)
                     disabled = _getDisabled(item);
 
                 if (!string.IsNullOrWhiteSpace(GroupName))
