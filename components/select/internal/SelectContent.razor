@@ -26,7 +26,7 @@
                @onkeyup="OnKeyUp"
                @onkeydown="OnKeyDown"
                @attributes=@AdditonalAttributes()
-               @bind-value="@SearchValue"
+               value="@_inputString"
                id="@(ParentSelect.Id)_list"
                type="search"
                readonly="@(!ParentSelect.IsSearchEnabled)"
@@ -42,7 +42,7 @@
                accesskey="@ParentSelect?.AccessKey"
                style="@_inputStyle" />
         </span>
-        @if (ShowPlaceholder)
+        @if (!ParentSelect.HasValue && string.IsNullOrEmpty(_inputString))
         {
           <span class="@Prefix-selection-placeholder">@Placeholder</span>
         }

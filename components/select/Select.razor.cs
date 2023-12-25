@@ -1208,7 +1208,7 @@ namespace AntDesign
                 await TokenizeSearchedPhrase(_searchValue);
             }
 
-            if (!string.IsNullOrWhiteSpace(_searchValue))
+            if (!string.IsNullOrEmpty(_searchValue))
             {
                 FilterOptionItems(_searchValue);
             }

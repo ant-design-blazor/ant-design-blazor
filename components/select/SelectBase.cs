@@ -96,10 +96,10 @@ namespace AntDesign
 
         /// <summary>
         /// Delays the processing of the search input event until the user has stopped
-        /// typing for a predetermined amount of time
+        /// typing for a predetermined amount of time. Default to 250ms.
         /// </summary>
         [Parameter]
-        public int SearchDebounceMilliseconds { get; set; }
+        public int SearchDebounceMilliseconds { get; set; } = 250;
 
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
@@ -446,7 +446,7 @@ namespace AntDesign
         ///     Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
         /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
-        protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
+        //protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
 
         /// <summary>
         ///     The Method is called every time if the value of the @bind-Values was changed by the two-way binding.
