@@ -457,7 +457,7 @@ namespace AntDesign
         {
             if (string.IsNullOrWhiteSpace(_searchValue))
             {
-                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; });
+                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; m.Hidden = false; });
                 return;
             }
 
