@@ -264,6 +264,7 @@
     public async Task Work_With_ValueProperty_and_LabelProperty()
     {
         JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.scrollTo", _ => true);
         JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
         JSInterop
             .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
