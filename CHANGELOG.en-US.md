@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.17.1
+
+`2023-12-27`
+
+- 🐞 Fixed Table avoid duplicated row key. [#3594](https://github.com/ant-design-blazor/ant-design-blazor/pull/3594) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Select avoid selected item being set to 0 when the default value of TItem is 0. [#3595](https://github.com/ant-design-blazor/ant-design-blazor/pull/3595) [@ElderJames](https://github.com/ElderJames)
+- 💄 Add support for custom script/style import locations. [#3596](https://github.com/ant-design-blazor/ant-design-blazor/pull/3596) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.0
 
 `2023-12-25`
