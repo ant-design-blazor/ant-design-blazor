@@ -258,7 +258,7 @@
     {
         return currentRowData =>
         {
-            return @<TableRowWrapper RowData="currentRowData" @key="GetHashCode(currentRowData.Data)">
+            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.RowIndex">
             @{
                 var currentDataItem = currentRowData.DataItem;
                 var rowAttributes = OnRow?.Invoke(currentRowData);
