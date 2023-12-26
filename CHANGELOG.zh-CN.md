@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.17.1
+
+`2023-12-27`
+
+- 🐞 修复 Table 避免 key 重复异常。[#3594](https://github.com/ant-design-blazor/ant-design-blazor/pull/3594) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 避免非可空的 ITem 默认值为 0 导致默认选中0。[#3595](https://github.com/ant-design-blazor/ant-design-blazor/pull/3595) [@ElderJames](https://github.com/ElderJames)
+- 💄 优化 脚本/样式导入支持指定位置。[#3596](https://github.com/ant-design-blazor/ant-design-blazor/pull/3596) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.0
 
 `2023-12-25`
