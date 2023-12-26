@@ -10,8 +10,9 @@
   <base href="~/" />
   <link rel="icon" href="logo.png" type="image/x-icon">
   <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-    <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
+  <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
+  <link antblazor-css />
   <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -55,7 +56,7 @@
   {
     <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
   }
-
+  <script antblazor-js></script>
   <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

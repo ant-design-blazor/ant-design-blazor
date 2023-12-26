@@ -28,6 +28,7 @@
         @<AntDesign.Select Mode="tags"
 			TItemValue="string"
 			TItem="string"
+            SearchDebounceMilliseconds="0"
 			EnableSearch>
 			<SelectOptions>						
 				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
@@ -38,13 +39,13 @@
         var input = cut.Find("input.ant-select-selection-search-input");        
         //Act
         await cut.InvokeAsync(() => input.Input("A"));
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null, TimeSpan.FromMilliseconds(250)));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null));
         input.KeyUp("ENTER");
         input.Input("B");
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "B", TimeSpan.FromMilliseconds(250)));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "B"));
         input.KeyUp("ENTER");
         input.Input("C");		
-        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "C", TimeSpan.FromMilliseconds(250)));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption.Value == "C"));
         input.KeyUp("ENTER");        
         //Assert
         var addedTags = cut.FindAll("span.ant-select-selection-item-content")

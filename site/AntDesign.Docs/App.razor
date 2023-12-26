@@ -5,27 +5,10 @@
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                @if (Result != null)
-                {
-                    @Result
-                }
+                <Result Status="404" />
             </LayoutView>
         </NotFound>
     </ConventionRouter>
     
     <AntContainer />
 </ConfigProvider>
-
-@code{
-
-    RenderFragment Result;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await Task.Delay(2000);
-
-        Result = @<Result Status="404"/>;
-    }
-
-}
