@@ -69,7 +69,20 @@ namespace AntDesign
         /// Item of the SelectOption
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
-        [Parameter] public TItem Item { get; set; }
+
+        private bool _itemSet;
+        private TItem _item;
+
+        [Parameter]
+        public TItem Item
+        {
+            get => _item;
+            set
+            {
+                _item = value;
+                _itemSet = true;
+            }
+        }
         #endregion
 
         # region Properties
@@ -200,7 +213,7 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = Item ?? THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
+                    Item = _itemSet ? Item : THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
                     ChildComponent = this
                 };
 
