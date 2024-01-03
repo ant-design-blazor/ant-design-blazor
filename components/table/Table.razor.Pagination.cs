@@ -116,8 +116,6 @@ namespace AntDesign
 
         private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
-            FlushCache();
-
             _pageIndex = args.Page;
 
             if (PageIndexChanged.HasDelegate)
