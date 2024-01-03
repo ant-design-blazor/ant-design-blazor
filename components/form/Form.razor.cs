@@ -78,6 +78,9 @@ namespace AntDesign
         public string Name { get; set; }
 
         [Parameter]
+        public string Method { get; set; } = "get";
+
+        [Parameter]
         public TModel Model
         {
             get { return _model; }
