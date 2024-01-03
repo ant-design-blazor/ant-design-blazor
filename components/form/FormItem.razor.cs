@@ -31,6 +31,9 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         private IFormItem ParentFormItem { get; set; }
 
+        [Parameter]
+        public string DataIndex { get; set; }
+        
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 

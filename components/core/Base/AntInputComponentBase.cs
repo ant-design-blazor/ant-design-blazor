@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -23,6 +24,8 @@ namespace AntDesign
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
         private PropertyReflector? _propertyReflector;
+
+        private Action<object, TValue> _setValueDelegate;
 
         protected string PropertyName => _propertyReflector?.PropertyName;
 
@@ -74,7 +77,7 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     _value = value;
-
+                    _setValueDelegate?.Invoke(Form.Model, value);
                     OnValueChange(value);
                 }
             }
@@ -284,6 +287,13 @@ namespace AntDesign
 
             FormItem?.AddControl(this);
             Form?.AddControl(this);
+
+            var dataIndex = FormItem?.DataIndex;
+            if (Form != null && !string.IsNullOrWhiteSpace(dataIndex))
+            {
+                _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, Form.Model.GetType());
+                Value = Form.Model.PathGetOrDefault<TValue>(dataIndex);
+            }
 
             _firstValue = Value;
         }

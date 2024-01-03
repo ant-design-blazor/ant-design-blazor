@@ -1,0 +1,100 @@
+﻿@using System.ComponentModel.DataAnnotations;
+
+<Form Model="@model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="User Name" DataIndex="Username">
+        <Input TValue="string"/>
+    </FormItem>
+    <FormItem Label="Password" DataIndex="Password">
+        <InputPassword TValue="string"/>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16" DataIndex="RememberMe">
+        <Checkbox>Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+    <FormItem>
+        <div>Username: @model.Username</div>
+        <div>Password: @model.Password</div>
+        <div>RememberMe: @model.RememberMe</div>
+    </FormItem>
+</Form>
+
+<Form Model="@modelDict"
+      OnFinish="OnFinishDict"
+      OnFinishFailed="OnFinishFailedDict"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="User Name" DataIndex="['Username']">
+        <Input TValue="string"/>
+    </FormItem>
+    <FormItem Label="Password" DataIndex="['Password']">
+        <InputPassword TValue="string"/>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16" DataIndex="['RememberMe']">
+        <Checkbox>Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+    <FormItem>
+        <div>Username: @modelDict["Username"]</div>
+        <div>Password: @modelDict["Password"]</div>
+        <div>RememberMe: @modelDict["RememberMe"]</div>
+    </FormItem>
+</Form>
+
+@code
+{
+    public class Model
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        public bool RememberMe { get; set; } = true;
+    }
+
+    private Dictionary<string, object> modelDict = new Dictionary<string, object>()
+    {
+        { "Username", "dict_test" },
+        { "Password", "dict_test_pwd" },
+        { "RememberMe", true }
+    };
+
+    private Model model = new Model()
+    {
+        Username = "obj_test",
+        Password = "obj_test_pwd"
+    };
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishDict(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(modelDict)}");
+    }
+
+    private void OnFinishFailedDict(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelDict)}");
+    }
+}
