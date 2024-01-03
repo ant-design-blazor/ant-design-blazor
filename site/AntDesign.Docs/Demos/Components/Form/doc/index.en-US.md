@@ -26,6 +26,8 @@ High performance Form component with data scope management. Including data colle
 | WrapperColOffset | Same as WrapperCol.Offset | int |-|
 | Size | Set the size of the field component (antd component only) | small \| middle \| large | middle |
 | Name | The name of the form, which will be used as the prefix of the form field id | string |-|
+| Method | Http method used to submit form | string | get |
+| FormName | Form handler name. This is required for posting it to a server-side endpoint. It is not used during interactive rendering. [source](https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Forms/EditForm.cs#L96) | string |-|
 | Model | Generic Object of Operation | T |-|
 | Loading | Is the form loading | bool | false |
 | OnFinish | Submit Event | EventCallback\<EditContext\> |-|
