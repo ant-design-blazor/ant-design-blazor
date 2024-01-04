@@ -92,7 +92,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ### Specify the style/script auto-import location
 
-As of the version 0.17.0, AntDesign Blazor component library utilizes [`JavaScript Initializers`](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) support automatic introduction of styles and scripts. CSS is introduced before the original `<link>` element of the page by default, and JS is introduced before all `<script>` elements by default. If you need to specify the location, simply add `<link antblazor-css>` or `<script antblazor-js></script>` to the specified location in `index.html`` or `App.razor`, and it will be automatically introduced before these two elements.
+After version 0.17.0, AntDesign Blazor component library utilizes [`JavaScript Initializers`](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) support automatic introduction of styles and scripts. CSS is introduced before the original `<link>` element of the page by default, and JS is introduced before all `<script>` elements by default. If you need to specify the location, simply add `<link antblazor-css>` or `<script antblazor-js></script>` to the specified location in `index.html`` or `App.razor`, and it will be automatically introduced before these two elements.
 
 ```html
   ...
@@ -104,4 +104,16 @@ As of the version 0.17.0, AntDesign Blazor component library utilizes [`JavaScri
   <script src="_content/AntDesign/js/ant-design-blazor.js"></script> <!-- introduced here automatically -->
   <script antblazor-js></script>
   ...
+```
+
+#### Disable auto-import 
+
+If you do not want to import JS or styles automatically, you can choose to disable the import and import them manually.
+
+Using `[no-antblazor-js]` attribute in any html element to disable automatic import of JS ，and using `[no-antblazor-css]` for CSS。
+
+```css
+  <meta no-antblazor-js no-antblazor-css />
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 ```
