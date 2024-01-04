@@ -313,8 +313,6 @@ namespace AntDesign
 
             PageIndex = 1;
 
-            FlushCache();
-
             this.ReloadAndInvokeChange();
         }
 
@@ -324,8 +322,6 @@ namespace AntDesign
 
             ChangePageIndex(pageIndex ?? 1);
             ChangePageSize(pageSize ?? PageSize);
-
-            FlushCache();
 
             this.ReloadAndInvokeChange();
         }
@@ -338,8 +334,6 @@ namespace AntDesign
             {
                 ChangePageIndex(queryModel.PageIndex);
                 ChangePageSize(queryModel.PageSize);
-
-                FlushCache();
 
                 foreach (var sorter in queryModel.SortModel)
                 {
@@ -461,6 +455,8 @@ namespace AntDesign
 
         private QueryModel<TItem> InternalReload()
         {
+            FlushCache(); // clear the selection state after pages was changed outside
+
             if (HidePagination && _dataSourceCount > 0)
             {
                 _pageSize = _dataSourceCount;
@@ -638,8 +634,6 @@ namespace AntDesign
 
             InitializePagination();
 
-            FlushCache();
-
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
@@ -655,7 +649,6 @@ namespace AntDesign
                 {
                     _waitingDataSourceReload = false;
 
-                    FlushCache(); // clear the selection state after pages was changed outside
                     ReloadAndInvokeChange();
                 }
             }

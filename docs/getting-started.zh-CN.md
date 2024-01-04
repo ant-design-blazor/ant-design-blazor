@@ -103,3 +103,15 @@ public void ConfigureServices(IServiceCollection services)
   <script antblazor-js></script>
   ...
 ```
+
+#### 禁用启动器
+
+当有特殊情况不想自动导入 JS 或者样式时，可以选择禁用自动导入，并手动导入。
+
+在入口 HTML 文件上任意元素使用 `[no-antblazor-js]` 标签可禁用自动导入JS，使用 `[no-antblazor-css]` 可禁用自动导入CSS。
+
+```css
+  <meta no-antblazor-js no-antblazor-css />
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+```
