@@ -77,9 +77,16 @@ namespace AntDesign
         [Parameter]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Http method used to submit form
+        /// </summary>
         [Parameter]
         public string Method { get; set; } = "get";
-        
+
+        /// <summary>
+        /// Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
+        /// It is not used during interactive rendering.
+        /// </summary>
         [Parameter]
         public string FormName { get; set; }
 

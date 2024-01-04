@@ -28,6 +28,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | Size | 设置字段组件的尺寸（仅限 antd 组件）|  small \| middle \| large | middle |
 | Name | 表单名称，会作为表单字段 id 前缀使用 | string | - |
 | Model | 操作的泛型对象 | T | - |
+| Method | 提交表单的 Http 方法 | string | get |
+| FormName | 表单处理器名称。在提交表单数据到服务端时必须指定，在交互渲染模式中不需使用。 [source](https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Forms/EditForm.cs#L96) | string |-|
 | Loading | 表单是否处于加载中 | bool | false |
 | OnFinish | 提交事件 | EventCallback\<EditContext\> | - |
 | OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
