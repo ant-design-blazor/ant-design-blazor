@@ -5,7 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using AntDesign.JsInterop;
+using System.Linq;
 
 namespace AntDesign
 {
@@ -75,5 +78,30 @@ namespace AntDesign
         /// Tour's zIndex
         /// </summary>
         [Parameter] public int ZIndex { get; set; } = 1001;
+
+        [Parameter] public IEnumerable<TourStep> Steps { get; set; }
+
+        private Dictionary<string, HtmlElement> _itemRefs;
+        private int _activeIndex = 0;
+
+        private TourStep ActiveStep => Steps.ElementAt(_activeIndex);
+
+        protected override async Task OnInitializedAsync()
+        {
+            CallAfterRender(async () =>
+            {
+                await GetItemElememt();
+            });
+        }
+
+        private async Task GetItemElememt()
+        {
+            var refs = Steps.Select(x => x.Target).ToArray();
+            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
+            foreach (var item in Steps)
+            {
+                item.Dom = _itemRefs[item.Target.Id];
+            }
+        }
     }
 }

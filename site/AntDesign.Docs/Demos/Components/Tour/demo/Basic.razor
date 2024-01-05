@@ -1,0 +1,60 @@
+﻿    <div>
+      <Button Type="primary" OnClick="() => _opoen = true">
+        Begin Tour
+      </Button>
+
+      <Divider />
+
+      <Space>
+          <SpaceItem>
+        <Button RefBack="ref1"> Upload</Button>
+        </SpaceItem>
+            <SpaceItem>
+            <Button RefBack="ref2" Type="primary">
+          Save
+        </Button>
+        </SpaceItem>
+            <SpaceItem>
+            <Button RefBack="ref3" Icon="ellipsis" />
+        </SpaceItem>
+      </Space>
+
+      <Tour Open="_opoen" OnClose="() => _opoen = false" Steps="steps" />
+    </div>
+
+@code {
+    bool _opoen = false;
+
+    ForwardRef ref1 = new();
+    ForwardRef ref2 = new();
+    ForwardRef ref3 = new();
+
+    TourStep[] steps = [];
+
+    protected override void OnInitialized()
+    {
+        steps = [
+            new()
+            {
+                Title = "Upload File",
+                Description = "Put your files here.",
+                Cover =@<img alt="tour.png" src="https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png" />,
+                Target = ref1.Current
+            },
+            new()
+            {
+                Title="Save",
+                Description= "Save your changes.",
+                Target = ref2.Current
+            },
+            new()
+            {
+                Title = "Other Actions",
+                Description= "Click to see other actions.",
+                Target = ref3.Current
+            },
+        ];
+    }
+
+
+}

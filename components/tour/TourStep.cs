@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
+using AntDesign.JsInterop;
 
 namespace AntDesign
 {
@@ -75,6 +76,8 @@ namespace AntDesign
         /// support pass custom scrollIntoView options, the default follows the scrollIntoViewOptions property of Tour
         /// </summary>
         public bool ScrollIntoViewOptions { get; set; }
+
+        internal HtmlElement Dom { get; set; }
     }
 
     public class TourStepButtonProps
