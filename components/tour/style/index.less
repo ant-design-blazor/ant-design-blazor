@@ -1,0 +1,115 @@
+﻿.ant-tour {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: rgba(0, 0, 0, 0.88);
+    line-height: 1.5714285714285714;
+    list-style: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    position: absolute;
+    z-index: undefined;
+    display: block;
+    visibility: visible;
+    width: 520px;
+    --antd-arrow-background-color: #ffffff;
+
+    &-pure {
+        max-width: 100%;
+        position: relative;
+    }
+
+    &-hidden {
+        display: none;
+    }
+
+    &-content {
+        position: relative;
+    }
+
+    &-inner {
+        text-align: start;
+        text-decoration: none;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        position: relative;
+        background-color: #ffffff;
+        border: none;
+        background-clip: padding-box;
+    }
+}
+
+.ant-tour .ant-tour-inner .ant-tour-close {
+    position: absolute;
+    top: 16px;
+    inset-inline-end: 16px;
+    color: rgba(0, 0, 0, 0.45);
+    outline: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    transition: background-color 0.2s,color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-cover {
+    text-align: center;
+    padding: calc(16px + 22px + 8px) 16px 0;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-header {
+    padding: 16px 16px 8px;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-description {
+    padding: 0 16px;
+    line-height: 1.5714285714285714;
+    word-wrap: break-word;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer {
+    padding: 8px 16px 16px;
+    text-align: end;
+    border-radius: 0 0 2px 2px;
+    display: flex;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-header .ant-tour-title {
+    line-height: 1.5714285714285714;
+    font-size: rgba(0, 0, 0, 0.88);
+    font-weight: 600;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-description {
+    padding: 0 16px;
+    line-height: 1.5714285714285714;
+    word-wrap: break-word;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer .ant-tour-indicators {
+    display: inline-block;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer .ant-tour-indicators .ant-tour-indicator {
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer .ant-tour-indicators .ant-tour-indicator
+:not(:last-child) {
+    margin-inline-end: 6px
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer .ant-tour-indicators .ant-tour-indicator-active {
+    background: #1677ff;
+}
+
+.ant-tour .ant-tour-inner .ant-tour-footer .ant-tour-buttons .ant-btn {
+    margin-inline-start: 8px;
+}

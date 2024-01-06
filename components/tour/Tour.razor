@@ -3,56 +3,67 @@
 
 @if (Open)
 {
-@*     <div>
-        <div class="ant-tour-mask css-7wxm6k css-var-r1g" style="position: fixed; inset: 0px; z-index: 1001; pointer-events: none;">
+    <div>
+        <div class="ant-tour-mask css-7wxm6k css-var-r1g" style="position: fixed; inset: 0px; z-index: @(ZIndex); pointer-events: none;">
             <svg style="width: 100%; height: 100%;">
                 <defs>
                     <mask id="ant-tour-mask-:r2v:">
                         <rect x="0" y="0" width="100vw" height="100vh" fill="white"></rect>
-                        <rect x="415.38543701171875" y="498.7708435058594" rx="2" width="88.14583587646484" height="44" fill="black" class="ant-tour-placeholder-animated"></rect>
+                        <rect x="@(ActiveStep.Dom.AbsoluteLeft)" y="@(ActiveStep.Dom.AbsoluteTop)" rx="2" width="@(ActiveStep.Dom.ClientWidth)" height="@(ActiveStep.Dom.ClientWidth)" fill="black" class="ant-tour-placeholder-animated"></rect>
                     </mask>
                 </defs>
                 <rect x="0" y="0" width="100%" height="100%" fill="rgba(0,0,0,0.5)" mask="url(#ant-tour-mask-:r2v:)"></rect>
-                <rect fill="transparent" pointer-events="auto" x="0" y="0" width="100%" height="498.7708435058594"></rect>
-                <rect fill="transparent" pointer-events="auto" x="0" y="0" width="415.38543701171875" height="100%"></rect>
-                <rect fill="transparent" pointer-events="auto" x="0" y="542.7708435058594" width="100%" height="calc(100vh - 542.7708435058594px)"></rect>
-                <rect fill="transparent" pointer-events="auto" x="503.5312728881836" y="0" width="calc(100vw - 503.5312728881836px)" height="100%"></rect>
+                <rect fill="transparent" pointer-events="auto" x="0" y="0" width="100%" height="@(ActiveStep.Dom.AbsoluteTop)"></rect>
+                <rect fill="transparent" pointer-events="auto" x="0" y="0" width="@(ActiveStep.Dom.AbsoluteLeft)" height="100%"></rect>
+                <rect fill="transparent" pointer-events="auto" x="0" y="@(ActiveStep.Dom.AbsoluteTop+ActiveStep.Dom.ClientHeight)" width="100%" height="calc(100vh - @(ActiveStep.Dom.AbsoluteTop+ActiveStep.Dom.ClientHeight))"></rect>
+                <rect fill="transparent" pointer-events="auto" x="@(ActiveStep.Dom.AbsoluteLeft+ActiveStep.Dom.ClientWidth)" y="0" width="calc(100vw - @(ActiveStep.Dom.AbsoluteLeft+ActiveStep.Dom.ClientWidth)px)" height="100%"></rect>
             </svg>
         </div>
     </div>
 
     <div>
-        <div class="css-7wxm6k css-var-r1g ant-tour-target-placeholder" style="left: 415.385px; top: 498.771px; width: 88.1458px; height: 44px; position: fixed; pointer-events: none;"></div>
+        <div class="css-7wxm6k css-var-r1g ant-tour-target-placeholder" style="left: @(ActiveStep.Dom.AbsoluteLeft)px; top: @(ActiveStep.Dom.AbsoluteTop)px; width: (ActiveStep.Dom.ClientWidth)px; height: @(ActiveStep.Dom.ClientHeight)px; position: fixed; pointer-events: none;"></div>
     </div>
- *@
+
     <div>
-        <div class="ant-tour css-7wxm6k css-var-r1g ant-tour-placement-bottom" style="--arrow-x: 260px; --arrow-y: -6px; inset: 554.771px auto auto 199.458px; box-sizing: border-box; z-index: 1001;">
+        <div class="ant-tour css-7wxm6k css-var-r1g ant-tour-placement-bottom" style="--arrow-x: 260px; --arrow-y: -6px; inset: @(ActiveStep.Dom.AbsoluteTop+ActiveStep.Dom.ClientHeight+16)px auto auto @(ActiveStep.Dom.AbsoluteLeft/2+ActiveStep.Dom.ClientWidth/2)px; box-sizing: border-box; z-index: @(ZIndex);">
             <div class="ant-tour-arrow" style="position: absolute; top: 0px; left: 260px;"></div>
             <div class="ant-tour-content">
                 <div class="ant-tour-inner">
-                    <span aria-label="Close" class="ant-tour-close">
+                    <span aria-label="Close" class="ant-tour-close" @click="HandleOnClose">
                         <span role="img" aria-label="close" class="anticon anticon-close ant-tour-close-icon">
                             <svg fill-rule="evenodd" viewBox="64 64 896 896" focusable="false" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
                                 <path d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"></path>
                             </svg>
                         </span>
-                    </span><div class="ant-tour-cover"><img alt="tour.png" src="https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png"></div>
+                    </span>
+                    <div class="ant-tour-cover">
+                        @ActiveStep.Cover
+                    </div>
                     <div class="ant-tour-header">
                         <div class="ant-tour-title">@ActiveStep.Title</div>
                     </div><div class="ant-tour-description">@ActiveStep.Description</div>
                     <div class="ant-tour-footer">
                         <div class="ant-tour-indicators">
-                            <span class="ant-tour-indicator-active ant-tour-indicator"></span>
-                            <span class="ant-tour-indicator"></span><span class="ant-tour-indicator"></span>
-                        </div><div class="ant-tour-buttons">
-                            <button type="button" class="ant-btn css-7wxm6k css-var-r1g ant-btn-primary ant-btn-sm ant-tour-next-btn">
-                                <span>下一步</span>
-                            </button>
+                            @for (var i=0; i < _stepCount; i++)
+                            {
+                                var index = i;
+                                <span class="ant-tour-indicator @(index==_activeIndex?"ant-tour-indicator-active":"")"></span>
+                            }
+                        </div>
+                        <div class="ant-tour-buttons">
+                            @if (_activeIndex!=0)
+                            {
+                                  <Button OnClick="PrevStep" Type="default">上一步</Button>
+                            }
+                            @if (_activeIndex < _stepCount-1)
+                            {
+                                <Button OnClick="NextStep" Type="primary">下一步</Button>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 }

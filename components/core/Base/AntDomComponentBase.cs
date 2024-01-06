@@ -8,7 +8,15 @@ namespace AntDesign
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
         [Parameter]
-        public string Id { get; set; }
+        public string Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                RefBack?.SetId(value);
+            }
+        }
 
         [CascadingParameter]
         public ConfigProvider ConfigProvider { get; set; }
@@ -84,5 +92,6 @@ namespace AntDesign
 
         private string _class;
         private string _style;
+        private string _id;
     }
 }

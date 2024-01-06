@@ -5,6 +5,7 @@ namespace AntDesign
     public class ForwardRef
     {
         private ElementReference _current;
+        private string _id;
 
         public ElementReference Current
         {
@@ -16,6 +17,13 @@ namespace AntDesign
         public void Set(ElementReference value)
         {
             _current = value;
+        }
+
+        public string Id => _id;
+
+        public void SetId(string id)
+        {
+            _id = id;
         }
     }
 }

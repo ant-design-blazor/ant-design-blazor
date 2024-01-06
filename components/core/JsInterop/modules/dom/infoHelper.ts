@@ -148,9 +148,10 @@ export class infoHelper {
   }
 
   static getElementsInfo(elements: any[]): any {
-    let infos = {};
-    elements.forEach(el => {
-      infos[el.id] = this.getInfo(el);
+      const infos = {};
+      elements.forEach((el: HTMLElement) => {
+      const id = Array.from(el.attributes).find(attr => attr.name.startsWith('_bl_')).name;
+      infos[id] = this.getInfo(el);
     })
 
     return infos;

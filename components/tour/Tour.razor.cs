@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using AntDesign.JsInterop;
 using System.Linq;
+using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
@@ -54,6 +55,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool Open { get; set; }
 
+        [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
         /// <summary>
         /// Callback when the step changes. Current is the previous step
         /// </summary>
@@ -83,24 +86,62 @@ namespace AntDesign
 
         private Dictionary<string, HtmlElement> _itemRefs;
         private int _activeIndex = 0;
+        private int _stepCount;
 
         private TourStep ActiveStep => Steps.ElementAt(_activeIndex);
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
+            _stepCount = Steps.Count();
+
             CallAfterRender(async () =>
             {
                 await GetItemElememt();
             });
+
+            base.OnInitialized();
         }
 
         private async Task GetItemElememt()
         {
-            var refs = Steps.Select(x => x.Target).ToArray();
+            var refs = Steps.Select(x => x.Target.Current).ToArray();
             _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
             foreach (var item in Steps)
             {
-                item.Dom = _itemRefs[item.Target.Id];
+                item.Dom = _itemRefs[item.Target.Current.GetAttribute()];
+            }
+        }
+
+        private void NextStep()
+        {
+            if (_activeIndex + 1 >= _stepCount)
+            {
+                return;
+            }
+            _activeIndex++;
+        }
+
+        private void PrevStep()
+        {
+            if (_activeIndex <= 0)
+            {
+                return;
+            }
+            _activeIndex--;
+        }
+
+        private void HandleOnClose()
+        {
+            Open = false;
+
+            if (OpenChanged.HasDelegate)
+            {
+                OpenChanged.InvokeAsync(false);
+            }
+
+            if (OnClose.HasDelegate)
+            {
+                OnClose.InvokeAsync(false);
             }
         }
     }

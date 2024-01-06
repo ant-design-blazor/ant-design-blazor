@@ -7,7 +7,7 @@
 
       <Space>
           <SpaceItem>
-        <Button RefBack="ref1"> Upload</Button>
+            <Button RefBack="ref1"> Upload</Button>
         </SpaceItem>
             <SpaceItem>
             <Button RefBack="ref2" Type="primary">
@@ -39,19 +39,19 @@
                 Title = "Upload File",
                 Description = "Put your files here.",
                 Cover =@<img alt="tour.png" src="https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png" />,
-                Target = ref1.Current
+                Target = ref1
             },
             new()
             {
                 Title="Save",
                 Description= "Save your changes.",
-                Target = ref2.Current
+                Target = ref2
             },
             new()
             {
                 Title = "Other Actions",
                 Description= "Click to see other actions.",
-                Target = ref3.Current
+                Target = ref3
             },
         ];
     }

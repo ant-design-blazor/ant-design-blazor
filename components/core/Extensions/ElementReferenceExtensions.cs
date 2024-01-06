@@ -16,17 +16,22 @@ namespace AntDesign.Core.Extensions
             return elementReference?.GetSelector();
         }
 
-        public static string GetSelector(this ElementReference elementReference)
+        public static string GetAttribute(this ElementReference elementReference)
         {
 #if NET5_0_OR_GREATER
             if (elementReference.Context is null)
             {
                 return null;
             }
-
-            return $"[_bl_{elementReference.Id}]";
 #endif
-            return $"[_bl_{elementReference.Id}]";
+
+            return $"_bl_{elementReference.Id}";
+        }
+
+        public static string GetSelector(this ElementReference elementReference)
+        {
+            var attribute = GetAttribute(elementReference);
+            return attribute == null ? null : $"[{attribute}]";
         }
     }
 }

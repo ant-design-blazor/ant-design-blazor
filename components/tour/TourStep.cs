@@ -15,7 +15,7 @@ namespace AntDesign
         /// <summary>
         /// Get the element the guide card points to. Empty makes it show in center of screen
         /// </summary>
-        public ElementReference Target { get; set; }
+        public ForwardRef Target { get; set; }
 
         /// <summary>
         /// Get the element the guide card points to. Empty makes it show in center of screen
