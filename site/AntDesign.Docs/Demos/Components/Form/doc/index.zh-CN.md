@@ -26,13 +26,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | WrapperColSpan | 等同于WrapperCol.Span | int | - |
 | WrapperColOffset | 等同于WrapperCol.Offset | int | - |
 | Size | 设置字段组件的尺寸（仅限 antd 组件）|  small \| middle \| large | middle |
-| Name | 表单名称，会作为表单字段 id 前缀使用 | string | - |
+| Name | 表单名称，会作为表单字段 id 前缀使用。在静态渲染模式中，还作为 [EditForm](https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Forms/EditForm.cs#L96) 的 `FromName` 属性，指定 Form Handler。 | string | - |
 | Model | 操作的泛型对象 | T | - |
+| Method | 提交表单的 Http 方法 | string | get |
 | Loading | 表单是否处于加载中 | bool | false |
 | OnFinish | 提交事件 | EventCallback\<EditContext\> | - |
 | OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
 | ValidateOnChange | 是否在更改时校验 | bool | false |
 | RequiredMark | 更改必填/可选字段标签在表单上的显示方式。 | FormRequiredMark | FormRequiredMark.Required |
+
 ### FormItem
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
