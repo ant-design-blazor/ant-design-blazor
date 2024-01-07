@@ -74,8 +74,18 @@ namespace AntDesign
         [Parameter]
         public string Size { get; set; }
 
+        /// <summary>
+        /// Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
+        /// Or using for get the form instance from <see cref="AntDesign.FormProviderFinishEventArgs"/>.
+        /// </summary>
         [Parameter]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Http method used to submit form
+        /// </summary>
+        [Parameter]
+        public string Method { get; set; } = "get";
 
         [Parameter]
         public TModel Model
