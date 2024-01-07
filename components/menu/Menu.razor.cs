@@ -234,7 +234,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (InternalMode != MenuMode.Inline && _inlineCollapsed)
+            if (Mode != MenuMode.Inline && _inlineCollapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
