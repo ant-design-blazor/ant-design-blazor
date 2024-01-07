@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.17.2
+
+`2024-01-07`
+
+- 🐞 Fixed Menu wrong judge about InlineCollapsed parameter. [#3614](https://github.com/ant-design-blazor/ant-design-blazor/pull/3614) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table caches page data multiple times on remote DataSource mode. [#3611](https://github.com/ant-design-blazor/ant-design-blazor/pull/3611) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add more options for js initializers. [#3610](https://github.com/ant-design-blazor/ant-design-blazor/pull/3610) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.1
 
 `2023-12-27`
