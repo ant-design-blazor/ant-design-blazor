@@ -455,8 +455,6 @@ namespace AntDesign
 
         private QueryModel<TItem> InternalReload()
         {
-            FlushCache(); // clear the selection state after pages was changed outside
-
             if (HidePagination && _dataSourceCount > 0)
             {
                 _pageSize = _dataSourceCount;
@@ -720,7 +718,11 @@ namespace AntDesign
         {
             // Do not render until initialisation is complete.
             this._shouldRender = this._shouldRender && _hasInitialized;
+            if (_shouldRender)
+            {
+                FlushCache(); // clear the selection state after pages was changed outside
 
+            }
             return this._shouldRender;
         }
 
