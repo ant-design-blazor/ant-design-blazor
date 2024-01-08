@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 0.17.2
+
+`2024-01-07`
+
+- 🐞 修复 Menu 对 InlineCollapsed 属性的判断。[#3614](https://github.com/ant-design-blazor/ant-design-blazor/pull/3614) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 在远程加载模式重复增加选中行。[#3611](https://github.com/ant-design-blazor/ant-design-blazor/pull/3611) [@ElderJames](https://github.com/ElderJames)
+- 🆕 增加 JS 启动器选项。[#3610](https://github.com/ant-design-blazor/ant-design-blazor/pull/3610) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.1
 
 `2023-12-27`
