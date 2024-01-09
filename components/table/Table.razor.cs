@@ -311,7 +311,7 @@ namespace AntDesign
         {
             ResetData();
 
-            PageIndex = 1;
+            ChangePageIndex(1);
 
             this.ReloadAndInvokeChange();
         }
@@ -718,11 +718,7 @@ namespace AntDesign
         {
             // Do not render until initialisation is complete.
             this._shouldRender = this._shouldRender && _hasInitialized;
-            if (_shouldRender)
-            {
-                FlushCache(); // clear the selection state after pages was changed outside
 
-            }
             return this._shouldRender;
         }
 
