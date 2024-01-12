@@ -38,7 +38,6 @@ namespace AntDesign.Select.Internal
 
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
-        [Parameter] public bool ShowPlaceholder { get; set; }
 
         [Parameter]
         public int MaxTagCount
@@ -294,6 +293,11 @@ namespace AntDesign.Select.Internal
         internal virtual void OnCompositionEnd(JsonElement e)
         {
             _compositionInputting = false;
+        }
+
+        internal void ClearSearch()
+        {
+            _inputString = string.Empty;
         }
 
         private void SetInputWidth()

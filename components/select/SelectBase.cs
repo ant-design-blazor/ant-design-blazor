@@ -1013,6 +1013,7 @@ namespace AntDesign
         internal async Task CloseAsync()
         {
             await _dropDown.Hide(true);
+            _selectContent?.ClearSearch();
         }
 
         /// <summary>
