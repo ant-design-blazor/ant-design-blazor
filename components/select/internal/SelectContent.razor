@@ -5,6 +5,10 @@
 @typeparam TItemValue
 @typeparam TItem
 @inherits AntDomComponentBase
+
+@{
+    var showPlaceholder = !ParentSelect.HasValue && string.IsNullOrEmpty(_inputString);
+}
 <div class="@ParentSelect.CurrentClassMapper.Class"
      style="@ParentSelect.Style"
      id="@Id"
@@ -42,7 +46,7 @@
                accesskey="@ParentSelect?.AccessKey"
                style="@_inputStyle" />
         </span>
-        @if (!ParentSelect.HasValue && string.IsNullOrEmpty(_inputString))
+        @if (showPlaceholder)
         {
           <span class="@Prefix-selection-placeholder">@Placeholder</span>
         }
@@ -61,7 +65,7 @@
             }
             else
             {
-              <span class="@Prefix-selection-item">
+              <span class="@Prefix-selection-item" title="@getLabel(selectedItem)" style="@(string.IsNullOrEmpty(_inputString)?"":"visibility: hidden;")">
                 @getLabel(selectedItem)
               </span>
             }
@@ -89,7 +93,7 @@
               </span>
             </div>
           }
-          @if (!ShowPlaceholder)
+          @if (!showPlaceholder)
           {
             var selectedItems = ParentSelect.SelectedOptionItems;
             @if (ParentSelect.HasTagCount)
@@ -235,7 +239,7 @@
               <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
             </div>
           </div>
-          @if (ShowPlaceholder)
+          @if (showPlaceholder)
           {
             <span class="@Prefix-selection-placeholder" style="@(ParentSelect.PrefixIcon != null?"margin-left: 7px;":"")">@Placeholder</span>
           }
@@ -253,9 +257,20 @@
 </div>
 
 @code {
-  RenderFragment getLabel(SelectOptionItem<TItemValue, TItem> option) =>
-  @<Template>@if (option.LabelTemplate != null)@option.LabelTemplate else @option.Label</Template>;
+    RenderFragment getLabel(SelectOptionItem<TItemValue, TItem> option)
+    {
+        if (option.LabelTemplate != null)
+            return builder => builder.AddContent(0, option.LabelTemplate);
+        else
+            return builder => builder.AddContent(0, option.Label);
+    }
 
-  RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)=>
-  @<Template>@if (option.LabelTemplate != null) @option.LabelTemplate else @content.FormatLabel(option.Label)</Template>;
+    RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)
+    {
+        if (option.LabelTemplate != null)
+            return builder => builder.AddContent(0, option.LabelTemplate);
+        else
+            return builder => builder.AddContent(0, content.FormatLabel(option.Label));
+
+    }
 }
