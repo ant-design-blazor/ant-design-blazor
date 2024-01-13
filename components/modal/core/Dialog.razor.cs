@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -14,6 +15,9 @@ namespace AntDesign
     public partial class Dialog
     {
         private const string IdPrefix = "Ant-Design-";
+
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
         #region Parameters
 
@@ -392,6 +396,15 @@ namespace AntDesign
         #endregion build element's class name
 
         #region override
+
+        protected override void OnInitialized()
+        {
+            NavigationManager.LocationChanged += (object sender, LocationChangedEventArgs e) =>
+            {
+                _ = JsInvokeAsync(JSInteropConstants.DestroyAllDialog);
+            };
+        }
+
 
         private bool _hasRendered = false;
 

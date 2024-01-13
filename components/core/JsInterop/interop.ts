@@ -15,6 +15,8 @@ export {
     downloadHelper,
     watermarkHelper,
 } from './modules/components/export'
+
+
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
 
 export { generate as generateColor } from "@ant-design/colors";
@@ -24,14 +26,4 @@ import {manipulationHelper}from './modules/dom/manipulationHelper'
 
 export function log(text) {
     console.log(text);
-}
-
-/**
- * 1. enableBodyScroll
- * 2. remove all old modal and drawer dom instance
- */
-export function onLocationChanged() {
-    manipulationHelper.enableBodyScroll(true)
-    modalHelper.destroyAllDialog();
-    document.querySelectorAll('.ant-drawer').forEach(e => document.body.removeChild(e));
 }
