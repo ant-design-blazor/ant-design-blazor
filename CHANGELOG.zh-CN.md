@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.17.3
+
+`2024-01-14`
+
+- Table
+  - 🐞 修复 应只在翻页时清理行状态。[#3620](https://github.com/ant-design-blazor/ant-design-blazor/pull/3620) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 无法反选全部。[#3618](https://github.com/ant-design-blazor/ant-design-blazor/pull/3618) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当列类型是 `Char` 时会抛异常。[#3617](https://github.com/ant-design-blazor/ant-design-blazor/pull/3617) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Modal url 变化的时候 modal 实例未完全清理的问题。[#3630](https://github.com/ant-design-blazor/ant-design-blazor/pull/3630) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Select 的 Placholder 在选中后仍然显示。[#3628](https://github.com/ant-design-blazor/ant-design-blazor/pull/3628) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.2
 
 `2024-01-07`
