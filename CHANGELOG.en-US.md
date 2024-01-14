@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.17.3
+
+`2024-01-14`
+
+- Table
+  - 🐞 Fixed should flush cache only pagging. [#3620](https://github.com/ant-design-blazor/ant-design-blazor/pull/3620) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed UnselectAll() was not work. [#3618](https://github.com/ant-design-blazor/ant-design-blazor/pull/3618) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed thrown exception when property type is `Char`. [#3617](https://github.com/ant-design-blazor/ant-design-blazor/pull/3617) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Modal dom instance clear when url changed. [#3630](https://github.com/ant-design-blazor/ant-design-blazor/pull/3630) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Select placholder doesn't hide correctly. [#3628](https://github.com/ant-design-blazor/ant-design-blazor/pull/3628) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.17.2
 
 `2024-01-07`
