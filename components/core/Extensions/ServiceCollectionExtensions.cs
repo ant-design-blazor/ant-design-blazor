@@ -2,6 +2,7 @@
 using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.Filters;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ConfigService>();
             services.TryAddScoped<ReuseTabsService>();
             services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
+            services.TryAddScoped<NavMgrService>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

@@ -6,6 +6,8 @@ namespace AntDesign
     {
         private const string FUNC_PREFIX = "AntDesign.interop.";
 
+        public static string OnLocationChanged => $"{FUNC_PREFIX}onLocationChanged";
+
         #region domInfo
 
         public static string GetWindow = DomInfoHelper.GetWindow;

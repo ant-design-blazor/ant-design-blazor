@@ -17,35 +17,6 @@ namespace AntDesign
         internal event Func<ModalRef, Task> OnModalUpdateEvent;
 
 
-        private readonly NavigationManager _navigationManager;
-        private readonly IJSRuntime _jsRuntime;
-        internal static HashSet<ModalRef> ReusedModals = new HashSet<ModalRef>();
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public ModalService(NavigationManager navigationManager, IJSRuntime jsRuntime)
-        {
-            _navigationManager = navigationManager;
-            _navigationManager.LocationChanged += NavigationManager_LocationChanged;
-            _jsRuntime = jsRuntime;
-        }
-
-        /// <summary>
-        /// Destroy all reused Modal
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void NavigationManager_LocationChanged(object sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
-        {
-            if (ReusedModals.Count > 0)
-            {
-                // Since Modal cannot be captured, it can only be removed through JS
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.DestroyAllDialog);
-                ReusedModals.Clear();
-            }
-        }
-
         /// <summary>
         /// Create and open a Modal
         /// </summary>
@@ -141,7 +112,6 @@ namespace AntDesign
         internal Task<ModalRef> CreateOrOpenModalAsync(ModalRef modalRef)
         {
             OnModalOpenEvent?.Invoke(modalRef);
-            ReusedModals.Add(modalRef);
             return Task.FromResult(modalRef);
         }
         /// <summary>
@@ -152,7 +122,6 @@ namespace AntDesign
         internal Task<ModalRef<TResult>> CreateOrOpenModalAsync<TResult>(ModalRef<TResult> modalRef)
         {
             OnModalOpenEvent?.Invoke(modalRef);
-            ReusedModals.Add(modalRef);
             return Task.FromResult(modalRef);
         }
 
@@ -176,8 +145,6 @@ namespace AntDesign
         /// </summary>
         public void Dispose()
         {
-            _navigationManager.LocationChanged -= NavigationManager_LocationChanged;
-            GC.SuppressFinalize(this);
         }
 
 
