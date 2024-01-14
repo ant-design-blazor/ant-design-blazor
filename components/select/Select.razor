@@ -140,7 +140,7 @@
             @if(ctx.select.EnableVirtualization)
             {
                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
-                    Items=@ctx.select._filterOptionsVirtualization
+                    Items=@ctx.select.SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
                     ChildContent="optionRender(ctx.itemTemplate)"/>
             }
             else

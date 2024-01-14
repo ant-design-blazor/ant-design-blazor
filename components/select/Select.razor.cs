@@ -38,8 +38,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool EnableVirtualization { get; set; }
-
-        protected internal List<SelectOptionItem<TItemValue, TItem>> _filterOptionsVirtualization = [];
 #endif
 
         private bool _dataSourceHasChanged = false;
@@ -768,10 +766,6 @@ namespace AntDesign
                     }
                 }
             }
-
-#if NET5_0_OR_GREATER
-            ResetFilterOptionsVirtualization();
-#endif
         }
 
         /// <summary>
@@ -1245,28 +1239,10 @@ namespace AntDesign
                     SelectOptionItems.Remove(CustomTagSelectOptionItem);
                     CustomTagSelectOptionItem = null;
                 }
-
-#if NET5_0_OR_GREATER
-                ResetFilterOptionsVirtualization();
-#endif
-
             }
             OnSearch?.Invoke(_searchValue);
         }
 
-#if NET5_0_OR_GREATER
-        private void ResetFilterOptionsVirtualization()
-        {
-            if (!EnableVirtualization)
-            {
-                return;
-            }
-
-            _filterOptionsVirtualization.Clear();
-            _filterOptionsVirtualization.Capacity = SelectOptionItems.Count;
-            _filterOptionsVirtualization.AddRange(SelectOptionItems);
-        }
-#endif
         private async Task TokenizeSearchedPhrase(string searchValue)
         {
             Dictionary<string, SelectOptionItem<TItemValue, TItem>> tokenItemMatch = new();
@@ -1325,9 +1301,6 @@ namespace AntDesign
         {
             if (SelectMode != SelectMode.Tags)
             {
-#if NET5_0_OR_GREATER
-                _filterOptionsVirtualization.Clear();
-#endif
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
@@ -1353,13 +1326,6 @@ namespace AntDesign
                         }
                         item.IsActive = false;
                     }
-
-#if NET5_0_OR_GREATER
-                    if (EnableVirtualization && !item.IsHidden)
-                    {
-                        _filterOptionsVirtualization.Add(item);
-                    }
-#endif
                 }
             }
             else
