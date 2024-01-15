@@ -718,6 +718,10 @@ namespace AntDesign
         {
             // Do not render until initialisation is complete.
             this._shouldRender = this._shouldRender && _hasInitialized;
+            if (_shouldRender)
+            {
+                FlushCache();
+            }
 
             return this._shouldRender;
         }

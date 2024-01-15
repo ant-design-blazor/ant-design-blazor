@@ -18,8 +18,6 @@ namespace AntDesign
 
         private void FinishLoadPage()
         {
-            FlushCache();
-
             if (_selection == null)
                 return;
 
