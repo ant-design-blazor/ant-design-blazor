@@ -12,6 +12,11 @@ namespace AntDesign
 
         private void FlushCache()
         {
+            if (!_hasInitialized)
+            {
+                return;
+            }
+
             _dataSourceCache.Clear();
             _rootRowDataCache.Clear();
         }

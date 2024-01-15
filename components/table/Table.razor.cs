@@ -435,6 +435,7 @@ namespace AntDesign
                 return;
             }
 #endif
+            FlushCache();
 
             var queryModel = this.InternalReload();
             StateHasChanged();
@@ -465,6 +466,7 @@ namespace AntDesign
 
             if (ServerSide)
             {
+                FlushCache();
                 _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
@@ -718,10 +720,6 @@ namespace AntDesign
         {
             // Do not render until initialisation is complete.
             this._shouldRender = this._shouldRender && _hasInitialized;
-            if (_shouldRender)
-            {
-                FlushCache();
-            }
 
             return this._shouldRender;
         }
