@@ -356,8 +356,6 @@ namespace AntDesign
             ChangePageIndex(1);
             ChangePageSize(PageSize);
 
-            FlushCache();
-
             foreach (var col in ColumnContext.HeaderColumns)
             {
                 if (col is IFieldColumn fieldColumn)
@@ -641,6 +639,27 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            if (_preventRender)
+            {
+                _shouldRender = false;
+                _preventRender = false;
+            }
+            else if (this.RerenderStrategy == RerenderStrategy.ParametersHashCodeChanged)
+            {
+                var hashCode = this.GetParametersHashCode();
+                this._shouldRender = this._parametersHashCode != hashCode;
+                this._parametersHashCode = hashCode;
+            }
+            else
+            {
+                this._shouldRender = true;
+            }
+
+            if (!this._shouldRender)
+            {
+                return;
+            }
+
             if (_waitingReloadAndInvokeChange)
             {
                 _waitingReloadAndInvokeChange = false;
@@ -659,22 +678,6 @@ namespace AntDesign
                 {
                     InternalReload();
                 }
-            }
-
-            if (_preventRender)
-            {
-                _shouldRender = false;
-                _preventRender = false;
-            }
-            else if (this.RerenderStrategy == RerenderStrategy.ParametersHashCodeChanged)
-            {
-                var hashCode = this.GetParametersHashCode();
-                this._shouldRender = this._parametersHashCode != hashCode;
-                this._parametersHashCode = hashCode;
-            }
-            else
-            {
-                this._shouldRender = true;
             }
         }
 
