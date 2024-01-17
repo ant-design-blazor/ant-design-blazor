@@ -12,14 +12,17 @@ namespace AntDesign
 
         private void FlushCache()
         {
+            if (!_hasInitialized)
+            {
+                return;
+            }
+
             _dataSourceCache.Clear();
             _rootRowDataCache.Clear();
         }
 
         private void FinishLoadPage()
         {
-            FlushCache();
-
             if (_selection == null)
                 return;
 
