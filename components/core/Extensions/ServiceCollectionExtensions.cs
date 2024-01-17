@@ -39,7 +39,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ConfigService>();
             services.TryAddScoped<ReuseTabsService>();
             services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
-            services.TryAddScoped<NavMgrService>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 
