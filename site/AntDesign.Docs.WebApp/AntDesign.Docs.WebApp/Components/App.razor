@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="AntDesign.Docs.WebApp.styles.css" />
+    <HeadOutlet @rendermode="InteractiveAuto" />
+</head>
+
+<body>
+    <Routes @rendermode="InteractiveAuto" />
+    <script src="/blazor.web.patched.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            webAssembly: {
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    if (type === 'dotnetjs' && name === 'dotnet.js') {
+                        return '/dotnet.patched.js';
+                    }
+                    return `_framework/${name}`;
+                },
+                configureRuntime: (builder) => {
+                   
+                        builder.withConfig({
+                            maxParallelDownloads: 2, // Adjust this to change the WebAssembly resource throttling amount
+                        });
+                  
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>
