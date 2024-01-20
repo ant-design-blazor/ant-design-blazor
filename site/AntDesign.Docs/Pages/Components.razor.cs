@@ -14,6 +14,8 @@ namespace AntDesign.Docs.Pages
     public partial class Components : ComponentBase, IDisposable
     {
         [Parameter]
+        public string Locale { get; set; }
+        [Parameter]
         public string Name { get; set; }
 
         [Inject]

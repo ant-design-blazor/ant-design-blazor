@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\AntDesign.Docs\AntDesign.Docs.csproj" />
+  </ItemGroup>
+
 </Project>

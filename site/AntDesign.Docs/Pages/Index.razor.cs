@@ -9,6 +9,8 @@ namespace AntDesign.Docs.Pages
 {
     public partial class Index : ComponentBase, IDisposable
     {
+        [Parameter]
+       public string Locale { get; set; }
         private Recommend[] _recommends = { };
 
         private Product[] _products = { };
