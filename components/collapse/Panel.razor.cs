@@ -125,6 +125,7 @@ namespace AntDesign
                         _isActive = true;
                         _isInactive = false;
                         _isHidden = false;
+                        StateHasChanged();
                     }
                 }
                 else
@@ -138,8 +139,8 @@ namespace AntDesign
                         _isActive = false;
                         _isInactive = true;
                         _isHidden = true;
+                        StateHasChanged();
                     }
-
                 }
             }
         }
