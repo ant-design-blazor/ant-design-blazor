@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 0.17.4
+
+`2024-02-01`
+
+- Select
+  - 🐞 修复 Select 禁用时 Input 还能输入的问题。[#3655](https://github.com/ant-design-blazor/ant-design-blazor/pull/3655) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Select 在启用虚拟化时滚动不正常。[#3625](https://github.com/ant-design-blazor/ant-design-blazor/pull/3625) [@Magehernan](https://github.com/Magehernan)
+- 🐞 修复 Collapse 无动画时手风琴模式失效。[#3646](https://github.com/ant-design-blazor/ant-design-blazor/pull/3646) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 居中时拖拽问题。[#3647](https://github.com/ant-design-blazor/ant-design-blazor/pull/3647) [@zxyao145](https://github.com/zxyao145)
+
 ### 0.17.3
 
 `2024-01-14`
