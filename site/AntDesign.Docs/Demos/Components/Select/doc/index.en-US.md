@@ -39,6 +39,7 @@ Select component to select value from options.
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
+| FilterExpression | Customize the logic to filter when searching. | Func<string, string, CultureInfo, bool> | (label, searchValue, cultureInfo) => label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
 | IgnoreItemChanges | Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property. | bool | true |  |
