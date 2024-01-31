@@ -66,7 +66,7 @@
                                         @{
                                             @if (!IsGroupingEnabled)
                                             {
-                                                @selectOptionsRender((this, SortedSelectOptionItems, ItemTemplate))                                                                                               
+                                                @selectOptionsRender((this, ItemTemplate))                                                                                               
                                             }
                                             else
                                             {
@@ -134,20 +134,20 @@
 
 @code
 {
-    static RenderFragment<(Select<TItemValue, TItem> select, IEnumerable<SelectOptionItem<TItemValue, TItem>> selectOptionItems, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
+    static RenderFragment<(Select<TItemValue, TItem> select, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
         @<Template>
 @{ #if NET5_0_OR_GREATER }
             @if(ctx.select.EnableVirtualization)
             {
                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
-                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    Items=@ctx.select.SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
                     ChildContent="optionRender(ctx.itemTemplate)"/>
             }
             else
             {
 #endif 
                 <ForeachLoop 
-                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    Items=@ctx.select.SortedSelectOptionItems
                     ChildContent="optionRender(ctx.itemTemplate)"/>
 #if NET5_0_OR_GREATER 
             }
