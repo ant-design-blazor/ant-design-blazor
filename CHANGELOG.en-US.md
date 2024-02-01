@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+
+### 0.17.4
+
+`2024-02-01`
+
+- Select
+  - 🐞 Fixed search input box still editable when disabled. [#3655](https://github.com/ant-design-blazor/ant-design-blazor/pull/3655) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed scroll in select not working correctly when EnableVirtualization is true. [#3625](https://github.com/ant-design-blazor/ant-design-blazor/pull/3625) [@Magehernan](https://github.com/Magehernan)
+
+- 🐞 Fixed Collapse `Accordion` doesn't work. [#3646](https://github.com/ant-design-blazor/ant-design-blazor/pull/3646) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal draggable and centered work incorrectly. [#3647](https://github.com/ant-design-blazor/ant-design-blazor/pull/3647) [@zxyao145](https://github.com/zxyao145)
+
 ### 0.17.3
 
 `2024-01-14`
