@@ -1,0 +1,138 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components;
+@using System.Globalization
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+        new Person(5, "Hernán"),
+        new Person(6, "Mariño"),
+    };
+
+
+    public Select_FilterExpression_Tests(bool useMoq = false) : base(useMoq)
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+    }
+
+    [Theory]
+    [InlineData("nán", 1, new string[] { "Hernán" })]
+    [InlineData("a", 2, new string[] { "Jack", "Mariño" })]
+    [InlineData("l", 2, new string[] { "Lucy", "Emily" })]
+    [InlineData("m", 2, new string[] { "Emily", "Mariño" })]
+    [InlineData("oHn", 1, new string[] { "John" })]
+    [InlineData("ó", 0, new string[0])]
+    public void Will_found_using_default_filter_expression(string text, int count, string[] namesFound)
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+            .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition
+                {
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10,
+                    Top = 10,
+                    Placement = Placement.TopLeft,
+                    ZIndex = 100
+                });
+
+        var searchComplete = false;
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select
+                EnableSearch=true
+                SearchDebounceMilliseconds=0
+                OnSearch="(search) => { searchComplete = true; }"
+                TItemValue="Person"
+                TItem="Person">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                              TItemValue="Person"
+                              TItem="Person"
+                              Value=@item
+                              Label=@item.Name />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        cut.Find("input[type=search]").Input(text);
+        cut.Find(".ant-select-item-option").Click();
+        cut.WaitForState(() => searchComplete);
+
+        var foundItems = cut.Instance.SelectOptionItems.Where(x=> !x.IsHidden).ToList();
+        foundItems.Count.Should().Be(count);
+        for (int i = 0; i < foundItems.Count; i++)
+        {
+            foundItems[i].Item.Name.Should().Be(namesFound[i]);
+        }
+    }
+
+    [Theory]
+    [InlineData("nan", 1, new string[] { "Hernán" })]
+    [InlineData("oHn", 1, new string[] { "John" })]
+    [InlineData("n", 3, new string[] { "John", "Hernán", "Mariño" })]
+    [InlineData("cy", 1, new string[] { "Lucy" })]
+    [InlineData("l", 2, new string[] { "Lucy", "Emily" })]
+    [InlineData("á", 3, new string[] { "Jack", "Hernán", "Mariño" })]
+    [InlineData("s", 0, new string[0])]
+    public void Will_found_using_custom_filter_expression(string text, int count, string[] namesFound)
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+        .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+        .SetResult(new OverlayPosition
+                {
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10,
+                    Top = 10,
+                    Placement = Placement.TopLeft,
+                    ZIndex = 100
+                });
+
+        var searchComplete = false;
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select EnableSearch=true
+                                SearchDebounceMilliseconds=0
+                                OnSearch="(search) => { searchComplete = true; }"
+                                TItemValue="Person"
+                                TItem="Person"
+                                FilterExpression="(item, searchValue) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0">
+                    <SelectOptions>
+                        @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                    TItemValue="Person"
+                                    TItem="Person"
+                                    Value=@item
+                                    Label=@item.Name />
+                    }
+                    </SelectOptions>
+                </AntDesign.Select>
+        );
+
+        cut.Find("input[type=search]").Input(text);
+        cut.Find(".ant-select-item-option").Click();
+        cut.WaitForState(() => searchComplete);
+
+        var foundItems = cut.Instance.SelectOptionItems.Where(x => !x.IsHidden).ToList();
+        foundItems.Count.Should().Be(count);
+        for (int i = 0; i < foundItems.Count; i++)
+        {
+            foundItems[i].Item.Name.Should().Be(namesFound[i]);
+        }
+    }
+}

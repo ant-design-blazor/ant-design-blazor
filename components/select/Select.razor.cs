@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -239,6 +240,8 @@ namespace AntDesign
         /// Callback function that is fired when input changed.
         /// </summary>
         [Parameter] public Action<string> OnSearch { get; set; }
+
+        [Parameter] public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; } = (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
 
@@ -1303,7 +1306,7 @@ namespace AntDesign
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
-                    if (item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (!firstDone)
                         {
@@ -1349,7 +1352,7 @@ namespace AntDesign
             {
                 if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem
                 {
-                    if (item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (item.Label.Equals(searchValue, StringComparison.InvariantCulture))
                         {
