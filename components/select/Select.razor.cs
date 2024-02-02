@@ -241,7 +241,7 @@ namespace AntDesign
         /// </summary>
         [Parameter] public Action<string> OnSearch { get; set; }
 
-        [Parameter] public Func<string, string, bool> FilterExpression { get; set; } = (label, searchValue) => label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
+        [Parameter] public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; } = (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
 
@@ -1307,7 +1307,7 @@ namespace AntDesign
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
-                    if (FilterExpression(item.Label, searchValue))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (!firstDone)
                         {
@@ -1353,7 +1353,7 @@ namespace AntDesign
             {
                 if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem
                 {
-                    if (FilterExpression(item.Label, searchValue))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (item.Label.Equals(searchValue, StringComparison.InvariantCulture))
                         {

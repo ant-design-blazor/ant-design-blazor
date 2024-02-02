@@ -13,7 +13,7 @@
 		OnFocus="OnFocus"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler"
 		OnSearch="OnSearch"
-		FilterExpression="(label, searchValue) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0">
+		FilterExpression="(item, searchValue) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0">
 </Select>
 <br /><br />
 <p>

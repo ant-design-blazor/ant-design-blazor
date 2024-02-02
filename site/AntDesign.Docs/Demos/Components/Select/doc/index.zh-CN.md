@@ -39,7 +39,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 指示搜索功能是否处于活动状态。 对于Mode = `tags` 始终为 `true`。 | bool | false |  |
-| FilterExpression | 自定义搜索时过滤的逻辑。 | Func<string, string, bool> | (label, searchValue) => label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
+| FilterExpression | 自定义搜索时过滤的逻辑。 | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
 | GroupName | 用作组指示符的属性的名称。 如果设置了该值，则条目将按组显示。 使用额外的 `SortByGroup` 和 `SortByLabel`. | string | - |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
 | IgnoreItemChanges |用于提高速度。 如果希望更改标签名称、组名称或禁用指示器，请禁用此属性。 | bool | true |  |
