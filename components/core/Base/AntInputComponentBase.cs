@@ -29,6 +29,8 @@ namespace AntDesign
 
         protected string PropertyName => _propertyReflector?.PropertyName;
 
+        internal PropertyReflector? PopertyReflector => _propertyReflector;
+
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
@@ -285,17 +287,19 @@ namespace AntDesign
 
             base.OnInitialized();
 
-            FormItem?.AddControl(this);
-            Form?.AddControl(this);
-
-            var dataIndex = FormItem?.DataIndex;
+            var dataIndex = FormItem?.Name;
             if (Form != null && !string.IsNullOrWhiteSpace(dataIndex))
             {
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, Form.Model.GetType());
                 Value = Form.Model.PathGetOrDefault<TValue>(dataIndex);
+                var lambda = PathHelper.GetLambda(dataIndex, Form.Model.GetType());
+                _propertyReflector = PropertyReflector.Create(lambda.Body);
             }
 
             _firstValue = Value;
+
+            FormItem?.AddControl(this);
+            Form?.AddControl(this);
         }
 
         /// <inheritdoc />
@@ -313,16 +317,19 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                if (ValueExpression == null && ValuesExpression == null)
+                if (ValueExpression == null && ValuesExpression == null && FormItem?.Name == null)
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 EditContext = Form?.EditContext;
-                if (ValuesExpression == null)
+                if (ValueExpression != null)
                     FieldIdentifier = FieldIdentifier.Create(ValueExpression);
-                else
+                else if (ValuesExpression != null)
                     FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                else if (FormItem?.Name != null)
+                    FieldIdentifier = new FieldIdentifier(Form?.Model, FormItem.Name);
+
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;

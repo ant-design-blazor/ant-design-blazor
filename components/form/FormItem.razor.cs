@@ -32,8 +32,8 @@ namespace AntDesign
         private IFormItem ParentFormItem { get; set; }
 
         [Parameter]
-        public string DataIndex { get; set; }
-        
+        public string Name { get; set; }
+
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
@@ -170,7 +170,7 @@ namespace AntDesign
 
         private IControlValueAccessor _control;
 
-        private PropertyReflector _propertyReflector;
+        private PropertyReflector? _propertyReflector;
 
         private ClassMapper _labelClassMapper = new ClassMapper();
 
@@ -249,7 +249,7 @@ namespace AntDesign
             var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
-                && _propertyReflector.RequiredAttribute != null)
+                && _propertyReflector?.RequiredAttribute != null)
             {
                 isRequired = true;
             }
@@ -368,13 +368,14 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
-            _propertyReflector = control.ValueExpression is null
-                ? PropertyReflector.Create(control.ValuesExpression)
-                : PropertyReflector.Create(control.ValueExpression);
+            _propertyReflector = control.PopertyReflector ?? (control.ValueExpression is not null
+                    ? PropertyReflector.Create(control.ValueExpression) :
+                     control.ValuesExpression is not null ?
+                     PropertyReflector.Create(control.ValuesExpression) : default);
 
-            if (_propertyReflector.DisplayName != null)
+            if (_propertyReflector?.DisplayName != null)
             {
-                Label ??= _propertyReflector.DisplayName;
+                Label ??= _propertyReflector?.DisplayName;
             }
 
             SetInternalIsRequired();

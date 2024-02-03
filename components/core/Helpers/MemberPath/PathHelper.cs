@@ -25,7 +25,7 @@ namespace AntDesign.Core.Helpers.MemberPath
 
         private const string ListCount = "Count";
 
-        #endregion
+        #endregion Constant Names
 
         #region Cache
 
@@ -43,7 +43,7 @@ namespace AntDesign.Core.Helpers.MemberPath
 
         private static readonly ConcurrentDictionary<PathSetConfig, Delegate> _setDelegateCache = new(_comparer);
 
-        #endregion
+        #endregion Cache
 
         #region GetValue
 
@@ -158,7 +158,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             return new(exp, param);
         }
 
-        #endregion
+        #endregion GetValue
 
         #region Set value
 
@@ -249,7 +249,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             return new(exp, paramExp, valueParam);
         }
 
-        #endregion
+        #endregion Set value
 
         #region Common Method
 
@@ -277,11 +277,13 @@ namespace AntDesign.Core.Helpers.MemberPath
 
                 switch (pathNode.NodeType)
                 {
-                    case PathNodeType.Member:
+                    case PathNodeType.Member when exp.Type.GetProperty(pathNode.Name) != null:
                         {
                             exp = Expression.PropertyOrField(exp, pathNode.Name);
                             break;
                         }
+
+                    case PathNodeType.Member:
                     case PathNodeType.StringIndex:
                         {
                             if (checkNull && exp.Type.IsClass)
@@ -545,14 +547,17 @@ namespace AntDesign.Core.Helpers.MemberPath
                         case PathCharState.MemberName:
                             prevChar = PathCharState.MemberName;
                             break;
+
                         case PathCharState.SingleQuote:
                         case PathCharState.StringKey:
                             prevChar = PathCharState.StringKey;
                             break;
+
                         case PathCharState.LeftBracket:
                         case PathCharState.NumberKey:
                             prevChar = PathCharState.NumberKey;
                             break;
+
                         default:
                             throw new InvalidPathException($"Unexpected character '{c}' after {prevChar} character");
                     }
@@ -580,7 +585,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             throw new InvalidPathException($"Unexpected path end character '{prevChar}', only member names or right brackets can be used as the end of a path");
         }
 
-        #endregion
+        #endregion Common Method
 
         private readonly struct PathGetConfig
         {

@@ -12,7 +12,7 @@ namespace AntDesign.Internal
 
         public RenderFragment FeedbackIcon { get; }
 
-        public string DataIndex { get; }
+        public string Name { get; }
 
         internal bool IsRequiredByValidation { get; }
 
