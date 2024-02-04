@@ -11,12 +11,20 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddSingleton(sp => new HttpClient()
+builder.Services.AddSingleton(sp =>
 {
-    DefaultRequestHeaders =
+    var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
+    if (httpContext != null)
     {
-        // Use to call the github API on server side
-      {"User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36 Edg/81.0.416.68"}
+        var request = httpContext.Request;
+        var host = request.Host.ToUriComponent();
+        var scheme = request.Scheme;
+        var baseAddress = $"{scheme}://{host}";
+        return new HttpClient() { BaseAddress = new Uri(baseAddress) };
+    }
+    else
+    {
+        return new HttpClient() { BaseAddress = new Uri("http://0.0.0.0:8181") };
     }
 });
 builder.Services.AddAntDesignDocs();
