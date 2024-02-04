@@ -27,6 +27,8 @@ namespace AntDesign.Docs.Shared
 
         private DemoMenuItem[] _menuItems = { };
 
+        private bool _firstRender;
+
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -46,12 +48,17 @@ namespace AntDesign.Docs.Shared
         {
             if (firstRender)
             {
+                _firstRender = true;
                 await JsInterop.InvokeVoidAsync("window.DocSearch.init", CurrentLanguage);
             }
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
+            if (!_firstRender)
+            {
+                return;
+            }
             _menuItems = await DemoService.GetMenuAsync();
             await JsInterop.InvokeVoidAsync("window.DocSearch.init", culture.Name);
             await InvokeAsync(StateHasChanged);

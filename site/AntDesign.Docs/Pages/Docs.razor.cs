@@ -15,6 +15,8 @@ namespace AntDesign.Docs.Pages
 {
     public partial class Docs : ComponentBase, IDisposable
     {
+        [Parameter]
+        public string Locale { get; set; }
         [Parameter] public string FileName { get; set; }
 
         [CascadingParameter]
