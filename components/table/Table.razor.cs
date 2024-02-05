@@ -212,8 +212,8 @@ namespace AntDesign
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
-        private string _scrollBarWidth = "17px";
-
+        private string _scrollBarWidth;
+        private string _realScrollBarSize = "15px";
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
@@ -254,6 +254,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth;
+        string ITable.RealScrollBarSize => _realScrollBarSize;
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -633,6 +634,23 @@ namespace AntDesign
             InitializePagination();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.TryGetValue<string>(nameof(ScrollBarWidth), out var value))
+            {
+                if (value is null)
+                {
+                    var scrollBarSize = await JsInvokeAsync<double>(JSInteropConstants.DomMainpulationHelper.GetScrollBarSize, false);
+                    _realScrollBarSize = $"{scrollBarSize}px";
+                }
+                else
+                {
+                    _realScrollBarSize = value;
+                }
+            }
+            await base.SetParametersAsync(parameters);
         }
 
         protected override void OnParametersSet()

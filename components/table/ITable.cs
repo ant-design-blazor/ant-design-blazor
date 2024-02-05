@@ -40,6 +40,8 @@ namespace AntDesign
 
         internal string ScrollBarWidth { get; }
 
+        internal string RealScrollBarSize { get; }
+
         internal int ExpandIconColumnIndex { get; }
 
         internal int TreeExpandIconColumnIndex { get; }
