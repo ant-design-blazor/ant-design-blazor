@@ -12,6 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET SDK
@@ -21,7 +23,8 @@ jobs:
     - name: Restore
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: |
+        dotnet build
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
@@ -31,6 +34,7 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build
