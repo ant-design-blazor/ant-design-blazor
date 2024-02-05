@@ -9,6 +9,9 @@ namespace AntDesign.Docs.Pages
 {
     public partial class Index : ComponentBase, IDisposable
     {
+        [Parameter]
+        public string Locale { get; set; }
+
         private Recommend[] _recommends = { };
 
         private Product[] _products = { };
@@ -23,6 +26,12 @@ namespace AntDesign.Docs.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await FetchData();
+            await base.OnInitializedAsync();
 
             Language.LanguageChanged += HandleLanguageChanged;
         }
@@ -43,11 +52,11 @@ namespace AntDesign.Docs.Pages
                 return;
             }
 
-            if (_rendered)
-            {
-                _rendered = false;
-                _ = FetchData();
-            }
+            //if (_rendered)
+            //{
+            //    _rendered = false;
+            //    _ = FetchData();
+            //}
         }
 
         private async Task FetchData()
