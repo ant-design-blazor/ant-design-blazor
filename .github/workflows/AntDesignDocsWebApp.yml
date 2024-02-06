@@ -8,8 +8,6 @@ on: pull_request
 env:
   AZURE_WEBAPP_NAME: AntDesignDocsWebApp
   AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/AntDesign.Docs.WebApp/published
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: site/AntDesign.Docs.WebApp/AntDesign.Docs.WebApp
 jobs:
   build:
@@ -42,7 +40,7 @@ jobs:
     - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        dotnet-version: 8.0.x
 
     - uses: actions/setup-node@v1
       with:
@@ -58,7 +56,7 @@ jobs:
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
