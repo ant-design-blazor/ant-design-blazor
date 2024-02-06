@@ -39,11 +39,17 @@ namespace AntDesign
         [Parameter]
         public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
 
+        [Parameter]
+        public string Placement { get; set; } = "left";
+
+        private bool RightAvatar => Placement?.Equals("right", StringComparison.InvariantCultureIgnoreCase) == true;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
             this.ClassMapper.Clear()
                 .Add("ant-comment")
+                .If("ant-comment-right", () => RightAvatar)
                 .If("ant-comment-rtl", () => RTL);
         }
     }
