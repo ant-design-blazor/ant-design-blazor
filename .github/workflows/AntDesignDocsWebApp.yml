@@ -1,8 +1,10 @@
 name: Build and deploy .NET Core application to Web App AntDesignDocsWebApp
-on:
-  push:
-    branches:
-    - master
+# on:
+#   push:
+#     branches:
+#     - master
+on: pull_request
+
 env:
   AZURE_WEBAPP_NAME: AntDesignDocsWebApp
   AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/AntDesign.Docs.WebApp/published
@@ -51,6 +53,7 @@ jobs:
     - name: Build
       run: |
         npm install
+        dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj
         dotnet build
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
