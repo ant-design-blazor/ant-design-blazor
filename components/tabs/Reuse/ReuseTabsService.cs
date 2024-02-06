@@ -178,40 +178,46 @@ namespace AntDesign
 
 
           
-        public void AddReuseTabsPageItem(params string[] keys)
+     
+        public void AddReuseTabsPageItem(string pageUrl, string? routeUrl, RenderFragment? title)
         {
-            var list = GetAllAssembly();
-            foreach (var key in keys)
+            /*
+              Use it like this
+                TabService.AddReuseTabsPageItem("/module/1000/1001", "/module/{group}/{menu}", (builder) => { builder.AddContent(0, "Title"); });
+                TabService.AddReuseTabsPageItem("/module/1000/1002", "/module/{group}/{menu}", null);
+                TabService.AddReuseTabsPageItem("/user/setting", null, null);
+             */
+        
+            if (!_pageMap.ContainsKey(pageUrl))
             {
-                if (!_pageMap.ContainsKey(key))
+                var list = GetAllAssembly();
+                foreach (var item in list)
                 {
-                    foreach (var item in list)
+                    var pageType = item.ExportedTypes
+                    .Where(w =>
                     {
-                        var pageType = item.ExportedTypes
-                        .Where(w =>
+                        var routeAttribute = w.GetCustomAttribute<RouteAttribute>();
+                        var reuseTabsAttribute = w.GetCustomAttribute<ReuseTabsPageAttribute>();
+                        var url = reuseTabsAttribute?.PinUrl ?? routeAttribute?.Template;
+                        return url == (string.IsNullOrWhiteSpace(routeUrl) ? pageUrl : routeUrl);
+                    }).FirstOrDefault();
+                    if (pageType != null)
+                    {
+                        var reuseTabsPageItem = new ReuseTabsPageItem();
+                        GetPageInfo(reuseTabsPageItem, pageType, pageUrl, title != null ? null : Activator.CreateInstance(pageType));
+                        reuseTabsPageItem.CreatedAt = DateTime.MinValue;
+                        reuseTabsPageItem.Url = pageUrl;
+                        if (title != null)
                         {
-                            var routeAttribute = w.GetCustomAttribute<RouteAttribute>();
-                            var reuseTabsAttribute = w.GetCustomAttribute<ReuseTabsPageAttribute>();
-                            var url = reuseTabsAttribute?.PinUrl ?? routeAttribute?.Template;
-                            if (url == null)
-                            {
-                                Console.WriteLine(w.Name);
-                                if (w.GetInterface(typeof(IReuseTabsPage).Name) != null)
-                                {
-                                    var aa = w.GetCustomAttributes();
-                                    var bb = aa;
-                                }
-                            }
-                            return url == key;
-                        }).FirstOrDefault();
-                        if (pageType != null)
-                        {
-                            AddReuseTabsPageItem(pageType);
-                            break;
+                            reuseTabsPageItem.Title = title;
                         }
+                        _pageMap[pageUrl] = reuseTabsPageItem;
+                        break;
                     }
                 }
+                OnStateHasChanged?.Invoke();
             }
+        
         }
 
         //public void Pin(string key)
