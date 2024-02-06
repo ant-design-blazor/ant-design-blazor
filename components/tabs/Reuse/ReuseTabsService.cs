@@ -176,6 +176,44 @@ namespace AntDesign
             _pageMap[url] = reuseTabsPageItem;
         }
 
+
+          
+        public void AddReuseTabsPageItem(params string[] keys)
+        {
+            var list = GetAllAssembly();
+            foreach (var key in keys)
+            {
+                if (!_pageMap.ContainsKey(key))
+                {
+                    foreach (var item in list)
+                    {
+                        var pageType = item.ExportedTypes
+                        .Where(w =>
+                        {
+                            var routeAttribute = w.GetCustomAttribute<RouteAttribute>();
+                            var reuseTabsAttribute = w.GetCustomAttribute<ReuseTabsPageAttribute>();
+                            var url = reuseTabsAttribute?.PinUrl ?? routeAttribute?.Template;
+                            if (url == null)
+                            {
+                                Console.WriteLine(w.Name);
+                                if (w.GetInterface(typeof(IReuseTabsPage).Name) != null)
+                                {
+                                    var aa = w.GetCustomAttributes();
+                                    var bb = aa;
+                                }
+                            }
+                            return url == key;
+                        }).FirstOrDefault();
+                        if (pageType != null)
+                        {
+                            AddReuseTabsPageItem(pageType);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         //public void Pin(string key)
         //{
         //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
