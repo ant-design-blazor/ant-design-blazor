@@ -1,9 +1,8 @@
 name: Build and deploy .NET Core application to Web App AntDesignDocsWebApp
-# on:
-#   push:
-#     branches:
-#     - master
-on: pull_request
+on:
+  push:
+    branches:
+    - master
 
 env:
   AZURE_WEBAPP_NAME: AntDesignDocsWebApp
