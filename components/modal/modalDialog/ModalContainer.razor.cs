@@ -11,6 +11,9 @@ namespace AntDesign
         [Inject]
         private ModalService ModalService { get; set; }
 
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         private readonly List<ModalRef> _modalRefs = new List<ModalRef>();
 
         protected override void OnInitialized()
@@ -18,6 +21,12 @@ namespace AntDesign
             ModalService.OnModalOpenEvent += ModalService_OnModalOpenEvent;
             ModalService.OnModalCloseEvent += ModalService_OnModalCloseEvent;
             ModalService.OnModalUpdateEvent += ModalService_OnModalUpdateEvent;
+
+            NavigationManager.LocationChanged += (sender, e) =>
+            {
+                _modalRefs.Clear();
+                InvokeStateHasChanged();
+            };
         }
 
         private async Task ModalService_OnModalOpenEvent(ModalRef modalRef)

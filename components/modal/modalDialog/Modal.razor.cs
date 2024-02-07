@@ -13,6 +13,9 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         #region Parameter
 
         /// <summary>
@@ -366,6 +369,8 @@ namespace AntDesign
 
         private bool _hasFocus = false;
 
+        private bool _firstShow = true;
+
         private async Task OnAfterDialogShow()
         {
             if (!_hasFocus)
@@ -376,6 +381,29 @@ namespace AntDesign
                 {
                     await ModalRef.OnOpen();
                 }
+            }
+
+            if (_firstShow)
+            {
+                _firstShow = false;
+                NavigationManager.LocationChanged += (sender, e) =>
+                {
+                    // Modal create by Service
+                    if (ModalRef != null)
+                    {
+                        return;
+                    }
+                    // Modal has been destroyed
+                    if (!Visible && DestroyOnClose)
+                    {
+                        return;
+                    }
+
+                    if (_dialogWrapper.Dialog != null)
+                    {
+                        _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
+                    }
+                };
             }
         }
 

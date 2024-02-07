@@ -12,6 +12,9 @@ namespace AntDesign
         [Inject]
         private ConfirmService ConfirmService { get; set; }
 
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         private readonly List<ConfirmRef> _confirmRefs = new List<ConfirmRef>();
 
         #region override
@@ -27,6 +30,12 @@ namespace AntDesign
             ModalService.OnConfirmUpdateEvent += OnConfirmUpdate;
 
             ConfirmService.OnOpenEvent += OnConfirmOpen;
+
+            NavigationManager.LocationChanged += (sender, e) =>
+            {
+                _confirmRefs.Clear();
+                InvokeStateHasChanged();
+            };
         }
 
         #endregion
