@@ -176,48 +176,19 @@ namespace AntDesign
             _pageMap[url] = reuseTabsPageItem;
         }
 
-
-          
-     
-        public void AddReuseTabsPageItem(string pageUrl, string? routeUrl, RenderFragment? title)
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="title">The title show on the tab</param>
+        public void CreateTab(string pageUrl, RenderFragment? title)
         {
-            /*
-              Use it like this
-                TabService.AddReuseTabsPageItem("/module/1000/1001", "/module/{group}/{menu}", (builder) => { builder.AddContent(0, "Title"); });
-                TabService.AddReuseTabsPageItem("/module/1000/1002", "/module/{group}/{menu}", null);
-                TabService.AddReuseTabsPageItem("/user/setting", null, null);
-             */
-             if (_pageMap.ContainsKey(pageUrl))
-             {
-                 return;
-             }
-            var list = GetAllAssembly();
-            foreach (var item in list)
+            if (_pageMap.ContainsKey(pageUrl))
             {
-                var pageType = item.ExportedTypes
-                .Where(w =>
-                {
-                    var routeAttribute = w.GetCustomAttribute<RouteAttribute>();
-                    var reuseTabsAttribute = w.GetCustomAttribute<ReuseTabsPageAttribute>();
-                    var url = reuseTabsAttribute?.PinUrl ?? routeAttribute?.Template;
-                    return url == (string.IsNullOrWhiteSpace(routeUrl) ? pageUrl : routeUrl);
-                }).FirstOrDefault();
-                if (pageType != null)
-                {
-                    var reuseTabsPageItem = new ReuseTabsPageItem();
-                    GetPageInfo(reuseTabsPageItem, pageType, pageUrl, title != null ? null : Activator.CreateInstance(pageType));
-                    reuseTabsPageItem.CreatedAt = DateTime.MinValue;
-                    reuseTabsPageItem.Url = pageUrl;
-                    if (title != null)
-                    {
-                        reuseTabsPageItem.Title = title;
-                    }
-                    _pageMap[pageUrl] = reuseTabsPageItem;
-                    break;
-                }
+                return;
             }
+            _pageMap.TryAdd(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
             OnStateHasChanged?.Invoke();
-        
         }
 
         //public void Pin(string key)

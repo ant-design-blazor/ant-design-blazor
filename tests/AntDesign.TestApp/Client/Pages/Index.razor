@@ -5,3 +5,13 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@inject ReuseTabsService ReuseTabsService;
+
+@code{
+    protected override void OnInitialized()
+    {
+        ReuseTabsService.AddReuseTabsPageItem("/counter/1",@<span>Counter 1</span>);
+        ReuseTabsService.AddReuseTabsPageItem("/counter/2",@<span>Counter 2</span>);
+    }
+}
