@@ -181,7 +181,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="pageUrl">The url of target page</param>
         /// <param name="title">The title show on the tab</param>
-        public void CreateTab(string pageUrl, RenderFragment? title)
+        public void CreateTab(string pageUrl, RenderFragment? title = null)
         {
             if (_pageMap.ContainsKey(pageUrl))
             {
