@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
@@ -20,6 +21,8 @@ namespace AntDesign.Docs.Pages
 
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private ILanguageService Language { get; set; }
+
+        [Inject] private IStringLocalizer StringLocalizer { get; set; }
 
         private bool _rendered;
 

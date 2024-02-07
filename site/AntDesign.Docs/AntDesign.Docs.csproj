@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 
