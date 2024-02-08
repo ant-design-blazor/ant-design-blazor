@@ -137,9 +137,9 @@ namespace AntDesign
         [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
 
         /// <summary>
-        /// Customize dropdown content.
+        /// Customize dropdown content. The context is the original content.
         /// </summary>
-        [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
+        [Parameter] public RenderFragment<RenderFragment> DropdownRender { get; set; }
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
@@ -328,6 +328,7 @@ namespace AntDesign
         /// Specifies predicate for disabled options
         /// </summary>
         [Parameter] public Func<TItem, bool> DisabledPredicate { get => _getDisabled; set => _getDisabled = value; }
+
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
         /// </summary>
