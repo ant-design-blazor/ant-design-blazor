@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -31,14 +32,16 @@ namespace AntDesign
 
             ConfirmService.OnOpenEvent += OnConfirmOpen;
 
-            NavigationManager.LocationChanged += (sender, e) =>
-            {
-                _confirmRefs.Clear();
-                InvokeStateHasChanged();
-            };
+            NavigationManager.LocationChanged += OnLocationChanged;
         }
 
         #endregion
+
+        private void OnLocationChanged(object sender, EventArgs e)
+        {
+            _confirmRefs.Clear();
+            InvokeStateHasChanged();
+        }
 
         /// <summary>
         /// create and open a Confirm dialog
@@ -125,6 +128,7 @@ namespace AntDesign
             ModalService.OnConfirmUpdateEvent -= OnConfirmUpdate;
 
             ConfirmService.OnOpenEvent -= OnConfirmOpen;
+            NavigationManager.LocationChanged -= OnLocationChanged;
 
             base.Dispose(disposing);
         }

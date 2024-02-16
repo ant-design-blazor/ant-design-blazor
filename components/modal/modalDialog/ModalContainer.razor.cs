@@ -22,11 +22,13 @@ namespace AntDesign
             ModalService.OnModalCloseEvent += ModalService_OnModalCloseEvent;
             ModalService.OnModalUpdateEvent += ModalService_OnModalUpdateEvent;
 
-            NavigationManager.LocationChanged += (sender, e) =>
-            {
-                _modalRefs.Clear();
-                InvokeStateHasChanged();
-            };
+            NavigationManager.LocationChanged += OnLocationChanged;
+        }
+
+        private void OnLocationChanged(object sender, EventArgs e)
+        {
+            _modalRefs.Clear();
+            InvokeStateHasChanged();
         }
 
         private async Task ModalService_OnModalOpenEvent(ModalRef modalRef)
@@ -65,6 +67,7 @@ namespace AntDesign
             ModalService.OnModalOpenEvent -= ModalService_OnModalOpenEvent;
             ModalService.OnModalCloseEvent -= ModalService_OnModalCloseEvent;
             ModalService.OnModalUpdateEvent -= ModalService_OnModalUpdateEvent;
+            NavigationManager.LocationChanged -= OnLocationChanged;
 
             base.Dispose(disposing);
         }
