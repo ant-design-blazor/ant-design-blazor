@@ -176,6 +176,21 @@ namespace AntDesign
             _pageMap[url] = reuseTabsPageItem;
         }
 
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="title">The title show on the tab</param>
+        public void CreateTab(string pageUrl, RenderFragment? title = null)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                return;
+            }
+            _pageMap.TryAdd(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            OnStateHasChanged?.Invoke();
+        }
+
         //public void Pin(string key)
         //{
         //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
