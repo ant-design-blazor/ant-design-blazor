@@ -303,8 +303,8 @@ namespace AntDesign
                 return;
             }
 
-            ReloadAndInvokeChange();
             _hasInitialized = true;
+            ReloadAndInvokeChange();
         }
 
         public void ReloadData()
@@ -433,6 +433,13 @@ namespace AntDesign
                 return;
             }
 #endif
+
+            if (_fieldModel is null)
+            {
+                StateHasChanged();
+                return;
+            }
+
             FlushCache();
 
             var queryModel = this.InternalReload();
@@ -704,7 +711,7 @@ namespace AntDesign
                 }
 
                 // To handle the case where a dynamic table does not render columns until the data is requested
-                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                if ((!ColumnContext.HeaderColumns.Any() || _fieldModel is null) && !_hasInitialized)
                 {
                     OnColumnInitialized();
                     return;
