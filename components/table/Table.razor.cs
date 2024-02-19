@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System.Reflection;
+using AntDesign.core.Services;
 using AntDesign.Table.Internal;
 
 #if NET5_0_OR_GREATER
@@ -199,6 +200,9 @@ namespace AntDesign
 
         [Inject]
         private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
+        
+        [Inject]
+        private ClientDimensionService ClientDimensionService { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -254,7 +258,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth;
-        string ITable.RealScrollBarSize => _realScrollBarSize;
+        string ITable.RealScrollBarSize => _scrollBarWidth ?? _realScrollBarSize;
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -636,23 +640,6 @@ namespace AntDesign
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            if (parameters.TryGetValue<string>(nameof(ScrollBarWidth), out var value))
-            {
-                if (value is null)
-                {
-                    var scrollBarSize = await JsInvokeAsync<double>(JSInteropConstants.DomMainpulationHelper.GetScrollBarSize, false);
-                    _realScrollBarSize = $"{scrollBarSize}px";
-                }
-                else
-                {
-                    _realScrollBarSize = value;
-                }
-            }
-            await base.SetParametersAsync(parameters);
-        }
-
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -711,6 +698,12 @@ namespace AntDesign
                 if (ScrollY != null || ScrollX != null || Resizable)
                 {
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
+                }
+
+                if (ScrollY != null && ScrollBarWidth == null)
+                {
+                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync(); 
+                    _realScrollBarSize = $"{scrollBarSize}px";
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
