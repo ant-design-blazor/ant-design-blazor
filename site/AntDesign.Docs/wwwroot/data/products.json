@@ -34,5 +34,11 @@
     "title": "UEditor Blazor",
     "description": "app.home.product-ueditor-slogan",
     "href": "https://github.com/ant-design-blazor/ueditor-blazor"
+  },
+  {
+    "img": "https://github.com/xuzeyu91/AntSK/blob/main/images/%E9%97%AE%E7%AD%94.png",
+    "title": "AntSK",
+    "description": "app.home.product-antsk-slogan",
+    "href": "https://github.com/xuzeyu91/AntSK"
   }
 ]
