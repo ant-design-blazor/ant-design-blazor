@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AntDesign.Docs.WebApp.Client\AntDesign.Docs.WebApp.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
   </ItemGroup>
 
@@ -16,11 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
+    <ProjectReference Include="..\..\AntDesign.Docs.Wasm\AntDesign.Docs.Wasm.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyDocs" BeforeTargets="Build">
-    <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
-  </Target>
-  
 </Project>
