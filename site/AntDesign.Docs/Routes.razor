@@ -8,6 +8,9 @@
             <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>
+        <NotFound>
+            <Result Status="404" />
+        </NotFound>
     </Router>
     <AntContainer />
 </ConfigProvider>
@@ -22,26 +25,33 @@
 
         var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;
 
-        if (string.IsNullOrWhiteSpace(segment))
+        try
         {
-            NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
-            return;
-        }
-        else
-        {
-            if (segment.IsIn("zh-CN", "en-US"))
-            {
-                LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
-            }
-            else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+            if (string.IsNullOrWhiteSpace(segment))
             {
                 NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
+                return;
             }
             else
             {
-                NavigationManager.NavigateTo($"en-US/{relativeUri}");
-                return;
+                if (segment.IsIn("zh-CN", "en-US"))
+                {
+                    LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
+                }
+                else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                {
+                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo($"en-US/{relativeUri}");
+                    return;
+                }
             }
+        }
+        catch
+        {
+            
         }
     }
 }
