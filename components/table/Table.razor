@@ -7,7 +7,7 @@
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading || (_fieldModel is null)">
+    <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
@@ -96,7 +96,7 @@
                                         @colGroup(this, true)
                                         @header()
                                         <tbody class="ant-table-tbody">
-                                            @body( _showItems)
+                                            @body(_showItems)
                                         </tbody>
                                         @tfoot()
                                     </table>
