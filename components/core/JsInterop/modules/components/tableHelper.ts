@@ -1,8 +1,8 @@
 ﻿export class tableHelper {
-  static bindTableScroll(bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
+  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
-        tableHelper.SetScrollPositionClassName(bodyRef, tableRef);
+        tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
       }
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
@@ -29,7 +29,7 @@
     }
   }
 
-  static SetScrollPositionClassName(bodyRef, tableRef) {
+  static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
     let scrollLeft = bodyRef.scrollLeft;
     let scrollWidth = bodyRef.scrollWidth;
@@ -55,8 +55,8 @@
       pingRight = true;
     }
 
-    pingLeft ? tableRef.classList.add("ant-table-ping-left") : tableRef.classList.remove("ant-table-ping-left");
-    pingRight ? tableRef.classList.add("ant-table-ping-right") : tableRef.classList.remove("ant-table-ping-right");
+    pingLeft ? wrapperRef.classList.add("ant-table-ping-left") : wrapperRef.classList.remove("ant-table-ping-left");
+    pingRight ? wrapperRef.classList.add("ant-table-ping-right") : wrapperRef.classList.remove("ant-table-ping-right");
   }
 
   static enableColumnResizing(tableElement) {

@@ -228,6 +228,7 @@ namespace AntDesign
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
+        private ElementReference _wrapperRef;
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
         private ElementReference _tableRef;
@@ -704,7 +705,7 @@ namespace AntDesign
 
                 if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
                 if (ScrollY != null && ScrollBarWidth == null)
