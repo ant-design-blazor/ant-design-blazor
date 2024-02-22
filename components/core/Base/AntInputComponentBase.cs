@@ -27,6 +27,8 @@ namespace AntDesign
 
         private Action<object, TValue> _setValueDelegate;
 
+        private Func<object, TValue> _getValueDelegate;
+
         protected string PropertyName => _propertyReflector?.PropertyName;
 
         internal PropertyReflector? PopertyReflector => _propertyReflector;
@@ -79,7 +81,6 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     _value = value;
-                    _setValueDelegate?.Invoke(Form.Model, value);
                     OnValueChange(value);
                 }
             }
@@ -136,7 +137,7 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     Value = value;
-
+                    _setValueDelegate?.Invoke(Form.Model, value);
                     ValueChanged.InvokeAsync(value);
 
                     OnCurrentValueChange(value);
@@ -287,19 +288,19 @@ namespace AntDesign
 
             base.OnInitialized();
 
+            FormItem?.AddControl(this);
+            Form?.AddControl(this);
+
             var dataIndex = FormItem?.Name;
             if (Form != null && !string.IsNullOrWhiteSpace(dataIndex))
             {
-                _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, Form.Model.GetType());
-                Value = Form.Model.PathGetOrDefault<TValue>(dataIndex);
-                var lambda = PathHelper.GetLambda(dataIndex, Form.Model.GetType());
-                _propertyReflector = PropertyReflector.Create(lambda.Body);
+                var type = Form.Model.GetType();
+                _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
+                _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
+                Value = _getValueDelegate.Invoke(Form.Model);
             }
 
             _firstValue = Value;
-
-            FormItem?.AddControl(this);
-            Form?.AddControl(this);
         }
 
         /// <inheritdoc />
@@ -317,18 +318,24 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                if (ValueExpression == null && ValuesExpression == null && FormItem?.Name == null)
+                if (ValueExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                }
+                else if (ValuesExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);   
+                }
+                else if (Form?.Model != null && FormItem?.Name != null)
+                {
+                    FieldIdentifier = new FieldIdentifier(Form.Model, FormItem.Name);
+                }
+                else
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 EditContext = Form?.EditContext;
-                if (ValueExpression != null)
-                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
-                else if (ValuesExpression != null)
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
-                else if (FormItem?.Name != null)
-                    FieldIdentifier = new FieldIdentifier(Form?.Model, FormItem.Name);
 
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
@@ -380,6 +387,15 @@ namespace AntDesign
         void IControlValueAccessor.Reset()
         {
             ResetValue();
+        }
+
+        internal void OnNameChanged()
+        {
+            if (_getValueDelegate != null)
+            {
+                CurrentValue = _getValueDelegate.Invoke(Form.Model);
+                InvokeAsync(StateHasChanged);
+            }
         }
     }
 }

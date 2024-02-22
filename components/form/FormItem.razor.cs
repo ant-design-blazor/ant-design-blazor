@@ -32,8 +32,16 @@ namespace AntDesign
         private IFormItem ParentFormItem { get; set; }
 
         [Parameter]
-        public string Name { get; set; }
-
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                _nameChanged?.Invoke();
+            }
+        }
+        
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
@@ -183,6 +191,10 @@ namespace AntDesign
         private FormValidateStatus _validateStatus;
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
+
+        private Action _nameChanged;
+
+        private string _name;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
@@ -334,6 +346,7 @@ namespace AntDesign
             if (_control != null) return;
 
             _vaildateStatusChanged = () => control.UpdateStyles();
+            _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -368,10 +381,21 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
-            _propertyReflector = control.PopertyReflector ?? (control.ValueExpression is not null
-                    ? PropertyReflector.Create(control.ValueExpression) :
-                     control.ValuesExpression is not null ?
-                     PropertyReflector.Create(control.ValuesExpression) : default);
+            if (control.ValueExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            }
+            else if (control.ValuesExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
+            }
+            else if (Name is not null)
+            {
+                _propertyReflector = new PropertyReflector 
+                { 
+                    PropertyName = Name
+                };
+            }
 
             if (_propertyReflector?.DisplayName != null)
             {
