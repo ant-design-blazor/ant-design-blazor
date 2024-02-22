@@ -51,7 +51,7 @@ namespace AntDesign
 
         protected SelectContent<TItemValue, TItem> _selectContent;
 
-        protected IEnumerable<TItemValue> _selectedValues;
+        protected TItemValue[] _selectedValues;
 
         protected Action<TItem, string> _setLabel;
 
@@ -267,12 +267,12 @@ namespace AntDesign
                             return;
                         }
 
-                        _selectedValues = value;
+                        _selectedValues = value.ToArray();
                         _ = OnValuesChangeAsync(value);
                     }
                     else
                     {
-                        _selectedValues = value;
+                        _selectedValues = value.ToArray();
 
                         _ = OnValuesChangeAsync(value);
                     }
