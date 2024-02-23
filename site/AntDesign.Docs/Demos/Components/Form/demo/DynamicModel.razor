@@ -1,5 +1,6 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.ComponentModel
+@using System.Reflection
 
 <Form Model="@model"
       OnFinish="OnFinish"
@@ -10,7 +11,7 @@
     @foreach (var field in fields)
     {
         <FormItem Name="@field.Key">
-            @typedInput[field.Value]
+            @InputRender(field.Value)
         </FormItem>
     }
 
@@ -23,12 +24,12 @@
 
 @code
 {
-    private Dictionary<string, Type> fields = new();
+    private Dictionary<string, PropertyInfo> fields = new();
     private Model model = new();
 
     protected override void OnInitialized()
     {
-        fields = typeof(Model).GetProperties().ToDictionary(x => x.Name, x => x.PropertyType);
+        fields = typeof(Model).GetProperties().ToDictionary(x => x.Name, x => x);
         base.OnInitialized();
     }
 
@@ -36,16 +37,23 @@
     {
         [Required, DisplayName("User Name")]
         public string Username { get; set; }
+
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
         public bool RememberMe { get; set; } = true;
     }
 
-    private Dictionary<Type,RenderFragment> typedInput => new()
+    private RenderFragment InputRender(PropertyInfo property)
     {
-        [typeof(string)]= @<Input TValue="string" />,
-        [typeof(bool)] = @<Checkbox />,
-    };
+        return property switch
+        {
+            _ when property.Name == "Password" =>@<InputPassword></InputPassword>,
+            _ when property.PropertyType == typeof(bool) =>@<Checkbox></Checkbox>,
+            _ =>@<Input TValue="string"></Input>,
+        };
+    }
 
     private void OnFinish(EditContext editContext)
     {

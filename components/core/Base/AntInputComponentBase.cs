@@ -288,17 +288,21 @@ namespace AntDesign
 
             base.OnInitialized();
 
-            FormItem?.AddControl(this);
-            Form?.AddControl(this);
-
             var dataIndex = FormItem?.Name;
+
             if (Form != null && !string.IsNullOrWhiteSpace(dataIndex))
             {
                 var type = Form.Model.GetType();
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
                 Value = _getValueDelegate.Invoke(Form.Model);
+
+                var lambda = PathHelper.GetLambda(dataIndex, type);
+                _propertyReflector = PropertyReflector.Create(lambda.Body);
             }
+
+            FormItem?.AddControl(this);
+            Form?.AddControl(this);
 
             _firstValue = Value;
         }
@@ -318,13 +322,19 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
+                EditContext = Form?.EditContext;
+
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+
+                EditContext.OnValidationStateChanged += _validationStateChangedHandler;
+
                 if (ValueExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValueExpression);
                 }
                 else if (ValuesExpression != null)
                 {
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);   
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
                 }
                 else if (Form?.Model != null && FormItem?.Name != null)
                 {
@@ -334,12 +344,6 @@ namespace AntDesign
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
-
-                EditContext = Form?.EditContext;
-
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
-
-                EditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
             else if (Form?.EditContext != EditContext)
             {

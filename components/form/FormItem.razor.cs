@@ -41,7 +41,7 @@ namespace AntDesign
                 _nameChanged?.Invoke();
             }
         }
-        
+
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
@@ -381,20 +381,17 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
-            if (control.ValueExpression is not null)
+            if (control.PopertyReflector is not null)
+            {
+                _propertyReflector = control.PopertyReflector;
+            }
+            else if (control.ValueExpression is not null)
             {
                 _propertyReflector = PropertyReflector.Create(control.ValueExpression);
             }
             else if (control.ValuesExpression is not null)
             {
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
-            }
-            else if (Name is not null)
-            {
-                _propertyReflector = new PropertyReflector 
-                { 
-                    PropertyName = Name
-                };
             }
 
             if (_propertyReflector?.DisplayName != null)

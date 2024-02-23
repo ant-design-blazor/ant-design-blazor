@@ -34,19 +34,7 @@ namespace AntDesign.Core.Reflection
 
             var accessorBody = accessor.Body;
 
-            if (accessorBody is UnaryExpression unaryExpression
-               && unaryExpression.NodeType == ExpressionType.Convert
-               && unaryExpression.Type == typeof(object))
-            {
-                accessorBody = unaryExpression.Operand;
-            }
-
-            if (accessorBody is MemberExpression memberExpression)
-            {
-                return new PropertyReflector(memberExpression.Member);
-            }
-
-            return new PropertyReflector();
+            return Create(accessorBody);
         }
 
         public static PropertyReflector Create(Expression accessorBody)
