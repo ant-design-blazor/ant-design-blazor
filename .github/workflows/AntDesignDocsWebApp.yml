@@ -6,8 +6,8 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: AntDesignDocsWebApp
-  AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/AntDesign.Docs.WebApp/published
-  WORKING_DIRECTORY: site/AntDesign.Docs.WebApp/AntDesign.Docs.WebApp
+  AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/published
+  WORKING_DIRECTORY: site/AntDesign.Docs.WebApp
 jobs:
   build:
     runs-on: ubuntu-latest
