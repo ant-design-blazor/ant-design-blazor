@@ -38,10 +38,15 @@
         [Required, DisplayName("User Name")]
         public string Username { get; set; }
 
+        [DisplayName("Birthday")]
+        public DateOnly? Birthday { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
+        [DisplayName("Password")]
         public string Password { get; set; }
 
+        [DisplayName("RememberMe")]
         public bool RememberMe { get; set; } = true;
     }
 
@@ -49,8 +54,9 @@
     {
         return property switch
         {
-            _ when property.Name == "Password" =>@<InputPassword></InputPassword>,
+            _ when property.PropertyType.GetCustomAttribute<DataTypeAttribute>()?.DataType == DataType.Password =>@<InputPassword></InputPassword>,
             _ when property.PropertyType == typeof(bool) =>@<Checkbox></Checkbox>,
+            _ when property.PropertyType == typeof(DateOnly?) =>@<DatePicker TValue="DateOnly?"></DatePicker>,
             _ =>@<Input TValue="string"></Input>,
         };
     }

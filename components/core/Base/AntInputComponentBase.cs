@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -288,11 +289,14 @@ namespace AntDesign
 
             base.OnInitialized();
 
-            var dataIndex = FormItem?.Name;
-
-            if (Form != null && !string.IsNullOrWhiteSpace(dataIndex))
+            if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
             {
                 var type = Form.Model.GetType();
+                var dataIndex = FormItem.Name;
+                if (type.IsAssignableFrom(typeof(IDictionary)))
+                {
+                    dataIndex = $"['{dataIndex}']";
+                }
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
                 Value = _getValueDelegate.Invoke(Form.Model);

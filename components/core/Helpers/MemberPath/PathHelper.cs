@@ -277,13 +277,12 @@ namespace AntDesign.Core.Helpers.MemberPath
 
                 switch (pathNode.NodeType)
                 {
-                    case PathNodeType.Member when exp.Type.GetProperty(pathNode.Name) != null:
+                    case PathNodeType.Member:
                         {
                             exp = Expression.PropertyOrField(exp, pathNode.Name);
                             break;
                         }
 
-                    case PathNodeType.Member:
                     case PathNodeType.StringIndex:
                         {
                             if (checkNull && exp.Type.IsClass)
