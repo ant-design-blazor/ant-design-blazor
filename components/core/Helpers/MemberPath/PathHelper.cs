@@ -25,7 +25,7 @@ namespace AntDesign.Core.Helpers.MemberPath
 
         private const string ListCount = "Count";
 
-        #endregion Constant Names
+        #endregion
 
         #region Cache
 
@@ -43,7 +43,7 @@ namespace AntDesign.Core.Helpers.MemberPath
 
         private static readonly ConcurrentDictionary<PathSetConfig, Delegate> _setDelegateCache = new(_comparer);
 
-        #endregion Cache
+        #endregion
 
         #region GetValue
 
@@ -158,7 +158,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             return new(exp, param);
         }
 
-        #endregion GetValue
+        #endregion
 
         #region Set value
 
@@ -249,7 +249,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             return new(exp, paramExp, valueParam);
         }
 
-        #endregion Set value
+        #endregion
 
         #region Common Method
 
@@ -282,7 +282,6 @@ namespace AntDesign.Core.Helpers.MemberPath
                             exp = Expression.PropertyOrField(exp, pathNode.Name);
                             break;
                         }
-
                     case PathNodeType.StringIndex:
                         {
                             if (checkNull && exp.Type.IsClass)
@@ -546,17 +545,14 @@ namespace AntDesign.Core.Helpers.MemberPath
                         case PathCharState.MemberName:
                             prevChar = PathCharState.MemberName;
                             break;
-
                         case PathCharState.SingleQuote:
                         case PathCharState.StringKey:
                             prevChar = PathCharState.StringKey;
                             break;
-
                         case PathCharState.LeftBracket:
                         case PathCharState.NumberKey:
                             prevChar = PathCharState.NumberKey;
                             break;
-
                         default:
                             throw new InvalidPathException($"Unexpected character '{c}' after {prevChar} character");
                     }
@@ -584,7 +580,7 @@ namespace AntDesign.Core.Helpers.MemberPath
             throw new InvalidPathException($"Unexpected path end character '{prevChar}', only member names or right brackets can be used as the end of a path");
         }
 
-        #endregion Common Method
+        #endregion
 
         private readonly struct PathGetConfig
         {
