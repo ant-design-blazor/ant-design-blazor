@@ -10,10 +10,10 @@ export class eventHelper {
     return element.dispatchEvent(evt);
   }
 
-    static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
+  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
     const callback = args => {
       const obj = {};
-      for (let k in args) {
+      for (const k in args) {
         if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
           obj[k] = args[k];
         }
@@ -29,7 +29,7 @@ export class eventHelper {
         args.preventDefault();
       }
       if (stopPropagation) {
-          args.stopPropagation();
+        args.stopPropagation();
       }
     };
 
@@ -91,8 +91,9 @@ export class eventHelper {
   }
 
   private static debounce(func, wait, immediate) {
-    var timeout;
+    let timeout;
     return (...args) => {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this;
       const later = () => {
         timeout = null;
@@ -103,7 +104,7 @@ export class eventHelper {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
-  };
+  }
 
   private static preventKeys(e: KeyboardEvent, keys: string[]) {
     if (keys.indexOf(e.key.toUpperCase()) !== -1) {

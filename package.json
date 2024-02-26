@@ -26,7 +26,8 @@
     "build:lib": "gulp build:library",
     "build:doc": "gulp build:preview --max-old-space-size=81920",
     "preinstall": "dotnet tool restore",
-    "changelog": "node ./scripts/print-changelog"
+    "changelog": "node ./scripts/print-changelog",
+    "lint": "eslint ./components --ext .ts"
   },
   "devDependencies": {
     "@ant-design/colors": "^6.0.0",
