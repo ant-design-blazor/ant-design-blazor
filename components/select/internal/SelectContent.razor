@@ -54,7 +54,7 @@
         else
         {
           var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
-          if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
+          if (string.IsNullOrEmpty(_inputString) && selectedItem != null)
           {
             @if (ParentLabelTemplate != null)
             {
