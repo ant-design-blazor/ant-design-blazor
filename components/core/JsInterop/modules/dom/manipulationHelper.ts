@@ -31,7 +31,6 @@ export class manipulationHelper {
 
   static delElementFrom(delElement, elementSelector) {
     const parent = domInfoHelper.get(elementSelector);
-    const delElement = domInfoHelper.get(delElement);
     if (parent && delElement) {
       parent.removeChild(delElement);
     }
