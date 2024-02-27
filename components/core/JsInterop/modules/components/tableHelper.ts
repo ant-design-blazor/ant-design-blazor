@@ -31,9 +31,9 @@
 
   static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
-    let scrollLeft = bodyRef.scrollLeft;
-    let scrollWidth = bodyRef.scrollWidth;
-    let clientWidth = bodyRef.clientWidth;
+    const scrollLeft = bodyRef.scrollLeft;
+    const scrollWidth = bodyRef.scrollWidth;
+    const clientWidth = bodyRef.clientWidth;
 
     let pingLeft = false;
     let pingRight = false;
