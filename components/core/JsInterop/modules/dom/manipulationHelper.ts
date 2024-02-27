@@ -120,15 +120,15 @@ export class manipulationHelper {
 
     if (dom instanceof HTMLInputElement || dom instanceof HTMLTextAreaElement) {
       switch (option) {
-      case enums.FocusBehavior.FocusAndSelectAll:
-        dom.select();
-        break;
-      case enums.FocusBehavior.FocusAtFirst:
-        dom.setSelectionRange(0, 0);
-        break;
-      case enums.FocusBehavior.FocusAtLast:
-        dom.setSelectionRange(-1, -1);
-        break;
+        case enums.FocusBehavior.FocusAndSelectAll:
+          dom.select();
+          break;
+        case enums.FocusBehavior.FocusAtFirst:
+          dom.setSelectionRange(0, 0);
+          break;
+        case enums.FocusBehavior.FocusAtLast:
+          dom.setSelectionRange(-1, -1);
+          break;
       }
     }
   }
@@ -146,7 +146,7 @@ export class manipulationHelper {
       parentElement.scrollTop = element.offsetTop;
     } else if (element && element instanceof HTMLElement) {
       element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    }    
+    }
   }
 
   static smoothScrollTo(

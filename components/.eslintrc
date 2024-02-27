@@ -14,7 +14,12 @@
     "indent": [
       "error",
       2,
-      { "ignoreComments": true }
+      {
+        "ignoreComments": true,
+        "SwitchCase": 1,
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": false
+      }
     ]
   }
 }
