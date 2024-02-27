@@ -51,6 +51,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(AntDesign.Docs.WebApp.Client._Imports).Assembly, typeof(AntDesign.Docs.App).Assembly);
+    .AddAdditionalAssemblies(typeof(AntDesign.Docs.Wasm._Imports).Assembly, typeof(AntDesign.Docs.App).Assembly);
 
 app.Run();

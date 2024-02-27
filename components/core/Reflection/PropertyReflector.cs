@@ -15,7 +15,7 @@ namespace AntDesign.Core.Reflection
 
         public string PropertyName { get; set; }
 
-        private PropertyReflector(MemberInfo propertyInfo)
+        public PropertyReflector(MemberInfo propertyInfo)
         {
             this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
             this.DisplayName = propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
@@ -33,6 +33,11 @@ namespace AntDesign.Core.Reflection
 
             var accessorBody = accessor.Body;
 
+            return Create(accessorBody);
+        }
+
+        public static PropertyReflector Create(Expression accessorBody)
+        {
             if (accessorBody is UnaryExpression unaryExpression
                && unaryExpression.NodeType == ExpressionType.Convert
                && unaryExpression.Type == typeof(object))

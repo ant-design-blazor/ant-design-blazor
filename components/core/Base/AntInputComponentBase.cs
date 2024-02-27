@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -24,7 +26,13 @@ namespace AntDesign
         private Type _nullableUnderlyingType;
         private PropertyReflector? _propertyReflector;
 
+        private Action<object, TValue> _setValueDelegate;
+
+        private Func<object, TValue> _getValueDelegate;
+
         protected string PropertyName => _propertyReflector?.PropertyName;
+
+        internal PropertyReflector? PopertyReflector => _propertyReflector;
 
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
@@ -74,7 +82,6 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     _value = value;
-
                     OnValueChange(value);
                 }
             }
@@ -131,7 +138,7 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     Value = value;
-
+                    _setValueDelegate?.Invoke(Form.Model, value);
                     ValueChanged.InvokeAsync(value);
 
                     OnCurrentValueChange(value);
@@ -282,6 +289,22 @@ namespace AntDesign
 
             base.OnInitialized();
 
+            if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
+            {
+                var type = Form.Model.GetType();
+                var dataIndex = FormItem.Name;
+                if (type.IsAssignableFrom(typeof(IDictionary)))
+                {
+                    dataIndex = $"['{dataIndex}']";
+                }
+                _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
+                _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
+                Value = _getValueDelegate.Invoke(Form.Model);
+
+                var lambda = PathHelper.GetLambda(dataIndex, type);
+                _propertyReflector = PropertyReflector.Create(lambda.Body);
+            }
+
             FormItem?.AddControl(this);
             Form?.AddControl(this);
 
@@ -303,19 +326,28 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                if (ValueExpression == null && ValuesExpression == null)
-                {
-                    return base.SetParametersAsync(ParameterView.Empty);
-                }
-
                 EditContext = Form?.EditContext;
-                if (ValuesExpression == null)
-                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
-                else
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
+
+                if (ValueExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                }
+                else if (ValuesExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                }
+                else if (Form?.Model != null && FormItem?.Name != null)
+                {
+                    FieldIdentifier = new FieldIdentifier(Form.Model, FormItem.Name);
+                }
+                else
+                {
+                    return base.SetParametersAsync(ParameterView.Empty);
+                }
             }
             else if (Form?.EditContext != EditContext)
             {
@@ -363,6 +395,15 @@ namespace AntDesign
         void IControlValueAccessor.Reset()
         {
             ResetValue();
+        }
+
+        internal void OnNameChanged()
+        {
+            if (_getValueDelegate != null)
+            {
+                CurrentValue = _getValueDelegate.Invoke(Form.Model);
+                InvokeAsync(StateHasChanged);
+            }
         }
     }
 }

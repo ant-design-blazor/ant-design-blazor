@@ -31,6 +31,17 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         private IFormItem ParentFormItem { get; set; }
 
+        [Parameter]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                _nameChanged?.Invoke();
+            }
+        }
+
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
@@ -167,7 +178,7 @@ namespace AntDesign
 
         private IControlValueAccessor _control;
 
-        private PropertyReflector _propertyReflector;
+        private PropertyReflector? _propertyReflector;
 
         private ClassMapper _labelClassMapper = new ClassMapper();
 
@@ -180,6 +191,10 @@ namespace AntDesign
         private FormValidateStatus _validateStatus;
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
+
+        private Action _nameChanged;
+
+        private string _name;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
@@ -246,7 +261,7 @@ namespace AntDesign
             var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
-                && _propertyReflector.RequiredAttribute != null)
+                && _propertyReflector?.RequiredAttribute != null)
             {
                 isRequired = true;
             }
@@ -331,6 +346,7 @@ namespace AntDesign
             if (_control != null) return;
 
             _vaildateStatusChanged = () => control.UpdateStyles();
+            _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -365,13 +381,22 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
-            _propertyReflector = control.ValueExpression is null
-                ? PropertyReflector.Create(control.ValuesExpression)
-                : PropertyReflector.Create(control.ValueExpression);
-
-            if (_propertyReflector.DisplayName != null)
+            if (control.PopertyReflector is not null)
             {
-                Label ??= _propertyReflector.DisplayName;
+                _propertyReflector = control.PopertyReflector;
+            }
+            else if (control.ValueExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            }
+            else if (control.ValuesExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
+            }
+
+            if (_propertyReflector?.DisplayName != null)
+            {
+                Label ??= _propertyReflector?.DisplayName;
             }
 
             SetInternalIsRequired();

@@ -1,8 +1,9 @@
 ﻿const throttle = (fn, threshold = 160) => {
   let timeout;
-  var start = +new Date();
+  let start = +new Date();
   return function (...args) {
-    let context = this,
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context = this,
       curTime = +new Date() - 0;
     //总是干掉事件回调
     window.clearTimeout(timeout);
@@ -13,7 +14,6 @@
     } else {
       //让方法在脱离事件后也能执行一次
       timeout = window.setTimeout(() => {
-        //@ts-ignore
         fn.apply(this, args);
       }, threshold);
     }
@@ -130,6 +130,7 @@ class Dragger {
     state.mouseDownYOffset = yOffset;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onMouseup = (e) => {
     const state = this._state;
     state.isInDrag = false;
@@ -138,9 +139,8 @@ class Dragger {
   onMousemove = throttle((e) => {
     const state = this._state;
     if (state.isInDrag) {
-      var nowX = e.clientX,
-        nowY = e.clientY,
-        offsetX = nowX - state.mouseDownX + state.mouseDownXOffset,
+      const nowX = e.clientX, nowY = e.clientY;
+      let offsetX = nowX - state.mouseDownX + state.mouseDownXOffset,
         offsetY = nowY - state.mouseDownY + state.mouseDownYOffset;
 
       if (this._options.inViewport) {
@@ -159,6 +159,7 @@ class Dragger {
     }
   }, 10).bind(this);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onResize = throttle((e) => {
     this._state.bound = getBoundPosition(
       this._container,
@@ -207,7 +208,7 @@ function getBoundPosition(childNode: HTMLElement, parentNode: HTMLElement) {
   const childComputedStyle = window.getComputedStyle(parentNode);
   const parentComputedStyle = window.getComputedStyle(parentNode);
 
-  let bounds = {
+  const bounds = {
     left:
       -childNode.offsetLeft +
       parseInt(childComputedStyle.marginLeft) +

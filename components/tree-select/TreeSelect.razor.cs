@@ -170,11 +170,11 @@ namespace AntDesign
                     if (!hasChanged)
                         return;
 
-                    _selectedValues = value;
+                    _selectedValues = value.ToArray();
                 }
                 else if (value != null && _selectedValues == null)
                 {
-                    _selectedValues = value;
+                    _selectedValues = value.ToArray();
                 }
                 else if (value == null && _selectedValues != null)
                 {
