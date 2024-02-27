@@ -17,7 +17,7 @@ export class manipulationHelper {
   }
 
   static addElementTo(addElement, elementSelector, prepend = false): boolean {
-    let parent = domInfoHelper.get(elementSelector);
+    const parent = domInfoHelper.get(elementSelector);
     if (parent && addElement) {
       if (parent instanceof Node && addElement instanceof Node) {
         if (prepend) parent.insertBefore(addElement, parent.firstChild);
@@ -31,16 +31,16 @@ export class manipulationHelper {
   }
 
   static delElementFrom(delElement, elementSelector) {
-    let parent = domInfoHelper.get(elementSelector);
+    const parent = domInfoHelper.get(elementSelector);
     if (parent && delElement) {
       parent.removeChild(delElement);
     }
   }
 
   static setDomAttribute(element, attributes) {
-    let dom: HTMLElement = domInfoHelper.get(element);
+    const dom: HTMLElement = domInfoHelper.get(element);
     if (dom) {
-      for (let key in attributes) {
+      for (const key in attributes) {
         dom.setAttribute(key, attributes[key]);
       }
     }
@@ -53,15 +53,15 @@ export class manipulationHelper {
   }
 
   private static copyElementAsRichText(element) {
-    var selection = document.getSelection();
+    const selection = document.getSelection();
     if (selection.rangeCount > 0) {
       selection.removeAllRanges();
     }
-    var range = document.createRange();
+    const range = document.createRange();
     range.selectNode(element);
     selection.addRange(range);
     try {
-      var successful = document.execCommand('copy');
+      const successful = document.execCommand('copy');
       selection.removeAllRanges();
       return successful;
     } catch (err) {
@@ -83,7 +83,7 @@ export class manipulationHelper {
   }
 
   private static fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
+    const textArea = document.createElement("textarea");
     textArea.value = text;
 
     // Avoid scrolling to bottom
@@ -96,8 +96,8 @@ export class manipulationHelper {
     textArea.select();
 
     try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'successful' : 'unsuccessful';
+      const successful = document.execCommand('copy');
+      const msg = successful ? 'successful' : 'unsuccessful';
       console.log('Fallback: Copying text command was ' + msg);
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
@@ -107,7 +107,7 @@ export class manipulationHelper {
   }
 
   static focus(selector, noScroll: boolean = false, option: enums.FocusBehavior = enums.FocusBehavior.FocusAtLast) {
-    let dom = domInfoHelper.get(selector);
+    const dom = domInfoHelper.get(selector);
     if (!(dom instanceof HTMLElement))
       throw new Error("Unable to focus on invalid element.");
 
@@ -117,22 +117,22 @@ export class manipulationHelper {
 
     if (dom instanceof HTMLInputElement || dom instanceof HTMLTextAreaElement) {
       switch (option) {
-        case enums.FocusBehavior.FocusAndSelectAll:
-          dom.select();
-          break;
-        case enums.FocusBehavior.FocusAtFirst:
-          dom.setSelectionRange(0, 0);
-          break;
-        case enums.FocusBehavior.FocusAtLast:
-          dom.setSelectionRange(-1, -1);
-          break;
+      case enums.FocusBehavior.FocusAndSelectAll:
+        dom.select();
+        break;
+      case enums.FocusBehavior.FocusAtFirst:
+        dom.setSelectionRange(0, 0);
+        break;
+      case enums.FocusBehavior.FocusAtLast:
+        dom.setSelectionRange(-1, -1);
+        break;
       }
     }
   }
 
 
   static blur(selector) {
-    let dom = domInfoHelper.get(selector);
+    const dom = domInfoHelper.get(selector);
     if (dom) {
       dom.blur();
     }
@@ -143,38 +143,38 @@ export class manipulationHelper {
     if (parentElement && element && element instanceof HTMLElement) {
       parentElement.scrollTop = element.offsetTop;
     } else if (element && element instanceof HTMLElement) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }    
   }  
 
   static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number) {
     const element = domInfoHelper.get(selector);
-    let to = element.offsetTop;
+    const to = element.offsetTop;
     if (scrollIds.get(parentElement)) {
-        cancelAnimationFrame(scrollIds.get(parentElement)!);
+      cancelAnimationFrame(scrollIds.get(parentElement)!);
     }
     // jump to target if duration zero
     if (duration <= 0) {
-        scrollIds.set(
-            parentElement,
-            requestAnimationFrame(() => {
-                parentElement.scrollTop = to;
-            }),
-        );
+      scrollIds.set(
+        parentElement,
+        requestAnimationFrame(() => {
+          parentElement.scrollTop = to;
+        }),
+      );
 
-        return;
+      return;
     }
     const difference = to - parentElement.scrollTop;
     const perTick = (difference / duration) * 10;
 
     scrollIds.set(
-        parentElement,
-        requestAnimationFrame(() => {
-            parentElement.scrollTop += perTick;
-            if (parentElement.scrollTop !== to) {
-                manipulationHelper.smoothScrollTo(selector, parentElement, duration - 10);
-            }
-        }),
+      parentElement,
+      requestAnimationFrame(() => {
+        parentElement.scrollTop += perTick;
+        if (parentElement.scrollTop !== to) {
+          manipulationHelper.smoothScrollTo(selector, parentElement, duration - 10);
+        }
+      }),
     );
   }
 
@@ -193,13 +193,12 @@ export class manipulationHelper {
 
   //copied from https://www.telerik.com/forums/trigger-tab-key-when-enter-key-is-pressed
   static invokeTabKey() {
-    var currInput = document.activeElement;
+    const currInput = document.activeElement;
     if (currInput.tagName.toLowerCase() == "input") {
-      var inputs = document.getElementsByTagName("input");
-      var currInput = document.activeElement;
-      for (var i = 0; i < inputs.length; i++) {
+      const inputs = document.getElementsByTagName("input");
+      for (let i = 0; i < inputs.length; i++) {
         if (inputs[i] == currInput) {
-          var next = inputs[i + 1];
+          const next = inputs[i + 1];
           if (next && next.focus) {
             next.focus();
           }
@@ -210,7 +209,7 @@ export class manipulationHelper {
   }
 
   static disableBodyScroll() {
-    let body = document.body;
+    const body = document.body;
     const oldBodyCache = {};
     ["position", "width", "overflow"].forEach((key) => {
       oldBodyCache[key] = body.style[key];
@@ -228,9 +227,9 @@ export class manipulationHelper {
 
   static enableBodyScroll(force: boolean | undefined) {
     if (force) {
-        state.oldBodyCacheStack = [];
+      state.oldBodyCacheStack = [];
     }
-    let oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
+    const oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
     
 
     styleHelper.css(document.body,
@@ -243,7 +242,7 @@ export class manipulationHelper {
   }
 
   static hasScrollbar = () => {
-    let overflow = document.body.style.overflow;
+    const overflow = document.body.style.overflow;
     if (overflow && overflow === "hidden") return false;
     return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
   }
@@ -256,7 +255,7 @@ export class manipulationHelper {
    * @param fresh force get scrollBar size and don't use cache
    * @returns 
    */
-   static getScrollBarSize = (fresh: boolean = false) => {
+  static getScrollBarSize = (fresh: boolean = false) => {
     if (typeof document === "undefined") {
       return 0;
     }

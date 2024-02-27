@@ -1,4 +1,5 @@
-﻿import { domInfoHelper, domTypes } from '../dom/exports'
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+import { domInfoHelper, domTypes } from '../dom/exports'
 import { resize } from '../../ObservableApi/observableApi';
 import { mutationObserver as mutation } from '../../ObservableApi/mutationObserver';
 
@@ -58,23 +59,24 @@ export type overlayPosition = {
 }
 
 export class Overlay {
-    private static appliedStylePositionMap: Map<Placement,
+  private static appliedStylePositionMap: Map<Placement,
         { horizontal: "left" | "right", vertical: "top" | "bottom", class: string }> =
-    new Map([
-      [Placement.TopLeft,       { horizontal: "left", vertical: "bottom", class: "topLeft"  }],
-      [Placement.Top,           { horizontal: "left", vertical: "bottom", class: "top" }],
-      [Placement.TopRight,      { horizontal: "right", vertical: "bottom", class: "topRight" }],
-      [Placement.Left,          { horizontal: "right", vertical: "top", class: "left" }],
-      [Placement.LeftTop,       { horizontal: "right", vertical: "top", class: "leftTop" }],
-      [Placement.LeftBottom,    { horizontal: "right", vertical: "bottom", class: "leftBottom" }],
-      [Placement.Right,         { horizontal: "left", vertical: "top", class: "right" }],
-      [Placement.RightTop,      { horizontal: "left", vertical: "top", class: "rightTop" }],
-      [Placement.RightBottom,   { horizontal: "left", vertical: "bottom", class: "rightBottom" }],
-      [Placement.BottomLeft,    { horizontal: "left", vertical: "top", class: "bottomLeft" }],
-      [Placement.Bottom,        { horizontal: "left", vertical: "top", class: "bottom" }],
-      [Placement.BottomRight,   { horizontal: "right", vertical: "top", class: "bottomRight" }],
-    ]);
+      new Map([
+        [Placement.TopLeft,       { horizontal: "left", vertical: "bottom", class: "topLeft"  }],
+        [Placement.Top,           { horizontal: "left", vertical: "bottom", class: "top" }],
+        [Placement.TopRight,      { horizontal: "right", vertical: "bottom", class: "topRight" }],
+        [Placement.Left,          { horizontal: "right", vertical: "top", class: "left" }],
+        [Placement.LeftTop,       { horizontal: "right", vertical: "top", class: "leftTop" }],
+        [Placement.LeftBottom,    { horizontal: "right", vertical: "bottom", class: "leftBottom" }],
+        [Placement.Right,         { horizontal: "left", vertical: "top", class: "right" }],
+        [Placement.RightTop,      { horizontal: "left", vertical: "top", class: "rightTop" }],
+        [Placement.RightBottom,   { horizontal: "left", vertical: "bottom", class: "rightBottom" }],
+        [Placement.BottomLeft,    { horizontal: "left", vertical: "top", class: "bottomLeft" }],
+        [Placement.Bottom,        { horizontal: "left", vertical: "top", class: "bottom" }],
+        [Placement.BottomRight,   { horizontal: "right", vertical: "top", class: "bottomRight" }],
+      ]);
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static reverseVerticalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.BottomLeft],
@@ -91,6 +93,7 @@ export class Overlay {
       [Placement.BottomRight,   (position: string) => Placement.TopRight]
     ]);
     
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static reverseHorizontalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.TopRight],
@@ -235,56 +238,56 @@ export class Overlay {
   static setVerticalCalculation(placement: Placement, position: "top" | "bottom") {
     if (position === "top") {
       switch (placement) {
-        case Placement.LeftTop:
-        case Placement.RightTop:          
-          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {               
-            return { 
-              top: triggerTop,
-              bottom: Overlay.reversePositionValue(triggerTop, container.scrollHeight, overlayHeight) 
-            };              
-          }; 
-        case Placement.BottomLeft:
-        case Placement.Bottom:
-        case Placement.BottomRight:
-          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
-            const position: verticalPosition = {
-              top: triggerTop + triggerHeight + constraints.verticalOffset,
-            };
-            position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
-            return position;
-          }; 
-        case Placement.Left:
-        case Placement.Right:
-          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {     
-            const position: verticalPosition = { 
-              top: triggerTop + (triggerHeight / 2) - (overlayHeight / 2)
-            };
-            position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
-            return position;
-          }; 
+      case Placement.LeftTop:
+      case Placement.RightTop:          
+        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {               
+          return { 
+            top: triggerTop,
+            bottom: Overlay.reversePositionValue(triggerTop, container.scrollHeight, overlayHeight) 
+          };              
+        }; 
+      case Placement.BottomLeft:
+      case Placement.Bottom:
+      case Placement.BottomRight:
+        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
+          const position: verticalPosition = {
+            top: triggerTop + triggerHeight + constraints.verticalOffset,
+          };
+          position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
+          return position;
+        }; 
+      case Placement.Left:
+      case Placement.Right:
+        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {     
+          const position: verticalPosition = { 
+            top: triggerTop + (triggerHeight / 2) - (overlayHeight / 2)
+          };
+          position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
+          return position;
+        }; 
       }
     }    
     if (position === "bottom") {
       switch (placement) {
-        case Placement.TopLeft:
-        case Placement.Top:
-        case Placement.TopRight:
-          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
-            const position: verticalPosition = { 
-              bottom: triggerBottom + triggerHeight + constraints.verticalOffset,
-            };
-            position.top = Overlay.reversePositionValue(position.bottom, container.scrollHeight, overlayHeight);
-            return position;
-          };           
-        case Placement.LeftBottom:
-        case Placement.RightBottom:
-          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {  
-            const position: verticalPosition = { 
-              bottom: triggerBottom,
-              top: Overlay.reversePositionValue(triggerBottom, container.scrollHeight, overlayHeight)
-            };            
-            return position;                               
-          };   
+      case Placement.TopLeft:
+      case Placement.Top:
+      case Placement.TopRight:
+        return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
+          const position: verticalPosition = { 
+            bottom: triggerBottom + triggerHeight + constraints.verticalOffset,
+          };
+          position.top = Overlay.reversePositionValue(position.bottom, container.scrollHeight, overlayHeight);
+          return position;
+        };           
+      case Placement.LeftBottom:
+      case Placement.RightBottom:
+        return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {  
+          const position: verticalPosition = { 
+            bottom: triggerBottom,
+            top: Overlay.reversePositionValue(triggerBottom, container.scrollHeight, overlayHeight)
+          };            
+          return position;                               
+        };   
       }
     }
     //fallback - should not happen, but to avoid crashing scenarios, revert to BottomLeft
@@ -295,57 +298,57 @@ export class Overlay {
   static setHorizontalCalculation(placement: Placement, position: "left" | "right") {
     if (position === "left") {
       switch (placement) {
-        case Placement.TopLeft:
-        case Placement.BottomLeft:
-          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-            return { 
-              left: triggerLeft,
-              right: Overlay.reversePositionValue(triggerLeft, container.scrollWidth, overlayWidth)
-            };              
-          }; 
-        case Placement.Right:
-        case Placement.RightTop:
-        case Placement.RightBottom:
-          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-            const position: horizontalPosition = {
-              left: triggerLeft + triggerWidth + constraints.horizontalOffset
-            };
-            position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
-            return position;
+      case Placement.TopLeft:
+      case Placement.BottomLeft:
+        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+          return { 
+            left: triggerLeft,
+            right: Overlay.reversePositionValue(triggerLeft, container.scrollWidth, overlayWidth)
+          };              
+        }; 
+      case Placement.Right:
+      case Placement.RightTop:
+      case Placement.RightBottom:
+        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+          const position: horizontalPosition = {
+            left: triggerLeft + triggerWidth + constraints.horizontalOffset
           };
+          position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
+          return position;
+        };
 
-        case Placement.Top:
-        case Placement.Bottom:
-          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-            const position: horizontalPosition = {
-              left: triggerLeft + (triggerWidth / 2) - (overlayWidth / 2)
-            };
-            position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
-            return position;
+      case Placement.Top:
+      case Placement.Bottom:
+        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+          const position: horizontalPosition = {
+            left: triggerLeft + (triggerWidth / 2) - (overlayWidth / 2)
           };
+          position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
+          return position;
+        };
       }
     }
     if (position === "right") {
       switch (placement) {
-        case Placement.TopRight:
-        case Placement.BottomRight:
-          return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-            let position: horizontalPosition = {
-              right: triggerRight,
-              left: Overlay.reversePositionValue(triggerRight, container.scrollWidth, overlayWidth)
-            };            
-            return position;
+      case Placement.TopRight:
+      case Placement.BottomRight:
+        return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+          const position: horizontalPosition = {
+            right: triggerRight,
+            left: Overlay.reversePositionValue(triggerRight, container.scrollWidth, overlayWidth)
+          };            
+          return position;
+        };
+      case Placement.Left:
+      case Placement.LeftTop:
+      case Placement.LeftBottom:
+        return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {
+          const position: horizontalPosition = {
+            right: triggerRight + triggerWidth + constraints.horizontalOffset
           };
-        case Placement.Left:
-        case Placement.LeftTop:
-        case Placement.LeftBottom:
-          return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {
-            const position: horizontalPosition = {
-              right: triggerRight + triggerWidth + constraints.horizontalOffset
-            };
-            position.left = Overlay.reversePositionValue(position.right, container.scrollWidth, overlayWidth)
-            return position;
-          };          
+          position.left = Overlay.reversePositionValue(position.right, container.scrollWidth, overlayWidth)
+          return position;
+        };          
       }      
     }
     //fallback - should not happen, but to avoid crashing scenarios, revert to BottomLeft
@@ -366,10 +369,10 @@ export class Overlay {
   }
 
   private removeHiddenClass() {    
-    let end = this.overlay.className.indexOf("-hidden");
-    let start = this.overlay.className.lastIndexOf(" ", end)
+    const end = this.overlay.className.indexOf("-hidden");
+    const start = this.overlay.className.lastIndexOf(" ", end)
     if (start >= 0) {
-      let className = this.overlay.className.substr(start + 1, end);
+      const className = this.overlay.className.substr(start + 1, end);
       if (className !== "") {
         this.overlay.classList.remove(className);
       }
@@ -671,11 +674,11 @@ export class Overlay {
         position: this.position,           
         sanitizedPosition: this.sanitizedPosition,
         placment: {
-         initialPlacement: this.initialPlacement,
-         recentPlacement: this.recentPlacement,
-         placement: this.placement,
-         selectedHorizontalPosition: this.selectedHorizontalPosition,
-         selectedVerticalPosition: this.selectedVerticalPosition
+          initialPlacement: this.initialPlacement,
+          recentPlacement: this.recentPlacement,
+          placement: this.placement,
+          selectedHorizontalPosition: this.selectedHorizontalPosition,
+          selectedVerticalPosition: this.selectedVerticalPosition
         }
       }
     );    
@@ -752,7 +755,7 @@ export class Overlay {
       } else {
         currentPlacement = Overlay.appliedStylePositionMap.get(this.initialPlacement).class;
       }
-      let newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
+      const newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
       this.overlay.classList.replace(currentPlacement, newPlacement);
     }
   }
@@ -786,7 +789,7 @@ export class Overlay {
     let position: verticalPosition;
     //usually first offsetHeight is taken, as the measurement contains the borders
     this.triggerPosition.height = this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight 
-    : this.triggerInfo.clientHeight;    
+      : this.triggerInfo.clientHeight;    
     if (this.overlayPreset) {
       this.triggerPosition.top = this.triggerInfo.absoluteTop + this.overlayPreset.y;
       this.triggerPosition.height = 0;
@@ -862,14 +865,14 @@ export class Overlay {
   }
 
   private setBodyBoundayrSize() {
-      const window = domInfoHelper.getWindow();      
-      const scroll = domInfoHelper.getScroll();
-      this.bodyBoundarySize = {
-        top : scroll.y,
-        left: scroll.x,
-        right: window.innerWidth + scroll.x,
-        bottom: window.innerHeight + scroll.y
-      };     
+    const window = domInfoHelper.getWindow();      
+    const scroll = domInfoHelper.getScroll();
+    this.bodyBoundarySize = {
+      top : scroll.y,
+      left: scroll.x,
+      right: window.innerWidth + scroll.x,
+      bottom: window.innerHeight + scroll.y
+    };     
   }
 
   /**
@@ -886,11 +889,11 @@ export class Overlay {
         this.setBodyBoundayrSize();
       }
       return { 
-          left: 0,
-          right: this.containerInfo.scrollWidth,
-          top: 0,
-          bottom: this.containerInfo.scrollHeight
-        };
+        left: 0,
+        right: this.containerInfo.scrollWidth,
+        top: 0,
+        bottom: this.containerInfo.scrollHeight
+      };
     }        
     this.setBodyBoundayrSize();
 
@@ -994,7 +997,7 @@ export class Overlay {
         visibleWidthInBodyBeforeAdjustment = this.getOverlayVisibleWidth("body");
       } else {
         visibleWidthInBodyBeforeAdjustment = visibleWidthBeforeAdjustment
-      };      
+      }      
 
       this.getHorizontalAdjustment();
 
@@ -1004,7 +1007,7 @@ export class Overlay {
         visibleWidthInBodyAfterAdjustment = this.getOverlayVisibleWidth("body");
       } else {
         visibleWidthInBodyAfterAdjustment = visibleWidthAfterAdjustment
-      };        
+      }        
 
       if (
         !(visibleWidthInBodyBeforeAdjustment < visibleWidthInBodyAfterAdjustment 
@@ -1037,7 +1040,7 @@ export class Overlay {
         visibleHeightInBodyBeforeAdjustment = this.getOverlayVisibleHeight("body");
       } else {
         visibleHeightInBodyBeforeAdjustment = visibleHeightBeforeAdjustment
-      };
+      }
 
       this.getVerticalAdjustment();      
 
@@ -1047,7 +1050,7 @@ export class Overlay {
         visibleHeightInBodyAfterAdjustment = this.getOverlayVisibleHeight("body");
       } else {
         visibleHeightInBodyAfterAdjustment = visibleHeightAfterAdjustment
-      };          
+      }          
 
       if (
         !(visibleHeightInBodyBeforeAdjustment < visibleHeightInBodyAfterAdjustment 

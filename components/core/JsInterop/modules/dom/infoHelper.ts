@@ -13,7 +13,7 @@ export class infoHelper {
       element = document.body;
     } else if (typeof element === 'string') {
       if (element === 'window') {
-          return window;
+        return window;
       } else if (element === 'document') {
         return document;
       }
@@ -148,7 +148,7 @@ export class infoHelper {
   }
 
   static getElementsInfo(elements: any[]): any {
-    let infos = {};
+    const infos = {};
     elements.forEach(el => {
       infos[el.id] = this.getInfo(el);
     })
