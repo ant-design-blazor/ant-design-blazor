@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
@@ -13,6 +14,9 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         #region Parameter
 
         /// <summary>
@@ -150,7 +154,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Visible { get; set; }
-
 
         /// <summary>
         /// Specify a function invoke when the modal dialog is visible or not
@@ -366,6 +369,8 @@ namespace AntDesign
 
         private bool _hasFocus = false;
 
+        private bool _firstShow = true;
+
         private async Task OnAfterDialogShow()
         {
             if (!_hasFocus)
@@ -376,6 +381,32 @@ namespace AntDesign
                 {
                     await ModalRef.OnOpen();
                 }
+            }
+
+            if (_firstShow)
+            {
+                _firstShow = false;
+                NavigationManager.LocationChanged += OnLocationChanged;
+            }
+        }
+
+        private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+        {
+            // Modal create by Service
+            if (ModalRef != null)
+            {
+                return;
+            }
+            // Modal has been destroyed
+            if (!Visible && DestroyOnClose)
+            {
+                return;
+            }
+
+            if (_dialogWrapper.Dialog != null)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
+                NavigationManager.LocationChanged -= OnLocationChanged;
             }
         }
 
@@ -390,6 +421,7 @@ namespace AntDesign
 
         private async Task OnBeforeDialogWrapperDestroy()
         {
+            NavigationManager.LocationChanged -= OnLocationChanged;
             await InvokeAsync(StateHasChanged);
         }
 

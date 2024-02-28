@@ -16,9 +16,6 @@ namespace AntDesign
     {
         private const string IdPrefix = "Ant-Design-";
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
-
         #region Parameters
 
 #pragma warning disable 1591
@@ -396,15 +393,6 @@ namespace AntDesign
         #endregion build element's class name
 
         #region override
-
-        protected override void OnInitialized()
-        {
-            NavigationManager.LocationChanged += (object sender, LocationChangedEventArgs e) =>
-            {
-                _ = JsInvokeAsync(JSInteropConstants.DestroyAllDialog);
-            };
-        }
-
 
         private bool _hasRendered = false;
 

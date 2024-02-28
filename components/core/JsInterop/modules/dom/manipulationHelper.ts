@@ -1,8 +1,7 @@
-﻿import { domInfoHelper } from './exports'
-import { styleHelper } from '../styleHelper'
-import { state } from '../stateProvider'
-import * as enums from '../enums';
-
+﻿import { domInfoHelper } from "./exports";
+import { styleHelper } from "../styleHelper";
+import { state } from "../stateProvider";
+import * as enums from "../enums";
 
 let cachedScrollBarSize: number | undefined = undefined;
 const scrollIds = new Map<HTMLElement, number>();
@@ -45,7 +44,7 @@ export class manipulationHelper {
       }
     }
   }
-  
+
   static copyElement(element) {
     if (!this.copyElementAsRichText(element)) {
       this.copy(element.innerText);
@@ -75,11 +74,14 @@ export class manipulationHelper {
       this.fallbackCopyTextToClipboard(text);
       return;
     }
-    navigator.clipboard.writeText(text).then(function () {
-      console.log('Async: Copying to clipboard was successful!');
-    }, function (err) {
-      console.error('Async: Could not copy text: ', err);
-    });
+    navigator.clipboard.writeText(text).then(
+      function () {
+        console.log("Async: Copying to clipboard was successful!");
+      },
+      function (err) {
+        console.error("Async: Could not copy text: ", err);
+      }
+    );
   }
 
   private static fallbackCopyTextToClipboard(text) {
@@ -100,7 +102,7 @@ export class manipulationHelper {
       const msg = successful ? 'successful' : 'unsuccessful';
       console.log('Fallback: Copying text command was ' + msg);
     } catch (err) {
-      console.error('Fallback: Oops, unable to copy', err);
+      console.error("Fallback: Oops, unable to copy", err);
     }
 
     document.body.removeChild(textArea);
@@ -108,28 +110,28 @@ export class manipulationHelper {
 
   static focus(selector, noScroll: boolean = false, option: enums.FocusBehavior = enums.FocusBehavior.FocusAtLast) {
     const dom = domInfoHelper.get(selector);
+
     if (!(dom instanceof HTMLElement))
       throw new Error("Unable to focus on invalid element.");
 
     dom.focus({
-      preventScroll: noScroll
+      preventScroll: noScroll,
     });
 
     if (dom instanceof HTMLInputElement || dom instanceof HTMLTextAreaElement) {
       switch (option) {
-      case enums.FocusBehavior.FocusAndSelectAll:
-        dom.select();
-        break;
-      case enums.FocusBehavior.FocusAtFirst:
-        dom.setSelectionRange(0, 0);
-        break;
-      case enums.FocusBehavior.FocusAtLast:
-        dom.setSelectionRange(-1, -1);
-        break;
+        case enums.FocusBehavior.FocusAndSelectAll:
+          dom.select();
+          break;
+        case enums.FocusBehavior.FocusAtFirst:
+          dom.setSelectionRange(0, 0);
+          break;
+        case enums.FocusBehavior.FocusAtLast:
+          dom.setSelectionRange(-1, -1);
+          break;
       }
     }
   }
-
 
   static blur(selector) {
     const dom = domInfoHelper.get(selector);
@@ -144,10 +146,14 @@ export class manipulationHelper {
       parentElement.scrollTop = element.offsetTop;
     } else if (element && element instanceof HTMLElement) {
       element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    }    
-  }  
+    }
+  }
 
-  static smoothScrollTo(selector: Element | string, parentElement: HTMLElement, duration: number) {
+  static smoothScrollTo(
+    selector: Element | string,
+    parentElement: HTMLElement,
+    duration: number
+  ) {
     const element = domInfoHelper.get(selector);
     const to = element.offsetTop;
     if (scrollIds.get(parentElement)) {
@@ -180,13 +186,20 @@ export class manipulationHelper {
 
   static slideTo(targetPageY) {
     const timer = setInterval(function () {
-      const currentY = document.documentElement.scrollTop || document.body.scrollTop;
-      const distance = targetPageY > currentY ? targetPageY - currentY : currentY - targetPageY;
+      const currentY =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      const distance =
+        targetPageY > currentY
+          ? targetPageY - currentY
+          : currentY - targetPageY;
       const speed = Math.ceil(distance / 10);
       if (currentY === targetPageY) {
         clearInterval(timer);
       } else {
-        window.scrollTo(0, targetPageY > currentY ? currentY + speed : currentY - speed);
+        window.scrollTo(
+          0,
+          targetPageY > currentY ? currentY + speed : currentY - speed
+        );
       }
     }, 10);
   }
@@ -216,12 +229,14 @@ export class manipulationHelper {
     });
     state.oldBodyCacheStack.push(oldBodyCache);
     const scrollBarSize = this.getScrollBarSize();
-    styleHelper.css(body,
-      {
-        "position": "relative",
-        "width": this.hasScrollbar() && scrollBarSize > 0 ? `calc(100% - ${scrollBarSize}px)` : null,
-        "overflow": "hidden"
-      });
+    styleHelper.css(body, {
+      position: "relative",
+      width:
+        this.hasScrollbar() && scrollBarSize > 0
+          ? `calc(100% - ${scrollBarSize}px)`
+          : null,
+      overflow: "hidden",
+    });
     styleHelper.addCls(document.body, "ant-scrolling-effect");
   }
 
@@ -229,9 +244,8 @@ export class manipulationHelper {
     if (force) {
       state.oldBodyCacheStack = [];
     }
-    const oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
-    
 
+    const oldBodyCache = state.oldBodyCacheStack.length > 0 ? state.oldBodyCacheStack.pop() : {};
     styleHelper.css(document.body,
       {
         "position": oldBodyCache["position"] ?? null,
@@ -244,16 +258,18 @@ export class manipulationHelper {
   static hasScrollbar = () => {
     const overflow = document.body.style.overflow;
     if (overflow && overflow === "hidden") return false;
-    return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
-  }
-
+    return (
+      document.body.scrollHeight >
+      (window.innerHeight || document.documentElement.clientHeight)
+    );
+  };
 
   /**
    * getScrollBarSize
    * source https://github.com/react-component/util/blob/master/src/getScrollBarSize.tsx
-   * 
+   *
    * @param fresh force get scrollBar size and don't use cache
-   * @returns 
+   * @returns
    */
   static getScrollBarSize = (fresh: boolean = false) => {
     if (typeof document === "undefined") {

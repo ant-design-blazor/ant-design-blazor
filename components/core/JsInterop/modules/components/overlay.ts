@@ -238,56 +238,56 @@ export class Overlay {
   static setVerticalCalculation(placement: Placement, position: "top" | "bottom") {
     if (position === "top") {
       switch (placement) {
-      case Placement.LeftTop:
-      case Placement.RightTop:          
-        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {               
-          return { 
-            top: triggerTop,
-            bottom: Overlay.reversePositionValue(triggerTop, container.scrollHeight, overlayHeight) 
-          };              
-        }; 
-      case Placement.BottomLeft:
-      case Placement.Bottom:
-      case Placement.BottomRight:
-        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
-          const position: verticalPosition = {
-            top: triggerTop + triggerHeight + constraints.verticalOffset,
-          };
-          position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
-          return position;
-        }; 
-      case Placement.Left:
-      case Placement.Right:
-        return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {     
-          const position: verticalPosition = { 
-            top: triggerTop + (triggerHeight / 2) - (overlayHeight / 2)
-          };
-          position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
-          return position;
-        }; 
+        case Placement.LeftTop:
+        case Placement.RightTop:          
+          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {               
+            return { 
+              top: triggerTop,
+              bottom: Overlay.reversePositionValue(triggerTop, container.scrollHeight, overlayHeight) 
+            };              
+          }; 
+        case Placement.BottomLeft:
+        case Placement.Bottom:
+        case Placement.BottomRight:
+          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
+            const position: verticalPosition = {
+              top: triggerTop + triggerHeight + constraints.verticalOffset,
+            };
+            position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
+            return position;
+          }; 
+        case Placement.Left:
+        case Placement.Right:
+          return function(triggerTop: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {     
+            const position: verticalPosition = { 
+              top: triggerTop + (triggerHeight / 2) - (overlayHeight / 2)
+            };
+            position.bottom = Overlay.reversePositionValue(position.top, container.scrollHeight, overlayHeight)
+            return position;
+          }; 
       }
     }    
     if (position === "bottom") {
       switch (placement) {
-      case Placement.TopLeft:
-      case Placement.Top:
-      case Placement.TopRight:
-        return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
-          const position: verticalPosition = { 
-            bottom: triggerBottom + triggerHeight + constraints.verticalOffset,
-          };
-          position.top = Overlay.reversePositionValue(position.bottom, container.scrollHeight, overlayHeight);
-          return position;
-        };           
-      case Placement.LeftBottom:
-      case Placement.RightBottom:
-        return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {  
-          const position: verticalPosition = { 
-            bottom: triggerBottom,
-            top: Overlay.reversePositionValue(triggerBottom, container.scrollHeight, overlayHeight)
-          };            
-          return position;                               
-        };   
+        case Placement.TopLeft:
+        case Placement.Top:
+        case Placement.TopRight:
+          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) { 
+            const position: verticalPosition = { 
+              bottom: triggerBottom + triggerHeight + constraints.verticalOffset,
+            };
+            position.top = Overlay.reversePositionValue(position.bottom, container.scrollHeight, overlayHeight);
+            return position;
+          };           
+        case Placement.LeftBottom:
+        case Placement.RightBottom:
+          return function(triggerBottom: number, triggerHeight: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayHeight: number, constraints: overlayConstraints) {  
+            const position: verticalPosition = { 
+              bottom: triggerBottom,
+              top: Overlay.reversePositionValue(triggerBottom, container.scrollHeight, overlayHeight)
+            };            
+            return position;                               
+          };   
       }
     }
     //fallback - should not happen, but to avoid crashing scenarios, revert to BottomLeft
@@ -298,57 +298,57 @@ export class Overlay {
   static setHorizontalCalculation(placement: Placement, position: "left" | "right") {
     if (position === "left") {
       switch (placement) {
-      case Placement.TopLeft:
-      case Placement.BottomLeft:
-        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-          return { 
-            left: triggerLeft,
-            right: Overlay.reversePositionValue(triggerLeft, container.scrollWidth, overlayWidth)
-          };              
-        }; 
-      case Placement.Right:
-      case Placement.RightTop:
-      case Placement.RightBottom:
-        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-          const position: horizontalPosition = {
-            left: triggerLeft + triggerWidth + constraints.horizontalOffset
+        case Placement.TopLeft:
+        case Placement.BottomLeft:
+          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+            return { 
+              left: triggerLeft,
+              right: Overlay.reversePositionValue(triggerLeft, container.scrollWidth, overlayWidth)
+            };              
+          }; 
+        case Placement.Right:
+        case Placement.RightTop:
+        case Placement.RightBottom:
+          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+            const position: horizontalPosition = {
+              left: triggerLeft + triggerWidth + constraints.horizontalOffset
+            };
+            position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
+            return position;
           };
-          position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
-          return position;
-        };
 
-      case Placement.Top:
-      case Placement.Bottom:
-        return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-          const position: horizontalPosition = {
-            left: triggerLeft + (triggerWidth / 2) - (overlayWidth / 2)
+        case Placement.Top:
+        case Placement.Bottom:
+          return function(triggerLeft: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+            const position: horizontalPosition = {
+              left: triggerLeft + (triggerWidth / 2) - (overlayWidth / 2)
+            };
+            position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
+            return position;
           };
-          position.right = Overlay.reversePositionValue(position.left, container.scrollWidth, overlayWidth)
-          return position;
-        };
       }
     }
     if (position === "right") {
       switch (placement) {
-      case Placement.TopRight:
-      case Placement.BottomRight:
-        return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-          const position: horizontalPosition = {
-            right: triggerRight,
-            left: Overlay.reversePositionValue(triggerRight, container.scrollWidth, overlayWidth)
-          };            
-          return position;
-        };
-      case Placement.Left:
-      case Placement.LeftTop:
-      case Placement.LeftBottom:
-        return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {
-          const position: horizontalPosition = {
-            right: triggerRight + triggerWidth + constraints.horizontalOffset
+        case Placement.TopRight:
+        case Placement.BottomRight:
+          return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
+            const position: horizontalPosition = {
+              right: triggerRight,
+              left: Overlay.reversePositionValue(triggerRight, container.scrollWidth, overlayWidth)
+            };            
+            return position;
           };
-          position.left = Overlay.reversePositionValue(position.right, container.scrollWidth, overlayWidth)
-          return position;
-        };          
+        case Placement.Left:
+        case Placement.LeftTop:
+        case Placement.LeftBottom:
+          return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {
+            const position: horizontalPosition = {
+              right: triggerRight + triggerWidth + constraints.horizontalOffset
+            };
+            position.left = Overlay.reversePositionValue(position.right, container.scrollWidth, overlayWidth)
+            return position;
+          };          
       }      
     }
     //fallback - should not happen, but to avoid crashing scenarios, revert to BottomLeft
