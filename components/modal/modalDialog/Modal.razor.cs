@@ -406,6 +406,7 @@ namespace AntDesign
             if (_dialogWrapper.Dialog != null)
             {
                 _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
+                NavigationManager.LocationChanged -= OnLocationChanged;
             }
         }
 
