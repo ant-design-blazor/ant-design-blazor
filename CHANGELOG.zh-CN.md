@@ -15,7 +15,7 @@ timeline: true
 
 ---
 
-### 0.17.5
+### 0.18.0
 
 `2024-02-29`
 
@@ -30,11 +30,18 @@ timeline: true
 
 - Select
   - 🆕 新增 支持列表选择器（Table Select）。[#3693](https://github.com/ant-design-blazor/ant-design-blazor/pull/3693) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 Select  筛选表达式属性 FilterExpression 用于自定义筛选逻辑。[#3656](https://github.com/ant-design-blazor/ant-design-blazor/pull/3656) [@Magehernan](https://github.com/Magehernan)
   - 🐞 修复 固定输入（搜索）值不为null时选择内容中的占位符显示。[#3701](https://github.com/ant-design-blazor/ant-design-blazor/pull/3701) [@agolub-s](https://github.com/agolub-s)
   - 🐞 修复 错误的 HTML Title 显示。[#3695](https://github.com/ant-design-blazor/ant-design-blazor/pull/3695) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 的 DropdownRender 属性没有传入原内容。[#3675](https://github.com/ant-design-blazor/ant-design-blazor/pull/3675) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 在 From 中当 ValidateOnChange 为 true 时，修改绑定值不会更新选中项。[#3703](https://github.com/ant-design-blazor/ant-design-blazor/pull/3703) [@edwardbarford](https://github.com/edwardbarford)
 
+- Form
+  - 🆕 新增 Form 的 Method 属性用于适配 SSR 表单。[#3608](https://github.com/ant-design-blazor/ant-design-blazor/pull/3608) [@CrosRoad95](https://github.com/CrosRoad95)
+  - 🆕 新增 FormItem Name 属性，基于 DataIndex 支持动态属性。[#3612](https://github.com/ant-design-blazor/ant-design-blazor/pull/3612) [@Zonciu](https://github.com/Zonciu)
+
+- 🆕 新增 Tabs 为 ReuseTabsService 新增创建标签的方法`CreateTab`。[#3671](https://github.com/ant-design-blazor/ant-design-blazor/pull/3671) [@jxcproject](https://github.com/jxcproject)
+- 🆕 新增 Comment 头像位置属性 Placement。[#3670](https://github.com/ant-design-blazor/ant-design-blazor/pull/3670) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Modal 重复移除DOM的问题。[#3673](https://github.com/ant-design-blazor/ant-design-blazor/pull/3673) [@zxyao145](https://github.com/zxyao145)
 - 🐞 修复 Message 在  Webview 上非线程安全的问题。[#3698](https://github.com/ant-design-blazor/ant-design-blazor/pull/3698) [@zxyao145](https://github.com/zxyao145)
 - 🐞 修复 Radio 切换选项后原选中样式未重置。[#3694](https://github.com/ant-design-blazor/ant-design-blazor/pull/3694) [@ElderJames](https://github.com/ElderJames)
