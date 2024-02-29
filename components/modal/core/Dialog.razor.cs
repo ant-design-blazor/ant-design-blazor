@@ -221,7 +221,7 @@ namespace AntDesign
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private async Task OnCloserClick()
+        internal async Task OnCloserClick()
         {
             await CloseAsync();
         }
@@ -248,7 +248,7 @@ namespace AntDesign
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private Task OnMaxBtnClick()
+        internal Task OnMaxBtnClick()
         {
             if (Status == ModalStatus.Default)
             {

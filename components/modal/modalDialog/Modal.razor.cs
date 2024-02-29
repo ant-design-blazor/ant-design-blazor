@@ -85,7 +85,7 @@ namespace AntDesign
         /// Header content
         /// </summary>
         [Parameter]
-        public RenderFragment Header { get; set; }
+        public RenderFragment Header { get; set; } = DialogOptions.DefaultHeader;
 
         /// <summary>
         /// Footer content, set as Footer=null when you don't need default buttons
@@ -156,7 +156,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Visible { get; set; }
-
 
         /// <summary>
         /// Specify a function invoke when the modal dialog is visible or not
