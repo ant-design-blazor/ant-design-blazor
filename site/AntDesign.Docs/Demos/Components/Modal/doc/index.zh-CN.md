@@ -26,6 +26,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | CloseIcon | 自定义关闭图标 | RenderFragment | - |
 | ConfirmLoading | 确定按钮 loading | bool | false |
 | DestroyOnClose | 关闭时销毁 Modal 里的子元素 | bool | false |
+| Header | 头部内容，当不需要头部时，可以设置为`null` | RenderFragment | - |
 | Footer | 底部内容，当不需要默认底部按钮时，可以设为 `null` | string\|RenderFragment | 确定取消按钮 |
 | ForceRender | 强制渲染 Modal | bool | false |
 | GetContainer | 指定 Modal 挂载的 HTML 节点, false 为挂载在当前 dom | ElementReference? | document.body |
