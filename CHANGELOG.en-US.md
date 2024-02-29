@@ -15,6 +15,32 @@ timeline: true
 
 ---
 
+### 0.17.5
+
+`2024-02-29`
+
+🐉Good luck in the Year of the Loong！
+
+- Table
+  - 🆕 Add default ScrollBar style. [#3668](https://github.com/ant-design-blazor/ant-design-blazor/pull/3668) [@thirking](https://github.com/thirking)
+  - 🐞 Fixed the DateField filter would throw exception when property type is nullable. [#3704](https://github.com/ant-design-blazor/ant-design-blazor/pull/3704) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the shadow style of Header in Table with fixed columns. [#3691](https://github.com/ant-design-blazor/ant-design-blazor/pull/3691) [@thirking](https://github.com/thirking)
+  - 🐞 Fixed built-in filter carriage jump. [#3683](https://github.com/ant-design-blazor/ant-design-blazor/pull/3683) [@m-khrapunov](https://github.com/m-khrapunov)
+  - 🐞 Fixed that remove loading and show no data when datasource is abstract and empty. [#3688](https://github.com/ant-design-blazor/ant-design-blazor/pull/3688) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🆕 Add support table select. [#3693](https://github.com/ant-design-blazor/ant-design-blazor/pull/3693) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed placeholder display in Select Content when the input (search) value is not null. [#3701](https://github.com/ant-design-blazor/ant-design-blazor/pull/3701) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 Fixed incorrect html title for selected item label. [#3695](https://github.com/ant-design-blazor/ant-design-blazor/pull/3695) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the DropdownRender doesn't pass original content into renderfargment. [#3675](https://github.com/ant-design-blazor/ant-design-blazor/pull/3675) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed bug where selects contained in forms with ValidateOnChange = true don't appear to update when bound values change . [#3703](https://github.com/ant-design-blazor/ant-design-blazor/pull/3703) [@edwardbarford](https://github.com/edwardbarford)
+
+- 🐞 Fixed Modal  repeated cleaning dom. [#3673](https://github.com/ant-design-blazor/ant-design-blazor/pull/3673) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fixed Message non thread safe on Webview. [#3698](https://github.com/ant-design-blazor/ant-design-blazor/pull/3698) [@zxyao145](https://github.com/zxyao145)
+- 🐞 Fix Radio style issue cause by preent default. [#3694](https://github.com/ant-design-blazor/ant-design-blazor/pull/3694) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Card Tabs size. [#3661](https://github.com/ant-design-blazor/ant-design-blazor/pull/3661) [@thirking](https://github.com/thirking)
+- 🐞 Fixed Segmented label in SegmentedOption. [#3659](https://github.com/ant-design-blazor/ant-design-blazor/pull/3659) [@CrosRoad95](https://github.com/CrosRoad95)
+- 📖 Add Blazor Webapp site. [#3642](https://github.com/ant-design-blazor/ant-design-blazor/pull/3642) [@bxjg1987](https://github.com/bxjg1987)
 
 ### 0.17.4
 

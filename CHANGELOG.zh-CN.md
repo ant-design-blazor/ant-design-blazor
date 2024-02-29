@@ -15,6 +15,33 @@ timeline: true
 
 ---
 
+### 0.17.5
+
+`2024-02-29`
+
+🐉龙年吉祥！
+
+- Table
+  - 🆕 新增 默认滚动条样式。[#3668](https://github.com/ant-design-blazor/ant-design-blazor/pull/3668) [@thirking](https://github.com/thirking)
+  - 🐞 修复 内置的日期类型筛选器在绑定类型为可空时，修改值会引发异常。[#3704](https://github.com/ant-design-blazor/ant-design-blazor/pull/3704) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 固定列的Table中Header的阴影样式。[#3691](https://github.com/ant-design-blazor/ant-design-blazor/pull/3691) [@thirking](https://github.com/thirking)
+  - 🐞 修复 筛选器跳动。[#3683](https://github.com/ant-design-blazor/ant-design-blazor/pull/3683) [@m-khrapunov](https://github.com/m-khrapunov)
+  - 🐞 修复 DataSource 为空且类型时抽象类时，一直显示加载中不显示空状态。[#3688](https://github.com/ant-design-blazor/ant-design-blazor/pull/3688) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🆕 新增 支持列表选择器（Table Select）。[#3693](https://github.com/ant-design-blazor/ant-design-blazor/pull/3693) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 固定输入（搜索）值不为null时选择内容中的占位符显示。[#3701](https://github.com/ant-design-blazor/ant-design-blazor/pull/3701) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 修复 错误的 HTML Title 显示。[#3695](https://github.com/ant-design-blazor/ant-design-blazor/pull/3695) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 的 DropdownRender 属性没有传入原内容。[#3675](https://github.com/ant-design-blazor/ant-design-blazor/pull/3675) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在 From 中当 ValidateOnChange 为 true 时，修改绑定值不会更新选中项。[#3703](https://github.com/ant-design-blazor/ant-design-blazor/pull/3703) [@edwardbarford](https://github.com/edwardbarford)
+
+- 🐞 修复 Modal 重复移除DOM的问题。[#3673](https://github.com/ant-design-blazor/ant-design-blazor/pull/3673) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Message 在  Webview 上非线程安全的问题。[#3698](https://github.com/ant-design-blazor/ant-design-blazor/pull/3698) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 Radio 切换选项后原选中样式未重置。[#3694](https://github.com/ant-design-blazor/ant-design-blazor/pull/3694) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Card 中的 Tabs 尺寸属性。[#3661](https://github.com/ant-design-blazor/ant-design-blazor/pull/3661) [@thirking](https://github.com/thirking)
+- 🐞 修复 Segmented 的 SegmentedOption 标签 。[#3659](https://github.com/ant-design-blazor/ant-design-blazor/pull/3659) [@CrosRoad95](https://github.com/CrosRoad95)
+- 📖 新增 Blazor WebApp 示例站点。[#3642](https://github.com/ant-design-blazor/ant-design-blazor/pull/3642) [@bxjg1987](https://github.com/bxjg1987)
+
 ### 0.17.4
 
 `2024-02-01`
