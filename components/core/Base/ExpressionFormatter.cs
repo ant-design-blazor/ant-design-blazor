@@ -39,6 +39,7 @@ namespace AntDesign.Core.Base
                         var constantExpression = (ConstantExpression)node;
                         node = null;
                         break;
+
                     case ExpressionType.Call:
                         var methodCallExpression = (MethodCallExpression)node;
 
@@ -142,13 +143,10 @@ namespace AntDesign.Core.Base
 
         private static MethodInfoData GetOrCreateMethodInfoData(MethodInfo methodInfo)
         {
-          
-              var  methodInfoData = GetMethodInfoData(methodInfo);
-
+            var methodInfoData = GetMethodInfoData(methodInfo);
 
             return methodInfoData;
 
-            [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "The relevant members should be preserved since they were referenced in a LINQ expression")]
             static MethodInfoData GetMethodInfoData(MethodInfo methodInfo)
             {
                 var declaringType = methodInfo.DeclaringType;
@@ -194,9 +192,11 @@ namespace AntDesign.Core.Base
                 case MemberExpression memberExpression when memberExpression.Expression is ConstantExpression constantExpression:
                     FormatCapturedValue(memberExpression, constantExpression, ref builder);
                     break;
+
                 case ConstantExpression constantExpression:
                     FormatConstantValue(constantExpression, ref builder);
                     break;
+
                 default:
                     throw new InvalidOperationException($"Unable to evaluate index expressions of type '{indexExpression.GetType().Name}'.");
             }
@@ -283,9 +283,11 @@ namespace AntDesign.Core.Base
                 case IFormattable formattable:
                     builder.InsertFront(formattable);
                     break;
+
                 case null:
                     builder.InsertFront("null");
                     break;
+
                 case var x:
                     throw new InvalidOperationException($"Unable to format constant values of type '{x.GetType()}'.");
             }
