@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
-using AntDesign.Core.Base;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -40,7 +39,9 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
+#if NET8_0_OR_GREATER
         [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
+#endif
 
         [CascadingParameter(Name = "Form")]
         protected IForm Form { get; set; }
@@ -327,7 +328,7 @@ namespace AntDesign
                 {
                     return Convert.ToString(nameAttributeValue, CultureInfo.InvariantCulture) ?? string.Empty;
                 }
-
+#if NET8_0_OR_GREATER
                 if (_shouldGenerateFieldNames)
                 {
                     if (_formattedValueExpression is null && ValueExpression is not null)
@@ -338,7 +339,7 @@ namespace AntDesign
 
                     return _formattedValueExpression ?? string.Empty;
                 }
-
+#endif
                 return string.Empty;
             }
         }
