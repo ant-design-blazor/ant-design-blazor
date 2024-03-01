@@ -86,6 +86,12 @@ namespace AntDesign
         public bool DestroyOnClose { get; set; }
 
         /// <summary>
+        /// Header content
+        /// </summary>
+        [Parameter]
+        public RenderFragment Header { get; set; } = DialogOptions.DefaultHeader;
+
+        /// <summary>
         /// Footer content, set as Footer=null when you don't need default buttons
         /// </summary>
         [Parameter]
@@ -286,6 +292,7 @@ namespace AntDesign
                 DragInViewport = DragInViewport,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
+                Header = Header,
                 Footer = Footer,
 
                 GetContainer = GetContainer,
