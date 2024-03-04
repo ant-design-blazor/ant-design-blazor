@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TestApp.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.WebApp", "site\AntDesign.Docs.WebApp\AntDesign.Docs.WebApp.csproj", "{4734661E-8525-4331-9B3C-DC3C3A3612E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{69240625-7E70-435C-B35C-1A97854798C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{4734661E-8525-4331-9B3C-DC3C3A3612E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4734661E-8525-4331-9B3C-DC3C3A3612E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4734661E-8525-4331-9B3C-DC3C3A3612E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69240625-7E70-435C-B35C-1A97854798C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69240625-7E70-435C-B35C-1A97854798C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69240625-7E70-435C-B35C-1A97854798C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69240625-7E70-435C-B35C-1A97854798C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
 		{4734661E-8525-4331-9B3C-DC3C3A3612E0} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
+		{69240625-7E70-435C-B35C-1A97854798C6} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E124DDCB-1F8D-4F96-BF41-D87019D0A412}

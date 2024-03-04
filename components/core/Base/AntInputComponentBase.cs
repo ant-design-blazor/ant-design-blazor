@@ -27,6 +27,7 @@ namespace AntDesign
         private PropertyReflector? _propertyReflector;
         private string? _formattedValueExpression;
         private bool _shouldGenerateFieldNames;
+        private bool _hasInitializedParameters;
 
         private Action<object, TValue> _setValueDelegate;
 
@@ -39,7 +40,10 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
+        [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
+
 #if NET8_0_OR_GREATER
+
         [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
 #endif
 
@@ -349,19 +353,35 @@ namespace AntDesign
         {
             parameters.SetParameterProperties(this);
 
-            if (EditContext == null)
+            if (!_hasInitializedParameters)
             {
                 // This is the first run
                 // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
 
-                if (Form?.EditContext == null)
+#if NET8_0_OR_GREATER
+                if (CascadedEditContext != null)
                 {
-                    return base.SetParametersAsync(ParameterView.Empty);
+                    EditContext = CascadedEditContext;
+                    _shouldGenerateFieldNames = EditContext.ShouldUseFieldIdentifiers;
                 }
+                else
+                {
+                    // Ideally we'd know if we were in an SSR context but we don't
+                    _shouldGenerateFieldNames = !OperatingSystem.IsBrowser();
+                }
+#endif
 
-                EditContext = Form?.EditContext;
+                if (EditContext == null)
+                {
+                    if (Form?.EditContext == null)
+                    {
+                        return base.SetParametersAsync(ParameterView.Empty);
+                    }
 
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                    EditContext = Form?.EditContext;
+
+                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                }
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
@@ -381,6 +401,8 @@ namespace AntDesign
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
+
+                _hasInitializedParameters = true;
             }
             else if (Form?.EditContext != EditContext)
             {
