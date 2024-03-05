@@ -335,10 +335,16 @@ namespace AntDesign
 #if NET8_0_OR_GREATER
                 if (_shouldGenerateFieldNames)
                 {
-                    if (_formattedValueExpression is null && ValueExpression is not null)
+                    if (_formattedValueExpression is null)
                     {
-                        _formattedValueExpression = FieldPrefix != null ? FieldPrefix.GetFieldName(ValueExpression) :
-                            ExpressionFormatter.FormatLambda(ValueExpression);
+                        if (ValueExpression is not null)
+                        {
+                            _formattedValueExpression = FieldPrefix != null ? FieldPrefix.GetFieldName(ValueExpression) : ExpressionFormatter.FormatLambda(ValueExpression);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(Form?.Name) && !string.IsNullOrWhiteSpace(FormItem?.Name))
+                        {
+                            _formattedValueExpression = $"{Form?.Name}.{FormItem.Name}";
+                        }
                     }
 
                     return _formattedValueExpression ?? string.Empty;

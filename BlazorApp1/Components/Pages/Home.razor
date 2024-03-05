@@ -2,6 +2,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 @using System.ComponentModel
+@using System.Reflection
 
 <PageTitle>Home</PageTitle>
 
@@ -14,7 +15,7 @@ Welcome to your new app.
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
-      Name="abc"
+      Name="model"
       Method="post"
       Enhance
       WrapperColSpan="16">
@@ -34,19 +35,54 @@ Welcome to your new app.
     </FormItem>
 </Form>
 
-@code
-{
-    public class Model
+@*  <Form Model="@model"
+       OnFinish="OnFinish"
+       OnFinishFailed="OnFinishFailed"
+       Name="@nameof(model)"
+       Method="post"
+       Enhance
+       LabelColSpan="8"
+       WrapperColSpan="16">
+
+     @foreach (var field in fields)
     {
-        [Required, DisplayName("User Name")]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
-        public bool RememberMe { get; set; } = true;
+        <FormItem Name="@field.Key">
+            @InputRender(field.Value)
+        </FormItem>
     }
 
-    [SupplyParameterFromForm(FormName = "abc")]
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+ *@
+@code
+{
+    private Dictionary<string, PropertyInfo> fields = new();
+   
+
+    [SupplyParameterFromForm(FormName = "model")]
     public Model model { get; set; } = new();
+
+
+    protected override void OnInitialized()
+    {
+        fields = typeof(Model).GetProperties().ToDictionary(x => x.Name, x => x);
+        base.OnInitialized();
+    }
+
+    private RenderFragment InputRender(PropertyInfo property)
+    {
+        return property switch
+        {
+            _ when property.PropertyType.GetCustomAttribute<DataTypeAttribute>()?.DataType == DataType.Password =>@<InputPassword></InputPassword>,
+            _ when property.PropertyType == typeof(bool) =>@<Checkbox></Checkbox>,
+            _ when property.PropertyType == typeof(DateOnly?) =>@<DatePicker TValue="DateOnly?"></DatePicker>,
+            _ =>@<Input TValue="string"></Input>,
+        };
+    }
 
     private void OnFinish(EditContext editContext)
     {
@@ -56,5 +92,14 @@ Welcome to your new app.
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    public class Model
+    {
+        [Required, DisplayName("User Name")]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool RememberMe { get; set; } = true;
     }
 }
