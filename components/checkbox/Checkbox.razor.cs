@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Internal;
 
 namespace AntDesign
 {
@@ -17,9 +18,13 @@ namespace AntDesign
         [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
 
         [Parameter] public bool Indeterminate { get; set; }
+
         [Parameter] public string Label { get; set; }
 
-        [CascadingParameter] private CheckboxGroup CheckboxGroup { get; set; }
+        [CascadingParameter] private ICheckboxGroup CheckboxGroup { get; set; }
+
+        [CascadingParameter(Name = "ItemValue")]
+        internal object ItemValue { get; set; }
 
         internal bool IsFromOptions { get; set; }
 

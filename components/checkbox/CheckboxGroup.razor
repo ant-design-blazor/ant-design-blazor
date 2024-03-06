@@ -1,39 +1,46 @@
 ﻿@namespace AntDesign
-@inherits AntInputComponentBase<string[]>
+@typeparam TValue
+@inherits AntInputComponentBase<TValue[]>
 @using AntDesign.Internal;
 
-<CascadingValue Value="null" Name="FormItem" TValue="IFormItem" IsFixed="@true">        
+<CascadingValue Value="null" Name="FormItem" TValue="IFormItem" IsFixed="@true">
     <CascadingValue Value="this" IsFixed="@true">
         <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
             @if (MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
                 @ChildContent
+
             @if (Options.Value != null)
             {
                 if (Options.IsT0)
                 {
                     @foreach (var option in Options.AsT0)
-                    { 
-                        <Checkbox Disabled="option.Disabled || Disabled"
-                                  Checked="@option.Checked"
-                                  Label="@option.Value">
-                            @option.Label
-                        </Checkbox>
+                    {
+                        <CascadingValue Value="option.Value" Name="ItemValue">
+                            <Checkbox Disabled="option.Disabled || Disabled"
+                                      Checked="@option.Checked"
+                                      Label="@option.Label">
+                                @option.Label
+                            </Checkbox>
+                        </CascadingValue>
                     }
                 }
                 else
                 {
                     @foreach (var option in Options.AsT1)
                     {
-                        <Checkbox Disabled="Disabled"
-                                  Checked="@option.IsIn(_selectedValues)"
-                                  Label="@option">
-                            @option
-                        </Checkbox>
+                        <CascadingValue Value="option" Name="ItemValue">
+                            <Checkbox Disabled="Disabled"
+                                      Checked="@option.IsIn(_selectedValues)"
+                                      Label="@option.ToString()">
+                                @option
+                            </Checkbox>
+                        </CascadingValue>
                     }
                 }
             }
             @if (MixedMode == CheckboxGroupMixedMode.OptionsFirst)
                 @ChildContent
+
         </div>
     </CascadingValue>
 </CascadingValue>

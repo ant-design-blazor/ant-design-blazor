@@ -4,13 +4,14 @@
 <label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref">
     <span class="@ClassMapper.Class">
         <input id="@Id"
-               value="@Label"
+               value="@(CheckboxGroup==null?"true":Label)"
                checked="@Checked"
                disabled="@IsDisabled"
                autofocus=@AutoFocus
                @onchange="@InputCheckedChange"
                type="checkbox"
-               class="ant-checkbox-input" />
+               class="ant-checkbox-input"
+               name="@(CheckboxGroup?.NameAttributeValue ?? NameAttributeValue)" />
         <span class="ant-checkbox-inner"></span>
     </span>
 
