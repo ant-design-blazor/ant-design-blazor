@@ -19,7 +19,7 @@ Welcome to your new app.
       Method="post"
       Enhance
       WrapperColSpan="16">
-    <FormItem>
+     <FormItem Label="User Name">
         <Input @bind-Value="@model.Username"/>
     </FormItem>
     <FormItem Label="Password">
@@ -28,6 +28,12 @@ Welcome to your new app.
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
          <Checkbox @bind-Value="model.RememberMe">Remember me</Checkbox>
     </FormItem>
+     <FormItem WrapperColOffset="8" WrapperColSpan="16">
+         <EnumRadioGroup @bind-Value="model.Period">Period</EnumRadioGroup>
+     </FormItem>
+     <FormItem WrapperColOffset="8" WrapperColSpan="16">
+         <EnumCheckboxGroup @bind-Value="model.Period2">Periods</EnumCheckboxGroup>
+     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
@@ -59,12 +65,18 @@ Welcome to your new app.
 </Form>
  *@
 @code
-{
+ {
     private Dictionary<string, PropertyInfo> fields = new();
-   
+
 
     [SupplyParameterFromForm(FormName = "model")]
     public Model model { get; set; } = new();
+
+    public enum Period
+    {
+        Moring,
+        Evening
+    }
 
 
     protected override void OnInitialized()
@@ -100,6 +112,13 @@ Welcome to your new app.
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
+
         public bool RememberMe { get; set; } = true;
+
+        public Period Period { get; set; }
+
+        public Period[] Period2 { get; set; }
     }
+
+
 }
