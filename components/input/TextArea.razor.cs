@@ -326,7 +326,7 @@ namespace AntDesign
             }
         }
 
-        internal class TextAreaInfo
+        public class TextAreaInfo
         {
             public double ScrollHeight { get; set; }
             public double LineHeight { get; set; }
