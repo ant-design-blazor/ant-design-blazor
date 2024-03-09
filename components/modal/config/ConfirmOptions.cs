@@ -16,9 +16,8 @@ namespace AntDesign
     {
         public ConfirmOptions()
         {
-            Width = 416;
-            Mask = true;
-            MaskClosable = false;
+            Width =ConfirmDefaultValueOptions.Instance.Width??416;
+            MaskClosable = ConfirmDefaultValueOptions.Instance.MaskClosable??false;
             Locale = LocaleProvider.CurrentLocale.Confirm;
         }
 

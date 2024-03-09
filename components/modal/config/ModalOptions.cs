@@ -15,8 +15,10 @@ namespace AntDesign
         {
             _onCancel = DefaultOnCancelOrOk;
             _onOk = DefaultOnCancelOrOk;
-            Width = 520;
-            MaskClosable = true;
+            Width = ModalDefaultValueOptions.Instance.Width ?? 520;
+            MaskClosable = ModalDefaultValueOptions.Instance.MaskClosable ?? true;
+            DestroyOnClose=ModalDefaultValueOptions.Instance.DestroyOnClose ?? false;
+            Footer=ModalDefaultValueOptions.Instance.Footer??DialogOptions.DefaultFooter;
         }
 
         internal ModalRef ModalRef { get; set; }
@@ -88,7 +90,7 @@ namespace AntDesign
         /// <summary>
         /// Modal footer. If Footer==null, the dialog will not have a footer
         /// </summary>
-        public OneOf<string, RenderFragment>? Footer { get; set; } = DialogOptions.DefaultFooter;
+        public OneOf<string, RenderFragment>? Footer { get; set; }
 
         /// <summary>
         /// 
