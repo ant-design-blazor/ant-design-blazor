@@ -1,0 +1,26 @@
+﻿@namespace AntDesign
+
+@inherits AntDomComponentBase;
+
+@if (Parent != null)
+{
+    <div class="ant-space-item">
+        @RenderContent()
+    </div>
+}
+else
+{
+    @RenderContent()
+}
+
+@code{
+    RenderFragment RenderContent()
+    {
+        return
+    @<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+        <CascadingValue Value="this" IsFixed>
+            @ChildContent
+        </CascadingValue>
+    </div>;
+    }
+}
