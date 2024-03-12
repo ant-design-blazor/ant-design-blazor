@@ -22,7 +22,10 @@
     }
     else
     {
-        <div class="@ClassMapper.Class">@selectOption.GroupName</div>
+        if(SelectParent.SelectOptionItems.Where(i=>i.GroupName==selectOption.GroupName && !i.IsHidden).Count()>0)
+        {
+            <div class="@ClassMapper.Class">@selectOption.GroupName</div>
+        }
         <CascadingValue Value="@selectOption.InternalId" Name="InternalId">
             @selectOptionFragment(selectOption)
         </CascadingValue>
