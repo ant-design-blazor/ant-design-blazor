@@ -28,6 +28,12 @@ namespace AntDesign
     {
         #region Parameters
 
+        public delegate bool FilterOptionDelegate(string label, string searchValue);
+        /// <summary>
+        /// Allow Custom Filter
+        /// </summary>
+        [Parameter]
+        public FilterOptionDelegate FilterOption { get; set; }
         /// <summary>
         /// Toggle the border style.
         /// </summary>
@@ -1306,7 +1312,7 @@ namespace AntDesign
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
-                    if (FilterExpression(item, searchValue))
+                    if (FilterOption == null ? FilterExpression(item, searchValue) : FilterOption(item.Label, searchValue))
                     {
                         if (!firstDone)
                         {
