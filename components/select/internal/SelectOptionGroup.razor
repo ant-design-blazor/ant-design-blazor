@@ -22,7 +22,7 @@
     }
     else
     {
-        if(SelectParent.SelectOptionItems.Where(i=>i.GroupName==selectOption.GroupName && !i.IsHidden).Count()>0)
+        if(SelectParent.SelectOptionItems.Any(i=>i.GroupName==selectOption.GroupName && !i.IsHidden))
         {
             <div class="@ClassMapper.Class">@selectOption.GroupName</div>
         }
