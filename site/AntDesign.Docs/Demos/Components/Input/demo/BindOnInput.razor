@@ -1,6 +1,10 @@
 ﻿<div>
+    input onchanged:
+    <Input TValue="string" Placeholder="onblur change" OnChange="OnChnaged" />
+    <br />
+    <br />
     onchange:
-    <Input Placeholder="onblur change" @bind-Value="@txtValue"  />
+    <Input Placeholder="onblur change" @bind-Value="@txtValue" />
     <br />
     <br />
     oninput:
@@ -13,6 +17,10 @@
     <br />
     <Text>@txtValue</Text>
 </div>
-@code{
+@code {
     string txtValue { get; set; }
+    void OnChnaged(string text)
+    {
+        
+    }
 }
