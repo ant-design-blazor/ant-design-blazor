@@ -11,9 +11,13 @@
     border-color: @radio-dot-color;
 
     &::after {
-        transform: scale((unit(@radio-dot-size) / unit(@radio-size)));
-        opacity: 1;
-        transition: all @radio-duration @ease-in-out-circ;
+      transform: scale((unit(@radio-dot-size) / unit(@radio-size)));
+      opacity: 1;
+      transition: all @radio-duration @ease-in-out-circ;
     }
+  }
+
+  .ant-radio-checked .@{radio-inner-prefix-cls}::after {
+      opacity: 0; /** ignore the *-checked's opacity, use :checked's for static SSR  */
   }
 }
