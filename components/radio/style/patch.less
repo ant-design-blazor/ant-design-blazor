@@ -16,8 +16,11 @@
       transition: all @radio-duration @ease-in-out-circ;
     }
   }
+}
 
-  .ant-radio-checked .@{radio-inner-prefix-cls}::after {
-      opacity: 0; /** ignore the *-checked's opacity, use :checked's for static SSR  */
-  }
+&.ant-radio-checked .@{radio-inner-prefix-cls}::after {
+  opacity: 0; /** cover the *-checked's opacity, use :checked's for static SSR  */
+}
+.ant-radio-checked .ant-radio-inner {
+  border-color: @border-color-base;
 }
