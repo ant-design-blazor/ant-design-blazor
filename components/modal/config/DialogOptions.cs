@@ -23,7 +23,7 @@ namespace AntDesign
         public string BodyStyle { get; set; }
 
         /// <summary>
-        /// show ant-modal-closer 
+        /// show ant-modal-closer
         /// </summary>
         public bool Closable { get; set; } = true;
 
@@ -48,12 +48,17 @@ namespace AntDesign
         public bool ConfirmLoading { get; set; }
 
         /// <summary>
+        /// modal header
+        /// </summary>
+        public RenderFragment Header { get; set; } = DefaultHeader;
+
+        /// <summary>
         /// modal footer
         /// </summary>
         public OneOf<string, RenderFragment>? Footer { get; set; } = DefaultFooter;
 
         /// <summary>
-        /// The class name of the container of the modal dialog	
+        /// The class name of the container of the modal dialog
         /// </summary>
         public string WrapClassName { get; set; }
 
@@ -63,7 +68,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// the class name of the element of ".ant-modal" 
+        /// the class name of the element of ".ant-modal"
         /// </summary>
         public string ClassName { get; set; }
 
@@ -111,7 +116,6 @@ namespace AntDesign
 
         #region internal
 
-
         internal string GetHeaderStyle()
         {
             if (Draggable)
@@ -146,6 +150,6 @@ namespace AntDesign
             return string.Join(' ', classNameArray);
         }
 
-        #endregion
+        #endregion internal
     }
 }
