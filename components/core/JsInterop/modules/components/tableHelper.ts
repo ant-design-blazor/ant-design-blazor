@@ -60,7 +60,9 @@
   }
 
   static enableColumnResizing(tableElement) {
-
+    if (!tableElement || !tableElement.tHead) {
+      return;
+    }
     const cols = tableElement.querySelectorAll('col');
 
     tableElement.tHead.querySelectorAll('.ant-table-thead th').forEach((th, i) => {
