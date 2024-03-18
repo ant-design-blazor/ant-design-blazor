@@ -3,14 +3,14 @@
 
 @using AntDesign.Internal;
 
-<span style="@Style" @ref="Ref" class="@ClassMapper.Class @(IsPictureCard? "ant-upload-picture-card-wrapper" : "")"
+<span style="@Style" @ref="Ref" class="@ClassMapper.Class"
      @ondragover="@HandleDrag"
      @ondragleave="@HandleDrag"
      @ondrop="@HandleDrag"
      @ondragover:stopPropagation
      @ondragleave:stopPropagation
      @ondrop:stopPropagation>
-        @if (!IsPictureCard || !ShowUploadList)
+        @if (ChildContent != null && (!IsPictureCard || !ShowUploadList))
         {
             <CascadingValue Value="this" IsFixed>
                 <UploadButton Action="@Action"

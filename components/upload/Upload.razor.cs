@@ -103,6 +103,10 @@ namespace AntDesign
 
             var prefixCls = "ant-upload";
 
+            ClassMapper
+                .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
+                .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);
+
             _listClassMapper
                 .Add($"{prefixCls}-list")
                 .Get(() => $"{prefixCls}-list-{ListType}")
