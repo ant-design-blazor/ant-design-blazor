@@ -373,7 +373,7 @@ namespace AntDesign
                 else
                 {
                     // Ideally we'd know if we were in an SSR context but we don't
-                    _shouldGenerateFieldNames = !OperatingSystem.IsBrowser();
+                    //_shouldGenerateFieldNames = !OperatingSystem.IsBrowser();
                 }
 #endif
 

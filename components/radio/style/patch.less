@@ -11,10 +11,14 @@
     border-color: @radio-dot-color;
 
     &::after {
-      transform: scale((unit(@radio-dot-size) / unit(@radio-size)));
-      opacity: 1;
-      transition: all @radio-duration @ease-in-out-circ;
+        transform: scale((unit(@radio-dot-size) / unit(@radio-size)));
+        opacity: 1;
+        transition: all @radio-duration @ease-in-out-circ;
     }
+  }
+
+  &-disabled .ant-radio-input:checked + .@{radio-inner-prefix-cls} {
+    border-color: @border-color-base;
   }
 }
 
