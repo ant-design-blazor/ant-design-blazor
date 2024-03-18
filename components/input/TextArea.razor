@@ -44,7 +44,7 @@
 {
     <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
         <span class="@_warpperClassMapper.Class">
-            <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+            <textarea @ref="Ref" name="@NameAttributeValue" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
             @if (AllowClear)
             {
                 @ClearIcon
@@ -64,5 +64,5 @@
 }
 else
 {
-    <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+    <textarea @ref="Ref" name="@NameAttributeValue" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
 }
