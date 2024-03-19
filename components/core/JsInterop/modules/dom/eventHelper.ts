@@ -22,7 +22,7 @@ export class eventHelper {
       const json = JSON.stringify(obj, (k, v) => {
         if (typeof v === 'object' && v !== null) {
           if (cache.has(v)) {
-              return;
+            return;
           }
           cache.add(v);
         }
