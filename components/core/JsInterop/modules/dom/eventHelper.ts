@@ -18,7 +18,14 @@ export class eventHelper {
           obj[k] = args[k];
         }
       }
+      const cache = new Set();
       const json = JSON.stringify(obj, (k, v) => {
+        if (typeof v === 'object' && v !== null) {
+          if (cache.has(v)) {
+              return;
+          }
+          cache.add(v);
+        }
         if (v instanceof Node) return 'Node';
         if (v instanceof Window) return 'Window';
         return v;
