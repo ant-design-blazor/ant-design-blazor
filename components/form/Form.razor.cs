@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Form.Locale;
@@ -18,7 +19,6 @@ namespace AntDesign
 
         /// <summary>
         /// Change how required/optional field labels are displayed on the form.
-        /// 
         /// <list type="bullet">
         ///     <item>Required - Will mark required fields</item>
         ///     <item>Optional - Will mark optional fields</item>
@@ -142,6 +142,11 @@ namespace AntDesign
         [Parameter]
         public FormValidateErrorMessages ValidateMessages { get; set; }
 
+        /// <summary>
+        /// If enabled, form submission is performed without fully reloading the page. This is equivalent to adding data-enhance to the form.
+        /// </summary>
+        [Parameter]
+        public bool Enhance { get; set; }
 
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
@@ -177,6 +182,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
+            if (Model == null)
+            {
+                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+            }
+
             _editContext = new EditContext(Model);
 
             if (FormProvider != null)
@@ -199,9 +209,10 @@ namespace AntDesign
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
-        private void OnValidationRequestedHandler(object sender, ValidationRequestedEventArgs e) => InvokeAsync(() => OnValidationRequested.InvokeAsync(e));
-        private void OnValidationStateChangedHandler(object sender, ValidationStateChangedEventArgs e) => InvokeAsync(() => OnValidationStateChanged.InvokeAsync(e));
 
+        private void OnValidationRequestedHandler(object sender, ValidationRequestedEventArgs e) => InvokeAsync(() => OnValidationRequested.InvokeAsync(e));
+
+        private void OnValidationStateChangedHandler(object sender, ValidationStateChangedEventArgs e) => InvokeAsync(() => OnValidationStateChanged.InvokeAsync(e));
 
         protected override void Dispose(bool disposing)
         {
@@ -354,6 +365,11 @@ namespace AntDesign
             if (_editContext == null)
                 return;
 
+            if (Model == null)
+            {
+                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+            }
+
             var newContext = new EditContext(Model);
             foreach (var kv in GetEventInfos())
             {
@@ -372,14 +388,14 @@ namespace AntDesign
             _editContext = newContext;
         }
 
-        static BindingFlags AllBindings
+        private static BindingFlags AllBindings
         {
             get { return BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance; }
         }
 
-        static Dictionary<string, (FieldInfo fi, EventInfo ei)> _eventInfos;
+        private static Dictionary<string, (FieldInfo fi, EventInfo ei)> _eventInfos;
 
-        static Dictionary<string, (FieldInfo fi, EventInfo ei)> GetEventInfos()
+        private static Dictionary<string, (FieldInfo fi, EventInfo ei)> GetEventInfos()
         {
             if (_eventInfos is null)
             {
