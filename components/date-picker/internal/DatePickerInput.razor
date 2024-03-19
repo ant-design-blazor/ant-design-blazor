@@ -11,7 +11,8 @@
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               @onkeydown:preventDefault=@PreventDefault
+               value="@Value"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -59,6 +60,7 @@ else
                @onfocus="Onfocus"
                @onblur="OnBlur"
                @bind-value="@Value"
+               @onkeydown:preventDefault=@PreventDefault
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -95,6 +97,9 @@ else
 
     [Parameter]
     public bool AutoFocus { get; set; }
+
+    [Parameter]
+    public bool PreventDefault { get; set; }
 
     [Parameter]
     public bool ShowSuffixIcon { get; set; } = true;

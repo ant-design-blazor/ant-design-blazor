@@ -3,15 +3,17 @@
 @inherits AntDesignTestBase
 
 @code {
+
     [Theory]
     [MemberData(nameof(DatePickerTestData.Data), MemberType = typeof(DatePickerTestData))]
     public void DefaultValue_applied_to_value<T>(T defaultValue)
-    {//Arrange
+    {
+        //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 
         //Act
         var cut = Render<AntDesign.DatePicker<T>>(
-			@<DatePicker TValue="T" DefaultValue="@defaultValue" />);
+            @<DatePicker TValue="T" DefaultValue="@defaultValue"/>);
         //Assert
         cut.Instance.Value.Should().Be(defaultValue);
     }
@@ -29,7 +31,7 @@
 
         DateTime value = new DateTime(2021, 4, 5);
         string expectedAsString = value.ToString("yyyy-MM-dd");
-        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" />);
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value"/>);
         string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
         //Act
         var input = cut.Find("input");
@@ -59,7 +61,7 @@
 
         var value = new DateTime(2023, 1, 31);
         var expectedAsString = value.ToString("yyyy-MM-dd");
-        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" />);
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value"/>);
         var expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
 
         //Act
@@ -86,6 +88,45 @@
         input.GetAttribute("value").Should().Be(dateToSelect);
     }
 
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.MaskInputData), MemberType = typeof(DatePickerTestData))]
+    public async Task Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false, string mask = "dd/MM/yyyy")
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+        var cut = Render<AntDesign.DatePicker<DateTime?>>(
+            @<DatePicker TValue="DateTime?" Format="@mask" Mask="@mask" AllowClear="false"/>
+            );
+
+        //Act
+        var input = cut.Find("input");
+        input.Click();
+        foreach (var symbol in inputValue)
+        {
+            await input.KeyDownAsync(new KeyboardEventArgs
+            {
+                Key = symbol.ToString()
+            });
+        }
+
+        //Assert
+        input.GetAttribute("value").Should().Be(expectedValue);
+
+        if (validateValue)
+        {
+            input.KeyDown("ENTER");
+
+            cut.Instance.Value.Should().Be(DateTime.ParseExact(expectedValue, mask, CultureInfo.InvariantCulture));
+        }
+    }
+
     [Theory]
     [MemberData(nameof(DatePickerTestData.FormatData), MemberType = typeof(DatePickerTestData))]
     public void Format_is_applied<T>(T value, string format, string expected)
@@ -94,8 +135,7 @@
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 
         var cut = Render<AntDesign.DatePicker<T>>(
-			@<DatePicker @bind-Value="@value" Format="@format" />
-        );
+            @<DatePicker @bind-Value="@value" Format="@format"/>);
         //Act
         var input = cut.Find("input");
         //Assert
@@ -108,10 +148,10 @@
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-        
+
         CultureInfo cultureInfo = CultureInfo.GetCultureInfo(culture);
         var cut = Render<AntDesign.DatePicker<T>>(
-			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" />);
+            @<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo"/>);
         //Act
         var input = cut.Find("input");
         //Assert
@@ -124,12 +164,12 @@
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-        
+
         CultureInfo cultureInfo = CultureInfo.GetCultureInfo(culture);
-             
+
         var cut = Render<AntDesign.DatePicker<T>>(
-			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" Format="@format" />
-        );
+            @<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" Format="@format"/>
+            );
         //Act
         var input = cut.Find("input");
         //Assert
@@ -146,7 +186,7 @@
 
         //Act
         var cut = Render<AntDesign.DatePicker<T>>
-        (@<DatePicker TValue="T" Value="@value" Placeholder="@(placeholder)" />);
+            (@<DatePicker TValue="T" Value="@value" Placeholder="@(placeholder)"/>);
 
         //Assert
         var input = cut.Find("input");
@@ -160,14 +200,15 @@
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         string placeholder = "This is awesome";
-        
+
         //Act
         var cut = Render<AntDesign.DatePicker<T>>
-        (@<DatePicker @bind-Value="@value" Placeholder="@(placeholder)" />);
+            (@<DatePicker @bind-Value="@value" Placeholder="@(placeholder)"/>);
         cut.Instance.ClearValue();
 
         //Assert
         var input = cut.Find("input");
         input.GetAttribute("placeholder").Should().Be(placeholder);
     }
+
 }

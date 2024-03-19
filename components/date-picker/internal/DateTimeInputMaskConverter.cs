@@ -29,14 +29,14 @@ internal class DateTimeInputMaskConverter : IInputMaskConverter
         var allowedSymbols = _allowedInput;
         var keySymbols = _maskSymbolsToReplace;
         var masks = mask.ToArray();
-        var chars = value.Where(x => allowedSymbols.IsMatch(x.ToString())).ToArray();
-        var newValue = new StringBuilder();
+        var inputSymbols = value.Where(x => allowedSymbols.IsMatch(x.ToString())).ToArray();
+        var newValue = new StringBuilder(mask.Length);
         var insertedCount = 0;
         for (var maskIndex = 0; maskIndex < masks.Length; maskIndex++)
         {
             var maskItem = masks[maskIndex];
             var isKeySymbol = keySymbols.IsMatch(maskItem.ToString());
-            if (insertedCount == chars.Length)
+            if (insertedCount == inputSymbols.Length)
             {
                 if (!isKeySymbol)
                 {
@@ -48,7 +48,7 @@ internal class DateTimeInputMaskConverter : IInputMaskConverter
 
             if (isKeySymbol)
             {
-                var symbol = chars[insertedCount];
+                var symbol = inputSymbols[insertedCount];
 
                 var symbolsToAdd = ConvertSymbol(mask, newValue.ToString(), symbol);
 
@@ -66,6 +66,31 @@ internal class DateTimeInputMaskConverter : IInputMaskConverter
         return newValue.ToString();
     }
 
+    public bool CanInputKey(string key)
+    {
+        if (key.Length > 1)
+        {
+            return false;
+        }
+
+        return _allowedInput.IsMatch(key);
+    }
+
+    public int LastIndexForDeletion(string value)
+    {
+        for (var index = value.Length - 1; index > 0; index--)
+        {
+            var symbol = value[index];
+
+            if (_allowedInput.IsMatch(symbol.ToString()))
+            {
+                return index;
+            }
+        }
+
+        return 0;
+    }
+
     private static string ConvertSymbol(string mask, string resultStr, char symbol)
     {
         var indexOfMonthPattern = mask.IndexOf("MM", StringComparison.InvariantCulture);
@@ -75,9 +100,16 @@ internal class DateTimeInputMaskConverter : IInputMaskConverter
         }
 
         var indexOfDayPattern = mask.IndexOf("dd", StringComparison.InvariantCulture);
-        if (indexOfDayPattern >= 0 && resultStr.Length == indexOfDayPattern && symbol >= '4')
+        if (indexOfDayPattern >= 0)
         {
-            return new string(new[] { '0', symbol });
+            if (resultStr.Length == indexOfDayPattern + 1 && symbol > '1' && resultStr[^1] == '3')
+            {
+                return new string(new[] { '1' });
+            }
+            if (resultStr.Length == indexOfDayPattern && symbol >= '4')
+            {
+                return new string(new[] { '0', symbol });
+            }
         }
 
         var indexOfMinutesPattern = mask.IndexOf("mm", StringComparison.InvariantCulture);

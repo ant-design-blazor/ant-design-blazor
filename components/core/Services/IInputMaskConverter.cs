@@ -7,4 +7,6 @@ namespace AntDesign.Core;
 public interface IInputMaskConverter
 {
     string Convert(string value, string mask);
+    bool CanInputKey(string key);
+    int LastIndexForDeletion(string value);
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
@@ -20,7 +21,8 @@ namespace AntDesign
             ProcessDefaults();
             _pickerValuesAfterInit = PickerValues[0];
         }
-
+        
+        
         private void ProcessDefaults()
         {
             UseDefaultPickerValue[0] = true;
@@ -113,8 +115,9 @@ namespace AntDesign
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         protected async Task OnKeyDown(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
+
+            await OnKeyDown(e, 0);
 
             var isEnter = key == "ENTER";
             var isTab = key == "TAB";

@@ -135,6 +135,7 @@ namespace AntDesign
         protected OneOf<bool, string> _showTime = null;
 
         private bool _timeFormatProvided;
+        public bool PreventDefault => !string.IsNullOrEmpty(Mask);
 
         [Parameter]
         public OneOf<bool, string> ShowTime
@@ -488,21 +489,6 @@ namespace AntDesign
             }
 
             var newValue = args.Value.ToString();
-            var hasMask = !string.IsNullOrEmpty(Mask);
-
-            if (hasMask)
-            {
-                newValue = InputMaskConverter.Convert(newValue, Mask);
-
-                if (index == 0)
-                {
-                    _inputStart.Value = newValue;
-                }
-                else
-                {
-                    _inputEnd.Value = newValue;
-                }
-            }
 
             if (FormatAnalyzer.TryPickerStringConvert(newValue, out DateTime parsedValue, Mask))
             {
@@ -514,7 +500,7 @@ namespace AntDesign
                 _pickerStatus[index].SelectedValue = InternalConvert.SetKind<TValue>(parsedValue);
                 ChangePickerValue(parsedValue, index);
 
-                if (hasMask)
+                if (!string.IsNullOrEmpty(Mask))
                 {
                     ChangeValue(parsedValue, index);
                 }
@@ -522,6 +508,38 @@ namespace AntDesign
             else
             {
                 _pickerStatus[index].SelectedValue = null;
+            }
+        }
+
+        protected virtual async Task OnKeyDown(KeyboardEventArgs e, int index)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            if (e.Key.ToUpper() == "TAB" && PreventDefault)
+            {
+                await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
+            }
+
+            var hasMask = !string.IsNullOrEmpty(Mask);
+            if (PreventDefault && hasMask)
+            {
+                var input = index == 0 ? _inputStart : _inputEnd;
+                if (e.Key.ToUpperInvariant() == "BACKSPACE")
+                {
+                    var lastIndexForDeletion = InputMaskConverter.LastIndexForDeletion(input.Value);
+                    input.Value = input.Value.Remove(lastIndexForDeletion);
+
+                    OnInput(new ChangeEventArgs { Value = input.Value }, index);
+                }
+                else if (InputMaskConverter.CanInputKey(e.Key))
+                {
+                    var value = input.Value + e.Key;
+
+                    var newValue = InputMaskConverter.Convert(value, Mask);
+
+                    input.Value = newValue;
+                    OnInput(new ChangeEventArgs { Value = newValue }, index);
+                }
             }
         }
 
@@ -672,10 +690,29 @@ namespace AntDesign
 
         protected virtual async Task OnBlur(int index)
         {
+            //Await for Focus event - if it is going to happen, it will be
+            //right after OnBlur. Best way to achieve that is to wait.
+            //Task.Yield() does not work here.
+            await Task.Delay(1);
+
             if (ChangeOnClose && _duringManualInput)
             {
-                ChangeValue(_pickerStatus[index].SelectedValue.Value);
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
+                }
+                else if (AllowClear)
+                {
+                    ClearValue(index);
+                }
             }
+
+            if (_openingOverlay)
+            {
+                return;
+            }
+            _duringManualInput = false;
+            AutoFocus = false;
         }
 
         protected void InitPicker(string picker)

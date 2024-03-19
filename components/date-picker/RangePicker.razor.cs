@@ -220,9 +220,9 @@ namespace AntDesign
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         /// <param name="index">Refers to picker index - 0 for starting date, 1 for ending date</param>
-        protected async Task OnKeyDown(KeyboardEventArgs e, int index)
+        protected override async Task OnKeyDown(KeyboardEventArgs e, int index)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            await base.OnKeyDown(e, index);
 
             var key = e.Key.ToUpperInvariant();
 

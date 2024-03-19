@@ -121,4 +121,23 @@ public static class DatePickerTestData
 #endif
         }
     }
+
+    public static IEnumerable<object?[]> MaskInputData
+    {
+        get
+        {
+            yield return new object?[] { "1/", "1" };
+            yield return new object?[] { "11", "11/" };
+            yield return new object?[] { "111", "11/1" };
+            yield return new object?[] { "1111", "11/11/" };
+            yield return new object?[] { "asdaxcv", "" };
+            yield return new object?[] { "11112111", "11/11/2111", true };
+            yield return new object?[] { "111121111", "11/11/2111", true };
+            yield return new object?[] { "11/11/2111", "11/11/2111", true };
+            yield return new object?[] { "11/11/21111", "11/11/2111", true };
+            yield return new object?[] { "33122020", "31/12/2020", true };
+            yield return new object?[] { "992022", "09/09/2022", true };
+            yield return new object?[] { "2222222", "2222/22/02", true, "yyyy/dd/MM" };
+        }
+    }
 }
