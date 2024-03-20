@@ -18,7 +18,7 @@
     window.addEventListener('resize', bodyRef.bindScroll);
 
     if (resizable) {
-      tableHelper.enableColumnResizing(tableRef);
+      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
     }
   }
 
@@ -59,11 +59,13 @@
     pingRight ? wrapperRef.classList.add("ant-table-ping-right") : wrapperRef.classList.remove("ant-table-ping-right");
   }
 
-  static enableColumnResizing(tableElement) {
+  static enableColumnResizing(headerElement, tableElement, scrollY) {
 
     const cols = tableElement.querySelectorAll('col');
-
-    tableElement.tHead.querySelectorAll('.ant-table-thead th').forEach((th, i) => {
+    const ths = scrollY ? 
+        headerElement.querySelectorAll('.ant-table-thead th') :
+        tableElement.tHead.querySelectorAll('.ant-table-thead th');
+    ths.forEach((th, i) => {
 
       const col = cols[i];
       const handle = document.createElement('div');
