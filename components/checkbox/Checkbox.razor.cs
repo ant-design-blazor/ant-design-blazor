@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using AntDesign.Internal;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AntDesign
 {
@@ -30,6 +32,8 @@ namespace AntDesign
 
         private bool IsDisabled => Disabled || (CheckboxGroup?.Disabled ?? false);
 
+        private Dictionary<string, object> _attributes;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -41,6 +45,18 @@ namespace AntDesign
         {
             CheckboxGroup?.RemoveItem(this);
             base.Dispose(disposing);
+        }
+
+        protected override void OnParametersSet()
+        {
+            _attributes = AdditionalAttributes?.ToDictionary(x => x.Key, x => x.Value) ?? [];
+
+            var name = CheckboxGroup?.NameAttributeValue ?? NameAttributeValue;
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                _attributes.TryAdd("name", name);
+            }
+            base.OnParametersSet();
         }
 
         protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
