@@ -63,8 +63,9 @@
 
     const cols = tableElement.querySelectorAll('col');
     const ths = scrollY ? 
-        headerElement.querySelectorAll('.ant-table-thead th') :
-        tableElement.tHead.querySelectorAll('.ant-table-thead th');
+      headerElement.querySelectorAll('.ant-table-thead th') :
+      tableElement.tHead.querySelectorAll('.ant-table-thead th');
+
     ths.forEach((th, i) => {
 
       const col = cols[i];
