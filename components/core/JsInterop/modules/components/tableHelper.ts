@@ -18,7 +18,7 @@
     window.addEventListener('resize', bodyRef.bindScroll);
 
     if (resizable) {
-      tableHelper.enableColumnResizing(tableRef);
+      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
     }
   }
 
@@ -59,13 +59,18 @@
     pingRight ? wrapperRef.classList.add("ant-table-ping-right") : wrapperRef.classList.remove("ant-table-ping-right");
   }
 
-  static enableColumnResizing(tableElement) {
+  static enableColumnResizing(headerElement, tableElement, scrollY) {
 
     const cols = tableElement.querySelectorAll('col');
+    const ths = scrollY ? 
+      headerElement.querySelectorAll('.ant-table-thead th') :
+      tableElement.tHead.querySelectorAll('.ant-table-thead th');
+    const headerCols = scrollY ? headerElement.querySelectorAll('col') : null;
 
-    tableElement.tHead.querySelectorAll('.ant-table-thead th').forEach((th, i) => {
+    ths.forEach((th, i) => {
 
       const col = cols[i];
+      const headerCol = headerCols ? headerCols[i] : null;
       const handle = document.createElement('div');
       handle.classList.add('ant-table-resizable-handle');
       handle.style.height = `${tableElement.offsetHeight}px`;
@@ -104,6 +109,9 @@
           if (updatedColumnWidth > 0) {
             th.style.width = `${updatedColumnWidth}px`;
             col.style.width = `${updatedColumnWidth}px`;
+            if (headerCol) {
+              headerCol.style.width =`${updatedColumnWidth}px`;
+            }
             handle.style.right = '0';
             handle.style.left = '';
             handle.classList.remove('ant-table-resizing');
