@@ -15,6 +15,27 @@ timeline: true
 
 ---
 
+### 0.18.1
+
+`2024-3-21` 
+
+是日春分
+
+- 🆕 新增 Modal 自定义头部 (#3579)。[4cfeffd](https://github.com/ant-design-blazor/ant-design-blazor/commit/4cfeffd) [@Pat Hartl](https://github.com/Pat Hartl)
+
+- Form
+  - 🐞 修复 静态渲染时的绑定与验证，**正式支持静态渲染**。[#3580](https://github.com/ant-design-blazor/ant-design-blazor/pull/3580) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当没有绑定时的异常。[#3717](https://github.com/ant-design-blazor/ant-design-blazor/pull/3717) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 修复 在筛选时隐藏空分组。[#3722](https://github.com/ant-design-blazor/ant-design-blazor/pull/3722) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 修复 通过搜索选择值时清除输入。[#3726](https://github.com/ant-design-blazor/ant-design-blazor/pull/3726) [@agolub-s](https://github.com/agolub-s)
+
+- 💄 优化 Upload 无按钮时的样式。[#3734](https://github.com/ant-design-blazor/ant-design-blazor/pull/3734) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 在设置 `ScrollY` 时伸缩列失效。[#3746](https://github.com/ant-design-blazor/ant-design-blazor/pull/3746) [@thirking](https://github.com/thirking)
+- 🐞 修复 JS 序列化循环引用异常。[#3739](https://github.com/ant-design-blazor/ant-design-blazor/pull/3739) [@jxcproject](https://github.com/jxcproject)
+
+
 ### 0.18.0
 
 `2024-02-29`
