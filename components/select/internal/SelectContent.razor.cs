@@ -298,6 +298,7 @@ namespace AntDesign.Select.Internal
         internal void ClearSearch()
         {
             _inputString = string.Empty;
+            StateHasChanged();
         }
 
         private void SetInputWidth()
