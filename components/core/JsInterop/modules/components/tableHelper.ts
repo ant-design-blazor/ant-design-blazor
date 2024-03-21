@@ -110,7 +110,7 @@
             th.style.width = `${updatedColumnWidth}px`;
             col.style.width = `${updatedColumnWidth}px`;
             if (headerCol) {
-                headerCol.style.width =`${updatedColumnWidth}px`;
+              headerCol.style.width =`${updatedColumnWidth}px`;
             }
             handle.style.right = '0';
             handle.style.left = '';
