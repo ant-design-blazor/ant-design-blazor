@@ -3,15 +3,15 @@
     Check all
     </Checkbox>
     <br />
-    <AntDesign.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"/>
+    <AntDesign.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged" TValue="string"/>
 </div>
 
 @code{
 
-    static CheckboxOption[] ckeckAllOptions = new CheckboxOption[]{
-        new CheckboxOption{ Label="Apple",Value="Apple" ,Checked=true},
-        new CheckboxOption{ Label="Pear", Value="Pear" },
-        new CheckboxOption{ Label="Orange", Value="Orange",Checked=true },
+    static CheckboxOption<string>[] ckeckAllOptions = new CheckboxOption<string>[]{
+        new() { Label="Apple",Value="Apple" ,Checked=true},
+        new() { Label="Pear", Value="Pear" },
+        new(){ Label="Orange", Value="Orange",Checked=true },
     };
 
     void CheckAllChanged()

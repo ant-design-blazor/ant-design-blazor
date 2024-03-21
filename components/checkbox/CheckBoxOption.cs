@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class CheckboxOption
+    public class CheckboxOption<TValue>
     {
         public string Label { get; set; }
 
-        public string Value { get; set; }
+        public TValue Value { get; set; }
 
         public bool Checked { get; set; }
 
