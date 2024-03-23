@@ -27,6 +27,43 @@ To save time, we will systematically close all issues about general support and 
 
 If you would like to chat about the question in real-time, you can reach out via [our discord server][discord].
 
+
+## Form-pop-up-code
+// 表单验证函数
+function validateForm() {
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var message = document.getElementById("message").value;
+
+    // 检查字段是否为空
+    if (name == "" || email == "" || message == "") {
+        alert("请填写所有字段。");
+        return false;
+    }
+
+    // 验证电子邮件格式
+    var emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+        alert("请输入有效的电子邮件地址。");
+        return false;
+    }
+
+    // 所有验证通过
+    return true;
+}
+
+// 显示弹出表单的函数
+function showForm() {
+    document.getElementById("popupForm").style.display = "block";
+}
+
+// 隐藏弹出表单的函数
+function hideForm() {
+    document.getElementById("popupForm").style.display = "none";
+}
+
+
+
 ## <a name="issue"></a> Found a Bug?
 If you find a bug in the source code, you can help us by
 [submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
