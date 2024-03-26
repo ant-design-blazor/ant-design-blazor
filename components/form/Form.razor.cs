@@ -270,7 +270,12 @@ namespace AntDesign
             _rulesValidator.ClearError(args.FieldIdentifier);
 
             var formItem = _formItems
-                .Single(t => t.GetFieldIdentifier().Equals(args.FieldIdentifier));
+                .FirstOrDefault(t => t.GetFieldIdentifier().Equals(args.FieldIdentifier));
+
+            if (formItem == null)
+            {
+                return;
+            }
 
             var result = formItem.ValidateField();
 
