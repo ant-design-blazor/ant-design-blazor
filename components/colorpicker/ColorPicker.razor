@@ -42,21 +42,21 @@
                         </GridRow>
                     </div>
                     <div class="ant-popover-inner-content">
-                        <div class="mud-picker-color-picker" style="@($"background-color: {_value.ToString(AntColorOutputFormats.RGB)}")">
-                            <div class="mud-picker-color-overlay">
-                                <div class="mud-picker-color-overlay mud-picker-color-overlay-white">
-                                    <div class="mud-picker-color-overlay mud-picker-color-overlay-black">
-                                        <div class="mud-picker-color-overlay" @onclick="OnColorOverlayClick">
-                                            <svg class="mud-picker-color-selector" height="26" width="26" style="transform: @GetSelectorLocation()" @onclick="OnSelectorClicked" @onclick:stopPropagation="true">
+                        <div class="ant-color-picker" style="@($"background-color: {_value.ToString(AntColorOutputFormats.RGB)}")">
+                            <div class="ant-color-picker-overlay">
+                                <div class="ant-color-picker-overlay ant-color-picker-overlay-white">
+                                    <div class="ant-color-picker-overlay ant-color-picker-overlay-black">
+                                        <div class="ant-color-picker-overlay" @onclick="OnColorOverlayClick">
+                                            <svg class="ant-color-picker-selector" height="26" width="26" style="transform: @GetSelectorLocation()" @onclick="OnSelectorClicked" @onclick:stopPropagation="true">
                                                 <defs>
-                                                    <filter id="mud-picker-color-selector-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                                    <filter id="ant-color-picker-selector-shadow" x="-50%" y="-50%" width="200%" height="200%">
                                                         <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
                                                         <feOffset dx="0" dy="5" result="offsetblur" />
                                                         <feOffset dx="0" dy="-5" result="offsetblur" />
                                                         <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
                                                     </filter>
                                                 </defs>
-                                                <circle r="10" cx="13" cy="13" stroke="white" stroke-width="1" fill="transparent" style="filter: url(#mud-picker-color-selector-shadow)" />
+                                                <circle r="10" cx="13" cy="13" stroke="white" stroke-width="1" fill="transparent" style="filter: url(#ant-picker-color-selector-shadow)" />
                                                 <circle r="11" cx="13" cy="13" stroke="white" stroke-width="1.5" fill="transparent" />
                                             </svg>
                                         </div>
@@ -68,12 +68,12 @@
                     <div class="ant-popover-title">
                         <GridRow align="middle">
                             <GridCol Span="4">
-                                <div class="mud-picker-color-dot mud-picker-color-dot-current mud-ripple">
-                                    <div class="mud-picker-color-fill" style="@($"background: {_value.ToString(AntColorOutputFormats.RGBA)};")"></div>
+                                <div class="ant-color-picker-dot ant-color-picker-dot-current ant-ripple">
+                                    <div class="ant-color-picker-fill" style="@($"background: {_value.ToString(AntColorOutputFormats.RGBA)};")"></div>
                                 </div>
                             </GridCol>
                             <GridCol Span="20">
-                                <GridRow><GridCol Span="24"><Slider class="mud-picker-color-slider hue" TValue="double" Value="@_value.H" OnChange="UpdateBaseColorSlider" Step="1" Min="0" Max="360" @onclick:stopPropagation="true"/></GridCol></GridRow>
+                                <GridRow><GridCol Span="24"><Slider class="ant-color-picker-slider-hue" TValue="double" Value="@_value.H" OnChange="UpdateBaseColorSlider" Step="1" Min="0" Max="360" @onclick:stopPropagation="true"/></GridCol></GridRow>
                                 <GridRow><GridCol Span="24"><Slider TValue="double" Value="@_value.A" OnChange="SetAlpha" Step="1" Min="0" Max="255" @onclick:stopPropagation="true" /></GridCol></GridRow>
                             </GridCol>
                         </GridRow>
@@ -88,44 +88,3 @@
         </Overlay>
     </CascadingValue>
 </CascadingValue>
-
-<style>
-    .mud-picker-color-picker {
-        width: 312px;
-        height: 250px;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .mud-picker-color-picker .mud-picker-color-overlay {
-            width: 100%;
-            height: 100%;
-        }
-
-            .mud-picker-color-picker .mud-picker-color-overlay.mud-picker-color-overlay-white {
-                background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
-            }
-
-            .mud-picker-color-picker .mud-picker-color-overlay.mud-picker-color-overlay-black {
-                background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, black 100%);
-            }
-
-    .mud-picker-color-slider {
-        background: linear-gradient(90deg, #FF0000, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #FF0000)
-    }
-
-    .mud-picker-color-dot {
-        height: 38px;
-        min-width: 38px;
-        width: 100%;
-        transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-radius 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-        border-radius: var(--mud-default-borderradius);
-        box-shadow: 0 0 6px rgba(127,130,134,.18);
-    }
-
-        .mud-picker-color-dot .mud-picker-color-fill {
-            width: 100%;
-            height: 100%;
-            border-radius: inherit;
-        }
-</style>

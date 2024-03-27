@@ -8,9 +8,9 @@ using System.Text;
 
 namespace AntDesign
 {
-    public static class MathExtensions
+    internal static class MathExtensions
     {
-        public static double Map(double sourceMin, double sourceMax, double targetMin, double targetMax, double value) =>
+        internal static double Map(double sourceMin, double sourceMax, double targetMin, double targetMax, double value) =>
             ((value) / (sourceMax - sourceMin)) * (targetMax - targetMin);
     }
 }
