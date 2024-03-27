@@ -1,12 +1,17 @@
 ﻿@using System.Text.Json;
+@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Components.Rendering
 
 <Form Model="@model"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
       WrapperColSpan="16">
-    <FormItem Label="Input">
+    <FormItem Label="Price">
         <PriceInput @bind-Value="context.Price" />
+    </FormItem>
+    <FormItem Label="Input" Required>
+        <Component Type="typeof(TestInput)" @bind-Value="@context.Name" />
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button HtmlType="submit">Submit</Button>
@@ -17,6 +22,7 @@
 {
     public class Model
     {
+        public string Name{ get; set; }
         public Price Price { get; set; } = new Price() { 
             Number = 0,
             Currency = "rmb"
@@ -33,5 +39,27 @@
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    /// <summary>
+    /// in razor:
+    ///  @inherits AntInputComponentBase<string>
+    ///  
+    ///  <Input @bind-Value="CurrentValue" />
+    /// </summary>
+    public class TestInput : AntDesign.AntInputComponentBase<string>
+    {
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            Expression<Func<string>> expression = () => CurrentValue;
+
+            builder.OpenComponent<Input<string>>(0);
+
+            builder.AddAttribute(1, "Value", CurrentValue);
+            builder.AddAttribute(2, "ValueChanged", EventCallback.Factory.Create<string>(this, e => CurrentValue = e));
+            builder.AddAttribute(3, "ValueExpression", expression);
+
+            builder.CloseComponent();
+        }
     }
 }

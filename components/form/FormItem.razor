@@ -27,8 +27,10 @@
         <AntDesign.Col @attributes="GetWrapperColAttributes()" Class=@($"{_prefixCls}-control")>
             <div class=@($"{_prefixCls}-control-input")>
                 <div class=@($"{_prefixCls}-control-input-content")>
-                    <CascadingValue Value="this" Name="FormItem" TValue="IFormItem" IsFixed="@true">
-                        @ChildContent
+                     <CascadingValue Value="null" Name="Form" TValue="IForm" IsFixed="@true">
+                        <CascadingValue Value="this" Name="FormItem" TValue="IFormItem" IsFixed="@true">
+                            @ChildContent
+                        </CascadingValue>
                     </CascadingValue>
                 </div>
             </div>
