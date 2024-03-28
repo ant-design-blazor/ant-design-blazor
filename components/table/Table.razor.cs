@@ -837,6 +837,9 @@ namespace AntDesign
             if (RowKey == null)
                 RowKey = data => data;
 
+            if (x is null && y is null)
+                return true;
+
             return RowKey(x).Equals(RowKey(y));
         }
 
