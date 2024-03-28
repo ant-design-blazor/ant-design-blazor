@@ -446,8 +446,6 @@ namespace AntDesign
                 return;
             }
 
-            FlushCache();
-
             var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
@@ -475,9 +473,10 @@ namespace AntDesign
             var queryModel = BuildQueryModel();
             _currentQueryModel = queryModel;
 
+            FlushCache();
+
             if (ServerSide)
             {
-                FlushCache();
                 _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
