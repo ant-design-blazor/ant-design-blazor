@@ -1,0 +1,10 @@
+﻿<h1>@colorValue</h1>
+
+<ColorPicker @bind-TextValue="@colorValue" Title="Title" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})">
+    <Button type="primary">选择颜色</Button>
+</ColorPicker>
+
+
+@code {
+    private string colorValue = "#00FF00FF";
+}
