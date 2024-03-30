@@ -31,6 +31,8 @@ namespace AntDesign
 
         public void ExpandAll()
         {
+            _preventRender = true;
+
             foreach (var item in _rootRowDataCache)
             {
                 item.Value.SetExpanded(true);
@@ -39,6 +41,8 @@ namespace AntDesign
 
         public void CollapseAll()
         {
+            _preventRender = true;
+
             foreach (var item in _rootRowDataCache)
             {
                 item.Value.SetExpanded(false);
