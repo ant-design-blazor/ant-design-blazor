@@ -3,6 +3,7 @@
 <Button @onclick="SaveTableWithJson">SAVE JSON</Button>
 <Button @onclick="LoadTableWithJson">LOAD JSON</Button>
 <Button @onclick="ResetTable">RESET</Button>
+<Button @onclick="GetAllFilteredRows">Get All Filtered Rows</Button>
 <br />
 <Table DataSource="data" OnChange="OnChange" TItem="Data" @ref="Table" Size="TableSize.Small">
     <PropertyColumn 
@@ -117,6 +118,13 @@
     void SaveTableWithJson()
     {
         SavedQueryModelJson = JsonSerializer.Serialize(Table.GetQueryModel());
+    }
+
+    void GetAllFilteredRows()
+    {
+        var queryModel = Table.GetQueryModel() as QueryModel<Data>;
+
+        var list = queryModel.ExecuteQuery(Table.DataSource.AsQueryable());
     }
 
     void LoadTableWithJson()
