@@ -15,6 +15,8 @@ namespace AntDesign.Core.Reflection
 
         public string PropertyName { get; set; }
 
+        public PropertyInfo PropertyInfo { get; set; }
+
         public PropertyReflector(MemberInfo propertyInfo)
         {
             this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
@@ -22,6 +24,7 @@ namespace AntDesign.Core.Reflection
                 propertyInfo?.GetCustomAttribute<DisplayAttribute>(true)?.GetName();
 
             this.PropertyName = propertyInfo?.Name;
+            this.PropertyInfo = propertyInfo as PropertyInfo;
         }
 
         public static PropertyReflector Create<TField>(Expression<Func<TField>> accessor)

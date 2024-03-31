@@ -116,6 +116,8 @@ namespace AntDesign
 
         bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
 
+        IForm IFormItem.Form => Form;
+
         [Parameter]
         public bool Required { get; set; } = false;
 
@@ -215,7 +217,12 @@ namespace AntDesign
 
             if (Form == null)
             {
-                throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
+                Form = ParentFormItem?.Form;
+            }
+
+            if (Form == null)
+            {
+                throw new InvalidOperationException("Form is null. FormItem should be childContent of Form.");
             }
 
             SetClass();
@@ -357,10 +364,6 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
-            }
 
             _validationStateChangedHandler = (s, e) =>
             {
@@ -397,6 +400,11 @@ namespace AntDesign
             if (_propertyReflector?.DisplayName != null)
             {
                 Label ??= _propertyReflector?.DisplayName;
+            }
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _fieldPropertyInfo = _propertyReflector?.PropertyInfo;
             }
 
             SetInternalIsRequired();

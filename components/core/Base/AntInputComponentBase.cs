@@ -47,8 +47,7 @@ namespace AntDesign
         [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
 #endif
 
-        [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        protected IForm Form => FormItem?.Form;
 
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
