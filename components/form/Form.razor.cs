@@ -148,6 +148,12 @@ namespace AntDesign
         [Parameter]
         public bool Enhance { get; set; }
 
+        /// <summary>
+        /// Whether input elements can by default have their values automatically completed by the browser
+        /// </summary>
+        [Parameter]
+        public string Autocomplete { get; set; } = "off";
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
