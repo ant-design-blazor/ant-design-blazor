@@ -84,7 +84,7 @@ namespace AntDesign
             checkbox.IsFromOptions = IsCheckboxFromOptions(checkbox);
             if (!checkbox.IsFromOptions)
             {
-                checkbox.SetValue(_selectedValues.Contains((TValue)checkbox.ItemValue));
+                checkbox.SetValue(_selectedValues.Any(x => x.ToString() == checkbox.Label));
                 if (_indexConstructedOptionsOffset == -1)
                     _indexConstructedOptionsOffset = _checkboxItems.Count - 1;
             }
@@ -203,7 +203,7 @@ namespace AntDesign
             }
             return _checkboxItems
                 .Where(c => !c.IsFromOptions)
-                .Select(c => c.ItemValue).Cast<TValue>().ToArray();
+                .Select(c => c.ItemValue ?? c.Label).Cast<TValue>().ToArray();
         }
 
         private Func<TValue[]> GetCurrentValueFunc()
