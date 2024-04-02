@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.18.2
+
+`2024-4-2` 
+
+- Form
+  - 🆕 新增 自动填充属性 AutoComplete。[#3763](https://github.com/ant-design-blazor/ant-design-blazor/pull/3763) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 自定义控件的验证。[#3761](https://github.com/ant-design-blazor/ant-design-blazor/pull/3761) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 Table 在外部设置排序时异常[#3766](https://github.com/ant-design-blazor/ant-design-blazor/pull/3766) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 选择行清理后，全选时还会被选中 （客户端数据）。[#3762](https://github.com/ant-design-blazor/ant-design-blazor/pull/3762) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.18.1
 
 `2024-3-21` 
