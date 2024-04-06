@@ -1088,7 +1088,35 @@ namespace AntDesign
             Close();
         }
 
-        protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
+        internal bool IsDisabledDate(DateTime input)
+        {
+            var disabledCurrentDate = DisabledDate is not null && DisabledDate(input);
+            if (!disabledCurrentDate)
+            {
+                return false;
+            }
+
+            var isInitialPickerType = Picker == _pickerStatus[0].InitPicker;
+
+            if (isInitialPickerType)
+            {
+                return disabledCurrentDate;
+            }
+
+            var currentPeriodStartDate = DateHelper.FormatDateByPicker(input, Picker);
+            var currentPeriodEndDate = DateHelper.GetNextStartDateOfPeriod(input, Picker).AddDays(-1);
+
+            // This loop can be optimized so that if it is already available in the lower period, the current period is also available.
+            for (var curr = currentPeriodStartDate; curr < currentPeriodEndDate; curr = curr.AddDays(1))
+            {
+                if (!DisabledDate(curr))
+                {
+                    return false;
+                }
+            }
+
+            return disabledCurrentDate;
+        }
 
         protected void ToDateTimeOffset(DateTime value, out DateTimeOffset? currentValue, out DateTimeOffset newValue)
         {
