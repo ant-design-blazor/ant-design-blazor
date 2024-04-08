@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 0.18.3
+
+`2024-4-9` 
+
+- 🐞 修复 Table 重新渲染导致的行展开状态无法维持。[#3785](https://github.com/ant-design-blazor/ant-design-blazor/pull/3785) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Progress 环形进度条 strokecolor 单色不生效。[#3783](https://github.com/ant-design-blazor/ant-design-blazor/pull/3783) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+- 🐞 修复  DatePicker  禁用日期逻辑在更大的范围选择中判断不正确。[#3781](https://github.com/ant-design-blazor/ant-design-blazor/pull/3781) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复 Charts 文档。[#3774](https://github.com/ant-design-blazor/ant-design-blazor/pull/3774) [@CAPCHIK](https://github.com/CAPCHIK)
+
+Table 行状态行为变更：
+
+在重新渲染或调用 `ITable.ReloadData()` 后， RowKey 与当前页数据的相同的行状态（如展开、选中）不会被重置。
+
 ### 0.18.2
 
 `2024-4-2` 
