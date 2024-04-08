@@ -16,9 +16,14 @@ namespace AntDesign
             {
                 return;
             }
-
-            _dataSourceCache.Clear();
-            _rootRowDataCache.Clear();
+            // Clears the cache of rowdata that is not in the current page.
+            var showItemKeys = _showItems.Select(GetHashCode).ToHashSet();
+            var removedKeys = _dataSourceCache.Keys.Except(showItemKeys);
+            foreach (var key in removedKeys)
+            {
+                _rootRowDataCache.Remove(key);
+                _dataSourceCache.Remove(key);
+            }
         }
 
         private void FinishLoadPage()
