@@ -200,7 +200,7 @@ namespace AntDesign
 
         [Inject]
         private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
-        
+
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
@@ -290,6 +290,7 @@ namespace AntDesign
 
         void ITable.OnExpandChange(RowData rowData)
         {
+            _preventRender = true;
             if (OnExpand.HasDelegate)
             {
                 OnExpand.InvokeAsync(rowData as RowData<TItem>);
@@ -473,8 +474,6 @@ namespace AntDesign
             var queryModel = BuildQueryModel();
             _currentQueryModel = queryModel;
 
-            FlushCache();
-
             if (ServerSide)
             {
                 _showItems = _dataSource ?? Enumerable.Empty<TItem>();
@@ -502,6 +501,8 @@ namespace AntDesign
 
                 _shouldRender = true;
             }
+
+            FlushCache();
 
             if (_groupedColumns.Count > 0)
             {
@@ -709,7 +710,7 @@ namespace AntDesign
 
                 if (ScrollY != null && ScrollBarWidth == null)
                 {
-                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync(); 
+                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
                     _realScrollBarSize = $"{scrollBarSize}px";
                 }
 
