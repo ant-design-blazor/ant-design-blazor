@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.Components.Forms;
 namespace AntDesign
 {
     /// <summary>
-    /// Base class for any input control that optionally supports an <see cref="EditContext"/>.
-    /// reference:https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web/src/Forms/InputBase.cs
+    /// Base class for any input control that optionally supports an <see cref="EditContext"/>. reference:https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web/src/Forms/InputBase.cs
     /// </summary>
     /// <typeparam name="TValue">the natural type of the input's value</typeparam>
     public abstract class AntInputComponentBase<TValue> : AntDomComponentBase, IControlValueAccessor
@@ -78,9 +77,7 @@ namespace AntDesign
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
         /// </summary>
-        /// <example>
-        /// @bind-Value="model.PropertyName"
-        /// </example>
+        /// <example>@bind-Value="model.PropertyName"</example>
         [Parameter]
         public virtual TValue Value
         {
@@ -112,15 +109,15 @@ namespace AntDesign
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
         /// <summary>
-        /// The size of the input box. Note: in the context of a form,
-        /// the `large` size is used. Available: `large` `default` `small`
+        /// The size of the input box. Note: in the context of a form, the `large` size is used.
+        /// Available: `large` `default` `small`
         /// </summary>
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
-        /// What Culture will be used when converting string to value and value to string
-        /// Useful for InputNumber component.
+        /// What Culture will be used when converting string to value and value to string Useful for
+        /// InputNumber component.
         /// </summary>
         [Parameter]
         public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
@@ -175,9 +172,9 @@ namespace AntDesign
 
                 if (_nullableUnderlyingType != null && string.IsNullOrEmpty(value))
                 {
-                    // Assume if it's a nullable type, null/empty inputs should correspond to default(T)
-                    // Then all subclasses get nullable support almost automatically (they just have to
-                    // not reject Nullable<T> based on the type itself).
+                    // Assume if it's a nullable type, null/empty inputs should correspond to
+                    // default(T) Then all subclasses get nullable support almost automatically
+                    // (they just have to not reject Nullable<T> based on the type itself).
                     parsingFailed = false;
                     CurrentValue = default;
                 }
@@ -199,7 +196,8 @@ namespace AntDesign
 
                         _parsingValidationMessages.Add(FieldIdentifier, validationErrorMessage);
 
-                        // Since we're not writing to CurrentValue, we'll need to notify about modification from here
+                        // Since we're not writing to CurrentValue, we'll need to notify about
+                        // modification from here
                         EditContext.NotifyFieldChanged(FieldIdentifier);
                     }
                 }
@@ -226,7 +224,8 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Formats the value as a string. Derived classes can override this to determine the formating used for <see cref="CurrentValueAsString"/>.
+        /// Formats the value as a string. Derived classes can override this to determine the
+        /// formating used for <see cref="CurrentValueAsString"/>.
         /// </summary>
         /// <param name="value">The value to format.</param>
         /// <returns>A string representation of the value.</returns>
@@ -234,19 +233,22 @@ namespace AntDesign
             => value?.ToString();
 
         /// <summary>
-        /// Parses a string to create an instance of <typeparamref name="TValue"/>. Derived classes can override this to change how
-        /// <see cref="CurrentValueAsString"/> interprets incoming values.
+        /// Parses a string to create an instance of <typeparamref name="TValue"/>. Derived classes
+        /// can override this to change how <see cref="CurrentValueAsString"/> interprets incoming values.
         /// </summary>
         /// <param name="value">The string value to be parsed.</param>
         /// <param name="result">An instance of <typeparamref name="TValue"/>.</param>
-        /// <param name="validationErrorMessage">If the value could not be parsed, provides a validation error message.</param>
+        /// <param name="validationErrorMessage">
+        /// If the value could not be parsed, provides a validation error message.
+        /// </param>
         /// <returns>True if the value could be parsed; otherwise false.</returns>
         protected virtual bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             TValue parsedValue = default;
             bool success;
 
-            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
+            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove
+            // this when the BCL bug is fixed.
             if (_isValueGuid)
             {
                 success = Guid.TryParse(value, out Guid parsedGuidValue);
@@ -275,7 +277,8 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not
+        /// triggered, so the outside bound Value is not changed.
         /// </summary>
         /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
@@ -283,7 +286,8 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
+        /// When this method is called, Value and CurrentValue have been modified, and the
+        /// ValueChanged has been triggered, so the outside bound Value is changed.
         /// </summary>
         /// <param name="value"></param>
         protected virtual void OnCurrentValueChange(TValue value)
@@ -303,7 +307,7 @@ namespace AntDesign
             {
                 var type = Form.Model.GetType();
                 var dataIndex = FormItem.Name;
-                if (type.IsAssignableFrom(typeof(IDictionary)))
+                if (typeof(IDictionary).IsAssignableFrom(type))
                 {
                     dataIndex = $"['{dataIndex}']";
                 }
@@ -354,15 +358,15 @@ namespace AntDesign
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override Task SetParametersAsync(ParameterView parameters)
         {
             parameters.SetParameterProperties(this);
 
             if (!_hasInitializedParameters)
             {
-                // This is the first run
-                // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
+                // This is the first run Could put this logic in OnInit, but its nice to avoid
+                // forcing people who override OnInit to call base.OnInit()
 
 #if NET8_0_OR_GREATER
                 if (CascadedEditContext != null)
