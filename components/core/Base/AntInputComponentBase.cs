@@ -303,7 +303,7 @@ namespace AntDesign
             {
                 var type = Form.Model.GetType();
                 var dataIndex = FormItem.Name;
-                if (type.IsAssignableFrom(typeof(IDictionary)))
+                if (typeof(IDictionary).IsAssignableFrom(type))
                 {
                     dataIndex = $"['{dataIndex}']";
                 }
