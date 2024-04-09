@@ -27,11 +27,11 @@
 
 @code
 {
-    private Dictionary<string, object> model = new() { ["Name"] = "" };
+    private Dictionary<string, object> model = new() { ["Field1"] = "" };
 
     private void AddField()
     {
-        model.Add("Field" + model.Count, "");
+        model.Add("Field" + model.Count + 1, "");
     }
 
     private void OnFinish(EditContext editContext)
@@ -44,5 +44,5 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
     }
 
-    
+
 }
