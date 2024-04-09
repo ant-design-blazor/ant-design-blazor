@@ -312,7 +312,7 @@ namespace AntDesign
                 Value = _getValueDelegate.Invoke(Form.Model);
 
                 var lambda = PathHelper.GetLambda(dataIndex, type);
-                _propertyReflector = PropertyReflector.Create(lambda.Body);
+                _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
             }
 
             FormItem?.AddControl(this);
