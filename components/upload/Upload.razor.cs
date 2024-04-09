@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -42,7 +43,29 @@ namespace AntDesign
         public string Accept { get; set; }
 
         [Parameter]
-        public bool ShowUploadList { get; set; } = true;
+        public OneOf<bool?, ShowUploadListOption> ShowUploadList {
+            get
+            {
+                return _showUploadListOption;
+            }
+            set
+            {
+                _showUploadListOption = value;
+                if (value.IsT0)
+                {
+                    _showUploadList = value.AsT0.Value;
+                    _showDownloadIcon = value.AsT0.Value;
+                    _showPreviewIcon = value.AsT0.Value;
+                    _showRemoveIcon = value.AsT0.Value;
+                }else if (value.IsT1)
+                {
+                    _showUploadList = true;
+                    _showDownloadIcon = value.IsT1 && value.AsT1.ShowDownloadIcon;
+                    _showPreviewIcon = value.IsT1 && value.AsT1.ShowPreviewIcon;
+                    _showRemoveIcon = value.IsT1 && value.AsT1.ShowRemoveIcon;
+                }
+            }
+        }
 
         [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
@@ -94,6 +117,11 @@ namespace AntDesign
         private bool IsPictureCard => ListType == "picture-card";
 
         private ClassMapper _listClassMapper = new ClassMapper();
+        private OneOf<bool?, ShowUploadListOption> _showUploadListOption = new ShowUploadListOption();
+        private bool _showPreviewIcon;
+        private bool _showDownloadIcon;
+        private bool _showRemoveIcon;
+        private bool _showUploadList;
 
         internal bool _dragHover;
 
@@ -146,5 +174,12 @@ namespace AntDesign
                 await OnDownload.InvokeAsync(item);
             }
         }
+    }
+    
+    public class ShowUploadListOption
+    {
+        public bool ShowRemoveIcon { get; set; }
+        public bool ShowDownloadIcon { get; set; }
+        public bool ShowPreviewIcon { get; set; }
     }
 }

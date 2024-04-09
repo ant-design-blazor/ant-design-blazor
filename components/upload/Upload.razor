@@ -10,7 +10,7 @@
      @ondragover:stopPropagation
      @ondragleave:stopPropagation
      @ondrop:stopPropagation>
-        @if (ChildContent != null && (!IsPictureCard || !ShowUploadList))
+    @if (ChildContent != null && (!IsPictureCard || !_showUploadList))
         {
             <CascadingValue Value="this" IsFixed>
                 <UploadButton Action="@Action"
@@ -29,7 +29,7 @@
             </CascadingValue>
         }
 
-    @if (ShowUploadList)
+    @if (_showUploadList)
     {
         <div class="@_listClassMapper.Class">
             @{
@@ -122,7 +122,7 @@
                                                 }
                                                 picture = "picture";
                                             }
-                                            @if (OnDownload.HasDelegate)
+                                            @if (OnDownload.HasDelegate && _showDownloadIcon)
                                             {
                                                 <a rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" @onclick="() => DownloadFile(file)">@file.FileName</a>
                                             }
@@ -133,9 +133,12 @@
                                             @if (!IsPictureCard)
                                             {
                                                 <span class="ant-upload-list-item-card-actions @picture">
-                                                    <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
-                                                        <Icon Type="delete" />
-                                                    </button>
+                                                    @if (_showRemoveIcon)
+                                                    {
+                                                        <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
+                                                            <Icon Type="delete" />
+                                                        </button>
+                                                    }
                                                 </span>
                                             }
                                         </span>
@@ -143,12 +146,18 @@
                                     @if (IsPictureCard)
                                     {
                                         <span class="ant-upload-list-item-actions">
-                                            <a href="@(OnPreview.HasDelegate ? null : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
-                                                <Icon Type="eye" />
-                                            </a>
-                                            <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
-                                                <Icon Type="delete" />
-                                            </button>
+                                            @if (_showPreviewIcon)
+                                            {
+                                                <a href="@(OnPreview.HasDelegate ? null : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
+                                                    <Icon Type="eye" />
+                                                </a>
+                                            }
+                                            @if (_showRemoveIcon)
+                                            {
+                                                <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
+                                                    <Icon Type="delete" />
+                                                </button>
+                                            }
                                         </span>
                                     }
                                     @if (file.State == UploadState.Uploading)

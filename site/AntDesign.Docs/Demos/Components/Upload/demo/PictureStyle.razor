@@ -1,24 +1,32 @@
 @inject IMessageService _message
 
+<h4>使用bool</h4>
 <Upload @attributes="attrs"
-         OnSingleCompleted="OnSingleCompleted"
-         OnRemove="HandleRemove">
+        ShowUploadList="@showUploadListOption1"
+        OnSingleCompleted="OnSingleCompleted"
+        OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>Upload</span>
     </Button>
 </Upload>
 <br />
 <br />
-<Upload @attributes="attrs1"
-         OnSingleCompleted="OnSingleCompleted"
-         OnRemove="HandleRemove">
+<h4>使用ShowUploadListOption，可以预览，但是不能删除</h4>
+<Upload @attributes="attrs"
+        ShowUploadList="@showUploadListOption2"
+        OnSingleCompleted="OnSingleCompleted"
+        OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>Upload</span>
     </Button>
 </Upload>
+<br />
+<br />
 
 @code
 {
+    bool showUploadListOption1 = true;
+    ShowUploadListOption showUploadListOption2 = new ShowUploadListOption { ShowPreviewIcon = true, ShowDownloadIcon = true, ShowRemoveIcon = false };
 
     static List<UploadFileItem> fileList = new List<UploadFileItem>
 {
