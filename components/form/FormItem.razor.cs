@@ -352,7 +352,7 @@ namespace AntDesign
         {
             if (_control != null) return;
 
-            _vaildateStatusChanged = () => control.UpdateStyles();
+            _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
@@ -366,6 +366,13 @@ namespace AntDesign
 
             _validationStateChangedHandler = (s, e) =>
             {
+                // don't show the vaidation error messages unitl the validate method being called.
+                // However, the default validation process has already been performed because that's how it's designed in the EditContext.
+                if (!Form.IsCallingValidation && !Form.ValidateOnChange)
+                {
+                    return;
+                }
+
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
 
