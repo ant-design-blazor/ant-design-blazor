@@ -29,6 +29,8 @@ namespace AntDesign.Internal
 
         internal bool ValidateOnChange { get; }
 
+        internal bool IsCallingValidation { get; }
+
         event Action<IForm> OnFinishEvent;
 
         bool IsModified { get; }
