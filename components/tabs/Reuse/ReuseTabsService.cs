@@ -190,7 +190,15 @@ namespace AntDesign
             _pageMap.TryAdd(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
             OnStateHasChanged?.Invoke();
         }
-
+        public void UpdateTitle(string pageUrl, RenderFragment? title = null)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                _pageMap[pageUrl].Title = title ?? pageUrl.ToRenderFragment();
+                OnStateHasChanged?.Invoke();
+                return;
+            }
+        }
         //public void Pin(string key)
         //{
         //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
