@@ -66,7 +66,10 @@ namespace AntDesign.Docs.Pages
                 _file = await HttpClient.GetFromJsonAsync<DocsFile>(docUrl);
                 _waitingHighlight = true;
 
-                await MainLayout.ChangePrevNextNav(FileName);
+                if (MainLayout != null)
+                {
+                    await MainLayout.ChangePrevNextNav(FileName);
+                }
 
                 _filePath = $"docs/{FileName}.{CurrentLanguage}.md";
                 _filePaths = new() { _filePath };
