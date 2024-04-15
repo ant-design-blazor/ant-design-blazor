@@ -122,7 +122,7 @@
             return;
         }
 
-        if (_rendered && Demo.Iframe <= 0 && _demoType == null)
+        if (_rendered && _demoType == null)
         {
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();

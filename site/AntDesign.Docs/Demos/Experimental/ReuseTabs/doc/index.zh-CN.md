@@ -1,8 +1,8 @@
 ---
 category: Experimental
-subtitle: 路由复用
-type: Layout
+type: 布局
 title: ReuseTabs
+subtitle: 路由复用
 cols: 1
 cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 ---

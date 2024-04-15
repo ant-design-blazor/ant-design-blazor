@@ -27,7 +27,7 @@
 
         try
         {
-            if (string.IsNullOrWhiteSpace(segment))
+            if (string.IsNullOrWhiteSpace(segment)&& !relativeUri.StartsWith("reuse", StringComparison.InvariantCultureIgnoreCase))
             {
                 NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
                 return;
