@@ -25,7 +25,7 @@ namespace AntDesign
             {
                 try
                 {
-                    _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+                    _navmgr.NavigateTo(value.StartsWith('/') ? value[1..] : value);
                 }
                 catch (NavigationException)
                 {
@@ -46,7 +46,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="pageUrl">The url of target page</param>
         /// <param name="titleTemplate">The title show on the tab</param>
-        public void CreateTab(string pageUrl, RenderFragment titleTemplate)
+        public void CreateTab(string pageUrl, RenderFragment titleTemplate = null)
         {
             if (_pageMap.ContainsKey(pageUrl))
             {
