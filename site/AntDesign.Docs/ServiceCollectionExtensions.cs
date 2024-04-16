@@ -19,12 +19,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
             services.TryAddSingleton<IStringLocalizerFactory>(sp => ActivatorUtilities.CreateInstance<EmbeddedJsonStringLocalizerFactory>(sp, "Resources", Assembly.GetExecutingAssembly()));
-            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
-            services.TryAddTransient(sp =>
-            {
-                var language = sp.GetService<ILanguageService>();
-                return sp.GetRequiredService<IStringLocalizerFactory>().Create($"Resources", "");
-            });
+            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(BlazorStringLocalizer<>));
+            services.TryAddTransient<IStringLocalizer>(sp => new BlazorStringLocalizer("Resources", "", sp.GetService<IStringLocalizerFactory>(), sp.GetService<ILanguageService>()));
             return services;
         }
     }
