@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -9,7 +10,11 @@ namespace AntDesign.core.Extensions
 {
     internal static class HttpClientExtensions
     {
+#if NET5_0_OR_GREATER
+        public static async Task<TValue> GetFromJsonAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue>(this HttpClient client, string requestUri, CancellationToken cancellationToken = default)
+#else
         public static async Task<TValue> GetFromJsonAsync<TValue>(this HttpClient client, string requestUri, CancellationToken cancellationToken = default)
+#endif
         {
             if (client == null)
             {

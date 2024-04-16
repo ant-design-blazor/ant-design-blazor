@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 
 namespace AntDesign.JsInterop
@@ -35,6 +36,10 @@ namespace AntDesign.JsInterop
     public class DomEventSubscription
     {
         internal Delegate Delegate { get; set; }
+
+#if NET5_0_OR_GREATER
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+#endif
         internal Type Type { get; set; }
         internal string Id { get; set; }
 

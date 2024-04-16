@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -13,7 +14,11 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET5_0_OR_GREATER
+    public partial class Form<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel> : AntDomComponentBase, IForm
+#else
     public partial class Form<TModel> : AntDomComponentBase, IForm
+#endif
     {
         private readonly string _prefixCls = "ant-form";
 

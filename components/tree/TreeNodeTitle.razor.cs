@@ -125,8 +125,6 @@ namespace AntDesign
             SelfNode.DragTarget = true;
             _dragTargetClientX = e.ClientX;
 
-            System.Diagnostics.Debug.WriteLine($"OnDragEnter {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
-
             if (TreeComponent.OnDragEnter.HasDelegate)
                 TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }

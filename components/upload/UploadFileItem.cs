@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 
@@ -25,8 +26,13 @@ namespace AntDesign
         public string Ext { get; set; }
 
         public string Type { get; set; }
-
-        public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null)
+#if NET5_0_OR_GREATER
+        [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
+        public TResponseModel GetResponse<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TResponseModel>(JsonSerializerOptions options = null)
+#else
+  public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null)
+#endif
         {
             if (options == null)
             {

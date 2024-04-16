@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,7 +22,12 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET5_0_OR_GREATER
+    public abstract class SelectBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TItemValue,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TItem> : AntInputComponentBase<TItemValue>
+#else
     public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>
+#endif
     {
         protected const string DefaultWidth = "width: 100%;";
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
