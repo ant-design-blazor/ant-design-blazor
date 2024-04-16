@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAntDesign();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
-            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
+            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService());
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
             services.TryAddSingleton<IStringLocalizerFactory>(sp => ActivatorUtilities.CreateInstance<EmbeddedJsonStringLocalizerFactory>(sp, "Resources", Assembly.GetExecutingAssembly()));

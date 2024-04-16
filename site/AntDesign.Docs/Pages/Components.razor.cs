@@ -8,6 +8,7 @@ using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
@@ -23,6 +24,9 @@ namespace AntDesign.Docs.Pages
 
         [Inject]
         private ILanguageService LanguageService { get; set; }
+
+        [Inject]
+        private IStringLocalizer Localizer { get; set; }
 
         [Inject]
         private NavigationManager NavigationManager { get; set; }

@@ -4,26 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Localization
 {
     public class InAssemblyLanguageService : ILanguageService
     {
-        private readonly Assembly _resourcesAssembly;
-
-        public InAssemblyLanguageService(Assembly assembly, CultureInfo culture)
-        {
-            _resourcesAssembly = assembly;
-        }
-
-        public InAssemblyLanguageService(Assembly assembly)
-        {
-            _resourcesAssembly = assembly;
-        }
-
-        public CultureInfo CurrentCulture { get; private set; }
-
-        public Resources Resources { get; private set; }
+        public CultureInfo CurrentCulture { get; private set; } = CultureInfo.CurrentCulture;
 
         public event EventHandler<CultureInfo> LanguageChanged;
 
