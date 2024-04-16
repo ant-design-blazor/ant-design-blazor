@@ -1,8 +1,9 @@
 @inject IMessageService _message
 
-<h4>使用bool</h4>
 <Upload @attributes="attrs"
-        ShowUploadList="@showUploadListOption1"
+        ShowUploadList=true
+        ShowPreviewIcon=true
+        ShowRemoveIcon=false
         OnSingleCompleted="OnSingleCompleted"
         OnRemove="HandleRemove">
     <Button Icon="upload">
@@ -11,9 +12,10 @@
 </Upload>
 <br />
 <br />
-<h4>使用ShowUploadListOption，可以预览，但是不能删除</h4>
 <Upload @attributes="attrs"
-        ShowUploadList="@showUploadListOption2"
+        ShowUploadList=true
+        ShowPreviewIcon=true
+        ShowRemoveIcon=true
         OnSingleCompleted="OnSingleCompleted"
         OnRemove="HandleRemove">
     <Button Icon="upload">
@@ -25,11 +27,8 @@
 
 @code
 {
-    bool showUploadListOption1 = true;
-    ShowUploadListOption showUploadListOption2 = new ShowUploadListOption { ShowPreviewIcon = true, ShowDownloadIcon = true, ShowRemoveIcon = false };
-
     static List<UploadFileItem> fileList = new List<UploadFileItem>
-{
+    {
         new UploadFileItem
         {
             Id = "1",

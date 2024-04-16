@@ -40,7 +40,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg
 | OnPreview | 点击文件链接或预览图标时的回调 | Function(file) | 无 |  |
 | OnRemove   | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除。               | Function(file): `boolean | Promise` | 无   |  |
 | OnSingleCompleted | 回调函数，上传完成后执行 | Function(file) | - |  |
-| ShowUploadList | 是否展示文件列表, 可设为一个对象，用于单独设定 `showPreviewIcon`, `showRemoveIcon`, `showDownloadIcon` | Boolean or { showPreviewIcon?: boolean, showRemoveIcon?: boolean, showDownloadIcon?: boolean } | true |  |
+| ShowUploadList | 是否展示文件列表 | Boolean | true |  |
+| ShowDownloadIcon | 是否展示下载按钮 | Boolean | true |  |
+| ShowPreviewIcon | 是否展示预览按钮 | Boolean | true |  |
+| ShowRemoveIcon | 是否展示移除按钮 | Boolean | true |  |
 
 ### onChange
 
