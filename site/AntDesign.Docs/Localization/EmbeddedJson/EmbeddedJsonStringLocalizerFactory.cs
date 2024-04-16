@@ -33,14 +33,14 @@ namespace AntDesign.Docs.Localization.EmbeddedJson
         {
             var resourceType = resourceSource.GetTypeInfo();
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var resourceName = $"{_resourceBasePath.Replace("/", ".")}.{cultureInfo.Name}.json";
+            var resourceName = $"{_resourceBasePath.Replace("/", ".")}";
             return GetCachedLocalizer(resourceName, resourceType.Assembly, cultureInfo);
         }
 
         public IStringLocalizer Create(string baseName, string location)
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var resourceName = $"{baseName}.json";
+            var resourceName = $"{baseName}";
             return GetCachedLocalizer(resourceName, _resourceAssembly, cultureInfo);
         }
 
