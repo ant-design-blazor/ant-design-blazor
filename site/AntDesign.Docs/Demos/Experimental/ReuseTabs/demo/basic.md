@@ -1,7 +1,7 @@
 ---
 order: 0
 iframe: 360
-link: /reuse
+link: /reuse/title-attribute
 title:
   zh-CN: 基本
   en-US: Basic

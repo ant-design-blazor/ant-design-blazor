@@ -1,35 +1,10 @@
 ﻿@layout AntDesign.Docs.Demos.Experimental.ReuseTabs.demo.Basic
 
 @page "/reuse/title-attribute"
+@attribute [ReuseTabsPage(Title = "Home")]
 
-<Layout>
-    <Sider Style="overflow: auto;height: 100vh;position: fixed;left: 0;">
-        <div class="logo" />
-        <Menu Mode="MenuMode.Inline" Theme="@MenuTheme.Dark">
-            <MenuItem RouterLink="/reuse?type=Demos.Experimental.ReuseTabs.demo.Basic&FileName=getting-started">Getting Started</MenuItem>
-            <MenuItem RouterLink="/reuse?type=Demos.Experimental.ReuseTabs.demo.Basic&FileName=introduce"></MenuItem>
-            <MenuItem RouterLink="/reuse?type=Demos.Experimental.ReuseTabs.demo.Basic&FileName=CHANGELOG">CHANGELOG</MenuItem>
-        </Menu>
-    </Sider>
-    <Layout Class="site-layout" Style=" margin-left: 200px">
-        <Header Class="site-layout-background" Style="padding: 0"></Header>
-        <Content Style="margin: 24px 16px 0; overflow: initial; ">
-            <div class="site-layout-background" style="padding: 24px; text-align:center; ">
-                <ReuseTabs></ReuseTabs>
-            </div>
-        </Content>
-        <Footer Style=" text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
-    </Layout>
-</Layout>
+<h1>Home</h1>
 
-<style>
-    #components-reusetabs-demo-basic .logo {
-        height: 32px;
-        background: rgba(255, 255, 255, 0.2);
-        margin: 16px;
-    }
+@code {
 
-    .site-layout .site-layout-background {
-        background: #fff;
-    }
-</style>
+}
