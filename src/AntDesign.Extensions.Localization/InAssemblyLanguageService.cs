@@ -10,7 +10,12 @@ namespace AntDesign.Docs.Localization
 {
     public class InAssemblyLanguageService : ILanguageService
     {
-        public CultureInfo CurrentCulture { get; private set; } = CultureInfo.CurrentCulture;
+        private CultureInfo? _currentCulture;
+
+        public CultureInfo CurrentCulture
+        {
+            get => _currentCulture ?? CultureInfo.CurrentCulture;
+        }
 
         public event EventHandler<CultureInfo> LanguageChanged;
 
@@ -21,9 +26,9 @@ namespace AntDesign.Docs.Localization
                 CultureInfo.CurrentCulture = culture;
             }
 
-            if (CurrentCulture == null || !CurrentCulture.Equals(culture))
+            if (_currentCulture == null || !_currentCulture.Equals(culture))
             {
-                CurrentCulture = culture;
+                _currentCulture = culture;
                 CultureInfo.DefaultThreadCurrentCulture = culture;
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
 

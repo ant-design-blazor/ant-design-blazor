@@ -8,11 +8,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Extensions.Localization;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 
 namespace AntDesign.Docs.Localization
 {
-    internal class BlazorStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILanguageService languageService) : BlazorStringLocalizer(factory, languageService),
+    internal class BlazorStringLocalizer<TResourceSource>(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService) : BlazorStringLocalizer(options, factory, languageService),
         IStringLocalizer<TResourceSource>,
         IStringLocalizer
     {
@@ -26,10 +28,10 @@ namespace AntDesign.Docs.Localization
     {
         private readonly IStringLocalizerFactory _factory;
         private readonly ILanguageService _languageService;
+        private readonly IOptions<BlazorLocalizationOptions> _options;
+        private readonly EventHandler<CultureInfo> _languageChanged;
 
         protected IStringLocalizer _localizer;
-
-        private EventHandler<CultureInfo> _languageChanged;
 
         public virtual LocalizedString this[string name]
         {
@@ -47,22 +49,19 @@ namespace AntDesign.Docs.Localization
             }
         }
 
-        public BlazorStringLocalizer(IStringLocalizerFactory factory, ILanguageService languageService)
+        public BlazorStringLocalizer(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService)
         {
             _factory = factory;
             _languageService = languageService;
+            _options = options;
+
             _languageChanged = LanguageChanged;
 
             _languageService.LanguageChanged += _languageChanged;
+
+            LanguageChanged(this, CultureInfo.CurrentCulture);
         }
 
-        public BlazorStringLocalizer(string baseName, string location, IStringLocalizerFactory factory, ILanguageService languageService) : this(factory, languageService)
-        {
-            _languageChanged = (_, _) =>
-            {
-                _localizer = _factory.Create(baseName, location);
-            };
-        }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
@@ -71,6 +70,7 @@ namespace AntDesign.Docs.Localization
 
         public virtual void LanguageChanged(object sender, CultureInfo culture)
         {
+            _localizer = _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
         }
 
         public void Dispose()

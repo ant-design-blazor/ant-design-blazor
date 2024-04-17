@@ -17,9 +17,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
-            services.AddLocalization(options =>
+            services.AddBlazorLocalization(options =>
             {
-                options.ResourcesPath=""
+                options.ResourcesPath = "Resources";
             });
 
             return services;

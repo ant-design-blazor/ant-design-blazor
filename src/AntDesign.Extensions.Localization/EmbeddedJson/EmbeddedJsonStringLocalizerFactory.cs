@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Extensions.Localization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,28 +21,33 @@ namespace AntDesign.Docs.Localization.EmbeddedJson
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
-        private readonly string _resourceBasePath;
-        private readonly Assembly _resourceAssembly;
-        IOptions<LocalizationOptions> _localizationOptions;
-        public EmbeddedJsonStringLocalizerFactory(IOptions<LocalizationOptions> localizationOptions, ILoggerFactory loggerFactory)
+        private readonly string _resourcesRelativePath;
+
+        public EmbeddedJsonStringLocalizerFactory(IOptions<BlazorLocalizationOptions> localizationOptions, ILoggerFactory loggerFactory)
         {
-            _localizationOptions = localizationOptions;
             _loggerFactory = loggerFactory;
+            _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(_resourcesRelativePath))
+            {
+                _resourcesRelativePath = _resourcesRelativePath.Replace(Path.AltDirectorySeparatorChar, '.').Replace(Path.DirectorySeparatorChar, '.');
+            }
         }
 
         public IStringLocalizer Create(Type resourceSource)
         {
-            var resourceType = resourceSource.GetTypeInfo();
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var resourceName = $"{_resourceBasePath.Replace("/", ".")}";
-            return GetCachedLocalizer(resourceName, resourceType.Assembly, cultureInfo);
+            var resourceType = resourceSource.GetTypeInfo();
+
+            return GetCachedLocalizer(_resourcesRelativePath, resourceType.Assembly, cultureInfo);
         }
 
         public IStringLocalizer Create(string baseName, string location)
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var resourceName = $"{baseName}";
-            return GetCachedLocalizer(resourceName, _resourceAssembly, cultureInfo);
+            Assembly assembly = Assembly.Load(new AssemblyName(location));
+
+            return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);
         }
 
         private IStringLocalizer GetCachedLocalizer(string resourceName, Assembly assembly, CultureInfo cultureInfo)
