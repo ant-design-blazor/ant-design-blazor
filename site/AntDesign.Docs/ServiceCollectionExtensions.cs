@@ -15,12 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAntDesign();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
-            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService());
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
-            services.TryAddSingleton<IStringLocalizerFactory>(sp => ActivatorUtilities.CreateInstance<EmbeddedJsonStringLocalizerFactory>(sp, "Resources", Assembly.GetExecutingAssembly()));
-            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(BlazorStringLocalizer<>));
-            services.TryAddTransient<IStringLocalizer>(sp => new BlazorStringLocalizer("Resources", "", sp.GetService<IStringLocalizerFactory>(), sp.GetService<ILanguageService>()));
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath=""
+            });
+
             return services;
         }
     }

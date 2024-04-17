@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AntDesign.Docs.Localization.EmbeddedJson
 {
@@ -21,12 +22,11 @@ namespace AntDesign.Docs.Localization.EmbeddedJson
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
         private readonly string _resourceBasePath;
         private readonly Assembly _resourceAssembly;
-
-        public EmbeddedJsonStringLocalizerFactory(string resourceBasePath, Assembly resourceAssembly, ILoggerFactory loggerFactory)
+        IOptions<LocalizationOptions> _localizationOptions;
+        public EmbeddedJsonStringLocalizerFactory(IOptions<LocalizationOptions> localizationOptions, ILoggerFactory loggerFactory)
         {
-            _resourceBasePath = resourceBasePath;
+            _localizationOptions = localizationOptions;
             _loggerFactory = loggerFactory;
-            _resourceAssembly = resourceAssembly;
         }
 
         public IStringLocalizer Create(Type resourceSource)

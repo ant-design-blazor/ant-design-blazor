@@ -22,7 +22,7 @@ namespace AntDesign.Docs.Localization
         }
     }
 
-    internal class BlazorStringLocalizer : IStringLocalizer
+    internal class BlazorStringLocalizer : IStringLocalizer, IDisposable
     {
         private readonly IStringLocalizerFactory _factory;
         private readonly ILanguageService _languageService;
@@ -51,25 +51,17 @@ namespace AntDesign.Docs.Localization
         {
             _factory = factory;
             _languageService = languageService;
+            _languageChanged = LanguageChanged;
 
-            _languageService.LanguageChanged += LanguageChanged;
-
-            LanguageChanged(this, CultureInfo.DefaultThreadCurrentUICulture);
+            _languageService.LanguageChanged += _languageChanged;
         }
 
-        public BlazorStringLocalizer(string baseName, string location, IStringLocalizerFactory factory, ILanguageService languageService)
+        public BlazorStringLocalizer(string baseName, string location, IStringLocalizerFactory factory, ILanguageService languageService) : this(factory, languageService)
         {
-            _factory = factory;
-            _languageService = languageService;
-
-            _localizer = _factory.Create(baseName, location);
-
             _languageChanged = (_, _) =>
             {
                 _localizer = _factory.Create(baseName, location);
             };
-
-            _languageService.LanguageChanged += _languageChanged;
         }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
@@ -79,6 +71,11 @@ namespace AntDesign.Docs.Localization
 
         public virtual void LanguageChanged(object sender, CultureInfo culture)
         {
+        }
+
+        public void Dispose()
+        {
+            _languageService.LanguageChanged -= _languageChanged;
         }
     }
 }
