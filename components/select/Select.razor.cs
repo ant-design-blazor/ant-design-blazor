@@ -657,6 +657,10 @@ namespace AntDesign
 
                         if (exists is null)
                         {
+                            if (IgnoreItemChanges)
+                            {
+                                SelectOptionItems.Remove(selectOption);
+                            }
                             RemoveEqualityToNoValue(selectOption);
 
                             if (selectOption.IsSelected)
@@ -667,7 +671,10 @@ namespace AntDesign
                     }
                 }
             }
-            SelectOptionItems.Clear();
+            if (!IgnoreItemChanges)
+            {
+                SelectOptionItems.Clear();
+            }
 
             //A simple approach to avoid unnecessary scanning through _selectedValues once
             //all of SelectOptionItem where already marked as selected
