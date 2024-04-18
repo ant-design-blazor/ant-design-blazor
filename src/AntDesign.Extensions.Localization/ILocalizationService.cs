@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace AntDesign.Extensions.Localization
 {
-    public interface ILanguageService
+    public interface ILocalizationService
     {
         CultureInfo CurrentCulture { get; }
 

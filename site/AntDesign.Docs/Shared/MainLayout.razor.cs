@@ -11,7 +11,7 @@ namespace AntDesign.Docs.Shared
     {
         private bool _drawerVisible = false;
 
-        public string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        public string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private bool _isMobile;
 
@@ -19,7 +19,7 @@ namespace AntDesign.Docs.Shared
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public ILanguageService LanguageService { get; set; }
+        public ILocalizationService LocalizationService { get; set; }
 
         [Inject]
         public DemoService DemoService { get; set; }

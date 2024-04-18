@@ -13,7 +13,7 @@ namespace AntDesign.Docs.Shared
 
         [Inject] private DemoService DemoService { get; set; }
 
-        [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private ILocalizationService LocalizationService { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; }
 
@@ -21,7 +21,7 @@ namespace AntDesign.Docs.Shared
 
         [CascadingParameter] public ConfigProvider ConfigProvider { get; set; }
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private string Direction => ConfigProvider?.Direction;
 
@@ -34,7 +34,7 @@ namespace AntDesign.Docs.Shared
             await base.OnInitializedAsync();
             _menuItems = await DemoService.GetMenuAsync();
 
-            LanguageService.LanguageChanged += OnLanguageChanged;
+            LocalizationService.LanguageChanged += OnLanguageChanged;
         }
 
         private void ChangeLanguage(string language)
@@ -66,7 +66,7 @@ namespace AntDesign.Docs.Shared
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
         }
     }
 }

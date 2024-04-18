@@ -53,7 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
         internal static void AddInteractiveStringLocalizerServices(IServiceCollection services)
         {
             var assembly = Assembly.GetCallingAssembly();
-            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService());
+            services.AddSingleton<ILocalizationService>(new LocalizationService());
             services.AddTransient(typeof(IStringLocalizer<>), typeof(InteractiveStringLocalizer<>));
         }
 

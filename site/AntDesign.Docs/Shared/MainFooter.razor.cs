@@ -14,7 +14,7 @@ namespace AntDesign.Docs.Shared
         [Inject] private IJSRuntime JS { get; set; }
         [Inject] private IMessageService Message { get; set; }
 
-        [Inject] private ILanguageService Language { get; set; }
+        [Inject] private ILocalizationService Language { get; set; }
         [Inject] private IStringLocalizer Localizer { get; set; }
         protected override async Task OnInitializedAsync()
         {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Extensions.Localization
 {
-    public class InAssemblyLanguageService : ILanguageService
+    internal class LocalizationService : ILocalizationService
     {
         private CultureInfo? _currentCulture;
 

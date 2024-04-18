@@ -20,7 +20,7 @@ namespace AntDesign.Docs.Pages
         private MoreProps[] _moreArticles = { };
 
         [Inject] private DemoService DemoService { get; set; }
-        [Inject] private ILanguageService Language { get; set; }
+        [Inject] private ILocalizationService Language { get; set; }
 
         [Inject] private IStringLocalizer<Index> Localizer { get; set; }
 

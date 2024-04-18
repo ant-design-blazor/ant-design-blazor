@@ -23,7 +23,7 @@ namespace AntDesign.Docs.Pages
         private DemoService DemoService { get; set; }
 
         [Inject]
-        private ILanguageService LanguageService { get; set; }
+        private ILocalizationService LocalizationService { get; set; }
 
         [Inject]
         private IStringLocalizer Localizer { get; set; }
@@ -40,7 +40,7 @@ namespace AntDesign.Docs.Pages
 
         private bool _expandAllCode;
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private string _filePath;
 
@@ -54,7 +54,7 @@ namespace AntDesign.Docs.Pages
 
         protected override void OnInitialized()
         {
-            LanguageService.LanguageChanged += OnLanguageChanged;
+            LocalizationService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
         }
 
@@ -127,7 +127,7 @@ namespace AntDesign.Docs.Pages
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
             NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
