@@ -34,39 +34,38 @@ namespace Microsoft.Extensions.DependencyInjection
             });
         }
 
-        public static IServiceCollection AddBlazorLocalization(this IServiceCollection services)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            services.AddOptions();
-            AddLocalizationServices(services, o => o.ResourcesAssembly ??= assembly);
-            return services;
-        }
-
-        public static IServiceCollection AddBlazorLocalization(this IServiceCollection services, Action<BlazorLocalizationOptions> setupAction)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            AddLocalizationServices(services, setupAction);
-            services.Configure<BlazorLocalizationOptions>(o => o.ResourcesAssembly ??= assembly);
-            return services;
-        }
-
         internal static void AddInteractiveStringLocalizerServices(IServiceCollection services)
         {
-            var assembly = Assembly.GetCallingAssembly();
             services.AddSingleton<ILocalizationService>(new LocalizationService());
             services.AddTransient(typeof(IStringLocalizer<>), typeof(InteractiveStringLocalizer<>));
         }
 
-        internal static void AddLocalizationServices(IServiceCollection services)
+        public static IServiceCollection AddEmbeddedJsonLocalization(this IServiceCollection services)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            services.AddOptions();
+            AddEmbeddedJsonLocalizationServices(services, o => o.ResourcesAssembly ??= assembly);
+            return services;
+        }
+
+        public static IServiceCollection AddEmbeddedJsonLocalization(this IServiceCollection services, Action<BlazorLocalizationOptions> setupAction)
+        {
+            var assembly = Assembly.GetCallingAssembly();
+            AddEmbeddedJsonLocalizationServices(services, setupAction);
+            services.Configure<BlazorLocalizationOptions>(o => o.ResourcesAssembly ??= assembly);
+            return services;
+        }
+
+
+        internal static void AddEmbeddedJsonLocalizationServices(IServiceCollection services)
         {
             AddInteractiveStringLocalizer(services);
             services.TryAddSingleton<IStringLocalizerFactory, EmbeddedJsonStringLocalizerFactory>();
-            services.TryAddTransient<IStringLocalizer>(sp => ActivatorUtilities.CreateInstance<InteractiveStringLocalizer>(sp, sp.GetRequiredService<IOptions<BlazorLocalizationOptions>>()));
         }
 
-        internal static void AddLocalizationServices(IServiceCollection services, Action<BlazorLocalizationOptions> setupAction)
+        internal static void AddEmbeddedJsonLocalizationServices(IServiceCollection services, Action<BlazorLocalizationOptions> setupAction)
         {
-            AddLocalizationServices(services);
+            AddEmbeddedJsonLocalizationServices(services);
             services.Configure(setupAction);
         }
     }

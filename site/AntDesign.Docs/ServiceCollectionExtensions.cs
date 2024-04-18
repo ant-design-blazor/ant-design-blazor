@@ -15,13 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
-            //services.AddBlazorLocalization(options =>
-            //{
-            //    options.ResourcesPath = "Resources";
-            //});
+            services.AddEmbeddedJsonLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
 
-            services.AddInteractiveStringLocalizer();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            //services.AddInteractiveStringLocalizer();
+            //services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             return services;
         }

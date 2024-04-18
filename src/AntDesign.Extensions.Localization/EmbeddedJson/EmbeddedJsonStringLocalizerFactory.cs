@@ -36,9 +36,11 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         public IStringLocalizer Create(Type resourceSource)
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var resourceType = resourceSource.GetTypeInfo();
+            var typeInfo = resourceSource.GetTypeInfo();
+            var baseName = GetResourcePrefix(typeInfo);
+            var assembly = typeInfo.Assembly;
 
-            return GetCachedLocalizer(_resourcesRelativePath, resourceType.Assembly, cultureInfo);
+            return GetCachedLocalizer(baseName, assembly, cultureInfo);
         }
 
         public IStringLocalizer Create(string baseName, string location)
@@ -48,6 +50,74 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
 
             return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);
         }
+
+        protected virtual RootNamespaceAttribute? GetRootNamespaceAttribute(Assembly assembly)
+        {
+            return assembly.GetCustomAttribute<RootNamespaceAttribute>();
+        }
+
+
+        protected virtual string GetResourcePrefix(TypeInfo typeInfo)
+        {
+            return GetResourcePrefix(typeInfo, GetRootNamespace(typeInfo.Assembly), GetResourcePath(typeInfo.Assembly));
+        }
+
+        protected virtual string GetResourcePrefix(TypeInfo typeInfo, string? baseNamespace, string? resourcesRelativePath)
+        {
+            if (string.IsNullOrEmpty(resourcesRelativePath))
+            {
+                return typeInfo.FullName;
+            }
+            else
+            {
+                // This expectation is defined by dotnet's automatic resource storage.
+                // We have to conform to "{RootNamespace}.{ResourceLocation}.{FullTypeName - RootNamespace}".
+                return baseNamespace + "." + resourcesRelativePath + TrimPrefix(typeInfo.FullName, baseNamespace + ".");
+            }
+        }
+
+        private static string? TrimPrefix(string name, string prefix)
+        {
+            if (name.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                return name.Substring(prefix.Length);
+            }
+
+            return name;
+        }
+
+        private string? GetRootNamespace(Assembly assembly)
+        {
+            var rootNamespaceAttribute = GetRootNamespaceAttribute(assembly);
+
+            if (rootNamespaceAttribute != null)
+            {
+                return rootNamespaceAttribute.RootNamespace;
+            }
+
+            return assembly.GetName().Name;
+        }
+
+        private string GetResourcePath(Assembly assembly)
+        {
+            var resourceLocationAttribute = GetResourceLocationAttribute(assembly);
+
+            // If we don't have an attribute assume all assemblies use the same resource location.
+            var resourceLocation = resourceLocationAttribute == null
+                ? _resourcesRelativePath + "."
+                : resourceLocationAttribute.ResourceLocation + ".";
+            resourceLocation = resourceLocation
+                .Replace(Path.DirectorySeparatorChar, '.')
+                .Replace(Path.AltDirectorySeparatorChar, '.');
+
+            return resourceLocation;
+        }
+
+        private ResourceLocationAttribute? GetResourceLocationAttribute(Assembly assembly)
+        {
+            return assembly.GetCustomAttribute<ResourceLocationAttribute>();
+        }
+
 
         private IStringLocalizer GetCachedLocalizer(string resourceName, Assembly assembly, CultureInfo cultureInfo)
         {
