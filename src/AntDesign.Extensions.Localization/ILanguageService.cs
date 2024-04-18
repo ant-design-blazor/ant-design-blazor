@@ -2,7 +2,7 @@
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 
-namespace AntDesign.Docs.Localization
+namespace AntDesign.Extensions.Localization
 {
     public interface ILanguageService
     {

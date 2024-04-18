@@ -6,16 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Extensions.Localization
 {
-    public class BlazorLocalizationOptions
+    public class BlazorLocalizationOptions : LocalizationOptions
     {
-        /// <summary>
-        /// The relative path under application root where resource files are located.
-        /// </summary>
-        public string ResourcesPath { get; set; } = string.Empty;
-
         public Assembly? ResourcesAssembly { get; set; }
     }
 }

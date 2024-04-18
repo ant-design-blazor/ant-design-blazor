@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace AntDesign.Docs.Localization.EmbeddedJson
+namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
     public class EmbeddedJsonStringLocalizer : IStringLocalizer
     {
@@ -83,7 +83,7 @@ namespace AntDesign.Docs.Localization.EmbeddedJson
 
             using var reader = new StreamReader(stream);
 
-            string json = reader.ReadToEnd();
+            var json = reader.ReadToEnd();
 
             return JsonSerializer.Deserialize<IDictionary<string, string>>(json, new JsonSerializerOptions
             {

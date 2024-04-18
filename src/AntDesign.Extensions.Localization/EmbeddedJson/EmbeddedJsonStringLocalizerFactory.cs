@@ -10,12 +10,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using AntDesign.Extensions.Localization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AntDesign.Docs.Localization.EmbeddedJson
+namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
     public class EmbeddedJsonStringLocalizerFactory : IStringLocalizerFactory
     {
@@ -45,7 +44,7 @@ namespace AntDesign.Docs.Localization.EmbeddedJson
         public IStringLocalizer Create(string baseName, string location)
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
-            Assembly assembly = Assembly.Load(new AssemblyName(location));
+            var assembly = Assembly.Load(new AssemblyName(location));
 
             return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);
         }

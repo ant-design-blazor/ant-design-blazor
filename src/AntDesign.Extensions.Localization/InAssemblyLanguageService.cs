@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Localization;
 
-namespace AntDesign.Docs.Localization
+namespace AntDesign.Extensions.Localization
 {
     public class InAssemblyLanguageService : ILanguageService
     {

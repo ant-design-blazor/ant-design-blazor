@@ -8,11 +8,10 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AntDesign.Extensions.Localization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
-namespace AntDesign.Docs.Localization
+namespace AntDesign.Extensions.Localization
 {
     internal class BlazorStringLocalizer<TResourceSource>(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService) : BlazorStringLocalizer(options, factory, languageService),
         IStringLocalizer<TResourceSource>,

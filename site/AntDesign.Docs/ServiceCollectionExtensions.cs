@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using AntDesign.Docs.Highlight;
-using AntDesign.Docs.Localization;
-using AntDesign.Docs.Localization.EmbeddedJson;
 using AntDesign.Docs.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
@@ -17,10 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
-            services.AddBlazorLocalization(options =>
-            {
-                options.ResourcesPath = "Resources";
-            });
+            //services.AddBlazorLocalization(options =>
+            //{
+            //    options.ResourcesPath = "Resources";
+            //});
+
+            services.AddBlazorStringLocalizer();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             return services;
         }

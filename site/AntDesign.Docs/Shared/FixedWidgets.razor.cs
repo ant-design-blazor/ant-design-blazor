@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;

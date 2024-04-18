@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Utils;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
