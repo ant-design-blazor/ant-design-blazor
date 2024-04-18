@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Extensions.Localization
 {

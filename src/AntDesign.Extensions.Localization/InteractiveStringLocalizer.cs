@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization
 {
-    internal class BlazorStringLocalizer<TResourceSource>(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService) : BlazorStringLocalizer(options, factory, languageService),
+    internal class InteractiveStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILanguageService languageService) : InteractiveStringLocalizer(factory, languageService),
         IStringLocalizer<TResourceSource>,
         IStringLocalizer
     {
@@ -23,7 +23,7 @@ namespace AntDesign.Extensions.Localization
         }
     }
 
-    internal class BlazorStringLocalizer : IStringLocalizer, IDisposable
+    internal class InteractiveStringLocalizer : IStringLocalizer, IDisposable
     {
         private readonly IStringLocalizerFactory _factory;
         private readonly ILanguageService _languageService;
@@ -48,19 +48,34 @@ namespace AntDesign.Extensions.Localization
             }
         }
 
-        public BlazorStringLocalizer(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService)
+        public InteractiveStringLocalizer(IStringLocalizerFactory factory, ILanguageService languageService)
         {
             _factory = factory;
             _languageService = languageService;
-            _options = options;
-
             _languageChanged = LanguageChanged;
 
             _languageService.LanguageChanged += _languageChanged;
 
-            LanguageChanged(this, CultureInfo.CurrentCulture);
+            if (_localizer == null)
+            {
+                LanguageChanged(this, CultureInfo.CurrentCulture);
+            }
         }
 
+        public InteractiveStringLocalizer(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILanguageService languageService) : this(factory, languageService)
+        {
+            _options = options;
+
+            _languageChanged = (object sender, CultureInfo culture) =>
+            {
+                _localizer = _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
+            };
+
+            if (_localizer == null)
+            {
+                _languageChanged.Invoke(this, CultureInfo.CurrentCulture);
+            }
+        }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
@@ -69,7 +84,6 @@ namespace AntDesign.Extensions.Localization
 
         public virtual void LanguageChanged(object sender, CultureInfo culture)
         {
-            _localizer = _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
         }
 
         public void Dispose()

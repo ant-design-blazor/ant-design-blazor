@@ -20,7 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //    options.ResourcesPath = "Resources";
             //});
 
-            services.AddBlazorStringLocalizer();
+            services.AddInteractiveStringLocalizer();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             return services;

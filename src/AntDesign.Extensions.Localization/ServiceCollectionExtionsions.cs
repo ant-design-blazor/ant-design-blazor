@@ -18,10 +18,10 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtionsions
     {
-        public static void AddBlazorStringLocalizer(this IServiceCollection services)
+        public static void AddInteractiveStringLocalizer(this IServiceCollection services)
         {
             var assembly = Assembly.GetCallingAssembly();
-            AddBlazorStringLocalizerServices(services);
+            AddInteractiveStringLocalizerServices(services);
 
             services.TryAddTransient<IStringLocalizer>(sp =>
             {
@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 blazorOptions.Value.ResourcesPath = localeOptions.Value.ResourcesPath;
                 blazorOptions.Value.ResourcesAssembly ??= assembly;
 
-                return ActivatorUtilities.CreateInstance<BlazorStringLocalizer>(sp, blazorOptions);
+                return ActivatorUtilities.CreateInstance<InteractiveStringLocalizer>(sp, blazorOptions);
             });
         }
 
@@ -50,18 +50,18 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        internal static void AddBlazorStringLocalizerServices(IServiceCollection services)
+        internal static void AddInteractiveStringLocalizerServices(IServiceCollection services)
         {
             var assembly = Assembly.GetCallingAssembly();
             services.AddSingleton<ILanguageService>(new InAssemblyLanguageService());
-            services.AddTransient(typeof(IStringLocalizer<>), typeof(BlazorStringLocalizer<>));
+            services.AddTransient(typeof(IStringLocalizer<>), typeof(InteractiveStringLocalizer<>));
         }
 
         internal static void AddLocalizationServices(IServiceCollection services)
         {
-            AddBlazorStringLocalizer(services);
+            AddInteractiveStringLocalizer(services);
             services.TryAddSingleton<IStringLocalizerFactory, EmbeddedJsonStringLocalizerFactory>();
-            services.TryAddTransient<IStringLocalizer>(sp => ActivatorUtilities.CreateInstance<BlazorStringLocalizer>(sp, sp.GetRequiredService<IOptions<BlazorLocalizationOptions>>()));
+            services.TryAddTransient<IStringLocalizer>(sp => ActivatorUtilities.CreateInstance<InteractiveStringLocalizer>(sp, sp.GetRequiredService<IOptions<BlazorLocalizationOptions>>()));
         }
 
         internal static void AddLocalizationServices(IServiceCollection services, Action<BlazorLocalizationOptions> setupAction)
