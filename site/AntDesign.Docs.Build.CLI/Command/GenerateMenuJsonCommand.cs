@@ -258,7 +258,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         [language] = new DemoMenuItem()
                         {
-                            Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                            Order = float.TryParse(docData["order"], out var order) ? order : 0,
                             Title = docData["title"],
                             Url = $"docs/{segments[0]}",
                             Type = "menuItem"

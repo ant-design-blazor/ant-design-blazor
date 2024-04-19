@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Shared
 {
@@ -31,7 +31,7 @@ namespace AntDesign.Docs.Shared
 
         [Inject] public NavigationManager Navigation { get; set; }
 
-        [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
 
         private AvatarInfo[] _avatarList;
         private List<string> _filePaths;

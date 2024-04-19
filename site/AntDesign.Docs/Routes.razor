@@ -1,5 +1,4 @@
 ﻿@using System.Reflection
-@using AntDesign.Docs.Localization
 @using System.Globalization
 
 <ConfigProvider>
@@ -15,13 +14,13 @@
     <AntContainer />
 </ConfigProvider>
 
-@inject ILanguageService LanguageService;
+@inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
 @code{
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
-        var currentCulture = LanguageService.CurrentCulture;
+        var currentCulture = LocalizationService.CurrentCulture;
 
         var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;
 
@@ -36,7 +35,7 @@
             {
                 if (segment.IsIn("zh-CN", "en-US"))
                 {
-                    LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
+                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
                 }
                 else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
                 {

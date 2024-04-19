@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
   </ItemGroup>
-  
+
 </Project>

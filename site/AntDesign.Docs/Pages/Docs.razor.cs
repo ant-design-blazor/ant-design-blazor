@@ -5,11 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AntDesign.Docs.Highlight;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
@@ -32,10 +33,11 @@ namespace AntDesign.Docs.Pages
 
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         [Inject] private NavigationManager NavigationManager { get; set; }
-        [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private ILocalizationService LocalizationService { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private IPrismHighlighter PrismHighlighter { get; set; }
         [Inject] private HttpClient HttpClient { get; set; }

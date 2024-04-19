@@ -12,7 +12,7 @@ namespace AntDesign.Docs.Shared
         {
             MenuItems = await DemoService.GetCurrentMenuItems();
 
-            LanguageService.LanguageChanged += OnLanguageChanged;
+            LocalizationService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
 
             StateHasChanged();
@@ -34,7 +34,7 @@ namespace AntDesign.Docs.Shared
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
             NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
