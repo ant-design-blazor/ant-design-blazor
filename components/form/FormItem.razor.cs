@@ -187,7 +187,7 @@ namespace AntDesign
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
-        private PropertyInfo _fieldPropertyInfo;
+        private Func<object, object> _fieldValueGetter;
 
         private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
         private FormValidateStatus _validateStatus;
@@ -352,7 +352,7 @@ namespace AntDesign
         {
             if (_control != null) return;
 
-            _vaildateStatusChanged = () => control.UpdateStyles();
+            _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
@@ -364,9 +364,15 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-
             _validationStateChangedHandler = (s, e) =>
             {
+                // don't show the vaidation error messages unitl the validate method being called.
+                // However, the default validation process has already been performed because that's how it's designed in the EditContext.
+                if (!Form.IsCallingValidation && !Form.ValidateOnChange)
+                {
+                    return;
+                }
+
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
 
@@ -404,7 +410,7 @@ namespace AntDesign
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
-                _fieldPropertyInfo = _propertyReflector?.PropertyInfo;
+                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             }
 
             SetInternalIsRequired();
@@ -421,9 +427,9 @@ namespace AntDesign
 
             var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
 
-            if (_fieldPropertyInfo != null)
+            if (_fieldValueGetter != null)
             {
-                var propertyValue = _fieldPropertyInfo.GetValue(_fieldIdentifier.Model);
+                var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
                 var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 

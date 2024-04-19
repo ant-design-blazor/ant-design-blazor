@@ -657,7 +657,10 @@ namespace AntDesign
 
                         if (exists is null)
                         {
-                            SelectOptionItems.Remove(selectOption);
+                            if (IgnoreItemChanges)
+                            {
+                                SelectOptionItems.Remove(selectOption);
+                            }
                             RemoveEqualityToNoValue(selectOption);
 
                             if (selectOption.IsSelected)
@@ -667,6 +670,10 @@ namespace AntDesign
                             dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
                     }
                 }
+            }
+            if (!IgnoreItemChanges)
+            {
+                SelectOptionItems.Clear();
             }
 
             //A simple approach to avoid unnecessary scanning through _selectedValues once
@@ -742,6 +749,7 @@ namespace AntDesign
                     updateSelectOption.IsDisabled = disabled;
                     updateSelectOption.GroupName = groupName;
                     updateSelectOption.IsHidden = isSelected && HideSelected;
+                    SelectOptionItems.Add(updateSelectOption);
                     if (isSelected)
                     {
                         if (!updateSelectOption.IsSelected)
