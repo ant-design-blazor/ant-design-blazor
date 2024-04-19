@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization
 {
-    internal class InteractiveStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILocalizationService LocalizationService) : InteractiveStringLocalizer(factory, LocalizationService),
+    internal class InteractiveStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILocalizationService localizationService) : InteractiveStringLocalizer(factory, localizationService),
         IStringLocalizer<TResourceSource>,
         IStringLocalizer
     {
@@ -23,11 +23,14 @@ namespace AntDesign.Extensions.Localization
         }
     }
 
+    /// <summary>
+    /// Support change the localizer at runtime. 
+    /// </summary>
     internal class InteractiveStringLocalizer : IStringLocalizer, IDisposable
     {
         private readonly IStringLocalizerFactory _factory;
-        private readonly ILocalizationService _LocalizationService;
-        private readonly IOptions<BlazorLocalizationOptions> _options;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOptions<SimpleStringLocalizerOptions> _options;
         private readonly EventHandler<CultureInfo> _languageChanged;
 
         protected IStringLocalizer _localizer;
@@ -48,13 +51,13 @@ namespace AntDesign.Extensions.Localization
             }
         }
 
-        public InteractiveStringLocalizer(IStringLocalizerFactory factory, ILocalizationService LocalizationService)
+        public InteractiveStringLocalizer(IStringLocalizerFactory factory, ILocalizationService localizationService)
         {
             _factory = factory;
-            _LocalizationService = LocalizationService;
+            _localizationService = localizationService;
             _languageChanged = LanguageChanged;
 
-            _LocalizationService.LanguageChanged += _languageChanged;
+            _localizationService.LanguageChanged += _languageChanged;
 
             if (_localizer == null)
             {
@@ -62,7 +65,7 @@ namespace AntDesign.Extensions.Localization
             }
         }
 
-        public InteractiveStringLocalizer(IOptions<BlazorLocalizationOptions> options, IStringLocalizerFactory factory, ILocalizationService LocalizationService) : this(factory, LocalizationService)
+        public InteractiveStringLocalizer(IOptions<SimpleStringLocalizerOptions> options, IStringLocalizerFactory factory, ILocalizationService localizationService) : this(factory, localizationService)
         {
             _options = options;
 
@@ -88,7 +91,7 @@ namespace AntDesign.Extensions.Localization
 
         public void Dispose()
         {
-            _LocalizationService.LanguageChanged -= _languageChanged;
+            _localizationService.LanguageChanged -= _languageChanged;
         }
     }
 }

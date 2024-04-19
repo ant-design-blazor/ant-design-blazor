@@ -10,7 +10,7 @@ using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Extensions.Localization
 {
-    public class BlazorLocalizationOptions : LocalizationOptions
+    public class SimpleStringLocalizerOptions : LocalizationOptions
     {
         public Assembly? ResourcesAssembly { get; set; }
     }

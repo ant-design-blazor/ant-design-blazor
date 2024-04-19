@@ -15,12 +15,22 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
-            services.AddEmbeddedJsonLocalization(options =>
+            services.AddSimpleEmbeddedJsonLocalization(options =>
             {
                 options.ResourcesPath = "Resources";
             });
 
+            //services.AddSimpleInteractiveStringLocalizer();
             //services.AddInteractiveStringLocalizer();
+            //services.AddLocalization(options =>
+            //{
+            //    options.ResourcesPath = "Resources";
+            //});
+
+            //services.AddJsonLocalization(b =>
+            //{
+            //    b.UseEmbeddedJson(o => o.ResourcesPath = "Resources");
+            //}, ServiceLifetime.Singleton);
             //services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             return services;

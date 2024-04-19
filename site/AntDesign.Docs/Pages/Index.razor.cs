@@ -22,7 +22,7 @@ namespace AntDesign.Docs.Pages
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private ILocalizationService Language { get; set; }
 
-        [Inject] private IStringLocalizer<Index> Localizer { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
 
         private bool _rendered;
 

@@ -16,13 +16,13 @@ using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
-    public class EmbeddedJsonStringLocalizerFactory : IStringLocalizerFactory
+    internal class SimpleEmbeddedJsonLocalizerFactory : IStringLocalizerFactory
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
         private readonly string _resourcesRelativePath;
 
-        public EmbeddedJsonStringLocalizerFactory(IOptions<BlazorLocalizationOptions> localizationOptions, ILoggerFactory loggerFactory)
+        public SimpleEmbeddedJsonLocalizerFactory(IOptions<SimpleStringLocalizerOptions> localizationOptions, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
             _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? string.Empty;
@@ -122,7 +122,7 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         private IStringLocalizer GetCachedLocalizer(string resourceName, Assembly assembly, CultureInfo cultureInfo)
         {
             var cacheKey = GetCacheKey(resourceName, assembly, cultureInfo);
-            return _cache.GetOrAdd(cacheKey, new EmbeddedJsonStringLocalizer(resourceName, assembly, cultureInfo, _loggerFactory.CreateLogger<EmbeddedJsonStringLocalizer>()));
+            return _cache.GetOrAdd(cacheKey, new SimpleEmbeddedJsonStringLocalizer(resourceName, assembly, cultureInfo, _loggerFactory.CreateLogger<SimpleEmbeddedJsonStringLocalizer>()));
         }
 
         private string GetCacheKey(string resourceName, Assembly assembly, CultureInfo cultureInfo)

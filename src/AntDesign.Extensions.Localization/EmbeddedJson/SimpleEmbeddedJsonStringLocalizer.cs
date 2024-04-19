@@ -18,12 +18,12 @@ using Microsoft.Extensions.Logging;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
-    public class EmbeddedJsonStringLocalizer : IStringLocalizer
+    internal class SimpleEmbeddedJsonStringLocalizer : IStringLocalizer
     {
         private readonly Lazy<IDictionary<string, string>> _resources;
         private readonly Lazy<IDictionary<string, string>> _fallbackResources;
 
-        public EmbeddedJsonStringLocalizer(string resourceName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<EmbeddedJsonStringLocalizer> logger)
+        public SimpleEmbeddedJsonStringLocalizer(string resourceName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<SimpleEmbeddedJsonStringLocalizer> logger)
         {
             _resources = new Lazy<IDictionary<string, string>>(
                 () => ReadResources(resourceName, resourceAssembly, cultureInfo, logger, isFallback: false));
@@ -68,7 +68,7 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
                 _fallbackResources.Value.TryGetValue(name, out value);
         }
 
-        private static IDictionary<string, string> ReadResources(string resourcePathName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<EmbeddedJsonStringLocalizer> logger, bool isFallback)
+        private static IDictionary<string, string> ReadResources(string resourcePathName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<SimpleEmbeddedJsonStringLocalizer> logger, bool isFallback)
         {
             var availableResources = resourceAssembly
                 .GetManifestResourceNames()
