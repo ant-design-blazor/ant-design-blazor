@@ -8,14 +8,15 @@
 
 
 <CascadingValue Name="AntDesign.InReusePageContent" Value="true" IsFixed>
-
-    @foreach (var item in ReuseTabsService.Pages)
+    @if (ReuseTabsService.Pages?.Any() == true)
     {
-        <div class="ant-reuse-tabs-content @Class" @key="item.Url" style="@(item.Url == ReuseTabsService.CurrentUrl? "": "display:none;") @Style">
-            @item.Body
-        </div>
+        @foreach (var item in ReuseTabsService.Pages)
+        {
+            <div class="ant-reuse-tabs-content @Class" @key="item.Url" style="@(item.Url == ReuseTabsService.CurrentUrl? "": "display:none;") @Style">
+                @item.Body
+            </div>
+        }
     }
-
 </CascadingValue>
 
 @code {
