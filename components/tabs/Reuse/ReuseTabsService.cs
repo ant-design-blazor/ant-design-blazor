@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -15,6 +14,7 @@ namespace AntDesign
     {
         private readonly NavigationManager _navmgr;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
+        private IOrderedEnumerable<ReuseTabsPageItem> _pages;
 
         internal event Action OnStateHasChanged;
 
@@ -25,7 +25,7 @@ namespace AntDesign
             {
                 try
                 {
-                    _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+                    _navmgr.NavigateTo(value.StartsWith('/') ? value[1..] : value);
                 }
                 catch (NavigationException)
                 {
@@ -34,15 +34,134 @@ namespace AntDesign
             }
         }
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore)
-            .OrderBy(x => x.CreatedAt)
-            .ThenByDescending(x => x.Pin ? 1 : 0)
-            .ThenBy(x => x.Order)
-            .ToArray();
+        public IOrderedEnumerable<ReuseTabsPageItem> Pages => _pages;
 
         public ReuseTabsService(NavigationManager navmgr)
         {
             this._navmgr = navmgr;
+        }
+
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="titleTemplate">The title show on the tab</param>
+        public void CreateTab(string pageUrl, RenderFragment titleTemplate = null)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                return;
+            }
+            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = titleTemplate ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            OnStateHasChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="title">The title show on the tab</param>
+        public void CreateTab(string pageUrl, string title)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                return;
+            }
+            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            OnStateHasChanged?.Invoke();
+        }
+
+        //public void Pin(string key)
+        //{
+        //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
+        //    if (reuseTabsPageItem == null)
+        //    {
+        //        return;
+        //    }
+        //    reuseTabsPageItem.Pin = true;
+        //    StateHasChanged();
+        //}
+
+        /// <summary>
+        /// Close the page corresponding to the specified key
+        /// </summary>
+        /// <param name="key">The specified page's key</param>
+        public void ClosePage(string key)
+        {
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == key);
+            if (reuseTabsPageItem?.Pin == true)
+            {
+                return;
+            }
+
+            RemovePageBase(key);
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Close all pages except the page with the specified key
+        /// </summary>
+        /// <param name="key">The specified page's key</param>
+        public void CloseOther(string key)
+        {
+            foreach (var item in _pages?.Where(x => x.Closable && x.Url != key && !x.Pin))
+            {
+                RemovePageBase(item.Url);
+            }
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Close all pages that is Closable or is not Pinned
+        /// </summary>
+        public void CloseAll()
+        {
+            foreach (var item in _pages?.Where(x => x.Closable && !x.Pin))
+            {
+                RemovePageBase(item.Url);
+            }
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Close current page
+        /// </summary>
+        public void CloseCurrent()
+        {
+            ClosePage(this.CurrentUrl);
+        }
+
+        /// <summary>
+        /// Reload Current Page
+        /// </summary>
+        public void ReloadPage()
+        {
+            ReloadPage(null);
+        }
+
+        /// <summary>
+        /// Reload the page corresponding to the specified key
+        /// </summary>
+        /// <param name="key"></param>
+        public void ReloadPage(string key)
+        {
+            key ??= CurrentUrl;
+            _pageMap[key].Body = null;
+            if (CurrentUrl == key)
+            {
+                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
+            }
+            StateHasChanged();
+        }
+
+        public void Update()
+        {
+            StateHasChanged();
+        }
+
+        internal void StateHasChanged()
+        {
+            OnStateHasChanged?.Invoke();
         }
 
         internal void Init(bool reuse)
@@ -73,7 +192,7 @@ namespace AntDesign
                     CreatedAt = DateTime.Now,
                 };
 
-                _pageMap[CurrentUrl] = reuseTabsPageItem;
+                AddPage(CurrentUrl, reuseTabsPageItem);
             }
 
             reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
@@ -159,7 +278,7 @@ namespace AntDesign
 
             if (_pageMap.Any())
             {
-                CurrentUrl = Pages[0].Url;
+                CurrentUrl = _pages.First().Url;
             }
         }
 
@@ -173,100 +292,26 @@ namespace AntDesign
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
             reuseTabsPageItem.CreatedAt = DateTime.MinValue;
             reuseTabsPageItem.Url = url;
-            _pageMap[url] = reuseTabsPageItem;
+            AddPage(url, reuseTabsPageItem);
         }
 
-        /// <summary>
-        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
-        /// </summary>
-        /// <param name="pageUrl">The url of target page</param>
-        /// <param name="title">The title show on the tab</param>
-        public void CreateTab(string pageUrl, RenderFragment? title = null)
+        private void AddPage(string key, ReuseTabsPageItem pageItem)
         {
-            if (_pageMap.ContainsKey(pageUrl))
-            {
-                return;
-            }
-            _pageMap.TryAdd(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
-            OnStateHasChanged?.Invoke();
-        }
-
-        //public void Pin(string key)
-        //{
-        //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-        //    if (reuseTabsPageItem == null)
-        //    {
-        //        return;
-        //    }
-        //    reuseTabsPageItem.Pin = true;
-        //    StateHasChanged();
-        //}
-
-        public void ClosePage(string key)
-        {
-            var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-            if (reuseTabsPageItem?.Pin == true)
-            {
-                return;
-            }
-
-            RemovePageBase(key);
-            StateHasChanged();
-        }
-
-        public void CloseOther(string key)
-        {
-            foreach (var item in Pages.Where(x => x.Closable && x.Url != key && !x.Pin))
-            {
-                RemovePageBase(item.Url);
-            }
-            StateHasChanged();
-        }
-
-        public void CloseAll()
-        {
-            foreach (var item in Pages.Where(x => x.Closable && !x.Pin))
-            {
-                RemovePageBase(item.Url);
-            }
-            StateHasChanged();
-        }
-
-        public void CloseCurrent()
-        {
-            ClosePage(this.CurrentUrl);
-        }
-
-        public void Update()
-        {
-            StateHasChanged();
-        }
-
-        public void StateHasChanged()
-        {
-            OnStateHasChanged?.Invoke();
-        }
-
-        public void ReloadPage()
-        {
-            ReloadPage(null);
-        }
-
-        public void ReloadPage(string key = null)
-        {
-            key ??= CurrentUrl;
-            _pageMap[key].Body = null;
-            if (CurrentUrl == key)
-            {
-                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
-            }
-            StateHasChanged();
+            _pageMap.TryAdd(key, pageItem);
+            _pages = _pageMap.Values.Where(x => !x.Ignore)
+                .OrderBy(x => x.CreatedAt)
+                .ThenByDescending(x => x.Pin ? 1 : 0)
+                .ThenBy(x => x.Order);
         }
 
         private void RemovePageBase(string key)
         {
             _pageMap[key].Body = null;
             _pageMap.Remove(key);
+            _pages = _pageMap.Values.Where(x => !x.Ignore)
+                .OrderBy(x => x.CreatedAt)
+                .ThenByDescending(x => x.Pin ? 1 : 0)
+                .ThenBy(x => x.Order);
         }
     }
 }
