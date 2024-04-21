@@ -237,6 +237,11 @@ namespace AntDesign
             ClosePage(this.CurrentUrl);
         }
 
+        public void Update()
+        {
+            StateHasChanged();
+        }
+
         public void StateHasChanged()
         {
             OnStateHasChanged?.Invoke();

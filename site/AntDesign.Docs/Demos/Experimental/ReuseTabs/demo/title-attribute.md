@@ -1,16 +1,16 @@
 ---
-order: 0
+order: 1
 iframe: 360
 link: /reuse/title-attribute
 title:
-  zh-CN: 基本
-  en-US: Basic
+  zh-CN: 页面的设置
+  en-US: Page settings
 ---
 
 ## zh-CN
 
-默认选中第一项。
+利用 `ReuseTabsPage` 特性设置页面的额外行为，如定义标题、启动时固定、不可关闭。
 
 ## en-US
 
-Default activate first tab.
+Use the `ReuseTabsPage` attribute to set additional behavior of the page, such as defining the title, fixed at startup, and non-closable.

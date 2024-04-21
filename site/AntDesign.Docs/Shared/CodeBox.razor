@@ -9,7 +9,7 @@
         {
             if (Demo.Iframe > 0)
             {
-                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"{Demo.Link??"/mock"}?demoId={DemoId}&type={Demo.Type}")" />
+                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@(Demo.Link??$"/mock?demoId={DemoId}&type={Demo.Type}")" />
             }
             else if (_demoType != null)
             {
