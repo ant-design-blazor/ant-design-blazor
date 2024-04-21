@@ -190,15 +190,37 @@ namespace AntDesign
             _pageMap.TryAdd(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
             OnStateHasChanged?.Invoke();
         }
-        public void UpdateTitle(string pageUrl, RenderFragment? title = null)
+
+        /// <summary>
+        /// Update the tab title
+        /// </summary>
+        /// <param name="title">The new title</param>
+        /// <param name="pageUrl">The key of the tab. If null, the current page will be updated.</param>
+        public void UpdateTitle(string title, string pageUrl = null)
         {
+            pageUrl ??= this.CurrentUrl;
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                _pageMap[pageUrl].Title = title.ToRenderFragment();
+                OnStateHasChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Update the tab title
+        /// </summary>
+        /// <param name="title">The new title render fragment</param>
+        /// <param name="pageUrl">The key of the tab. If null, the current page will be updated.</param>
+        public void UpdateTitle(RenderFragment title, string pageUrl = null)
+        {
+            pageUrl ??= this.CurrentUrl;
             if (_pageMap.ContainsKey(pageUrl))
             {
                 _pageMap[pageUrl].Title = title ?? pageUrl.ToRenderFragment();
                 OnStateHasChanged?.Invoke();
-                return;
             }
         }
+
         //public void Pin(string key)
         //{
         //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
