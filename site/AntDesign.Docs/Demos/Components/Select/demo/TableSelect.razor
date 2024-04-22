@@ -5,7 +5,9 @@
         DataSource="data"
         @bind-Values="@selectedRows"
         Mode="multiple"
-        DropdownMatchSelectWidth="false">
+        DropdownMatchSelectWidth="false"
+        EnableSearch
+        OnSearch="OnSearch">
     <DropdownRender>
         <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
             <ColumnDefinitions Context="ctx">
@@ -20,11 +22,21 @@
     </DropdownRender>
 </Select>
 
-@inject IconListService _iconListService
 @code
 {
     ITable table;
     IEnumerable<Column> selectedRows=[];
+    Column[] data;
+
+    protected override void OnInitialized()
+    {
+        data = dataSource;
+    }
+
+    void OnSearch(string searchValue)
+    {
+        data = dataSource.Where(x => x.Name.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+    }
 
     class Column
     {
@@ -34,8 +46,8 @@
 
         public string Address { get; set; }
     }
-
-    Column[] data =
+    
+    Column[] dataSource =
     {
         new Column()
         {

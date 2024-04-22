@@ -47,8 +47,7 @@ namespace AntDesign
         [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
 #endif
 
-        [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        protected IForm Form => FormItem?.Form;
 
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
@@ -153,7 +152,7 @@ namespace AntDesign
 
                     OnCurrentValueChange(value);
 
-                    if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
@@ -303,7 +302,7 @@ namespace AntDesign
             {
                 var type = Form.Model.GetType();
                 var dataIndex = FormItem.Name;
-                if (type.IsAssignableFrom(typeof(IDictionary)))
+                if (typeof(IDictionary).IsAssignableFrom(type))
                 {
                     dataIndex = $"['{dataIndex}']";
                 }
@@ -312,7 +311,7 @@ namespace AntDesign
                 Value = _getValueDelegate.Invoke(Form.Model);
 
                 var lambda = PathHelper.GetLambda(dataIndex, type);
-                _propertyReflector = PropertyReflector.Create(lambda.Body);
+                _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
             }
 
             FormItem?.AddControl(this);

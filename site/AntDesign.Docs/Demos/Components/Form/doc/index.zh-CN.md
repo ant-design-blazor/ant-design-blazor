@@ -18,6 +18,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 ### Form
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| Autocomplete | 默认情况下，浏览器是否可以自动完成输入元素的值 | string | on \| off | off |
 | Layout | 表单布局 | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
 | LabelCol | label 标签布局，同 \<Col\> 组件，设置 span offset 值 | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) | - |
 | LabelColSpan | 等同于LabelCol.Span | int | - |
@@ -34,6 +35,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | OnFinishFailed | 提交失败(校验失败)回调事件 | EventCallback\<EditContext\> | - |
 | ValidateOnChange | 是否在更改时校验 | bool | false |
 | RequiredMark | 更改必填/可选字段标签在表单上的显示方式。 | FormRequiredMark | FormRequiredMark.Required |
+
 
 ### FormItem
 | 名称 | 说明 | 类型 | 默认值 |

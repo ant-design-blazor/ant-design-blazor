@@ -17,6 +17,7 @@ High performance Form component with data scope management. Including data colle
 ### Form
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |
+| Autocomplete| Whether input elements can by default have their values automatically completed by the browser. | string | on \| off | off  |
 | Layout | Form Layout | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
 | LabelCol | label label layout, same as \<Col\> component, set span offset value | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
 | LabelColSpan | Same as LabelCol.Span | int |-|

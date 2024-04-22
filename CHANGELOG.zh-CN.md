@@ -15,6 +15,52 @@ timeline: true
 
 ---
 
+### 0.18.3
+
+`2024-4-9` 
+
+- 🐞 修复 Table 重新渲染导致的行展开状态无法维持。[#3785](https://github.com/ant-design-blazor/ant-design-blazor/pull/3785) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Progress 环形进度条 strokecolor 单色不生效。[#3783](https://github.com/ant-design-blazor/ant-design-blazor/pull/3783) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+- 🐞 修复  DatePicker  禁用日期逻辑在更大的范围选择中判断不正确。[#3781](https://github.com/ant-design-blazor/ant-design-blazor/pull/3781) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复 Charts 文档。[#3774](https://github.com/ant-design-blazor/ant-design-blazor/pull/3774) [@CAPCHIK](https://github.com/CAPCHIK)
+
+Table 行状态行为变更：
+
+在重新渲染或调用 `ITable.ReloadData()` 后， RowKey 与当前页数据的相同的行状态（如展开、选中）不会被重置。
+
+### 0.18.2
+
+`2024-4-2` 
+
+- Form
+  - 🆕 新增 自动填充属性 AutoComplete。[#3763](https://github.com/ant-design-blazor/ant-design-blazor/pull/3763) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 自定义控件的验证。[#3761](https://github.com/ant-design-blazor/ant-design-blazor/pull/3761) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 Table 在外部设置排序时异常[#3766](https://github.com/ant-design-blazor/ant-design-blazor/pull/3766) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 选择行清理后，全选时还会被选中 （客户端数据）。[#3762](https://github.com/ant-design-blazor/ant-design-blazor/pull/3762) [@ElderJames](https://github.com/ElderJames)
+
+### 0.18.1
+
+`2024-3-21` 
+
+是日春分
+
+- 🆕 新增 Modal 自定义头部 (#3579)。[4cfeffd](https://github.com/ant-design-blazor/ant-design-blazor/commit/4cfeffd) [@Pat Hartl](https://github.com/Pat Hartl)
+
+- Form
+  - 🐞 修复 静态渲染时的绑定与验证，**正式支持静态渲染**。[#3580](https://github.com/ant-design-blazor/ant-design-blazor/pull/3580) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当没有绑定时的异常。[#3717](https://github.com/ant-design-blazor/ant-design-blazor/pull/3717) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 修复 在筛选时隐藏空分组。[#3722](https://github.com/ant-design-blazor/ant-design-blazor/pull/3722) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 修复 通过搜索选择值时清除输入。[#3726](https://github.com/ant-design-blazor/ant-design-blazor/pull/3726) [@agolub-s](https://github.com/agolub-s)
+
+- 💄 优化 Upload 无按钮时的样式。[#3734](https://github.com/ant-design-blazor/ant-design-blazor/pull/3734) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 在设置 `ScrollY` 时伸缩列失效。[#3746](https://github.com/ant-design-blazor/ant-design-blazor/pull/3746) [@thirking](https://github.com/thirking)
+- 🐞 修复 JS 序列化循环引用异常。[#3739](https://github.com/ant-design-blazor/ant-design-blazor/pull/3739) [@jxcproject](https://github.com/jxcproject)
+
+
 ### 0.18.0
 
 `2024-02-29`

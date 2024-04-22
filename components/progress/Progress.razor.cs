@@ -182,11 +182,11 @@ namespace AntDesign
                 _circleTrailStyle = FormattableString.Invariant($"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;");
                 if (SuccessPercent == 0)
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
                 }
                 else
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {-CircleDash * SuccessPercent / 100}px;");
                 }
             }
@@ -206,6 +206,38 @@ namespace AntDesign
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;");
                 }
             }
+        }
+
+        private string GetCircleColor()
+        {
+            var baseColor = "";
+            if (StrokeColor.Value == null)
+            {
+                return baseColor;
+            }
+
+            var style = new StringBuilder(baseColor);
+
+            if (StrokeColor.IsT1)
+            {
+                try
+                {
+                    var gradientPoints = string.Join(", ", StrokeColor.AsT1.Select(pair => $"{ToRGB(pair.Value)} {pair.Key}"));
+                    style.Append($" stroke: linear-gradient(to right, {gradientPoints})");
+                }
+                catch
+                {
+                    throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be dictionary like \"0%\": \"#108ee9\", \"100%\": \"#87d068\"");
+                }
+            }
+            else if (StrokeColor.IsT0)
+            {
+                style.Append("stroke: ");
+                style.Append(ToRGB(StrokeColor.AsT0));
+                style.Append(';');
+            }
+
+            return style.ToString();
         }
 
         private string GetLineBGStyle()

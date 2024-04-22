@@ -150,6 +150,38 @@
         };
 
     }
+    
+    [Fact]
+    public void Select_Must_Set_SelectedValue_After_Select_In_DropDown()
+    {
+        var dataSource = new PersonNullable[]
+        {
+            new("1", "test"),
+            new("2", "qqqq")
+        };
+        
+        var cut = Render<AntDesign.Select<string, PersonNullable>>(
+            @<AntDesign.Select TItem="PersonNullable" TItemValue="string" DataSource="@dataSource"
+                               LabelName="@nameof(PersonNullable.Name)"
+                               ValueName="@nameof(PersonNullable.Id)"
+                               AllowClear>
+            </AntDesign.Select>);
+        cut.Render();
+        
+        // Act
+        var input = cut.Find("input");
+        input.Input("t");
+        cut.WaitForElements("div.ant-select-item-option-content");
+        var dropDownItems = cut.FindAll("div.ant-select-item-option-content");
+        var firstItem = dropDownItems.First();
+        firstItem.Click();
+        
+        // Arrange
+        cut.WaitForElement("span.ant-select-selection-item");
+        var selectedLabel = cut.Find("span.ant-select-selection-item");
+        selectedLabel.GetAttribute("title").Should().Be("test");
+        input.GetAttribute("value").Should().BeEmpty();
+    }
 
 /*
     [Theory]

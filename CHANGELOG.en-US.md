@@ -15,6 +15,51 @@ timeline: true
 
 ---
 
+### 0.18.3
+
+`2024-4-9` 
+
+- 🐞 Fixed Table row expand incorrectly because the cache is cleared due to re-rendering. [#3785](https://github.com/ant-design-blazor/ant-design-blazor/pull/3785) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Progress single strokecolor does not works for circle type. [#3783](https://github.com/ant-design-blazor/ant-design-blazor/pull/3783) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+- 🐞 Fixed DatePicker that disabled date is not judging correctly in the larger range panels. [#3781](https://github.com/ant-design-blazor/ant-design-blazor/pull/3781) [@ElderJames](https://github.com/ElderJames)
+- 📖 Updated get started for charts. [#3774](https://github.com/ant-design-blazor/ant-design-blazor/pull/3774) [@CAPCHIK](https://github.com/CAPCHIK)
+
+Table row status behavior changes:
+
+After rerendering or calling `ITable.ReloadData()`, the row state of the same RowKey as the current page data (e.g., expanded, selected) will not be reset.
+
+### 0.18.2
+
+`2024-4-2` 
+
+- Form
+  - 🆕 Add Form autocomplete parameter. [#3763](https://github.com/ant-design-blazor/ant-design-blazor/pull/3763) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed form validation for custom controls. [#3761](https://github.com/ant-design-blazor/ant-design-blazor/pull/3761) [@ElderJames](https://github.com/ElderJames)
+- Table
+  - 🐞 Fixed Table throw exception while sorting rows outside. [#3766](https://github.com/ant-design-blazor/ant-design-blazor/pull/3766) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 fix table rows which have been remove from selectedRows would be selected again  （client side data）. [#3762](https://github.com/ant-design-blazor/ant-design-blazor/pull/3762) [@ElderJames](https://github.com/ElderJames)
+
+### 0.18.1
+
+`2024-3-21` 
+
+The Spring Equinox
+
+- 🆕 Add modal support customized header (#3579). [4cfeffd](https://github.com/ant-design-blazor/ant-design-blazor/commit/4cfeffd) [@Pat Hartl](https://github.com/Pat Hartl)
+
+- Form
+  - 🐞 Fixed binding issue for static SSR，**static rendering support is available**. [#3580](https://github.com/ant-design-blazor/ant-design-blazor/pull/3580) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed cause exception while has no FieldIdentifier. [#3717](https://github.com/ant-design-blazor/ant-design-blazor/pull/3717) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 Fixed group names are not hidden when searching. [#3722](https://github.com/ant-design-blazor/ant-design-blazor/pull/3722) [@WhyILoveSpringRoll](https://github.com/WhyILoveSpringRoll)
+  - 🐞 Fixed clearing input in Select when value selected via search. [#3726](https://github.com/ant-design-blazor/ant-design-blazor/pull/3726) [@agolub-s](https://github.com/agolub-s)
+
+- 💄 Style Upload with no button. [#3734](https://github.com/ant-design-blazor/ant-design-blazor/pull/3734) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table resizable column did'n work with `ScrollY`. [#3746](https://github.com/ant-design-blazor/ant-design-blazor/pull/3746) [@thirking](https://github.com/thirking)
+- 🐞 Fixed JS  circular referencing during serialization. [#3739](https://github.com/ant-design-blazor/ant-design-blazor/pull/3739) [@jxcproject](https://github.com/jxcproject)
+
+
 ### 0.18.0
 
 `2024-02-29`

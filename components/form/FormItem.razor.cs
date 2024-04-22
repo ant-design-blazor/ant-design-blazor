@@ -116,6 +116,8 @@ namespace AntDesign
 
         bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
 
+        IForm IFormItem.Form => Form;
+
         [Parameter]
         public bool Required { get; set; } = false;
 
@@ -185,7 +187,7 @@ namespace AntDesign
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
-        private PropertyInfo _fieldPropertyInfo;
+        private Func<object, object> _fieldValueGetter;
 
         private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
         private FormValidateStatus _validateStatus;
@@ -215,7 +217,12 @@ namespace AntDesign
 
             if (Form == null)
             {
-                throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
+                Form = ParentFormItem?.Form;
+            }
+
+            if (Form == null)
+            {
+                throw new InvalidOperationException("Form is null. FormItem should be childContent of Form.");
             }
 
             SetClass();
@@ -345,7 +352,7 @@ namespace AntDesign
         {
             if (_control != null) return;
 
-            _vaildateStatusChanged = () => control.UpdateStyles();
+            _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
@@ -357,13 +364,15 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
-            }
-
             _validationStateChangedHandler = (s, e) =>
             {
+                // don't show the vaidation error messages unitl the validate method being called.
+                // However, the default validation process has already been performed because that's how it's designed in the EditContext.
+                if (!Form.IsCallingValidation && !Form.ValidateOnChange)
+                {
+                    return;
+                }
+
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
 
@@ -399,6 +408,11 @@ namespace AntDesign
                 Label ??= _propertyReflector?.DisplayName;
             }
 
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
+            }
+
             SetInternalIsRequired();
         }
 
@@ -413,9 +427,9 @@ namespace AntDesign
 
             var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
 
-            if (_fieldPropertyInfo != null)
+            if (_fieldValueGetter != null)
             {
-                var propertyValue = _fieldPropertyInfo.GetValue(_fieldIdentifier.Model);
+                var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
                 var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 

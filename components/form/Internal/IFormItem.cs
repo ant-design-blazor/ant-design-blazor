@@ -14,6 +14,8 @@ namespace AntDesign.Internal
 
         public string Name { get; }
 
+        internal IForm Form { get; }
+
         internal bool IsRequiredByValidation { get; }
 
         internal void AddControl<TValue>(AntInputComponentBase<TValue> control);

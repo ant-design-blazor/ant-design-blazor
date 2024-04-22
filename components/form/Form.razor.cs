@@ -148,6 +148,12 @@ namespace AntDesign
         [Parameter]
         public bool Enhance { get; set; }
 
+        /// <summary>
+        /// Whether input elements can by default have their values automatically completed by the browser
+        /// </summary>
+        [Parameter]
+        public string Autocomplete { get; set; } = "off";
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
@@ -158,6 +164,7 @@ namespace AntDesign
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
+        private bool _isCallingValidation;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -175,6 +182,7 @@ namespace AntDesign
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
         FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
+        bool IForm.IsCallingValidation => _isCallingValidation;
 
         public event Action<IForm> OnFinishEvent;
 
@@ -267,10 +275,20 @@ namespace AntDesign
                 return;
             }
 
+            if (!_isCallingValidation && !ValidateOnChange)
+            {
+                return;
+            }
+
             _rulesValidator.ClearError(args.FieldIdentifier);
 
             var formItem = _formItems
-                .Single(t => t.GetFieldIdentifier().Equals(args.FieldIdentifier));
+                .FirstOrDefault(t => t.GetFieldIdentifier().Equals(args.FieldIdentifier));
+
+            if (formItem == null)
+            {
+                return;
+            }
 
             var result = formItem.ValidateField();
 
@@ -286,6 +304,11 @@ namespace AntDesign
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
         {
             if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                return;
+            }
+
+            if (!_isCallingValidation && !ValidateOnChange)
             {
                 return;
             }
@@ -337,7 +360,7 @@ namespace AntDesign
 
         public void Submit()
         {
-            var isValid = _editContext.Validate();
+            var isValid = Validate();
 
             if (isValid)
             {
@@ -354,7 +377,16 @@ namespace AntDesign
             }
         }
 
-        public bool Validate() => _editContext.Validate();
+        public bool Validate()
+        {
+            _isCallingValidation = true;
+
+            var result = _editContext.Validate();
+
+            _isCallingValidation = false;
+
+            return result;
+        }
 
         public void ValidationReset() => BuildEditContext();
 
