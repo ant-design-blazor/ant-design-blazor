@@ -38,9 +38,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.Build", "site\AntDesign.Docs.Build\AntDesign.Docs.Build.csproj", "{67E9D6C5-106F-412C-B43C-F096145FD8A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntDesign.TestApp", "AntDesign.TestApp", "{606789E3-AFE9-4489-9963-2B06A701D6B6}"
-	ProjectSection(SolutionItems) = preProject
-		site\AntDesign.Docs\Demos\Experimental\ReuseTabs\demo\basic.md = site\AntDesign.Docs\Demos\Experimental\ReuseTabs\demo\basic.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TestApp.Server", "tests\AntDesign.TestApp\Server\AntDesign.TestApp.Server.csproj", "{32A251DB-FF95-4325-B80F-0E3B0FA5CBC5}"
 EndProject
