@@ -389,7 +389,7 @@ namespace AntDesign
         {
             base.UpdateStyles();
             SetClasses();
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override void OnParametersSet()
