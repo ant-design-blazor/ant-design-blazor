@@ -387,25 +387,24 @@ namespace AntDesign
                     _validationMessages = new[] { Help };
                 }
 
+                _vaildateStatusChanged?.Invoke();
                 InvokeAsync(StateHasChanged);
             }
 
-            _validationStateChangedHandler = (s, e) =>
+            if (Form?.ValidateOnChange == true)
             {
-                ValidateDefault();
-            };
-
-            _validationRequestedHandler = (s, e) =>
-            {
-                ValidateDefault();
-            };
-
-            if (Form.ValidateOnChange)
-            {
+                _validationStateChangedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
                 CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
             else
             {
+                _validationRequestedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
                 CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
             }
 
