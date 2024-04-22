@@ -5,7 +5,9 @@
 <ConfigProvider>
     <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
         <Found Context="routeData">
-            <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            <CascadingValue Value="routeData">
+                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            </CascadingValue>
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>
         <NotFound>
@@ -17,7 +19,7 @@
 
 @inject ILanguageService LanguageService;
 @inject NavigationManager NavigationManager;
-@code{
+@code {
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
@@ -34,6 +36,9 @@
             }
             else
             {
+                if (new[] { "/Docs", "/Components" }.All(x => !relativeUri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+                    return;
+
                 if (segment.IsIn("zh-CN", "en-US"))
                 {
                     LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
@@ -51,7 +56,7 @@
         }
         catch
         {
-            
+
         }
     }
 }

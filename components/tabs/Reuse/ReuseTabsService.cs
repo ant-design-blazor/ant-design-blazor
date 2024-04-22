@@ -154,6 +154,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        public void Update()
+        {
+            StateHasChanged();
+        }
+
         internal void StateHasChanged()
         {
             OnStateHasChanged?.Invoke();

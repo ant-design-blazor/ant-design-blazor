@@ -139,6 +139,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                                 Title = title.Value,
                                 Order = descriptionContent.Meta.Order,
                                 Iframe = descriptionContent.Meta.Iframe,
+                                Link = descriptionContent.Meta.Link,
                                 Code = code,
                                 Description = descriptionContent.Descriptions[title.Key],
                                 Name = descriptionFile?.Name.Replace(".md", ""),
