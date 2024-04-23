@@ -20,7 +20,7 @@
 @inject NavigationManager NavigationManager;
 @code {
 
-    static string[] avaliableRoutes = new[] { "/Components", "/Charts", "/Experimental" };
+    static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
 
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
@@ -34,7 +34,6 @@
             if (string.IsNullOrWhiteSpace(segment))
             {
                 NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
-                return;
             }
             else if (segment.IsIn("zh-CN", "en-US"))
             {
@@ -52,7 +51,6 @@
                 else
                 {
                     NavigationManager.NavigateTo($"/en-US/{relativeUri}");
-                    return;
                 }
             }
         }
