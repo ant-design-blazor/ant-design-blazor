@@ -77,7 +77,7 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
                 .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
                 .ToList();
 
-            logger.LogInformation("Available resources: {AvailableResources}", availableResources.Select(x => x.ResourceName).ToArray());
+            logger.LogInformation("Available resources:" + string.Join(",", availableResources.Select(x => x.ResourceName).ToArray()));
 
             var (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
 
