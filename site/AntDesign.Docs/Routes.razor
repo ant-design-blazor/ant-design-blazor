@@ -19,6 +19,9 @@
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
 @code {
+
+    static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
+
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
@@ -30,26 +33,24 @@
         {
             if (string.IsNullOrWhiteSpace(segment))
             {
-                NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
-                return;
+                NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+            }
+            else if (segment.IsIn("zh-CN", "en-US"))
+            {
+                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
             }
             else
             {
-                if (new[] { "/Docs", "/Components" }.All(x => !relativeUri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+                if (avaliableRoutes.All(x => !relativeUri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
                     return;
 
-                if (segment.IsIn("zh-CN", "en-US"))
+                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
                 {
-                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
-                }
-                else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
-                {
-                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
+                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
                 }
                 else
                 {
-                    NavigationManager.NavigateTo($"en-US/{relativeUri}");
-                    return;
+                    NavigationManager.NavigateTo($"/en-US/{relativeUri}");
                 }
             }
         }

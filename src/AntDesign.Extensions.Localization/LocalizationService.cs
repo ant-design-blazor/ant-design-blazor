@@ -12,12 +12,9 @@ namespace AntDesign.Extensions.Localization
     {
         private CultureInfo? _currentCulture;
 
-        public CultureInfo CurrentCulture
-        {
-            get => _currentCulture ?? CultureInfo.CurrentCulture;
-        }
+        public CultureInfo CurrentCulture => _currentCulture ?? CultureInfo.CurrentCulture;
 
-        public event EventHandler<CultureInfo> LanguageChanged;
+        public event EventHandler<CultureInfo> LanguageChanged = default!;
 
         public void SetLanguage(CultureInfo culture)
         {
