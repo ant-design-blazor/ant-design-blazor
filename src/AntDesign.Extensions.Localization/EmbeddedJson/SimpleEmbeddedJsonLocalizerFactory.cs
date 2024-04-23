@@ -21,11 +21,13 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         private readonly ILoggerFactory _loggerFactory;
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
         private readonly string _resourcesRelativePath;
+        private readonly IOptions<SimpleStringLocalizerOptions> _localizationOptions;
 
         public SimpleEmbeddedJsonLocalizerFactory(IOptions<SimpleStringLocalizerOptions> localizationOptions, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
             _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? string.Empty;
+            _localizationOptions = localizationOptions;
 
             if (!string.IsNullOrEmpty(_resourcesRelativePath))
             {
@@ -46,7 +48,7 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         public IStringLocalizer Create(string baseName, string location)
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
-            var assembly = Assembly.Load(new AssemblyName(location));
+            var assembly = Assembly.Load(new AssemblyName(location)) ?? _localizationOptions.Value.ResourcesAssembly;
 
             return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);
         }
