@@ -184,7 +184,7 @@ namespace AntDesign
 
         private ClassMapper _labelClassMapper = new ClassMapper();
 
-        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;

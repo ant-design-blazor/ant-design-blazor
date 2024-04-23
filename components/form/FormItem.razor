@@ -15,7 +15,7 @@
                 {
                     <label class=@GetLabelClass() style="@LabelStyle">
                         @Label
-                        @if (Form.RequiredMark == FormRequiredMark.Optional && !IsRequired)
+                        @if (Form?.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                         {
                             <span class="ant-form-item-optional">@_locale.Optional</span>
                         }
