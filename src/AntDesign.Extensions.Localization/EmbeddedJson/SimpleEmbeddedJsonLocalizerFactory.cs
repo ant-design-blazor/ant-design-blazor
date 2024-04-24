@@ -124,7 +124,7 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         private IStringLocalizer GetCachedLocalizer(string resourceName, Assembly assembly, CultureInfo cultureInfo)
         {
             var cacheKey = GetCacheKey(resourceName, assembly, cultureInfo);
-            return _cache.GetOrAdd(cacheKey, new SimpleEmbeddedJsonStringLocalizer(resourceName, assembly, cultureInfo, _loggerFactory.CreateLogger<SimpleEmbeddedJsonStringLocalizer>()));
+            return _cache.GetOrAdd(cacheKey, new SimpleEmbeddedJsonStringLocalizer(resourceName, assembly, cultureInfo, _localizationOptions));
         }
 
         private string GetCacheKey(string resourceName, Assembly assembly, CultureInfo cultureInfo)
