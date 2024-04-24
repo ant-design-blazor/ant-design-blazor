@@ -14,33 +14,21 @@ namespace AntDesign.Extensions.Localization
 {
     public class SimpleStringLocalizerOptions : LocalizationOptions
     {
-        private Dictionary<string, IDictionary<string, string>> _cache = new();
-        private Assembly? _resourcesAssembly;
+        public Dictionary<string, IDictionary<string, string>> Resources { get; set; } = new();
+        public Assembly? ResourcesAssembly { get; set; }
 
         public IDictionary<string, string>? GetResource(string cultureName)
         {
-            return _cache.TryGetValue(cultureName, out var resource) ? resource : null;
+            return Resources.TryGetValue(cultureName, out var resource) ? resource : null;
         }
 
-        public Assembly? ResourcesAssembly
+        public static Dictionary<string, IDictionary<string, string>> BuildResources(string resourcesPath, Assembly? resourceAssembly)
         {
-            get => _resourcesAssembly;
-            set
-            {
-                _resourcesAssembly = value;
-                if (value != null)
-                {
-                    LoadResources(value);
-                }
-            }
-        }
-
-
-        private void LoadResources(Assembly resourceAssembly)
-        {
+            Dictionary<string, IDictionary<string, string>> cache = new();
+            resourceAssembly ??= Assembly.GetCallingAssembly();
             var availableResources = resourceAssembly
                .GetManifestResourceNames()
-               .Select(x => Regex.Match(x, $@"^.*{ResourcesPath}\.(.+)\.json"))
+               .Select(x => Regex.Match(x, $@"^.*{resourcesPath}\.(.+)\.json"))
                .Where(x => x.Success)
                .ToDictionary(x => x.Groups[1].Value, x => x.Value);
 
@@ -57,8 +45,10 @@ namespace AntDesign.Extensions.Localization
                     ReadCommentHandling = JsonCommentHandling.Skip,
                 }) ?? throw new InvalidOperationException($"Failed to parse JSON: '{json}'");
 
-                _cache.Add(resource.Key, kv);
+                cache.Add(resource.Key, kv);
             }
+
+            return cache;
         }
     }
 }
