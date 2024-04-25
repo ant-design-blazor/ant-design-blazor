@@ -94,6 +94,14 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        private async Task<bool> OnTabEdit(string key, string action)
+        {
+            if (action != "remove")
+                return false;
+
+            return ReuseTabsService.ClosePage(key);
+        }
+
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
         {
             if (RouteData != null)
