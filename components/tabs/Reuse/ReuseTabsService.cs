@@ -34,6 +34,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The page information list of the currently opened page, which can be used for caching and recovery
+        /// </summary>
         public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
 
         public ReuseTabsService(NavigationManager navmgr)

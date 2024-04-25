@@ -46,7 +46,7 @@ namespace AntDesign
         public bool HidePages { get; set; }
 
         /// <summary>
-        /// The routing information for the current page is a serializable version of <see cref="Microsoft.AspNetCore.Components.RouteData"/>.
+        /// The routing information for the current page, which is a serializable version of <see cref="Microsoft.AspNetCore.Components.RouteData"/>.
         /// </summary>
         [Parameter]
         public ReuseTabsRouteData ReuseTabsRouteData { get; set; }

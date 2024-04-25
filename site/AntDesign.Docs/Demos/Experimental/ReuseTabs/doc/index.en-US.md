@@ -57,6 +57,7 @@ Used to implement in-application page tabs and page caching.
 | Body | A template for a rendering class that adds styles around the page in the TabPane, passing in a context called `ReuseTabsPageItem`, where the Body is the page content | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
 | Locale | Localized object | - | - |
 | HidePages | Whether pages hidden in Tabs are used with ReusePages | bool | false |
+| ReuseTabsRouteData | The routing information for the current page, which is a serializable version of RouteData | RouteData | - |
 
 ### ReuseTabsPageAttribute attribute
 
@@ -78,14 +79,15 @@ Used to implement in-application page tabs and page caching.
 
 ### ReuseTabsService
 
-Used to control ReuseTabs
+Used to control ReuseTabs in pages
 
 | Method | Description | 
-| --- | --- | --- | --- |
+| --- | --- | 
+| Pages| 当前打开过的页面信息列表，可自行用于缓存和恢复 | 
 | CreateTab(string pageUrl, RenderFragment? title = null) | Create a tab, but do not navigate to the page, and initialize the page when you navigate to the page. |
-| ClosePage(string key) | Close the page with the specified key. | string | current path |
-| CloseOther(string key) | Close all pages except those that specify key, `Cloasable=false`, or `Pin=true`. | boolean | false |
-| CloseAll() | Close all pages except those that `Cloasable=false` or `Pin=true`. | boolean | false |
-| CloseCurrent() | Close current page. | boolean | false |
-| Update() | Update the state of current tab. When the variable referenced in `GetPageTitle()` changes, `Update()` needs to be called to update the tab display. | boolean | false |
+| ClosePage(string key) | Close the page with the specified key. |
+| CloseOther(string key) | Close all pages except those that specify key, `Cloasable=false`, or `Pin=true`. |
+| CloseAll() | Close all pages except those that `Cloasable=false` or `Pin=true`.|
+| CloseCurrent() | Close current page. |
+| Update() | Update the state of current tab. When the variable referenced in `GetPageTitle()` changes, `Update()` needs to be called to update the tab display. |
 | ReloadPage(key) | Reload the page for the specified label, allowing the page components to be reinitialized without refreshing the browser. If no key is passed, reload the current page . |
