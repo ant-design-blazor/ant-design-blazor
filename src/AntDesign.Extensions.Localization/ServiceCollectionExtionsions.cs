@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public static IServiceCollection AddInteractiveStringLocalizer(this IServiceCollection services)
         {
-            services.AddSingleton<ILocalizationService>(new LocalizationService());
+            services.AddScoped<ILocalizationService, LocalizationService>();
             services.AddTransient(typeof(IStringLocalizer<>), typeof(InteractiveStringLocalizer<>));
             return services;
         }
