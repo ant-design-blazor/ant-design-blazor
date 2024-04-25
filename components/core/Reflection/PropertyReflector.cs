@@ -11,22 +11,34 @@ namespace AntDesign.Core.Reflection
     {
         public RequiredAttribute RequiredAttribute { get; set; }
 
-        public string DisplayName { get; set; }
-
+        public string DisplayName { get => _displayName ?? GetDisplayName?.Invoke(); set => _displayName = value; }
         public string PropertyName { get; set; }
 
         public Func<object, object> GetValueDelegate { get; set; }
 
+        public Func<string> GetDisplayName { get; set; }
+
+        public MemberInfo _propertyInfo;
+        private string _displayName;
+
         public PropertyReflector(MemberInfo propertyInfo)
         {
             this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
-            this.DisplayName = propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
-                propertyInfo?.GetCustomAttribute<DisplayAttribute>(true)?.GetName();
+
+            if (propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true) is DisplayNameAttribute displayNameAttribute && !string.IsNullOrEmpty(displayNameAttribute.DisplayName))
+            {
+                _displayName = displayNameAttribute.DisplayName;
+            }
+            else if (propertyInfo?.GetCustomAttribute<DisplayAttribute>(true) is DisplayAttribute displayAttribute)
+            {
+                GetDisplayName = displayAttribute.GetName;
+            }
 
             this.PropertyName = propertyInfo?.Name;
 
             if (propertyInfo is PropertyInfo property)
             {
+                _propertyInfo = property;
                 GetValueDelegate = property.GetValue;
             }
         }

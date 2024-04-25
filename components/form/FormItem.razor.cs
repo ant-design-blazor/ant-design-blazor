@@ -421,17 +421,13 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (_propertyReflector?.DisplayName != null)
-            {
-                Label ??= _propertyReflector?.DisplayName;
-            }
-
             if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
                 _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             }
 
             SetInternalIsRequired();
+            StateHasChanged();
         }
 
         ValidationResult[] IFormItem.ValidateField()

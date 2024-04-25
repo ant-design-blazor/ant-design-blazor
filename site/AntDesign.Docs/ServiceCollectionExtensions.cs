@@ -23,11 +23,11 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             //services.AddSimpleInteractiveStringLocalizer();
-            //services.AddInteractiveStringLocalizer();
-            //services.AddLocalization(options =>
-            //{
-            //    options.ResourcesPath = "Resources";
-            //});
+            services.AddInteractiveStringLocalizer();
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
 
             //services.AddJsonLocalization(b =>
             //{
