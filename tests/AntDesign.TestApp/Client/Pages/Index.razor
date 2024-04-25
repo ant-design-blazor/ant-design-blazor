@@ -1,5 +1,5 @@
 ﻿@page "/"
-@attribute [ReuseTabsPage(Title = "Home", Closable = false, Pin = true)]
+@attribute [ReuseTabsPage(Title = "Home",  Pin = true)]
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
@@ -11,7 +11,7 @@ Welcome to your new app.
 @code{
     protected override void OnInitialized()
     {
-        ReuseTabsService.CreateTab("/counter/1",@<span>Counter 1</span>);
-        ReuseTabsService.CreateTab("/counter/2");
+        // ReuseTabsService.CreateTab("/counter/1",@<span>Counter 1</span>);
+        // ReuseTabsService.CreateTab("/counter/2");
     }
 }

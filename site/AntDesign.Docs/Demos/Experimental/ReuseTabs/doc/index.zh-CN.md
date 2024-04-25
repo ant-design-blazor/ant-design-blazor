@@ -58,6 +58,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | Body | 渲染类容的模板，可以给 TabPane 中页面周围增加样式，传入上下文为 ReuseTabsPageItem，其中的 Body 即为页面内容 | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
 | Locale | 本地化对象 | - | - |
 | HidePages | 是否隐藏在 Tabs 中的页面，搭配 ReusePages 使用 | bool | false |
+| ReuseTabsRouteData | 当前页的路由信息，RouteData 的可序列化版本，用于从静态页面传递到动态页面 | RouteData | - |
 
 ### ReuseTabsPageAttribute 特性
 
@@ -79,14 +80,15 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
 ### ReuseTabsService
 
-用于控制 ReuseTabs
+用于在页面中控制 ReuseTabs
 
-| 方法 | Description | 
+| 属性/方法 | Description | 
 | --- | --- | 
+| Pages | 当前打开过的页面信息列表，可自行用于缓存和恢复 | 
 | CreateTab(string pageUrl, RenderFragment? title = null) | 创建一个标签，但不导航到该页面，等导航到该页面时才初始化这个页面。|
-| ClosePage(string key) | 关闭指定key的页面，key 就是 url。 
-| CloseOther(string key) | 关闭除了指定key的页面，或者设置了 `Cloasable=false` 或 `Pin=true` 的页面。
-| CloseAll() | 关闭除了设置了 `Cloasable=false` 或者 `Pin=true` 的页面。  
+| ClosePage(string key) | 关闭指定key的页面，key 就是 url。 |
+| CloseOther(string key) | 关闭除了指定key的页面，或者设置了 `Cloasable=false` 或 `Pin=true` 的页面。 |
+| CloseAll() | 关闭除了设置了 `Cloasable=false` 或者 `Pin=true` 的页面。  |
 | CloseCurrent() | 关闭当前页面。 |
 | Update() | 更新 Tab 状态。当 `GetPageTitle()` 中引用的变量发生变化时，需要调用 `Update()` 来更新 tab 的显示。 |
-| ReloadPage(key) | 重新加载指定标签的页面，让页面组件重新初始化，且无需刷新浏览器。不传key时重新加载当前页面。 |
+| ReloadPage(key) | 重新加载指定标签的页面，让页面组件重新初始化，且无需刷新浏览器。不传key时重新加载当前页面。 | 

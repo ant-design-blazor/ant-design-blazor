@@ -14,7 +14,7 @@ namespace AntDesign
     {
         private readonly NavigationManager _navmgr;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
-        private IOrderedEnumerable<ReuseTabsPageItem> _pages;
+        private IReadOnlyCollection<ReuseTabsPageItem> _pages;
 
         internal event Action OnStateHasChanged;
 
@@ -34,7 +34,10 @@ namespace AntDesign
             }
         }
 
-        public IOrderedEnumerable<ReuseTabsPageItem> Pages => _pages;
+        /// <summary>
+        /// The page information list of the currently opened page, which can be used for caching and recovery
+        /// </summary>
+        public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
 
         public ReuseTabsService(NavigationManager navmgr)
         {
@@ -86,16 +89,18 @@ namespace AntDesign
         /// Close the page corresponding to the specified key
         /// </summary>
         /// <param name="key">The specified page's key</param>
-        public void ClosePage(string key)
+        public bool ClosePage(string key)
         {
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == key);
-            if (reuseTabsPageItem?.Pin == true)
+            if (reuseTabsPageItem?.Closable != true)
             {
-                return;
+                return false;
             }
 
             RemovePageBase(key);
             StateHasChanged();
+
+            return true;
         }
 
         /// <summary>
@@ -178,6 +183,7 @@ namespace AntDesign
             {
                 return;
             }
+
             if (!reuse)
             {
                 _pageMap.Clear();
@@ -276,10 +282,7 @@ namespace AntDesign
                 }
             }
 
-            if (_pageMap.Any())
-            {
-                CurrentUrl = _pages.First().Url;
-            }
+            CurrentUrl ??= _pages.FirstOrDefault()?.Url;
         }
 
         private void AddReuseTabsPageItem(Type pageType)
@@ -301,7 +304,8 @@ namespace AntDesign
             _pages = _pageMap.Values.Where(x => !x.Ignore)
                 .OrderBy(x => x.CreatedAt)
                 .ThenByDescending(x => x.Pin ? 1 : 0)
-                .ThenBy(x => x.Order);
+                .ThenBy(x => x.Order)
+                .ToList();
         }
 
         private void RemovePageBase(string key)
@@ -311,7 +315,8 @@ namespace AntDesign
             _pages = _pageMap.Values.Where(x => !x.Ignore)
                 .OrderBy(x => x.CreatedAt)
                 .ThenByDescending(x => x.Pin ? 1 : 0)
-                .ThenBy(x => x.Order);
+                .ThenBy(x => x.Order)
+                .ToList();
         }
     }
 }
