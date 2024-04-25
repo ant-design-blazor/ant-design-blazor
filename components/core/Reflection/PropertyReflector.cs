@@ -11,14 +11,14 @@ namespace AntDesign.Core.Reflection
     {
         public RequiredAttribute RequiredAttribute { get; set; }
 
-        public string DisplayName { get => _displayName ?? GetDisplayName?.Invoke(); set => _displayName = value; }
+        public string DisplayName { get => _displayName ?? _getDisplayName?.Invoke(); set => _displayName = value; }
+
         public string PropertyName { get; set; }
 
         public Func<object, object> GetValueDelegate { get; set; }
 
-        public Func<string> GetDisplayName { get; set; }
+        private Func<string> _getDisplayName;
 
-        public MemberInfo _propertyInfo;
         private string _displayName;
 
         public PropertyReflector(MemberInfo propertyInfo)
@@ -31,14 +31,13 @@ namespace AntDesign.Core.Reflection
             }
             else if (propertyInfo?.GetCustomAttribute<DisplayAttribute>(true) is DisplayAttribute displayAttribute)
             {
-                GetDisplayName = displayAttribute.GetName;
+                _getDisplayName = displayAttribute.GetName;
             }
 
             this.PropertyName = propertyInfo?.Name;
 
             if (propertyInfo is PropertyInfo property)
             {
-                _propertyInfo = property;
                 GetValueDelegate = property.GetValue;
             }
         }
