@@ -268,6 +268,7 @@ namespace AntDesign.Internal
         internal void PreventHide(bool prevent)
         {
             _isPreventHide = prevent;
+            ParentTrigger?.GetOverlayComponent().PreventHide(prevent);
         }
 
         /// <summary>
