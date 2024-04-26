@@ -16,7 +16,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
 ## 使用方法
 
-1. 修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView`。
+1. 修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView` 或者 `AuthorizeRouteView`。
 
    ```razor
    <Router AppAssembly="@typeof(Program).Assembly">
@@ -75,6 +75,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 ### IReuseTabsPage 接口
 
 | 方法 | Description | 
+| --- | --- | 
 | RenderFragment GetPageTitle() | 设置动态标题，用于需要使用模板或者加载时才确定的标题 |
 
 
