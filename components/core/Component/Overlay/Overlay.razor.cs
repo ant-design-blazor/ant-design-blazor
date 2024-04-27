@@ -206,6 +206,7 @@ namespace AntDesign.Internal
                 await InvokeAsync(StateHasChanged);
             }
 
+            ParentTrigger?.GetOverlayComponent().PreventHide(true);
             await UpdateParentOverlayState(true);
 
             await AddOverlayToBody(overlayLeft, overlayTop);
@@ -236,10 +237,18 @@ namespace AntDesign.Internal
             }
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
+            if (!force)
             {
-                return;
+                if (_isPreventHide)
+                {
+                    return;
+                }
+                else if (!IsContainTrigger(TriggerType.Click) && (_mouseInOverlay || _isChildOverlayShow))
+                {
+                    return;
+                }
             }
+
             _isOverlayFirstRender = true;
 
             _isWaitForOverlayFirstRender = false;
@@ -248,7 +257,7 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
-            await UpdateParentOverlayState(false);
+           // aait UpdateParentOverlayState(false);
 
             StateHasChanged();
 
@@ -259,6 +268,7 @@ namespace AntDesign.Internal
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
+            ParentTrigger?.GetOverlayComponent().PreventHide(false);
             StateHasChanged();
 
             if (OnHide.HasDelegate)
