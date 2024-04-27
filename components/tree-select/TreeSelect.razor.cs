@@ -15,7 +15,7 @@ using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
-    public partial class TreeSelect<TValue, TItem> : SelectBase<TValue, TItem>, ITreeSelect
+    public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
 
@@ -97,7 +97,7 @@ namespace AntDesign
         /// Specifies a method that returns the key of the node.
         /// </summary>
         [Parameter]
-        public Func<TreeNode<TItem>, object> KeyExpression { get; set; }
+        public Func<TreeNode<TItem>, string> KeyExpression { get; set; }
 
         /// <summary>
         /// Specifies a method to return the node icon.
@@ -107,7 +107,7 @@ namespace AntDesign
 
         /// <summary>
         /// Specifies a method that returns whether the expression is a leaf node.
-        /// </summary>
+        /// </summary>) == args.Node.Key).FirstOrDefault();
         [Parameter]
         public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
@@ -131,7 +131,7 @@ namespace AntDesign
 
         internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
 
-        private string[] SelectedKeys => Values?.Select(x => x?.ToString()).ToArray();
+        private string[] SelectedKeys => Values?.Select(x => GetTreeKeyFormValue(x)).ToArray();
 
         private string _dropdownStyle = string.Empty;
         private bool _multiple;
@@ -139,7 +139,7 @@ namespace AntDesign
         private Tree<TItem> _tree;
 
         [Parameter]
-        public override TValue Value
+        public override TItemValue Value
         {
             get => base.Value;
             set
@@ -159,7 +159,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public override IEnumerable<TValue> Values
+        public override IEnumerable<TItemValue> Values
         {
             get => base.Values;
             set
@@ -199,7 +199,7 @@ namespace AntDesign
             _tree?._allNodes.ForEach(x => x.SetSelected(false));
         }
 
-        private void CreateOptions(IEnumerable<TValue> data)
+        private void CreateOptions(IEnumerable<TItemValue> data)
         {
             if (IsTemplatedNodes)
             {
@@ -218,11 +218,11 @@ namespace AntDesign
             });
         }
 
-        private void CreateOptionsByTreeNode(IEnumerable<TValue> data)
+        private void CreateOptionsByTreeNode(IEnumerable<TItemValue> data)
         {
             data.ForEach(menuId =>
             {
-                var d = _tree.FindFirstOrDefaultNode(n => n.Key == menuId?.ToString());
+                var d = _tree.FindFirstOrDefaultNode(n => n.Key == GetTreeKeyFormValue(menuId));
                 if (d != null)
                 {
                     var o = CreateOption(d, true);
@@ -230,13 +230,13 @@ namespace AntDesign
             });
         }
 
-        private SelectOptionItem<TValue, TItem> CreateOption(TreeNode<TItem> data, bool append = false)
+        private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> data, bool append = false)
         {
-            var o = new SelectOptionItem<TValue, TItem>()
+            var o = new SelectOptionItem<TItemValue, TItem>()
             {
                 Label = data.Title,
                 LabelTemplate = data.TitleTemplate,
-                Value = THelper.ChangeType<TValue>(data.Key),
+                Value = THelper.ChangeType<TItemValue>(data.Key),
                 Item = data.DataItem,
                 IsAddedTag = SelectMode != SelectMode.Default,
             };
@@ -328,14 +328,14 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnRemoveSelectedAsync(SelectOptionItem<TValue, TItem> selectOption)
+        protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
 
             foreach (var item in _tree.SelectedNodesDictionary.Select(x => x.Value).ToList())
             {
-                if (item.Key == selectOption.Value?.ToString())
+                if (item.Key == GetTreeKeyFormValue(selectOption.Value))
                     item.SetSelected(false);
             }
         }
@@ -350,7 +350,7 @@ namespace AntDesign
             var key = node.Key;
             if (Value != null && Value.Equals(key))
                 return;
-            if (Values != null && Values.Select(x => x?.ToString()).Contains(key))
+            if (Values != null && Values.Select(x => GetTreeKeyFormValue(x)).Contains(key))
                 return;
 
             var option = CreateOption(node, true);
@@ -372,7 +372,7 @@ namespace AntDesign
         protected async Task OnTreeNodeUnSelect(TreeEventArgs<TItem> args)
         {
             // Prevent deselect in sigle selection mode
-            if (!Multiple && args.Node.Key == Value?.ToString())
+            if (!Multiple && args.Node.Key == GetTreeKeyFormValue(Value))
             {
                 args.Node.SetSelected(true);
                 return;
@@ -381,7 +381,7 @@ namespace AntDesign
             if (Multiple)
             {
                 // Deselect in Multiple mode
-                var node = SelectOptionItems.Where(o => o.Value?.ToString() == args.Node.Key).FirstOrDefault();
+                var node = SelectOptionItems.Where(o => GetTreeKeyFormValue(o.Value) == args.Node.Key).FirstOrDefault();
                 if (node != null)
                 {
                     await SetValueAsync(node);
@@ -417,11 +417,11 @@ namespace AntDesign
             {
                 if (_selectedValues == null)
                     return;
-                _tree._allNodes.ForEach(n => n.SetSelected(_selectedValues.Select(x => x?.ToString()).Contains(n.Key)));
+                _tree._allNodes.ForEach(n => n.SetSelected(_selectedValues.Select(x => GetTreeKeyFormValue(x)).Contains(n.Key)));
             }
             else
             {
-                _tree?.FindFirstOrDefaultNode(node => node.Key == Value?.ToString())?.SetSelected(true);
+                _tree?.FindFirstOrDefaultNode(node => node.Key == GetTreeKeyFormValue(Value))?.SetSelected(true);
             }
         }
 
@@ -470,7 +470,7 @@ namespace AntDesign
             }
             else
             {
-                var data = _tree?._allNodes.FirstOrDefault(x => x.Key == Value?.ToString());
+                var data = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(Value));
                 if (data != null)
                 {
                     var o = CreateOption(data, true);
@@ -496,6 +496,28 @@ namespace AntDesign
         void ITreeSelect.UpdateValueAfterDataSourceChanged()
         {
             UpdateValueAfterDataSourceChanged();
+        }
+
+        private string GetTreeKeyFormValue(TItemValue value)
+        {
+            if (value is string key)
+                return key;
+
+            if (DataSource == null)
+                return null;
+
+            var item = DataSource.Where(x => ItemValue(x).Equals(value)).FirstOrDefault();
+            if (item == null)
+                return null;
+
+            var node = _tree._allNodes.Where(x => x.DataItem.Equals(item)).FirstOrDefault();
+
+            if (node == null)
+                return null;
+
+            KeyExpression ??= node => node.DataItem.ToString();
+
+            return KeyExpression.Invoke(node);
         }
     }
 }

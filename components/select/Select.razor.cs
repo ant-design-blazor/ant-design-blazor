@@ -74,7 +74,7 @@ namespace AntDesign
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (DataSourceEqualityComparer is null)
                 {
-                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
+                    DataSourceEqualityComparer = this;
                 }
             }
             return _dataSourceItemShallowCopyMehtod;
@@ -320,12 +320,16 @@ namespace AntDesign
         /// <summary>
         /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
         /// </summary>
-        [Parameter] public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
+        [Obsolete("Use ItemLabel instead")]
+        [Parameter]
+        public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
 
         /// <summary>
         /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
         /// </summary>
-        [Parameter] public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
+        [Obsolete("Use ItemValue instead")]
+        [Parameter]
+        public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
 
         /// <summary>
         /// Specifies predicate for disabled options
@@ -387,8 +391,6 @@ namespace AntDesign
 
         private string _labelName;
 
-        internal Func<TItem, string> _getLabel;
-
         private string _groupName = string.Empty;
 
         private Func<TItem, string> _getGroup;
@@ -399,7 +401,6 @@ namespace AntDesign
 
         private string _valueName;
 
-        internal Func<TItem, TItemValue> _getValue;
 
         private bool _showArrowIcon = true;
 
@@ -1883,6 +1884,7 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
         }
+
 
         #endregion Events
     }

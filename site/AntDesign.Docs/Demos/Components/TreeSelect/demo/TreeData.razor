@@ -1,4 +1,4 @@
-<TreeSelect TItem="Data" TValue="int"
+<TreeSelect TItem="Data" TItemValue="int"
             Style="width:100%;"
             DataSource="treeData"
             @bind-Values="@values"
@@ -8,7 +8,7 @@
             TreeDefaultExpandAll
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
-            KeyExpression="node=>node.DataItem.Key"
+            KeyExpression="node=>node.DataItem.Key.ToString()"
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
 

@@ -22,7 +22,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>
+    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected const string DefaultWidth = "width: 100%;";
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
@@ -54,8 +54,10 @@ namespace AntDesign
 
         protected TItemValue[] _selectedValues;
 
+        protected Func<TItem, string> _getLabel;
         protected Action<TItem, string> _setLabel;
 
+        protected Func<TItem, TItemValue> _getValue;
         protected Action<TItem, TItemValue> _setValue;
 
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
@@ -442,6 +444,16 @@ namespace AntDesign
                 _valueOnClear = value;
             }
         }
+
+        /// <summary>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, string> ItemLabel { get => _getLabel; set => _getLabel = value; }
+
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ItemValue { get => _getValue; set => _getValue = value; }
 
         /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.
@@ -1056,5 +1068,30 @@ namespace AntDesign
         }
 
         protected abstract void SetClassMap();
+
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (_getLabel is null)
+            {
+                if (_getValue is null)
+                {
+                    return x.ToString() == y.ToString();
+                }
+                return x.ToString() == y.ToString()
+                    && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+            }
+            if (_getValue is null)
+            {
+                return _getLabel(x) == _getLabel(y);
+            }
+            return _getLabel(x) == _getLabel(y)
+                && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

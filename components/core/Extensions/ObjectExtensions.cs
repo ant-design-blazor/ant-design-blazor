@@ -8,7 +8,7 @@ using System.Text;
 
 namespace AntDesign.Core.Extensions
 {
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         public static void SetValue(this object obj, string name, object value)
         {
