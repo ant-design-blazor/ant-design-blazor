@@ -674,7 +674,10 @@ namespace AntDesign
         {
             if (ChangeOnClose && _duringManualInput)
             {
-                ChangeValue(_pickerStatus[index].SelectedValue.Value);
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value);
+                }
             }
         }
 
