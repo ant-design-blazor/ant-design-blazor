@@ -1,8 +1,9 @@
-<TreeSelect TItem="Data" TItemValue="int"
+<TreeSelect
             Style="width:100%;"
             DataSource="treeData"
             @bind-Values="@values"
             Placeholder="Please select"
+            ItemValue="c=>c.Key"
             AllowClear
             Multiple
             TreeDefaultExpandAll

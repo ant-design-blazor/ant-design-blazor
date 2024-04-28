@@ -181,6 +181,8 @@ namespace AntDesign
                     ClearOptions();
                 }
 
+                _selectedValues ??= [];
+
                 UpdateValuesSelection();
 
                 if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
@@ -504,11 +506,7 @@ namespace AntDesign
             if (DataSource == null)
                 return null;
 
-            var item = DataSource.Where(x => ItemValue(x).Equals(value)).FirstOrDefault();
-            if (item == null)
-                return null;
-
-            var node = _tree._allNodes.Where(x => x.DataItem.Equals(item)).FirstOrDefault();
+            var node = _tree._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
 
             if (node == null)
                 return null;

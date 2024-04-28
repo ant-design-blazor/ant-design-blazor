@@ -1,5 +1,4 @@
-﻿<TreeSelect TItem="Data"
-            TItemValue="int"
+﻿<TreeSelect 
             Style="width:100%;"
             DataSource="treeData"
             @bind-Value="@value"
@@ -8,6 +7,7 @@
             Multiple
             TreeCheckable
             TreeDefaultExpandAll
+            ItemValue="node=> node.Key"
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
             KeyExpression="node=>node.DataItem.Key"
@@ -17,7 +17,7 @@
 value: @value
 
 @code {
-  private int value;
+  private string value;
 
   Data[] treeData = new Data[]
   {

@@ -17,6 +17,7 @@ using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using AntDesign.Core.Helpers.MemberPath;
 
 #endregion using block
 
@@ -59,6 +60,10 @@ namespace AntDesign
 
         protected Func<TItem, TItemValue> _getValue;
         protected Action<TItem, TItemValue> _setValue;
+
+
+        private string _labelName;
+        private string _valueName;
 
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
 
@@ -454,6 +459,39 @@ namespace AntDesign
         /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
         /// </summary>
         [Parameter] public Func<TItem, TItemValue> ItemValue { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// The name of the property to be used for the label.
+        /// </summary>
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
+                }
+                _labelName = value;
+            }
+        }
+
+        /// <summary>
+        /// The name of the property to be used for the value.
+        /// </summary>
+        [Parameter]
+        public string ValueName
+        {
+            get => _valueName;
+            set
+            {
+                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
+                _valueName = value;
+            }
+        }
 
         /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.

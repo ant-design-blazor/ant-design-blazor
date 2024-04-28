@@ -169,24 +169,7 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the label.
-        /// </summary>
-        [Parameter]
-        public string LabelName
-        {
-            get => _labelName;
-            set
-            {
-                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
-                {
-                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
-                }
-                _labelName = value;
-            }
-        }
-
+  
         /// <summary>
         /// Is used to customize the label style.
         /// </summary>
@@ -282,21 +265,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the value.
-        /// </summary>
-        [Parameter]
-        public string ValueName
-        {
-            get => _valueName;
-            set
-            {
-                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
-                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
-                _valueName = value;
-            }
-        }
-
         private bool _valueHasChanged;
 
         /// <summary>
@@ -389,8 +357,6 @@ namespace AntDesign
         private bool _isToken;
         private bool _defaultActiveFirstOption;
 
-        private string _labelName;
-
         private string _groupName = string.Empty;
 
         private Func<TItem, string> _getGroup;
@@ -398,8 +364,6 @@ namespace AntDesign
         private string _disabledName;
 
         private Func<TItem, bool> _getDisabled;
-
-        private string _valueName;
 
 
         private bool _showArrowIcon = true;
