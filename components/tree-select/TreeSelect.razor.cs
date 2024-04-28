@@ -131,8 +131,6 @@ namespace AntDesign
 
         internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
 
-        private string[] SelectedKeys => Values?.Select(x => GetTreeKeyFormValue(x)).ToArray();
-
         private string _dropdownStyle = string.Empty;
         private bool _multiple;
         private readonly string _dir = "ltr";
