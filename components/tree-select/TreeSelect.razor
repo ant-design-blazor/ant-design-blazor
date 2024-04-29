@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits SelectBase<string, TItem>
+@inherits SelectBase<TItemValue, TItem>
+@typeparam TItemValue
 @typeparam TItem
 
 @using AntDesign.Internal
@@ -75,7 +76,7 @@
                   <SelectContent Prefix="@ClassPrefix"
                                  RefBack="@context"
                                  @ref="_selectContent"
-                                 TItemValue="string"
+                                 TItemValue="TItemValue"
                                  TItem="TItem"
                                  SearchValue="@_searchValue"
                                  SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
