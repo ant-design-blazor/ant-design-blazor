@@ -271,16 +271,16 @@ namespace AntDesign
         {
             validationErrorMessage = null;
 
-            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
-            {
-                result = Value;
-                return true;
-            }
+            //if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
+            //{
+            //    result = Value;
+            //    return true;
+            //}
 
-            if (value == "-" || value == "+")
-            {
-                value = "0";
-            }
+            //if (value == "-" || value == "+")
+            //{
+            //    value = "0";
+            //}
             if (string.IsNullOrWhiteSpace(value))
             {
                 result = default;
