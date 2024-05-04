@@ -12,7 +12,6 @@ using AntDesign.JsInterop;
 using OneOf;
 using System.Linq;
 using AntDesign.Core.Extensions;
-using AntDesign.Filters;
 
 namespace AntDesign
 {
