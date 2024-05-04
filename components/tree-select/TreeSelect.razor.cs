@@ -47,6 +47,12 @@ namespace AntDesign
 
         [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
 
+        /// <summary>
+        ///  Customize the icon templates
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
+
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
 
         [Parameter] public bool ShowArrowIcon { get; set; } = true;
@@ -80,6 +86,12 @@ namespace AntDesign
         [Parameter] public string DropdownStyle { get; set; }
 
         [Parameter] public bool ShowTreeLine { get; set; }
+
+        /// <summary>
+        /// show treeNode icon icon
+        /// </summary>
+        [Parameter]
+        public bool ShowIcon { get; set; }
 
         [Parameter] public bool ShowLeafIcon { get; set; }
 
