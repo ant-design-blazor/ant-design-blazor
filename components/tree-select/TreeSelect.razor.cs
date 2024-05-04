@@ -208,7 +208,10 @@ namespace AntDesign
         {
             SelectOptionItems.Clear();
             SelectedOptionItems.Clear();
-            _tree?._allNodes.ForEach(x => x.SetSelected(false));
+            if (TreeCheckable)
+                _tree?._allNodes.ForEach(x => x.SetChecked(false));
+            else
+                _tree?._allNodes.ForEach(x => x.SetSelected(false));
         }
 
         private void CreateOptions(IEnumerable<TItemValue> data)
@@ -344,19 +347,23 @@ namespace AntDesign
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
-
-            foreach (var item in _tree.SelectedNodesDictionary.Select(x => x.Value).ToList())
-            {
-                if (item.Key == GetTreeKeyFormValue(selectOption.Value))
-                    item.SetSelected(false);
-            }
+            var key = GetTreeKeyFormValue(selectOption.Value);
+            var item = _tree._allNodes.Where(x => x.Key == key).FirstOrDefault();
+            if (item == null)
+                return;
+            if (TreeCheckable)
+                item.SetChecked(false);
+            else
+                item.SetSelected(false);
         }
 
         private async Task OnTreeNodeClick(TreeEventArgs<TItem> args)
         {
+            if (TreeCheckable)
+                return;
             var node = args.Node;
 
-            if (!TreeCheckable && !node.Selected)
+            if (!node.Selected)
                 return;
 
             var key = node.Key;
@@ -383,6 +390,8 @@ namespace AntDesign
 
         protected async Task OnTreeNodeUnSelect(TreeEventArgs<TItem> args)
         {
+            if (TreeCheckable)
+                return;
             // Prevent deselect in sigle selection mode
             if (!Multiple && args.Node.Key == GetTreeKeyFormValue(Value))
             {
@@ -401,10 +410,19 @@ namespace AntDesign
             }
         }
 
-        private async Task OnTreeCheck(TreeEventArgs<TItem> args)
+        private void OnTreeCheckedKeysChanged(string[] checkedKeys)
         {
-            var option = CreateOption(args.Node, true);
-            await SetValueAsync(option);
+            if (!TreeCheckable)
+                return;
+
+            if (checkedKeys is not { Length: > 0 })
+            {
+                Values = [];
+                return;
+            }
+
+            var checkedNodes = _tree._allNodes.Where(x => checkedKeys.Contains(x.Key));
+            Values = checkedNodes.Select(node => _getValue(node.DataItem)).ToArray();
         }
 
         protected async Task SetDropdownStyleAsync()
@@ -427,9 +445,17 @@ namespace AntDesign
 
             if (Multiple)
             {
-                if (_selectedValues == null)
+                if (Values == null)
                     return;
-                _tree._allNodes.ForEach(n => n.SetSelected(_selectedValues.Select(x => GetTreeKeyFormValue(x)).Contains(n.Key)));
+                var checkedKeys = Values.Select(x => GetTreeKeyFormValue(x));
+                if (TreeCheckable)
+                {
+                    _tree._allNodes.ForEach(n => n.SetChecked(checkedKeys.Contains(n.Key)));
+                }
+                else
+                {
+                    _tree._allNodes.ForEach(n => n.SetSelected(checkedKeys.Contains(n.Key)));
+                }
             }
             else
             {

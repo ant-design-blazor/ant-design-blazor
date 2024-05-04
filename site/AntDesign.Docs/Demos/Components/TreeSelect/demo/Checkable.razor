@@ -1,7 +1,7 @@
 ﻿<TreeSelect 
             Style="width:100%;"
             DataSource="treeData"
-            @bind-Value="@value"
+            @bind-Values="@values"
             Placeholder="Please select"
             AllowClear
             Multiple
@@ -14,10 +14,10 @@
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
 
-value: @value
+@JsonSerializer.Serialize(values);
 
 @code {
-  private string value;
+    private IEnumerable<string> values = new[] { "1", "11" };
 
   Data[] treeData = new Data[]
   {
