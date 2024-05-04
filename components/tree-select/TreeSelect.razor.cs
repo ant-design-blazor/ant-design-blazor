@@ -135,6 +135,12 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
+        /// <summary>
+        /// (Controlled) expands the specified tree node
+        /// </summary>
+        [Parameter]
+        public string[] ExpandedKeys { get; set; }
+
         private const string ClassPrefix = "ant-select";
 
         private bool IsMultiple => Multiple || TreeCheckable;
