@@ -277,10 +277,10 @@ namespace AntDesign
             //    return true;
             //}
 
-            //if (value == "-" || value == "+")
-            //{
-            //    value = "0";
-            //}
+            if (value == "-" || value == "+")
+            {
+                value = "0";
+            }
             if (string.IsNullOrWhiteSpace(value))
             {
                 result = default;
