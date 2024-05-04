@@ -1,0 +1,22 @@
+﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" EnableFlags @bind-Value="_value" />
+Value: @Convert.ToUInt64(_value), @_value
+
+
+@using System.ComponentModel.DataAnnotations
+@code {
+    void handleChange(Province province)
+    {
+        Console.WriteLine(province);
+    }
+    Province _value = Province.Jiangsu | Province.Zhejiang;
+    [Flags]
+    public enum Province
+    {
+        [Display(Name = "❤️Shanghai")]
+        Shanghai = 1,
+
+        Zhejiang = 2,
+
+        Jiangsu = 4
+    }
+}

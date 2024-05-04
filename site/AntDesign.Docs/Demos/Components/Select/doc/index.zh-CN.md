@@ -88,6 +88,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | ValueOnClear | 按下清除按钮时，值将设置为 ValueOnClear 中设置的值. | TItemValue | - | 0.11 |
 | ValueProperty | 指定 option 对象的 value 属性. | `Func<TItem, TItemValue>` | - |
 
+### EnumSelect props
+
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| EnableFlags  | 设为true支持使用'@bind-Value'代替'@bind-Values'来设置或获取多选值                    | bool        | false  |      |
+
 ### SelectOption props
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
