@@ -402,7 +402,15 @@ namespace AntDesign
         {
             if (!TreeCheckable)
                 return;
-            Values = checkedKeys.Select(k => THelper.ChangeType<TItemValue>(k)).ToArray();
+
+            if (checkedKeys is not { Length: > 0 })
+            {
+                Values = [];
+                return;
+            }
+
+            var checkedNodes = _tree._allNodes.Where(x => checkedKeys.Contains(x.Key));
+            Values = checkedNodes.Select(node => _getValue(node.DataItem)).ToArray();
         }
 
         protected async Task SetDropdownStyleAsync()
