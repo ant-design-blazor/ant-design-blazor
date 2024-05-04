@@ -268,10 +268,9 @@ namespace AntDesign.Internal
 
         internal void PreventHide(bool prevent)
         {
-            if (!prevent)
+            if (!prevent && _childrenToShow.Count > 0)
             {
-                if (_childrenToShow.Count > 0)
-                    return;
+                return;
             }
             _isPreventHide = prevent;
         }
