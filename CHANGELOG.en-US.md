@@ -43,6 +43,7 @@ timeline: true
   - 🆕 feat(module: reuse-tabs): make the Page of ReuseTabsService public. [#3800](https://github.com/ant-design-blazor/ant-design-blazor/pull/3800) [@ElderJames](https://github.com/ElderJames)
 - 🆕 feat(i18n): implement dynamic IStringLocalizer. [#3804](https://github.com/ant-design-blazor/ant-design-blazor/pull/3804) [@ElderJames](https://github.com/ElderJames)
 - Select
+  - 🆕 feat(module: EnumSelect): Support using 'bind-Value' to get or set multiple enumeration values with the Flags attribute
   - 🐞 Fix List order after datasource change. [#3806](https://github.com/ant-design-blazor/ant-design-blazor/pull/3806) [@miguelkmarques](https://github.com/miguelkmarques)
   - 📖 docs: add search sample for table select demo. [#3797](https://github.com/ant-design-blazor/ant-design-blazor/pull/3797) [@ElderJames](https://github.com/ElderJames)
 - 🆕 feat(module: modal): support updaet loading state of the confirm button. [#3796](https://github.com/ant-design-blazor/ant-design-blazor/pull/3796) [@ElderJames](https://github.com/ElderJames)
