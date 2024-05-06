@@ -13,11 +13,17 @@ namespace AntDesign
 {
     public static class EnumHelper<T>
     {
+        private static readonly MethodInfo _enumHasFlag = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
+
         private static readonly Func<T, T, T> _aggregateFunction;
+        private static readonly Func<T, T, bool> _hasFlagFunction;
 
         private static readonly IEnumerable<T> _valueList;
         private static readonly IEnumerable<(T Value, string Label)> _valueLabelList;
         private static readonly Type _enumType;
+        private static readonly bool _isFlags;
+
+        public static bool IsFlags => _isFlags;
 
         static EnumHelper()
         {
@@ -25,6 +31,8 @@ namespace AntDesign
             _aggregateFunction = BuildAggregateFunction();
             _valueList = Enum.GetValues(_enumType).Cast<T>();
             _valueLabelList = _valueList.Select(value => (value, GetDisplayName(value)));
+            _isFlags = _enumType.GetCustomAttribute<FlagsAttribute>() != null;
+            _hasFlagFunction = BuildHasFlagFunction();
         }
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type
@@ -39,12 +47,15 @@ namespace AntDesign
 
         public static IEnumerable<T> Split(object enumValue)
         {
-            var str = enumValue?.ToString();
-            if (string.IsNullOrEmpty(str))
+            if (enumValue == null)
             {
                 return Array.Empty<T>();
             }
-            return str.Split(',').Select(x => (T)Enum.Parse(_enumType, x)).ToArray();
+            if (enumValue is string enumString)
+            {
+                return _valueList.Where(value => enumString.Split(",").Contains(Enum.GetName(_enumType, value)));
+            }
+            return _valueList.Where(value => _hasFlagFunction((T)enumValue, value));
         }
 
         public static IEnumerable<T> GetValueList()
@@ -76,6 +87,15 @@ namespace AntDesign
                     Expression.Convert(param2, underlyingType)),
                 type);
             return Expression.Lambda<Func<T, T, T>>(body, param1, param2).Compile();
+        }
+
+        private static Func<T, T, bool> BuildHasFlagFunction()
+        {
+            var type = typeof(T);
+            var param1 = Expression.Parameter(type);
+            var param2 = Expression.Parameter(type);
+            var body = Expression.Call(param1, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
+            return Expression.Lambda<Func<T, T, bool>>(body, param1, param2).Compile();
         }
     }
 }
