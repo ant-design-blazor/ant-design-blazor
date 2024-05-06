@@ -15,6 +15,44 @@ timeline: true
 
 ---
 
+### 0.19.0
+
+`2024-5-7` 
+
+- TreeSelect
+  - 🆕 新增 TreeSelect ExpandedKeys 属性。[#3844](https://github.com/ant-design-blazor/ant-design-blazor/pull/3844) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 TreeSelect  设置TreeChecable 时勾选无效的问题。[#3839](https://github.com/ant-design-blazor/ant-design-blazor/pull/3839) [@pankey888](https://github.com/pankey888)
+  - 🆕 新增 TreeSelect TitleIconTemplate 属性。[#3834](https://github.com/ant-design-blazor/ant-design-blazor/pull/3834) [@pankey888](https://github.com/pankey888)
+  - 🆕 新增 TreeSelect 泛型值支持。[#3831](https://github.com/ant-design-blazor/ant-design-blazor/pull/3831) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 TreeSelect 在重新渲染时树节点会收取。[#3827](https://github.com/ant-design-blazor/ant-design-blazor/pull/3827) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 InputNumber 粘贴带有分隔符的数字时无法绑定。[#3841](https://github.com/ant-design-blazor/ant-design-blazor/pull/3841) [@HuaFangYun](https://github.com/HuaFangYun)
+- 🐞 修复 Overlay 多子级关闭时，父级联动冲突。[#3838](https://github.com/ant-design-blazor/ant-design-blazor/pull/3838) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 DatePicker 在使用 ShowTime 时，Now 按钮无法使用，并在关闭时更改。[#3830](https://github.com/ant-design-blazor/ant-design-blazor/pull/3830) [@agolub-s](https://github.com/agolub-s)
+- 🐞 修复 ReuseTabs 不应该自动跳转到第一个固定的tab。[#3825](https://github.com/ant-design-blazor/ant-design-blazor/pull/3825) [@ElderJames](https://github.com/ElderJames)
+- Form
+  - 🆕 新增 Form 模型 DataAnnotations 的本地化支持。[#3823](https://github.com/ant-design-blazor/ant-design-blazor/pull/3823) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 null 引用异常。[#3815](https://github.com/ant-design-blazor/ant-design-blazor/pull/3815) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Form 当没有设置"变更时验证"，在提交前不应该验证。[#3812](https://github.com/ant-design-blazor/ant-design-blazor/pull/3812) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Form 动态模型的必填数据声明失效。[#3811](https://github.com/ant-design-blazor/ant-design-blazor/pull/3811) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Form 的 IsModified 属性在 ValidateOnChange 时失效。[#3795](https://github.com/ant-design-blazor/ant-design-blazor/pull/3795) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 动态字段的 Rules 验证方式。[#3791](https://github.com/ant-design-blazor/ant-design-blazor/pull/3791) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 FormItem 绑定字典类型判断。[#3787](https://github.com/ant-design-blazor/ant-design-blazor/pull/3787) [@tiansfather](https://github.com/tiansfather)
+  - 🔥 支持静态 SSR 模型绑定和验证。[#3580](https://github.com/ant-design-blazor/ant-design-blazor/pull/3580) [@ElderJames](https://github.com/ElderJames)
+- ReuseTabs 
+  - 📖 增加ReuseTabs 文档和示例。[#3802](https://github.com/ant-design-blazor/ant-design-blazor/pull/3802) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 ReuseTabs 公开 ReuseTabsService 的 Pages 属性，以供持久化等场景。[#3800](https://github.com/ant-design-blazor/ant-design-blazor/pull/3800) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增交互式本地化服务。[#3804](https://github.com/ant-design-blazor/ant-design-blazor/pull/3804) [@ElderJames](https://github.com/ElderJames)
+- Select
+  - 🐞 修复 Select 选项列表随数据源变更重新排序。[#3806](https://github.com/ant-design-blazor/ant-design-blazor/pull/3806) [@miguelkmarques](https://github.com/miguelkmarques)
+  - 📖 给 TableSelect 示例增加查询功能。[#3797](https://github.com/ant-design-blazor/ant-design-blazor/pull/3797) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Modal 支持更新确认按钮的Loading状态。[#3796](https://github.com/ant-design-blazor/ant-design-blazor/pull/3796) [@ElderJames](https://github.com/ElderJames)
+- Modal
+  - 🛠 重构 Modal 的 ModalService 中创建模态框的方法同步地返回 ModalRef。[#3794](https://github.com/ant-design-blazor/ant-design-blazor/pull/3794) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 Modal 自定义 Header。[7be4807](https://github.com/ant-design-blazor/ant-design-blazor/commit/7be4807) [@Pat Hartl](https://github.com/Pat Hartl)
+- 🆕 新增 Checkbox 支持泛型值绑定。[#3715](https://github.com/ant-design-blazor/ant-design-blazor/pull/3715) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(i18n): resource assembly loading incorrectly。[#3813](https://github.com/ant-design-blazor/ant-design-blazor/pull/3813) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复IsExternalInit 的访问级别，避免与第三方库冲突。[#3799](https://github.com/ant-design-blazor/ant-design-blazor/pull/3799) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.18.3
 
 `2024-4-9` 
