@@ -88,12 +88,6 @@ Select component to select value from options.
 | ValueOnClear | When Clear button is pressed, Value will be set to whatever is set in ValueOnClear. | TItemValue | - | 0.11 |
 | ValueProperty | Specifies the value property in the option object. | Func<TItem, TItemValue> | - |
 
-### EnumSelect props
-
-| Property | Description | Type | Default | Version |
-| --- | --- | --- | --- | --- |
-| EnableFlags  | Set to true to support using '@bind-Value' instead of '@bind-Values' to get or set the values of multiple options.                    | bool        | false  |      |
-
 ### SelectOption props
 
 | Property | Description | Type | Default | Version |

@@ -7,95 +7,47 @@ using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace AntDesign
 {
     public class EnumSelect<TEnum> : Select<TEnum, TEnum>
     {
+        private bool _isFlags;
+
         public EnumSelect()
         {
             if (THelper.GetUnderlyingType<TEnum>().IsEnum)
             {
                 DataSource = EnumHelper<TEnum>.GetValueList();
+                _isFlags = EnumHelper<TEnum>.IsFlags;
             }
         }
 
-        protected override void OnInitialized()
-        {
-            if (EnableFlags)
-            {
-                var attr = typeof(TEnum).GetCustomAttribute<FlagsAttribute>();
-                if (attr != null)
-                {
-                    Mode = SelectModeExtensions.Multiple;
-                }
-                else
-                {
-                    EnableFlags = false;
-                }
-            }
-            base.OnInitialized();
-        }
-
-        /// <summary>
-        /// Set to true to support using '@bind-Value' instead of '@bind-Values' to get or set the values of multiple options
-        /// </summary>
-        [Parameter]
-        public bool EnableFlags { get; set; } = false;
-
-        /// <summary>
-        /// Get or set the selected value.
-        /// </summary>
         [Parameter]
         public override TEnum Value
         {
             get => base.Value;
             set
             {
-                if (EnableFlags)
+                if (_isFlags)
                 {
-                    List<TEnum> values = [];
-                    var val = Convert.ToUInt64(value);
-                    foreach (var item in DataSource)
-                    {
-                        var item_val = Convert.ToUInt64(item);
-                        if ((item_val & val) == item_val)
-                        {
-                            values.Add(item);
-                        }
-                    }
-                    base.Values = [.. values];
+                    base.Values = EnumHelper<TEnum>.Split(value).ToArray();
                 }
                 base.Value = value;
             }
         }
 
-        /// <summary>
-        /// Get or set the selected values.
-        /// </summary>
         [Parameter]
         public override IEnumerable<TEnum> Values
         {
             get => base.Values;
             set
             {
-                if (EnableFlags)
+                if (_isFlags)
                 {
-                    var oldVal = Convert.ToUInt64(base.Value);
-                    ulong newVal = 0;
-                    foreach (var item in value)
-                    {
-                        newVal += Convert.ToUInt64(item);
-                    }
-                    if (newVal == 0)
-                        base.Value = default;
-                    else
-                        base.Value = THelper.ChangeType<TEnum>(newVal);
-                    if (oldVal != newVal)
-                    {
-                        ValueChanged.InvokeAsync(base.Value);
-                    }
+                    base.Value = (TEnum)EnumHelper<TEnum>.Combine(value) ?? default;
                 }
                 base.Values = value;
             }

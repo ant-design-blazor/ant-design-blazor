@@ -7,12 +7,8 @@ title:
 
 ## zh-CN
 
-使用`@bind-Value`设置或获取多选值。
-
-> 注意：需要启用`EnableFlags`，并具有`FlagsAttribute`属性。
+当枚举类型有 `FlagsAttribute` 特性时，可使用 `@bind-Value` 绑定多选值。
 
 ## en-US
 
-Use `@bind-Value` to set or get multiple selected values.
-
-> Note: Need to enable `EnableFlags` and have the `FlagsAttribute` applied to your enum.
+When the enum type have the `FlagsAttribute`, you can use `@bind-Value` to bind multiple selected values.

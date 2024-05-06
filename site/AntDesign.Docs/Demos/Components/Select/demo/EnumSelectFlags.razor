@@ -1,6 +1,6 @@
-﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" @bind-Values="_values" Mode="multiple" />
-Values: @JsonSerializer.Serialize(_values)
+﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" @bind-Value="_value" Mode="multiple" />
 
+Value: @Convert.ToUInt64(_value), @_value
 
 @using System.ComponentModel.DataAnnotations
 @code {
@@ -8,8 +8,10 @@ Values: @JsonSerializer.Serialize(_values)
     {
         Console.WriteLine(province);
     }
-    IEnumerable<Province> _values = [Province.Jiangsu, Province.Zhejiang];
 
+    Province _value = Province.Jiangsu | Province.Zhejiang;
+
+    [Flags]
     public enum Province
     {
         [Display(Name = "❤️Shanghai")]
