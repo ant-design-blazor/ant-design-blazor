@@ -17,7 +17,7 @@ namespace AntDesign
     public partial class Tree<TItem> : AntDomComponentBase
     {
         [CascadingParameter(Name = "TreeSelect")]
-        public TreeSelect<TItem> TreeSelect { get; set; }
+        public ITreeSelect TreeSelect { get; set; }
 
         #region fields
 

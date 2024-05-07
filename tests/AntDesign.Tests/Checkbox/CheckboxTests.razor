@@ -7,7 +7,7 @@
 		cut.MarkupMatches(
 			@<label class="ant-checkbox-wrapper" for:ignore>
 				<span class="ant-checkbox">
-					<input id:ignore type="checkbox" class="ant-checkbox-input">
+					<input id:ignore type="checkbox" value="true" class="ant-checkbox-input">
 					<span class="ant-checkbox-inner"></span>
 				</span>
 				<span>Test</span>
@@ -25,8 +25,8 @@
 		//Act
 		inputElement.Change(true);
 		
-                //Assert
-                checkboxComponent.Checked.Should().BeTrue();
+        //Assert
+        checkboxComponent.Checked.Should().BeTrue();
 		checkboxComponent.Checked.Should().Be(!oldValue);
 	}
 
@@ -39,8 +39,8 @@
 		var inputElement = cut.Find("[type=checkbox]");		
 		//Act
 		inputElement.Change(true);
-                //Assert
-                isChecked.Should().BeTrue();
+        //Assert
+        isChecked.Should().BeTrue();
 	}
 
 	[Fact]
@@ -52,8 +52,8 @@
 		var inputElement = cut.Find("[type=checkbox]");		
 		//Act
 		inputElement.Change(true);
-                //Assert
-                isChecked.Should().BeTrue();
+        //Assert
+        isChecked.Should().BeTrue();
 	}
 
 	[Fact]

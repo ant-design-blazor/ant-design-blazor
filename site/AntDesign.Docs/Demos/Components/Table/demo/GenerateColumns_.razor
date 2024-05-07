@@ -87,13 +87,13 @@
                     }
                     <Tag Color="@color">@tag</Tag>
                 }
-            </span>;
+            </span>
+    ;
 
             return;
         }
 
-        // You can use the `SetValue` extension method to set parameters for columns.
-        column.SetValue("Sortable", true);
-        column.SetValue("Filterable", true);
+        ((dynamic)column).Sortable = true;
+        ((dynamic)column).Filterable= true;
     }
 }

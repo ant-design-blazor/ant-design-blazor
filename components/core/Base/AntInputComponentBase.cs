@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
@@ -310,8 +311,15 @@ namespace AntDesign
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
                 Value = _getValueDelegate.Invoke(Form.Model);
 
-                var lambda = PathHelper.GetLambda(dataIndex, type);
-                _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
+                {
+                    var perpertyInfo = lambda.Member as PropertyInfo;
+                    _propertyReflector = new PropertyReflector(perpertyInfo);
+                }
+                else
+                {
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                }
             }
 
             FormItem?.AddControl(this);

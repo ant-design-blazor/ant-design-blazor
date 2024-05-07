@@ -43,6 +43,8 @@ namespace AntDesign.Tests.Core.Helpers
         {
             new object[] { null, Array.Empty<TestColor>() },
             new object[] { (int)TestColor.Red, new TestColor[] { TestColor.Red } },
+            new object[] { (int)(TestColor.Red | TestColor.Green), new TestColor[] { TestColor.Red ,TestColor.Green } },
+            new object[] { TestColor.Red | TestColor.Green, new TestColor[] { TestColor.Red ,TestColor.Green } },
             new object[] { "Red", new TestColor[] { TestColor.Red } },
             new object[] { "Red,Green", new TestColor[] { TestColor.Red, TestColor.Green } },
         };

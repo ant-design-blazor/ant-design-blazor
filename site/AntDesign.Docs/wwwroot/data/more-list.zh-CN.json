@@ -10,7 +10,7 @@
   {
     "title": "Ant Design Blazor 路由复用多标签页介绍",
     "description": "Blazor 社区中对多标签页的呼声有一年多了，这几天终于结合 Blazor 内置路由组件实现了基于 Tabs 组件的 ReuseTabs 组件，国内外的社区都一片欢腾，也是颇有成就感的。",
-    "img": "/docs/assets/news/reuse-tabs-demo.gif",
+    "img": "/docs/assets/news/reuse-tabs-demo.png",
     "date": "2021-07-08",
     "source": "weixin",
     "href": "https://mp.weixin.qq.com/s/J1vQv_YHUDx6ignlvVVDXA"

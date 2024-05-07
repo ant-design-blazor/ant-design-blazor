@@ -1,11 +1,12 @@
 ﻿@using System.Reflection
-@using AntDesign.Docs.Localization
 @using System.Globalization
 
 <ConfigProvider>
     <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
         <Found Context="routeData">
-            <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            <CascadingValue Value="routeData">
+                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            </CascadingValue>
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>
         <NotFound>
@@ -15,13 +16,16 @@
     <AntContainer />
 </ConfigProvider>
 
-@inject ILanguageService LanguageService;
+@inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
-@code{
+@code {
+
+    static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
+
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
-        var currentCulture = LanguageService.CurrentCulture;
+        var currentCulture = LocalizationService.CurrentCulture;
 
         var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;
 
@@ -29,29 +33,30 @@
         {
             if (string.IsNullOrWhiteSpace(segment))
             {
-                NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
-                return;
+                NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+            }
+            else if (segment.IsIn("zh-CN", "en-US"))
+            {
+                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
             }
             else
             {
-                if (segment.IsIn("zh-CN", "en-US"))
+                if (avaliableRoutes.All(x => !relativeUri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+                    return;
+
+                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
                 {
-                    LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
-                }
-                else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
-                {
-                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
+                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
                 }
                 else
                 {
-                    NavigationManager.NavigateTo($"en-US/{relativeUri}");
-                    return;
+                    NavigationManager.NavigateTo($"/en-US/{relativeUri}");
                 }
             }
         }
         catch
         {
-            
+
         }
     }
 }

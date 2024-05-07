@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
@@ -19,7 +20,9 @@ namespace AntDesign.Docs.Pages
         private MoreProps[] _moreArticles = { };
 
         [Inject] private DemoService DemoService { get; set; }
-        [Inject] private ILanguageService Language { get; set; }
+        [Inject] private ILocalizationService Language { get; set; }
+
+        [Inject] private IStringLocalizer Localizer { get; set; }
 
         private bool _rendered;
 

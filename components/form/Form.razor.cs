@@ -164,7 +164,6 @@ namespace AntDesign
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
-        private bool _isCallingValidation;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -182,7 +181,6 @@ namespace AntDesign
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
         FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
-        bool IForm.IsCallingValidation => _isCallingValidation;
 
         public event Action<IForm> OnFinishEvent;
 
@@ -275,11 +273,6 @@ namespace AntDesign
                 return;
             }
 
-            if (!_isCallingValidation && !ValidateOnChange)
-            {
-                return;
-            }
-
             _rulesValidator.ClearError(args.FieldIdentifier);
 
             var formItem = _formItems
@@ -304,11 +297,6 @@ namespace AntDesign
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
         {
             if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                return;
-            }
-
-            if (!_isCallingValidation && !ValidateOnChange)
             {
                 return;
             }
@@ -379,11 +367,7 @@ namespace AntDesign
 
         public bool Validate()
         {
-            _isCallingValidation = true;
-
             var result = _editContext.Validate();
-
-            _isCallingValidation = false;
 
             return result;
         }

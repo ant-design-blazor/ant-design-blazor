@@ -74,7 +74,7 @@ namespace AntDesign
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (DataSourceEqualityComparer is null)
                 {
-                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
+                    DataSourceEqualityComparer = this;
                 }
             }
             return _dataSourceItemShallowCopyMehtod;
@@ -169,24 +169,7 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the label.
-        /// </summary>
-        [Parameter]
-        public string LabelName
-        {
-            get => _labelName;
-            set
-            {
-                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
-                {
-                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
-                }
-                _labelName = value;
-            }
-        }
-
+  
         /// <summary>
         /// Is used to customize the label style.
         /// </summary>
@@ -282,21 +265,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the value.
-        /// </summary>
-        [Parameter]
-        public string ValueName
-        {
-            get => _valueName;
-            set
-            {
-                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
-                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
-                _valueName = value;
-            }
-        }
-
         private bool _valueHasChanged;
 
         /// <summary>
@@ -320,12 +288,16 @@ namespace AntDesign
         /// <summary>
         /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
         /// </summary>
-        [Parameter] public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
+        [Obsolete("Use ItemLabel instead")]
+        [Parameter]
+        public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
 
         /// <summary>
         /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
         /// </summary>
-        [Parameter] public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
+        [Obsolete("Use ItemValue instead")]
+        [Parameter]
+        public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
 
         /// <summary>
         /// Specifies predicate for disabled options
@@ -385,10 +357,6 @@ namespace AntDesign
         private bool _isToken;
         private bool _defaultActiveFirstOption;
 
-        private string _labelName;
-
-        internal Func<TItem, string> _getLabel;
-
         private string _groupName = string.Empty;
 
         private Func<TItem, string> _getGroup;
@@ -397,9 +365,6 @@ namespace AntDesign
 
         private Func<TItem, bool> _getDisabled;
 
-        private string _valueName;
-
-        internal Func<TItem, TItemValue> _getValue;
 
         private bool _showArrowIcon = true;
 
@@ -1883,6 +1848,7 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
         }
+
 
         #endregion Events
     }
