@@ -635,14 +635,19 @@ namespace AntDesign
         internal void OnRangeItemOver(DateTime?[] range)
         {
             _swpValue = Value;
-            Value = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            _pickerStatus[0].SelectedValue = range[0];
+            _pickerStatus[1].SelectedValue = range[1];
         }
 
-        internal void OnRangeItemOut(DateTime?[] range) => Value = _swpValue;
+        internal void OnRangeItemOut(DateTime?[] range)
+        {
+            var orginalValue = DataConversionExtensions.Convert<TValue, DateTime?[]>(_swpValue);
+            _pickerStatus[0].SelectedValue = orginalValue[0];
+            _pickerStatus[1].SelectedValue = orginalValue[1];
+        }
 
         internal void OnRangeItemClicked(DateTime?[] range)
         {
-            _swpValue = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
             ChangeValue((DateTime)range[0], 0);
             ChangeValue((DateTime)range[1], 1);
             Close();
