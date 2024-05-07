@@ -29,7 +29,8 @@ export class manipulationHelper {
     return false;
   }
 
-  static delElementFrom(delElement, elementSelector) {
+  static delElementFrom(delElementSelector, elementSelector) {
+    const delElement = domInfoHelper.get(delElementSelector);
     const parent = domInfoHelper.get(elementSelector);
     if (parent && delElement) {
       parent.removeChild(delElement);
