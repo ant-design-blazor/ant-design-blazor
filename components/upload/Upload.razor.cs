@@ -45,6 +45,15 @@ namespace AntDesign
         public bool ShowUploadList { get; set; } = true;
 
         [Parameter]
+        public bool ShowDownloadIcon { get; set; } = true;
+
+        [Parameter]
+        public bool ShowPreviewIcon { get; set; } = true;
+
+        [Parameter]
+        public bool ShowRemoveIcon { get; set; } = true;
+
+        [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
         [Parameter]
@@ -85,7 +94,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Drag { get; set; }
-        
+
         [Parameter]
         public string Method { get; set; } = "post";
 
