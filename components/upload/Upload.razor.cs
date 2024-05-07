@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
@@ -52,7 +51,7 @@ namespace AntDesign
         public bool ShowPreviewIcon { get; set; } = true;
 
         [Parameter]
-        public bool ShowRemoveIcon { get; set; } =true;
+        public bool ShowRemoveIcon { get; set; } = true;
 
         [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
@@ -95,7 +94,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Drag { get; set; }
-        
+
         [Parameter]
         public string Method { get; set; } = "post";
 
