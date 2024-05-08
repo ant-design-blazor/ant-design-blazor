@@ -1,4 +1,4 @@
----
+ï»¿---
 category: Experimental
 type: Layout
 title: ReuseTabs
@@ -15,9 +15,9 @@ Used to implement in-application page tabs and page caching.
 
 ## How to use
 
-1. Modify the `Routes.razor` file, warp the `RouteView` with `<CascadingValue Value="routeData">`.
+1. Modify the `Routes.razor` file, warp the `RouteView` or `AuthorizeRouteView` with `<CascadingValue Value="routeData">...</CascadingValue>`.
 
-   ```razor
+   ```html
    <Router AppAssembly="@typeof(Program).Assembly">
        <Found Context="routeData">
            <CascadingValue Value="routeData">
@@ -30,7 +30,7 @@ Used to implement in-application page tabs and page caching.
 
 2. Then modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
 
-   ```razor
+   ```html
    @inherits LayoutComponentBase
 
    <div class="page">
@@ -67,13 +67,14 @@ Used to implement in-application page tabs and page caching.
 | Ignore | If `Ignore=true`, the page is not displayed in tab, but in the entire page. | boolean | false |
 | Closable | Whether the delete button can be displayed. | boolean | false |
 | Pin | Whether the page is fixed to load and avoid closing, usually used on the home page or default page. | boolean | false |
-| PinUrl | Specify the Url of the loaded page, and then open the page with a route parameter£¬such as `/order/1` | string | - |
+| PinUrl | Specify the Url of the loaded page, and then open the page with a route parameter, such as `/order/1` | string | - |
 | KeepAlive| Whether to cache the page state | bool | true |
 | Order | The sequence number | int | 999 |
 
 ### IReuseTabsPage interface
 
 | Method | Description |
+| --- | --- | 
 | RenderFragment GetPageTitle() | Sets dynamic titles for titles that need to be determined when using templates or when loading |
 
 
@@ -83,7 +84,7 @@ Used to control ReuseTabs in pages
 
 | Method | Description | 
 | --- | --- | 
-| Pages| µ±Ç°´ò¿ª¹ýµÄÒ³ÃæÐÅÏ¢ÁÐ±í£¬¿É×ÔÐÐÓÃÓÚ»º´æºÍ»Ö¸´ | 
+| Pages | The information list of the currently opened pages can be used for caching and recovery | 
 | CreateTab(string pageUrl, RenderFragment? title = null) | Create a tab, but do not navigate to the page, and initialize the page when you navigate to the page. |
 | ClosePage(string key) | Close the page with the specified key. |
 | CloseOther(string key) | Close all pages except those that specify key, `Cloasable=false`, or `Pin=true`. |

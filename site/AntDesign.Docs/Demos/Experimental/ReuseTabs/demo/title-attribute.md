@@ -9,8 +9,8 @@ title:
 
 ## zh-CN
 
-利用 `ReuseTabsPage` 特性设置页面的额外行为，如定义标题、启动时固定、不可关闭。
+利用 `ReuseTabsPage` 特性设置每个页面的功能属性，如定义标题、启动时固定、不可关闭等。
 
 ## en-US
 
-Use the `ReuseTabsPage` attribute to set additional behavior of the page, such as defining the title, fixed at startup, and non-closable.
+Use the `ReuseTabsPage` attribute to set the functional properties of each page, such as defining the title, fixed at startup, and non-closable.

@@ -4,7 +4,7 @@
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline">
             <MenuItem Icon="user" RouterLink="/reuse/title-attribute">Home</MenuItem>
-            <MenuItem Icon="user" RouterLink="/reuse/dynamic-title">Home</MenuItem>
+            <MenuItem Icon="block" RouterLink="/reuse/dynamic-title">Dynamic title</MenuItem>
         </Menu>
     </Sider>
     <Layout Class="site-layout">
@@ -14,7 +14,9 @@
 
         <ReuseTabs Style="margin: 16px;">
             <Body>
-                <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;"> @context.Body </Content>
+                <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;">
+                    @context.Body
+                </Content>
             </Body>
         </ReuseTabs>
 
