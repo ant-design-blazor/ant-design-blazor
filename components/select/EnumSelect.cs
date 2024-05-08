@@ -31,10 +31,7 @@ namespace AntDesign
             get => base.Value;
             set
             {
-                if (_isFlags)
-                {
-                    base.Values = EnumHelper<TEnum>.Split(value).ToArray();
-                }
+                base.Values = EnumHelper<TEnum>.Split(value).ToArray();
                 base.Value = value;
             }
         }
@@ -45,10 +42,7 @@ namespace AntDesign
             get => base.Values;
             set
             {
-                if (_isFlags)
-                {
-                    base.Value = (TEnum)EnumHelper<TEnum>.Combine(value) ?? default;
-                }
+                base.CurrentValue = (TEnum)EnumHelper<TEnum>.Combine(value) ?? default;
                 base.Values = value;
             }
         }
