@@ -1,5 +1,5 @@
 ﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" />
-
+<br />
 <br />
 <EnumSelect TEnum="Fruits" @bind-Value="_value" Mode="multiple" />
 
@@ -28,10 +28,10 @@ Value: @Convert.ToUInt64(_value), @_value.ToString()
     [Flags]
     public enum Fruits
     {
-        Apple,
+        Apple = 1,
 
-        Pear,
+        Pear = 2,
 
-        Orange
+        Orange = 4
     }
 }
