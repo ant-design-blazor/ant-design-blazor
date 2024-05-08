@@ -61,6 +61,15 @@ namespace AntDesign.Docs.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Jiangsu 的本地化字符串。
+        /// </summary>
+        public static string Jiangsu {
+            get {
+                return ResourceManager.GetString("Jiangsu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Paassword 的本地化字符串。
         /// </summary>
         public static string Password {
@@ -79,6 +88,15 @@ namespace AntDesign.Docs.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Shanghai 的本地化字符串。
+        /// </summary>
+        public static string Shanghai {
+            get {
+                return ResourceManager.GetString("Shanghai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 User Name 的本地化字符串。
         /// </summary>
         public static string UserName {
@@ -93,6 +111,15 @@ namespace AntDesign.Docs.Resources {
         public static string UserNameValidation {
             get {
                 return ResourceManager.GetString("UserNameValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zhejiang 的本地化字符串。
+        /// </summary>
+        public static string Zhejiang {
+            get {
+                return ResourceManager.GetString("Zhejiang", resourceCulture);
             }
         }
     }
