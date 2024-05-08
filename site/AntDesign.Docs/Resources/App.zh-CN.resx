@@ -117,16 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Jiangsu" xml:space="preserve">
+    <value>江苏</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>密码</value>
   </data>
   <data name="PasswordValidation" xml:space="preserve">
     <value>请填写密码</value>
   </data>
+  <data name="Shanghai" xml:space="preserve">
+    <value>上海</value>
+  </data>
   <data name="UserName" xml:space="preserve">
     <value>用户名</value>
   </data>
   <data name="UserNameValidation" xml:space="preserve">
     <value>请填写用户名</value>
+  </data>
+  <data name="Zhejiang" xml:space="preserve">
+    <value>浙江</value>
   </data>
 </root>

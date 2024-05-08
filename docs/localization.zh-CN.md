@@ -42,14 +42,69 @@ dotnet add package AntDesign.Extensions.Localization
   
 - 使用时在 razor 注入 IStringLocalizer<T> 服务，例如：
 
-    ```razor
+    ```html
     @inject IStringLocalizer<Index> localizer
 
     <p>@localizer["Hello"]</p>
     <p>@localizer["Goodbye"]</p>
     ```
 
+- 在 Layout.razor 订阅语言变更事件，即可切换 UI 上的语言
+
+    ```html
+    @implements IDisposable
+    @inject ILocalizationService LocalizationService
+
+    <Button OnClick="()=>LocalizationService.SetLanguage("en-US")" >English</Button>
+    <Button OnClick="()=>LocalizationService.SetLanguage("zh-CN")" >中文</Button>
+
+    @code {
+
+        protected override void OnInitialized()
+        {
+            LocalizationService.LanguageChanged += OnLanguageChanged;
+        }
+        private void OnLanguageChanged(object sender, CultureInfo args)
+        {
+            InvokeAsync(StateHasChanged);
+        }
+        public void Dispose()
+        {
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
+        }
+    }
+    ```
+
+
 - 需要使用第三方 Localization 提供者，或者其他配置，可参考 [官方文档](https://learn.microsoft.com/zh-cn/aspnet/core/blazor/globalization-localization?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987)。
+
+### 表单验证消息的本地化
+
+Form 组件的默认验证器是 [ObjectGraphDataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/validation?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987#nested-models-collection-types-and-complex-types)，支持[ DataAnnotations 的本地化](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/localization/make-content-localizable?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987#dataannotations-localization)。
+
+示例：[Form 表单 - 本地化](https://antblazor.com/en-US/components/form#components-form-demo-localization)
+
+注意：暂不支持 AntDesign locales 中的验证信息配置。
+
+### DisplayAttribute 支持本地化
+
+组件中有部分 UI 绑定利用了实体模型或者枚举类型的 DisplayAttribute 特性用作 Label 显示，如 FormItem、EnumSelect、EnumRadioGroup、EnumCheckboxGroup 等。
+
+  ```cs
+    public class Model
+    {
+        [Display(Name = nameof(Resources.App.UserName), ResourceType = typeof(Resources.App))]
+        public string Username { get; set; }
+    }
+
+    public enum Province
+    {
+        [Display(Name = nameof(Resources.App.Shanghai), ResourceType = typeof(Resources.App))]
+        Shanghai,
+
+        Jiangsu
+    }
+  ```
 
 ### 使用简单嵌入 JSON 提供者
 
@@ -97,34 +152,7 @@ dotnet add package AntDesign.Extensions.Localization
     <p>@localizer["Goodbye"]</p>
     ```
 
-
-### 可交互地切换 UI 上的语言
-
-```razor
-@implements IDisposable
-@inject ILocalizationService LocalizationService
-
-<Button OnClick="()=>LocalizationService.SetLanguage("en-US")" >English</Button>
-<Button OnClick="()=>LocalizationService.SetLanguage("zh-CN")" >中文</Button>
-
-@code {
-
-    protected override void OnInitialized()
-    {
-        LocalizationService.LanguageChanged += OnLanguageChanged;
-    }
-    private void OnLanguageChanged(object sender, CultureInfo args)
-    {
-        InvokeAsync(StateHasChanged);
-    }
-    public void Dispose()
-    {
-        LocalizationService.LanguageChanged -= OnLanguageChanged;
-    }
-}
-```
-
-### 路由上的语言标识
+### 实现路由上的语言标识
 
 从本站点建立之初，就实现了路由的语言标记，有如下特点：
 
