@@ -6,6 +6,7 @@ using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using AntDesign.core.Extensions;
 
 namespace AntDesign
 {
@@ -516,12 +517,9 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                InvokeOnChange();
-            }
+                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
 
-            if (_isNotifyFieldChanged && (Form?.ValidateOnChange is true))
-            {
-                EditContext?.NotifyFieldChanged(FieldIdentifier);
+                InvokeOnChange();
             }
 
             _pickerStatus[index].IsValueSelected = true;
