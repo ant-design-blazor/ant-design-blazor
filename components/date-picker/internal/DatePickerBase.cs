@@ -648,8 +648,7 @@ namespace AntDesign
 
         internal void OnRangeItemClicked(DateTime?[] range)
         {
-            ChangeValue((DateTime)range[0], 0);
-            ChangeValue((DateTime)range[1], 1);
+            CurrentValue = DataConversionExtensions.Convert<DateTime?[], TValue>(range);
             Close();
         }
 

@@ -42,7 +42,7 @@ namespace AntDesign
             {
                 return enumValues.Aggregate(_aggregateFunction);
             }
-            return null;
+            return default(T);
         }
 
         public static IEnumerable<T> Split(object enumValue)

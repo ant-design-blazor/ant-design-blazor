@@ -144,7 +144,7 @@ namespace AntDesign
             get => Value;
             set
             {
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, _value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
                 if (hasChanged)
                 {
                     Value = value;
