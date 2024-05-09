@@ -14,14 +14,11 @@ namespace AntDesign
 {
     public class EnumSelect<TEnum> : Select<TEnum, TEnum>
     {
-        private bool _isFlags;
-
         public EnumSelect()
         {
             if (THelper.GetUnderlyingType<TEnum>().IsEnum)
             {
                 DataSource = EnumHelper<TEnum>.GetValueList();
-                _isFlags = EnumHelper<TEnum>.IsFlags;
             }
         }
 
