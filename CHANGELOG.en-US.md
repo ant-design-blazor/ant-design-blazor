@@ -44,7 +44,7 @@ timeline: true
 
 
 - Select
-  - 🆕 Add EnumSelect Support using 'bind-Value' to get or set multiple enumeration values with the Flags attribute
+  - 🆕 Add EnumSelect Support using 'bind-Value' to get or set multiple enumeration values with the Flags attribute. [#3843](https://github.com/ant-design-blazor/ant-design-blazor/pull/3843) [@pankey888](https://github.com/pankey888)
   - 🐞 Fixed List order after datasource change. [#3806](https://github.com/ant-design-blazor/ant-design-blazor/pull/3806) [@miguelkmarques](https://github.com/miguelkmarques)
   - 📖 Docs add search sample for table select demo. [#3797](https://github.com/ant-design-blazor/ant-design-blazor/pull/3797) [@ElderJames](https://github.com/ElderJames)
 
@@ -63,6 +63,13 @@ timeline: true
 - 🐞 Fixed make IsExternalInit internal for avoiding runtime conflicts with 3rd-party libs. [#3799](https://github.com/ant-design-blazor/ant-design-blazor/pull/3799) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed InputNumber cannot bind when pasting numbers with delimiters. [#3841](https://github.com/ant-design-blazor/ant-design-blazor/pull/3841) [@HuaFangYun](https://github.com/HuaFangYun)
 - 🐞 Fixed overlay Prarent overlay hides irregularly when child is open or closed. (#3836, #3837). [#3838](https://github.com/ant-design-blazor/ant-design-blazor/pull/3838) [@pankey888](https://github.com/pankey888)
+
+#### New Contributors
+* @pathartl made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3579
+* @tiansfather made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3787
+* @miguelkmarques made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3806
+* @pankey888 made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3827
+* @HuaFangYun made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3841
 
 
 ### 0.18.3
