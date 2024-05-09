@@ -23,8 +23,8 @@ namespace AntDesign.Tests.Core.Helpers
 
         public static IEnumerable<object[]> Combine_seeds => new List<object[]>
         {
-            new object[] { null, null },
-            new object[] { Array.Empty<TestColor>(), null },
+            new object[] { null, default(TestColor) },
+            new object[] { Array.Empty<TestColor>(), default(TestColor) },
             new object[] { new TestColor[] { TestColor.Red }, TestColor.Red },
             new object[] { new TestColor[] { TestColor.Red, TestColor.Yellow } , TestColor.Red | TestColor.Yellow },
             new object[] { new TestColor[] { TestColor.Red, TestColor.Yellow, TestColor.Green }, TestColor.Red | TestColor.Yellow | TestColor.Green },
@@ -41,7 +41,7 @@ namespace AntDesign.Tests.Core.Helpers
 
         public static IEnumerable<object[]> Split_seeds => new List<object[]>
         {
-            new object[] { null, Array.Empty<TestColor>() },
+            new object[] { default(TestColor), Array.Empty<TestColor>() },
             new object[] { (int)TestColor.Red, new TestColor[] { TestColor.Red } },
             new object[] { (int)(TestColor.Red | TestColor.Green), new TestColor[] { TestColor.Red ,TestColor.Green } },
             new object[] { TestColor.Red | TestColor.Green, new TestColor[] { TestColor.Red ,TestColor.Green } },
