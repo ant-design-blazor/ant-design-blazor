@@ -45,7 +45,7 @@ timeline: true
 
 - Select
 
-  - 🆕 新增 EnumSelect 绑定有 Flags 特性的枚举类型时，支持用 Value 绑定组合值。
+  - 🆕 新增 EnumSelect 绑定有 Flags 特性的枚举类型时，支持用 Value 绑定组合值。[#3843](https://github.com/ant-design-blazor/ant-design-blazor/pull/3843) [@pankey888](https://github.com/pankey888)
   - 🐞 修复 选项列表随数据源变更重新排序。[#3806](https://github.com/ant-design-blazor/ant-design-blazor/pull/3806) [@miguelkmarques](https://github.com/miguelkmarques)
   - 📖 给 TableSelect 示例增加查询功能。[#3797](https://github.com/ant-design-blazor/ant-design-blazor/pull/3797) [@ElderJames](https://github.com/ElderJames)
 
@@ -66,7 +66,12 @@ timeline: true
 - 🐞 修复 InputNumber 粘贴带有分隔符的数字时无法绑定。[#3841](https://github.com/ant-design-blazor/ant-design-blazor/pull/3841) [@HuaFangYun](https://github.com/HuaFangYun)
 - 🐞 修复 Overlay 多子级关闭时，父级联动冲突。[#3838](https://github.com/ant-design-blazor/ant-design-blazor/pull/3838) [@pankey888](https://github.com/pankey888)
 
-
+#### 此版本中新的贡献者
+* @pathartl made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3579
+* @tiansfather made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3787
+* @miguelkmarques made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3806
+* @pankey888 made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3827
+* @HuaFangYun made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3841
 
 ### 0.18.3
 
