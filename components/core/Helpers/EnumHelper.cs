@@ -94,8 +94,21 @@ namespace AntDesign
             var type = typeof(T);
             var param1 = Expression.Parameter(type);
             var param2 = Expression.Parameter(type);
-            var body = Expression.Call(param1, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
-            return Expression.Lambda<Func<T, T, bool>>(body, param1, param2).Compile();
+
+            if (THelper.IsTypeNullable(type))
+            {
+                Expression notNull = Expression.NotEqual(param1, Expression.Constant(null));
+                var param1Value = Expression.MakeMemberAccess(param1, param1.Type.GetMember(nameof(Nullable<int>.Value))[0]);
+                var param1ValueHasFlags = Expression.Call(param1Value, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
+                var notNullAndParam1ValueHasFlags = Expression.AndAlso(notNull, param1ValueHasFlags);
+
+                return Expression.Lambda<Func<T, T, bool>>(notNullAndParam1ValueHasFlags, param1, param2).Compile();
+            }
+            else
+            {
+                var body = Expression.Call(param1, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
+                return Expression.Lambda<Func<T, T, bool>>(body, param1, param2).Compile();
+            }
         }
     }
 }

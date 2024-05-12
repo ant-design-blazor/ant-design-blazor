@@ -30,6 +30,15 @@ namespace AntDesign.Tests.Core.Helpers
             new object[] { new TestColor[] { TestColor.Red, TestColor.Yellow, TestColor.Green }, TestColor.Red | TestColor.Yellow | TestColor.Green },
         };
 
+        [Fact]
+        public void CombineNullable()
+        {
+            var result = EnumHelper<TestColor?>.Combine([TestColor.Red, TestColor.Yellow]);
+            var result2 = EnumHelper<TestColor>.Combine([TestColor.Red, TestColor.Yellow]);
+            Assert.Equal(TestColor.Red | TestColor.Yellow, result);
+            Assert.Equal(TestColor.Red | TestColor.Yellow, result2);
+        }
+
         [Theory]
         [MemberData(nameof(Split_seeds))]
         public void Split(object? value, IEnumerable<TestColor> expectedList)
@@ -37,6 +46,16 @@ namespace AntDesign.Tests.Core.Helpers
             var list = EnumHelper<TestColor>.Split(value);
 
             Assert.True(list.SequenceEqual(expectedList));
+        }
+
+        [Fact]
+        public void SplitNullable()
+        {
+            var list = EnumHelper<TestColor?>.Split(TestColor.Red | TestColor.Yellow);
+            var list2 = EnumHelper<TestColor>.Split(TestColor.Red | TestColor.Yellow);
+
+            Assert.True(list.SequenceEqual([TestColor.Red, TestColor.Yellow]));
+            Assert.True(list2.SequenceEqual([TestColor.Red, TestColor.Yellow]));
         }
 
         public static IEnumerable<object[]> Split_seeds => new List<object[]>
