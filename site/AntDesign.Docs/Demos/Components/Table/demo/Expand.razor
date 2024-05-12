@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
-@using TableModels
+@using AntDesign.TableModels
 
-<Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
+<Table @ref="table" DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
 	<ColumnDefinitions>
 		<PropertyColumn Property="c=>c.Name" />
 		<PropertyColumn Property="c=>c.Age" />
@@ -30,7 +30,14 @@
 	</ExpandTemplate>
 </Table>
 
+<br />
+
+<Button OnClick="()=> table.ExpandAll()">Expand All</Button>
+<Button OnClick="()=> table.CollapseAll()">Collapse All</Button>
+
+
 @code {
+    ITable table;
 
     Contact[] data =
     {

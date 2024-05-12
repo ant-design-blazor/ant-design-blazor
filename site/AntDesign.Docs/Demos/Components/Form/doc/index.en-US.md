@@ -17,6 +17,7 @@ High performance Form component with data scope management. Including data colle
 ### Form
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |
+| Autocomplete| Whether input elements can by default have their values automatically completed by the browser. | string | on \| off | off  |
 | Layout | Form Layout | [FormLayout](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/types/FormLayout.cs) | FormLayout.Horizontal |
 | LabelCol | label label layout, same as \<Col\> component, set span offset value | [ColLayoutParam](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/form/ColLayoutParam.cs) |-|
 | LabelColSpan | Same as LabelCol.Span | int |-|
@@ -25,13 +26,15 @@ High performance Form component with data scope management. Including data colle
 | WrapperColSpan | Same as WrapperCol.Span | int |-|
 | WrapperColOffset | Same as WrapperCol.Offset | int |-|
 | Size | Set the size of the field component (antd component only) | small \| middle \| large | middle |
-| Name | The name of the form, which will be used as the prefix of the form field id | string |-|
+| Name | The name of the form, which will be used as the prefix of the form field id. In static render mode, also as `FromName` parameter of [EditForm](https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Forms/EditForm.cs#L96), specifying the Form Handler. | string |-|
+| Method | Http method used to submit form | string | get |
 | Model | Generic Object of Operation | T |-|
 | Loading | Is the form loading | bool | false |
 | OnFinish | Submit Event | EventCallback\<EditContext\> |-|
 | OnFinishFailed | Submission failure (verification failure) callback event | EventCallback\<EditContext\> |-|
 | ValidateOnChange | Whether to verify when changing | bool | false |
 | RequiredMark | Change how required/optional field labels are displayed on the form. | FormRequiredMark | FormRequiredMark.Required |
+
 ### FormItem
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |

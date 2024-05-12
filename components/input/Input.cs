@@ -258,6 +258,9 @@ namespace AntDesign
 
         private async Task Clear()
         {
+            if (Disabled)
+                return;
+
             CurrentValue = default;
             IsFocused = true;
             _inputString = null;
@@ -386,7 +389,7 @@ namespace AntDesign
         {
             base.UpdateStyles();
             SetClasses();
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override void OnParametersSet()
@@ -488,7 +491,7 @@ namespace AntDesign
             builder.OpenElement(31, "span");
             builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
                 (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
-                (string.IsNullOrEmpty(_inputString) ? $"{PrefixCls}-clear-icon-hidden " : ""));
+                (string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
 
             builder.OpenComponent<Icon>(33);
 
@@ -686,6 +689,11 @@ namespace AntDesign
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(NameAttributeValue))
+            {
+                builder.AddAttribute(46, "name", NameAttributeValue);
             }
 
             builder.AddAttribute(50, "id", Id);

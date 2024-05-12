@@ -210,7 +210,7 @@ namespace AntDesign
 
             if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
             {
-                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
+                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.RealScrollBarSize}");
             }
 
             var fixedWidth = fixedWidths.Length switch

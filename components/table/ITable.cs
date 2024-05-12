@@ -22,6 +22,10 @@ namespace AntDesign
 
         void UnselectAll();
 
+        void ExpandAll();
+
+        void CollapseAll();
+
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }
@@ -35,6 +39,8 @@ namespace AntDesign
         internal string ScrollY { get; }
 
         internal string ScrollBarWidth { get; }
+
+        internal string RealScrollBarSize { get; }
 
         internal int ExpandIconColumnIndex { get; }
 

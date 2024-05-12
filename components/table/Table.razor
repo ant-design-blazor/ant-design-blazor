@@ -7,7 +7,7 @@
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading || (_fieldModel is null)">
+    <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
@@ -34,7 +34,7 @@
                             @ChildContent(_fieldModel)
                         }
                     </CascadingValue>
-                    <div class="@ClassMapper.Class">
+                    <div class="@ClassMapper.Class" @ref="_wrapperRef">
                         @if (TitleTemplate != null || Title != null)
                         {
                             <div class="ant-table-title">
@@ -50,7 +50,7 @@
                                         @header()
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
                                     <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup(this, false)
                                         <tbody class="ant-table-tbody">
@@ -70,7 +70,7 @@
                             }
                             else if (ScrollX != null)
                             {
-                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; --scrollbar-width: @((CssSizeLength)_scrollBarWidth);">
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
                                     <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
@@ -92,11 +92,11 @@
                             else
                             {
                                 <div class="ant-table-content">
-                                    <table style="@TableLayoutStyle;--scrollbar-width: @((CssSizeLength)_scrollBarWidth);" @ref="_tableRef">
+                                    <table style="@TableLayoutStyle;@(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
                                         <tbody class="ant-table-tbody">
-                                            @body( _showItems)
+                                            @body(_showItems)
                                         </tbody>
                                         @tfoot()
                                     </table>
@@ -164,6 +164,7 @@
 
     static RenderFragment colGroup(Table<TItem> table, bool header)
     {
+        var realSize = (CssSizeLength)((table as ITable).RealScrollBarSize);
         return @<colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                 @if (_fieldModel is not null)
@@ -173,7 +174,7 @@
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
                 {
-                    <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
+                    <col style="width: @realSize; min-width: @realSize;" />
                 }
             </colgroup>;
     }
@@ -258,7 +259,7 @@
     {
         return currentRowData =>
         {
-            return @<TableRowWrapper RowData="currentRowData">
+            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.RowIndex">
             @{
                 var currentDataItem = currentRowData.DataItem;
                 var rowAttributes = OnRow?.Invoke(currentRowData);

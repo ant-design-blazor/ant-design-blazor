@@ -3,21 +3,24 @@ export * as observable from './ObservableApi/observableApi';
 export { domInfoHelper, domTypes, domManipulationHelper, eventHelper } from './modules/dom/exports';
 export { styleHelper } from './modules/styleHelper';
 export {
-    backtopHelper,
-    iconHelper,
-    imageHelper,
-    inputHelper,
-    mentionsHelper,
-    modalHelper,
-    overlayHelper,
-    tableHelper,
-    uploadHelper,
-    downloadHelper
+  backtopHelper,
+  iconHelper,
+  imageHelper,
+  inputHelper,
+  mentionsHelper,
+  modalHelper,
+  overlayHelper,
+  tableHelper,
+  uploadHelper,
+  downloadHelper,
+  watermarkHelper,
 } from './modules/components/export'
+
+
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
 
 export { generate as generateColor } from "@ant-design/colors";
 
 export function log(text) {
-    console.log(text);
+  console.log(text);
 }

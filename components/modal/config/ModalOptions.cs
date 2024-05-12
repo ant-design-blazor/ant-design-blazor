@@ -7,7 +7,7 @@ using OneOf;
 namespace AntDesign
 {
     /// <summary>
-    /// the options of Modal dialog box
+    /// The options of Modal dialog box
     /// </summary>
     public class ModalOptions : DialogOptionsBase
     {

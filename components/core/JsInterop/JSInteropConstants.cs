@@ -191,6 +191,7 @@ namespace AntDesign
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
+            public static string GetScrollBarSize => $"{FUNC_PREFIX}getScrollBarSize";
         }
 
         public static class StyleHelper
@@ -299,6 +300,13 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "downloadHelper.";
             public static string TriggerFileDownload => $"{FUNC_PREFIX}triggerFileDownload";
+        }
+
+        public static class WatermarkHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";
+
+            public static string GenerateBase64Url => $"{FUNC_PREFIX}generateBase64Url";
         }
     }
 }

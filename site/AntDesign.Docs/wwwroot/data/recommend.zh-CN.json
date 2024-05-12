@@ -1,5 +1,12 @@
 ﻿[
   {
+    "title": "Blazor 全栈渲染模式的原理与应用 - .NET Conf China 2023 实录",
+    "description": "远赴北京大冬天，为大家带来最新的 Blazor 原创成果。首先讲解了 Blazor 在 .NET 8 全新的渲染模式，然后深度解析静态服务端渲染的优势和局限，最后讲解实际应用 SSR + Auto 架构，.NET 8 终于可以 All in Blazor！",
+    "img": "/docs/assets/news/dotNetConf2023.jpg",
+    "href": "https://www.bilibili.com/video/BV1vg4y1m78w",
+    "popularize": false
+  },
+  {
     "title": "如何给 Ant Design Blazor 贡献代码？",
     "description": "社区中很多朋友想给 Ant Design Blazor 贡献代码，但是受阻于不知如何操作，故录制一个视频作为参考。这个B站账号还会不定期更新组件库的各种玩法，欢迎关注！",
     "img": "/docs/assets/news/how-to-contribute-ant-design-blazor.jpg",
@@ -11,13 +18,6 @@
     "description": "在这次演讲中，SSW 工程师 Luke 展示了流行的开源组件库是如何工作的，并进行了有见地的比较和演示。AntBlazor 得到了 .NET 基金会的完全支持，并拥有令人印象深刻的追捧。最重要的是，它有很棒的文档和代码示例，可以让你很快上手并运行起来",
     "img": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F146529479%2F55525066651%2F1%2Foriginal.20210903-062701?w=800&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=01e8a457183827b661d145dbaded77a8",
     "href": "https://www.bilibili.com/video/BV1gU4y1F7WA/",
-    "popularize": false
-  },
-  {
-    "title": "【入门系列教程】进击吧！Blazor",
-    "description": "从 2020 年 9 月份开始，Ant Design Blazor 团队携手微软 MVP 张善友，在 Reactor 上海举办了一系列的 Blazor 入门教程，一共 7 期，带领大家掌握 Blazor！。主讲人是张善友和 Ant Design Blazor 贡献者陈超超，主持人是董斌。",
-    "img": "/docs/assets/news/attack-blazor.jpg",
-    "href": "https://space.bilibili.com/483888821/channel/detail?cid=151273",
     "popularize": false
   }
 ]

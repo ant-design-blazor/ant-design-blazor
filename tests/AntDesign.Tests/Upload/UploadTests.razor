@@ -18,8 +18,8 @@
                       some content
                   </span>
               </div>
-              <div class="ant-upload-list ant-upload-list-text">
-              </div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
           </span>);
     }
 
@@ -40,7 +40,8 @@
                   </div>
                 </span>
             </div>
-            <div class="ant-upload-list ant-upload-list-text"></div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
         </span>);
     }
     
@@ -59,8 +60,8 @@
                       some content
                   </span>
               </div>
-              <div class="ant-upload-list ant-upload-list-text">
-              </div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
           </span>);
     }
 
@@ -75,7 +76,7 @@
 
         var cut = Context.Render(@<Upload>some content</Upload>);
 
-        var inputElement = ((AngleSharpWrappers.HtmlInputElementWrapper)cut.Find("input")).WrappedElement;
+        var inputElement = cut.Find("input");
         
         Func<Task> act = () => inputElement.ChangeAsync(new ChangeEventArgs() { Value = "ignored" });
         await act.Should().NotThrowAsync();

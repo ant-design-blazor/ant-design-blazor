@@ -110,7 +110,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="args">MouseEventArgs</param>
         /// <returns></returns>
-        public override async Task OnClickDiv(MouseEventArgs args)
+        protected override async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
             {

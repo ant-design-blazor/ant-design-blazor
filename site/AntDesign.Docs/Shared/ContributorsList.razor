@@ -3,7 +3,7 @@
     {
         @foreach (var item in _avatarList)
         {
-            <Tooltip Title="@($"{LanguageService.Resources["app.content.contributors"]}:{item.Username}")">
+            <Tooltip Title="@($"{Localizer["app.content.contributors"]}:{item.Username}")">
                 <Unbound>
                     <a @ref="context.Current" target="_blank" href="@item.ProfileUrl">
                         <Avatar Text="@item.Username" Src="@item.Url" />

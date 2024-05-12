@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System.Reflection;
+using AntDesign.core.Services;
 using AntDesign.Table.Internal;
 
 #if NET5_0_OR_GREATER
@@ -200,6 +201,9 @@ namespace AntDesign
         [Inject]
         private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
+        [Inject]
+        private ClientDimensionService ClientDimensionService { get; set; }
+
         public ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
@@ -212,8 +216,8 @@ namespace AntDesign
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
-        private string _scrollBarWidth = "17px";
-
+        private string _scrollBarWidth;
+        private string _realScrollBarSize = "15px";
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
@@ -224,6 +228,7 @@ namespace AntDesign
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
+        private ElementReference _wrapperRef;
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
         private ElementReference _tableRef;
@@ -254,6 +259,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth;
+        string ITable.RealScrollBarSize => _scrollBarWidth ?? _realScrollBarSize;
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -284,6 +290,7 @@ namespace AntDesign
 
         void ITable.OnExpandChange(RowData rowData)
         {
+            _preventRender = true;
             if (OnExpand.HasDelegate)
             {
                 OnExpand.InvokeAsync(rowData as RowData<TItem>);
@@ -303,17 +310,15 @@ namespace AntDesign
                 return;
             }
 
-            ReloadAndInvokeChange();
             _hasInitialized = true;
+            ReloadAndInvokeChange();
         }
 
         public void ReloadData()
         {
             ResetData();
 
-            PageIndex = 1;
-
-            FlushCache();
+            ChangePageIndex(1);
 
             this.ReloadAndInvokeChange();
         }
@@ -324,8 +329,6 @@ namespace AntDesign
 
             ChangePageIndex(pageIndex ?? 1);
             ChangePageSize(pageSize ?? PageSize);
-
-            FlushCache();
 
             this.ReloadAndInvokeChange();
         }
@@ -338,8 +341,6 @@ namespace AntDesign
             {
                 ChangePageIndex(queryModel.PageIndex);
                 ChangePageSize(queryModel.PageSize);
-
-                FlushCache();
 
                 foreach (var sorter in queryModel.SortModel)
                 {
@@ -361,8 +362,6 @@ namespace AntDesign
         {
             ChangePageIndex(1);
             ChangePageSize(PageSize);
-
-            FlushCache();
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -442,6 +441,12 @@ namespace AntDesign
             }
 #endif
 
+            if (_fieldModel is null)
+            {
+                StateHasChanged();
+                return;
+            }
+
             var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
@@ -496,6 +501,8 @@ namespace AntDesign
 
                 _shouldRender = true;
             }
+
+            FlushCache();
 
             if (_groupedColumns.Count > 0)
             {
@@ -638,35 +645,12 @@ namespace AntDesign
 
             InitializePagination();
 
-            FlushCache();
-
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-
-                if (_hasInitialized)
-                {
-                    _waitingDataSourceReload = false;
-
-                    FlushCache(); // clear the selection state after pages was changed outside
-                    ReloadAndInvokeChange();
-                }
-            }
-            else if (_waitingDataSourceReload)
-            {
-                _waitingDataSourceReload = false;
-                if (_hasInitialized)
-                {
-                    InternalReload();
-                }
-            }
 
             if (_preventRender)
             {
@@ -683,6 +667,31 @@ namespace AntDesign
             {
                 this._shouldRender = true;
             }
+
+            if (!this._shouldRender)
+            {
+                return;
+            }
+
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+
+                if (_hasInitialized)
+                {
+                    _waitingDataSourceReload = false;
+
+                    ReloadAndInvokeChange();
+                }
+            }
+            else if (_waitingDataSourceReload)
+            {
+                _waitingDataSourceReload = false;
+                if (_hasInitialized)
+                {
+                    InternalReload();
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -696,7 +705,13 @@ namespace AntDesign
 
                 if (ScrollY != null || ScrollX != null || Resizable)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
+                }
+
+                if (ScrollY != null && ScrollBarWidth == null)
+                {
+                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
+                    _realScrollBarSize = $"{scrollBarSize}px";
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
@@ -708,7 +723,7 @@ namespace AntDesign
                 }
 
                 // To handle the case where a dynamic table does not render columns until the data is requested
-                if (!ColumnContext.HeaderColumns.Any() && !_hasInitialized)
+                if ((!ColumnContext.HeaderColumns.Any() || _fieldModel is null) && !_hasInitialized)
                 {
                     OnColumnInitialized();
                     return;
@@ -822,6 +837,9 @@ namespace AntDesign
         {
             if (RowKey == null)
                 RowKey = data => data;
+
+            if (x is null && y is null)
+                return true;
 
             return RowKey(x).Equals(RowKey(y));
         }

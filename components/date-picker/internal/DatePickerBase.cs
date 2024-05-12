@@ -635,16 +635,20 @@ namespace AntDesign
         internal void OnRangeItemOver(DateTime?[] range)
         {
             _swpValue = Value;
-            Value = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
+            _pickerStatus[0].SelectedValue = range[0];
+            _pickerStatus[1].SelectedValue = range[1];
         }
 
-        internal void OnRangeItemOut(DateTime?[] range) => Value = _swpValue;
+        internal void OnRangeItemOut(DateTime?[] range)
+        {
+            var orginalValue = DataConversionExtensions.Convert<TValue, DateTime?[]>(_swpValue);
+            _pickerStatus[0].SelectedValue = orginalValue[0];
+            _pickerStatus[1].SelectedValue = orginalValue[1];
+        }
 
         internal void OnRangeItemClicked(DateTime?[] range)
         {
-            _swpValue = DataConversionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { range[0], range[1] });
-            ChangeValue((DateTime)range[0], 0);
-            ChangeValue((DateTime)range[1], 1);
+            CurrentValue = DataConversionExtensions.Convert<DateTime?[], TValue>(range);
             Close();
         }
 
@@ -674,7 +678,10 @@ namespace AntDesign
         {
             if (ChangeOnClose && _duringManualInput)
             {
-                ChangeValue(_pickerStatus[index].SelectedValue.Value);
+                if (_pickerStatus[index].SelectedValue is not null)
+                {
+                    ChangeValue(_pickerStatus[index].SelectedValue.Value);
+                }
             }
         }
 
@@ -1088,7 +1095,35 @@ namespace AntDesign
             Close();
         }
 
-        protected bool IsDisabledDate(DateTime input) => DisabledDate is not null && DisabledDate(input);
+        internal bool IsDisabledDate(DateTime input)
+        {
+            var disabledCurrentDate = DisabledDate is not null && DisabledDate(input);
+            if (!disabledCurrentDate)
+            {
+                return false;
+            }
+
+            var isInitialPickerType = Picker == _pickerStatus[0].InitPicker;
+
+            if (isInitialPickerType)
+            {
+                return disabledCurrentDate;
+            }
+
+            var currentPeriodStartDate = DateHelper.FormatDateByPicker(input, Picker);
+            var currentPeriodEndDate = DateHelper.GetNextStartDateOfPeriod(input, Picker).AddDays(-1);
+
+            // This loop can be optimized so that if it is already available in the lower period, the current period is also available.
+            for (var curr = currentPeriodStartDate; curr < currentPeriodEndDate; curr = curr.AddDays(1))
+            {
+                if (!DisabledDate(curr))
+                {
+                    return false;
+                }
+            }
+
+            return disabledCurrentDate;
+        }
 
         protected void ToDateTimeOffset(DateTime value, out DateTimeOffset? currentValue, out DateTimeOffset newValue)
         {

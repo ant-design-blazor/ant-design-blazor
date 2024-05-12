@@ -1,16 +1,19 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@if (_configs.Count > 0)
-{
-    <div>
-        <div class="ant-message" style="top: @(_top)px;" @ref="Ref">
-            <span>
-                @foreach (var config in _configs)
-                {
-                    <MessageItem @key="config" Config="config"></MessageItem>
-                }
-            </span>
+@{
+    var coinfigs = _configDict.Values.OrderBy(x=>x.Order).ToList();
+    if (coinfigs.Count > 0)
+    {
+        <div>
+            <div class="ant-message" style="top: @(_top)px;" @ref="Ref">
+                <span>
+                    @foreach (var config in coinfigs)
+                    {
+                        <MessageItem @key="config" Config="config"></MessageItem>
+                    }
+                </span>
+            </div>
         </div>
-    </div>
+    }
 }

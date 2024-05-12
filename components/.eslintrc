@@ -1,0 +1,25 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "indent": [
+      "error",
+      2,
+      {
+        "ignoreComments": true,
+        "SwitchCase": 1,
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": false
+      }
+    ]
+  }
+}

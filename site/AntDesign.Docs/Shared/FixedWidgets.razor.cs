@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Shared
 {
     public partial class FixedWidgets
     {
-        [Inject] private ILanguageService Language { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
         [Inject] private IJSRuntime JS { get; set; }
 
         private ElementReference _linkRef;

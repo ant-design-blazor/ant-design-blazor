@@ -569,18 +569,24 @@ namespace AntDesign
                     {
                         await Js.FocusAsync(baseDomComponent.Ref, FocusBehavior.FocusAtLast);
                         await Task.Delay(50);
-                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Ref.Id;
+                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Id;
                     }
                     catch (JSException jsex)
                     {
                         Console.WriteLine(jsex.ToString());
+                        break;
                     }
                     catch
                     {
                         throw;
                     }
+                    finally
+                    {
+                        attemptCount++;
+                    }
+                    if (attemptCount > 2) break;
 
-                } while (!filterInputFocused || attemptCount++ >= 3);
+                } while (!filterInputFocused);
             });
 #endif
         }

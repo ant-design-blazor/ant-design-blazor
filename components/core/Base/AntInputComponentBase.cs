@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -23,14 +26,29 @@ namespace AntDesign
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
         private PropertyReflector? _propertyReflector;
+        private string? _formattedValueExpression;
+        private bool _shouldGenerateFieldNames;
+        private bool _hasInitializedParameters;
+
+        private Action<object, TValue> _setValueDelegate;
+
+        private Func<object, TValue> _getValueDelegate;
 
         protected string PropertyName => _propertyReflector?.PropertyName;
+
+        internal PropertyReflector? PopertyReflector => _propertyReflector;
 
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
-        [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
+
+#if NET8_0_OR_GREATER
+
+        [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
+#endif
+
+        protected IForm Form => FormItem?.Form;
 
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
@@ -74,7 +92,6 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     _value = value;
-
                     OnValueChange(value);
                 }
             }
@@ -131,12 +148,12 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     Value = value;
-
+                    _setValueDelegate?.Invoke(Form.Model, value);
                     ValueChanged.InvokeAsync(value);
 
                     OnCurrentValueChange(value);
 
-                    if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
@@ -282,10 +299,66 @@ namespace AntDesign
 
             base.OnInitialized();
 
+            if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
+            {
+                var type = Form.Model.GetType();
+                var dataIndex = FormItem.Name;
+                if (typeof(IDictionary).IsAssignableFrom(type))
+                {
+                    dataIndex = $"['{dataIndex}']";
+                }
+                _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
+                _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
+                Value = _getValueDelegate.Invoke(Form.Model);
+
+                if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
+                {
+                    var perpertyInfo = lambda.Member as PropertyInfo;
+                    _propertyReflector = new PropertyReflector(perpertyInfo);
+                }
+                else
+                {
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                }
+            }
+
             FormItem?.AddControl(this);
             Form?.AddControl(this);
 
             _firstValue = Value;
+        }
+
+        /// <summary>
+        /// Gets the value to be used for the input's "name" attribute.
+        /// </summary>
+        protected string NameAttributeValue
+        {
+            get
+            {
+                if (AdditionalAttributes?.TryGetValue("name", out var nameAttributeValue) ?? false)
+                {
+                    return Convert.ToString(nameAttributeValue, CultureInfo.InvariantCulture) ?? string.Empty;
+                }
+#if NET8_0_OR_GREATER
+                if (_shouldGenerateFieldNames)
+                {
+                    if (_formattedValueExpression is null)
+                    {
+                        if (ValueExpression is not null)
+                        {
+                            _formattedValueExpression = FieldPrefix != null ? FieldPrefix.GetFieldName(ValueExpression) : ExpressionFormatter.FormatLambda(ValueExpression);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(Form?.Name) && !string.IsNullOrWhiteSpace(FormItem?.Name))
+                        {
+                            _formattedValueExpression = $"{Form?.Name}.{FormItem.Name}";
+                        }
+                    }
+
+                    return _formattedValueExpression ?? string.Empty;
+                }
+#endif
+                return string.Empty;
+            }
         }
 
         /// <inheritdoc />
@@ -293,29 +366,56 @@ namespace AntDesign
         {
             parameters.SetParameterProperties(this);
 
-            if (EditContext == null)
+            if (!_hasInitializedParameters)
             {
                 // This is the first run
                 // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
 
-                if (Form?.EditContext == null)
+#if NET8_0_OR_GREATER
+                if (CascadedEditContext != null)
                 {
-                    return base.SetParametersAsync(ParameterView.Empty);
+                    EditContext = CascadedEditContext;
+                    _shouldGenerateFieldNames = EditContext.ShouldUseFieldIdentifiers;
                 }
-
-                if (ValueExpression == null && ValuesExpression == null)
-                {
-                    return base.SetParametersAsync(ParameterView.Empty);
-                }
-
-                EditContext = Form?.EditContext;
-                if (ValuesExpression == null)
-                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
                 else
-                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                {
+                    // Ideally we'd know if we were in an SSR context but we don't
+                    //_shouldGenerateFieldNames = !OperatingSystem.IsBrowser();
+                }
+#endif
+
+                if (EditContext == null)
+                {
+                    if (Form?.EditContext == null)
+                    {
+                        return base.SetParametersAsync(ParameterView.Empty);
+                    }
+
+                    EditContext = Form?.EditContext;
+
+                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                }
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
+
+                if (ValueExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                }
+                else if (ValuesExpression != null)
+                {
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                }
+                else if (Form?.Model != null && FormItem?.Name != null)
+                {
+                    FieldIdentifier = new FieldIdentifier(Form.Model, FormItem.Name);
+                }
+                else
+                {
+                    return base.SetParametersAsync(ParameterView.Empty);
+                }
+
+                _hasInitializedParameters = true;
             }
             else if (Form?.EditContext != EditContext)
             {
@@ -363,6 +463,15 @@ namespace AntDesign
         void IControlValueAccessor.Reset()
         {
             ResetValue();
+        }
+
+        internal void OnNameChanged()
+        {
+            if (_getValueDelegate != null)
+            {
+                CurrentValue = _getValueDelegate.Invoke(Form.Model);
+                InvokeAsync(StateHasChanged);
+            }
         }
     }
 }

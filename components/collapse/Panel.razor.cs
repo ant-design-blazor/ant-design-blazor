@@ -116,11 +116,31 @@ namespace AntDesign
 
                 if (Active)
                 {
-                    HandleExpand();
+                    if (Collapse.Animation)
+                    {
+                        HandleExpand();
+                    }
+                    else
+                    {
+                        _isActive = true;
+                        _isInactive = false;
+                        _isHidden = false;
+                        StateHasChanged();
+                    }
                 }
                 else
                 {
-                    HandleCollapse();
+                    if (Collapse.Animation)
+                    {
+                        HandleCollapse();
+                    }
+                    else
+                    {
+                        _isActive = false;
+                        _isInactive = true;
+                        _isHidden = true;
+                        StateHasChanged();
+                    }
                 }
             }
         }

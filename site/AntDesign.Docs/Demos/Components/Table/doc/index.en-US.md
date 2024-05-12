@@ -106,6 +106,23 @@ Inherit from `Column`.
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  Defines the value to be displayed in this column's cells. | Expression<Func<TItem, TProp>> | - |
 
+
+### Public methods
+
+The Table can be controlled using the methods provided in the instance of the `@ref` binding `ITable`.
+
+| Methods           | Instruction                                | 
+| ---------------- | ------------------------------------------- | 
+| ReloadData       | Reloads the data, with three overloads, specifying paging, filtering, and sorting   | 
+| ResetData        | Reset table paging, filtering, sorting status                   |
+| GetQueryModel    | Gets table state, which can be used for persistence and recovery              |
+| SetSelection     | Set selection column                                 |
+| SelectAll        | Select all rows                                   |
+| UnselectAll      | Unselect all rows                                    |
+| ExpandAll        | Expand all rows                             |
+| CollapseAll      | Collapse all rows                     |
+
+
 ### Responsive
 
 The table supports responsive by default, and when the screen width is less than 960px, the table would switch to small-screen mode.
