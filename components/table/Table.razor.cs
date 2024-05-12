@@ -212,6 +212,8 @@ namespace AntDesign
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
+        protected virtual RenderFragment AdvancedSearchTemplate { get; }
+
         public ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;

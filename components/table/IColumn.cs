@@ -7,6 +7,8 @@ namespace AntDesign
 {
     public interface IColumn
     {
+        public string Id { get; set; }
+
         public ITable Table { get; set; }
 
         public bool IsInitialize { get; set; }

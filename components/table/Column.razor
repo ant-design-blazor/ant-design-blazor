@@ -264,7 +264,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     private void RenderDefaultFilterDropdown(RenderTreeBuilder __builder)
     {
-        @if (_filters.Any() == true && _columnFilterType == TableFilterType.List)
+        @if (_filters?.Any() == true && _columnFilterType == TableFilterType.List)
         {
             <Menu AutoCloseDropdown="false" SelectedKeys="_selectedFilterValues">
                 @foreach (var filter in _filters)
@@ -282,7 +282,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                 }
             </Menu>
         }
-        else
+        else if (_filters?.Any() == true)
         {
             <div id="@("popup-container-for-" + Id)" style="position:relative!important"></div>
             int index = 0;

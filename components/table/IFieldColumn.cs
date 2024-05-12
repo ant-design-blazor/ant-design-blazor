@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AntDesign.Filters;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -16,6 +17,8 @@ namespace AntDesign
 
         public bool Sortable { get; }
 
+        public bool Filterable { get; }
+
         public int SorterMultiple { get; }
 
         public bool Grouping { get; }
@@ -24,11 +27,19 @@ namespace AntDesign
 
         public ITableFilterModel FilterModel { get; }
 
+        public IFieldFilterType FieldFilterType { get; }
+
         internal void ClearSorter();
 
         internal void ClearFilters();
 
+        internal IEnumerable<TableFilter> Filters { get; }
+
+        internal object FilterInputRef { get; }
+
         internal void SetFilterModel(ITableFilterModel filterModel);
+
+        internal void SetSelectedFilters(IEnumerable<TableFilter> selectedFilters);
 
         internal void SetSortModel(ITableSortModel sortModel);
 

@@ -102,5 +102,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="AntDesign.Tests" />
+    <InternalsVisibleTo Include="ProBlazor" />
   </ItemGroup>
 </Project>

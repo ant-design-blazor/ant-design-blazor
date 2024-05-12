@@ -127,7 +127,7 @@ namespace AntDesign
         public bool FilterMultiple { get; set; } = true;
 
         [Parameter]
-        public IFieldFilterType FieldFilterType { get; set; }
+        public IFieldFilterType FieldFilterType { get => _fieldFilterType; set => _fieldFilterType = value; }
 
         /// <summary>
         /// Function that determines if the row is displayed when filtered
@@ -189,6 +189,11 @@ namespace AntDesign
         private RenderFragment _renderDefaultFilterDropdown;
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
+        private object _filterInputRef;
+
+        IEnumerable<TableFilter> IFieldColumn.Filters => _filters;
+        object IFieldColumn.FilterInputRef => _filterInputRef;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
 
@@ -549,13 +554,32 @@ namespace AntDesign
             _hasFilterSelected = true;
         }
 
+        void IFieldColumn.SetSelectedFilters(IEnumerable<TableFilter> selectedFilters)
+        {
+            if (_columnFilterType == TableFilterType.List)
+            {
+                foreach (var filter in _filters.Where(f => selectedFilters.Any(x => x.Value.Equals(f.Value))))
+                {
+                    filter.Selected = true;
+                }
+            }
+            else
+            {
+                _filters = selectedFilters;
+            }
+
+            _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
+
+            FilterModel = _hasFilterSelected ?
+                new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType)
+                : null;
+        }
+
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
             SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
         }
-
-        protected object _filterInputRef;
 
         private void FilterDropdownOnVisibleChange(bool visible)
         {

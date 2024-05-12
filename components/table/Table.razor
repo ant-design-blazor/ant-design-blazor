@@ -6,6 +6,23 @@
 
 @typeparam TItem
 
+<CascadingValue Value="@this" TValue="ITable" IsFixed>
+    <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
+        <CascadingValue Value="@ColumnContext" IsFixed>
+            <CascadingValue Name="IsInitialize" Value="true" IsFixed>
+                @if (_fieldModel is not null)
+                {
+                    @ChildContent(_fieldModel)
+                }
+                @if (AdvancedSearchTemplate is not null)
+                {
+                    @AdvancedSearchTemplate
+                }
+            </CascadingValue>
+        </CascadingValue>
+    </CascadingValue>
+</CascadingValue>
+
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))

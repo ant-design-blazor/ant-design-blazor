@@ -62,7 +62,7 @@ namespace AntDesign.TableModels
             this._fieldFilterType = fieldFilterType;
         }
 
-public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
+        public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
         {
             if (Filters?.Any() != true)
             {
@@ -76,7 +76,7 @@ public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
             {
                 lambda = Expression.Constant(false, typeof(bool));
             }
-            
+
             foreach (var filter in Filters)
             {
                 if (this.FilterType == TableFilterType.List)
@@ -86,7 +86,7 @@ public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
                 else // TableFilterType.FieldType
                 {
                     if (filter.Value == null
-                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull)) 
+                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull))
                         continue;
 
                     Expression constantExpression = Expression.Constant(
