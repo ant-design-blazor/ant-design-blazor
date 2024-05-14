@@ -45,12 +45,6 @@
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>
-                    <CascadingValue Name="IsInitialize" Value="true" IsFixed>
-                        @if (_fieldModel is not null)
-                        {
-                            @ChildContent(_fieldModel)
-                        }
-                    </CascadingValue>
                     <div class="@ClassMapper.Class" @ref="_wrapperRef">
                         @if (TitleTemplate != null || Title != null)
                         {
