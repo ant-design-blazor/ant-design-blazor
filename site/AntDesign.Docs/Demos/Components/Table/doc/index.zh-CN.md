@@ -108,6 +108,16 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
 
 
+### GenerateColumns
+
+用于通过 'TItem' 类型的属性自动生成列。 查看 [demo](#components-table-demo-generate-columns).
+
+| Parameter             | Instruction             | Type                         | Defaults |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Definitions | 一个两参数委托。第一个参数是属性名, 第二个是对于的 Column 实例。 | Action<string, object> Definitions |  -  |
+| HideColumnsByName | 指定隐藏的属性名。  | IEnumerable<string>   |  -  |
+| Range            | 一个范围值，指定某些列可以显示。 | Range |  -  |
+
 ### 公开方法
 
 可以使用 `@ref` 绑定 `ITable` 的实例中提供的方法操作 Table。
