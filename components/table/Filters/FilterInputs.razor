@@ -40,11 +40,11 @@
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
         @<text>
             <EnumSelect TEnum="TData" Mode="multiple"
-                        @*Values="EnumHelper<TData>.Split(filter.Value)" workaround for https: //github.com/ant-design-blazor/ant-design-blazor/issues/3006 *@
-            PopupContainerSelector="@filter.PopupContainerSelector"
-            Style="width:180px;"
-            ValuesChanged="value => filter.Value = EnumHelper<TData>.Combine(value)"
-            BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" />
+                Value="(TData)filter.Value"
+                PopupContainerSelector="@filter.PopupContainerSelector"
+                Style="width:180px;"
+                ValueChanged="value => filter.Value = value"
+                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" />
          </text>;
 
     public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
