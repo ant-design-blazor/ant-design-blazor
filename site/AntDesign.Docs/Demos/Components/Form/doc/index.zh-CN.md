@@ -117,6 +117,17 @@ var formConfig = new FormConfig {
 </ConfigProvider>;
 ```
 
+### GenerateFormItem
+可通过 `TItem` 类型自动生成表单元素。当前支持string、DateTime、number、enum类型成员自动生成，根据成员是否为可空控制是否为必填(只建议简单验证表单使用)
+> **注意:** 此功能正在迭代中，后续本版可能会存在不兼容的变更。
+
+| 名称 | 说明       | 类型        | 默认值  |
+| --- |-------|------------|------|
+| RulesRequireByType | 通过自动判断成员类型是否可空，控制表单验证                    | bool?                               | null |
+| Definitions | 一个两参数范型委托，第一个参数是熟悉PropertyInfo，第二个参数是TItem, 返回值为RenderFragment  | Func<PropertyInfo, TItem, RenderFragment>? | null |
+| NotGenerate | 一个两参数范型委托，第一个参数是熟悉PropertyInfo，第二个参数是TItem, 返回值为bool，返回true则不自动生成 | Func<PropertyInfo, TItem, bool>? | null |
+
+
 <style>
 .code-box-demo .ant-form:not(.ant-form-inline):not(.ant-form-vertical) {
   max-width: 600px;
