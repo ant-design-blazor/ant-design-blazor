@@ -213,7 +213,7 @@ namespace AntDesign
             _equalToFunc = fexpEqualTo.Compile();
 
             //四舍五入 rounding
-            if (_floatTypes.Contains(_surfaceType))
+            if (_floatTypes.Contains(underlyingType))
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
                 ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");

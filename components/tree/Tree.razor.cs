@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+#endif
     public partial class Tree<TItem> : AntDomComponentBase
     {
         [CascadingParameter(Name = "TreeSelect")]
