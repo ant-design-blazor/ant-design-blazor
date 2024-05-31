@@ -209,17 +209,20 @@ namespace AntDesign
         {
             return builder =>
             {
-                builder.OpenComponent(0, routeData.PageType);
+                builder.OpenComponent<ReuseTabPane>(0);
+                builder.AddAttribute(1, nameof(ReuseTabPane.ReuseTabsPageItem), item);
+                builder.OpenComponent(2, routeData.PageType);
                 foreach (var routeValue in routeData.RouteValues)
                 {
-                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
+                    builder.AddAttribute(3, routeValue.Key, routeValue.Value);
                 }
 
-                builder.AddComponentReferenceCapture(2, @ref =>
+                builder.AddComponentReferenceCapture(4, @ref =>
                 {
                     GetPageInfo(item, routeData.PageType, item.Url, @ref);
                 });
 
+                builder.CloseComponent();
                 builder.CloseComponent();
             };
         }
