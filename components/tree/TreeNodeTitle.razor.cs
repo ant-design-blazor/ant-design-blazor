@@ -34,9 +34,9 @@ namespace AntDesign
 
         private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
 
-        private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.IsExpanded() && !SelfNode.IsLeaf;
 
-        private bool IsSwitcherClose => !SelfNode.Expanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.IsExpanded() && !SelfNode.IsLeaf;
 
         protected ClassMapper TitleClassMapper { get; } = new ClassMapper();
 
@@ -47,7 +47,7 @@ namespace AntDesign
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
-                .If("ant-tree-node-selected", () => SelfNode.Selected);
+                .If("ant-tree-node-selected", () => SelfNode.IsSelected());
         }
 
         protected override void OnInitialized()
@@ -63,10 +63,11 @@ namespace AntDesign
         /// <returns></returns>
         private async Task OnClick(MouseEventArgs args)
         {
-            SelfNode.SetSelected(!SelfNode.Selected);
+            if (SelfNode.Disabled)
+                return;
+            SelfNode.SetSelected(!SelfNode.IsSelected());
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-            TreeComponent.UpdateBindData();
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace AntDesign
         private void OnDragStart(DragEventArgs e)
         {
             TreeComponent.DragItem = SelfNode;
-            SelfNode.Expand(false);
+            _ = SelfNode.Expand(false);
             if (TreeComponent.OnDragStart.HasDelegate)
                 TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -142,7 +143,7 @@ namespace AntDesign
             {
                 SelfNode.SetTargetBottom();
                 SelfNode.SetParentTargetContainer();
-                SelfNode.Expand(true);
+                _ = SelfNode.Expand(true);
             }
             else
             {
