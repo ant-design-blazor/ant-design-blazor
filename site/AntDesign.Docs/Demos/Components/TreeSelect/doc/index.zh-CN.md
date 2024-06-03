@@ -107,12 +107,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | Key  |  节点key  | string  |   |   |
 | Disabled |  是否禁用 | string  |   |   |
 | Checked | 是否勾选（支持双向绑定）  |  boolean |  false |   |
-| IsChecked | 判断实际是否勾选  |  boolean |  false |   |
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
 | Selected | 是否选中（支持双向绑定）  |  boolean |  false |   |
-| IsSelected | 判断实际是否选中  |  boolean |  false |   |
 | Expanded | 是否展开（支持双向绑定）  |  boolean |  false |   |
-| IsExpanded | 判断实际是否展开  |  boolean |  false |   |
 | Title | 标题  |  string |  false |   |
 | TitleTemplate | 标题模板 | RenderFragment | null |  |
 | Icon | 标题前图标  |  string |  false |   |

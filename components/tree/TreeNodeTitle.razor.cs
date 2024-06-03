@@ -34,9 +34,9 @@ namespace AntDesign
 
         private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
 
-        private bool IsSwitcherOpen => SelfNode.IsExpanded() && !SelfNode.IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
 
-        private bool IsSwitcherClose => !SelfNode.IsExpanded() && !SelfNode.IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.Expanded && !SelfNode.IsLeaf;
 
         protected ClassMapper TitleClassMapper { get; } = new ClassMapper();
 
@@ -47,7 +47,7 @@ namespace AntDesign
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
-                .If("ant-tree-node-selected", () => SelfNode.IsSelected());
+                .If("ant-tree-node-selected", () => SelfNode.Selected);
         }
 
         protected override void OnInitialized()
@@ -65,7 +65,7 @@ namespace AntDesign
         {
             if (SelfNode.Disabled)
                 return;
-            SelfNode.SetSelected(!SelfNode.IsSelected());
+            SelfNode.SetSelected(!SelfNode.Selected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }

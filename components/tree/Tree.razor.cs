@@ -237,7 +237,7 @@ namespace AntDesign
 
         internal void DoDeselectAll(bool isManual)
         {
-            foreach (var item in _allNodes.Where(r => r.IsSelected()))
+            foreach (var item in _allNodes.Where(r => r.Selected))
             {
                 item.DoSelect(false, false, isManual);
             }
@@ -343,7 +343,7 @@ namespace AntDesign
         /// </summary>
         internal void UpdateSelectedKeys()
         {
-            var selectedNodes = _allNodes.Where(r => r.IsSelected()).ToList();
+            var selectedNodes = _allNodes.Where(r => r.Selected).ToList();
             if (selectedNodes.Count == 0)
             {
                 ResetSelectedKeys();
@@ -415,7 +415,7 @@ namespace AntDesign
 
         internal void UpdateCheckedKeys()
         {
-            _checkedKeys = _allNodes.Where(r => r.IsChecked()).Select(r => r.Key).ToArray();
+            _checkedKeys = _allNodes.Where(r => r.Checked).Select(r => r.Key).ToArray();
             if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 
@@ -928,7 +928,7 @@ namespace AntDesign
 
         internal async Task UpdateExpandedKeys()
         {
-            ExpandedKeys = _allNodes.Where(x => x.IsExpanded()).Select(x => x.Key).ToArray();
+            ExpandedKeys = _allNodes.Where(x => x.Expanded).Select(x => x.Key).ToArray();
             if (ExpandedKeysChanged.HasDelegate)
             {
                 await ExpandedKeysChanged.InvokeAsync(ExpandedKeys);
@@ -968,7 +968,7 @@ namespace AntDesign
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
         {
-            var expandedKeys = _allNodes.Where(x => x.IsExpanded()).Select(x => x.Key).ToArray();
+            var expandedKeys = _allNodes.Where(x => x.Expanded).Select(x => x.Key).ToArray();
             if (OnNodeLoadDelayAsync.HasDelegate && expanded == true)
             {
                 node.SetLoading(true);
@@ -1017,11 +1017,11 @@ namespace AntDesign
             if (_updateAllKeysAfterRender)
             {
                 // Make sure keys updated after all nodes' OnInitialized.
-                if (_allNodes.FirstOrDefault(n => n.IsSelected()) != null)
+                if (_allNodes.FirstOrDefault(n => n.Selected) != null)
                     UpdateSelectedKeys();
-                if (_allNodes.FirstOrDefault(n => n.IsChecked()) != null)
+                if (_allNodes.FirstOrDefault(n => n.Checked) != null)
                     UpdateCheckedKeys();
-                if (_allNodes.FirstOrDefault(n => n.IsExpanded()) != null)
+                if (_allNodes.FirstOrDefault(n => n.Expanded) != null)
                     _ = UpdateExpandedKeys();
                 _updateAllKeysAfterRender = false;
             }

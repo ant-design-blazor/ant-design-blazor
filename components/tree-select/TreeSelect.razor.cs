@@ -374,7 +374,7 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
-            if (!node.IsSelected())
+            if (!node.Selected)
                 return;
 
             var key = node.Key;

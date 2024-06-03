@@ -170,19 +170,19 @@ namespace AntDesign
             set { _disabled = value; }
         }
 
+        private bool _actualSelected;
+
         private bool _selected;
 
         /// <summary>
         /// Selected or not
-        /// To make sure the "Selected" parameter can function properly, we intentionally distinguish "Selected" from "_selected". see bug: 
-        /// https://github.com/ant-design-blazor/ant-design-blazor/issues/3890
-        /// If you want to retrieve the value of _selected, please use "IsSelected" instead of "Selected".
-        /// However, you can still bind the "Selected" to get the right value of "_selected".
         /// </summary>
         [Parameter]
-        public bool Selected { private get; set; }
-
-        public bool IsSelected() => _selected;
+        public bool Selected
+        {
+            get => _actualSelected;
+            set => _selected = value;
+        }
 
         [Parameter]
         public EventCallback<bool> SelectedChanged { get; set; }
@@ -202,12 +202,12 @@ namespace AntDesign
         {
             if (Disabled && !TreeComponent.Multiple)
             {
-                _selected = false;
+                _actualSelected = false;
             }
             else
             {
-                value = (!Disabled || !isManual) ? value : _selected;
-                if (_selected == value) return;
+                value = (!Disabled || !isManual) ? value : _actualSelected;
+                if (_actualSelected == value) return;
                 if (value == true)
                 {
                     if (!(TreeComponent.Multiple && (TreeComponent.IsCtrlKeyDown || isMulti)))
@@ -220,10 +220,10 @@ namespace AntDesign
                 {
                     TreeComponent.TriggerOnUnselect(this);
                 }
-                _selected = value;
+                _actualSelected = value;
             }
             if (SelectedChanged.HasDelegate)
-                SelectedChanged.InvokeAsync(_selected);
+                SelectedChanged.InvokeAsync(_actualSelected);
             StateHasChanged();
             return;
         }
@@ -305,9 +305,9 @@ namespace AntDesign
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)
-                .If("ant-tree-treenode-checkbox-checked", () => IsChecked())
+                .If("ant-tree-treenode-checkbox-checked", () => Checked)
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
-                .If("ant-tree-treenode-selected", () => IsSelected())
+                .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading)
                 .If("drop-target", () => DragTarget)
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
@@ -345,17 +345,17 @@ namespace AntDesign
 
         /// <summary>
         /// Expand the node or not
-        /// To make sure the "Expanded" parameter can function properly, we intentionally distinguish "Expanded" from "_expanded". see bug: 
-        /// https://github.com/ant-design-blazor/ant-design-blazor/issues/3892
-        /// If you want to retrieve the value of _expanded, please use "IsExpanded" instead of "Expanded".
-        /// However, you can still bind the "Expanded" to get the right value of "_expanded".
         /// </summary>
         [Parameter]
-        public bool Expanded { private get; set; }
+        public bool Expanded
+        {
+            get => _actualExpanded;
+            set => _expanded = value;
+        }
+
+        private bool _actualExpanded = false;
 
         private bool _expanded = false;
-
-        public bool IsExpanded() => _expanded;
 
         [Parameter]
         public EventCallback<bool> ExpandedChanged { get; set; }
@@ -372,16 +372,16 @@ namespace AntDesign
 
         internal async Task DoExpand(bool expanded)
         {
-            if (_expanded == expanded)
+            if (_actualExpanded == expanded)
             {
                 return;
             }
-            _expanded = expanded;
+            _actualExpanded = expanded;
             if (ExpandedChanged.HasDelegate)
             {
-                await ExpandedChanged.InvokeAsync(_expanded);
+                await ExpandedChanged.InvokeAsync(_actualExpanded);
             }
-            await TreeComponent?.OnNodeExpand(this, _expanded, new MouseEventArgs());
+            await TreeComponent?.OnNodeExpand(this, _actualExpanded, new MouseEventArgs());
         }
 
 
@@ -423,7 +423,7 @@ namespace AntDesign
             {
                 if (Hidden) return false;
                 if (ParentNode == null) return true;
-                if (ParentNode.IsExpanded() == false) return false;
+                if (ParentNode.Expanded == false) return false;
                 return ParentNode.RealDisplay;
             }
         }
@@ -435,7 +435,7 @@ namespace AntDesign
         /// <returns></returns>
         private void OnSwitcherClick(MouseEventArgs args)
         {
-            _ = Expand(!_expanded);
+            _ = Expand(!_actualExpanded);
         }
 
         internal void SetLoading(bool loading)
@@ -446,12 +446,12 @@ namespace AntDesign
         /// <summary>
         /// switcher is opened
         /// </summary>
-        private bool SwitcherOpen => IsExpanded() && !IsLeaf;
+        private bool SwitcherOpen => Expanded && !IsLeaf;
 
         /// <summary>
         /// switcher is close
         /// </summary>
-        private bool SwitcherClose => !IsExpanded() && !IsLeaf;
+        private bool SwitcherClose => !Expanded && !IsLeaf;
 
         /// <summary>
         /// expaned parents
@@ -471,15 +471,21 @@ namespace AntDesign
 
         /// <summary>
         /// Check the TreeNode or not 
-        /// To make sure the "Checked" parameter can function properly, we intentionally distinguish "Checked" from "_checked". see bug: 
-        /// https://github.com/ant-design-blazor/ant-design-blazor/issues/3891
-        /// If you want to retrieve the value of _checked, please use "IsChecked" instead of "Checked".
-        /// However, you can still bind the "Checked" to get the right value of "_checked".
         /// </summary>
         [Parameter]
-        public bool Checked { private get; set; }
+        public bool Checked
+        {
+            get
+            {
+                return _actualChecked;
+            }
+            set
+            {
+                _checked = value;
+            }
+        }
 
-        public bool IsChecked() => _checked;
+        private bool _actualChecked = false;
 
         private bool _checked = false;
 
@@ -513,7 +519,7 @@ namespace AntDesign
         {
             if (Disabled || DisableCheckbox)
                 return;
-            SetChecked(!_checked);
+            SetChecked(!_actualChecked);
             if (TreeComponent.OnCheck.HasDelegate)
                 await TreeComponent.OnCheck.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
         }
@@ -533,7 +539,7 @@ namespace AntDesign
         {
             if (TreeComponent.CheckStrictly || strict)
             {
-                _checked = (!Disabled || !DisableCheckbox || !isManual) ? check : _checked;
+                _actualChecked = (!Disabled || !DisableCheckbox || !isManual) ? check : _actualChecked;
                 Indeterminate = false;
                 NotifyCheckedChanged();
             }
@@ -554,7 +560,7 @@ namespace AntDesign
         /// <param name="isManual"></param>
         private bool SetChildChecked(TreeNode<TItem> subnode, bool check, bool isManual)
         {
-            _checked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _checked;
+            _actualChecked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _actualChecked;
             var hasChecked = false;
             var hasUnChecked = false;
             if (subnode.HasChildNodes)
@@ -566,13 +572,13 @@ namespace AntDesign
                     else
                         hasUnChecked = true;
                 }
-                _checked = !hasUnChecked;
+                _actualChecked = !hasUnChecked;
             }
             Indeterminate = hasChecked && hasUnChecked;
             if (Indeterminate)
-                _checked = false;
+                _actualChecked = false;
             NotifyCheckedChanged();
-            return _checked;
+            return _actualChecked;
         }
 
         /// <summary>
@@ -584,7 +590,7 @@ namespace AntDesign
             if (halfChecked == true)
             {
                 //If the child node is indeterminate, the parent node must is indeterminate.
-                _checked = false;
+                _actualChecked = false;
                 Indeterminate = true;
             }
             else if (HasChildNodes == true)
@@ -601,11 +607,11 @@ namespace AntDesign
                         hasUnchecked = true;
                         break;
                     }
-                    else if (item._checked)
+                    else if (item._actualChecked)
                     {
                         hasChecked = true;
                     }
-                    else if (!item._checked)
+                    else if (!item._actualChecked)
                     {
                         hasUnchecked = true;
                     }
@@ -613,17 +619,17 @@ namespace AntDesign
 
                 if (hasChecked && !hasUnchecked)
                 {
-                    _checked = true;
+                    _actualChecked = true;
                     Indeterminate = false;
                 }
                 else if (!hasChecked && hasUnchecked)
                 {
-                    _checked = false;
+                    _actualChecked = false;
                     Indeterminate = false;
                 }
                 else if (hasChecked && hasUnchecked)
                 {
-                    _checked = false;
+                    _actualChecked = false;
                     Indeterminate = true;
                 }
             }
@@ -639,7 +645,7 @@ namespace AntDesign
         private void NotifyCheckedChanged()
         {
             if (CheckedChanged.HasDelegate)
-                CheckedChanged.InvokeAsync(_checked);
+                CheckedChanged.InvokeAsync(_actualChecked);
         }
 
         #endregion Checkbox
@@ -901,21 +907,21 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var isExpandedChanged = parameters.IsParameterChanged(nameof(Expanded), Expanded);
-            var isCheckedChanged = parameters.IsParameterChanged(nameof(Checked), Checked);
-            var isSelectedChanged = parameters.IsParameterChanged(nameof(Selected), Selected);
+            var isExpandedChanged = parameters.IsParameterChanged(nameof(Expanded), _expanded);
+            var isCheckedChanged = parameters.IsParameterChanged(nameof(Checked), _checked);
+            var isSelectedChanged = parameters.IsParameterChanged(nameof(Selected), _selected);
             await base.SetParametersAsync(parameters);
             if (isExpandedChanged)
             {
-                await Expand(Expanded);
+                await Expand(_expanded);
             }
             if (isCheckedChanged)
             {
-                SetChecked(Checked);
+                SetChecked(_checked);
             }
             if (isSelectedChanged)
             {
-                SetSelected(Selected);
+                SetSelected(_selected);
             }
         }
 
@@ -933,7 +939,7 @@ namespace AntDesign
 
             // Expand
             var isExpanded = false;
-            if (Expanded)
+            if (_expanded)
             {
                 isExpanded = true;
             }
@@ -957,7 +963,7 @@ namespace AntDesign
             if (TreeComponent.Checkable)
             {
                 var isChecked = false;
-                if (Checked)
+                if (_checked)
                 {
                     isChecked = true;
                 }
@@ -973,7 +979,7 @@ namespace AntDesign
             if (TreeComponent.Selectable)
             {
                 var isSelected = false;
-                if (Selected)
+                if (_selected)
                 {
                     isSelected = true;
                 }

@@ -107,12 +107,9 @@ Tree selection control.
 | Key  |  key  | string  |   |   |
 | Disabled |  disabled | string  |   |   |
 | Checked | checked (Supports two-way binding)  |  boolean |  false |   |
-| IsChecked | Get the actual checked value  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
 | Selected | selected (Supports two-way binding)  |  boolean |  false |   |
-| IsSelected | Get the actual selected value  |  boolean |  false |   |
 | Expanded | expanded (Supports two-way binding)  |  boolean |  false |   |
-| IsExpanded | Get the actual expanded value  |  boolean |  false |   |
 | Title | title  |  string |  false |   |
 | TitleTemplate | title template | RenderFragment | null |  |
 | Icon | icon  |  string |  false |   |
