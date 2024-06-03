@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -19,6 +20,9 @@ namespace AntDesign
 
         [Parameter]
         public Func<TValue, string> Formatter { get; set; }
+
+        [Parameter]
+        public string Format { get; set; }
 
         [Parameter]
         public Func<string, string> Parser { get; set; }
@@ -508,6 +512,10 @@ namespace AntDesign
             if (Formatter != null)
             {
                 return Formatter(Value);
+            }
+            else if (Format is { Length: > 0 })
+            {
+                return Formatter<TValue>.Format(value, Format);
             }
 
             if (EqualityComparer<TValue>.Default.Equals(value, default))
