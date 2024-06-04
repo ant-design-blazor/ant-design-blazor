@@ -26,6 +26,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | SwitcherIcon | Customize toggle icon£¬the value is Icon types | string | null | |
 | Selectable | Whether can be selected | boolean | true |  |
+| DefaultSelectedKey | Specifies the key of the default selected treeNode | string | null |  |
 | DefaultSelectedKeys | Specifies the keys of the default selected treeNodes | string[] | null |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | Checkable |  Add a Checkbox before the node | boolean  | false  |   |
@@ -54,12 +55,14 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| @bind-SelectedKey | SelectedKey | string |   |  |
-| @bind-SelectedNode | SelectedNode | TreeNode |  |  |
-| @bind-SelectedData | SelectedData | string |  |  |
-| @bind-SelectedKeys | SelectedKeys | string[] |  |  |
-| @bind-SelectedDatas | SelectedDatas | TItem[] |  |  |
-| @bind-CheckedKeys | CheckedKeys | string[] |  |  | 
+| @bind-SelectedKey | Bind the selected node's Key (You can also use DefaultSelectedKey for the default value) | string |   |  |
+| @bind-SelectedNode | Bind the selected node (Use DefaultSelectedKey for the default value) | TreeNode<TItem> |  |  |
+| @bind-SelectedData | Bind the selected node's data (Use DefaultSelectedKey for the default value) | string |  |  |
+| @bind-SelectedKeys | Bind the keys of selected nodes (You can also use DefaultSelectedKeys for the default value) | string[] |  |  |
+| @bind-SelectedNodes | Bind the selected nodes (Use DefaultSelectedKeys for the default value) | TreeNode<TItem>[] |  |  |
+| @bind-SelectedDatas | Bind the datas of selected nodes (Use DefaultSelectedKeys for the default value) | TItem[] |  |  |
+| @bind-CheckedKeys | Bind the keys of checked nodes (You can also use DefaultCheckedKeys for the default value) | string[] |  |  | 
+| @bind-ExpandedKeys | Bind the keys of expanded nodes (You can also use DefaultExpandedKeys for the default value) | string[] |  |  | 
 
 ### Tree EventCallback
 
@@ -101,8 +104,10 @@ Almost anything can be represented in a tree structure. Examples include directo
 | --- | --- | --- | --- | --- |
 | Key  |  key  | string  |   |   |
 | Disabled |  disabled | string  |   |   |
-| Checked | checked  |  boolean |  false |   |
+| Checked | checked (Supports two-way binding)  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
+| Selected | selected (Supports two-way binding)  |  boolean |  false |   |
+| Expanded | expanded (Supports two-way binding)  |  boolean |  false |   |
 | Title | title  |  string |  false |   |
 | TitleTemplate | title template | RenderFragment | null |  |
 | Icon | icon  |  string |  false |   |

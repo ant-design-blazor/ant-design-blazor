@@ -30,8 +30,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | Checkable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
 | CheckStrictly  |  checkable 状态下节点选择完全受控（父子节点选中状态不再关联） |  boolean | false  |   |
-| DefaultSelectedKeys | 默认选中的节点key | string[] | null | |
-| DefaultCheckedKeys  | 默认勾选的节点key |  string[] | null |   |
+| DefaultSelectedKey | 默认选中的节点Key | string | null |  |
+| DefaultSelectedKeys | 默认选中的多个节点的key | string[] | null | |
+| DefaultCheckedKeys  | 默认勾选的多个节点的key |  string[] | null |   |
 | DisableCheckKeys | 默认禁用的勾选节点 |  string[] |  null |   |
 | SearchValue  | 搜索节点关键字  | string  | null  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
@@ -56,13 +57,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| @bind-SelectedKey | 绑定选择的节点Key | string |   |  |
-| @bind-SelectedNode | 绑定选择的节点 | TreeNode |  |  |
-| @bind-SelectedData | 绑定选择的节点数据项 | string |  |  |
-| @bind-SelectedKeys | 绑定选择的节点Key集合 | string[] |  |  |
-| @bind-SelectedDatas | 绑定选择的节点数据项 | TItem[] |  |  |
-| @bind-CheckedKeys | 绑定勾选的数据 keys | string[] |  |  | 
-
+| @bind-SelectedKey | 绑定选择的节点的Key值 (也可使用DefaultSelectedKey设置初始值) | string |   |  |
+| @bind-SelectedNode | 绑定选择的节点 (使用DefaultSelectedKey设置初始值) | TreeNode<TItem> |  |  |
+| @bind-SelectedData | 绑定选择节点的数据 (使用DefaultSelectedKey设置初始值) | string |  |  |
+| @bind-SelectedKeys | 绑定多个选择的节点的Key值 (也可使用DefaultSelectedKeys设置初始值) | string[] |  |  |
+| @bind-SelectedNodes | 绑定选择的多个节点 (使用DefaultSelectedKeys设置初始值) | TreeNode<TItem>[] |  |  |
+| @bind-SelectedDatas | 绑定选择的多个节点的数据 (使用DefaultSelectedKeys设置初始值) | TItem[] |  |  |
+| @bind-CheckedKeys | 绑定多个勾选的节点的Key值 (也可使用DefaultCheckedKey设置初始值) | string[] |  |  | 
+| @bind-ExpandedKeys | 绑定多个展开的节点的Key值 (也可使用DefaultExpandedKey设置初始值) | string[] |  |  | 
 ### Tree EventCallback
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
@@ -102,9 +104,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | --- | --- | --- | --- | --- |
 | Key  |  节点key  | string  |   |   |
 | Disabled |  是否禁用 | string  |   |   |
-| Checked | 勾选  |  boolean |  false |   |
+| Checked | 是否勾选（支持双向绑定）  |  boolean |  false |   |
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
-| Checked | 勾选  |  boolean |  false |   |
+| Selected | 是否选中（支持双向绑定）  |  boolean |  false |   |
+| Expanded | 是否展开（支持双向绑定）  |  boolean |  false |   |
 | Title | 标题  |  string |  false |   |
 | TitleTemplate | 标题模板 | RenderFragment | null |  |
 | Icon | 标题前图标  |  string |  false |   |
