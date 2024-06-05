@@ -84,6 +84,10 @@ namespace AntDesign
         [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
 
+
+        [Parameter]
+        public string Width { get; set; }
+
         private static readonly Type _surfaceType = typeof(TValue);
 
         private static readonly Type[] _smallIntegerType = new Type[]
@@ -180,6 +184,8 @@ namespace AntDesign
         private ClassMapper _affixWarrperClass = new ClassMapper();
 
         private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
+
+        private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
         public InputNumber()
         {

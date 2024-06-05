@@ -49,12 +49,6 @@
     public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
          @<InputNumber Value="(TData?)filter.Value" TValue="TData?" ValueChanged="value => filter.Value = (object)value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
 
-    private static string NumberFormatter<TData>(TData value, string format)
-    {
-        if (value == null) return null;
-        return Formatter<TData>.Format(value, format);
-    }
-
     public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
         @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
 
