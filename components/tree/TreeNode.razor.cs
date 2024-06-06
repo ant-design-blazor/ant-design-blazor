@@ -492,6 +492,18 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CheckedChanged { get; set; }
 
+        private bool _checkable = true;
+
+        /// <summary>
+        /// Checkable can only be set to false when TreeComponent.CheckStrictly is true
+        /// </summary>
+        [Parameter]
+        public bool Checkable
+        {
+            get => TreeComponent.Checkable && (_checkable || !TreeComponent.CheckStrictly);
+            set => _checkable = value;
+        }
+
         public bool Indeterminate { get; set; }
 
         private bool _disableCheckbox;
@@ -530,14 +542,14 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if (!TreeComponent.Checkable) return;
             if (!DoCheck(check, false, true)) return;
             TreeComponent.UpdateCheckedKeys();
         }
 
         internal bool DoCheck(bool check, bool strict, bool isManual)
         {
-            if (TreeComponent.CheckStrictly || strict)
+            if (!Checkable) return false;
+            else if (TreeComponent.CheckStrictly || strict)
             {
                 _actualChecked = (!Disabled || !DisableCheckbox || !isManual) ? check : _actualChecked;
                 Indeterminate = false;
@@ -960,7 +972,10 @@ namespace AntDesign
             if (TreeComponent.DisabledExpression != null)
                 Disabled = TreeComponent.DisabledExpression(this);
 
-            if (TreeComponent.Checkable)
+            if (TreeComponent.CheckableExpression != null)
+                Checkable = TreeComponent.CheckableExpression(this);
+
+            if (Checkable)
             {
                 var isChecked = false;
                 if (_checked)

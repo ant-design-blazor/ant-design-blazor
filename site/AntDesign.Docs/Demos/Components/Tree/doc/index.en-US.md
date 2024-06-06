@@ -45,6 +45,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | IsLeafExpression  | Specifies a method that returns whether the expression is a leaf node.  | Func  |   |   |
 | ChildrenExpression  | Specifies a method  to return a child node  | Func  |   |   |
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
+| CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | DefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | DefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
 | DefaultExpandedKeys  |  Expand the specified tree node by default | string[]  | null |   |
@@ -104,6 +105,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | --- | --- | --- | --- | --- |
 | Key  |  key  | string  |   |   |
 | Disabled |  disabled | string  |   |   |
+| Checkable | Checkable  |  boolean |  true |   |
 | Checked | checked (Supports two-way binding)  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
 | Selected | selected (Supports two-way binding)  |  boolean |  false |   |

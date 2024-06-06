@@ -84,6 +84,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | IsLeafExpression  | 返回一个值是否是页节点  | Func  |   |   |
 | ChildrenExpression  | 返回子节点的方法  | Func  |   |   |
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
+| CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 
@@ -106,6 +107,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | --- | --- | --- | --- | --- |
 | Key  |  节点key  | string  |   |   |
 | Disabled |  是否禁用 | string  |   |   |
+| Checkable | 是否可勾选  |  boolean |  true |   |
 | Checked | 是否勾选（支持双向绑定）  |  boolean |  false |   |
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
 | Selected | 是否选中（支持双向绑定）  |  boolean |  false |   |
