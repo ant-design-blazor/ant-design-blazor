@@ -494,13 +494,10 @@ namespace AntDesign
 
         private bool _checkable = true;
 
-        /// <summary>
-        /// Checkable can only be set to false when TreeComponent.CheckStrictly is true
-        /// </summary>
         [Parameter]
         public bool Checkable
         {
-            get => TreeComponent.Checkable && (_checkable || !TreeComponent.CheckStrictly);
+            get => TreeComponent.Checkable && _checkable;
             set => _checkable = value;
         }
 
@@ -579,12 +576,14 @@ namespace AntDesign
             {
                 foreach (var child in subnode.ChildNodes)
                 {
+                    if (!child.Checkable) continue;
                     if (child.SetChildChecked(child, check, isManual))
                         hasChecked = true;
                     else
                         hasUnChecked = true;
                 }
-                _actualChecked = !hasUnChecked;
+                if (hasChecked || hasUnChecked)
+                    _actualChecked = !hasUnChecked;
             }
             Indeterminate = hasChecked && hasUnChecked;
             if (Indeterminate)
@@ -599,6 +598,7 @@ namespace AntDesign
         /// <param name="halfChecked"></param>
         private void UpdateCheckState(bool? halfChecked = null)
         {
+            if (!Checkable) return;
             if (halfChecked == true)
             {
                 //If the child node is indeterminate, the parent node must is indeterminate.
@@ -613,6 +613,7 @@ namespace AntDesign
 
                 foreach (var item in ChildNodes)
                 {
+                    if (!item.Checkable) continue;
                     if (item.Indeterminate)
                     {
                         hasChecked = true;
