@@ -13,6 +13,9 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TModel))]
+#endif
     public partial class Form<TModel> : AntDomComponentBase, IForm
     {
         private readonly string _prefixCls = "ant-form";

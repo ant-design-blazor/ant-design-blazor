@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -10,30 +10,33 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using AntDesign.Internal;
 
 namespace AntDesign;
 
-public partial class GenerateFormItem<TItem> : ComponentBase
+public partial class GenerateFormItem<TModel> : ComponentBase
 {
     private PropertyInfo[] _propertyInfos = { };
 
 
-    [Parameter] public TItem Model { get; set; }
+    [CascadingParameter(Name = "Form")]
+    private IForm Form { get; set; }
+
 
     /// <summary>
     /// If true then the rules will be required by CheckTypeRequire.
     /// Recommended only for forms without complex validation, where only simple validation for empty values is required.
     /// </summary>
     [Parameter]
-    public bool? RulesRequireByType { get; set; }
+    public bool RulesRequireByType { get; set; }
 
-    [Parameter] public Func<PropertyInfo, TItem, RenderFragment>? Definitions { get; set; }
+    [Parameter] public Func<PropertyInfo, TModel, RenderFragment> Definitions { get; set; }
 
-    [Parameter] public Func<PropertyInfo, TItem, bool>? NotGenerate { get; set; }
+    [Parameter] public Func<PropertyInfo, TModel, bool> NotGenerate { get; set; }
 
     protected override void OnInitialized()
     {
-        _propertyInfos = typeof(TItem).GetProperties();
+        _propertyInfos = typeof(TModel).GetProperties();
 
         base.OnInitialized();
     }
@@ -43,7 +46,7 @@ public partial class GenerateFormItem<TItem> : ComponentBase
         foreach (var property in _propertyInfos)
         {
             // Not Generate
-            if (NotGenerate != null && NotGenerate.Invoke(property, Model))
+            if (NotGenerate != null && NotGenerate.Invoke(property, (TModel)Form.Model))
             {
                 continue;
             }
@@ -54,7 +57,7 @@ public partial class GenerateFormItem<TItem> : ComponentBase
             RenderFragment? childContent = null;
             if (Definitions != null)
             {
-                childContent = Definitions.Invoke(property, Model);
+                childContent = Definitions.Invoke(property, (TModel)Form.Model);
             }
 
             childContent ??= GenerateByType(underlyingType, property, displayName, isRequired);
@@ -172,11 +175,11 @@ public partial class GenerateFormItem<TItem> : ComponentBase
     {
         if (isRequired)
         {
-            var dateTimeValue = (DateTime)(property.GetValue(Model) ?? DateTime.Now);
+            var dateTimeValue = (DateTime)(property.GetValue(Form.Model) ?? DateTime.Now);
             if (dateTimeValue == DateTime.MinValue)
             {
                 dateTimeValue = DateTime.Now;
-                property.SetValue(Model, dateTimeValue);
+                property.SetValue(Form.Model, dateTimeValue);
             }
         }
         return MakeFormItem(property, typeof(DatePicker<>));
@@ -189,7 +192,7 @@ public partial class GenerateFormItem<TItem> : ComponentBase
 
     private RenderFragment MakeFormItem(PropertyInfo property, Type formItemChildContent)
     {
-        var constant = Expression.Constant(Model, typeof(TItem));
+        var constant = Expression.Constant(Form.Model, typeof(TModel));
         var exp = Expression.Property(constant, property.Name);
         var genericType = formItemChildContent;
         var constructedType = genericType.MakeGenericType(property.PropertyType);
@@ -201,9 +204,9 @@ public partial class GenerateFormItem<TItem> : ComponentBase
         {
             builder.OpenComponent(0, constructedType);
 
-            builder.AddAttribute(1, "Value", property.GetValue(Model));
+            builder.AddAttribute(1, "Value", property.GetValue(Form.Model));
             var eventCallback = CreateEventCallback(property.PropertyType, this,
-                new Action<object>(o => property.SetValue(Model, o)));
+                new Action<object>(o => property.SetValue(Form.Model, o)));
             builder.AddAttribute(2, "ValueChanged", eventCallback);
             builder.AddAttribute(3, "ValueExpression", Expression.Lambda(constructedFuncType, exp));
             builder.CloseComponent();
