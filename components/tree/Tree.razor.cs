@@ -603,6 +603,12 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
+        /// <summary>
+        /// Specifies a method to return a checkable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
+
         #endregion DataBind
 
         #region Event
