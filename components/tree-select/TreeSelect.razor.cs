@@ -180,8 +180,10 @@ namespace AntDesign
                 {
                     ClearOptions();
                 }
-
-                UpdateValueAndSelection();
+                else
+                {
+                    UpdateValueAndSelection();
+                }
             }
         }
 
@@ -410,7 +412,7 @@ namespace AntDesign
             if (TreeCheckable)
                 return;
             // Prevent deselect in sigle selection mode
-            if (!Multiple && args.Node.Key == GetTreeKeyFormValue(Value))
+            if ((Value != null) && !Multiple && args.Node.Key == GetTreeKeyFormValue(Value))
             {
                 args.Node.SetSelected(true);
                 return;
@@ -476,6 +478,8 @@ namespace AntDesign
             }
             else
             {
+                if (Value == null)
+                    return;
                 _tree?.FindFirstOrDefaultNode(node => node.Key == GetTreeKeyFormValue(Value))?.SetSelected(true);
             }
         }
