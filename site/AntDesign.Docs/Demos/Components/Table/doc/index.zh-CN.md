@@ -107,6 +107,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
 
+### Selection
+
+| 参数              | 说明             | 类型                         | 默认值 |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| CheckStrictly    | checkable 状态下节点选择完全受控（父子数据选中状态不再关联）|  bool |  true  |
+| Type             |  多选/单选        | `checkbox` \| `radio`      | `checkbox` |
+| Disabled         |  是否禁用         |      bool            |   false      |
 
 ### GenerateColumns
 
