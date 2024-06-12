@@ -63,14 +63,20 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
-            foreach (var select in _dataSourceCache.Values)
+            foreach (var select in _rootRowDataCache.Values)
             {
-                if (select.Disabled)
+                if (select.DataItem.Disabled)
                     continue;
 
-                select.SetSelected(true);
-                _selectedRows.Add(select.Data);
+                select.SetSelected(true, _selection.CheckStrictly);
             }
+
+            _selectedRows.Clear();
+            foreach (var item in _dataSourceCache.Values.Where(x => x.Selected))
+            {
+                _selectedRows.Add(item.Data);
+            }
+
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
@@ -84,7 +90,15 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
-            ClearSelectedRows();
+            foreach (var select in _rootRowDataCache.Values)
+            {
+                if (select.DataItem.Disabled)
+                    continue;
+
+                select.SetSelected(false, _selection.CheckStrictly);
+            }
+
+            _selectedRows.Clear();
 
             _preventRowDataTriggerSelectedRowsChanged = false;
 
