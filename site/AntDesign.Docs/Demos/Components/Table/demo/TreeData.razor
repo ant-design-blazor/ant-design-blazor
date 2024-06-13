@@ -1,14 +1,23 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="_data" TreeChildren="item=>item.Children">
-    <Selection CheckStrictly="false" />
+CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
+<br/>
+
+<Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
+    <Selection CheckStrictly="_checkStrictly" />
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
     <PropertyColumn Property="c=>c.Address" Width="30%" />
 </Table>
 
+@string.Join(",", _selectedRows.Select(x=>x.Name))
+
 @code {
+    bool _checkStrictly;
+
     Data[] _data;
+
+    IEnumerable<Data> _selectedRows = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,7 +42,7 @@
     }
 
     Data[] data =
-{
+    {
         new() {
             Key = "1",
             Name = "John Brown sr.",

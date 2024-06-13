@@ -71,12 +71,6 @@ namespace AntDesign
                 select.SetSelected(true, _selection.CheckStrictly);
             }
 
-            _selectedRows.Clear();
-            foreach (var item in _dataSourceCache.Values.Where(x => x.Selected))
-            {
-                _selectedRows.Add(item.Data);
-            }
-
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
@@ -98,9 +92,7 @@ namespace AntDesign
                 select.SetSelected(false, _selection.CheckStrictly);
             }
 
-            _selectedRows.Clear();
-
-            _preventRowDataTriggerSelectedRowsChanged = false;
+             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
