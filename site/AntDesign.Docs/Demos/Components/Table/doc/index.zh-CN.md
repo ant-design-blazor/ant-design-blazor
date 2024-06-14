@@ -73,6 +73,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
 | Resizable | 启用可伸缩列 | bool | false |
 | FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
+| Filtered   | 标识数据是否经过过滤，筛选图标会高亮 | bool |  false |
 
 ### Column
 

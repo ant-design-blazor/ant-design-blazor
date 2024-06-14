@@ -141,6 +141,12 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        /// <summary>
+        /// Whether the dataSource is filtered. Filter icon will be actived when it is true.
+        /// </summary>
+        [Parameter]
+        public bool Filtered { get; set; }
+
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 
@@ -183,6 +189,8 @@ namespace AntDesign
         private RenderFragment _renderDefaultFilterDropdown;
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
+        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         protected override void OnInitialized()
         {
