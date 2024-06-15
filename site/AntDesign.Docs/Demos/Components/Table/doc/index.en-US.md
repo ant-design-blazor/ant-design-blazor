@@ -97,6 +97,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | OnFilter | Filter current data | Expression<Func<TData, TData, bool>> | - |
 | FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
 | FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
+| Filtered   |  Whether the dataSource is filtered. Filter icon will be actived when it is true. | bool |  false |
 
 ### PropertyColumn
 
