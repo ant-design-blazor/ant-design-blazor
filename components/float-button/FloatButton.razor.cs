@@ -7,25 +7,34 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
     public partial class FloatButton : AntDomComponentBase
     {
+        [Parameter]
         public RenderFragment Icon { get; set; }
 
+        [Parameter]
         public RenderFragment Description { get; set; }
 
+        [Parameter]
         public RenderFragment Tooltip { get; set; }
 
-        public string Type { get; set; }
+        [Parameter]
+        public string Type { get; set; } = "default";
 
-        public string Shape { get; set; }
+        [Parameter]
+        public string Shape { get; set; } = "circle";
 
+        [Parameter]
         public EventCallback OnClick { get; set; }
 
+        [Parameter]
         public string Href { get; set; }
 
+        [Parameter]
         public string Target { get; set; }
 
         protected override void OnInitialized()
@@ -38,6 +47,11 @@ namespace AntDesign
                 .If($"{prefixCls}-primary", () => Type == "primary")
                 .If($"{prefixCls}-circle", () => Shape == "circle")
                 .If($"{prefixCls}-square", () => Shape == "square");
+        }
+
+        private void HandleClick(MouseEventArgs args)
+        {
+
         }
     }
 }
