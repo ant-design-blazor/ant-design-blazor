@@ -412,7 +412,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
             if (SelectOptions == null)
@@ -433,9 +433,9 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
 
-                OnValueChange(_selectedValue);
+                await OnValueChangeAsync(_selectedValue);
             }
-            base.OnParametersSet();
+            await base.OnParametersSetAsync();
         }
 
         private void EvaluateDataSourceChange()
@@ -522,12 +522,12 @@ namespace AntDesign
                 {
                     if (LastValueBeforeReset is not null)
                     {
-                        OnValueChange(LastValueBeforeReset);
+                        await OnValueChangeAsync(LastValueBeforeReset);
                         LastValueBeforeReset = default;
                     }
                     else
                     {
-                        OnValueChange(Value);
+                        await OnValueChangeAsync(Value);
                     }
                 }
                 else
@@ -1078,17 +1078,14 @@ namespace AntDesign
         /// </summary>
         internal TItemValue LastValueBeforeReset { get; set; }
 
-        /// <summary>
-        /// The Method is called every time if the value of the @bind-Value was changed by the two-way binding.
-        /// </summary>
-        protected override void OnValueChange(TItemValue value)
+        protected override async Task OnValueChangeAsync(TItemValue value)
         {
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
             if (!_isValueEnum && !TypeDefaultExistsAsSelectOption && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                await InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
             }
 
@@ -1103,21 +1100,20 @@ namespace AntDesign
 
                 if (!AllowClear)
                 {
-                    _ = TrySetDefaultValueAsync();
+                    await TrySetDefaultValueAsync();
                 }
                 else
                 {
                     //Reset value if not found - needed if value changed
                     //outside of the component
-                    _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                    await InvokeAsync(() => OnInputClearClickAsync(new()));
                 }
                 return;
             }
 
             if (result.IsDisabled)
             {
-                _ = TrySetDefaultValueAsync();
-
+                await TrySetDefaultValueAsync();
                 return;
             }
 
@@ -1128,7 +1124,7 @@ namespace AntDesign
             if (HideSelected)
                 result.IsHidden = true;
 
-            ValueChanged.InvokeAsync(result.Value);
+            await ValueChanged.InvokeAsync(result.Value);
         }
 
         /// <summary>
