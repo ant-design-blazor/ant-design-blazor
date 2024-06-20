@@ -49,6 +49,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Style | 设置 Input 的 CSS 样式 | string | - |  |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
 | Type            |声明 input 类型，同原生 input 标签的 type 属性，见：MDN(请直接使用 TextArea 代替 type="textarea")。         | string  | -         |
+| Width | 输入框宽度                              | string        | -         |
 | WrapperStyle | 设置外部 `<span>` 元素的样式。当使用了 `Prefix` 、 `Suffix`、 `AllowClear` 属性或者是 `Password` 或 `Search` 组件时，需要用 `WrapperStyle` 来设置整个组件的样式。  | string | - |  |
 
 ### Common Methods
