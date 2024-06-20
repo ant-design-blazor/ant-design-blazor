@@ -38,7 +38,7 @@
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
             @{yearIndex++;}
-            @currentColDate.ToString(Locale.Lang.YearFormat, CultureInfo)
+            @currentColDate.ToString("yyyy", CultureInfo)
         </RenderColValue>
     </DatePickerTemplate>
 </div>
