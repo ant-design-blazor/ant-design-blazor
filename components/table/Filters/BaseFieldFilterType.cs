@@ -17,7 +17,7 @@ public abstract class BaseFieldFilterType : IFieldFilterType
 
     public virtual IEnumerable<TableFilterCompareOperator> SupportedCompareOperators { get; set; } = _supportedCompareOperators;
 
-    public virtual Dictionary<string, object> InputAttributes { get; } = [];
+    public virtual Dictionary<string, object> InputAttributes { get; set; } = [];
 
     private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
     {
