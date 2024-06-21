@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign.Docs.Shared
 {
-    public partial class MainLayout : LayoutComponentBase, IDisposable
+    public partial class MainLayout : LayoutComponentBase
     {
         private bool _drawerVisible = false;
 
-        public string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        public string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private bool _isMobile;
 
@@ -19,20 +19,12 @@ namespace AntDesign.Docs.Shared
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public ILanguageService LanguageService { get; set; }
+        public ILocalizationService LocalizationService { get; set; }
 
         [Inject]
         public DemoService DemoService { get; set; }
 
         internal PrevNextNav PrevNextNav { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            StateHasChanged();
-            await DemoService.InitializeDemos();
-
-            NavigationManager.LocationChanged += OnLocationChanged;
-        }
 
         public async Task ChangePrevNextNav(string currentTitle)
         {
@@ -43,16 +35,6 @@ namespace AntDesign.Docs.Shared
             var prevNext = await DemoService.GetPrevNextMenu(currentSubmenuUrl, currentTitle);
 
             PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
-        }
-
-        private void OnLocationChanged(object sender, LocationChangedEventArgs args)
-        {
-            StateHasChanged();
-        }
-
-        public void Dispose()
-        {
-            NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
 }

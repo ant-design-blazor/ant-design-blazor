@@ -4,7 +4,7 @@
 @{
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
-                {
+                                        {
             //{ "onchange", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnChangeAsync(e)) },
             //{ "onblur", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnBlurAsync(e)) },
             //{ "oninput", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnInputAsync(e)) },
@@ -26,29 +26,36 @@
             //{ "class", ClassMapper.Class },
             { "disabled", Disabled },
             { "readonly", ReadOnly },
-       };
+    };
 
     if (AutoSize == false)
     {
         attributes.Add("style", _heightStyle + Style);
+        attributes.Add("rows", Rows);
     }
 
     if (Attributes != null)
     {
         Attributes.Keys.ForEach(key => { attributes[key] = Attributes[key]; });
     }
+
+    if (!string.IsNullOrEmpty(NameAttributeValue))
+    {
+        attributes.Add("name", NameAttributeValue);
+    }
 }
 
-
-@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null)
+@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
-    <span class="@_warpperClassMapper.Class">
-        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
-        <span class="ant-input-textarea-suffix">
+    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
+        <span class="@_warpperClassMapper.Class">
+            <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
             @if (AllowClear)
             {
                 @ClearIcon
             }
+        </span>
+        <span class="ant-input-textarea-suffix">
             @if (Suffix != null)
             {
                 @Suffix
@@ -58,12 +65,6 @@
                 @FormItem.FeedbackIcon
             }
         </span>
-    </span>
-}
-else if (ShowCount)
-{
-    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
-        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
     </div>
 }
 else

@@ -34,7 +34,12 @@ namespace AntDesign
 
         public static bool IsTypeNullable<T>()
         {
-            return Nullable.GetUnderlyingType(typeof(T)) != null;
+            return IsTypeNullable(typeof(T));
+        }
+
+        public static bool IsTypeNullable(Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         public static Type GetNullableType<T>()
@@ -76,29 +81,21 @@ namespace AntDesign
             return targetType;
         }
 
-        public static bool IsNumericType<T>()
+        public static bool IsNumericType(this Type type)
         {
-            Type type = GetUnderlyingType<T>();
-            if (type == null)
-            {
-                return false;
-            }
-
-            return Type.GetTypeCode(type) switch
-            {
-                TypeCode.Byte
-                or TypeCode.Decimal
-                or TypeCode.Double
-                or TypeCode.Int16
-                or TypeCode.Int32
-                or TypeCode.Int64
-                or TypeCode.SByte
-                or TypeCode.Single
-                or TypeCode.UInt16
-                or TypeCode.UInt32
-                or TypeCode.UInt64 => true,
-                _ => false,
-            };
+            return type != null
+                && Type.GetTypeCode(type)
+                       is TypeCode.Byte
+                       or TypeCode.Decimal
+                       or TypeCode.Double
+                       or TypeCode.Int16
+                       or TypeCode.Int32
+                       or TypeCode.Int64
+                       or TypeCode.SByte
+                       or TypeCode.Single
+                       or TypeCode.UInt16
+                       or TypeCode.UInt32
+                       or TypeCode.UInt64;
         }
     }
 }

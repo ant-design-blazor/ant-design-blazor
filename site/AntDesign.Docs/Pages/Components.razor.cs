@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
     public partial class Components : ComponentBase, IDisposable
     {
+        [Parameter]
+        public string Locale { get; set; }
         [Parameter]
         public string Name { get; set; }
 
@@ -20,7 +23,10 @@ namespace AntDesign.Docs.Pages
         private DemoService DemoService { get; set; }
 
         [Inject]
-        private ILanguageService LanguageService { get; set; }
+        private ILocalizationService LocalizationService { get; set; }
+
+        [Inject]
+        private IStringLocalizer Localizer { get; set; }
 
         [Inject]
         private NavigationManager NavigationManager { get; set; }
@@ -34,55 +40,61 @@ namespace AntDesign.Docs.Pages
 
         private bool _expandAllCode;
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private string _filePath;
 
         private List<string> _filePaths;
 
-        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
+        private bool _rendered;
 
-        private bool _firstRendered;
+        private bool _changed = true;
+
+        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
         protected override void OnInitialized()
         {
-            LanguageService.LanguageChanged += OnLanguageChanged;
+            LocalizationService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
+        }
+
+        private void OnLanguageChanged(object sender, CultureInfo args)
+        {
+            if (!string.IsNullOrEmpty(Name))
+            {
+                _changed = true;
+                InvokeAsync(StateHasChanged);
+            }
+        }
+
+        private void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        {
+            _changed = true;
+            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                _firstRendered = true;
-                await HandleNavigate();
+                _rendered = true;
+                await Task.Yield();
+                StateHasChanged();
+                return;
             }
-        }
 
-        private async void OnLanguageChanged(object sender, CultureInfo args)
-        {
-            if (!string.IsNullOrEmpty(Name))
+            if (_rendered && _changed)
             {
-                await InvokeAsync(HandleNavigate);
-                await InvokeAsync(StateHasChanged);
+                _changed = false;
+                _ = HandleNavigate();
             }
-        }
 
-        private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
-        {
-            Name = null;
-            await HandleNavigate();
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-            await HandleNavigate();
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task HandleNavigate()
         {
-            if (!_firstRendered) return;
+            if (!_rendered) return;
 
             var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Trim('/');
             fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName[(fullPageName.IndexOf('/') + 1)..] : fullPageName;
@@ -117,7 +129,7 @@ namespace AntDesign.Docs.Pages
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
             NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }

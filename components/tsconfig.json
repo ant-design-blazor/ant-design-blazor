@@ -11,5 +11,8 @@
   "exclude": [
     "node_modules",
     "wwwroot"
+  ],
+  "include": [
+    "./**/*.ts"
   ]
 }

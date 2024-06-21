@@ -11,11 +11,22 @@ namespace AntDesign
         [Inject]
         private DrawerService DrawerService { get; set; }
 
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         protected override void OnInitialized()
         {
             DrawerService.OnCloseEvent += DrawerService_OnClose;
             DrawerService.OnOpenEvent += DrawerService_OnCreate;
             DrawerService.OnUpdateEvent += DrawerService_OnUpdateEvent;
+
+            NavigationManager.LocationChanged += OnLocationChanged;
+        }
+
+        private void OnLocationChanged(object sender, EventArgs e)
+        {
+            _drawerRefs.Clear();
+            InvokeStateHasChanged();
         }
 
         protected override void Dispose(bool disposing)
@@ -23,6 +34,7 @@ namespace AntDesign
             DrawerService.OnCloseEvent -= DrawerService_OnClose;
             DrawerService.OnOpenEvent -= DrawerService_OnCreate;
             DrawerService.OnUpdateEvent -= DrawerService_OnUpdateEvent;
+            NavigationManager.LocationChanged -= OnLocationChanged;
 
             base.Dispose(disposing);
         }

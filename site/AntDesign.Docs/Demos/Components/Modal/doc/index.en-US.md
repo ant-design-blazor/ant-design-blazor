@@ -23,7 +23,8 @@ When requiring users to interact with the application, but without jumping to a 
 | CloseIcon         | custom close icon                                            | RenderFragment                | -             |
 | ConfirmLoading    | Whether to apply loading  visual effect for OK button or not | bool                          | false         |
 | DestroyOnClose    | Whether to unmount child  components on onClose              | bool                          | false         |
-| Footer            | Footer content, set as  footer={null} when you don't need default buttons | string\|RenderFragment        | 确定取消按钮  |
+| Header            | Header content, set as Header="null" when you don't need default header      | RenderFragment                | -             |
+| Footer            | Footer content, set as Footer="null" when you don't need default buttons | string\|RenderFragment    | confirm and cancel buttons  |
 | ForceRender       | Force render Modal                                           | bool                          | false         |
 | GetContainer      | Return the mount node for  Modal                             | ElementReference?             | document.body |
 | Keyboard          | Whether support press esc to close                           | bool                          | true          |
@@ -50,6 +51,7 @@ When requiring users to interact with the application, but without jumping to a 
 | MaximizeBtnIcon | The icon of the maximize button when the modal is in normal state    | RenderFragment | fullscreen       |
 | RestoreBtnIcon  | The icon of the maximize button when the modal is in maximized state | RenderFragment | fullscreen-exit  |
 | DefaultMaximized | Modal is maximized at initialization | bool   | false |
+| Resizable | Can Modal be resized | bool | false |
 
 #### Note
 

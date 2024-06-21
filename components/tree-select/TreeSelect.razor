@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits SelectBase<string, TItem>
+@inherits SelectBase<TItemValue, TItem>
+@typeparam TItemValue
 @typeparam TItem
 
 @using AntDesign.Internal
@@ -25,45 +26,48 @@
             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
               <div>
                 <div class="" role="listbox" style="display: flex; flex-direction: column;">
-
-                  <Tree @ref="_tree"
+                  <CascadingValue Name="TreeSelect" Value="this" IsFixed="true">
+                    <Tree @ref="_tree"
                         TItem="TItem"
                         BlockNode
                         DataSource="DataSource"
                         Multiple="Multiple"
-                        Selectable="!TreeCheckable"
-                        SelectedKeys="SelectedKeys"
+                        Selectable="!TreeCheckable"                       
                         Checkable="TreeCheckable"
+                        CheckStrictly="true"
                         OnClick="OnTreeNodeClick"
                         OnUnselect="OnTreeNodeUnSelect"
-                        OnCheck="OnTreeCheck"
+                        CheckedKeysChanged="OnTreeCheckedKeysChanged"
                         ShowLeafIcon="ShowLeafIcon"
+                        ShowIcon="ShowIcon"
                         ShowLine="ShowTreeLine"
                         TitleExpression="TitleExpression"
                         TitleTemplate="TitleTemplate"
+                        TitleIconTemplate="TitleIconTemplate"
                         KeyExpression="KeyExpression"
                         IconExpression="IconExpression"
                         IsLeafExpression="IsLeafExpression"
                         ChildrenExpression="ChildrenExpression"
                         DisabledExpression="DisabledExpression"
+                        CheckableExpression="CheckableExpression"
                         DefaultExpandAll="TreeDefaultExpandAll"
                         SearchExpression="SearchExpression"
+                        ExpandedKeys="ExpandedKeys"
                         MatchedStyle="@MatchedStyle"
                         MatchedClass="@MatchedClass"
                         SearchValue="@_searchValue"
                         OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"
-                        @attributes="TreeAttributes"
-                  >
-                    <Nodes>
-                      @if (IsTemplatedNodes)
-                      {
-                        <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
-                          @ChildContent
-                        </CascadingValue>
-                      }
-                    </Nodes>
-
-                  </Tree>
+                        @attributes="TreeAttributes">
+                      <Nodes>
+                        @if (IsTemplatedNodes)
+                        {
+                          <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
+                            @ChildContent
+                          </CascadingValue>
+                        }
+                      </Nodes>
+                    </Tree>
+                  </CascadingValue>
                 </div>
               </div>
             </div>
@@ -77,7 +81,7 @@
                   <SelectContent Prefix="@ClassPrefix"
                                  RefBack="@context"
                                  @ref="_selectContent"
-                                 TItemValue="string"
+                                 TItemValue="TItemValue"
                                  TItem="TItem"
                                  SearchValue="@_searchValue"
                                  SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
@@ -89,8 +93,7 @@
                                  OnBlur="@OnInputBlurAsync"
                                  OnClearClick="@OnInputClearClickAsync"
                                  OnRemoveSelected="@OnRemoveSelectedAsync"
-                                 Placeholder="@Placeholder"
-                                 ShowPlaceholder="@ShowPlaceholder" />
+                                 Placeholder="@Placeholder" />
                 </CascadingValue>
               </CascadingValue>
             </CascadingValue>

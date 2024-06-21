@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-async
+When the list of matched content is returned asyncronously.

@@ -10,18 +10,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using AntDesign.Select;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using AntDesign.Core.Helpers.MemberPath;
 
 #endregion using block
 
 namespace AntDesign
 {
-    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>
+    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected const string DefaultWidth = "width: 100%;";
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
@@ -51,13 +53,21 @@ namespace AntDesign
 
         protected SelectContent<TItemValue, TItem> _selectContent;
 
-        protected IEnumerable<TItemValue> _selectedValues;
+        protected TItemValue[] _selectedValues;
 
+        protected Func<TItem, string> _getLabel;
         protected Action<TItem, string> _setLabel;
 
+        protected Func<TItem, TItemValue> _getValue;
         protected Action<TItem, TItemValue> _setValue;
 
+
+        private string _labelName;
+        private string _valueName;
+
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
+
+        internal ClassMapper CurrentClassMapper => ClassMapper;
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -94,10 +104,10 @@ namespace AntDesign
 
         /// <summary>
         /// Delays the processing of the search input event until the user has stopped
-        /// typing for a predetermined amount of time
+        /// typing for a predetermined amount of time. Default to 250ms.
         /// </summary>
         [Parameter]
-        public int SearchDebounceMilliseconds { get; set; }
+        public int SearchDebounceMilliseconds { get; set; } = 250;
 
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
@@ -118,6 +128,8 @@ namespace AntDesign
         /// Called when focus.
         /// </summary>
         [Parameter] public EventCallback OnFocus { get; set; }
+
+        [Parameter] public bool AutoFocus { get; set; }
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
@@ -263,12 +275,12 @@ namespace AntDesign
                             return;
                         }
 
-                        _selectedValues = value;
+                        _selectedValues = value.ToArray();
                         _ = OnValuesChangeAsync(value);
                     }
                     else
                     {
-                        _selectedValues = value;
+                        _selectedValues = value.ToArray();
 
                         _ = OnValuesChangeAsync(value);
                     }
@@ -439,10 +451,53 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, string> ItemLabel { get => _getLabel; set => _getLabel = value; }
+
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ItemValue { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// The name of the property to be used for the label.
+        /// </summary>
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
+                }
+                _labelName = value;
+            }
+        }
+
+        /// <summary>
+        /// The name of the property to be used for the value.
+        /// </summary>
+        [Parameter]
+        public string ValueName
+        {
+            get => _valueName;
+            set
+            {
+                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
+                _valueName = value;
+            }
+        }
+
+        /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
         /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
-        protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
+        //protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
 
         /// <summary>
         ///     The Method is called every time if the value of the @bind-Values was changed by the two-way binding.
@@ -644,6 +699,16 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        protected override async Task OnFirstAfterRenderAsync()
+        {
+            if (AutoFocus)
+            {
+                await SetInputFocusAsync();
+            }
+
+            await base.OnFirstAfterRenderAsync();
+        }
+
         protected void OnOverlayHide()
         {
             if (!IsSearchEnabled)
@@ -739,6 +804,7 @@ namespace AntDesign
                 {
                     SelectedOptionItems.Add(selectOption);
                 }
+
                 selectOption.IsSelected = true;
                 CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
@@ -763,7 +829,7 @@ namespace AntDesign
                     {
                         CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
-                        if (!SelectOptionItems.Any(x => x.Value.Equals(selectOption.Value)))
+                        if (!SelectOptionItems.Any(x => x.Value.AllNullOrEquals(selectOption.Value)))
                         {
                             SelectOptionItems.Add(selectOption);
                         }
@@ -968,7 +1034,7 @@ namespace AntDesign
         ///     Check if Focused property is False; Set the Focused property to true, change the
         ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
         /// </summary>
-        protected async Task SetInputFocusAsync()
+        internal async Task SetInputFocusAsync()
         {
             if (!Focused)
             {
@@ -991,11 +1057,6 @@ namespace AntDesign
             }
         }
 
-        internal async Task OnArrowClick(MouseEventArgs args)
-        {
-            await _dropDown.OnClickDiv(args);
-        }
-
         /// <summary>
         ///     Close the overlay
         /// </summary>
@@ -1003,6 +1064,7 @@ namespace AntDesign
         internal async Task CloseAsync()
         {
             await _dropDown.Hide(true);
+            _selectContent?.ClearSearch();
         }
 
         /// <summary>
@@ -1044,5 +1106,30 @@ namespace AntDesign
         }
 
         protected abstract void SetClassMap();
+
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (_getLabel is null)
+            {
+                if (_getValue is null)
+                {
+                    return x.ToString() == y.ToString();
+                }
+                return x.ToString() == y.ToString()
+                    && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+            }
+            if (_getValue is null)
+            {
+                return _getLabel(x) == _getLabel(y);
+            }
+            return _getLabel(x) == _getLabel(y)
+                && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

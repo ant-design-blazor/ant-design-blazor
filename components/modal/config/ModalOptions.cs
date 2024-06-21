@@ -7,7 +7,7 @@ using OneOf;
 namespace AntDesign
 {
     /// <summary>
-    /// the options of Modal dialog box
+    /// The options of Modal dialog box
     /// </summary>
     public class ModalOptions : DialogOptionsBase
     {
@@ -137,8 +137,12 @@ namespace AntDesign
         /// <summary>
         /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
         /// </summary>
-        [Parameter]
         public bool DefaultMaximized { get; set; } = false;
+
+        /// <summary>
+        /// Resizable
+        /// </summary>
+        public bool Resizable { get; set; }
 
         #region internal
 

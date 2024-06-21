@@ -60,6 +60,9 @@ namespace AntDesign
         public TValue Min { get; set; }
 
         [Parameter]
+        public int? MaxLength { get; set; }
+
+        [Parameter]
         public bool Disabled { get; set; }
 
         [Parameter]
@@ -210,7 +213,7 @@ namespace AntDesign
             _equalToFunc = fexpEqualTo.Compile();
 
             //四舍五入 rounding
-            if (_floatTypes.Contains(_surfaceType))
+            if (_floatTypes.Contains(underlyingType))
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
                 ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
@@ -268,11 +271,11 @@ namespace AntDesign
         {
             validationErrorMessage = null;
 
-            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
-            {
-                result = Value;
-                return true;
-            }
+            //if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
+            //{
+            //    result = Value;
+            //    return true;
+            //}
 
             if (value == "-" || value == "+")
             {

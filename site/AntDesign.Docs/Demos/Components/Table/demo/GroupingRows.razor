@@ -1,0 +1,70 @@
+﻿@using System.ComponentModel
+
+<Table DataSource="data">
+     <Selection CheckStrictly />
+     <PropertyColumn Property="c=>c.Name" />
+     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
+     <PropertyColumn Property="c=>c.Subject" Width="30%" />
+     <PropertyColumn Property="c=>c.Grade" Width="30%" Grouping GroupBy="GradeGroupBy" />
+ </Table>
+
+ @code {
+    string GradeGroupBy(int grade)
+       => grade switch
+       {
+            >= 95 => "A (95 ~ 100)",
+            >= 90 => "B (90 ~ 94)",
+            _ => "C (0 ~ 89 )"
+       };
+
+    Data[] data =
+    {
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Grade = 90,
+            Subject= "Math"
+        },
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Grade = 95,
+            Subject= "Language"
+        },
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Grade = 85,
+            Subject="Science"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 10,
+            Grade = 89,
+            Subject= "Math"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 10,
+            Grade = 90,
+            Subject= "Language"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 10,
+            Grade = 95,
+            Subject="Science"
+        },
+    };
+
+    public class Data
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public int Grade { get; set; }
+
+        public string Subject { get; set; }
+    }
+}

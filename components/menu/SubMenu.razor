@@ -22,7 +22,7 @@
             </span>
             <i class="@(prefixCls)-arrow"></i>
         </div>
-        <ul direction="ltr" class="@SubMenuMapper.Class" role="menu" aria-expanded="@IsOpen">
+        <ul direction="ltr" class="@SubMenuMapper.Class" style="@_warpperStyle" @ref="@_warpperRef" role="menu" aria-expanded="@IsOpen">
             <CascadingValue Value="this" IsFixed="@true">
                 @ChildContent
             </CascadingValue>

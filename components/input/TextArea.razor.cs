@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -110,10 +111,10 @@ namespace AntDesign
 
         /// <summary>
         /// Sets the height of the TextArea expressed in number of rows.
-        /// Default value is 3.
+        /// Default value is 2.
         /// </summary>
         [Parameter]
-        public uint Rows { get; set; } = 3;
+        public uint Rows { get; set; } = 2;
 
         /// <summary>
         /// Callback when the size changes
@@ -156,7 +157,9 @@ namespace AntDesign
                 .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
                 .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL);
+                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
+                ;
 
             ClassMapper
                 .Add("ant-input-textarea ")
@@ -206,24 +209,28 @@ namespace AntDesign
             {
                 _afterFirstRender = true;
             }
-            if (AutoSize && _valueHasChanged)
+
+            if (_afterFirstRender)
             {
-                _valueHasChanged = false;
-                if (_isInputing)
+                if (AutoSize && _valueHasChanged)
                 {
-                    _isInputing = false;
+                    _valueHasChanged = false;
+                    if (_isInputing)
+                    {
+                        _isInputing = false;
+                    }
+                    else if (_afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                    }
                 }
-                else if (_afterFirstRender)
+                if (_styleHasChanged)
                 {
-                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
-                }
-            }
-            if (_styleHasChanged)
-            {
-                _styleHasChanged = false;
-                if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
-                {
-                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    _styleHasChanged = false;
+                    if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    }
                 }
             }
         }
@@ -318,16 +325,6 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
-        }
-
-        internal class TextAreaInfo
-        {
-            public double ScrollHeight { get; set; }
-            public double LineHeight { get; set; }
-            public double PaddingTop { get; set; }
-            public double PaddingBottom { get; set; }
-            public double BorderTop { get; set; }
-            public double BorderBottom { get; set; }
         }
     }
 }

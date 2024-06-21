@@ -1,0 +1,74 @@
+<Table @ref="_table" DataSource="dataSource" OnChange="OnChange" TItem="Data">
+    <ColumnDefinitions>
+        <PropertyColumn Property="c=>c.Name"
+                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filtered="!string.IsNullOrWhiteSpace(searchString)">
+            <FilterDropdown>
+                <Search Placeholder="Search Name" WrapperStyle="padding:20px;" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+            </FilterDropdown>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a,b)=> a - b)" />
+        <PropertyColumn Property="c=>c.Address"
+                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+                        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+                        Filters="addressFilters"
+                        FilterMultiple="false"
+                        OnFilter="(value,address)=>address.StartsWith(value)" />
+    </ColumnDefinitions>
+</Table>
+
+@using AntDesign.TableModels;
+@using System.Text.Json;
+@code {
+    string searchString;
+    IEnumerable<Data> dataSource;
+    ITable _table;
+
+    class Data
+    {
+        public Data(string name, int age, string address)
+        {
+            Name = name;
+            Age = age;
+            Address = address;
+        }
+
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+    }
+
+    Data[] data =
+    {
+        new("John Brown",32,"New York No. 1 Lake Park"),
+        new("Jim Green",42, "London No. 1 Lake Park"),
+        new("Joe Black", 32,"Sidney No. 1 Lake Park"),
+        new("Jim Red",32,"London No. 2 Lake Park"),
+    };
+
+    public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
+        new() { Text = "Joe", Value = "Joe" },
+        new() { Text = "Jim", Value = "Jim" },
+    };
+
+    public TableFilter<string>[] addressFilters = new TableFilter<string>[] {
+        new() { Text = "London", Value = "London" },
+        new() { Text = "New York", Value = "New York" },
+    };
+
+    void OnChange(QueryModel<Data> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+
+        dataSource = query.ExecuteQuery(data.AsQueryable())
+            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    void OnRowClick(RowData<Data> row)
+    {
+        Console.WriteLine($"row {row.Data.Name} was clicked");
+    }
+}

@@ -1,5 +1,5 @@
 ﻿---
-order: 13
+order: 130
 title:
   zh-CN: Modal模板组件
   en-US: ModalTemplate

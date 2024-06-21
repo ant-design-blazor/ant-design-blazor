@@ -24,7 +24,9 @@
             </SelectOptions>
         </Select>
     </FormItem>
-
+    <FormItem Label="DateRange">
+        <RangePicker @bind-Value="context.DateRange" />
+    </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
@@ -45,6 +47,8 @@
         public string Note { get; set; }
         [Required]
         public string Gender { get; set; }
+        [Required]
+        public DateTime?[] DateRange { get; set; }
     }
 
     private Model model = new Model();
@@ -54,6 +58,7 @@
     {
         model.Note = "Hello Sir!";
         model.Gender = "Male";
+        model.DateRange = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(1) };
 
         Console.WriteLine($"form ref:{form}");
     }

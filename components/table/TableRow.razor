@@ -30,7 +30,7 @@
 {
     <tr @attributes="attributes"
         data-row-key="@(RowData.RowIndex-1)" 
-        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
+        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @(RowData.IsGrouping? "ant-table-row-grouping":"") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
         @ChildContent
     </tr>
 }

@@ -38,7 +38,6 @@ namespace AntDesign.Select.Internal
 
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
-        [Parameter] public bool ShowPlaceholder { get; set; }
 
         [Parameter]
         public int MaxTagCount
@@ -89,6 +88,9 @@ namespace AntDesign.Select.Internal
         private bool _refocus;
         private Timer _debounceTimer;
         private string _inputString;
+        private bool _firstRender;
+
+        private bool _compositionInputting;
 
         protected override void OnInitialized()
         {
@@ -105,6 +107,7 @@ namespace AntDesign.Select.Internal
             SetSuppressInput();
             if (firstRender)
             {
+                _firstRender = true;
                 if (ParentSelect.IsSearchEnabled)
                 {
                     DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
@@ -137,10 +140,13 @@ namespace AntDesign.Select.Internal
                     await DomEventListener.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
+
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionstart", OnCompositionStart);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionend", OnCompositionEnd);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
-            else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
+            else if (_firstRender && _currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
                 _currentItemCount = ParentSelect.SelectedOptionItems.Count;
                 _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
@@ -233,7 +239,7 @@ namespace AntDesign.Select.Internal
 
             if (SearchDebounceMilliseconds == 0)
             {
-                await OnInput.InvokeAsync(e);
+                await InvokeOnInput(e);
                 return;
             }
 
@@ -255,6 +261,16 @@ namespace AntDesign.Select.Internal
                 _debounceTimer = null;
             }
 
+            await InvokeOnInput(e);
+        }
+
+        private async Task InvokeOnInput(ChangeEventArgs e)
+        {
+            if (_compositionInputting)
+            {
+                return;
+            }
+
             await OnInput.InvokeAsync(e);
         }
 
@@ -269,6 +285,22 @@ namespace AntDesign.Select.Internal
             InvokeAsync(async () => await DebounceInputChange((ChangeEventArgs)state, true));
         }
 
+        internal virtual void OnCompositionStart(JsonElement e)
+        {
+            _compositionInputting = true;
+        }
+
+        internal virtual void OnCompositionEnd(JsonElement e)
+        {
+            _compositionInputting = false;
+        }
+
+        internal void ClearSearch()
+        {
+            _inputString = string.Empty;
+            StateHasChanged();
+        }
+
         private void SetInputWidth()
         {
             _inputWidth = string.Empty;
@@ -280,7 +312,7 @@ namespace AntDesign.Select.Internal
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
                 {
-                    _inputWidth = $"{_inputWidth}width: {4 + _inputString.Length * 8}px;";
+                    _inputWidth = $"{_inputWidth}width: {_inputString.Length}em;";
                     if (ParentSelect.IsResponsive && _lastInputWidth != _inputString.Length)
                     {
                         _lastInputWidth = _inputString.Length;
@@ -421,11 +453,6 @@ namespace AntDesign.Select.Internal
             }
         }
 
-        private async Task OnClearClickAsync(MouseEventArgs args)
-        {
-            await OnClearClick.InvokeAsync(args);
-        }
-
         private async Task RemoveClicked(MouseEventArgs e, SelectOptionItem<TItemValue, TItem> selectedOption)
         {
             if (e.Button == 0)
@@ -438,7 +465,14 @@ namespace AntDesign.Select.Internal
         private async void OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
 
         //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-        private async void OnBlurInternal(JsonElement e) => await OnBlur.InvokeAsync(new());
+        private async void OnBlurInternal(JsonElement e)
+        {
+            if (_compositionInputting)
+            {
+                _compositionInputting = false;
+            }
+            await OnBlur.InvokeAsync(new());
+        }
 
         protected override void Dispose(bool disposing)
         {

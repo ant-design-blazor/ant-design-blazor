@@ -1,13 +1,10 @@
-<Select TItem="Person"
-        TItemValue="string"
-        DataSource="@_list"
+<Select DataSource="@_list"
 		@bind-Value="@_selectedValue1"
 		DefaultValue="@("lucy")"
-		ValueName="@nameof(Person.Value)"
-		LabelName="@nameof(Person.Name)"
+		ValueProperty="c=>c.Value"
+        LabelProperty="c=>c.Name"
 		DisabledName="@nameof(Person.IsDisabled)"
-		Style="width:120px"
-		OnSelectedItemChanged="OnSelectedItemChangedHandler">
+		Style="width:120px">
 </Select>
 <Select @bind-Value="@_selectedValue2"
 		DefaultValue="@("lucy")"
@@ -16,7 +13,7 @@
 		TItem="string"
 		Disabled>
     <SelectOptions>
-		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+		<SelectOption Value="@("lucy")" Label="Lucy" />
 	</SelectOptions>
 </Select>
 <Select @bind-Value="@_selectedValue3"
@@ -26,7 +23,7 @@
 		TItem="string"
 		Loading>
 	<SelectOptions>
-		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+		<SelectOption Value="@("lucy")" Label="Lucy" />
 	</SelectOptions>
 </Select>
 <Select DataSource="@_list"
@@ -46,13 +43,26 @@
         Placeholder="Choose"
         OnSelectedItemChanged="@((personName) => Console.WriteLine($"selectedItem:{personName},selectedValue:{_selectedValue5}"))">
 </Select>
+
+<Select DataSource="@_dict"
+        @bind-Value="@_selectedValue6"
+        LabelProperty="c=>c.Key"
+        ValueProperty="c=>c.Value"
+        DisabledPredicate="@(c=>c.Key == "Disabled")"
+        Style="width: 120px;"
+        Placeholder="Dictionary options">
+</Select>
+
 @code
 {
     List<Person> _list;
     List<string> _personNames;
+    Dictionary<string, string> _dict;
+
     string _selectedValue1, _selectedValue2, _selectedValue3;
     string _selectedValue4 = "lucy";
     string _selectedValue5 = "Lucy";
+    string _selectedValue6 = "Lucy";
     class Person
     {
         public string Value { get; set; }
@@ -69,7 +79,10 @@
             new Person {Value = "disabled", Name = "Disabled", IsDisabled = true},
             new Person {Value = "yaoming", Name = "YaoMing"}
         };
+
         _personNames = new List<string> { "Jack", "Lucy", "YaoMing" };
+
+        _dict = _list.ToDictionary(c => c.Name, c => c.Value);
     }
 
     private void OnSelectedItemChangedHandler(Person value)

@@ -95,9 +95,9 @@
     "cancelText": "취소",
     "yesText": "네",
     "noText": "아니",
-    "retryText": "다시 시도 하 다",
-    "abortText": "중지 하 다",
-    "ignoreText": "소홀히 하 다"
+    "retryText": "다시 시도",
+    "abortText": "중지",
+    "ignoreText": "무시하기"
   },
   "Popconfirm": {
     "okText": "확인",
@@ -117,6 +117,6 @@
   },
   "Empty": { "description": "데이터 없음" },
   "Form": {
-    "optional": "(optional)"
+    "optional": "(선택적)"
   }
 }

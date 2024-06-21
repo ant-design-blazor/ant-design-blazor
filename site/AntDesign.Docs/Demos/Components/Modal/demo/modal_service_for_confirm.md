@@ -1,5 +1,5 @@
 ﻿---
-order: 12
+order: 120
 title:
   zh-CN: Confirm模板组件
   en-US: ConfirmTemplate

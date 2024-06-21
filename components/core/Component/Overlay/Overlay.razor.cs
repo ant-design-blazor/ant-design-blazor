@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -81,7 +82,7 @@ namespace AntDesign.Internal
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
-        private bool _isChildOverlayShow = false;
+        private List<Overlay> _childrenToShow = new();
         private bool _mouseInOverlay = false;
 
         private bool _isOverlayFirstRender = true;
@@ -219,7 +220,7 @@ namespace AntDesign.Internal
             await InvokeAsync(StateHasChanged);
 
             if (OnShow.HasDelegate)
-                OnShow.InvokeAsync(null);
+                _ = OnShow.InvokeAsync(null);
         }
 
         internal async Task Hide(bool force = false)
@@ -236,7 +237,7 @@ namespace AntDesign.Internal
             }
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
+            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0)))
             {
                 return;
             }
@@ -262,22 +263,47 @@ namespace AntDesign.Internal
             StateHasChanged();
 
             if (OnHide.HasDelegate)
-                OnHide.InvokeAsync(null);
+                _ = OnHide.InvokeAsync(null);
         }
 
         internal void PreventHide(bool prevent)
         {
+            if (!prevent && _childrenToShow.Count > 0)
+            {
+                return;
+            }
             _isPreventHide = prevent;
+        }
+
+        internal void SetMouseInOverlay(bool mouseInOverlay)
+        {
+            _mouseInOverlay = mouseInOverlay;
         }
 
         /// <summary>
         /// set if there any child overlay show or hide
         /// overlay would not hide if any child is showing
         /// </summary>
+        /// <param name="child"></param>
         /// <param name="isChildOverlayShow"></param>
-        internal void UpdateChildState(bool isChildOverlayShow)
+        internal void UpdateChildState(Overlay child, bool isChildOverlayShow)
         {
-            _isChildOverlayShow = isChildOverlayShow;
+            if (isChildOverlayShow)
+                AddVisibleChild(child);
+            else
+                RemoveVisibleChild(child);
+        }
+
+        internal void AddVisibleChild(Overlay child)
+        {
+            if (!_childrenToShow.Contains(child))
+                _childrenToShow.Add(child);
+        }
+
+        internal void RemoveVisibleChild(Overlay child)
+        {
+            if (_childrenToShow.Contains(child))
+                _childrenToShow.Remove(child);
         }
 
         internal bool IsPopup()
@@ -335,7 +361,7 @@ namespace AntDesign.Internal
                     await Task.Delay(10);
                     await AddOverlayToBody(overlayLeft, overlayTop);
                 }
-                else
+                else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
                     _overlayStyle = _position.PositionCss + GetTransformOrigin();
@@ -401,11 +427,16 @@ namespace AntDesign.Internal
             {
                 return;
             }
-
-            ParentTrigger.GetOverlayComponent().UpdateChildState(visible);
+            var parentOverlay = ParentTrigger.GetOverlayComponent();
+            parentOverlay.UpdateChildState(this, visible);
 
             if (!visible)
             {
+                if (parentOverlay.IsContainTrigger(TriggerType.Click) || parentOverlay.IsContainTrigger(TriggerType.ContextMenu))
+                {
+                    parentOverlay.PreventHide(true);
+                    return;
+                }
                 await ParentTrigger.Hide();
             }
         }

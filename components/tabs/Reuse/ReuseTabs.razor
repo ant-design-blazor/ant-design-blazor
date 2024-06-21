@@ -2,39 +2,37 @@
 @inherits AntDomComponentBase
 @inject NavigationManager _navigationManager
 
-@if (Pages?.Any() != true)
-{
-
-}
-else
-{
-    <Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@CurrentUrl" OnClose="RemovePage" Draggable="Draggable" Size="Size">
-        @foreach (var item in Pages)
+<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.CurrentUrl" OnEdit="OnTabEdit" Draggable="@Draggable" Size="@Size">
+    @if (ReuseTabsService.Pages?.Any() == true)
+    {
+        @foreach (var item in ReuseTabsService.Pages)
         {
             <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
                 <TabTemplate>
                     @item.Title
                 </TabTemplate>
-               <ChildContent>
-                    @if (Body != null)
+                <TabContextMenu>
+                    <Menu>
+                        <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
+                        <MenuItem Disabled="!item.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(item.Url);})">@Locale.Close</MenuItem>
+                        <MenuItem OnClick="@(()=>ReuseTabsService.CloseAll())">@Locale.CloseAllTabs</MenuItem>
+                        <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
+                        @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(item.Url);})">@Locale.PinTab</MenuItem> *@
+                    </Menu>
+                </TabContextMenu>
+                <ChildContent>
+                    @if (!HidePages && Body != null)
                     {
                         @Body(item)
                     }
-                    else
-                    {
-                        @item.Body
-                    }
-               </ChildContent>
-                <TabContextMenu>
-                    <Menu>
-                        <MenuItem Disabled="!item.Closable" OnClick="@(()=>{RemovePage(item.Url);})">@Locale.Close</MenuItem>
-                        <MenuItem OnClick="RemoveAll">@Locale.CloseAllTabs</MenuItem>
-                        <MenuItem OnClick="@(()=>{ RemoveOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
-                        @*         <MenuDivider />
-                <MenuItem>@Locale.PinTab</MenuItem>*@
-                    </Menu>
-                </TabContextMenu>
+                </ChildContent>
             </TabPane>
         }
-    </Tabs>
+    }
+</Tabs>
+
+@* @if (!HidePages)
+{
+    <ReusePages />
 }
+ *@

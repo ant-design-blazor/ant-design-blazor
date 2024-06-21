@@ -7,7 +7,6 @@
 
 <CascadingValue Value="this" IsFixed="@(!IsGroupingEnabled)">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
             <OverlayTrigger @ref="@_dropDown"
                             Visible="Open"
                             Disabled="Disabled"
@@ -22,81 +21,13 @@
                             OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
                 <Overlay>
                     <div style="@_dropdownStyle">
-                        @if (SelectOptions != null) 
-                        {
-                            <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
-                                <div>
-                                    <div class="" role="listbox" style="display: flex; flex-direction: column;">
-                                        @if (CustomTagSelectOptionItem != null) 
-                                        {
-                                            <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
-                                                <CascadingValue Value="@CustomTagSelectOptionItem" Name="Model">
-                                                    <SelectOption
-                                                        @key="@CustomTagSelectOptionItem.InternalId"
-                                                        TItemValue="TItemValue"
-                                                        TItem="TItem">
-                                                    </SelectOption>
-                                                </CascadingValue>
-                                            </CascadingValue>
-                                        }
-                                        @SelectOptions
-                                        @if (AddedTags != null) 
-                                        {
-                                            foreach (var selectOption in AddedTags)
-                                            {
-                                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
-                                                    <CascadingValue Value="@selectOption" Name="Model">
-                                                        <SelectOption
-                                                            @key="@selectOption.InternalId"
-                                                            TItemValue="TItemValue"
-                                                            TItem="TItem">
-                                                        </SelectOption>
-                                                    </CascadingValue>
-                                                </CascadingValue>
-                                            } 
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        else if (SelectOptions == null && !AllOptionsHidden())
-                        {
-                            <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;"  @ref="_scrollableSelectDiv">
-                                <div>
-                                    <div class="" role="listbox" style="display: flex; flex-direction: column;">
-                                        @{
-                                            @if (!IsGroupingEnabled)
-                                            {
-                                                @selectOptionsRender((this, SortedSelectOptionItems, ItemTemplate))                                                                                               
-                                            }
-                                            else
-                                            {
-                                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
-                                                    <SelectOptionGroup TItemValue="TItemValue" TItem="TItem"></SelectOptionGroup>
-                                                </CascadingValue>
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        @if (AllOptionsHidden())
-                        {
-                            <div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
-                                @if (NotFoundContent != null)
-                                {
-                                    @NotFoundContent
-                                }
-                                else
-                                {
-                                    <Empty Simple Small/>
-                                }
-                            </div>
-                        } 
-
                         @if (DropdownRender != null)
                         {
-                            @DropdownRender(default)
+                            @DropdownRender(RenderOptionDropdown())
+                        }
+                        else
+                        {
+                            @RenderOptionDropdown()
                         }
                     </div>                    
                 </Overlay>
@@ -106,15 +37,15 @@
                             <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
                                 <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                     <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                                        <SelectContent Prefix="@ClassPrefix"   
+                                        <SelectContent Prefix="@ClassPrefix"
                                                        RefBack="@context"
                                                        @ref="_selectContent"
                                                        TItemValue="TItemValue"
                                                        TItem="TItem"
                                                        SearchValue="@_searchValue"
-													   SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
+                                                       SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
                                                        IsOverlayShow="@_dropDown.IsOverlayShow()"
-													   MaxTagCount="@_maxTagCountAsInt"
+                                                       MaxTagCount="@_maxTagCountAsInt"
                                                        OnInput="@OnInputAsync"
                                                        OnKeyUp="@OnKeyUpAsync"
                                                        OnKeyDown="@OnKeyDownAsync"
@@ -122,8 +53,7 @@
                                                        OnBlur="@OnInputBlurAsync"
                                                        OnClearClick="@OnInputClearClickAsync"
                                                        OnRemoveSelected="@OnRemoveSelectedAsync"
-                                                       Placeholder="@Placeholder"
-                                                       ShowPlaceholder="@ShowPlaceholder"/>
+                                                       Placeholder="@Placeholder" />
                                     </CascadingValue>
                                 </CascadingValue>
                             </CascadingValue>
@@ -131,26 +61,25 @@
                     </CascadingValue>
                 </Unbound>
             </OverlayTrigger>
-        </div>
     </CascadingValue>
 </CascadingValue>
 
 @code
 {
-    static RenderFragment<(Select<TItemValue, TItem> select, IEnumerable<SelectOptionItem<TItemValue, TItem>> selectOptionItems, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
+    static RenderFragment<(Select<TItemValue, TItem> select, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
         @<Template>
 @{ #if NET5_0_OR_GREATER }
             @if(ctx.select.EnableVirtualization)
             {
                 <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
-                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    Items=@ctx.select.SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
                     ChildContent="optionRender(ctx.itemTemplate)"/>
             }
             else
             {
 #endif 
                 <ForeachLoop 
-                    Items=@(ctx.selectOptionItems is ICollection<SelectOptionItem<TItemValue, TItem>> optionsCollection ? optionsCollection : ctx.selectOptionItems.ToList()) 
+                    Items=@ctx.select.SortedSelectOptionItems
                     ChildContent="optionRender(ctx.itemTemplate)"/>
 #if NET5_0_OR_GREATER 
             }
@@ -167,4 +96,82 @@
                 </SelectOption>
             </CascadingValue>
         </CascadingValue>;
+
+    RenderFragment RenderOptionDropdown()
+    {
+        @if (SelectOptions != null)
+        {
+            return @<div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
+                <div>
+                    <div class="" role="listbox" style="@ListboxStyle">
+                        @if (CustomTagSelectOptionItem != null)
+                        {
+                            <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                <CascadingValue Value="@CustomTagSelectOptionItem" Name="Model">
+                                    <SelectOption @key="@CustomTagSelectOptionItem.InternalId"
+                                                  TItemValue="TItemValue"
+                                                  TItem="TItem">
+                                    </SelectOption>
+                                </CascadingValue>
+                            </CascadingValue>
+                        }
+                        @SelectOptions
+                        @if (AddedTags != null)
+                        {
+                            foreach (var selectOption in AddedTags)
+                            {
+                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                    <CascadingValue Value="@selectOption" Name="Model">
+                                        <SelectOption @key="@selectOption.InternalId"
+                                                      TItemValue="TItemValue"
+                                                      TItem="TItem">
+                                        </SelectOption>
+                                    </CascadingValue>
+                                </CascadingValue>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+    ;
+        }
+        else if (SelectOptions == null && !AllOptionsHidden())
+        {
+            return@<div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
+                <div>
+                    <div class="" role="listbox" style="@ListboxStyle">
+                        @{
+                            @if (!IsGroupingEnabled)
+                            {
+                                @selectOptionsRender((this, ItemTemplate))
+                            }
+                            else
+                            {
+                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                    <SelectOptionGroup TItemValue="TItemValue" TItem="TItem"></SelectOptionGroup>
+                                </CascadingValue>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>;
+        }
+        @if (AllOptionsHidden())
+        {
+            return@<div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
+                @if (NotFoundContent != null)
+                {
+                    @NotFoundContent
+                }
+                else
+                {
+                    <Empty Simple Small />
+                }
+            </div>
+    ;
+        }
+
+        return builder => { };
+    }
+
 }

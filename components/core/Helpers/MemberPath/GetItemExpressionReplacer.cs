@@ -23,7 +23,13 @@ namespace AntDesign.Core.Helpers.MemberPath
         {
             if (node.Method.Name == GetItemMethod && node.Object != null)
             {
-                return Expression.Call(node.Object, node.Object.Type.GetMethod(SetItemMethod, BindingFlags.Public | BindingFlags.Instance)!, new[] { node.Arguments[0], ValueArgumentExpression });
+                var valueExp = ValueArgumentExpression;
+                if (node.Type != valueExp.Type)
+                {
+                    valueExp = Expression.Convert(valueExp, node.Type);
+                }
+
+                return Expression.Call(node.Object, node.Object.Type.GetMethod(SetItemMethod, BindingFlags.Public | BindingFlags.Instance)!, new[] { node.Arguments[0], valueExp });
             }
 
             return node;
