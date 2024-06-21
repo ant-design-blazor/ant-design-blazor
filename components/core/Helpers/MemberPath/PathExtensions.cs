@@ -3,7 +3,7 @@
 
 namespace AntDesign.Core.Helpers.MemberPath
 {
-    public static class PathExtensions
+    internal static class PathExtensions
     {
         #region Get
 

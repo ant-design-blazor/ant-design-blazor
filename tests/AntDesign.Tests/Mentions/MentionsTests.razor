@@ -1,19 +1,146 @@
 ﻿@using AntDesign.Internal
+@using System.Threading;
 @using static AntDesign.TextArea;
 @inherits AntDesignTestBase	
+
 @code {
     private void SetupJavascript()
     {
         JSInterop.SetupVoid("AntDesign.interop.mentionsHelper.setEditorKeyHandler", _ => true);
+        JSInterop.Setup<int>("AntDesign.interop.mentionsHelper.getProp", _ => true).SetResult(1);
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", _ => true).SetResult(new[] { 1d, 1d });
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.getCursorXY", _ => true).SetResult(new[] { 1d, 1d });
     }
+
 
     private IRenderedComponent<AntDesign.Mentions> GetStandardRenderSystemUnderTest()
     {
         return Render<AntDesign.Mentions>(
-        @<AntDesign.Mentions>
-            <AntDesign.MentionsOption Value="testUsername">Test User</AntDesign.MentionsOption>
-        </AntDesign.Mentions>
+            @<AntDesign.Mentions>
+                <AntDesign.MentionsOption Value="testUsername">Test User</AntDesign.MentionsOption>
+                <AntDesign.MentionsOption Value="anotherUsername">Another User</AntDesign.MentionsOption>
+            </AntDesign.Mentions>
         );
+    }
+
+    private IRenderedComponent<AntDesign.Mentions> GetLoadOptionsRenderSystemUnderTest(Func<string, CancellationToken, Task<IEnumerable<MentionsDynamicOption>>> loadOptions)
+    {
+        return Render<AntDesign.Mentions>(
+            @<AntDesign.Mentions LoadOptions="@loadOptions" />
+        );
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("username")]
+    public async Task ItShouldCallLoadOptionsWithSearchValueWhenUserEntersValueAfterPrefix(string testEntry)
+    {
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(testEntry.Length + 1);
+
+        string? valueSentToCallback = null;
+        var systemUnderTest = GetLoadOptionsRenderSystemUnderTest((value, _) =>
+        {
+            valueSentToCallback = value;
+
+            return Task.FromResult(Enumerable.Empty<MentionsDynamicOption>());
+        });
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        await textArea.InputAsync(new ChangeEventArgs
+        {
+            Value = "@" + testEntry
+        });
+
+        valueSentToCallback.Should().BeEquivalentTo(testEntry);
+    }
+
+    [Fact]
+    public async Task ItShouldDisplayOptionsReturnedFromLoadOptionsCall()
+    {
+        var testEntry = "username";
+
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(testEntry.Length + 1);
+
+        var systemUnderTest = GetLoadOptionsRenderSystemUnderTest((value, _) =>
+        {
+            return Task.FromResult(new[]
+            {
+                new MentionsDynamicOption
+                {
+                    Display = @<span>User Name 1</span>,
+                    Value = "username1"
+                },
+                new MentionsDynamicOption
+                {
+                    Display = @<span>User Name 2</span>,
+                    Value = "username2"
+                }
+            }.AsEnumerable());
+        });
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        await textArea.InputAsync(new ChangeEventArgs
+        {
+            Value = "@" + testEntry
+        });
+
+        systemUnderTest.MarkupMatches(@"
+            <div class=""ant-mentions"">
+                <textarea value="""" class=""rc-textarea"" rows=""3""></textarea>
+            </div>
+            <div class:ignore style:ignore>
+                <ul class:ignore>
+                    <li class=""ant-mentions-dropdown-menu-item ant-mentions-dropdown-menu-item-active"">
+                        <span>User Name 1</span>
+                    </li>
+                    <li class=""ant-mentions-dropdown-menu-item"">
+                        <span>User Name 2</span>
+                    </li>
+                </ul>
+            </div>");
+    }
+
+    [Fact]
+    public async Task ItShouldDisplayOptionsWithValueContainingSearchValueWhenUserTypesForStaticOptions()
+    {
+        var testEntry = "anoth";
+
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(testEntry.Length + 1);
+
+        var systemUnderTest = GetStandardRenderSystemUnderTest();
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        await textArea.InputAsync(new ChangeEventArgs
+        {
+            Value = "@" + testEntry
+        });
+
+        systemUnderTest.MarkupMatches(@"
+            <div class=""ant-mentions"">
+                <textarea value="""" class=""rc-textarea"" rows=""3""></textarea>
+            </div>
+            <div class:ignore style:ignore>
+                <ul class:ignore>
+                    <li class=""ant-mentions-dropdown-menu-item ant-mentions-dropdown-menu-item-active"">
+                        Another User
+                    </li>
+                </ul>
+            </div>");
     }
 
     [Fact]
@@ -31,11 +158,14 @@
                 <li class=""ant-mentions-dropdown-menu-item"">
                     Test User
                 </li>
+                <li class=""ant-mentions-dropdown-menu-item"">
+                    Another User
+                </li>
             </div>");
     }
 
     [Fact]
-    public void StandardRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingAtSymbol()
+    public void StandardRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingPrefix()
     {
         SetupJavascript();
         var systemUnderTest = GetStandardRenderSystemUnderTest();
@@ -48,14 +178,21 @@
     }
 
     [Fact]
-    public void TemplatedRender_ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingAtSymbol()
+    public void ShouldCallJavascriptCallbackToDisplayOverlayWhenTypingProvidedPrefix()
     {
+        const string prefix = "#";
+
         SetupJavascript();
-        var systemUnderTest = GetStandardRenderSystemUnderTest();
+        var systemUnderTest = Render<AntDesign.Mentions>(
+            @<AntDesign.Mentions Prefix="@prefix">
+                <AntDesign.MentionsOption Value="testUsername">Test User</AntDesign.MentionsOption>
+                <AntDesign.MentionsOption Value="anotherUsername">Another User</AntDesign.MentionsOption>
+            </AntDesign.Mentions>
+        );
 
         JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", true);
 
-        systemUnderTest.Find("textarea").Input("@");
+        systemUnderTest.Find("textarea").Input(prefix);
 
         JSInterop.VerifyInvoke("AntDesign.interop.mentionsHelper.setPopShowFlag", 1);
     }
@@ -89,7 +226,7 @@
 
         systemUnderTest.MarkupMatches(@"
             <div class=""ant-mentions"">
-               <textarea class=""ant-input"" value="""" id:ignore style="""" ></textarea>
+               <textarea class=""ant-input"" value="""" id:ignore style="""" rows=""2"" ></textarea>
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden"" 
                 style=""position: absolute; display: none;"">

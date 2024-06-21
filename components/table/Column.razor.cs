@@ -12,6 +12,8 @@ using System.Text.Json;
 using AntDesign.Core.Helpers;
 using AntDesign.Filters;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -139,6 +141,12 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        /// <summary>
+        /// Whether the dataSource is filtered. Filter icon will be actived when it is true.
+        /// </summary>
+        [Parameter]
+        public bool Filtered { get; set; }
+
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 
@@ -181,6 +189,8 @@ namespace AntDesign
         private RenderFragment _renderDefaultFilterDropdown;
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
+        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         protected override void OnInitialized()
         {
@@ -547,16 +557,45 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
-        private async Task FilterDropdownOnVisibleChange(bool visible)
+        private void FilterDropdownOnVisibleChange(bool visible)
         {
 #if NET5_0_OR_GREATER
             if (!visible ||
                 _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
                 baseDomComponent.Ref.Context == null) return;
 
-            // implicit wait for component rendering
-            await Task.Delay(150);
-            await baseDomComponent.Ref.FocusAsync();
+            _ = Task.Run(async () =>
+            {
+                var filterInputFocused = false;
+                var attemptCount = 0;
+
+                do
+                {
+                    await Task.Delay(50);
+                    try
+                    {
+                        await Js.FocusAsync(baseDomComponent.Ref, FocusBehavior.FocusAtLast);
+                        await Task.Delay(50);
+                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Id;
+                    }
+                    catch (JSException jsex)
+                    {
+                        Console.WriteLine(jsex.ToString());
+                        break;
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        attemptCount++;
+                    }
+                    if (attemptCount > 2) break;
+
+                } while (!filterInputFocused);
+            });
 #endif
         }
     }

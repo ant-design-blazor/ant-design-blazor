@@ -27,7 +27,8 @@
         var cut = Render<AntDesign.Select<string, string>>(
         @<AntDesign.Select Mode="tags"
 			TItemValue="string"
-			TItem="string"		
+			TItem="string"
+            SearchDebounceMilliseconds="0"
 			EnableSearch>
 			<SelectOptions>						
 				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
@@ -103,7 +104,7 @@
         var datasource = new List<string>();
 
         var systemUnderTest = Render<Select<string, string>>(
-            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch />
+            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
         );
 
         var input = systemUnderTest.Find("input.ant-select-selection-search-input");

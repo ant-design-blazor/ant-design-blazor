@@ -42,12 +42,16 @@ namespace AntDesign.Filters
                     return Expression.NotEqual(leftExpr, rightExpr);
             }
 
+            if (THelper.IsTypeNullable(rightExpr.Type))
+            {
+                rightExpr = Expression.Property(rightExpr, nameof(Nullable<DateTime>.Value));
+            }
+
             if (THelper.IsTypeNullable(leftExpr.Type))
             {
                 Expression notNull = Expression.NotEqual(leftExpr, Expression.Constant(null));
                 Expression isNull = Expression.Equal(leftExpr, Expression.Constant(null));
                 leftExpr = Expression.Property(leftExpr, nameof(Nullable<DateTime>.Value));
-                rightExpr = Expression.Property(rightExpr, nameof(Nullable<DateTime>.Value));
 
                 return compareOperator switch
                 {

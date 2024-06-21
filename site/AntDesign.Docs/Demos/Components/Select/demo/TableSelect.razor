@@ -1,0 +1,77 @@
+@using AntDesign.Docs.Services
+<Select Style="width: 200px;"
+        ValueProperty="c=>c"
+        LabelProperty="c=>c.Name"
+        DataSource="data"
+        @bind-Values="@selectedRows"
+        Mode="multiple"
+        DropdownMatchSelectWidth="false"
+        EnableSearch
+        OnSearch="OnSearch">
+    <DropdownRender>
+        <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
+            <ColumnDefinitions Context="ctx">
+                <Selection Key="@ctx.Name" />
+                <PropertyColumn Property="c=>c.Name">
+                    <a>@ctx.Name</a>
+                </PropertyColumn>
+                <PropertyColumn Property="c=>c.Age"/>
+                 <PropertyColumn Property="c=>c.Address"/>
+            </ColumnDefinitions>
+        </Table>
+    </DropdownRender>
+</Select>
+
+@code
+{
+    ITable table;
+    IEnumerable<Column> selectedRows=[];
+    Column[] data;
+
+    protected override void OnInitialized()
+    {
+        data = dataSource;
+    }
+
+    void OnSearch(string searchValue)
+    {
+        data = dataSource.Where(x => x.Name.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+    }
+
+    class Column
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+    
+    Column[] dataSource =
+    {
+        new Column()
+        {
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Disabled User",
+            Age = 99,
+            Address = "Sidney No. 1 Lake Park",
+        }
+    };
+}

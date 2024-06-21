@@ -1,9 +1,6 @@
-﻿@using AntDesign.Docs.Services
+﻿<Divider />
 
-
-<Divider />
-
-<AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@LanguageService.Resources["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
+<AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@Localizer["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
     <Suffix>
         <Icon Type="search" />
     </Suffix>
@@ -53,12 +50,13 @@
     </div>
 }
 
-@inject ILanguageService LanguageService
+@inject ILocalizationService LocalizationService
 @inject DemoService demoService
+@inject IStringLocalizer Localizer;
 
 @code{
 
-    private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+    private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
     DemoMenuItem[] menuItems = { };
 
     protected override bool ShouldRender() => menuItems.Any();
@@ -68,7 +66,7 @@
         var menu = await demoService.GetMenuAsync();
         menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
 
-        LanguageService.LanguageChanged += async (sender, args) =>
+        LocalizationService.LanguageChanged += async (sender, args) =>
         {
             var menu = await demoService.GetMenuAsync();
             menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();

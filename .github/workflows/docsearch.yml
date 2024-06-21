@@ -10,10 +10,12 @@ jobs:
     if: github.repository_owner == 'ant-design-blazor'
 
     steps:
-    - uses: actions/checkout@master
-    - name: scrape
-      uses: darrenjennings/algolia-docsearch-action@master
-      with:
-        algolia_application_id: ${{ secrets.algolia_application_id }}
-        algolia_api_key: ${{ secrets.algolia_api_key }}
-        file: '.github/workflows/algolia-config.json'
+      - uses: actions/checkout@v2
+      - name: Run algolia/docsearch-scraper
+        run: |
+          docker pull algolia/docsearch-scraper
+          docker run \
+            -e ALGOLIA_APP_ID=${{ secrets.algolia_application_id }} \
+            -e API_KEY=${{ secrets.algolia_api_key }} \
+            -e "CONFIG=$(cat ./algolia-config.json | jq -r tostring)" \
+            algolia/docsearch-scraper

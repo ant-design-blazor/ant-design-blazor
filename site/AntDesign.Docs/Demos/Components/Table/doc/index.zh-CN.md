@@ -73,6 +73,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
 | Resizable | 启用可伸缩列 | bool | false |
 | FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
+| Filtered   | 标识数据是否经过过滤，筛选图标会高亮 | bool |  false |
 
 ### Column
 
@@ -106,6 +107,39 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | 参数              | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
+
+### Selection
+
+| 参数              | 说明             | 类型                         | 默认值 |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| CheckStrictly    | checkable 状态下节点选择完全受控（父子数据选中状态不再关联）|  bool |  true  |
+| Type             |  多选/单选        | `checkbox` \| `radio`      | `checkbox` |
+| Disabled         |  是否禁用         |      bool            |   false      |
+
+### GenerateColumns
+
+用于通过 'TItem' 类型的属性自动生成列。 查看 [demo](#components-table-demo-generate-columns).
+
+| Parameter             | Instruction             | Type                         | Defaults |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Definitions | 一个两参数委托。第一个参数是属性名, 第二个是对于的 Column 实例。 | Action<string, object> Definitions |  -  |
+| HideColumnsByName | 指定隐藏的属性名。  | IEnumerable<string>   |  -  |
+| Range            | 一个范围值，指定某些列可以显示。 | Range |  -  |
+
+### 公开方法
+
+可以使用 `@ref` 绑定 `ITable` 的实例中提供的方法操作 Table。
+
+| 方法名             | 说明                                       | 
+| ---------------- | ------------------------------------------- | 
+| ReloadData       | 重新加载数据，有三个重载，可指定分页、筛选和排序   | 
+| ResetData        | 重置表格分页、筛选、排序状态                    |
+| GetQueryModel    | 获取表格状态，可用于持久化和恢复                |
+| SetSelection     | 设置选择列                                   |
+| SelectAll        | 全选                                        |
+| UnselectAll      | 取消全选                                     |
+| ExpandAll        | 展开全部列                                   |
+| CollapseAll      | 收起所有展开的的列                            |
 
 
 ### 响应式

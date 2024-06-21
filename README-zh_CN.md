@@ -40,7 +40,8 @@
 
 WebAssembly 静态托管页面示例
 
-- [Azure Static WebApp](https://antblazor.com/)
+- [文档站点](https://antblazor.com/)
+- [企业级仪表板](https://pro.antblazor.com/)
 
 ## 🖥 支持环境
 
@@ -71,9 +72,11 @@ WebAssembly 静态托管页面示例
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1 以上版本，推荐 .NET 6。
+### 先决条件
 
-### 从模板创建一个新项目 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1 以上版本，推荐 .NET 8。
+
+### 选择一：从模板创建一个新项目 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
 我们提供了 `dotnet new` 模板来创建一个开箱即用的 [Ant Design Pro](https://github.com/ant-design-blazor/ant-design-pro-blazor) 新项目：
 
@@ -100,25 +103,24 @@ WebAssembly 静态托管页面示例
 | `--styles`        | 指定样式构建类型                                 | `css` \| `less`                | `css`  |
 | `--no-restore`    | 如果设置这个参数，就不会自动恢复包引用           | bool                           | false  |
 
-### 在已有项目中引入 Ant Design Blazor
+### 选择二：在已有项目中引入 Ant Design Blazor
 
 - 进入应用的项目文件夹，安装 Nuget 包引用
 
   ```bash
-  $ dotnet add package AntDesign --version
+  $ dotnet add package AntDesign
   ```
 
-- 在项目中注册:
+- 在项目的 `Program.cs` 中注册相关服务：
+
+  ```csharp
+  builder.Services.AddAntDesign();
+  ```
+
+  或者在 `Startup.cs` 中：
 
   ```csharp
   services.AddAntDesign();
-  ```
-
-- 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.cshtml`(Server) 中引入静态文件:
-
-  ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - 在 `_Imports.razor` 中加入命名空间
@@ -128,6 +130,15 @@ WebAssembly 静态托管页面示例
   ```
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
+
+  - 对于 Blazor WebApp 项目，还需要为 `Routes` 指定渲染模式来支持交互性。
+
+  ```diff
+  <Routes @rendermode="RenderMode.InteractiveAuto" />           <-- 指定渲染模式 ✨
+  + <AntContainer @rendermode="RenderMode.InteractiveAuto" />   <-- 在这里添加容器 ✨
+  ```
+ 
+  - 对于旧版本的项目，则只需加一行代码:
 
   ```diff
   <Router AppAssembly="@typeof(MainLayout).Assembly">
@@ -141,7 +152,7 @@ WebAssembly 静态托管页面示例
       </NotFound>
   </Router>
 
-  + <AntContainer />   <-- 在这里添加 ✨
+  + <AntContainer />   <-- 在这里添加容器 ✨
   ```
 
 - 最后就可以在`.razor`组件中引用啦！

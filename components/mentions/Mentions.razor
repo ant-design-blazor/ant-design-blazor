@@ -10,12 +10,12 @@
                     InlineFlexMode=false>
         <Overlay>
             <CascadingValue Value=this>
-                @if (OriginalOptions.Count > 0)
+                @if (ShowOptions.Count > 0)
                 {
                     <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
                         @foreach (var item in ShowOptions)
                         {
-                            <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
+                            <MentionsOption Value="@item.Value">@item.Display</MentionsOption>
                         }
                     </ul>
                 }

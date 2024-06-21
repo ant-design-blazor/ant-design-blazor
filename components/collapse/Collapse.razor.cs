@@ -32,6 +32,14 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<bool> ExpandIconTemplate { get; set; }
 
+
+        /// <summary>
+        /// Whether enable the expand/collapse animation
+        /// </summary>
+        [Parameter]
+        public bool Animation { get; set; }
+
+
         #endregion Parameter
 
         [Parameter]

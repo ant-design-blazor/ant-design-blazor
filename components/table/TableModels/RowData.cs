@@ -74,13 +74,21 @@ namespace AntDesign.TableModels
 
         public abstract TableDataItem TableDataItem { get; }
 
-        public bool Selected { get => TableDataItem.Selected; }
+        public bool Selected
+        {
+            get => TableDataItem.Selected;
+            set => TableDataItem.SetSelected(value);
+        }
 
         public event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {
-            _expanded = expanded;
+            if (_expanded != expanded)
+            {
+                _expanded = expanded;
+                ExpandedChanged?.Invoke(this, _expanded);
+            }
         }
 
         protected abstract void CheckedChildren(bool isSelected, bool checkStrictly);
@@ -89,7 +97,7 @@ namespace AntDesign.TableModels
         {
             TableDataItem.SetSelected(isSelected);
 
-            if (checkStrictly)
+            if (!checkStrictly)
             {
                 CheckedChildren(isSelected, checkStrictly);
             }
@@ -99,7 +107,7 @@ namespace AntDesign.TableModels
     /// <inheritdoc />
     public class TableDataItem<TItem> : TableDataItem
     {
-        public TItem Data { get; }
+        public TItem Data { get; set; }
 
         public Table<TItem> Table { get; set; }
 

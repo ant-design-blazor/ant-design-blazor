@@ -12,8 +12,18 @@ namespace AntDesign
 
         private void FlushCache()
         {
-            _dataSourceCache.Clear();
-            _rootRowDataCache.Clear();
+            if (!_hasInitialized)
+            {
+                return;
+            }
+            // Clears the cache of rowdata that is not in the current page.
+            var showItemKeys = _showItems.Select(GetHashCode).ToHashSet();
+            var removedKeys = _dataSourceCache.Keys.Except(showItemKeys);
+            foreach (var key in removedKeys)
+            {
+                _rootRowDataCache.Remove(key);
+                _dataSourceCache.Remove(key);
+            }
         }
 
         private void FinishLoadPage()
@@ -22,6 +32,26 @@ namespace AntDesign
                 return;
 
             _selection?.StateHasChanged();
+        }
+
+        public void ExpandAll()
+        {
+            _preventRender = true;
+
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(true);
+            }
+        }
+
+        public void CollapseAll()
+        {
+            _preventRender = true;
+
+            foreach (var item in _rootRowDataCache)
+            {
+                item.Value.SetExpanded(false);
+            }
         }
 
         private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
@@ -67,6 +97,8 @@ namespace AntDesign
                 currentDataItem.SetSelected(SelectedRows.Contains(data), triggersSelectedChanged: false);
                 _dataSourceCache.Add(dataHashCode, currentDataItem);
             }
+
+            currentDataItem.Data = data;
 
             // this row cache may be for children rows
             rowCache ??= _rootRowDataCache;

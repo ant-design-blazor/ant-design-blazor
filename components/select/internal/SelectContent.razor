@@ -1,218 +1,38 @@
 ﻿@using AntDesign
+@using System.Text.Json
+@using AntDesign.JsInterop
 @namespace AntDesign.Select.Internal
 @typeparam TItemValue
 @typeparam TItem
 @inherits AntDomComponentBase
 
-@if (ParentSelect.SelectMode == SelectMode.Default)
-{
-  <div class="@Prefix-selector" @ref="@Ref" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
-    @if (ParentSelect.PrefixIcon != null)
-    {
-      <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;">
-        @ParentSelect.PrefixIcon
-      </span>
-    }
-    <span class="@Prefix-selection-search" style="@_inputWidth">
-      <input @ref="ParentSelect._inputRef"
-           @oninput="@OnInputChange"
-           @onkeyup="OnKeyUp"
-           @onkeydown="OnKeyDown"
-           @attributes=@AdditonalAttributes()
-           @bind-value="@SearchValue"
-           id="@(ParentSelect.Id)_list"
-           type="search"
-           readonly="@(!ParentSelect.IsSearchEnabled)"
-           unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
-           role="combobox"
-           class="@Prefix-selection-search-input"
-           autocomplete="off"
-           aria-owns="@(ParentSelect.Id)_list"
-           aria-expanded="@IsOverlayShow"
-           aria-autocomplete="list"
-           aria-controls="@(ParentSelect.Id)_list"
-           aria-haspopup="listbox"
-           accesskey="@ParentSelect?.AccessKey"
-           style="@_inputStyle" />
-    </span>
-    @if (ShowPlaceholder)
-    {
-      <span class="@Prefix-selection-placeholder">@Placeholder</span>
-    }
-    else
-    {
-      var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
-      if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
-      {
-        @if (ParentLabelTemplate != null)
-        {
-          <CascadingValue Value="this" Name="SelectContent">
-            <CascadingValue Value="@selectedItem" Name="SelectOption">
-              @ParentLabelTemplate(selectedItem.Item)
-            </CascadingValue>
-          </CascadingValue>
-        }
-        else
-        {
-          <span class="@Prefix-selection-item">
-            @getLabel(selectedItem)
-          </span>
-        }
-      }
-    }
-  </div>
-
-    <SelectSuffixIcon 
-        TItem="TItem" 
-        TItemValue="TItemValue" 
-        IsOverlayShow="@IsOverlayShow"
-        OnClearClick="@OnClearClick" 
-        ShowArrowIcon="@ShowArrowIcon" 
-        ShowSearchIcon="@ShowArrowIcon"/>
+@{
+    var showPlaceholder = !ParentSelect.HasValue && string.IsNullOrEmpty(_inputString);
 }
-else //ParentSelect.SelectMode != SelectMode.Default
-{
-  <div class="@Prefix-selector" @ref="@Ref" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
-    <div class="@Prefix-selection-overflow" @ref="@_overflow">
-      @if (ParentSelect.PrefixIcon != null)
-      {
-        <div class="@Prefix-selection-overflow-item" style="opacity: 1;order:-100;">
-          <span @ref="@_prefixRef" class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;min-height:28px;">
+<div class="@ParentSelect.CurrentClassMapper.Class"
+     style="@ParentSelect.Style"
+     id="@Id"
+     tabindex="-1" 
+     @ref="@Ref"
+     >
+    @if (ParentSelect.SelectMode == SelectMode.Default)
+    {
+      <div class="@Prefix-selector" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
+        @if (ParentSelect.PrefixIcon != null)
+        {
+          <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;">
             @ParentSelect.PrefixIcon
           </span>
-        </div>
-      }
-      @if (!ShowPlaceholder)
-      {
-        var selectedItems = ParentSelect.SelectedOptionItems;
-        @if (ParentSelect.HasTagCount)
-        {
-          @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)
-          {
-            var selectedOption = selectedItems[i];
-            <div class="@Prefix-selection-overflow-item" style="@OverflowStyle(i)">
-              @if (ParentLabelTemplate != null)
-              {
-                <CascadingValue Value="this" Name="SelectContent">
-                  <CascadingValue Value="@selectedOption" Name="SelectOption">
-                    @ParentLabelTemplate(selectedOption.Item)
-                  </CascadingValue>
-                </CascadingValue>
-              }
-              else
-              {
-                <span class="@Prefix-selection-item">
-                  <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
-                  <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-              @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
-                    <Icon Type="close"></Icon>
-                  </span>
-                </span>
-              }
-            </div>
-          }
-          @if (selectedItems.Count > ParentSelect.MaxTagCount.AsT0)
-          {
-            <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" style="opacity: 1; order: @(selectedItems.Count-1);">
-              @if (ParentMaxTagPlaceholerTemplate != null)
-              {
-                <CascadingValue Value="this" Name="SelectContent">
-                  @ParentMaxTagPlaceholerTemplate(selectedItems.Skip(ParentSelect.MaxTagCount.AsT0).Select(i => i.Item))
-                </CascadingValue>
-              }
-              else
-              {
-
-                <span class="@Prefix-selection-item">
-                  <span class="@Prefix-selection-item-content">+ @(selectedItems.Count - ParentSelect.MaxTagCount.AsT0)@Ellipse</span>
-                </span>
-
-              }
-            </div>
-          }
         }
-        else if (ParentSelect.IsResponsive)
-        {
-          @for (int i = 0; i < selectedItems.Count; i++)
-          {
-            var selectedOption = selectedItems[i];
-            <div class="@Prefix-selection-overflow-item" @key="@selectedOption.InternalId" @ref="@selectedOption.SelectedTagRef" style="@OverflowStyle(i)">
-              @if (ParentLabelTemplate != null)
-              {
-                <CascadingValue Value="this" Name="SelectContent">
-                  <CascadingValue Value="@selectedOption" Name="SelectOption">
-                    @ParentLabelTemplate(selectedOption.Item)
-                  </CascadingValue>
-                </CascadingValue>
-              }
-              else
-              {
-                <span class="@Prefix-selection-item">
-                  <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
-                  <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-              @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
-                    <Icon Type="close"></Icon>
-                  </span>
-                </span>
-              }
-            </div>
-          }
-          @if (selectedItems.Count > _calculatedMaxCount)
-          {
-            <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" @key="@_internalId" @ref="@_aggregateTag" style="opacity 1; order: @(_calculatedMaxCount-1);">
-              @if (ParentMaxTagPlaceholerTemplate != null)
-              {
-                <CascadingValue Value="this" Name="SelectContent">
-                  @ParentMaxTagPlaceholerTemplate(selectedItems.Skip(_calculatedMaxCount).Select(i => i.Item))
-                </CascadingValue>
-              }
-              else
-              {
-                <span class="@Prefix-selection-item">
-                  <span class="@Prefix-selection-item-content">+ @(selectedItems.Count-_calculatedMaxCount)@Ellipse</span>
-                </span>
-              }
-            </div>
-          }
-        }
-        else
-        {
-          string firstAfterPrefix = $"max-width: {GetFirstItemMaxWidth()}%;";
-          @foreach (var selectedOption in selectedItems)
-          {
-            <div class="@Prefix-selection-overflow-item" style="opacity: 1;@firstAfterPrefix">
-              @if (ParentLabelTemplate != null)
-              {
-                <CascadingValue Value="this" Name="SelectContent">
-                  <CascadingValue Value="@selectedOption" Name="SelectOption">
-                    @ParentLabelTemplate(selectedOption.Item)
-                  </CascadingValue>
-                </CascadingValue>
-              }
-              else
-              {
-                <span class="@Prefix-selection-item">
-                  <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
-                  <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-              @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
-                    <Icon Type="close"></Icon>
-                  </span>
-                </span>
-              }
-            </div>
-            firstAfterPrefix = "max-width: 98%;";
-          }
-        }
-      }
-      <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:ParentSelect.SelectedOptionItems.Count)">
-        <div class="@Prefix-selection-search" style="@_inputWidth">
+        <span class="@Prefix-selection-search" style="@_inputWidth">
           <input @ref="ParentSelect._inputRef"
-               @oninput="OnInputChange"
+               @oninput="@OnInputChange"
                @onkeyup="OnKeyUp"
                @onkeydown="OnKeyDown"
                @attributes=@AdditonalAttributes()
-               @bind-value="@SearchValue"
-               id="@ParentSelect.Id"
+               disabled="@ParentSelect.Disabled"
+               value="@_inputString"
+               id="@(ParentSelect.Id)_list"
                type="search"
                readonly="@(!ParentSelect.IsSearchEnabled)"
                unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
@@ -224,30 +44,235 @@ else //ParentSelect.SelectMode != SelectMode.Default
                aria-autocomplete="list"
                aria-controls="@(ParentSelect.Id)_list"
                aria-haspopup="listbox"
+               accesskey="@ParentSelect?.AccessKey"
                style="@_inputStyle" />
-          <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+        </span>
+        @if (showPlaceholder)
+        {
+          <span class="@Prefix-selection-placeholder">@Placeholder</span>
+        }
+        else
+        {
+          var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
+          if (string.IsNullOrEmpty(_inputString) && selectedItem != null)
+          {
+            @if (ParentLabelTemplate != null)
+            {
+              <CascadingValue Value="this" Name="SelectContent">
+                <CascadingValue Value="@selectedItem" Name="SelectOption">
+                  @ParentLabelTemplate(selectedItem.Item)
+                </CascadingValue>
+              </CascadingValue>
+            }
+            else
+            {
+              <span class="@Prefix-selection-item" title="@selectedItem.Label" style="@(string.IsNullOrEmpty(_inputString)?"":"visibility: hidden;")">
+                @getLabel(selectedItem)
+              </span>
+            }
+          }
+        }
+      </div>
+
+        <SelectSuffixIcon 
+            TItem="TItem" 
+            TItemValue="TItemValue" 
+            IsOverlayShow="@IsOverlayShow"
+            OnClearClick="@OnClearClick" 
+            ShowArrowIcon="@ShowArrowIcon" 
+            ShowSearchIcon="@ShowArrowIcon"/>
+    }
+    else //ParentSelect.SelectMode != SelectMode.Default
+    {
+      <div class="@Prefix-selector" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
+        <div class="@Prefix-selection-overflow" @ref="@_overflow">
+          @if (ParentSelect.PrefixIcon != null)
+          {
+            <div class="@Prefix-selection-overflow-item" style="opacity: 1;order:-100;">
+              <span @ref="@_prefixRef" class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;min-height:28px;">
+                @ParentSelect.PrefixIcon
+              </span>
+            </div>
+          }
+          @if (!showPlaceholder)
+          {
+            var selectedItems = ParentSelect.SelectedOptionItems;
+            @if (ParentSelect.HasTagCount)
+            {
+              @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)
+              {
+                var selectedOption = selectedItems[i];
+                <div class="@Prefix-selection-overflow-item" style="@OverflowStyle(i)">
+                  @if (ParentLabelTemplate != null)
+                  {
+                    <CascadingValue Value="this" Name="SelectContent">
+                      <CascadingValue Value="@selectedOption" Name="SelectOption">
+                        @ParentLabelTemplate(selectedOption.Item)
+                      </CascadingValue>
+                    </CascadingValue>
+                  }
+                  else
+                  {
+                    <span class="@Prefix-selection-item">
+                      <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
+                      <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                  @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
+                        <Icon Type="close"></Icon>
+                      </span>
+                    </span>
+                  }
+                </div>
+              }
+              @if (selectedItems.Count > ParentSelect.MaxTagCount.AsT0)
+              {
+                <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" style="opacity: 1; order: @(selectedItems.Count-1);">
+                  @if (ParentMaxTagPlaceholerTemplate != null)
+                  {
+                    <CascadingValue Value="this" Name="SelectContent">
+                      @ParentMaxTagPlaceholerTemplate(selectedItems.Skip(ParentSelect.MaxTagCount.AsT0).Select(i => i.Item))
+                    </CascadingValue>
+                  }
+                  else
+                  {
+
+                    <span class="@Prefix-selection-item">
+                      <span class="@Prefix-selection-item-content">+ @(selectedItems.Count - ParentSelect.MaxTagCount.AsT0)@Ellipse</span>
+                    </span>
+
+                  }
+                </div>
+              }
+            }
+            else if (ParentSelect.IsResponsive)
+            {
+              @for (int i = 0; i < selectedItems.Count; i++)
+              {
+                var selectedOption = selectedItems[i];
+                <div class="@Prefix-selection-overflow-item" @key="@selectedOption.InternalId" @ref="@selectedOption.SelectedTagRef" style="@OverflowStyle(i)">
+                  @if (ParentLabelTemplate != null)
+                  {
+                    <CascadingValue Value="this" Name="SelectContent">
+                      <CascadingValue Value="@selectedOption" Name="SelectOption">
+                        @ParentLabelTemplate(selectedOption.Item)
+                      </CascadingValue>
+                    </CascadingValue>
+                  }
+                  else
+                  {
+                    <span class="@Prefix-selection-item">
+                      <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
+                      <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                  @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
+                        <Icon Type="close"></Icon>
+                      </span>
+                    </span>
+                  }
+                </div>
+              }
+              @if (selectedItems.Count > _calculatedMaxCount)
+              {
+                <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" @key="@_internalId" @ref="@_aggregateTag" style="opacity 1; order: @(_calculatedMaxCount-1);">
+                  @if (ParentMaxTagPlaceholerTemplate != null)
+                  {
+                    <CascadingValue Value="this" Name="SelectContent">
+                      @ParentMaxTagPlaceholerTemplate(selectedItems.Skip(_calculatedMaxCount).Select(i => i.Item))
+                    </CascadingValue>
+                  }
+                  else
+                  {
+                    <span class="@Prefix-selection-item">
+                      <span class="@Prefix-selection-item-content">+ @(selectedItems.Count-_calculatedMaxCount)@Ellipse</span>
+                    </span>
+                  }
+                </div>
+              }
+            }
+            else
+            {
+              string firstAfterPrefix = $"max-width: {GetFirstItemMaxWidth()}%;";
+              @foreach (var selectedOption in selectedItems)
+              {
+                <div class="@Prefix-selection-overflow-item" style="opacity: 1;@firstAfterPrefix">
+                  @if (ParentLabelTemplate != null)
+                  {
+                    <CascadingValue Value="this" Name="SelectContent">
+                      <CascadingValue Value="@selectedOption" Name="SelectOption">
+                        @ParentLabelTemplate(selectedOption.Item)
+                      </CascadingValue>
+                    </CascadingValue>
+                  }
+                  else
+                  {
+                    <span class="@Prefix-selection-item">
+                      <span class="@Prefix-selection-item-content">@getTagLabel(this,selectedOption)</span>
+                      <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                  @onmousedown="(e)=> RemoveClicked(e, selectedOption)" onclick="event.stopPropagation()">
+                        <Icon Type="close"></Icon>
+                      </span>
+                    </span>
+                  }
+                </div>
+                firstAfterPrefix = "max-width: 98%;";
+              }
+            }
+          }
+          <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:ParentSelect.SelectedOptionItems.Count)">
+            <div class="@Prefix-selection-search" style="@_inputWidth">
+              <input @ref="ParentSelect._inputRef"
+                   @oninput="OnInputChange"
+                   @onkeyup="OnKeyUp"
+                   @onkeydown="OnKeyDown"
+                   @attributes=@AdditonalAttributes()
+                   @bind-value="@SearchValue"
+                   disabled="@ParentSelect.Disabled"
+                   id="@ParentSelect.Id"
+                   type="search"
+                   readonly="@(!ParentSelect.IsSearchEnabled)"
+                   unselectable="@(ParentSelect.IsSearchEnabled ? false : "on")"
+                   role="combobox"
+                   class="@Prefix-selection-search-input"
+                   autocomplete="off"
+                   aria-owns="@(ParentSelect.Id)_list"
+                   aria-expanded="@IsOverlayShow"
+                   aria-autocomplete="list"
+                   aria-controls="@(ParentSelect.Id)_list"
+                   aria-haspopup="listbox"
+                   style="@_inputStyle" />
+              <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+            </div>
+          </div>
+          @if (showPlaceholder)
+          {
+            <span class="@Prefix-selection-placeholder" style="@(ParentSelect.PrefixIcon != null?"margin-left: 7px;":"")">@Placeholder</span>
+          }
         </div>
       </div>
-      @if (ShowPlaceholder)
-      {
-        <span class="@Prefix-selection-placeholder" style="@(ParentSelect.PrefixIcon != null?"margin-left: 7px;":"")">@Placeholder</span>
-      }
-    </div>
-  </div>
-    
-    <SelectSuffixIcon 
-        TItem="TItem" 
-        TItemValue="TItemValue" 
-        IsOverlayShow="@IsOverlayShow"
-        OnClearClick="@OnClearClick" 
-        ShowArrowIcon="@ShowArrowIcon" 
-        ShowSearchIcon="@ShowArrowIcon"/>
-}
+        
+        <SelectSuffixIcon 
+            TItem="TItem" 
+            TItemValue="TItemValue" 
+            IsOverlayShow="@IsOverlayShow"
+            OnClearClick="@OnClearClick" 
+            ShowArrowIcon="@ShowArrowIcon" 
+            ShowSearchIcon="@ShowArrowIcon"/>
+    }
+</div>
 
 @code {
-  RenderFragment getLabel(SelectOptionItem<TItemValue, TItem> option) =>
-  @<Template>@if (option.LabelTemplate != null)@option.LabelTemplate else @option.Label</Template>;
+    RenderFragment getLabel(SelectOptionItem<TItemValue, TItem> option)
+    {
+        if (option.LabelTemplate != null)
+            return builder => builder.AddContent(0, option.LabelTemplate);
+        else
+            return builder => builder.AddContent(0, option.Label);
+    }
 
-  RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)=>
-  @<Template>@if (option.LabelTemplate != null) @option.LabelTemplate else @content.FormatLabel(option.Label)</Template>;
+    RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)
+    {
+        if (option.LabelTemplate != null)
+            return builder => builder.AddContent(0, option.LabelTemplate);
+        else
+            return builder => builder.AddContent(0, content.FormatLabel(option.Label));
+
+    }
 }

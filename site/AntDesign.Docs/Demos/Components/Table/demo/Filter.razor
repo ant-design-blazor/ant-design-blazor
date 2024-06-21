@@ -38,7 +38,7 @@
 
   class Data
   {
-    public Data(string name, string address, DateTime birthDate, bool isActive, Gender gender, Hobbies? hobbies)
+    public Data(string name, string address, DateTime? birthDate, bool isActive, Gender gender, Hobbies? hobbies)
     {
       Id = Guid.NewGuid();
       Name = name;
@@ -52,7 +52,7 @@
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
-    public DateTime BirthDate { get; set; }
+    public DateTime? BirthDate { get; set; }
     public bool IsActive { get; set; }
     public Gender Gender { get; set; }
     public Hobbies? Hobbies { get; set; }

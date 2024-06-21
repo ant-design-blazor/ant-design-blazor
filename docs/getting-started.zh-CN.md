@@ -59,17 +59,6 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### 引入样式
-
-#### 使用样式与脚本
-
-在 `wwwroot/index.html` 中引入了
-
-```html
-<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-```
-
 - 在 `_Imports.razor` 中加入命名空间
 
   ```
@@ -97,4 +86,32 @@ public void ConfigureServices(IServiceCollection services)
 
 ```html
 <Button Type="primary">Primary</Button>
+```
+
+### 指定样式/脚本自动引入位置
+
+自 0.17.0 本版开始，AntDesign Blazor 组件库利用 [`JavaScript initializers`](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) 支持自动引入样式和脚本。其中 CSS 默认引入到 页面原有 `<link>` 元素的之前，而 JS 默认引入到所有 `<script>` 元素之前。如果需要指定位置，只需在 html 或者 App.razor 中指定位置加入 `<link  antblazor-css>` 或 `<script antblazor-js></script>`，会自动引入到这两个元素之前。
+
+```html
+  ...
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet"> <!-- 自动引入到这里 -->
+  <link antblazor-css />
+
+  ...
+
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script> <!-- 自动引入到这里 -->
+  <script antblazor-js></script>
+  ...
+```
+
+#### 禁用启动器
+
+当有特殊情况不想自动导入 JS 或者样式时，可以选择禁用自动导入，并手动导入。
+
+在入口 HTML 文件上任意元素使用 `[no-antblazor-js]` 标签可禁用自动导入JS，使用 `[no-antblazor-css]` 可禁用自动导入CSS。
+
+```css
+  <meta no-antblazor-js no-antblazor-css />
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 ```

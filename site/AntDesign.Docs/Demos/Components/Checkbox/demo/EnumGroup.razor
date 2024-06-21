@@ -1,0 +1,27 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<EnumCheckboxGroup TEnum="Fruits" @bind-Value="_value" Disabled="_disabled"></EnumCheckboxGroup>
+<br />
+
+Value: @JsonSerializer.Serialize(_value)
+
+@code {
+
+    Fruits[] _value = new[] { Fruits.Apple };
+    bool _disabled;
+
+    enum Fruits
+    {
+        [Display(Name = "🍎 Apple")]
+        Apple,
+
+        Pear,
+
+        Orange
+    }
+
+    void OnChange(string[] checkedValues)
+    {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+}

@@ -17,9 +17,9 @@ export class overlayHelper {
 
     if (!domManipulationHelper.addElementTo(overlaySelector, containerElement)) {
       console.log("Failed to add overlay. Details:", {
-         triggerPrefixCls: triggerPrefixCls,
-         overlaySelector: overlaySelector,
-         containerElement: containerElement
+        triggerPrefixCls: triggerPrefixCls,
+        overlaySelector: overlaySelector,
+        containerElement: containerElement
       } );
       return null;
     }    
@@ -50,17 +50,17 @@ export class overlayHelper {
     const overlay = this.overlayRegistry[blazorId];
     if (overlay){
       let overlayPresets: domTypes.position;
-        if (overlayTop || overlayLeft) {
-          overlayPresets = { x: overlayLeft, y: overlayTop };
-        }      
+      if (overlayTop || overlayLeft) {
+        overlayPresets = { x: overlayLeft, y: overlayTop };
+      }      
       return overlay.calculatePosition(false, false, overlayPresets);      
     } else {
       //When page is slow, it may happen that rendering of an overlay may not happen, even if 
       //blazor thinks it did happen. In such a case, when overlay object is not found, just try
       //to render it again.
       return overlayHelper.addOverlayToContainer(blazorId, overlaySelector, triggerSelector, placement,  containerSelector,triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, 
-      verticalOffset, horizontalOffset, arrowPointAtCenter,  
-      overlayTop, overlayLeft);      
+        verticalOffset, horizontalOffset, arrowPointAtCenter,  
+        overlayTop, overlayLeft);      
     }    
   }
 

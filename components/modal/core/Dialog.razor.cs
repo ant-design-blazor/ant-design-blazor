@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -221,7 +222,7 @@ namespace AntDesign
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private async Task OnCloserClick()
+        internal async Task OnCloserClick()
         {
             await CloseAsync();
         }
@@ -248,7 +249,7 @@ namespace AntDesign
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private Task OnMaxBtnClick()
+        internal Task OnMaxBtnClick()
         {
             if (Status == ModalStatus.Default)
             {

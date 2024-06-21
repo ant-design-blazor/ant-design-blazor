@@ -37,10 +37,14 @@ namespace AntDesign
 
         public CssStyleBuilder AddStyle(string styleName, string styleValue)
         {
+            if (string.IsNullOrWhiteSpace(styleValue))
+                return this;
+
             _stringBuilder.Append(styleName)
                 .Append(StyleKeyValuePairSplitString)
                 .Append(styleValue)
                 .Append(StyleItemSplitString);
+
             return this;
         }
 
