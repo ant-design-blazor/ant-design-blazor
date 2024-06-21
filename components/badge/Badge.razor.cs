@@ -179,8 +179,10 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixName = "ant-badge";
+            var hashId = UseStyle(prefixName);
             ClassMapper.Clear()
                 .Add(prefixName)
+                .Add(hashId)
                 .If($"{prefixName}-status", () => HasStatusOrColor)
                 .If($"{prefixName}-not-a-wrapper", () => ChildContent == null)
                 .If($"{prefixName}-rtl", () => RTL)

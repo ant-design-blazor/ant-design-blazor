@@ -65,6 +65,7 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var hashId = UseStyle(_prefixCls);
             ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
@@ -72,6 +73,7 @@ namespace AntDesign
 
             ClassMapper
                 .Add(_prefixCls)
+                .Add(hashId)
                 .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
                 .If($"{_prefixCls}-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-indeterminate", () => Indeterminate)

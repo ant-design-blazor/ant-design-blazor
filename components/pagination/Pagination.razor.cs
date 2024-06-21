@@ -204,26 +204,32 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             ClassMapper
                .Add(PrefixCls)
+               .Add(hashId)
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
                .If($"{PrefixCls}-mini", () => !Simple && Size == PaginationSize.Small)
                .If($"{PrefixCls}-rtl", () => RTL);
 
             _prevClass
+               .Add(hashId)
                .Add($"{PrefixCls}-prev")
                .If($"{PrefixCls}-disabled", () => !HasPrev());
 
             _nextClass
+               .Add(hashId)
                .Add($"{PrefixCls}-next")
                .If($"{PrefixCls}-disabled", () => !HasNext());
 
             _jumpPrevClass
+               .Add(hashId)
                .Add($"{PrefixCls}-jump-prev")
                .If($"{PrefixCls}-jump-prev-custom-icon", () => JumpPrevIcon != null);
 
             _jumpNextClass
+               .Add(hashId)
                .Add($"{PrefixCls}-jump-next")
                .If($"{PrefixCls}-jump-next-custom-icon", () => JumpNextIcon != null);
         }

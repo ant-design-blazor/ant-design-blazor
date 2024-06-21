@@ -27,6 +27,7 @@
     "build:doc": "gulp build:preview --max-old-space-size=81920",
     "preinstall": "dotnet tool restore",
     "changelog": "node ./scripts/print-changelog",
+    "migrate:v5": "ts-node ./scripts/migrator/index.ts"
     "lint": "eslint --ext .ts ./components",
     "lint-fix": "eslint --fix --ext .ts ./components"
   },
@@ -79,7 +80,7 @@
     "simple-git": "^3.7.0",
     "ts-node": "^10.8.0",
     "tsify": "^4.0.2",
-    "typescript": "^3.8.3",
+    "typescript": "~5.0.2",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },

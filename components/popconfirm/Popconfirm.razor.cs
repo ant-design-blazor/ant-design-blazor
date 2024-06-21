@@ -65,6 +65,7 @@ namespace AntDesign
         {
             OkText ??= Locale.OkText ?? "Ok";
             CancelText ??= Locale.CancelText ?? "Cancel";
+            var hashId = UseStyle(PrefixCls);
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)

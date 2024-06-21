@@ -96,12 +96,14 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(PrefixCls);
             SlickSliderClassMapper.Clear()
                 .Add("slick-slider slick-initialized")
                 .If("slick-vertical", () => !IsHorizontal);
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-vertical", () => !IsHorizontal)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }

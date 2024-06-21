@@ -72,10 +72,12 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-mentions";
-            ClassMapper.Clear()
+            var hashId = UseStyle(prefixCls);
+            this.ClassMapper.Clear()
                 .Add(prefixCls)
-                .If($"{prefixCls}-disable", () => Disable)
-                .If($"{prefixCls}-focused", () => Focused)
+                .Add(hashId)
+                .If($"{prefixCls}-disable", () => this.Disable)
+                .If($"{prefixCls}-focused", () => this.Focused)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
         }

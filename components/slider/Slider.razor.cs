@@ -459,9 +459,10 @@ namespace AntDesign
             base.OnParametersSet();
 
             ValidateParameter();
-
+            var hashId = UseStyle(PreFixCls); // todo: move to OnInitialized
             ClassMapper.Clear()
                 .Add(PreFixCls)
+                .Add(hashId)
                 .If($"{PreFixCls}-disabled", () => Disabled)
                 .If($"{PreFixCls}-horizontal", () => !Vertical)
                 .If($"{PreFixCls}-vertical", () => Vertical)
