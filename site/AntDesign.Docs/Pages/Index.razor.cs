@@ -19,6 +19,7 @@ namespace AntDesign.Docs.Pages
 
         private MoreProps[] _moreArticles = { };
 
+        private Sponsor[] _sponsors = { };
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private ILocalizationService Language { get; set; }
 
@@ -66,7 +67,8 @@ namespace AntDesign.Docs.Pages
         {
             _recommends = await DemoService.GetRecommend();
             _products = await DemoService.GetProduct();
-            _moreArticles = await DemoService.GetMore();
+            //_moreArticles = await DemoService.GetMore();
+            _sponsors = await DemoService.GetSponsors();
             await InvokeAsync(StateHasChanged);
         }
 
