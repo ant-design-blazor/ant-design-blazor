@@ -27,7 +27,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 | Width | 自定义宽度单位 px | number | auto |
 | OverlayClassName | 下拉根元素的类名称 | string | - |
 | OverlayStyle | 下拉根元素的样式 | object | - |
-| CompareWith | 对比，用于两个对象比较是否相同(o1: object, o2: object) => bool | (o1: object, o2: object) => o1===o2 |
+| CompareWith | 对比，用于两个对象比较是否相同 | (o1: object, o2: object) => bool | (o1: object, o2: object) => o1===o2 |
 | PopupContainerSelector | 菜单渲染父节点的选择器。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。 | string | 'body' |
 | Placeholder | 输入框提示 | string |  |
 | AutoCompleteOptions | 列表对象集合 | list<AutoCompleteOption> |  |
