@@ -169,7 +169,7 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
-  
+
         /// <summary>
         /// Is used to customize the label style.
         /// </summary>
@@ -1385,7 +1385,10 @@ namespace AntDesign
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         protected async Task OnKeyUpAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
             var overlayFirstOpen = false;
@@ -1755,7 +1758,10 @@ namespace AntDesign
         /// </summary>
         protected async Task OnKeyDownAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
 
