@@ -39,6 +39,25 @@ dotnet add package AntDesign.Extensions.Localization
   | ---- | ---- |
   | Hello | Hello! |
   | Goodbye | Goodbye! |
+
+要注意的是，`IStringLocalizer<T>` 需要指定泛型类型参数作为 resx 文件的定位，因此需要确保资源文件有对应的公开的类型。或如下手动调整 csproj 文件：
+
+```xml
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+```
   
 - 使用时在 razor 注入 IStringLocalizer<T> 服务，例如：
 
@@ -49,7 +68,7 @@ dotnet add package AntDesign.Extensions.Localization
     <p>@localizer["Goodbye"]</p>
     ```
 
-- 在 Layout.razor 订阅语言变更事件，即可切换 UI 上的语言
+- 在需要刷新语言的页面订阅语言变更事件，即可切换 UI 上的语言
 
     ```html
     @implements IDisposable
