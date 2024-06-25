@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 0.19.3
+
+`2024-6-26`
+
+- 🆕 Add Tree/TreeSelect support to select/check and expand node when clicking the node's title. [#3902](https://github.com/ant-design-blazor/ant-design-blazor/pull/3902) [@pankey888](https://github.com/pankey888)
+- 🛠 Refactor Icon import JS directly to set up iconfont. [#3931](https://github.com/ant-design-blazor/ant-design-blazor/pull/3931) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal set result to tcs after pressing ESC. [#3934](https://github.com/ant-design-blazor/ant-design-blazor/pull/3934) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table expression activator missing return. [#3933](https://github.com/ant-design-blazor/ant-design-blazor/pull/3933) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.19.2
 
 `2024-6-24`
