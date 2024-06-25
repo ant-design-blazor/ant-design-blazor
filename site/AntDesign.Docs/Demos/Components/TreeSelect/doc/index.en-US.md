@@ -72,7 +72,7 @@ Tree selection control.
 | ShowTreeLine | Shows a connecting line | boolean | false |  |
 | ShowIcon | show treeNode icon icon | boolean | false |  |
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
-| Multiple  |  Allows selecting multiple treeNodes (Valid when TreeCheckable is set to false) | boolean | false  |   |
+| Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | TreeCheckable | Whether can be checked | boolean  | false  |   |
 | CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
