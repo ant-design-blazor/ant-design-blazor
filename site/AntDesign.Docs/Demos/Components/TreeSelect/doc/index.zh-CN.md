@@ -73,7 +73,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ShowIcon | 显示节点图标 | boolean | false |  |
 | ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
-| TreeCheckable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
+| TreeCheckable |  是否可勾选节点 | boolean  | false  |   |
+| CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
 | MatchedClass  | 搜索匹配关键字高亮样式 | string  | null  |   |
@@ -87,12 +88,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
+| ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 
 ### Tree EventCallback
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | OnNodeLoadDelayAsync  |  异步加载时回调，方法异步使用 async  | EventCallback  |   |   |
+| OnTreeNodeSelect  |  选择节点时触发  | EventCallback  |   |   |
 
 ### Tree RenderFragment
 

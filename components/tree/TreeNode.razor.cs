@@ -368,6 +368,7 @@ namespace AntDesign
         {
             await DoExpand(expanded);
             await TreeComponent?.UpdateExpandedKeys();
+            StateHasChanged();
         }
 
         internal async Task DoExpand(bool expanded)

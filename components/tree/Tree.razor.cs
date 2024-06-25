@@ -388,6 +388,12 @@ namespace AntDesign
         public bool Checkable { get; set; }
 
         /// <summary>
+        /// Check or uncheck the node by click TreeNodeTitle if checkable
+        /// </summary>
+        [Parameter]
+        public bool CheckOnClickNode { get; set; } = true;
+
+        /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
         /// </summary>
         [Parameter]
@@ -905,6 +911,12 @@ namespace AntDesign
         }
 
         #region Expand
+
+        /// <summary>
+        /// Expand or collapse the node by click TreeNodeTitle
+        /// </summary>
+        [Parameter]
+        public bool ExpandOnClickNode { get; set; } = false;
 
         /// <summary>
         /// All tree nodes are expanded by default

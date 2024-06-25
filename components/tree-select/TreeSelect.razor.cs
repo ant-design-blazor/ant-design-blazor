@@ -38,7 +38,21 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public bool TreeCheckable { get; set; }
+        [Parameter]
+        public bool TreeCheckable
+        {
+            get => _treeCheckable;
+            set
+            {
+                _treeCheckable = value;
+                if (_treeCheckable)
+                {
+                    Mode = SelectMode.Multiple.ToString("G");
+                }
+            }
+        }
+
+        [Parameter] public bool CheckOnClickNode { get; set; } = true;
 
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
@@ -69,6 +83,8 @@ namespace AntDesign
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
+
+        [Parameter] public bool ExpandOnClickNode { get; set; } = false;
 
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
@@ -103,6 +119,9 @@ namespace AntDesign
         [Parameter] public IDictionary<string, object> TreeAttributes { get; set; }
 
         [Parameter] public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeEventArgs<TItem>> OnTreeNodeSelect { get; set; }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -162,6 +181,7 @@ namespace AntDesign
 
         private string _dropdownStyle = string.Empty;
         private bool _multiple;
+        private bool _treeCheckable;
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
 
@@ -376,7 +396,7 @@ namespace AntDesign
                 item.SetSelected(false);
         }
 
-        private async Task OnTreeNodeClick(TreeEventArgs<TItem> args)
+        private async Task DoTreeNodeClick(TreeEventArgs<TItem> args)
         {
             if (TreeCheckable)
                 return;
@@ -407,7 +427,7 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnTreeNodeUnSelect(TreeEventArgs<TItem> args)
+        protected async Task DoTreeNodeUnSelect(TreeEventArgs<TItem> args)
         {
             if (TreeCheckable)
                 return;
@@ -429,7 +449,7 @@ namespace AntDesign
             }
         }
 
-        private void OnTreeCheckedKeysChanged(string[] checkedKeys)
+        private void DoTreeCheckedKeysChanged(string[] checkedKeys)
         {
             if (!TreeCheckable)
                 return;
@@ -462,7 +482,7 @@ namespace AntDesign
                 maxWidth = $"max-width: {DropdownMaxWidth};";
             _dropdownStyle = minWidth + definedWidth + maxWidth + DropdownStyle ?? "";
 
-            if (Multiple)
+            if (IsMultiple)
             {
                 if (Values == null)
                     return;
