@@ -72,8 +72,9 @@ Tree selection control.
 | ShowTreeLine | Shows a connecting line | boolean | false |  |
 | ShowIcon | show treeNode icon icon | boolean | false |  |
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
-| Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
-| TreeCheckable |  Add a Checkbox before the node | boolean  | false  |   |
+| Multiple  |  Allows selecting multiple treeNodes (Valid when TreeCheckable is set to false) | boolean | false  |   |
+| TreeCheckable | Whether can be checked | boolean  | false  |   |
+| CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
 | MatchedClass | The  class name of matching text | string | null |  |
@@ -87,12 +88,14 @@ Tree selection control.
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
+| ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 
 ### Tree EventCallback
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| OnNodeLoadDelayAsync  |   Lazy load callbacks ¡£You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnNodeLoadDelayAsync  |   Lazy load callbacks. You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnTreeNodeSelect  |  Triggered when selecting a node  | EventCallback  |   |   |
 
 ### Tree RenderFragment
 
@@ -117,5 +120,5 @@ Tree selection control.
 | Icon | icon  |  string |  false |   |
 | IconTemplate | icon template | RenderFragment | null |  |
 | DataItem | dataitem |  Type |  |   | 
-| SwitcherIcon | Customize node toggle icon £¬the value is Icon types  | string | null | |
+| SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |

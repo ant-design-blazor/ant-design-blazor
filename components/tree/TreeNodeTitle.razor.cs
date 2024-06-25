@@ -65,7 +65,18 @@ namespace AntDesign
         {
             if (SelfNode.Disabled)
                 return;
-            SelfNode.SetSelected(!SelfNode.Selected);
+            if (TreeComponent.ExpandOnClickNode && !SelfNode.IsLeaf)
+            {
+                await SelfNode.Expand(!SelfNode.Expanded);
+            }
+            if (TreeComponent.CheckOnClickNode && TreeComponent.Checkable)
+            {
+                SelfNode.SetChecked(!SelfNode.Checked);
+            }
+            else
+            {
+                SelfNode.SetSelected(!SelfNode.Selected);
+            }
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }

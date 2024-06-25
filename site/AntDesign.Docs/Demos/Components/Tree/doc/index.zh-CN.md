@@ -29,6 +29,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | Selectable |是否可以选择 | boolean | true |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | Checkable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
+| CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | CheckStrictly  |  checkable 状态下节点选择完全受控（父子节点选中状态不再关联） |  boolean | false  |   |
 | DefaultSelectedKey | 默认选中的节点Key | string | null |  |
 | DefaultSelectedKeys | 默认选中的多个节点的key | string[] | null | |
@@ -52,6 +53,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | DefaultExpandedKeys  |  默认展开的节点数 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 | AutoExpandParent | 是否自动展开父节点 | bool | false | |
+| ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 
 
 ### Bind 绑定值
