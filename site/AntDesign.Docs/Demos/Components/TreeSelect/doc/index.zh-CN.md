@@ -72,7 +72,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ShowTreeLine | 显示连接线 | boolean | false |  |
 | ShowIcon | 显示节点图标 | boolean | false |  |
 | ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
-| Multiple  |  允许选择多个树节点（TreeCheckable为false时有效） | boolean | false  |   |
+| Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | TreeCheckable |  是否可勾选节点 | boolean  | false  |   |
 | CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
