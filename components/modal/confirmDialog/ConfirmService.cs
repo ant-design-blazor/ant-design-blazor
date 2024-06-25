@@ -71,6 +71,7 @@ namespace AntDesign
 
             var confirmRef = new ConfirmRef(confirmOptions)
             {
+                IsCreateByService = true,
                 TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
             };
             if (OnOpenEvent != null)
