@@ -7,9 +7,9 @@ using System.Text;
 namespace AntDesign.Core.Reflection
 {
 #if NETCOREAPP3_1_OR_GREATER
-    public static class ExpressionActivator<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>
+    internal static class ExpressionActivator<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>
 #else
-    public static class ExpressionActivator<T>
+    internal static class ExpressionActivator<T>
 #endif
     {
         private static Func<T> _createInstanceFunc;
@@ -20,6 +20,7 @@ namespace AntDesign.Core.Reflection
             if (constructor == null)
             {
                 _createInstanceFunc = () => default;
+                return;
             }
 
             var newExpression = Expression.New(constructor);
