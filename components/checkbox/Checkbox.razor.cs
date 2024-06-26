@@ -90,6 +90,15 @@ namespace AntDesign
             }
         }
 
-        internal void SetValue(bool value) => Checked = value;
+        internal void SetValue(bool value)
+        {
+            if (value == Checked)
+                return;
+
+            Checked = value;
+            StateHasChanged();
+        }
+
+        internal void SetItemValue(object itemValue) => ItemValue = itemValue;
     }
 }

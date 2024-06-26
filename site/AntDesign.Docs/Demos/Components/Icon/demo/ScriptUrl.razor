@@ -7,14 +7,6 @@
   <IconFont Type="icon-python" />
 </div>
 
-@code
-{
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-    if (firstRender)
-    {
-      await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js");
-      await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js");
-    }
-  }
-}
+<script src="//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js"></script>
+<script src="//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js"></script>
+

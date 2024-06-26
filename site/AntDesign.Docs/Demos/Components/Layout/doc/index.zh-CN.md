@@ -57,6 +57,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg
 
 > 注意：采用 flex 布局实现，请注意[浏览器兼容性](http://caniuse.com/#search=flex)问题。
 
+**如果需要添加应用内的标签页，请搭配 [ReuseTabs](/experimental/reusetabs) 组件使用。**
+
 ## API
 
 ```jsx

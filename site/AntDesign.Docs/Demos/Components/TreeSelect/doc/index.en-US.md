@@ -73,7 +73,8 @@ Tree selection control.
 | ShowIcon | show treeNode icon icon | boolean | false |  |
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
-| TreeCheckable |  Add a Checkbox before the node | boolean  | false  |   |
+| TreeCheckable | Whether can be checked | boolean  | false  |   |
+| CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
 | MatchedClass | The  class name of matching text | string | null |  |
@@ -84,14 +85,17 @@ Tree selection control.
 | IsLeafExpression  | Specifies a method that returns whether the expression is a leaf node.  | Func  |   |   |
 | ChildrenExpression  | Specifies a method  to return a child node  | Func  |   |   |
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
+| CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
+| ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 
 ### Tree EventCallback
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| OnNodeLoadDelayAsync  |   Lazy load callbacks ¡£You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnNodeLoadDelayAsync  |   Lazy load callbacks. You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnTreeNodeSelect  |  Triggered when selecting a node  | EventCallback  |   |   |
 
 ### Tree RenderFragment
 
@@ -106,12 +110,15 @@ Tree selection control.
 | --- | --- | --- | --- | --- |
 | Key  |  key  | string  |   |   |
 | Disabled |  disabled | string  |   |   |
-| Checked | checked  |  boolean |  false |   |
+| Checkable | Checkable  |  boolean |  true |   |
+| Checked | checked (Supports two-way binding)  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
+| Selected | selected (Supports two-way binding)  |  boolean |  false |   |
+| Expanded | expanded (Supports two-way binding)  |  boolean |  false |   |
 | Title | title  |  string |  false |   |
 | TitleTemplate | title template | RenderFragment | null |  |
 | Icon | icon  |  string |  false |   |
 | IconTemplate | icon template | RenderFragment | null |  |
 | DataItem | dataitem |  Type |  |   | 
-| SwitcherIcon | Customize node toggle icon £¬the value is Icon types  | string | null | |
+| SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |

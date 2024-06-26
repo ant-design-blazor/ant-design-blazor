@@ -56,6 +56,8 @@ Style of a navigation should conform to its level.
 
 > Based on `flex layout`, please pay attention to the [compatibility](http://caniuse.com/#search=flex).
 
+**If you need to add in-app tabs, use it with the [ReuseTabs](/experimental/reusetabs) component.**
+
 ## API
 
 ```jsx
