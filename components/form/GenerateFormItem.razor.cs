@@ -46,7 +46,6 @@ public partial class GenerateFormItem<TModel> : ComponentBase
                 continue;
             }
 
-            var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name;
             var underlyingType = THelper.GetUnderlyingType(property.PropertyType);
             FormValidationRule[]? validateRule = null;
             if (ValidateRules != null)
@@ -61,38 +60,36 @@ public partial class GenerateFormItem<TModel> : ComponentBase
                 childContent = Definitions.Invoke(property, (TModel)Form.Model);
             }
 
-            childContent ??= GenerateByType(underlyingType, property, displayName);
+            childContent ??= GenerateByType(underlyingType, property);
 
             // Make FormItem 
             if (validateRule != null)
             {
                 builder.OpenComponent(0, typeof(FormItem));
-                builder.AddAttribute(1, "Label", displayName);
-                builder.AddAttribute(2, "Rules", validateRule);
+                builder.AddAttribute(1, "Rules", validateRule);
                 Console.WriteLine(validateRule);
-                builder.AddAttribute(3, "ChildContent", childContent);
+                builder.AddAttribute(2, "ChildContent", childContent);
                 builder.CloseComponent();
             }
             else
             {
                 builder.OpenComponent(0, typeof(FormItem));
-                builder.AddAttribute(1, "Label", displayName);
-                builder.AddAttribute(2, "ChildContent", childContent);
+                builder.AddAttribute(1, "ChildContent", childContent);
                 builder.CloseComponent();
             }
         }
     }
 
-    private RenderFragment? GenerateByType(Type underlyingType, PropertyInfo property, string displayName)
+    private RenderFragment? GenerateByType(Type underlyingType, PropertyInfo property)
     {
         if (underlyingType == typeof(string))
         {
-            return MakeInputString(property, displayName);
+            return MakeInputString(property);
         }
 
         if (THelper.IsNumericType(underlyingType) && !underlyingType.IsEnum)
         {
-            return MakeInputNumeric(property, displayName);
+            return MakeInputNumeric(property);
         }
 
         if (underlyingType == typeof(DateTime))
@@ -125,12 +122,12 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         return eventCallback;
     }
 
-    private RenderFragment MakeInputString(PropertyInfo property, string? displayName = null)
+    private RenderFragment MakeInputString(PropertyInfo property)
     {
         return MakeFormItem(property, typeof(Input<>));
     }
 
-    private RenderFragment MakeInputNumeric(PropertyInfo property, string? displayName = null)
+    private RenderFragment MakeInputNumeric(PropertyInfo property)
     {
         return MakeFormItem(property, typeof(InputNumber<>));
     }
