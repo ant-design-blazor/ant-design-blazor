@@ -14,10 +14,11 @@ using AntDesign.Filters;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.JSInterop;
+using AntDesign.Table.Internal;
 
 namespace AntDesign
 {
-    public partial class Column<TData> : ColumnBase, IFieldColumn
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
@@ -597,6 +598,31 @@ namespace AntDesign
                 } while (!filterInputFocused);
             });
 #endif
+        }
+
+        RenderFragment IRenderColumn.RenderPlaceholder()
+        {
+            return PLACHOLDER;
+        }
+
+        RenderFragment IRenderColumn.RenderMeasure()
+        {
+            return MEASURE;
+        }
+
+        RenderFragment IRenderColumn.RenderColGroup()
+        {
+            return ColGroupRender;
+        }
+
+        RenderFragment IRenderColumn.RenderHeader()
+        {
+            return HeaderRender;
+        }
+
+        RenderFragment IRenderColumn.RenderBody(RowData rowData)
+        {
+            return BodyRender;
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AntDesign.Internal;
+using AntDesign.Table.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IRenderColumn
     {
         [Parameter] public string Type { get; set; } = "checkbox";
 
@@ -111,6 +112,31 @@ namespace AntDesign
             }
 
             base.Dispose(disposing);
+        }
+
+        RenderFragment IRenderColumn.RenderPlaceholder()
+        {
+            return PLACHOLDER;
+        }
+
+        RenderFragment IRenderColumn.RenderMeasure()
+        {
+            return MEASURE;
+        }
+
+        RenderFragment IRenderColumn.RenderColGroup()
+        {
+            return ColGroupRender;
+        }
+
+        RenderFragment IRenderColumn.RenderHeader()
+        {
+            return HeaderRender;
+        }
+
+        RenderFragment IRenderColumn.RenderBody(RowData rowData)
+        {
+            return BodyRender;
         }
     }
 }

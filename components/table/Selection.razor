@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
 @using AntDesign.TableModels
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits ColumnBase
 
 @if (IsInitialize)
@@ -20,14 +21,7 @@ else if (IsMeasure)
 }
 else if (IsColGroup)
 {
-	if (Width != null)
-	{
-		<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
-	}
-	else
-	{
-		<col class="ant-table-selection-col">
-	}
+	
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
@@ -65,4 +59,59 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 			}
 		}
 	</td>
+}
+
+@code{
+    static RenderFragment PLACHOLDER =@<td style="padding: 0px; border: 0px; height: 0px;"></td>;
+    static RenderFragment MEASURE =@<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>;
+
+    void ColGroupRender(RenderTreeBuilder __builder)
+    {
+        if (Width != null)
+	    {
+	    	<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+	    }
+	    else
+	    {
+	    	<col class="ant-table-selection-col">
+	    }
+    }
+
+    void HeaderRender(RenderTreeBuilder __builder)
+    {
+        <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
+		    @if (Type == "checkbox")
+		    {
+		    	<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
+		    }
+	    </th>
+    }
+
+    void BodyRender(RenderTreeBuilder __builder)
+    {
+        <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+		    @if (CellRender != null)
+		    {
+		    	var cellData = new CellData(RowData);
+                @CellRender(cellData)
+		    }
+		    else if (ChildContent != null)
+		    {
+		    	@ChildContent
+		    }
+		    else
+		    {
+                HandleSelected();
+
+		    	@if (Type == "checkbox")
+		    	{
+		    		<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" />
+		    	}
+		    	else if (Type == "radio")
+		    	{
+                    <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
+		    	}
+		    }
+	    </td>
+    }
 }
