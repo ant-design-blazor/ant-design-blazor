@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,6 +19,11 @@ using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+    [CascadingTypeParameter(nameof(TItemValue))]
+#endif
+
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
         #region Parameters
@@ -68,7 +74,7 @@ namespace AntDesign
                     .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (DataSourceEqualityComparer is null)
                 {
-                    DataSourceEqualityComparer = new DataSourceEqualityComparer<TItemValue, TItem>(this);
+                    DataSourceEqualityComparer = this;
                 }
             }
             return _dataSourceItemShallowCopyMehtod;
@@ -132,9 +138,9 @@ namespace AntDesign
         [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
 
         /// <summary>
-        /// Customize dropdown content.
+        /// Customize dropdown content. The context is the original content.
         /// </summary>
-        [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
+        [Parameter] public RenderFragment<RenderFragment> DropdownRender { get; set; }
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
@@ -163,23 +169,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the label.
-        /// </summary>
-        [Parameter]
-        public string LabelName
-        {
-            get => _labelName;
-            set
-            {
-                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
-                {
-                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
-                }
-                _labelName = value;
-            }
-        }
 
         /// <summary>
         /// Is used to customize the label style.
@@ -235,6 +224,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public Action<string> OnSearch { get; set; }
 
+        [Parameter] public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; } = (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
+
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
 
         /// <summary>
@@ -274,21 +265,6 @@ namespace AntDesign
         /// </summary>
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
 
-        /// <summary>
-        /// The name of the property to be used for the value.
-        /// </summary>
-        [Parameter]
-        public string ValueName
-        {
-            get => _valueName;
-            set
-            {
-                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
-                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
-                _valueName = value;
-            }
-        }
-
         private bool _valueHasChanged;
 
         /// <summary>
@@ -310,6 +286,25 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Obsolete("Use ItemLabel instead")]
+        [Parameter]
+        public Func<TItem, string> LabelProperty { get => _getLabel; set => _getLabel = value; }
+
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Obsolete("Use ItemValue instead")]
+        [Parameter]
+        public Func<TItem, TItemValue> ValueProperty { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// Specifies predicate for disabled options
+        /// </summary>
+        [Parameter] public Func<TItem, bool> DisabledPredicate { get => _getDisabled; set => _getDisabled = value; }
+
+        /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
         /// </summary>
         [Parameter]
@@ -328,7 +323,7 @@ namespace AntDesign
         }
 
         [Parameter] public string ListboxStyle { get; set; } = "display: flex; flex-direction: column;";
-        
+
         #endregion Parameters
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
@@ -357,14 +352,10 @@ namespace AntDesign
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
-        private bool _waittingStateChange;
+        private bool _waitingForStateChange;
         private bool _isValueEnum;
         private bool _isToken;
         private bool _defaultActiveFirstOption;
-
-        private string _labelName;
-
-        internal Func<TItem, string> _getLabel;
 
         private string _groupName = string.Empty;
 
@@ -374,9 +365,6 @@ namespace AntDesign
 
         private Func<TItem, bool> _getDisabled;
 
-        private string _valueName;
-
-        internal Func<TItem, TItemValue> _getValue;
 
         private bool _showArrowIcon = true;
 
@@ -402,7 +390,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && string.IsNullOrWhiteSpace(ValueName))
+            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -424,7 +412,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
             if (SelectOptions == null)
@@ -440,13 +428,14 @@ namespace AntDesign
             if (_valueHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
-                OnValueChange(_selectedValue);
                 if (Form?.ValidateOnChange == true)
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
+
+                await OnValueChangeAsync(_selectedValue);
             }
-            base.OnParametersSet();
+            await base.OnParametersSetAsync();
         }
 
         private void EvaluateDataSourceChange()
@@ -533,12 +522,12 @@ namespace AntDesign
                 {
                     if (LastValueBeforeReset is not null)
                     {
-                        OnValueChange(LastValueBeforeReset);
+                        await OnValueChangeAsync(LastValueBeforeReset);
                         LastValueBeforeReset = default;
                     }
                     else
                     {
-                        OnValueChange(Value);
+                        await OnValueChangeAsync(Value);
                     }
                 }
                 else
@@ -591,9 +580,9 @@ namespace AntDesign
                 _optionsHasInitialized = true;
             }
 
-            if (_waittingStateChange)
+            if (_waitingForStateChange)
             {
-                _waittingStateChange = false;
+                _waitingForStateChange = false;
                 StateHasChanged();
             }
 
@@ -633,7 +622,10 @@ namespace AntDesign
 
                         if (exists is null)
                         {
-                            SelectOptionItems.Remove(selectOption);
+                            if (IgnoreItemChanges)
+                            {
+                                SelectOptionItems.Remove(selectOption);
+                            }
                             RemoveEqualityToNoValue(selectOption);
 
                             if (selectOption.IsSelected)
@@ -643,6 +635,10 @@ namespace AntDesign
                             dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
                     }
                 }
+            }
+            if (!IgnoreItemChanges)
+            {
+                SelectOptionItems.Clear();
             }
 
             //A simple approach to avoid unnecessary scanning through _selectedValues once
@@ -685,7 +681,7 @@ namespace AntDesign
                         isSelected = _selectedValues.Contains(value);
                 }
 
-                if (!string.IsNullOrWhiteSpace(DisabledName))
+                if (_getDisabled != default)
                     disabled = _getDisabled(item);
 
                 if (!string.IsNullOrWhiteSpace(GroupName))
@@ -718,6 +714,7 @@ namespace AntDesign
                     updateSelectOption.IsDisabled = disabled;
                     updateSelectOption.GroupName = groupName;
                     updateSelectOption.IsHidden = isSelected && HideSelected;
+                    SelectOptionItems.Add(updateSelectOption);
                     if (isSelected)
                     {
                         if (!updateSelectOption.IsSelected)
@@ -788,7 +785,7 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectContent.Ref);
             var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             minWidth = $"min-width: {width}px;";
             if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
@@ -912,7 +909,7 @@ namespace AntDesign
                     if (HideSelected)
                         result.IsHidden = true;
 
-                    _waittingStateChange = true;
+                    _waitingForStateChange = true;
                     if (SelectedOptionItems.Count == 0)
                     {
                         SelectedOptionItems.Add(result);
@@ -920,13 +917,12 @@ namespace AntDesign
                     else
                         SelectedOptionItems[0] = result;
                     await ValueChanged.InvokeAsync(result.Value);
-                }
-                else
-                {
-                    await SetDefaultActiveFirstItemAsync();
+
+                    _defaultValueApplied = true;
+                    return;
                 }
             }
-            else if (DefaultActiveFirstOption)
+            if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -973,7 +969,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _waittingStateChange = true;
+                    _waitingForStateChange = true;
 
                     await InvokeValuesChanged();
                 }
@@ -1082,17 +1078,14 @@ namespace AntDesign
         /// </summary>
         internal TItemValue LastValueBeforeReset { get; set; }
 
-        /// <summary>
-        /// The Method is called every time if the value of the @bind-Value was changed by the two-way binding.
-        /// </summary>
-        protected override void OnValueChange(TItemValue value)
+        protected override async Task OnValueChangeAsync(TItemValue value)
         {
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
             if (!_isValueEnum && !TypeDefaultExistsAsSelectOption && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                await InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
             }
 
@@ -1107,21 +1100,20 @@ namespace AntDesign
 
                 if (!AllowClear)
                 {
-                    _ = TrySetDefaultValueAsync();
+                    await TrySetDefaultValueAsync();
                 }
                 else
                 {
                     //Reset value if not found - needed if value changed
                     //outside of the component
-                    _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                    await InvokeAsync(() => OnInputClearClickAsync(new()));
                 }
                 return;
             }
 
             if (result.IsDisabled)
             {
-                _ = TrySetDefaultValueAsync();
-
+                await TrySetDefaultValueAsync();
                 return;
             }
 
@@ -1132,7 +1124,7 @@ namespace AntDesign
             if (HideSelected)
                 result.IsHidden = true;
 
-            ValueChanged.InvokeAsync(result.Value);
+            await ValueChanged.InvokeAsync(result.Value);
         }
 
         /// <summary>
@@ -1206,7 +1198,7 @@ namespace AntDesign
                 await TokenizeSearchedPhrase(_searchValue);
             }
 
-            if (!string.IsNullOrWhiteSpace(_searchValue))
+            if (!string.IsNullOrEmpty(_searchValue))
             {
                 FilterOptionItems(_searchValue);
             }
@@ -1283,7 +1275,7 @@ namespace AntDesign
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
-                    if (item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (!firstDone)
                         {
@@ -1329,7 +1321,7 @@ namespace AntDesign
             {
                 if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem
                 {
-                    if (item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase))
+                    if (FilterExpression(item, searchValue))
                     {
                         if (item.Label.Equals(searchValue, StringComparison.InvariantCulture))
                         {
@@ -1393,7 +1385,10 @@ namespace AntDesign
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         protected async Task OnKeyUpAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
             var overlayFirstOpen = false;
@@ -1763,7 +1758,10 @@ namespace AntDesign
         /// </summary>
         protected async Task OnKeyDownAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
 
@@ -1852,6 +1850,7 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
         }
+
 
         #endregion Events
     }

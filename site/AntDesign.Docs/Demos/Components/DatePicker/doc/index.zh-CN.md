@@ -21,7 +21,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 - RangePicker
 - WeekPicker
 - YearPicker
-- QuarterPicker (4.1.0 新增)
+- QuarterPicker
+
+目前已经支持 4 种类型的值:
+
+- DateTime
+- DateTimeOffset
+- DateOnly
+- TimeOnly
 
 ### 国际化配置
 
@@ -58,6 +65,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |
 | OnClearClick | 清除按钮点击时的回调 | Action | - |  |
 | inputReadOnly | 设置输入框为只读（避免在移动设备上打开虚拟键盘） | boolean | false |  |
+| Mask | 指定输入格式，可使输入自动识别为时间值     | string  | - | |
 
 ### 共同的方法
 

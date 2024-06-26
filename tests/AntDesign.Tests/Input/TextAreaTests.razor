@@ -1,6 +1,6 @@
 ﻿@inherits AntDesignTestBase
 @code {
-    AntDesign.TextArea.TextAreaInfo _textAreaInfo = new AntDesign.TextArea.TextAreaInfo
+    AntDesign.Internal.TextAreaInfo _textAreaInfo = new AntDesign.Internal.TextAreaInfo
             {
                 LineHeight = 10,
                 PaddingTop = 1,
@@ -20,7 +20,7 @@
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
         .SetResult(_textAreaInfo);
         string value = "0123456789";
         var cut = Render(
@@ -38,7 +38,7 @@
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
     .SetResult(_textAreaInfo);
         string value = "0123456789";
         var cut = Render(
@@ -51,12 +51,28 @@
         attribute.Should().Be($"{value.Length}");
     }
 
+    //Check wrapper marks as disabled when TextArea disabled state
+    [Fact]
+    public void TextArea_Wrapper_Disabled()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        .SetResult(_textAreaInfo);
+        string value = "0123456789";
+        var cut = Render(@<AntDesign.TextArea ShowCount Value=@value Disabled/>);
+        //Act
+        var span= cut.Find("span");
+        //Assert
+        span.ClassList.Should().Contain("ant-input-affix-wrapper-disabled");
+    }
+
     [Fact]
     public void TextArea_ShowCount_increase()
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
         string value = "";
         string newValue = "newValue";
@@ -76,7 +92,7 @@
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
         var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea ReadOnly Value="@("0123456789")" />);
         //Act
@@ -86,11 +102,25 @@
     }
 
     [Fact]
+    public void TextArea_Rows_creates_attribute()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Rows="1" Value="@("0123456789")" />);
+        //Act
+        var textAreaElement = cut.Find("textarea");
+        //Assert
+        textAreaElement.GetAttribute("rows").Should().Be("1");
+    }
+
+    [Fact]
     public void TextArea_MaxLength_Adds_Attribute_To_Textarea()
     {
         JSCommonMock();
         JSInterop
-            .Setup<TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
 
         var cut = Render<TextArea>(@<TextArea MaxLength="50" />);
@@ -105,7 +135,7 @@
     {
         JSCommonMock();
         JSInterop
-            .Setup<TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
 
         var cut = Render<TextArea>(@<TextArea />);
@@ -122,7 +152,7 @@
 	{
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
         uint rows = 4;
         double expectedHeight = rows * _textAreaInfo.LineHeight +
@@ -143,7 +173,7 @@
 	{
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         uint rows = 4;
         double expectedHeight = rows * _textAreaInfo.LineHeight +
@@ -164,7 +194,7 @@
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea MinRows="1" AutoSize="false" />);
         //Act && Assert
@@ -176,7 +206,7 @@
     {
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea MaxRows="4" AutoSize="false" />);
         //Act && Assert
@@ -188,7 +218,7 @@
 	{
         //Arrange
         JSCommonMock();
-        JSInterop.Setup<AntDesign.TextArea.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true)
             .SetResult(_textAreaInfo);
         uint rows = 4;
         double expectedHeight = rows * _textAreaInfo.LineHeight +

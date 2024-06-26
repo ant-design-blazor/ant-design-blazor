@@ -31,6 +31,17 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         private IFormItem ParentFormItem { get; set; }
 
+        [Parameter]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                _nameChanged?.Invoke();
+            }
+        }
+
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
@@ -103,6 +114,10 @@ namespace AntDesign
 
         private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required;
 
+        bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
+
+        IForm IFormItem.Form => Form;
+
         [Parameter]
         public bool Required { get; set; } = false;
 
@@ -165,19 +180,24 @@ namespace AntDesign
 
         private IControlValueAccessor _control;
 
-        private PropertyReflector _propertyReflector;
+        private PropertyReflector? _propertyReflector;
 
         private ClassMapper _labelClassMapper = new ClassMapper();
 
-        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
-        private PropertyInfo _fieldPropertyInfo;
+        private Func<object, object> _fieldValueGetter;
 
         private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+        private EventHandler<ValidationRequestedEventArgs> _validationRequestedHandler;
         private FormValidateStatus _validateStatus;
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
+
+        private Action _nameChanged;
+
+        private string _name;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
@@ -198,7 +218,12 @@ namespace AntDesign
 
             if (Form == null)
             {
-                throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
+                Form = ParentFormItem?.Form;
+            }
+
+            if (Form == null)
+            {
+                throw new InvalidOperationException("Form is null. FormItem should be childContent of Form.");
             }
 
             SetClass();
@@ -244,7 +269,7 @@ namespace AntDesign
             var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
-                && _propertyReflector.RequiredAttribute != null)
+                && _propertyReflector?.RequiredAttribute != null)
             {
                 isRequired = true;
             }
@@ -314,9 +339,16 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (CurrentEditContext != null && _validationStateChangedHandler != null)
+            if (CurrentEditContext != null)
             {
-                CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+                if (_validationStateChangedHandler != null)
+                {
+                    CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+                }
+                if (_validationRequestedHandler != null)
+                {
+                    CurrentEditContext.OnValidationRequested -= _validationRequestedHandler;
+                }
             }
 
             Form?.RemoveFormItem(this);
@@ -328,7 +360,8 @@ namespace AntDesign
         {
             if (_control != null) return;
 
-            _vaildateStatusChanged = () => control.UpdateStyles();
+            _vaildateStatusChanged = control.UpdateStyles;
+            _nameChanged = control.OnNameChanged;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -339,13 +372,9 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            void ValidateDefault()
             {
-                _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
-            }
 
-            _validationStateChangedHandler = (s, e) =>
-            {
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
 
@@ -358,21 +387,47 @@ namespace AntDesign
                     _validationMessages = new[] { Help };
                 }
 
+                _vaildateStatusChanged?.Invoke();
                 InvokeAsync(StateHasChanged);
-            };
+            }
 
-            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
-
-            _propertyReflector = control.ValueExpression is null
-                ? PropertyReflector.Create(control.ValuesExpression)
-                : PropertyReflector.Create(control.ValueExpression);
-
-            if (_propertyReflector.DisplayName != null)
+            if (Form?.ValidateOnChange == true)
             {
-                Label ??= _propertyReflector.DisplayName;
+                _validationStateChangedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
+                CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
+            }
+            else
+            {
+                _validationRequestedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
+                CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
+            }
+
+            if (control.PopertyReflector is not null)
+            {
+                _propertyReflector = control.PopertyReflector;
+            }
+            else if (control.ValueExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            }
+            else if (control.ValuesExpression is not null)
+            {
+                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
+            }
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             }
 
             SetInternalIsRequired();
+            StateHasChanged();
         }
 
         ValidationResult[] IFormItem.ValidateField()
@@ -386,9 +441,9 @@ namespace AntDesign
 
             var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
 
-            if (_fieldPropertyInfo != null)
+            if (_fieldValueGetter != null)
             {
-                var propertyValue = _fieldPropertyInfo.GetValue(_fieldIdentifier.Model);
+                var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
                 var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 

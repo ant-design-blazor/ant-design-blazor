@@ -5,6 +5,12 @@
 @page "/experimental/{name}"
 @page "/experimental"
 
+@page "/{locale}/components"
+@page "/{locale}/components/{name}"
+@page "/{locale}/charts/{name}"
+@page "/{locale}/charts"
+@page "/{locale}/experimental/{name}"
+@page "/{locale}/experimental"
 <section class="main-container main-container-component">
     <article>
 
@@ -38,7 +44,7 @@
                     @_demoComponent.Title
                     <span class="subtitle">@_demoComponent.SubTitle</span>
                     <span class="widget"></span>
-                    <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
+                    <Tooltip Title="@Localizer["app.content.edit-demo"]">
                         <Unbound>
                             <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
                                 <Icon Type="edit" />
@@ -64,7 +70,7 @@
                 @if (demos.Any())
                 {
                     <h2 data-scrollama-index="1">
-                        @LanguageService.Resources["app.component.examples"]
+                        @Localizer["app.component.examples"]
                         <span class="all-code-box-controls">
                             @if (_demoComponent.Cols != 1)
                             {

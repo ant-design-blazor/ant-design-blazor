@@ -2,6 +2,10 @@
 
 <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         Name="avatar"
+        ShowUploadList=true
+        ShowDownloadIcon=true
+        ShowPreviewIcon=true
+        ShowRemoveIcon=true
         @bind-FileList="fileList"
         ShowButton="fileList?.Count < 8"
         ListType="picture-card"
@@ -30,9 +34,10 @@
     bool previewVisible = false;
     string previewTitle = string.Empty;
     string imgUrl = string.Empty;
+    bool showUploadListOption1 = true;
 
     List<UploadFileItem> fileList = new List<UploadFileItem>
-{
+    {
         new UploadFileItem
         {
             Id = "1",

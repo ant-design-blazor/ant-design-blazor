@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -30,6 +31,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Visible { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
 #pragma warning restore 1591
 
@@ -80,13 +84,12 @@ namespace AntDesign
         private string CalcModalStyle()
         {
             string style;
-            if (_modalStatus == ModalStatus.Default)
+            if (Status == ModalStatus.Default)
             {
                 style = $"{Config.GetWidth()};";
                 if (Config.Draggable)
                 {
-                    string left = $"margin: 0; padding-bottom:0;";
-                    style += left;
+                    style += "margin: 0; padding-bottom:0;";
                 }
             }
             else
@@ -219,7 +222,7 @@ namespace AntDesign
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private async Task OnCloserClick()
+        internal async Task OnCloserClick()
         {
             await CloseAsync();
         }
@@ -230,21 +233,25 @@ namespace AntDesign
             {
                 return;
             }
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(false);
+            }
             if (Config.OnCancel != null)
             {
                 await Config.OnCancel.Invoke(null);
             }
         }
 
-        private ModalStatus _modalStatus = ModalStatus.Default;
+        public ModalStatus Status { get; private set; } = ModalStatus.Default;
 
         /// <summary>
         /// closer(X) click event
         /// </summary>
         /// <returns></returns>
-        private Task OnMaxBtnClick()
+        internal Task OnMaxBtnClick()
         {
-            if (_modalStatus == ModalStatus.Default)
+            if (Status == ModalStatus.Default)
             {
                 SetModalStatus(ModalStatus.Max);
             }
@@ -257,7 +264,7 @@ namespace AntDesign
 
         private void SetModalStatus(ModalStatus modalStatus)
         {
-            _modalStatus = modalStatus;
+            Status = modalStatus;
             _wrapStyle = CalcWrapStyle();
             _modalStyle = CalcModalStyle();
         }
@@ -283,7 +290,7 @@ namespace AntDesign
         private string CalcWrapStyle()
         {
             string style;
-            if (_modalStatus == ModalStatus.Default && Config.Draggable)
+            if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
                 if (Config.Centered)
@@ -331,11 +338,17 @@ namespace AntDesign
             {
                 _hasShow = false;
 
+                if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+
                 _maskAnimationClsName = ModalAnimation.MaskLeave;
                 _modalAnimationClsName = ModalAnimation.ModalLeave;
                 await Task.Delay(200);
                 _wrapStyle = "display: none;";
                 _maskHideClsName = "ant-modal-mask-hidden";
+
                 await InvokeStateHasChangedAsync();
                 if (Config.OnClosed != null)
                 {
@@ -370,7 +383,7 @@ namespace AntDesign
             {
                 Config.ClassName,
                 _modalAnimationClsName,
-                _modalStatus == ModalStatus.Max ? "ant-modal-max" : "",
+                Status == ModalStatus.Max ? "ant-modal-max" : "",
                 Class
             };
 
@@ -439,7 +452,7 @@ namespace AntDesign
                 }
 
                 // enable drag and drop
-                if (_modalStatus != ModalStatus.Max && Config.Draggable && !_doDraggable)
+                if (Status != ModalStatus.Max && Config.Draggable && !_doDraggable)
                 {
                     _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
@@ -455,7 +468,7 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                 }
                 // disable drag and drop
-                if (_modalStatus != ModalStatus.Max && Config.Draggable && _doDraggable)
+                if (Status != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
                     _doDraggable = false;
                     await JsInvokeAsync(JSInteropConstants.DisableDraggable, _dialogHeader);

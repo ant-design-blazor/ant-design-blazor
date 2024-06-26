@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -156,7 +157,9 @@ namespace AntDesign
                 .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
                 .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL);
+                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
+                ;
 
             ClassMapper
                 .Add("ant-input-textarea ")
@@ -322,16 +325,6 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
-        }
-
-        internal class TextAreaInfo
-        {
-            public double ScrollHeight { get; set; }
-            public double LineHeight { get; set; }
-            public double PaddingTop { get; set; }
-            public double PaddingBottom { get; set; }
-            public double BorderTop { get; set; }
-            public double BorderBottom { get; set; }
         }
     }
 }

@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <meta no-antblazor-css />
     <title>Ant Design of Blazor</title>
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-    <link rel="stylesheet" href="https://unpkg.com/@docsearch/css@3.0.0/dist/style.css" />
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
     <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
     <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
 </head>
@@ -199,15 +200,15 @@
 
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
     <script>
-        window.AntDesign.Prism = {};
-        window.AntDesign.Prism.highlight = function (code, language) {
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
             return Prism.highlight(code, Prism.languages[language], language);
         }
 
-        window.AntDesign.Prism.highlightAll = function () {
+        window.XPrism.highlightAll = function () {
             Prism.highlightAll();
         }
 
@@ -221,7 +222,7 @@
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>
 </html>

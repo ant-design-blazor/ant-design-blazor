@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
@@ -13,6 +14,9 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         #region Parameter
 
         /// <summary>
@@ -80,6 +84,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool DestroyOnClose { get; set; }
+
+        /// <summary>
+        /// Header content
+        /// </summary>
+        [Parameter]
+        public RenderFragment Header { get; set; } = DialogOptions.DefaultHeader;
 
         /// <summary>
         /// Footer content, set as Footer=null when you don't need default buttons
@@ -150,6 +160,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Visible { get; set; }
+
+        /// <summary>
+        /// Specify a function invoke when the modal dialog is visible or not
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
         /// <summary>
         /// Width of the modal dialog, the default value is 520
@@ -276,6 +292,7 @@ namespace AntDesign
                 DragInViewport = DragInViewport,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
+                Header = Header,
                 Footer = Footer,
 
                 GetContainer = GetContainer,
@@ -302,6 +319,11 @@ namespace AntDesign
                     {
                         await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
 
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
+
                         if (OnCancel.HasDelegate)
                         {
                             await OnCancel.InvokeAsync(e);
@@ -318,6 +340,11 @@ namespace AntDesign
                     if (!args.Cancel)
                     {
                         await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
 
                         if (OnOk.HasDelegate)
                         {
@@ -349,6 +376,8 @@ namespace AntDesign
 
         private bool _hasFocus = false;
 
+        private bool _firstShow = true;
+
         private async Task OnAfterDialogShow()
         {
             if (!_hasFocus)
@@ -359,6 +388,32 @@ namespace AntDesign
                 {
                     await ModalRef.OnOpen();
                 }
+            }
+
+            if (_firstShow)
+            {
+                _firstShow = false;
+                NavigationManager.LocationChanged += OnLocationChanged;
+            }
+        }
+
+        private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+        {
+            // Modal create by Service
+            if (ModalRef != null)
+            {
+                return;
+            }
+            // Modal has been destroyed
+            if (!Visible && DestroyOnClose)
+            {
+                return;
+            }
+
+            if (_dialogWrapper.Dialog != null)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
+                NavigationManager.LocationChanged -= OnLocationChanged;
             }
         }
 
@@ -373,6 +428,7 @@ namespace AntDesign
 
         private async Task OnBeforeDialogWrapperDestroy()
         {
+            NavigationManager.LocationChanged -= OnLocationChanged;
             await InvokeAsync(StateHasChanged);
         }
 

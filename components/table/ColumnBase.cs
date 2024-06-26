@@ -23,6 +23,14 @@ namespace AntDesign
         [CascadingParameter]
         public RowData RowData { get; set; }
 
+        protected TableDataItem DataItem => RowData.TableDataItem;
+
+        [CascadingParameter(Name = "IsMeasure")]
+        public bool IsMeasure { get; set; }
+
+        [CascadingParameter(Name = "IsSummary")]
+        public bool IsSummary { get; set; }
+
         [Parameter]
         public virtual string Title { get; set; }
 
@@ -155,41 +163,45 @@ namespace AntDesign
 
             Fixed ??= Context?.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
 
-            if (Fixed != null)
+            Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+            if (string.IsNullOrWhiteSpace(Fixed))
             {
-                var fixedWidths = Array.Empty<string>();
-
-                if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
-                {
-                    for (int i = 0; i < ColIndex; i++)
-                    {
-                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
-                    }
-                }
-                else if (Fixed == "right")
-                {
-                    for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
-                    {
-                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
-                    }
-                }
-
-                if (isHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
-                {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
-                }
-
-                var fixedWidth = fixedWidths.Length switch
-                {
-                    > 1 => $"calc({string.Join(" + ", fixedWidths)})",
-                    1 => fixedWidths[0],
-                    _ => "0px"
-                };
-
-                cssStyleBuilder
-                    .AddStyle("position", "sticky")
-                    .AddStyle(Fixed, fixedWidth);
+                return cssStyleBuilder.Build();
             }
+
+            var fixedWidths = Array.Empty<string>();
+
+            if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
+            {
+                for (int i = 0; i < ColIndex; i++)
+                {
+                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                }
+            }
+            else if (Fixed == "right")
+            {
+                for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
+                {
+                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                }
+            }
+
+            if (IsHeaderTemplate && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+            {
+                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.RealScrollBarSize}");
+            }
+
+            var fixedWidth = fixedWidths.Length switch
+            {
+                > 1 => $"calc({string.Join(" + ", fixedWidths)})",
+                1 => fixedWidths[0],
+                _ => "0px"
+            };
+
+            cssStyleBuilder
+                .AddStyle("position", "sticky")
+                .AddStyle(Fixed, fixedWidth);
+
 
             return cssStyleBuilder.Build();
         }

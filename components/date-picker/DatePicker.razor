@@ -40,6 +40,7 @@
                                  OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
                                  OnBlur="e => OnBlur(0)"
+                                 Mask="@Mask"
                                  Onfocus="e => AutoFocus = true"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"

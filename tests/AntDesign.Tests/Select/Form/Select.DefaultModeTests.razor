@@ -53,5 +53,37 @@
         lastValue.Should().Be(modelValue);
         select.Instance.Value.Should().Be(newValue);
 	}
+
+    [Fact]
+    public void Model_value_change_reflected_in_select_when_Form_ValidateOnChange_true() 
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+        
+        Model _model = new() { Name = "John" };
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@_model" ValidateOnChange="true">       
+                <AntDesign.FormItem Label="Test">
+                    <AntDesign.Select DataSource="@_persons"
+                                      LabelName="@nameof(Person.Name)"
+                                      ValueName="@nameof(Person.Name)"
+                                      @bind-Value=@context.Name>
+                    </AntDesign.Select>
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+            );
+        var select = cut.FindComponent<Select<string, Person>>();
+        var lastValue = select.Instance.Value;
+        //Act		
+        _model.Name = "Lucy";
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Model, _model));
+        //Assert		
+        lastValue.Should().Be("John");
+        select.Instance.SelectedOptionItems.Should().ContainEquivalentOf(new { Label = "Lucy", Value = "Lucy" });
+    }
 #endif
 }

@@ -1,0 +1,11 @@
+﻿<Comment Author="@author" Datetime="9:00" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})" Placement="left"/>
+<Comment Author="@author" Datetime="9:00" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})" Placement="right" />
+<Comment Author="@author" Datetime="9:00" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})" Placement="left" />
+<Comment Author="@author" Datetime="9:00" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})" Placement="right" />
+
+@code {
+    string author = "Han Solo";
+    string avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+    string content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.";
+    RenderFragment replyAction =@<span>Reply to</span>;
+}

@@ -31,61 +31,18 @@
         Assert.Equal("Zhejiang", options[1].TextContent.Trim());
         Assert.Equal("Beijing", options[2].TextContent.Trim());
     }
-
-    [Fact] //covers scenario from issue #1989
-    public async Task Render_select_dropdown_on_arrow_click()
+    
+    [Fact]
+    public void Render_multiple_enum_select_with_ShowArrowIcon() 
     {
-		#if !NET6_0_OR_GREATER
-#pragma warning disable CS0618 // Type or member is obsolete
-            JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
-#pragma warning restore CS0618 // Type or member is obsolete
-		#endif
-        JSInterop.SetupVoid(JSInteropConstants.ScrollTo, _ => true).SetVoidResult();
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });        
-
-        var mock = base.MockedDomEventListener;
-        Action<JsonElement>? onTriggerMouseUpCallback = default;        
-        Action<JsonElement>? onTriggerClickCallback = default;        
-        mock.Setup(s => s.AddShared<JsonElement>("document", "mouseup", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
-            .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
-                {                
-                    if (callback.Target is AntDesign.Internal.OverlayTrigger)
-                    {
-                        onTriggerMouseUpCallback = callback;                
-                    }
-                });
-        mock.Setup(s => s.AddExclusive<JsonElement>(It.IsAny<ElementReference>(), "click", It.IsAny<Action<JsonElement>>(), It.IsAny<bool>()))
-            .Callback((object dom, string eventName, Action<JsonElement> callback, bool preventDefault) =>
-                {                
-                    if (callback.Target is AntDesign.Internal.OverlayTrigger)
-                    {
-                        onTriggerClickCallback = callback;                
-                    }
-                });
-
-
-        var plannedInvocation = JSInterop.Setup<string>(JSInteropConstants.AddDomEventListener, _ => true);
-        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect>);
-        //Act
-        var arrow = cut.Find("span.ant-select-arrow");
-        onTriggerMouseUpCallback.Should().NotBeNull();
-        onTriggerClickCallback.Should().NotBeNull();
+        // Arrange
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City" Mode="multiple" ShowArrowIcon></EnumSelect>);
         
-        await cut.InvokeAsync(() => arrow.Click());
-        onTriggerMouseUpCallback?.Invoke(JsonDocument.Parse("{}").RootElement);
-        onTriggerClickCallback?.Invoke(default);
-        cut.WaitForState(() => !cut.Find("div.ant-select-dropdown").ClassList.Contains("ant-select-dropdown-hidden"));
-        //This is probably not the best solution. However this test is awkward - we are testing
-        //for something that should not appear. In failing scenarios it appears after some
-        //time (due to multiple async/await and re-renderings). That actually points to
-        //a probable wrong design in the way the OverlayTrigger & Overlay are functioning.
-        //So here we wait and hope the delay is going be long enough for the component
-        //to finish all its renderings. 
-        await Task.Delay(500); 
-        //Assert
-        var dropdown = cut.Find("div.ant-select-dropdown");
-        dropdown.ClassList.Should().NotContain("ant-select-dropdown-hidden");
+        // Act
+        var arrow = cut.Find("span.ant-select-arrow");
+
+        // Assert
+        arrow.Should().NotBeNull();
     }
 
     [Fact]

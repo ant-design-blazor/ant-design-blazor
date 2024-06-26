@@ -10,6 +10,10 @@ using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using AntDesign.Core.Helpers;
+using AntDesign.Filters;
+using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using Microsoft.JSInterop;
 using AntDesign.Table;
 
 namespace AntDesign
@@ -75,6 +79,12 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public bool Grouping { get; set; }
+
+        [Parameter]
+        public virtual Func<TData, object> GroupBy { get; set; }
+
         private IEnumerable<TableFilter> _filters;
 
         private bool _hasFiltersAttribute;
@@ -91,7 +101,13 @@ namespace AntDesign
         }
 
         [Parameter]
+        public IEnumerable<TableFilter> DefaultFilters { get; set; }
+
+        [Parameter]
         public bool FilterMultiple { get; set; } = true;
+
+        [Parameter]
+        public IFieldFilterType FieldFilterType { get; set; }
 
         /// <summary>
         /// Function that determines if the row is displayed when filtered
@@ -105,10 +121,17 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        /// <summary>
+        /// Whether the dataSource is filtered. Filter icon will be actived when it is true.
+        /// </summary>
+        [Parameter]
+        public bool Filtered { get; set; }
+
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 
         private TableFilterType _columnFilterType;
+        private IFieldFilterType _fieldFilterType;
 
         private Type _columnDataType;
 
@@ -146,6 +169,8 @@ namespace AntDesign
         private RenderFragment _renderDefaultFilterDropdown;
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
+        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         protected override void OnInitialized()
         {
@@ -186,14 +211,36 @@ namespace AntDesign
                 FieldName = DataIndex ?? member?.Name;
             }
 
-            if (Sortable && GetFieldExpression != null)
-            {
-                SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
-            }
+                if (Sortable && GetFieldExpression != null)
+                {
+                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                }
 
-            if (!Table.HasRowTemplate)
+                if (Grouping)
+                {
+                    Table.AddGroupColumn(this);
+                }
+                else
+                {
+                    Table.RemoveGroupColumn(this);
+                }
+            
+             if (IsRowTemplate)
             {
-                SortModel ??= (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                if (!Table.HasRowTemplate)
+                {
+                    SortModel = (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                }
+
+                if (DataIndex != null)
+                {
+                    (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+
+                if (RowData.IsGrouping)
+                {
+                    ColSpan = ColIndex == Table.TreeExpandIconColumnIndex ? Context.Columns.Count + 1 : 0;
+                }
             }
 
             SortDirections ??= Table.SortDirections;
@@ -205,57 +252,59 @@ namespace AntDesign
 
             if (!IsRowTemplate)
             {
-                _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
-            }
-
-            if (_hasFiltersAttribute)
-            {
-                if (!_hasFilterableAttribute) Filterable = true;
-                _columnFilterType = TableFilterType.List;
-            }
-            else if (_hasFilterableAttribute)
-            {
-                _columnDataType = THelper.GetUnderlyingType<TData>();
-                if (_columnDataType == typeof(bool))
+                if (_hasFiltersAttribute)
                 {
+                    if (!_hasFilterableAttribute) Filterable = true;
                     _columnFilterType = TableFilterType.List;
-
-                    _filters = new List<TableFilter>();
-
-                    var trueFilterOption = GetNewFilter();
-                    trueFilterOption.Text = Table.Locale.FilterOptions.True;
-                    trueFilterOption.Value = true;
-                    ((List<TableFilter>)_filters).Add(trueFilterOption);
-                    var falseFilterOption = GetNewFilter();
-                    falseFilterOption.Text = Table.Locale.FilterOptions.False;
-                    falseFilterOption.Value = false;
-                    ((List<TableFilter>)_filters).Add(falseFilterOption);
                 }
-                else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
+                else if (_hasFilterableAttribute)
                 {
-                    _columnFilterType = TableFilterType.List;
-
-                    _filters = EnumHelper<TData>.GetValueLabelList().Select(item =>
-                    {
-                        var filterOption = GetNewFilter();
-                        filterOption.Text = item.Label;
-                        filterOption.Value = item.Value;
-                        return filterOption;
-                    }).ToList();
-                }
-                else
-                {
+                    _columnDataType = THelper.GetUnderlyingType<TData>();
                     _columnFilterType = TableFilterType.FieldType;
-                    InitFilters();
+
+                    if (FieldFilterType is null)
+                    {
+                        if (_columnDataType == typeof(bool))
+                        {
+                            _columnFilterType = TableFilterType.List;
+
+                            _filters = new List<TableFilter>();
+
+                            var trueFilterOption = GetNewFilter();
+                            trueFilterOption.Text = Table.Locale.FilterOptions.True;
+                            trueFilterOption.Value = true;
+                            ((List<TableFilter>)_filters).Add(trueFilterOption);
+                            var falseFilterOption = GetNewFilter();
+                            falseFilterOption.Text = Table.Locale.FilterOptions.False;
+                            falseFilterOption.Value = false;
+                            ((List<TableFilter>)_filters).Add(falseFilterOption);
+                        }
+                        else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
+                        {
+                            _columnFilterType = TableFilterType.List;
+
+                            _filters = EnumHelper<TData>.GetValueLabelList().Select(item =>
+                            {
+                                var filterOption = GetNewFilter();
+                                filterOption.Text = item.Label;
+                                filterOption.Value = item.Value;
+                                return filterOption;
+                            }).ToList();
+                        }
+                    }
+
+                    if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
+                    {
+                        var nullFilterOption = GetNewFilter();
+                        nullFilterOption.Text = Table.Locale.FilterOptions.Operator(TableFilterCompareOperator.IsNull);
+                        nullFilterOption.Value = null;
+                        ((List<TableFilter>)_filters).Add(nullFilterOption);
+                    }
                 }
 
-                if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
-                {
-                    var nullFilterOption = GetNewFilter();
-                    nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
-                    nullFilterOption.Value = null;
-                    ((List<TableFilter>)_filters).Add(nullFilterOption);
-                }
+                Context.HeaderColumnInitialed();
+
+                _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
 
             ClassMapper
@@ -267,21 +316,30 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
-                new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
-                null;
+            if (IsHeaderTemplate)
+            {
+                if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
+                {
+                    _fieldFilterType = FieldFilterType ?? Table.FieldFilterTypeResolver.Resolve<TData>();
+                    if (DefaultFilters is null)
+                        ResetFieldFilters();
+                    else
+                    {
+                        _filters = DefaultFilters;
+                        _hasFilterSelected = DefaultFilters.Any(f => f.Selected);
+                    }
+                }
+
+                FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
+                    new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType) :
+                    null;
+            }
         }
 
         protected override bool ShouldRender()
         {
             if (Blocked) return false;
             return true;
-        }
-
-        private string NumberFormatter(object value)
-        {
-            if (value == null) return null;
-            return Convert.ToDouble(value).ToString(Format);
         }
 
         private void HandleSort()
@@ -326,6 +384,24 @@ namespace AntDesign
             }
         }
 
+        IQueryable<IGrouping<object, TItem>> IFieldColumn.Group<TItem>(IQueryable<TItem> source)
+        {
+            var param = Expression.Parameter(typeof(TItem), "item");
+
+            Expression field = Expression.Invoke(GetFieldExpression, param);
+
+            if (GroupBy != null)
+            {
+                var instance = Expression.Constant(GroupBy.Target);
+                field = Expression.Call(instance, GroupBy.Method, field);
+            }
+
+            var body = Expression.Convert(field, typeof(object));
+            var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
+
+            return source.GroupBy(lambda);
+        }
+
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
@@ -340,11 +416,6 @@ namespace AntDesign
         private void SetFilterCondition(TableFilter filter, TableFilterCondition filterCondition)
         {
             filter.FilterCondition = filterCondition;
-        }
-
-        private void SetFilterValue(TableFilter filter, object value)
-        {
-            filter.Value = value;
         }
 
         private void FilterSelected(TableFilter filter)
@@ -378,9 +449,12 @@ namespace AntDesign
                 });
             }
             _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected
+                ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
+                    _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType)
+                : null;
 
-            Table?.ReloadAndInvokeChange();
+            Table?.ColumnFilterChange();
         }
 
         private void ResetFilters()
@@ -391,7 +465,7 @@ namespace AntDesign
             }
             else
             {
-                InitFilters();
+                ResetFieldFilters();
             }
             FilterConfirm(true);
         }
@@ -413,7 +487,7 @@ namespace AntDesign
                 return new TableFilter()
                 {
                     FilterCondition = TableFilterCondition.And,
-                    FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
+                    FilterCompareOperator = _fieldFilterType.DefaultCompareOperator
                 };
             }
             else
@@ -426,7 +500,7 @@ namespace AntDesign
             }
         }
 
-        private void InitFilters()
+        private void ResetFieldFilters()
         {
             _filters = new List<TableFilter>() { GetNewFilter() };
         }
@@ -455,7 +529,8 @@ namespace AntDesign
                 _filters = filterModel.Filters;
             }
 
-            FilterModel = new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType);
+            FilterModel = new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
+                _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType);
 
             _hasFilterSelected = true;
         }
@@ -464,6 +539,50 @@ namespace AntDesign
         {
             SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
             this.SetSorter(SortDirection.Parse(sortModel.Sort));
+        }
+
+        protected object _filterInputRef;
+
+        private void FilterDropdownOnVisibleChange(bool visible)
+        {
+#if NET5_0_OR_GREATER
+            if (!visible ||
+                _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
+                baseDomComponent.Ref.Context == null) return;
+
+            _ = Task.Run(async () =>
+            {
+                var filterInputFocused = false;
+                var attemptCount = 0;
+
+                do
+                {
+                    await Task.Delay(50);
+                    try
+                    {
+                        await Js.FocusAsync(baseDomComponent.Ref, FocusBehavior.FocusAtLast);
+                        await Task.Delay(50);
+                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Id;
+                    }
+                    catch (JSException jsex)
+                    {
+                        Console.WriteLine(jsex.ToString());
+                        break;
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        attemptCount++;
+                    }
+                    if (attemptCount > 2) break;
+
+                } while (!filterInputFocused);
+            });
+#endif
         }
     }
 }

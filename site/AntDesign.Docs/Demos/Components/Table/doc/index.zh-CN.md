@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 cols: 1
 type: 数据展示
@@ -29,10 +29,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 - **Selection** 用来开启选择列，并提供选择框。
 
 ## API
+
+### TItem 泛型类型
+
+从 0.16.0 开始，Table 已支持普通类、record、接口和抽象类作为 DataSource 的类型。但有几点需要说明：
+
+- 当使用 record 且有属性值变化，请重写 `GetHasCode()` 方法，或者用 Table 的 `RowKey`，否则内部对每列保持的状态会无法正确工作。[#2837](https://github.com/ant-design-blazor/ant-design-blazor/issues/2837)
+- 当使用抽象类时，首次渲染会等待 DataSource 获得元素，并取第一个来初始化。[#3471](https://github.com/ant-design-blazor/ant-design-blazor/issues/3471)
+
 ### Table
 | 参数             | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
-| RenderMode | 渲染模式 | [RenderMode](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RenderMode.cs) | RenderMode.Always |
+| RerenderStrategy | 重新渲染策略。可用来指定只有当有组件属性被修改时才重新渲染。 | [RerenderStrategy](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/RerenderStrategy.cs) | RerenderStrategy.Always |
 | RowTemplate | 行模板 | RenderFragment | - |
 | ExpandTemplate | 展开内容模板 | RenderFragment<RowData<TItem>> | - |
 | DataSource | 数据来源 | IEnumerable<TItem> | - |
@@ -56,13 +64,16 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | IndentSize | 展示树形数据时，每层缩进的宽度，以 px 为单位 | int | 15 |
 | ExpandIconColumnIndex | 自定义展开图标所在列索引 | int | - |
 | RowClassName | 表格行的类名 | Func<RowData<TItem>, string> | _ => "" |
+| RowKey | 设置比对 Key 来设置默认选中行，作用跟给 TItem 实现重写 `GetHashCode()` 一致。否则默认按引用来比对。 | Func<TItem, object> | - |
 | ExpandedRowClassName | 展开行的 className | Func<RowData<TItem>, string> | _ => "" |
 | OnExpand | 点击展开图标时触发 | EventCallback<RowData<TItem>> | - |
 | SortDirections | 支持的排序方式，覆盖 Table 中 sortDirections | [SortDirection[]](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | SortDirection.Preset.Default |
 | TableLayout | 表格元素的 table-layout 属性，设为 fixed 表示内容不会影响列的布局 | string | - |
 | OnRowClick | 行点击事件(于antd v3中已废弃) | EventCallback<RowData<TItem>> | - |
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
-
+| Resizable | 启用可伸缩列 | bool | false |
+| FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
+| Filtered   | 标识数据是否经过过滤，筛选图标会高亮 | bool |  false |
 
 ### Column
 
@@ -85,6 +96,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Filters | 指定需要筛选菜单的列 | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | 指定筛选器多选和单选 | bool | true |
 | FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
+| FieldFilterType | 筛选器配置 ，可用于自定义额外的筛选器 | `IFieldFilterType` | 由 `FieldFilterTypeResolver` 根据类型解析内置筛选器 |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
 
 
@@ -95,6 +107,39 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | 参数              | 说明             | 类型                         | 默认值 |
 | ---------------- | ---------------- | ---------------------------- | ------ |
 | Property         |  指定要绑定的属性 | Expression<Func<TItem, TProp>> | - |
+
+### Selection
+
+| 参数              | 说明             | 类型                         | 默认值 |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| CheckStrictly    | checkable 状态下节点选择完全受控（父子数据选中状态不再关联）|  bool |  true  |
+| Type             |  多选/单选        | `checkbox` \| `radio`      | `checkbox` |
+| Disabled         |  是否禁用         |      bool            |   false      |
+
+### GenerateColumns
+
+用于通过 'TItem' 类型的属性自动生成列。 查看 [demo](#components-table-demo-generate-columns).
+
+| Parameter             | Instruction             | Type                         | Defaults |
+| ---------------- | ---------------- | ---------------------------- | ------ |
+| Definitions | 一个两参数委托。第一个参数是属性名, 第二个是对于的 Column 实例。 | Action<string, object> Definitions |  -  |
+| HideColumnsByName | 指定隐藏的属性名。  | IEnumerable<string>   |  -  |
+| Range            | 一个范围值，指定某些列可以显示。 | Range |  -  |
+
+### 公开方法
+
+可以使用 `@ref` 绑定 `ITable` 的实例中提供的方法操作 Table。
+
+| 方法名             | 说明                                       | 
+| ---------------- | ------------------------------------------- | 
+| ReloadData       | 重新加载数据，有三个重载，可指定分页、筛选和排序   | 
+| ResetData        | 重置表格分页、筛选、排序状态                    |
+| GetQueryModel    | 获取表格状态，可用于持久化和恢复                |
+| SetSelection     | 设置选择列                                   |
+| SelectAll        | 全选                                        |
+| UnselectAll      | 取消全选                                     |
+| ExpandAll        | 展开全部列                                   |
+| CollapseAll      | 收起所有展开的的列                            |
 
 
 ### 响应式

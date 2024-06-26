@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+
+    <link rel="icon" href="logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
+    <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
+    <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet" />
+    <link antblazor-css />
+
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="AntDesign.Docs.WebApp.styles.css" />
+
+    <HeadOutlet @rendermode="InteractiveAuto" />
+</head>
+
+<body>
+    <app>
+        <Routes @rendermode="InteractiveAuto" />
+    </app>
+
+    <script src="_content/AntDesign.Charts/g2plot.js"></script>
+    <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
+    @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
+    <script src="_content/AntDesign.Docs/js/prism.js"></script>
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+    </script>
+    <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+
+    <script antblazor-js></script>
+    @* <script src="/blazor.web.js" autostart="false"></script> *@
+    <script src="/blazor.web.patched.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            webAssembly: {
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    if (type === 'dotnetjs' && name === 'dotnet.js') {
+                        return '/dotnet.patched.js';
+                    }
+                    return `_framework/${name}`;
+                },
+                configureRuntime: (builder) => {
+
+                    builder.withConfig({
+                        maxParallelDownloads: 2, // Adjust this to change the WebAssembly resource throttling amount
+                    });
+
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>

@@ -1,4 +1,5 @@
-﻿import { domInfoHelper, domTypes } from '../dom/exports'
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+import { domInfoHelper, domTypes } from '../dom/exports'
 import { resize } from '../../ObservableApi/observableApi';
 import { mutationObserver as mutation } from '../../ObservableApi/mutationObserver';
 
@@ -58,23 +59,24 @@ export type overlayPosition = {
 }
 
 export class Overlay {
-    private static appliedStylePositionMap: Map<Placement,
+  private static appliedStylePositionMap: Map<Placement,
         { horizontal: "left" | "right", vertical: "top" | "bottom", class: string }> =
-    new Map([
-      [Placement.TopLeft,       { horizontal: "left", vertical: "bottom", class: "topLeft"  }],
-      [Placement.Top,           { horizontal: "left", vertical: "bottom", class: "top" }],
-      [Placement.TopRight,      { horizontal: "right", vertical: "bottom", class: "topRight" }],
-      [Placement.Left,          { horizontal: "right", vertical: "top", class: "left" }],
-      [Placement.LeftTop,       { horizontal: "right", vertical: "top", class: "leftTop" }],
-      [Placement.LeftBottom,    { horizontal: "right", vertical: "bottom", class: "leftBottom" }],
-      [Placement.Right,         { horizontal: "left", vertical: "top", class: "right" }],
-      [Placement.RightTop,      { horizontal: "left", vertical: "top", class: "rightTop" }],
-      [Placement.RightBottom,   { horizontal: "left", vertical: "bottom", class: "rightBottom" }],
-      [Placement.BottomLeft,    { horizontal: "left", vertical: "top", class: "bottomLeft" }],
-      [Placement.Bottom,        { horizontal: "left", vertical: "top", class: "bottom" }],
-      [Placement.BottomRight,   { horizontal: "right", vertical: "top", class: "bottomRight" }],
-    ]);
+      new Map([
+        [Placement.TopLeft,       { horizontal: "left", vertical: "bottom", class: "topLeft"  }],
+        [Placement.Top,           { horizontal: "left", vertical: "bottom", class: "top" }],
+        [Placement.TopRight,      { horizontal: "right", vertical: "bottom", class: "topRight" }],
+        [Placement.Left,          { horizontal: "right", vertical: "top", class: "left" }],
+        [Placement.LeftTop,       { horizontal: "right", vertical: "top", class: "leftTop" }],
+        [Placement.LeftBottom,    { horizontal: "right", vertical: "bottom", class: "leftBottom" }],
+        [Placement.Right,         { horizontal: "left", vertical: "top", class: "right" }],
+        [Placement.RightTop,      { horizontal: "left", vertical: "top", class: "rightTop" }],
+        [Placement.RightBottom,   { horizontal: "left", vertical: "bottom", class: "rightBottom" }],
+        [Placement.BottomLeft,    { horizontal: "left", vertical: "top", class: "bottomLeft" }],
+        [Placement.Bottom,        { horizontal: "left", vertical: "top", class: "bottom" }],
+        [Placement.BottomRight,   { horizontal: "right", vertical: "top", class: "bottomRight" }],
+      ]);
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static reverseVerticalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.BottomLeft],
@@ -91,6 +93,7 @@ export class Overlay {
       [Placement.BottomRight,   (position: string) => Placement.TopRight]
     ]);
     
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static reverseHorizontalPlacementMap: Map<Placement, Function> =
     new Map([
       [Placement.TopLeft,       (position: string) => Placement.TopRight],
@@ -330,7 +333,7 @@ export class Overlay {
         case Placement.TopRight:
         case Placement.BottomRight:
           return function(triggerRight: number, triggerWidth: number, container: domTypes.domInfo, trigger: domTypes.domInfo, overlayWidth: number, constraints: overlayConstraints) {        
-            let position: horizontalPosition = {
+            const position: horizontalPosition = {
               right: triggerRight,
               left: Overlay.reversePositionValue(triggerRight, container.scrollWidth, overlayWidth)
             };            
@@ -366,10 +369,10 @@ export class Overlay {
   }
 
   private removeHiddenClass() {    
-    let end = this.overlay.className.indexOf("-hidden");
-    let start = this.overlay.className.lastIndexOf(" ", end)
+    const end = this.overlay.className.indexOf("-hidden");
+    const start = this.overlay.className.lastIndexOf(" ", end)
     if (start >= 0) {
-      let className = this.overlay.className.substr(start + 1, end);
+      const className = this.overlay.className.substr(start + 1, end);
       if (className !== "") {
         this.overlay.classList.remove(className);
       }
@@ -671,11 +674,11 @@ export class Overlay {
         position: this.position,           
         sanitizedPosition: this.sanitizedPosition,
         placment: {
-         initialPlacement: this.initialPlacement,
-         recentPlacement: this.recentPlacement,
-         placement: this.placement,
-         selectedHorizontalPosition: this.selectedHorizontalPosition,
-         selectedVerticalPosition: this.selectedVerticalPosition
+          initialPlacement: this.initialPlacement,
+          recentPlacement: this.recentPlacement,
+          placement: this.placement,
+          selectedHorizontalPosition: this.selectedHorizontalPosition,
+          selectedVerticalPosition: this.selectedVerticalPosition
         }
       }
     );    
@@ -752,7 +755,7 @@ export class Overlay {
       } else {
         currentPlacement = Overlay.appliedStylePositionMap.get(this.initialPlacement).class;
       }
-      let newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
+      const newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
       this.overlay.classList.replace(currentPlacement, newPlacement);
     }
   }
@@ -786,7 +789,7 @@ export class Overlay {
     let position: verticalPosition;
     //usually first offsetHeight is taken, as the measurement contains the borders
     this.triggerPosition.height = this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight 
-    : this.triggerInfo.clientHeight;    
+      : this.triggerInfo.clientHeight;    
     if (this.overlayPreset) {
       this.triggerPosition.top = this.triggerInfo.absoluteTop + this.overlayPreset.y;
       this.triggerPosition.height = 0;
@@ -862,14 +865,14 @@ export class Overlay {
   }
 
   private setBodyBoundayrSize() {
-      const window = domInfoHelper.getWindow();      
-      const scroll = domInfoHelper.getScroll();
-      this.bodyBoundarySize = {
-        top : scroll.y,
-        left: scroll.x,
-        right: window.innerWidth + scroll.x,
-        bottom: window.innerHeight + scroll.y
-      };     
+    const window = domInfoHelper.getWindow();      
+    const scroll = domInfoHelper.getScroll();
+    this.bodyBoundarySize = {
+      top : scroll.y,
+      left: scroll.x,
+      right: window.innerWidth + scroll.x,
+      bottom: window.innerHeight + scroll.y
+    };     
   }
 
   /**
@@ -886,11 +889,11 @@ export class Overlay {
         this.setBodyBoundayrSize();
       }
       return { 
-          left: 0,
-          right: this.containerInfo.scrollWidth,
-          top: 0,
-          bottom: this.containerInfo.scrollHeight
-        };
+        left: 0,
+        right: this.containerInfo.scrollWidth,
+        top: 0,
+        bottom: this.containerInfo.scrollHeight
+      };
     }        
     this.setBodyBoundayrSize();
 
@@ -994,7 +997,7 @@ export class Overlay {
         visibleWidthInBodyBeforeAdjustment = this.getOverlayVisibleWidth("body");
       } else {
         visibleWidthInBodyBeforeAdjustment = visibleWidthBeforeAdjustment
-      };      
+      }      
 
       this.getHorizontalAdjustment();
 
@@ -1004,7 +1007,7 @@ export class Overlay {
         visibleWidthInBodyAfterAdjustment = this.getOverlayVisibleWidth("body");
       } else {
         visibleWidthInBodyAfterAdjustment = visibleWidthAfterAdjustment
-      };        
+      }        
 
       if (
         !(visibleWidthInBodyBeforeAdjustment < visibleWidthInBodyAfterAdjustment 
@@ -1037,7 +1040,7 @@ export class Overlay {
         visibleHeightInBodyBeforeAdjustment = this.getOverlayVisibleHeight("body");
       } else {
         visibleHeightInBodyBeforeAdjustment = visibleHeightBeforeAdjustment
-      };
+      }
 
       this.getVerticalAdjustment();      
 
@@ -1047,7 +1050,7 @@ export class Overlay {
         visibleHeightInBodyAfterAdjustment = this.getOverlayVisibleHeight("body");
       } else {
         visibleHeightInBodyAfterAdjustment = visibleHeightAfterAdjustment
-      };          
+      }          
 
       if (
         !(visibleHeightInBodyBeforeAdjustment < visibleHeightInBodyAfterAdjustment 

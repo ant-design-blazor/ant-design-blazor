@@ -18,7 +18,7 @@ namespace AntDesign.TableModels
 
         public int ColumnIndex => _columnIndex;
 
-        private readonly Func<TField, TField, int> _comparer;
+        private Func<TField, TField, int> _comparer;
 
         private SortDirection _sortDirection;
 
@@ -26,7 +26,7 @@ namespace AntDesign.TableModels
 
         private int _columnIndex;
 
-        internal SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
+        public SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
             this.Priority = priority;
             this._columnIndex = column.ColIndex;
@@ -95,7 +95,11 @@ namespace AntDesign.TableModels
 
         public object Clone()
         {
-            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort);
+            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort)
+            {
+                _getFieldExpression = this._getFieldExpression, // keep the expression instance for sorting rows outside
+                _comparer = this._comparer,
+            };
         }
     }
 }

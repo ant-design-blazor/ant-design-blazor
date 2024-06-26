@@ -15,24 +15,28 @@ namespace AntDesign
 
         [Parameter] public string Key { get; set; }
 
-        [Parameter] public bool CheckStrictly { get; set; }
+        [Parameter] public bool CheckStrictly { get; set; } = true;
 
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
         private bool Indeterminate => !Table.AllSelected && Table.AnySelected;
 
-        private IList<ISelectionColumn> _rowSelections = new List<ISelectionColumn>();
+        private bool Indeterminate => IsHeader
+                                   && Table.AnySelected
+                                   && !Table.AllSelected;
 
         private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
         bool ISelectionColumn.Disabled => Disabled;
 
-        string ISelectionColumn.Key => Key;
+        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
 
-        IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
+        public bool Selected => DataItem.Selected;
 
-        private void OnCheckedChange(bool selected, RowData rowData = null, bool isHeader = false)
+        private bool? _selected;
+
+        private void OnCheckedChange(bool selected)
         {
             if (isHeader)
             {
@@ -49,12 +53,11 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table.SetSelection(new[] { Key });
+                    Table.SetSelection(this);
                 }
                 else
                 {
-                    rowData.Selected = selected;
-                    Table.Selection.StateHasChanged();
+                    RowData.SetSelected(selected, CheckStrictly);
                 }
             }
         }
@@ -65,12 +68,32 @@ namespace AntDesign
             {
                 StateHasChanged();
             }
+            else if (IsBody)
+            {
+                Table?.Selection?.RowSelections.Add(this);
+                DataItem.Disabled = Disabled;
+            }
         }
 
-        protected override bool ShouldRender()
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
+        private void HandleSelected()
         {
-            if (Blocked) return false;
-            return true;
+            // avoid check the disabled one but allow default checked
+            if (Disabled && _selected.HasValue)
+            {
+                DataItem.SetSelected(_selected.Value);
+            }
+
+            _selected = DataItem.Selected;
+        }
+
+        void ISelectionColumn.StateHasChanged()
+        {
+            if (IsHeader && Type == "checkbox")
+            {
+                StateHasChanged();
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -13,7 +13,7 @@ namespace AntDesign.Docs.Shared
 
         [Inject] private DemoService DemoService { get; set; }
 
-        [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private ILocalizationService LocalizationService { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; }
 
@@ -21,18 +21,20 @@ namespace AntDesign.Docs.Shared
 
         [CascadingParameter] public ConfigProvider ConfigProvider { get; set; }
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private string Direction => ConfigProvider?.Direction;
 
         private DemoMenuItem[] _menuItems = { };
+
+        private bool _firstRender;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             _menuItems = await DemoService.GetMenuAsync();
 
-            LanguageService.LanguageChanged += OnLanguageChanged;
+            LocalizationService.LanguageChanged += OnLanguageChanged;
         }
 
         private void ChangeLanguage(string language)
@@ -46,20 +48,25 @@ namespace AntDesign.Docs.Shared
         {
             if (firstRender)
             {
-                await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
+                _firstRender = true;
+                await JsInterop.InvokeVoidAsync("window.DocSearch.init", CurrentLanguage);
             }
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
+            if (!_firstRender)
+            {
+                return;
+            }
             _menuItems = await DemoService.GetMenuAsync();
-            await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", culture.Name);
+            await JsInterop.InvokeVoidAsync("window.DocSearch.init", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()
         {
-            LanguageService.LanguageChanged -= OnLanguageChanged;
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
         }
     }
 }

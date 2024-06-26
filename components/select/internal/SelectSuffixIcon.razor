@@ -1,0 +1,63 @@
+﻿@namespace AntDesign.Select.Internal
+@typeparam TItemValue
+@typeparam TItem
+
+@if (ParentSelect.SuffixIcon != null)
+{
+    <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
+        @ParentSelect.SuffixIcon
+    </span>
+}
+else if (ParentSelect.Loading)
+{
+    <span class="ant-select-arrow ant-select-arrow-loading" unselectable="on" aria-hidden="true" style="user-select: none;">
+        <Icon Type="loading"></Icon>
+    </span>
+}
+else
+{
+    if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
+    {
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
+            @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+            {
+                if (ShowSearchIcon)
+                {
+                    <Icon Type="search"></Icon>
+                }
+            }
+            else
+            {
+                <Icon Type="down"></Icon>
+            }
+
+            @if (ParentSelect.FeedbackIcon!=null)
+            {
+                @ParentSelect.FeedbackIcon
+            }
+        </span>
+    }
+    else
+    {
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
+            @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+            {
+                if (ShowSearchIcon)
+                {
+                    <Icon Type="search"></Icon>
+                }
+            }
+        </span>
+    }
+
+    @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+    {
+        <span class="ant-select-clear"
+              unselectable="on" 
+              aria-hidden="true" 
+              style="user-select: none;" 
+              @ref="@_clearRef">
+            <Icon Type="close-circle" Theme="fill"></Icon>
+        </span>
+    }
+}

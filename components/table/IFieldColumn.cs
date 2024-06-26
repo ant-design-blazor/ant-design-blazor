@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -16,6 +18,8 @@ namespace AntDesign
 
         public int SorterMultiple { get; }
 
+        public bool Grouping { get; }
+
         public ITableSortModel SortModel { get; }
 
         public ITableFilterModel FilterModel { get; }
@@ -27,5 +31,7 @@ namespace AntDesign
         internal void SetFilterModel(ITableFilterModel filterModel);
 
         internal void SetSortModel(ITableSortModel sortModel);
+
+        internal IQueryable<IGrouping<object, TItem>> Group<TItem>(IQueryable<TItem> source);
     }
 }

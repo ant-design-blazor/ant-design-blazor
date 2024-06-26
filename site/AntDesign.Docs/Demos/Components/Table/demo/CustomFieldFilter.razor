@@ -1,0 +1,65 @@
+﻿@using Color = System.Drawing.Color
+@using System.Drawing
+@using System.Linq.Expressions
+@using System.Reflection
+@using AntDesign.Filters
+
+<Table DataSource="data" TItem="KnownColor">
+    <PropertyColumn Property="c=>c.ToString()" Title="Name" Sortable Filterable FieldFilterType="simpleStringFilter" />
+
+     <PropertyColumn Property="c=>Color.FromKnownColor(c)" Title="Color"
+                     SorterCompare="(x, y) => x.GetHue().CompareTo(y.GetHue())"
+                     FieldFilterType="colorFilterOptions" Filterable>
+        <CellRender Context="cell">
+            <span style="background-color: @(ColorTranslator.ToHtml(cell.FieldValue))">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </CellRender>
+    </PropertyColumn>
+
+    <PropertyColumn Property="c=>Color.FromKnownColor(c).R" Title="Red" Sortable Filterable />
+    <PropertyColumn Property="c=>Color.FromKnownColor(c).G" Title="Green" Sortable Filterable />
+    <PropertyColumn Property="c=>Color.FromKnownColor(c).B" Title="Blue" Sortable Filterable />
+ </Table>
+
+ @code {
+
+    readonly KnownColor[] data = Enum.GetValues<KnownColor>();
+    readonly ColorFieldFilterType colorFilterOptions = new();
+    readonly StringFieldFilterType simpleStringFilter = new() { SupportedCompareOperators = new[] { TableFilterCompareOperator.Contains } };
+    class ColorFieldFilterType : BaseFieldFilterType
+    {
+        private static readonly MethodInfo colorGetBrightness = typeof(Color).GetMethod(nameof(Color.GetBrightness), Array.Empty<Type>());
+
+        public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
+
+        public override TableFilterCompareOperator DefaultCompareOperator => TableFilterCompareOperator.GreaterThan;
+
+        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
+        {
+                TableFilterCompareOperator.Equals,
+                TableFilterCompareOperator.NotEquals,
+                TableFilterCompareOperator.GreaterThan,
+                TableFilterCompareOperator.LessThan,
+                TableFilterCompareOperator.GreaterThanOrEquals,
+                TableFilterCompareOperator.LessThanOrEquals
+        };
+
+        public ColorFieldFilterType()
+        {
+            FilterInput = GetFilterInput;
+            SupportedCompareOperators = _supportedCompareOperators;
+        }
+
+        public RenderFragment GetFilterInput(TableFilterInputRenderOptions filter)
+        {
+            return @<Slider TValue="double" Value="(float?)filter.Value ?? 0" ValueChanged="value => filter.Value = (float?)value" Style="width: 70px" Min="0" Max="1" Step=".01" @ref="filter.InputRef"/>;
+        }
+
+        public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
+        {
+            // Compare the brightness of the color to the selected value
+            leftExpr = Expression.Call(leftExpr, colorGetBrightness);
+
+            return base.GetFilterExpression(compareOperator, leftExpr, rightExpr);
+        }
+    }
+}

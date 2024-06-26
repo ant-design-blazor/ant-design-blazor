@@ -7,7 +7,7 @@
           OnFinishFailed="OnFinishFailed"
           LabelColSpan="8"
           WrapperColSpan="16">
-        <FormItem>
+        <FormItem Label="User Name">
             <Input @bind-Value="@context.Username" />
         </FormItem>
         <FormItem Label="Password">
@@ -26,7 +26,7 @@
 {
     public class Model
     {
-        [Required, DisplayName("User Name")]
+        [Required]
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }

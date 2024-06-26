@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.JsInterop.ObservableApi;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -127,7 +128,7 @@ namespace AntDesign
         /// Filter expression
         /// </summary>
         [Parameter]
-        public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? true : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
+        public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? false : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// 允许过滤
@@ -176,11 +177,16 @@ namespace AntDesign
         [Parameter]
         public bool ShowPanel { get; set; } = false;
 
+        [Inject] private IDomEventListener DomEventListener { get; set; }
+
         private bool _isOptionsZero = true;
 
         private IAutoCompleteInput _inputComponent;
 
         private IList<AutoCompleteDataItem<TOption>> _filteredOptions;
+
+        private string _minWidth = "";
+        private bool _parPanelVisible = false;
 
         public void SetInputComponent(IAutoCompleteInput input)
         {
@@ -193,7 +199,7 @@ namespace AntDesign
         {
             if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                //this.OpenPanel();
             }
 
             return Task.CompletedTask;
@@ -204,11 +210,11 @@ namespace AntDesign
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
         }
 
-        public Task InputValueChange(string value)
+        public async Task InputValueChange(string value)
         {
             SelectedValue = value;
-            ResetActiveItem();
-            return Task.CompletedTask;
+            UpdateFilteredOptions();
+            await ResetActiveItem();
         }
 
         public async Task InputKeyDown(KeyboardEventArgs args)
@@ -228,7 +234,7 @@ namespace AntDesign
             }
             else if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                //this.OpenPanel();
             }
 
             if (key == "ArrowUp")
@@ -243,15 +249,10 @@ namespace AntDesign
 
         #endregion 子控件触发事件 / Child controls trigger events
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            UpdateFilteredOptions();
-        }
-
         protected override async Task OnFirstAfterRenderAsync()
         {
             await SetOverlayWidth();
+            await DomEventListener.AddResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             await base.OnFirstAfterRenderAsync();
         }
 
@@ -364,7 +365,7 @@ namespace AntDesign
             _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
         }
 
-        private void ResetActiveItem()
+        private async Task ResetActiveItem()
         {
             var items = _filteredOptions;
 
@@ -391,12 +392,12 @@ namespace AntDesign
                 // if options count == 0 then close overlay
                 if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
                 {
-                    _overlayTrigger.Close();
+                    await _overlayTrigger.Close();
                 }
                 // if options count > 0 then open overlay
                 else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
                 {
-                    _overlayTrigger.Show();
+                    await _overlayTrigger.Show();
                 }
             }
         }
@@ -414,8 +415,6 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        private bool _parPanelVisible = false;
-
         private async void OnOverlayTriggerVisibleChange(bool visible)
         {
             if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
@@ -430,31 +429,22 @@ namespace AntDesign
             }
         }
 
-        private string _minWidth = "";
+        private async void UpdateWidth(List<ResizeObserverEntry> entry)
+        {
+            await SetOverlayWidth();
+            InvokeStateHasChanged();
+        }
 
         private async Task SetOverlayWidth()
         {
-            string newWidth;
-            if (Width.Value != null)
-            {
-                var w = Width.Match<string>(f0 => $"{f0}px", f1 => f1);
-                newWidth = $"min-width:{w}";
-            }
-            else
-            {
-                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
-                //Element element;
-                //if (_divRef.Id != null)
-                //{
-                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
-                //}
-                //else
-                //{
-                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
-                //}
-                newWidth = $"min-width:{element.ClientWidth}px";
-            }
-            if (newWidth != _minWidth) _minWidth = newWidth;
+            HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
+            _minWidth = $"min-width:{element.ClientWidth}px";
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener.RemoveResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
+            base.Dispose(disposing);
         }
     }
 

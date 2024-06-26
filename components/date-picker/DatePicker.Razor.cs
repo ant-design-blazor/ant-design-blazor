@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         [Parameter]
-        public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
 
         private DateTime _pickerValuesAfterInit;
 
@@ -24,7 +24,7 @@ namespace AntDesign
         private void ProcessDefaults()
         {
             UseDefaultPickerValue[0] = true;
-            if (DefaultPickerValue.Equals(default(TValue)))
+            if (DefaultPickerValue?.Equals(default(TValue)) == true)
             {
                 if ((IsNullable && Value != null) || (!IsNullable && !Value.Equals(default(TValue))))
                 {
@@ -47,9 +47,9 @@ namespace AntDesign
                     UseDefaultPickerValue[0] = false;
                 }
             }
-            if (UseDefaultPickerValue[0])
+            if (UseDefaultPickerValue[0] && DefaultPickerValue is not null)
             {
-                PickerValues[0] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
+                PickerValues[0] = InternalConvert.ToDateTime(DefaultPickerValue).Value;
             }
         }
 
@@ -73,41 +73,21 @@ namespace AntDesign
 
             if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
-                GetIfNotNull(Value, notNullValue =>
+                GetIfNotNull(Value, 0, notNullValue =>
                 {
                     ChangePickerValue(notNullValue);
                 });
             }
         }
 
-        protected void OnInput(ChangeEventArgs args, int index = 0)
+        protected override void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (args == null)
-            {
-                return;
-            }
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-            }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
-            {
-                GetIfNotNull(changeValue, parsed =>
-                {
-                    if (IsDisabledDate(parsed))
-                    {
-                        return;
-                    }
-
-                    _pickerStatus[0].SelectedValue = parsed;
-                    ChangePickerValue(parsed, index);
-                });
-            }
+            base.OnInput(args, index);
         }
 
         protected override async Task OnBlur(int index)
@@ -160,10 +140,6 @@ namespace AntDesign
                     {
                         await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
                     }
-                    else if (AllowClear)
-                    {
-                        ClearValue();
-                    }
                     else if (isOverlayShown)
                     {
                         Close();
@@ -199,7 +175,7 @@ namespace AntDesign
 
             if (_pickerStatus[index].SelectedValue is not null)
             {
-                return _pickerStatus[index].SelectedValue;
+                return _pickerStatus[index].SelectedValue.Value;
             }
 
             if (_pickerStatus[0].IsValueSelected)
@@ -209,11 +185,12 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(Value, CultureInfo);
+                return InternalConvert.ToDateTime(Value);
             }
-            else if (DefaultValue != null)
+
+            if (DefaultValue != null)
             {
-                return Convert.ToDateTime(DefaultValue, CultureInfo);
+                return InternalConvert.ToDateTime(DefaultValue);
             }
 
             return null;
@@ -238,13 +215,11 @@ namespace AntDesign
                 return;
             }
 
-            var currentValue = CurrentValue is not null ?
-                Convert.ToDateTime(CurrentValue, CultureInfo)
-                : (DateTime?)null;
+            ToDateTimeOffset(value, out DateTimeOffset? currentValue, out DateTimeOffset newValue);
 
-            if (currentValue != value)
+            if (currentValue != newValue)
             {
-                CurrentValue = THelper.ChangeType<TValue>(value);
+                CurrentValue = InternalConvert.FromDateTimeOffset<TValue>(newValue);
 
                 _ = InvokeOnChange();
             }
@@ -256,7 +231,7 @@ namespace AntDesign
 
             _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
 
-            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+            GetIfNotNull(CurrentValue, 0, (notNullValue) => PickerValues[0] = notNullValue);
 
             _dropDown?.SetShouldRender(true);
         }
@@ -278,35 +253,19 @@ namespace AntDesign
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
 
             _dropDown.SetShouldRender(true);
 
-            OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
-        }
-
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
-        {
-            if (!IsNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
         }
 
         private void OverlayVisibleChange(bool visible)
@@ -324,9 +283,9 @@ namespace AntDesign
 
         private async Task InvokeOnChange()
         {
-            await OnChange.InvokeAsync(new DateTimeChangedEventArgs
+            await OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                Date = GetIndexValue(0),
+                Date = Value,
                 DateString = GetInputValue(0)
             });
         }
