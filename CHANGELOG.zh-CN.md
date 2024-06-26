@@ -15,6 +15,65 @@ timeline: true
 
 ---
 
+### 0.19.3
+
+`2024-6-26`
+
+- 🆕 新增 Tree 和 TreeSelect 支持点击节点标题的 select、check 和 expand 效果。[#3902](https://github.com/ant-design-blazor/ant-design-blazor/pull/3902) [@pankey888](https://github.com/pankey888)
+- 🛠 重构 Icon 直接用 JS 标签来引入 iconfont。[#3931](https://github.com/ant-design-blazor/ant-design-blazor/pull/3931) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 用ConfirmService 打开的确认框，在点击ESC关闭时没设置tcs，导致await不继续执行。[#3934](https://github.com/ant-design-blazor/ant-design-blazor/pull/3934) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 空实体实例化表达式构建异常。[#3933](https://github.com/ant-design-blazor/ant-design-blazor/pull/3933) [@ElderJames](https://github.com/ElderJames)
+
+### 0.19.2
+
+`2024-6-24`
+
+🔥 模板已经支持 Blazor WebApp 自动渲染模式，敬请尝试!
+
+```
+dotnet new update
+dotnet new antdesign -n webapp --host webapp --full
+```
+
+
+- Table  
+  - 🆕 新增 Filtered 属性设置某列的筛选是激活的。[#3911](https://github.com/ant-design-blazor/ant-design-blazor/pull/3911) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 支持自定义筛选器输入组件的属性。[#3897](https://github.com/ant-design-blazor/ant-design-blazor/pull/3897) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 创建 TItem 实例时未调用构造函数。[#3916](https://github.com/ant-design-blazor/ant-design-blazor/pull/3916) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 树形数据全选不会选中子行。[#3909](https://github.com/ant-design-blazor/ant-design-blazor/pull/3909) [@ElderJames](https://github.com/ElderJames)
+
+- Tree
+  - 🆕 新增 子节点 Checkable 属性，启用选中效果。[#3899](https://github.com/ant-design-blazor/ant-design-blazor/pull/3899) [@pankey888](https://github.com/pankey888)
+  - 🛠 重构 Selected/Checked/Expanded 属性。[#3896](https://github.com/ant-design-blazor/ant-design-blazor/pull/3896) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 修复 在浏览器默认选中时抛异常。[#3925](https://github.com/ant-design-blazor/ant-design-blazor/pull/3925) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 异步方法调用。[#3912](https://github.com/ant-design-blazor/ant-design-blazor/pull/3912) [@WoogaAndrew](https://github.com/WoogaAndrew)
+  - 🐞 修复 可搜索时输入文本框的宽度。[#3910](https://github.com/ant-design-blazor/ant-design-blazor/pull/3910) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Flags 枚举遇到0值不正确选中。[#3907](https://github.com/ant-design-blazor/ant-design-blazor/pull/3907) [@ElderJames](https://github.com/ElderJames)
+
+- Checkbox
+  - 🐞 修复 文本点击事件穿透。[#3918](https://github.com/ant-design-blazor/ant-design-blazor/pull/3918) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 CheckboxGroup 中勾选不正常。[#3903](https://github.com/ant-design-blazor/ant-design-blazor/pull/3903) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Image 无图片时 ImagePreviewGroup 展开抛异常。[#3917](https://github.com/ant-design-blazor/ant-design-blazor/pull/3917) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 应当有匹配选项时才展开。[#3926](https://github.com/ant-design-blazor/ant-design-blazor/pull/3926) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DatePicker 选择年份时单位换行。[#3919](https://github.com/ant-design-blazor/ant-design-blazor/pull/3919) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 在选择/未选 时调用StateHasChanged[#3894](https://github.com/ant-design-blazor/ant-design-blazor/pull/3894) [@iits-timon-holzhaeuser](https://github.com/iits-timon-holzhaeuser)
+- 🐞 修复 TreeSelect 单选时点击清空按钮会抛异常。[#3906](https://github.com/ant-design-blazor/ant-design-blazor/pull/3906) [@pankey888](https://github.com/pankey888)
+
+### 0.19.1
+
+`2024-5-27`
+
+- Table
+  - 🆕 新增 Table  GenerateColumns 增加HideColumnsByName 属性来隐藏某些列。[#3863](https://github.com/ant-design-blazor/ant-design-blazor/pull/3863) [@dessli](https://github.com/dessli)
+  - 🐞 修复 Table 当绑定字段类型是可空时，枚举选择器抛出异常。[#3870](https://github.com/ant-design-blazor/ant-design-blazor/pull/3870) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 TreeSelect 级联类型参数特性，以支持省略TreeNode的类型参数。[#3864](https://github.com/ant-design-blazor/ant-design-blazor/pull/3864) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 InputNumber 可空的浮点类型没有依据 Precision 舍入。[#3868](https://github.com/ant-design-blazor/ant-design-blazor/pull/3868) [@Jtfk](https://github.com/Jtfk)
+- 🐞 修复 Select 的 EnumSelect 绑定可控枚举类型时异常。[#3859](https://github.com/ant-design-blazor/ant-design-blazor/pull/3859) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.19.0
 
 `2024-5-7` 
@@ -65,13 +124,6 @@ timeline: true
 - 🐞 修复 IsExternalInit 的访问级别，避免与第三方库冲突。[#3799](https://github.com/ant-design-blazor/ant-design-blazor/pull/3799) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 InputNumber 粘贴带有分隔符的数字时无法绑定。[#3841](https://github.com/ant-design-blazor/ant-design-blazor/pull/3841) [@HuaFangYun](https://github.com/HuaFangYun)
 - 🐞 修复 Overlay 多子级关闭时，父级联动冲突。[#3838](https://github.com/ant-design-blazor/ant-design-blazor/pull/3838) [@pankey888](https://github.com/pankey888)
-
-#### 此版本中新的贡献者
-* @pathartl made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3579
-* @tiansfather made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3787
-* @miguelkmarques made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3806
-* @pankey888 made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3827
-* @HuaFangYun made their first contribution in https://github.com/ant-design-blazor/ant-design-blazor/pull/3841
 
 ### 0.18.3
 

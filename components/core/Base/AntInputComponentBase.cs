@@ -283,6 +283,15 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual Task OnValueChangeAsync(TValue value)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
         /// </summary>
         /// <param name="value"></param>

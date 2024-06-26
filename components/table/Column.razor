@@ -234,7 +234,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
                 <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }" OnVisibleChange="FilterDropdownOnVisibleChange">
                     <Unbound>
-                        <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
+                        <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
                               @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
                             <Icon Type="filter" Theme="fill" />
                         </span>
@@ -324,8 +324,11 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                         </SpaceItem>
                         @if (!noInput)
                         {
+                            _fieldFilterType.InputAttributes.TryAdd("PopupContainerSelector", $"#popup-container-for-{Id}");
+                            _fieldFilterType.InputAttributes.TryAdd("Format", Format);
+                            _fieldFilterType.InputAttributes.TryAdd("Width", Width ?? "120px");
                             <SpaceItem>
-                                @_fieldFilterType.FilterInput(new TableFilterInputRenderOptions(filter, "#popup-container-for-" + Id, Format, Expression.Field(Expression.Constant(this), nameof(_filterInputRef))))
+                                @_fieldFilterType.FilterInput(new TableFilterInputRenderOptions(filter, _fieldFilterType.InputAttributes, Expression.Field(Expression.Constant(this), nameof(_filterInputRef))))
                             </SpaceItem>
                         }
                         @if (filterCount > 1)
