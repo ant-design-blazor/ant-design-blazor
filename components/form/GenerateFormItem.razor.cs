@@ -22,13 +22,8 @@ public partial class GenerateFormItem<TModel> : ComponentBase
     [CascadingParameter(Name = "Form")]
     private IForm Form { get; set; }
 
-
-    /// <summary>
-    /// If true then the rules will be required by CheckTypeRequire.
-    /// Recommended only for forms without complex validation, where only simple validation for empty values is required.
-    /// </summary>
     [Parameter]
-    public bool RulesRequireByType { get; set; }
+    public Func<PropertyInfo, FormValidationRule[]?> ValidateRules { get; set; }
 
     [Parameter] public Func<PropertyInfo, TModel, RenderFragment> Definitions { get; set; }
 
@@ -52,23 +47,29 @@ public partial class GenerateFormItem<TModel> : ComponentBase
             }
 
             var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name;
-            var isRequired = RulesRequireByType is true && CheckTypeRequire(property);
             var underlyingType = THelper.GetUnderlyingType(property.PropertyType);
+            FormValidationRule[]? validateRule = null;
+            if (ValidateRules != null)
+            {
+                validateRule = ValidateRules.Invoke(property);
+            }
+            
+            
             RenderFragment? childContent = null;
             if (Definitions != null)
             {
                 childContent = Definitions.Invoke(property, (TModel)Form.Model);
             }
 
-            childContent ??= GenerateByType(underlyingType, property, displayName, isRequired);
+            childContent ??= GenerateByType(underlyingType, property, displayName);
 
             // Make FormItem 
-            if (isRequired)
+            if (validateRule != null)
             {
-                var formValidation = GetFormValidationRuleByType(underlyingType);
                 builder.OpenComponent(0, typeof(FormItem));
                 builder.AddAttribute(1, "Label", displayName);
-                builder.AddAttribute(2, "Rules", formValidation);
+                builder.AddAttribute(2, "Rules", validateRule);
+                Console.WriteLine(validateRule);
                 builder.AddAttribute(3, "ChildContent", childContent);
                 builder.CloseComponent();
             }
@@ -82,19 +83,7 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         }
     }
 
-    private bool CheckTypeRequire(PropertyInfo property)
-    {
-        if (property.PropertyType.IsValueType)
-        {
-            return !THelper.IsTypeNullable(property.PropertyType);
-        }
-
-        return !(property.GetMethod?.CustomAttributes.Where(x =>
-            x.AttributeType.Name == "NullableContextAttribute") ?? Array.Empty<CustomAttributeData>()).Any();
-    }
-
-    private RenderFragment? GenerateByType(Type underlyingType, PropertyInfo property, string displayName,
-        bool isRequired)
+    private RenderFragment? GenerateByType(Type underlyingType, PropertyInfo property, string displayName)
     {
         if (underlyingType == typeof(string))
         {
@@ -108,7 +97,7 @@ public partial class GenerateFormItem<TModel> : ComponentBase
 
         if (underlyingType == typeof(DateTime))
         {
-            return MakeDatePicker(property, isRequired);
+            return MakeDatePicker(property);
         }
 
         if (underlyingType.IsEnum)
@@ -117,31 +106,6 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         }
 
         return null;
-    }
-
-    private FormValidationRule[] GetFormValidationRuleByType(Type underlyingType)
-    {
-        if (underlyingType == typeof(string))
-        {
-            return [new() { Required = true, Type = FormFieldType.String }];
-        }
-
-        if (THelper.IsNumericType(underlyingType) && !underlyingType.IsEnum)
-        {
-            return [new() { Required = true, Type = FormFieldType.Number }];
-        }
-
-        if (underlyingType == typeof(DateTime))
-        {
-            return [new() { Required = true, Type = FormFieldType.Date }];
-        }
-
-        if (underlyingType.IsEnum)
-        {
-            return [new() { Required = true, Transform = v => Enum.IsDefined(underlyingType, v) ? "y" : null }];
-        }
-
-        return [new() { Required = true }];
     }
 
     private object? CreateEventCallback(Type callbackType, object receiver, Action<object> callback)
@@ -171,17 +135,8 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         return MakeFormItem(property, typeof(InputNumber<>));
     }
 
-    private RenderFragment MakeDatePicker(PropertyInfo property, bool isRequired)
+    private RenderFragment MakeDatePicker(PropertyInfo property)
     {
-        if (isRequired)
-        {
-            var dateTimeValue = (DateTime)(property.GetValue(Form.Model) ?? DateTime.Now);
-            if (dateTimeValue == DateTime.MinValue)
-            {
-                dateTimeValue = DateTime.Now;
-                property.SetValue(Form.Model, dateTimeValue);
-            }
-        }
         return MakeFormItem(property, typeof(DatePicker<>));
     }
 
@@ -203,7 +158,6 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         return builder =>
         {
             builder.OpenComponent(0, constructedType);
-
             builder.AddAttribute(1, "Value", property.GetValue(Form.Model));
             var eventCallback = CreateEventCallback(property.PropertyType, this,
                 new Action<object>(o => property.SetValue(Form.Model, o)));

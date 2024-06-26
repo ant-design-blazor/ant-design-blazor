@@ -8,7 +8,7 @@
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
       WrapperColSpan="16" >
-    <GenerateFormItem TModel="Model" Definitions="Definitions" RulesRequireByType NotGenerate="NotGenerate"/>
+    <GenerateFormItem TModel="Model" Definitions="Definitions" ValidateRules="ValidateRules" NotGenerate="NotGenerate"/>
     <FormItem Label="ListTestOutOfGenerate">
         <Select @bind-Values="@context.I" Style="width: 120px;" TItemValue="string" TItem="string">
             <SelectOptions>
@@ -71,6 +71,19 @@
     }
 
     private Model model = new Model();
+
+    public FormValidationRule[]? ValidateRules(PropertyInfo propertyInfo)
+    {
+        if (propertyInfo.Name == "A")
+        {
+            return new FormValidationRule[]
+            {
+                new FormValidationRule{ Required = true, Max = 10 }
+            };
+        }
+
+        return null;
+    }
 
     public RenderFragment? Definitions(PropertyInfo propertyInfo, Model model)
     {
