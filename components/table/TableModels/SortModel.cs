@@ -39,6 +39,7 @@ namespace AntDesign.TableModels
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
+
         public SortModel(int columnIndex, int priority, string fieldName, string sort)
         {
             this.Priority = priority;

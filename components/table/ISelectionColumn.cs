@@ -2,7 +2,7 @@
 
 namespace AntDesign
 {
-    public interface ISelectionColumn : IColumn
+    internal interface ISelectionColumn : IColumn
     {
         public string Type { get; set; }
 

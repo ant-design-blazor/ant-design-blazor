@@ -7,19 +7,37 @@
 @using System.Linq.Expressions;
 @typeparam TData
 
-@if (IsInitialize)
+@if (IsHeaderTemplate)
 {
-    return;
+    Context?.AddHeaderColumn(this);
 }
-else if (Hidden)
+else if (IsRowTemplate)
 {
-    return;
+    Context?.AddRowColumn(this);
 }
-else if (IsPlaceholder)
+else
+{
+    Context?.AddColumn(this);
+}
+
+@if (IsHeaderTemplate)
+{
+    @if (HeaderColSpan == 0)
+        return;
+    @RenderHeader()
+}
+else if (IsRowTemplate)
+{
+    @if (RowSpan == 0 || ColSpan == 0)
+        return;
+    @RenderBody(RowData)
+}
+else
 {
     <td style="padding: 0px; border: 0px; height: 0px;"></td>
 }
-else if (IsMeasure)
+
+@if (IsHeaderTemplate)
 {
     <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
 }
@@ -125,12 +143,19 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     </CascadingValue>
 }
 
-@code
-{
-    RenderFragment ColumnTitle()
+@code{
+
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+
+    RenderFragment RenderBody(RowData rowData)
     {
-        return @<span class="ant-table-column-title">
-            @if (TitleTemplate != null)
+        return builder =>
+        {
+            var fieldValue = GetValue != null ? GetValue(rowData) : default;
+            var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue?.ToString();
+            var title = Context.Columns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+
+            if (AppendExpandColumn)
             {
                 @TitleTemplate
             }
@@ -138,25 +163,33 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             {
                 @Title
             }
-        </span>
+            </span>
         ;
-    }
+        }
 
-    RenderFragment CellContent(CellData<TData> cellData)
-    {
-        if (CellRender != null)
-        {
-            return CellRender(cellData);
-        }
-        else if (ChildContent != null)
-        {
-            return ChildContent;
-        }
-        else
-        {
-            return builder => builder.AddContent(1, cellData.FormattedValue);
-        }
-    }
+            var cellData = new CellData<TData>(rowData, fieldValue, Format);
+            var cellAttributes = OnCell?.Invoke(cellData) ?? new();
+
+            if ((cellAttributes.TryGetValue("colspan", out var colspan) ? (int)colspan : 1) == 0 || (cellAttributes.TryGetValue("rowspan", out var rowspan) ? (int)rowspan : 1) == 0)
+            {
+                return;
+            }
+
+            builder.AddContent(2,
+        
+            @<td class="@ClassMapper.Class" style="@CalcFixedStyle() @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title" @attributes="cellAttributes">
+                @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
+                {
+                    <span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>
+                    @if (rowData.HasChildren)
+                    {
+                        <button type="button" @onclick="()=>ToggleTreeNode(rowData)" @onclick:stopPropagation class="ant-table-row-expand-icon @(rowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(rowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+                    }
+                }
 
     RenderFragment HeaderCellContent()
     {

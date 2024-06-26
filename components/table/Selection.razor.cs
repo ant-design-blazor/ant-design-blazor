@@ -3,10 +3,11 @@ using System.Linq;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Table;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IRenderColumn
     {
         [Parameter] public string Type { get; set; } = "checkbox";
 
@@ -19,15 +20,15 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
-        //private bool _checked;
+        private bool Indeterminate => !Table.AllSelected && Table.AnySelected;
 
         private bool Indeterminate => IsHeader
                                    && Table.AnySelected
                                    && !Table.AllSelected;
 
-        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
+        private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
-        //private int[] _selectedIndexes;
+        bool ISelectionColumn.Disabled => Disabled;
 
         private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
 
@@ -37,7 +38,7 @@ namespace AntDesign
 
         private void OnCheckedChange(bool selected)
         {
-            if (IsHeader)
+            if (isHeader)
             {
                 if (selected)
                 {
@@ -48,7 +49,7 @@ namespace AntDesign
                     Table.UnselectAll();
                 }
             }
-            else if (IsBody)
+            else
             {
                 if (Type == "radio")
                 {
@@ -61,19 +62,11 @@ namespace AntDesign
             }
         }
 
-        protected override void OnInitialized()
+        void ISelectionColumn.StateHasChanged()
         {
-            base.OnInitialized();
-
-            if (Table == null)
+            if (Type == "checkbox")
             {
-                return;
-            }
-
-            if (IsHeader)
-            {
-                Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
+                StateHasChanged();
             }
             else if (IsBody)
             {
@@ -105,11 +98,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (!IsHeader)
-            {
-                Table?.Selection?.RowSelections?.Remove(this);
-            }
-
+            Table?.Selection?.RowSelections?.Remove(this);
             base.Dispose(disposing);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
 
@@ -6,6 +7,7 @@ namespace AntDesign
 {
     public interface ITable
     {
+        Type ItemType { get; }
         void ReloadData();
 
         void ReloadData(int? pageIndex, int? pageSize = null);

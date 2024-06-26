@@ -212,7 +212,7 @@ namespace AntDesign
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
-        public ColumnContext ColumnContext { get; set; }
+        internal ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
@@ -245,6 +245,8 @@ namespace AntDesign
 
         private bool _isVirtualizeEmpty;
         private bool _afterFirstRender;
+
+        private bool _useRowTemplateAsColumnDefinitions;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -352,13 +354,13 @@ namespace AntDesign
 
                 foreach (var sorter in queryModel.SortModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[sorter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetSortModel(sorter);
                 }
 
                 foreach (var filter in queryModel.FilterModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[filter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetFilterModel(filter);
                 }
 
@@ -371,7 +373,7 @@ namespace AntDesign
             ChangePageIndex(1);
             ChangePageSize(PageSize);
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -394,7 +396,7 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -416,7 +418,7 @@ namespace AntDesign
         void ITable.Refresh()
         {
             _shouldRender = true;
-            StateHasChanged();
+            // StateHasChanged();
         }
 
         void ITable.ColumnFilterChange()
@@ -427,7 +429,7 @@ namespace AntDesign
 
         void ITable.ColumnSorterChange(IFieldColumn column)
         {
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
                 {
@@ -444,7 +446,7 @@ namespace AntDesign
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
-                StateHasChanged();
+                //StateHasChanged();
                 return;
             }
 #endif
@@ -456,7 +458,7 @@ namespace AntDesign
             }
 
             var queryModel = this.InternalReload();
-            StateHasChanged();
+            // StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -590,13 +592,13 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void AddGroupColumn(IFieldColumn column)
+        internal void AddGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Add(column);
             GroupItems();
         }
 
-        public void RemoveGroupColumn(IFieldColumn column)
+        internal void RemoveGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Remove(column);
             GroupItems();
@@ -726,12 +728,12 @@ namespace AntDesign
                 if (_hasInitialized && !_shouldRender)
                 {
                     _shouldRender = true;
-                    StateHasChanged();
+                    // StateHasChanged();
                     return;
                 }
 
                 // To handle the case where a dynamic table does not render columns until the data is requested
-                if ((!ColumnContext.HeaderColumns.Any() || _fieldModel is null) && !_hasInitialized)
+                if ((!ColumnContext.Columns.Any() || _fieldModel is null) && !_hasInitialized)
                 {
                     OnColumnInitialized();
                     return;
@@ -761,7 +763,7 @@ namespace AntDesign
         void ITable.TableLayoutIsFixed()
         {
             TableLayout = "fixed";
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         private void OnResize(DomRect domRect)
@@ -773,7 +775,7 @@ namespace AntDesign
 
             _tableWidth = domRect.Width;
             _shouldRender = true;
-            StateHasChanged();
+            //  StateHasChanged();
         }
 
         protected override void Dispose(bool disposing)

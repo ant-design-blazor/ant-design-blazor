@@ -33,6 +33,7 @@ namespace AntDesign.TableModels
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
+
         public FilterModel(int columnIndex, string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters)
         {
             this.FieldName = fieldName;

@@ -14,17 +14,12 @@ using AntDesign.Filters;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.JSInterop;
+using AntDesign.Table;
 
 namespace AntDesign
 {
-    public partial class Column<TData> : ColumnBase, IFieldColumn
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
-        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
-
-        [CascadingParameter(Name = "ItemType")]
-        public Type ItemType { get; set; }
-
         [Parameter]
         public EventCallback<TData> FieldChanged { get; set; }
 
@@ -35,22 +30,7 @@ namespace AntDesign
         public RenderFragment FilterDropdown { get; set; }
 
         [Parameter]
-        public TData Field
-        {
-            get
-            {
-                return GetValue != null ? GetValue(RowData) : _field;
-            }
-            set
-            {
-                if (GetValue == null)
-                {
-                    _field = value;
-                }
-            }
-        }
-
-        private TData _field;
+        public TData Field { get; set; }
 
         public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
 
@@ -198,32 +178,38 @@ namespace AntDesign
 
             Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
-            if (IsHeader)
+            if (FieldExpression != null)
             {
-                if (FieldExpression != null)
+                if (FieldExpression.Body is not MemberExpression memberExp)
                 {
-                    if (FieldExpression.Body is not MemberExpression memberExp)
-                    {
-                        throw new ArgumentException("'Field' parameter must be child member");
-                    }
-
-                    var paramExp = Expression.Parameter(ItemType);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
-                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
-                }
-                else if (DataIndex != null)
-                {
-                    (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                    throw new ArgumentException($"'Field' parameter must be a property or a field of {Table.ItemType}");
                 }
 
-                if (GetFieldExpression != null)
-                {
-                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
-                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
-                               ?? member?.Name;
-                    FieldName = DataIndex ?? member?.Name;
-                }
+                var paramExp = Expression.Parameter(Table.ItemType);
+                var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
+                GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+
+                var rowDataParamExp = Expression.Parameter(typeof(RowData));
+                var rowDataType = typeof(RowData<>).MakeGenericType(Table.ItemType);
+                var convertExp = Expression.Convert(rowDataParamExp, rowDataType);
+                var dataBodyExp = Expression.MakeMemberAccess(convertExp, rowDataType.GetMember(nameof(RowData<int>.Data))[0]);
+                var memberBodyExp = Expression.MakeMemberAccess(dataBodyExp, memberExp.Member);
+                var getValueLambda = Expression.Lambda<Func<RowData, TData>>(memberBodyExp, rowDataParamExp);
+                GetValue = getValueLambda.Compile(); // RowData => ((RowData<TItem>)RowData).Data.{Member}
+            }
+            else if (DataIndex != null)
+            {
+                (GetValue, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+            }
+
+            if (GetFieldExpression != null)
+            {
+                var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                           ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                           ?? member?.Name;
+                FieldName = DataIndex ?? member?.Name;
+            }
 
                 if (Sortable && GetFieldExpression != null)
                 {
@@ -238,12 +224,12 @@ namespace AntDesign
                 {
                     Table.RemoveGroupColumn(this);
                 }
-            }
-            else if (IsBody)
+            
+             if (IsRowTemplate)
             {
                 if (!Table.HasRowTemplate)
                 {
-                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                    SortModel = (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
                 }
 
                 if (DataIndex != null)
@@ -264,7 +250,7 @@ namespace AntDesign
 
             _filterable = _filterable || FilterDropdown != null;
 
-            if (IsHeader)
+            if (!IsRowTemplate)
             {
                 if (_hasFiltersAttribute)
                 {
@@ -316,7 +302,7 @@ namespace AntDesign
                     }
                 }
 
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialed();
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
@@ -330,7 +316,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (IsHeader)
+            if (IsHeaderTemplate)
             {
                 if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
                 {
