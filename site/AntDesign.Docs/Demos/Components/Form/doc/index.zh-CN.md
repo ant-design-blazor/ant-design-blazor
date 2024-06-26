@@ -118,7 +118,7 @@ var formConfig = new FormConfig {
 ```
 
 ### GenerateFormItem
-可通过 `TItem` 类型自动生成表单元素。当前支持string、DateTime、number、enum类型成员自动生成。
+可通过 `TItem` 类型自动生成表单元素。当前支持string、DateTime、number、enum类型成员自动生成，支持嵌套类型自动生成。
 > **注意:** 此功能正在迭代中，后续本版可能会存在不兼容的变更。
 
 | 名称 | 说明                                                                | 类型        | 默认值  |

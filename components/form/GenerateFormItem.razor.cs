@@ -18,16 +18,13 @@ public partial class GenerateFormItem<TModel> : ComponentBase
 {
     private PropertyInfo[] _propertyInfos = { };
 
+    [CascadingParameter(Name = "Form")] private IForm Form { get; set; }
 
-    [CascadingParameter(Name = "Form")]
-    private IForm Form { get; set; }
+    [Parameter] public Func<string, FormValidationRule[]?>? ValidateRules { get; set; }
 
-    [Parameter]
-    public Func<PropertyInfo, FormValidationRule[]?> ValidateRules { get; set; }
+    [Parameter] public Func<string, RenderFragment?>? Definitions { get; set; }
 
-    [Parameter] public Func<PropertyInfo, TModel, RenderFragment> Definitions { get; set; }
-
-    [Parameter] public Func<PropertyInfo, TModel, bool> NotGenerate { get; set; }
+    [Parameter] public Func<string, bool>? NotGenerate { get; set; }
 
     protected override void OnInitialized()
     {
@@ -41,68 +38,104 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         foreach (var property in _propertyInfos)
         {
             // Not Generate
-            if (NotGenerate != null && NotGenerate.Invoke(property, (TModel)Form.Model))
+            if (NotGenerate != null && NotGenerate.Invoke(property.Name))
             {
                 continue;
             }
 
-            var underlyingType = THelper.GetUnderlyingType(property.PropertyType);
-            FormValidationRule[]? validateRule = null;
-            if (ValidateRules != null)
-            {
-                validateRule = ValidateRules.Invoke(property);
-            }
-            
-            
-            RenderFragment? childContent = null;
-            if (Definitions != null)
-            {
-                childContent = Definitions.Invoke(property, (TModel)Form.Model);
-            }
-
-            childContent ??= GenerateByType(underlyingType, property);
-
-            // Make FormItem 
-            if (validateRule != null)
-            {
-                builder.OpenComponent(0, typeof(FormItem));
-                builder.AddAttribute(1, "Rules", validateRule);
-                Console.WriteLine(validateRule);
-                builder.AddAttribute(2, "ChildContent", childContent);
-                builder.CloseComponent();
-            }
-            else
-            {
-                builder.OpenComponent(0, typeof(FormItem));
-                builder.AddAttribute(1, "ChildContent", childContent);
-                builder.CloseComponent();
-            }
+            GenerateByType(property, builder, Form.Model, property.Name);
         }
     }
 
-    private RenderFragment? GenerateByType(Type underlyingType, PropertyInfo property)
+    private void MakeFormItemBlock(PropertyInfo property, FormValidationRule[]? validateRule, RenderFragment? formItemFragment,
+        RenderTreeBuilder builder, int sequenceIndex)
     {
+        var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name;
+        if (validateRule != null)
+        {
+            builder.OpenComponent(sequenceIndex++, typeof(FormItem));
+            builder.AddAttribute(sequenceIndex++, "Label", displayName);
+            builder.AddAttribute(sequenceIndex++, "Rules", validateRule);
+            builder.AddAttribute(sequenceIndex++, "ChildContent", formItemFragment);
+            builder.CloseComponent();
+        }
+        else
+        {
+            builder.OpenComponent(sequenceIndex++, typeof(FormItem));
+            builder.AddAttribute(sequenceIndex++, "Label", displayName);
+            builder.AddAttribute(sequenceIndex++, "ChildContent", formItemFragment);
+            builder.CloseComponent();
+        }
+    }
+    
+    private void GenerateByType(PropertyInfo property, RenderTreeBuilder builder, object model, string structurePath)
+    {
+        var sequenceIndex = 0;
+        
+        FormValidationRule[]? validateRule = null;
+        if (ValidateRules != null)
+        {
+            validateRule = ValidateRules.Invoke(structurePath);
+        }
+
+        var definitionsFormItem = Definitions?.Invoke(structurePath);
+        if (definitionsFormItem != null)
+        {
+            MakeFormItemBlock(property, validateRule, definitionsFormItem, builder, sequenceIndex);
+            return;
+        }
+
+        var underlyingType = THelper.GetUnderlyingType(property.PropertyType);
         if (underlyingType == typeof(string))
         {
-            return MakeInputString(property);
+            var formItemFragment = MakeInputString(property, model);
+            MakeFormItemBlock(property, validateRule, formItemFragment, builder, sequenceIndex);
         }
 
         if (THelper.IsNumericType(underlyingType) && !underlyingType.IsEnum)
         {
-            return MakeInputNumeric(property);
+            var formItemFragment = MakeInputNumeric(property, model);
+            MakeFormItemBlock(property, validateRule, formItemFragment, builder, sequenceIndex);
         }
 
         if (underlyingType == typeof(DateTime))
         {
-            return MakeDatePicker(property);
+            var formItemFragment = MakeDatePicker(property, model);
+            MakeFormItemBlock(property, validateRule, formItemFragment, builder, sequenceIndex);
         }
 
         if (underlyingType.IsEnum)
         {
-            return MakeEnumSelect(property);
+            var formItemFragment = MakeEnumSelect(property, model);
+            MakeFormItemBlock(property, validateRule, formItemFragment, builder, sequenceIndex);
         }
 
-        return null;
+        if (underlyingType.IsUserDefinedClass() && !underlyingType.IsArrayOrList())
+        {
+            var childModel = property.GetValue(model);
+            if (childModel == null) return;
+            var propertyInfos = underlyingType.GetProperties();
+            var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name;
+            builder.OpenElement(sequenceIndex++, "div");
+            builder.AddAttribute(sequenceIndex++, "style",
+                "border: 1px solid #9e9e9e;padding: 16px;position: relative;border-radius: 2px;");
+            builder.OpenElement(sequenceIndex++, "div");
+            builder.AddAttribute(sequenceIndex++, "style", "position: absolute;top: -12px;background: #fff;");
+            builder.AddContent(sequenceIndex++, displayName);
+            builder.CloseElement();
+            foreach (var propertyInfo in propertyInfos)
+            {
+                // Not Generate
+                var itemStructurePath = $"{structurePath}.{propertyInfo.Name}";
+                if (NotGenerate != null && NotGenerate.Invoke(itemStructurePath))
+                {
+                    continue;
+                }
+                 
+                GenerateByType(propertyInfo, builder, childModel, itemStructurePath);
+            }
+            builder.CloseElement();
+        }
     }
 
     private object? CreateEventCallback(Type callbackType, object receiver, Action<object> callback)
@@ -122,29 +155,29 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         return eventCallback;
     }
 
-    private RenderFragment MakeInputString(PropertyInfo property)
+    private RenderFragment MakeInputString(PropertyInfo property, object model)
     {
-        return MakeFormItem(property, typeof(Input<>));
+        return MakeFormItem(property, typeof(Input<>), model);
     }
 
-    private RenderFragment MakeInputNumeric(PropertyInfo property)
+    private RenderFragment MakeInputNumeric(PropertyInfo property, object model)
     {
-        return MakeFormItem(property, typeof(InputNumber<>));
+        return MakeFormItem(property, typeof(InputNumber<>), model);
     }
 
-    private RenderFragment MakeDatePicker(PropertyInfo property)
+    private RenderFragment MakeDatePicker(PropertyInfo property, object model)
     {
-        return MakeFormItem(property, typeof(DatePicker<>));
+        return MakeFormItem(property, typeof(DatePicker<>), model);
     }
 
-    private RenderFragment MakeEnumSelect(PropertyInfo property)
+    private RenderFragment MakeEnumSelect(PropertyInfo property, object model)
     {
-        return MakeFormItem(property, typeof(EnumSelect<>));
+        return MakeFormItem(property, typeof(EnumSelect<>), model);
     }
 
-    private RenderFragment MakeFormItem(PropertyInfo property, Type formItemChildContent)
+    private RenderFragment MakeFormItem(PropertyInfo property, Type formItemChildContent, object model)
     {
-        var constant = Expression.Constant(Form.Model, typeof(TModel));
+        var constant = Expression.Constant(model, model.GetType());
         var exp = Expression.Property(constant, property.Name);
         var genericType = formItemChildContent;
         var constructedType = genericType.MakeGenericType(property.PropertyType);
@@ -155,9 +188,9 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         return builder =>
         {
             builder.OpenComponent(0, constructedType);
-            builder.AddAttribute(1, "Value", property.GetValue(Form.Model));
+            builder.AddAttribute(1, "Value", property.GetValue(model));
             var eventCallback = CreateEventCallback(property.PropertyType, this,
-                new Action<object>(o => property.SetValue(Form.Model, o)));
+                new Action<object>(o => property.SetValue(model, o)));
             builder.AddAttribute(2, "ValueChanged", eventCallback);
             builder.AddAttribute(3, "ValueExpression", Expression.Lambda(constructedFuncType, exp));
             builder.CloseComponent();
