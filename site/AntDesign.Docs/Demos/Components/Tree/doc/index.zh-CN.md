@@ -88,10 +88,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  展开所有节点  | void  |   |   |
-| CollapseAll |  关闭所有节点 | void  |   |   |
+| ExpandAll  |  展开所有树节点  | void  |   |   |
+| CollapseAll |  折叠所有树节点 | void  |   |   |
 | CheckAll  |  递归勾选所有树节点  | void  |   |   |
 | UnCheckAll |  递归取消勾选所有树节点 | void  |   |   |
+| SelectAll  |  选择所有树节点  | void  |   |   |
+| DeselectAll |  取消选择所有树节点 | void  |   |   |
 
 ### Tree RenderFragment
 

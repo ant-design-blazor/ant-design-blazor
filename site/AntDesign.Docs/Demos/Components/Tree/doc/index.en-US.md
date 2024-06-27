@@ -87,10 +87,12 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  All tree nodes are expanded by default  | void  |   |   |
-| CollapseAll |  The parent node is expanded by default | void  |   |   |
-| CheckAll  |  Recursively check all tree nodes  | void  |   |   |
-| UnCheckAll |  Recursively uncheck all tree nodes | void  |   |   |
+| ExpandAll  |  Expand all the tree nodes  | void  |   |   |
+| CollapseAll |  Collapse all the tree nodes | void  |   |   |
+| CheckAll  |  Recursively check all the tree nodes  | void  |   |   |
+| UnCheckAll |  Recursively uncheck all the tree nodes | void  |   |   |
+| SelectAll  |  Select all the tree nodes  | void  |   |   |
+| DeselectAll |  Deselect all the tree nodes | void  |   |   |
 
 ### Tree RenderFragment
 
