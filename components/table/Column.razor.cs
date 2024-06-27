@@ -190,12 +190,9 @@ namespace AntDesign
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
 
-        private object _filterInputRef;
+        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         IEnumerable<TableFilter> IFieldColumn.Filters => _filters;
-        object IFieldColumn.FilterInputRef => _filterInputRef;
-
-        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         protected override void OnInitialized()
         {
@@ -385,6 +382,7 @@ namespace AntDesign
             }
         }
 
+
         private SortDirection NextSortDirection()
         {
             if (_sortDirection == SortDirection.None)
@@ -503,10 +501,15 @@ namespace AntDesign
         {
             if (_columnFilterType == TableFilterType.FieldType)
             {
+                _fieldFilterType.InputAttributes.TryAdd("PopupContainerSelector", $"#popup-container-for-{Id}");
+                _fieldFilterType.InputAttributes.TryAdd("Format", Format);
+                _fieldFilterType.InputAttributes.TryAdd("Width", Width ?? "120px");
+
                 return new TableFilter()
                 {
                     FilterCondition = TableFilterCondition.And,
-                    FilterCompareOperator = _fieldFilterType.DefaultCompareOperator
+                    FilterCompareOperator = _fieldFilterType.DefaultCompareOperator,
+                    FieldFilterType = _fieldFilterType
                 };
             }
             else
@@ -585,7 +588,7 @@ namespace AntDesign
         {
 #if NET5_0_OR_GREATER
             if (!visible ||
-                _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                _filters.FirstOrDefault()?.FilterInputRef is not AntDomComponentBase baseDomComponent ||
                 baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
                 baseDomComponent.Ref.Context == null) return;
 

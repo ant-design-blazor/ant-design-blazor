@@ -34,9 +34,6 @@ namespace AntDesign
         internal void ClearFilters();
 
         internal IEnumerable<TableFilter> Filters { get; }
-
-        internal object FilterInputRef { get; }
-
         internal void SetFilterModel(ITableFilterModel filterModel);
 
         internal void SetSelectedFilters(IEnumerable<TableFilter> selectedFilters);

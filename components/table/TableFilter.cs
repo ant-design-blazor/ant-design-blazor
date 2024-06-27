@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AntDesign.Filters;
 
 namespace AntDesign
 {
@@ -22,6 +23,20 @@ namespace AntDesign
         public TableFilterCompareOperator FilterCompareOperator { get; internal set; }
 
         public TableFilterCondition FilterCondition { get; internal set; }
+
+        public IFieldFilterType FieldFilterType { get; internal set; }
+        public object FilterInputRef => _filterInputRef;
+
+        TableFilterInputRenderOptions? _tableFilterInputRenderOptions;
+
+        private object _filterInputRef;
+
+        public TableFilterInputRenderOptions GetFilterInputRenderOptions()
+        {
+            _tableFilterInputRenderOptions ??= new TableFilterInputRenderOptions(this, FieldFilterType.InputAttributes, Expression.Field(Expression.Constant(this), nameof(_filterInputRef)));
+            return _tableFilterInputRenderOptions.Value;
+        }
+
 
         internal void SelectValue(bool selected)
         {
