@@ -223,6 +223,18 @@ namespace AntDesign
             }
         }
 
+        public void SelectAll()
+        {
+            if (!Selectable || !Multiple)
+                return;
+            foreach (var item in _allNodes)
+            {
+                item.DoSelect(true, true, true);
+            }
+            UpdateSelectedKeys();
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Deselect all selections
         /// </summary>
@@ -444,18 +456,6 @@ namespace AntDesign
                 item.UnCheckAllChildren();
             }
             UpdateCheckedKeys();
-        }
-
-        public void SelectAll()
-        {
-            if (!Selectable || !Multiple)
-                return;
-            foreach (var item in ChildNodes)
-            {
-                item.DoSelect(true, true, true);
-            }
-            UpdateSelectedKeys();
-            StateHasChanged();
         }
 
         /// <summary>
