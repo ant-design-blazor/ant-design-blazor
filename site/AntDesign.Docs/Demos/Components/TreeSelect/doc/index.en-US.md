@@ -27,6 +27,7 @@ Tree selection control.
 | Disabled | Whether the Select component is disabled. | bool | false |  |
 | DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
+| DropdownRender | Customize dropdown content. | Renderfragment | - |  |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
