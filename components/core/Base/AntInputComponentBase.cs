@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
@@ -25,6 +26,9 @@ namespace AntDesign
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
         private PropertyReflector? _propertyReflector;
+        private string? _formattedValueExpression;
+        private bool _shouldGenerateFieldNames;
+        private bool _hasInitializedParameters;
 
         private Action<object, TValue> _setValueDelegate;
 
@@ -37,8 +41,14 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
-        [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
+
+#if NET8_0_OR_GREATER
+
+        [CascadingParameter] private HtmlFieldPrefix FieldPrefix { get; set; } = default!;
+#endif
+
+        protected IForm Form => FormItem?.Form;
 
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
@@ -143,7 +153,7 @@ namespace AntDesign
 
                     OnCurrentValueChange(value);
 
-                    if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
@@ -273,6 +283,15 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual Task OnValueChangeAsync(TValue value)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
         /// </summary>
         /// <param name="value"></param>
@@ -293,7 +312,7 @@ namespace AntDesign
             {
                 var type = Form.Model.GetType();
                 var dataIndex = FormItem.Name;
-                if (type.IsAssignableFrom(typeof(IDictionary)))
+                if (typeof(IDictionary).IsAssignableFrom(type))
                 {
                     dataIndex = $"['{dataIndex}']";
                 }
@@ -301,8 +320,15 @@ namespace AntDesign
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
                 Value = _getValueDelegate.Invoke(Form.Model);
 
-                var lambda = PathHelper.GetLambda(dataIndex, type);
-                _propertyReflector = PropertyReflector.Create(lambda.Body);
+                if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
+                {
+                    var perpertyInfo = lambda.Member as PropertyInfo;
+                    _propertyReflector = new PropertyReflector(perpertyInfo);
+                }
+                else
+                {
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                }
             }
 
             FormItem?.AddControl(this);
@@ -311,24 +337,73 @@ namespace AntDesign
             _firstValue = Value;
         }
 
+        /// <summary>
+        /// Gets the value to be used for the input's "name" attribute.
+        /// </summary>
+        protected string NameAttributeValue
+        {
+            get
+            {
+                if (AdditionalAttributes?.TryGetValue("name", out var nameAttributeValue) ?? false)
+                {
+                    return Convert.ToString(nameAttributeValue, CultureInfo.InvariantCulture) ?? string.Empty;
+                }
+#if NET8_0_OR_GREATER
+                if (_shouldGenerateFieldNames)
+                {
+                    if (_formattedValueExpression is null)
+                    {
+                        if (ValueExpression is not null)
+                        {
+                            _formattedValueExpression = FieldPrefix != null ? FieldPrefix.GetFieldName(ValueExpression) : ExpressionFormatter.FormatLambda(ValueExpression);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(Form?.Name) && !string.IsNullOrWhiteSpace(FormItem?.Name))
+                        {
+                            _formattedValueExpression = $"{Form?.Name}.{FormItem.Name}";
+                        }
+                    }
+
+                    return _formattedValueExpression ?? string.Empty;
+                }
+#endif
+                return string.Empty;
+            }
+        }
+
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
             parameters.SetParameterProperties(this);
 
-            if (EditContext == null)
+            if (!_hasInitializedParameters)
             {
                 // This is the first run
                 // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
 
-                if (Form?.EditContext == null)
+#if NET8_0_OR_GREATER
+                if (CascadedEditContext != null)
                 {
-                    return base.SetParametersAsync(ParameterView.Empty);
+                    EditContext = CascadedEditContext;
+                    _shouldGenerateFieldNames = EditContext.ShouldUseFieldIdentifiers;
                 }
+                else
+                {
+                    // Ideally we'd know if we were in an SSR context but we don't
+                    //_shouldGenerateFieldNames = !OperatingSystem.IsBrowser();
+                }
+#endif
 
-                EditContext = Form?.EditContext;
+                if (EditContext == null)
+                {
+                    if (Form?.EditContext == null)
+                    {
+                        return base.SetParametersAsync(ParameterView.Empty);
+                    }
 
-                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                    EditContext = Form?.EditContext;
+
+                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
+                }
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
@@ -348,6 +423,8 @@ namespace AntDesign
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
+
+                _hasInitializedParameters = true;
             }
             else if (Form?.EditContext != EditContext)
             {

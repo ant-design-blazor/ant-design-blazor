@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -324,16 +325,6 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
-        }
-
-        internal class TextAreaInfo
-        {
-            public double ScrollHeight { get; set; }
-            public double LineHeight { get; set; }
-            public double PaddingTop { get; set; }
-            public double PaddingBottom { get; set; }
-            public double BorderTop { get; set; }
-            public double BorderBottom { get; set; }
         }
     }
 }

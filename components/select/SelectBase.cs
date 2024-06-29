@@ -10,18 +10,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using AntDesign.Select;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using AntDesign.Core.Helpers.MemberPath;
 
 #endregion using block
 
 namespace AntDesign
 {
-    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>
+    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected const string DefaultWidth = "width: 100%;";
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
@@ -53,9 +55,15 @@ namespace AntDesign
 
         protected TItemValue[] _selectedValues;
 
+        protected Func<TItem, string> _getLabel;
         protected Action<TItem, string> _setLabel;
 
+        protected Func<TItem, TItemValue> _getValue;
         protected Action<TItem, TItemValue> _setValue;
+
+
+        private string _labelName;
+        private string _valueName;
 
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
 
@@ -443,6 +451,49 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, string> ItemLabel { get => _getLabel; set => _getLabel = value; }
+
+        /// <summary>
+        /// Specifies the value property in the option object. If use this property, should not use <see cref="ValueName"/>
+        /// </summary>
+        [Parameter] public Func<TItem, TItemValue> ItemValue { get => _getValue; set => _getValue = value; }
+
+        /// <summary>
+        /// The name of the property to be used for the label.
+        /// </summary>
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
+                }
+                _labelName = value;
+            }
+        }
+
+        /// <summary>
+        /// The name of the property to be used for the value.
+        /// </summary>
+        [Parameter]
+        public string ValueName
+        {
+            get => _valueName;
+            set
+            {
+                _getValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, TItemValue>(value);
+                _valueName = value;
+            }
+        }
+
+        /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
         /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
@@ -778,7 +829,7 @@ namespace AntDesign
                     {
                         CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
-                        if (!SelectOptionItems.Any(x => x.Value.Equals(selectOption.Value)))
+                        if (!SelectOptionItems.Any(x => x.Value.AllNullOrEquals(selectOption.Value)))
                         {
                             SelectOptionItems.Add(selectOption);
                         }
@@ -1055,5 +1106,30 @@ namespace AntDesign
         }
 
         protected abstract void SetClassMap();
+
+
+        bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
+        {
+            if (_getLabel is null)
+            {
+                if (_getValue is null)
+                {
+                    return x.ToString() == y.ToString();
+                }
+                return x.ToString() == y.ToString()
+                    && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+            }
+            if (_getValue is null)
+            {
+                return _getLabel(x) == _getLabel(y);
+            }
+            return _getLabel(x) == _getLabel(y)
+                && EqualityComparer<TItemValue>.Default.Equals(_getValue(x), _getValue(y));
+        }
+
+        int IEqualityComparer<TItem>.GetHashCode(TItem obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

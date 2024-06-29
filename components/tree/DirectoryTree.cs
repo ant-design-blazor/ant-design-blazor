@@ -5,9 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+#endif
     public class DirectoryTree<TItem> : Tree<TItem>
     {
         public DirectoryTree()

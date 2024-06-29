@@ -63,10 +63,22 @@ namespace AntDesign
         /// <returns></returns>
         private async Task OnClick(MouseEventArgs args)
         {
-            SelfNode.SetSelected(!SelfNode.Selected);
+            if (SelfNode.Disabled)
+                return;
+            if (TreeComponent.ExpandOnClickNode && !SelfNode.IsLeaf)
+            {
+                await SelfNode.Expand(!SelfNode.Expanded);
+            }
+            if (TreeComponent.CheckOnClickNode && TreeComponent.Checkable)
+            {
+                SelfNode.SetChecked(!SelfNode.Checked);
+            }
+            else
+            {
+                SelfNode.SetSelected(!SelfNode.Selected);
+            }
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-            TreeComponent.UpdateBindData();
         }
 
         /// <summary>
@@ -98,7 +110,7 @@ namespace AntDesign
         private void OnDragStart(DragEventArgs e)
         {
             TreeComponent.DragItem = SelfNode;
-            SelfNode.Expand(false);
+            _ = SelfNode.Expand(false);
             if (TreeComponent.OnDragStart.HasDelegate)
                 TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -142,7 +154,7 @@ namespace AntDesign
             {
                 SelfNode.SetTargetBottom();
                 SelfNode.SetParentTargetContainer();
-                SelfNode.Expand(true);
+                _ = SelfNode.Expand(true);
             }
             else
             {

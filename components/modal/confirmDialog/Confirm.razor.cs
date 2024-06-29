@@ -68,7 +68,7 @@ namespace AntDesign
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ConfirmRef.IsCreateByModalService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.IsCreateByService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -181,7 +181,7 @@ namespace AntDesign
 
         private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByModalService)
+            if (ConfirmRef.IsCreateByService)
             {
                 await HandleOk(e);
             }
@@ -196,7 +196,7 @@ namespace AntDesign
 
         private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByModalService)
+            if (ConfirmRef.IsCreateByService)
             {
                 await HandleCancel(e);
             }

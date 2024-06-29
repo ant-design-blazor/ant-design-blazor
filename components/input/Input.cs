@@ -225,6 +225,9 @@ namespace AntDesign
         [Parameter]
         public bool ShowCount { get; set; }
 
+        [Parameter]
+        public string Width { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
@@ -284,6 +287,8 @@ namespace AntDesign
         protected bool IsFocused { get; set; }
 
         private string CountString => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
+
+        private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
         protected override void OnInitialized()
         {
@@ -389,7 +394,7 @@ namespace AntDesign
         {
             base.UpdateStyles();
             SetClasses();
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override void OnParametersSet()
@@ -624,7 +629,7 @@ namespace AntDesign
                 container = "groupWrapper";
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", GroupWrapperClass);
-                builder.AddAttribute(3, "style", WrapperStyle);
+                builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
                 builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
             }
@@ -650,7 +655,7 @@ namespace AntDesign
                 if (container == "input")
                 {
                     container = "affixWrapper";
-                    builder.AddAttribute(23, "style", WrapperStyle);
+                    builder.AddAttribute(23, "style", $"{WidthStyle} {WrapperStyle}");
                 }
                 if (WrapperRefBack != null)
                 {
@@ -670,7 +675,7 @@ namespace AntDesign
             // input
             builder.OpenElement(41, "input");
             builder.AddAttribute(42, "class", ClassMapper.Class);
-            builder.AddAttribute(43, "style", Style);
+            builder.AddAttribute(43, "style", $"{WidthStyle} {Style}");
 
             bool needsDisabled = Disabled;
             if (Attributes != null)
@@ -689,6 +694,11 @@ namespace AntDesign
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(NameAttributeValue))
+            {
+                builder.AddAttribute(46, "name", NameAttributeValue);
             }
 
             builder.AddAttribute(50, "id", Id);

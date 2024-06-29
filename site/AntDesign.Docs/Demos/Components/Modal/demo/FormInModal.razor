@@ -3,26 +3,39 @@
 <Button Type="primary" OnClick="@ShowModal">
     Open Modal with a Form
 </Button>
+
+<Button Type="primary" OnClick="@ShowModalWithService">
+    Open Modal with a Form with service
+</Button>
+
 <Modal Title="@("BasicModal")"
        @bind-Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
-    <Form Model="@model"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed"
-          @ref="@_form">
-        <FormItem Label="Username">
-            <Input @bind-Value="@context.Username" />
-        </FormItem>
-        <FormItem Label="Password">
-            <InputPassword @bind-Value="@context.Password" />
-        </FormItem>
-    </Form>
+         @FormTemplate()
 </Modal>
 
+@inject ModalService ModelService;
 @code {
+
+    RenderFragment FormTemplate()
+    {
+        return 
+        @<Form Model="@model"
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"
+              @ref="@_form">
+            <FormItem Label="Username">
+                <Input @bind-Value="@context.Username" />
+            </FormItem>
+            <FormItem Label="Password">
+                <InputPassword @bind-Value="@context.Password" />
+            </FormItem>
+        </Form>
+    ;
+    }
 
     bool _visible = false;
     bool _submitting = false;
@@ -73,5 +86,38 @@
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void ShowModalWithService()
+    {
+        ModalRef modalRef = default;
+        modalRef = ModelService.CreateModal(new()
+        {
+            Content = FormTemplate(),
+            OnOk = async e =>
+            {
+                modalRef?.SetConfirmLoading(true);
+                await Task.Delay(1000);
+                if (!_form.Validate())
+                {
+                    modalRef?.SetConfirmLoading(false);
+                    return;
+                }
+
+                _form.Submit();
+
+                await modalRef.CloseAsync();
+
+                 _form.Reset();
+            },
+            OnCancel = async e =>
+            {   
+                if (!_form.IsModified || await ModelService.ConfirmAsync(new() { Content = "Are you sure you want to discard the entries?" }))
+                {   
+                    await modalRef.CloseAsync();
+                     _form.Reset();
+                }
+            },
+        });
     }
 }

@@ -278,5 +278,31 @@ namespace AntDesign
             var num2 = Math.Floor(compareDate.Value.Year / 10d);
             return num1 == num2;
         }
+
+        public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, string picker)
+        {
+            return picker switch
+            {
+                DatePickerType.Date => AddDaysSafely(dateTime, -1),
+                DatePickerType.Year => AddYearsSafely(dateTime, -1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, -1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, -3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, -10),
+                _ => dateTime,
+            };
+        }
+
+        public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, string picker)
+        {
+            return picker switch
+            {
+                DatePickerType.Date => AddDaysSafely(dateTime, 1),
+                DatePickerType.Year => AddYearsSafely(dateTime, 1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, 1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, 3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, 10),
+                _ => dateTime,
+            };
+        }
     }
 }

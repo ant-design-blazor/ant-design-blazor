@@ -9,14 +9,11 @@
         {
             if (Demo.Iframe > 0)
             {
-                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={DemoId}&type={Demo.Type}")" />
+                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@(Demo.Link??$"/mock?demoId={DemoId}&type={Demo.Type}")" />
             }
-            else
+            else if (_demoType != null)
             {
-                @if (_demoType != null)
-                {
-                    <DynamicComponent Type="_demoType" />
-                }
+               <DynamicComponent Type="_demoType" />
             }
         }
         else
@@ -27,7 +24,7 @@
     <section class="code-box-meta markdown">
         <div class="code-box-title" @onclick="@AnchorClick">
             <a @onclick="AnchorClick">@Demo.Title</a>
-            <Tooltip Title="@lang.Resources["app.content.edit-demo"]">
+            <Tooltip Title="@Localizer["app.content.edit-demo"]">
                 <Unbound>
                     <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
                         <Icon Type="edit" />
@@ -39,12 +36,12 @@
             @((MarkupString)Demo.Description)
         </div>
         <div class="code-box-actions">
-            <Tooltip Title="@lang.Resources[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
+            <Tooltip Title="@Localizer[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
                 <Unbound>
                     <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
-            <Tooltip Title="@(CodeExpand?lang.Resources["app.demo.code.hide"] : lang.Resources["app.demo.code.show"])">
+            <Tooltip Title="@(CodeExpand? Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
                 <Unbound>
                     <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
                         <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
@@ -67,8 +64,8 @@
 
 @inject InteropService InteropService
 @inject DemoService demoService;
-@inject ILanguageService lang;
-
+@inject ILocalizationService lang;
+@inject IStringLocalizer Localizer;
 @code {
 
     [Parameter]
@@ -97,7 +94,7 @@
 
 #if DEBUG
         DebugIcon =
-    @<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
+    @<a href="@($"{(Demo.Link??"mock")}?type={Demo.Type}")" class="code-box-code-action" target="_blank">
             <Icon Type="bug" />
     </a>
     ;

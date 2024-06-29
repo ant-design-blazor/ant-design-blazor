@@ -14,6 +14,9 @@ using Microsoft.JSInterop;
 using System.Reflection;
 using AntDesign.core.Services;
 using AntDesign.Table.Internal;
+using AntDesign.Core.Reflection;
+using System.Diagnostics.CodeAnalysis;
+
 
 #if NET5_0_OR_GREATER
 
@@ -27,10 +30,15 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
+#if NETCOREAPP3_1_OR_GREATER
+    public partial class Table<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
+#else
     public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
+#endif
     {
         private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
-            : !typeof(TItem).IsAbstract ? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
+            : !typeof(TItem).IsAbstract ? ExpressionActivator<TItem>.CreateInstance()
+            ?? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
             : default;
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -200,7 +208,7 @@ namespace AntDesign
 
         [Inject]
         private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
-        
+
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
@@ -290,6 +298,7 @@ namespace AntDesign
 
         void ITable.OnExpandChange(RowData rowData)
         {
+            _preventRender = true;
             if (OnExpand.HasDelegate)
             {
                 OnExpand.InvokeAsync(rowData as RowData<TItem>);
@@ -446,8 +455,6 @@ namespace AntDesign
                 return;
             }
 
-            FlushCache();
-
             var queryModel = this.InternalReload();
             StateHasChanged();
             if (OnChange.HasDelegate)
@@ -477,7 +484,6 @@ namespace AntDesign
 
             if (ServerSide)
             {
-                FlushCache();
                 _showItems = _dataSource ?? Enumerable.Empty<TItem>();
                 _total = Total;
             }
@@ -503,6 +509,8 @@ namespace AntDesign
 
                 _shouldRender = true;
             }
+
+            FlushCache();
 
             if (_groupedColumns.Count > 0)
             {
@@ -710,7 +718,7 @@ namespace AntDesign
 
                 if (ScrollY != null && ScrollBarWidth == null)
                 {
-                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync(); 
+                    var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
                     _realScrollBarSize = $"{scrollBarSize}px";
                 }
 
@@ -837,6 +845,9 @@ namespace AntDesign
         {
             if (RowKey == null)
                 RowKey = data => data;
+
+            if (x is null && y is null)
+                return true;
 
             return RowKey(x).Equals(RowKey(y));
         }

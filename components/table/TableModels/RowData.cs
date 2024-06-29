@@ -84,7 +84,11 @@ namespace AntDesign.TableModels
 
         internal void SetExpanded(bool expanded)
         {
-            _expanded = expanded;
+            if (_expanded != expanded)
+            {
+                _expanded = expanded;
+                ExpandedChanged?.Invoke(this, _expanded);
+            }
         }
 
         protected abstract void CheckedChildren(bool isSelected, bool checkStrictly);
@@ -93,7 +97,7 @@ namespace AntDesign.TableModels
         {
             TableDataItem.SetSelected(isSelected);
 
-            if (checkStrictly)
+            if (!checkStrictly)
             {
                 CheckedChildren(isSelected, checkStrictly);
             }
