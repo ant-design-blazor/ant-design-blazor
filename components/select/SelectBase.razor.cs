@@ -988,6 +988,10 @@ namespace AntDesign
 
         private async Task ClearDefaultMode()
         {
+            if (SelectedOptionItems.Count == 0)
+            {
+                return;
+            }
             if (_hasValueOnClear && EqualityComparer<TItemValue>.Default.Equals(Value, _valueOnClear))
             {
                 return; //nothing to do, already cleared; mostly to avoid redoing OnInputClearClickAsync when issued from OnParameterSet() => OnValueChange() => OnInputClearClickAsync()
