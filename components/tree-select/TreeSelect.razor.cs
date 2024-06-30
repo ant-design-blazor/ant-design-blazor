@@ -54,15 +54,7 @@ namespace AntDesign
 
         [Parameter] public bool CheckOnClickNode { get; set; } = true;
 
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
-
-        [Parameter] public Action OnMouseEnter { get; set; }
-
-        [Parameter] public Action OnMouseLeave { get; set; }
-
         [Parameter] public Action OnBlur { get; set; }
-
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
         [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
 
@@ -71,10 +63,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
-
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
-
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
 
         [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
 
@@ -171,19 +159,21 @@ namespace AntDesign
         [Parameter]
         public string[] ExpandedKeys { get; set; }
 
-        private const string ClassPrefix = "ant-select";
-
         private bool IsMultiple => Multiple || TreeCheckable;
 
         private bool IsTemplatedNodes => ChildContent != null;
 
         internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
 
-        private string _dropdownStyle = string.Empty;
         private bool _multiple;
         private bool _treeCheckable;
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
+
+        /// <summary>
+        /// 树控件本身
+        /// </summary>
+        public Tree<TItem> TreeComponent { get => _tree; }
 
         [Parameter]
         public override TItemValue Value
@@ -314,11 +304,7 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
-        private void OnKeyDownAsync(KeyboardEventArgs args)
-        {
-        }
-
-        protected async void OnInputAsync(ChangeEventArgs e)
+        protected override async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)
@@ -340,21 +326,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected async Task OnKeyUpAsync(KeyboardEventArgs e)
-        {
-        }
-
-        protected async Task OnInputFocusAsync(FocusEventArgs _)
-        {
-            await SetInputFocusAsync();
-        }
-
-        protected async Task OnInputBlurAsync(FocusEventArgs _)
-        {
-            await SetInputBlurAsync();
-        }
-
-        protected async Task SetInputBlurAsync()
+        protected override async Task SetInputBlurAsync()
         {
             if (Focused)
             {
@@ -368,7 +340,7 @@ namespace AntDesign
             }
         }
 
-        private async Task OnOverlayVisibleChangeAsync(bool visible)
+        protected override async Task OnOverlayVisibleChangeAsync(bool visible)
         {
             if (visible)
             {
@@ -382,7 +354,7 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
+        protected override async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);

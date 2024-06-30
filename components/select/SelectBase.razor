@@ -1,0 +1,72 @@
+﻿@namespace AntDesign
+@inherits AntInputComponentBase<TItemValue>
+@typeparam TItemValue
+@typeparam TItem
+
+@using AntDesign.Internal
+@using AntDesign.Select.Internal
+
+<CascadingValue Value="this" IsFixed="IsSelectFixed()">
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
+            <OverlayTrigger @ref="@_dropDown"
+                            Visible="Open"
+                            Disabled="Disabled"
+                            Trigger="new[] { Trigger.Click }"
+                            HiddenMode
+                            BoundaryAdjustMode="@BoundaryAdjustMode"
+                            OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
+                            OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
+                            OnVisibleChange="@OnOverlayVisibleChangeAsync"
+                            PopupContainerSelector="@PopupContainerSelector"
+                            OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                            OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
+                <Overlay>
+                    <div style="@_dropdownStyle">
+                        @if (DropdownRender != null)
+                        {
+                            @DropdownRender(RenderOptionDropdown())
+                        }
+                        else
+                        {
+                            @RenderOptionDropdown()
+                        }
+                    </div>                    
+                </Overlay>
+                <Unbound>
+                    <CascadingValue Value="this" Name="ParentSelect" IsFixed>
+                        <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
+                            <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
+                                <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
+                                    <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                                        <SelectContent Prefix="@ClassPrefix"
+                                                       RefBack="@context"
+                                                       @ref="_selectContent"
+                                                       TItemValue="TItemValue"
+                                                       TItem="TItem"
+                                                       SearchValue="@_searchValue"
+                                                       SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
+                                                       IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                       MaxTagCount="@_maxTagCountAsInt"
+                                                       OnInput="@OnInputAsync"
+                                                       OnKeyUp="@OnKeyUpAsync"
+                                                       OnKeyDown="@OnKeyDownAsync"
+                                                       OnFocus="@OnInputFocusAsync"
+                                                       OnBlur="@OnInputBlurAsync"
+                                                       OnClearClick="@OnInputClearClickAsync"
+                                                       OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                       Placeholder="@Placeholder" />
+                                    </CascadingValue>
+                                </CascadingValue>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                </Unbound>
+            </OverlayTrigger>
+        </div>
+    </CascadingValue>
+</CascadingValue>
+
+@code {
+    protected abstract RenderFragment RenderOptionDropdown();
+}
