@@ -88,8 +88,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  展开所有节点  | void  |   |   |
-| CollapseAll |  关闭所有节点 | void  |   |   |
+| ExpandAll  |  展开所有树节点  | void  |   |   |
+| CollapseAll |  折叠所有树节点 | void  |   |   |
+| CheckAll  |  递归勾选所有树节点  | void  |   |   |
+| UnCheckAll |  递归取消勾选所有树节点 | void  |   |   |
+| SelectAll  |  选择所有树节点  | void  |   |   |
+| DeselectAll |  取消选择所有树节点 | void  |   |   |
 
 ### Tree RenderFragment
 
@@ -119,3 +123,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | DataItem | 数据项  |  Type |  |   | 
 | SwitcherIcon | 该节点的展开图标 | string | null | |
 | SwitcherIconTemplate | 该节点的展开图标 | RenderFragment | null | |
+
+### TreeNode Functions
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| CheckAllChildren  |  递归勾选当前节点下的所有子节点（含当前节点）  | void  |   |   |
+| UnCheckAllChildren |  递归取消勾选当前节点下的所有子节点（含当前节点） | void  |   |   |

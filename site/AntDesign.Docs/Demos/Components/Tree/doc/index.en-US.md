@@ -87,8 +87,12 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  All tree nodes are expanded by default  | void  |   |   |
-| CollapseAll |  The parent node is expanded by default | void  |   |   |
+| ExpandAll  |  Expand all the tree nodes  | void  |   |   |
+| CollapseAll |  Collapse all the tree nodes | void  |   |   |
+| CheckAll  |  Recursively check all the tree nodes  | void  |   |   |
+| UnCheckAll |  Recursively uncheck all the tree nodes | void  |   |   |
+| SelectAll  |  Select all the tree nodes  | void  |   |   |
+| DeselectAll |  Deselect all the tree nodes | void  |   |   |
 
 ### Tree RenderFragment
 
@@ -119,3 +123,9 @@ Almost anything can be represented in a tree structure. Examples include directo
 | DataItem | dataitem |  Type |  |   | 
 | SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |
+
+### TreeNode Functions
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| CheckAllChildren  |  Recursively check all child nodes (including the current node)  | void  |   |   |
+| UnCheckAllChildren |  Recursively uncheck all child nodes (including the current node) | void  |   |   |
