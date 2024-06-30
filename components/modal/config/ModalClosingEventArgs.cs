@@ -19,7 +19,7 @@ namespace AntDesign
         /// Whether the closing should be cancelled.
         /// Setting true if the closing should be cancelled; default is false.
         /// 是否应取消关闭Modal。
-        /// 如果应取消关闭，请设置 true; 默认未 false。
+        /// 如果应取消关闭，请设置为 true; 默认为 false。
         /// </summary>
         public bool Cancel { get; set; }
 
