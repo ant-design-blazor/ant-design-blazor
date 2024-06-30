@@ -2,6 +2,7 @@
 @using System.ComponentModel
 
 <Form Model="@model" TModel="Model"
+      ValidateMode="@FormValidateMode.Complex"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
@@ -25,7 +26,7 @@
 {
     public class Model
     {
-        [DisplayName("StringTest")] [Required] public string A { get; set; }
+        [DisplayName("StringTest")] public string A { get; set; }
 
         [DisplayName("StringTest nullable")] public string? B { get; set; }
 
@@ -51,6 +52,7 @@
 
         [DisplayName("DefinitionsTest")] public string J { get; set; }
 
+        [ValidateComplexType]
         public ModelChild ModelChild { get; set; }
     }
 
@@ -83,6 +85,7 @@
 
         public string JJ { get; set; }
         
+        [ValidateComplexType]
         public ModelChild2 ModelChild2 { get; set; }
     }
 
@@ -105,7 +108,7 @@
         {
             return new FormValidationRule[]
             {
-                new FormValidationRule { Required = true, Max = 10 }
+                new FormValidationRule { Required = true, Min = 5, Max = 10 }
             };
         }
         if (structurePath == "ModelChild.AA")
