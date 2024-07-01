@@ -265,30 +265,30 @@ namespace AntDesign
                 _tree?._allNodes.ForEach(x => x.SetSelected(false));
         }
 
-        private void CreateOptions(IEnumerable<TItemValue> data)
+        private void CreateOptions(IEnumerable<TItemValue> values)
         {
-            data.ForEach(menuId =>
+            values.ForEach(value =>
             {
-                var d = _tree._allNodes.FirstOrDefault(m => m.Key == GetTreeKeyFormValue(menuId));
+                var d = _tree._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
                 if (d != null)
                 {
-                    var o = CreateOption(d, true);
+                    _ = CreateOption(d, true);
                 }
             });
         }
 
-        private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> data, bool append = false)
+        private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> node, bool append = false)
         {
             if (!TreeCheckable || TreeCheckStrictly || (ShowCheckedStrategy == TreeCheckedStrategy.ShowAll)
-                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((data.ParentNode == null) || (!_cachedValues.Contains(_getValue(data.ParentNode.DataItem)))))
-                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowChild) && !data.HasChildNodes))
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(_getValue(node.ParentNode.DataItem)))))
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowChild) && !node.HasChildNodes))
             {
                 var o = new SelectOptionItem<TItemValue, TItem>()
                 {
-                    Label = data.Title,
-                    LabelTemplate = data.TitleTemplate,
-                    Value = THelper.ChangeType<TItemValue>(data.Key),
-                    Item = data.DataItem,
+                    Label = node.Title,
+                    LabelTemplate = node.TitleTemplate,
+                    Value = GetValueFromNode(node),
+                    Item = node.DataItem,
                     IsAddedTag = SelectMode != SelectMode.Default,
                 };
                 if (append && !SelectOptionItems.Any(m => m.Value.AllNullOrEquals(o.Value)))
