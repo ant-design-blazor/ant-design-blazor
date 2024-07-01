@@ -75,6 +75,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | TreeCheckable |  是否可勾选节点 | boolean  | false  |   |
+| TreeCheckStrictly | checkable 状态下节点选择完全受控（父子节点选中状态不再关联） | boolean  | false  |   |
+| ShowCheckedStrategy | 配置 treeCheckable 时，定义选中项回填的方式。ShowAll: 显示所有选中节点(包括父节点)。ShowParent: 只显示父节点(当父节点下所有子节点都选中时)。 默认只显示子节点 | TreeCheckedStrategy  | ShowChild  |   |
 | CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
