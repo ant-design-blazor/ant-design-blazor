@@ -88,6 +88,8 @@ Tree selection control.
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 
