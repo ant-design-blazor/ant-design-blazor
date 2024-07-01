@@ -75,6 +75,8 @@ Tree selection control.
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | TreeCheckable | Whether can be checked | boolean  | false  |   |
+| TreeCheckStrictly | Check treeNode precisely; parent treeNode and children treeNodes are not associated | boolean  | false  |   |
+| ShowCheckedStrategy | The way show selected item in box when treeCheckable set. Default: just show child nodes. ShowAll: show all checked treeNodes (include parent treeNode). ShowParent: show checked treeNodes (just show parent treeNode) | TreeCheckedStrategy  | ShowChild  |   |
 | CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |

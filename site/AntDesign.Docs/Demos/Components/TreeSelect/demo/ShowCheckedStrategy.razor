@@ -1,30 +1,41 @@
-<TreeSelect @ref="_treeSelect" Style=" width:100%;"
+﻿<Space>
+    <SpaceItem>
+        CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
+    </SpaceItem>
+    <SpaceItem>
+        ShowCheckedStrategy: 
+        <RadioGroup @bind-Value="_showCheckedStrategy">
+            <Radio RadioButton Value="TreeCheckedStrategy.ShowChild">ShowChild</Radio>
+            <Radio RadioButton Value="TreeCheckedStrategy.ShowParent">ShowParent</Radio>
+            <Radio RadioButton Value="TreeCheckedStrategy.ShowAll">ShowAll</Radio>
+        </RadioGroup>
+    </SpaceItem>
+</Space>
+<br />
+<br />
+<TreeSelect Style="width:100%;"
             DataSource="treeData"
             @bind-Values="@values"
             Placeholder="Please select"
             AllowClear
             TreeCheckable
-            TreeCheckStrictly
+            TreeCheckStrictly="_checkStrictly"
+            ShowCheckedStrategy="_showCheckedStrategy"
+            CheckOnClickNode
             TreeDefaultExpandAll
             ItemValue="node=> node.Key"
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
             KeyExpression="node=>node.DataItem.Key"
             IsLeafExpression="node=>node.DataItem.Children==null">
-    <DropdownRender Context="originNode">
-        <div>
-            @originNode
-            <Divider Style="margin: 4px 0"></Divider>
-            <Button OnClick="CheckAll">Check All</Button>
-            <Button OnClick="UncheckAll">Uncheck All</Button>
-        </div>
-    </DropdownRender>
 </TreeSelect>
 
 @JsonSerializer.Serialize(values);
 
 @code {
-    private IEnumerable<string> values = new[] { "1", "11" };
+    private IEnumerable<string> values = new[] { "1" };
+    TreeCheckedStrategy _showCheckedStrategy = TreeCheckedStrategy.ShowParent;
+    bool _checkStrictly = false;
 
     Data[] treeData = new Data[]
     {
@@ -33,20 +44,20 @@
             Title = "Node1",
             Key="1",
             Children = new Data[]
-        {
+    {
                 new()
                 {
                     Title = "Child Node1",
                     Key="11",
                 },
-        }
+    }
         },
         new()
         {
             Title = "Node2",
             Key="2",
             Children = new Data[]
-        {
+    {
                 new()
                 {
                     Title ="Child Node3",
@@ -62,7 +73,7 @@
                     Title ="Child Node5",
                     Key="23",
                 }
-        }
+    }
         }
     };
 
@@ -72,16 +83,5 @@
         public Data Value => this;
         public string Title { get; set; }
         public IEnumerable<Data> Children { get; set; }
-    }
-
-    private TreeSelect<string, Data> _treeSelect;
-
-    private void CheckAll()
-    {
-        _treeSelect.TreeComponent.CheckAll();
-    }
-    private void UncheckAll()
-    {
-        _treeSelect.TreeComponent.UncheckAll();
     }
 }
