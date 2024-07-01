@@ -68,7 +68,7 @@ namespace AntDesign
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ConfirmRef.IsCreateByService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.IsCreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -125,7 +125,7 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleOk(MouseEventArgs e)
+        private async Task HandleOk(MouseEventArgs e, ConfirmResult confirmResult)
         {
             var args = new ModalClosingEventArgs(e, false);
 
@@ -148,11 +148,11 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.OK);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
-        private async Task HandleCancel(MouseEventArgs e)
+        private async Task HandleCancel(MouseEventArgs e, ConfirmResult confirmResult)
         {
             var args = new ModalClosingEventArgs(e, false);
 
@@ -175,7 +175,7 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.Cancel);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
@@ -183,7 +183,7 @@ namespace AntDesign
         {
             if (ConfirmRef.IsCreateByService)
             {
-                await HandleOk(e);
+                await HandleOk(e, confirmResult);
             }
             else
             {
@@ -198,7 +198,7 @@ namespace AntDesign
         {
             if (ConfirmRef.IsCreateByService)
             {
-                await HandleCancel(e);
+                await HandleCancel(e, confirmResult);
             }
             else
             {
