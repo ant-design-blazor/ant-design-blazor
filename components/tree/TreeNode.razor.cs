@@ -1017,6 +1017,10 @@ namespace AntDesign
                 {
                     isChecked = true;
                 }
+                else if (!TreeComponent.CheckStrictly && ParentNode != null && ParentNode.Checked)
+                {
+                    isChecked = true;
+                }
                 else
                 {
                     var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;

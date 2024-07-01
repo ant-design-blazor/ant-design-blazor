@@ -77,6 +77,8 @@ Tree selection control.
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | TreeCheckable | Whether can be checked | boolean  | false  |   |
+| TreeCheckStrictly | Check treeNode precisely; parent treeNode and children treeNodes are not associated | boolean  | false  |   |
+| ShowCheckedStrategy | The way show selected item in box when treeCheckable set. Default: just show child nodes. ShowAll: show all checked treeNodes (include parent treeNode). ShowParent: show checked treeNodes (just show parent treeNode) | TreeCheckedStrategy  | ShowChild  |   |
 | CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
@@ -90,6 +92,8 @@ Tree selection control.
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 
