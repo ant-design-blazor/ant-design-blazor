@@ -31,6 +31,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 指示搜索功能是否处于活动状态。 对于Mode = `tags` 始终为 `true`。 | bool | false |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
+| ItemValue    | 指定 Item 中作为选项 Value 的属性，也可以指定 Item 本身。(替代 ValueName）| Func<TITem,TItemValue> |  -  |
+| ItemLabel    | 指定 Item 中作为选项 Label 的属性。(替代 LabelName）| Func<TITem,string> |  -  |
 | LabelInValue | 是否在 value 中嵌入标签，将 value 的格式从 `TItemValue` 转换为 string (JSON) e.g. { "value": `TItemValue`, "label": "`标签值`" } | bool | false |  |
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |

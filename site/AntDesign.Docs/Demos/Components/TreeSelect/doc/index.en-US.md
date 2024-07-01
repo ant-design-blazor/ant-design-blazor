@@ -31,6 +31,8 @@ Tree selection control.
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
+| ItemValue    | Specify the property in Item that is the Value of the option, can also specify the Item itself. (Used instead of ValueName) | Func<TITem,TItemValue> |  -  |
+| ItemLabel    | Specifies the property in Item that is the option Label. (Used instead of LabelName)| Func<TITem,string> |  -  |
 | LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |

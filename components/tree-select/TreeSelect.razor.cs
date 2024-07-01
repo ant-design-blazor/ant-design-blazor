@@ -243,18 +243,18 @@ namespace AntDesign
                 _tree?._allNodes.ForEach(x => x.SetSelected(false));
         }
 
-        private void CreateOptions(IEnumerable<TItemValue> data)
+        private void CreateOptions(IEnumerable<TItemValue> values)
         {
             if (IsTemplatedNodes)
             {
-                var d1 = data.Where(d => !SelectOptionItems.Any(o => o.Value.AllNullOrEquals(d)));
+                var d1 = values.Where(d => !SelectOptionItems.Any(o => o.Value.AllNullOrEquals(d)));
                 CreateOptionsByTreeNode(d1);
                 return;
             }
 
-            data.ForEach(menuId =>
+            values.ForEach(value =>
             {
-                var d = _tree._allNodes.FirstOrDefault(m => m.Key.AllNullOrEquals(menuId));
+                var d = _tree._allNodes.FirstOrDefault(m => _getValue(m.DataItem).AllNullOrEquals(value));
                 if (d != null)
                 {
                     var o = CreateOption(d, true);
@@ -280,7 +280,7 @@ namespace AntDesign
             {
                 Label = data.Title,
                 LabelTemplate = data.TitleTemplate,
-                Value = THelper.ChangeType<TItemValue>(data.Key),
+                Value = _getValue(data.DataItem),
                 Item = data.DataItem,
                 IsAddedTag = SelectMode != SelectMode.Default,
             };
