@@ -72,6 +72,12 @@ namespace AntDesign
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
 
+        [Parameter]
+        public bool TreeDefaultExpandParent { get; set; }
+
+        [Parameter]
+        public string[] TreeDefaultExpandedKeys { get; set; }
+
         [Parameter] public bool ExpandOnClickNode { get; set; } = false;
 
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }

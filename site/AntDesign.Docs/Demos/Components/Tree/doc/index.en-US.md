@@ -49,7 +49,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | DefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | DefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
-| DefaultExpandedKeys  |  Expand the specified tree node by default | string[]  | null |   |
+| DefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | AutoExpandParent | Whether to automatically expand a parent treeNode | bool | false |  |
 | ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |

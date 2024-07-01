@@ -88,6 +88,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 | ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 
