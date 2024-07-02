@@ -361,7 +361,7 @@ namespace AntDesign
         /// </summary>
         internal void UpdateSelectedKeys()
         {
-            var selectedNodes = _allNodes.Where(r => r.Selected || (IncludeIndeterminate && r.Indeterminate)).ToList();
+            var selectedNodes = _allNodes.Where(r => r.Selected).ToList();
             if (selectedNodes.Count == 0)
             {
                 ResetSelectedKeys();
