@@ -1,0 +1,25 @@
+<Popconfirm Title="Are you sure delete this task?"
+            OnConfirm="Confirm"
+            OkButtonProps="new(){ Loading = loading }"
+            CancelButtonProps="new(){ Disabled = true }"
+            OkText="Yes"
+            CancelText="No">
+    <a>Delete a task</a>
+</Popconfirm>
+
+@code{
+    private bool loading = false;
+
+    private async Task Confirm()
+    {
+        loading = true;
+        StateHasChanged();
+
+        await Task.Delay(1000);
+
+        _visible = false;
+        _message.Success("Next step.");
+
+        loading = false;
+    }
+}
