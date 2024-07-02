@@ -121,7 +121,7 @@ namespace AntDesign
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)
-                .If("ant-tree-unselectable", () => !Selectable)
+                .If("ant-tree-unselectable", () => !Selectable && !CheckOnClickNode)
                 .If("ant-tree-rtl", () => RTL);
         }
 
