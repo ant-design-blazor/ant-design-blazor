@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AntDesign.Core.Helpers
@@ -14,19 +15,14 @@ namespace AntDesign.Core.Helpers
         {
             List<TItem> result = new List<TItem>();
 
-            Stack<TItem> stack = new Stack<TItem>();
             foreach (var item in root)
             {
-                stack.Push(item);
-            }
+                result.Add(item);
 
-            while (stack.Count > 0)
-            {
-                var current = stack.Pop();
-                result.Add(current);
-                foreach (var child in getChildren(current))
+                var children = getChildren(item);
+                if (children.Any())
                 {
-                    stack.Push(child);
+                    result.AddRange(FlattenTree(children, getChildren));
                 }
             }
 

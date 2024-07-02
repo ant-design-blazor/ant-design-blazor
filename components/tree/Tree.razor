@@ -24,7 +24,7 @@
         <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
             <div class="ant-tree-list">
                 <div class="ant-tree-list-holder-inner">
-                    @foreach (var item in TreeDataHelper.FlattenTree(_allNodes, nodes=> nodes.ChildNodes))
+                    @foreach (var item in TreeDataHelper.FlattenTree(_allNodes.Where(x => x.ParentNode == null), nodes => nodes.ChildNodes))
                     {
                         @item.RenderTreeNote()
                     }
