@@ -94,9 +94,11 @@ namespace AntDesign.Docs.Pages
 
         private async Task HandleNavigate()
         {
-            var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-            fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName.Substring(fullPageName.IndexOf('/') + 1) : fullPageName;
-            fullPageName = fullPageName.IndexOf('#') > 0 ? fullPageName.Substring(0, fullPageName.IndexOf('#')) : fullPageName;
+            if (!_rendered) return;
+
+            var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Trim('/');
+            fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName[(fullPageName.IndexOf('/') + 1)..] : fullPageName;
+            fullPageName = fullPageName.IndexOf('#') > 0 ? fullPageName[..fullPageName.IndexOf('#')] : fullPageName;
             if (fullPageName.StartsWith("docs"))
             {
                 return;
