@@ -1,0 +1,83 @@
+﻿<div>
+    <SpaceCompact Block>
+      <SpaceCompact>
+        <SpaceCompact>
+          <Input TValue="string" Style=" width: 90px; " Placeholder="Typing..." />
+          <Button Icon="search" />
+        </SpaceCompact>
+        <SpaceCompact>
+          <AntDesign.InputNumber TValue="int" DefaultValue="12" />
+                <SimpleSelect DefaultValue="Option1">
+                    <SimpleSelectOption Value="Option1">Opt1</SimpleSelectOption>
+                    <SimpleSelectOption Value="Option2">Opt2</SimpleSelectOption>
+                </SimpleSelect>
+        </SpaceCompact>
+      </SpaceCompact>
+      <Button Type="primary">Separator</Button>
+      <SpaceCompact>
+        <SpaceCompact>
+          <Search Style=" width: 110px " Placeholder="Search" />
+          <Button Type="primary">Submit</Button>
+        </SpaceCompact>
+        <SpaceCompact>
+          <Input TValue="string" DefaultValue="@("mysite")" />
+          <Button Icon="copy" />
+        </SpaceCompact>
+      </SpaceCompact>
+    </SpaceCompact>
+    <div>
+      <br />
+      <SpaceCompact Block>
+        <SpaceCompact>
+          <TimePicker TValue="DateTime?"/>
+          <Button Type="primary">Submit</Button>
+        </SpaceCompact>
+        <SpaceCompact>
+          <Cascader Options="options"
+            Placeholder="Select Address"
+          />
+          <Button Type="primary">Submit</Button>
+        </SpaceCompact>
+      </SpaceCompact>
+    </div>
+  </div>
+
+@code{
+    List<CascaderNode> options = new List<CascaderNode>()
+        {
+            new() {
+                Value= "zhejiang",
+                Label= "Zhejiang",
+                Children= new CascaderNode[] {
+                 new() {
+                    Value= "hangzhou",
+                    Label= "Hangzhou",
+                    Children= new CascaderNode[]{
+                        new() {
+                            Value= "xihu",
+                            Label= "West Lake",
+                        },
+                },
+                }   ,
+            },
+            },
+            new() {
+                Value= "jiangsu",
+                Label= "Jiangsu",
+                Children=new  CascaderNode[]{
+
+                new() {
+                    Value= "nanjing",
+                    Label= "Nanjing",
+                    Children=new CascaderNode[]{
+
+                      new()   {
+                        Value= "zhonghuamen",
+                        Label= "Zhong Hua Men",
+                        },
+                    },
+                },
+             },
+          },
+    };
+}
