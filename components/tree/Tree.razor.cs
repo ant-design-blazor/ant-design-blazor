@@ -12,6 +12,7 @@ using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
 
 namespace AntDesign
 {
@@ -29,6 +30,8 @@ namespace AntDesign
         /// All of the node
         /// </summary>
         internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
+
+        internal List<TreeNode<TItem>> _flattedNodes = new List<TreeNode<TItem>>();
 
         /// <summary>
         /// All the checked nodes
@@ -109,6 +112,8 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string SwitcherIcon { get; set; }
+
+        [Parameter] public bool Virtualize { get; set; }
 
         public bool Directory { get; set; }
 

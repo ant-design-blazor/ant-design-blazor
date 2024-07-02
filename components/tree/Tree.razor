@@ -21,15 +21,38 @@
     }
 
     <AntDesign.Core.Component.Defer>
+        @{
+            _flattedNodes = TreeDataHelper.FlattenTree(_allNodes.Where(x => x.ParentNode == null), nodes => nodes.ChildNodes);
+        }
         <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
             <div class="ant-tree-list">
                 <div class="ant-tree-list-holder-inner">
-                    @foreach (var item in TreeDataHelper.FlattenTree(_allNodes.Where(x => x.ParentNode == null), nodes => nodes.ChildNodes))
+                    @if (Virtualize)
                     {
-                        @item.RenderTreeNote()
+                       <Virtualize 
+                         TItem="TItem"
+                         Items="@_flattedNodes"
+                         ItemContent="content"
+                        />
                     }
+                    else
+                    {
+                        @foreach (var item in _flattedNodes)
+                        {
+                            @item.RenderTreeNote()
+                        }
+                    }
+
                 </div>
             </div>
         </div>
     </AntDesign.Core.Component.Defer>
 </CascadingValue>
+
+
+@code{
+    RenderFragment content(TreeNode<TItem> item)
+    {
+        return b => b.AddContent(0, item.RenderTreeNote());
+    }
+}
