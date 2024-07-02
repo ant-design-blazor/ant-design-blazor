@@ -1,0 +1,61 @@
+﻿@inherits LayoutComponentBase
+<Layout Id="reuse-tabs-layout">
+    <Sider NoTrigger>
+        <div class="logo" />
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline">
+            <MenuItem Icon="user" RouterLink="/reuse/title-attribute">Home</MenuItem>
+            <MenuItem Icon="block" RouterLink="/reuse/dynamic-title">Dynamic title</MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Class="site-layout">
+        <Header Class="site-layout-background" Style="padding: 0;">
+            <Icon Type="@IconType.Outline.Reload" Theme="outline" Class="trigger" OnClick="Reload" />
+        </Header>
+
+        <ReuseTabs Style="margin: 16px;">
+            <Body>
+                <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;">
+                    @context.Body
+                </Content>
+            </Body>
+        </ReuseTabs>
+
+    </Layout>
+</Layout>
+
+<style>
+    #reuse-tabs-layout .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+        #reuse-tabs-layout .trigger:hover {
+            color: #1890ff;
+        }
+
+    #reuse-tabs-layout .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+
+    #reuse-tabs-layout .site-layout .site-layout-background {
+        background: #fff;
+    }
+
+    #reuse-tabs-layout .ant-tabs-content {
+        margin-top: -16px;
+        border: 1px solid #f0f0f0;
+    }
+</style>
+
+@inject ReuseTabsService ReuseTabsService
+@code {
+    void Reload()
+    {
+        ReuseTabsService.ReloadPage();
+    }
+}

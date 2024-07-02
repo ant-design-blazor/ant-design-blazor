@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
@@ -23,12 +24,12 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
         private readonly Lazy<IDictionary<string, string>> _resources;
         private readonly Lazy<IDictionary<string, string>> _fallbackResources;
 
-        public SimpleEmbeddedJsonStringLocalizer(string resourceName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<SimpleEmbeddedJsonStringLocalizer> logger)
+        public SimpleEmbeddedJsonStringLocalizer(string resourceName, Assembly resourceAssembly, CultureInfo cultureInfo, IOptions<SimpleStringLocalizerOptions> options)
         {
             _resources = new Lazy<IDictionary<string, string>>(
-                () => ReadResources(resourceName, resourceAssembly, cultureInfo, logger, isFallback: false));
+                () => ReadResources(resourceName, resourceAssembly, cultureInfo, options, isFallback: false));
             _fallbackResources = new Lazy<IDictionary<string, string>>(
-                () => ReadResources(resourceName, resourceAssembly, cultureInfo.Parent, logger, isFallback: true));
+                () => ReadResources(resourceName, resourceAssembly, cultureInfo.Parent, options, isFallback: true));
         }
 
         public LocalizedString this[string name]
@@ -68,27 +69,32 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
                 _fallbackResources.Value.TryGetValue(name, out value);
         }
 
-        private static IDictionary<string, string> ReadResources(string resourcePathName, Assembly resourceAssembly, CultureInfo cultureInfo, ILogger<SimpleEmbeddedJsonStringLocalizer> logger, bool isFallback)
+        private static IDictionary<string, string> ReadResources(string resourcePathName, Assembly resourceAssembly, CultureInfo cultureInfo, IOptions<SimpleStringLocalizerOptions> options, bool isFallback)
         {
-            var availableResources = resourceAssembly
-                .GetManifestResourceNames()
-                .Select(x => Regex.Match(x, $@"^.*{resourcePathName}\.(.+)\.json"))
-                .Where(x => x.Success)
-                .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
-                .ToList();
+            return options.Value.GetResource(cultureInfo.Name) ?? new Dictionary<string, string>();
 
-            var (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
+            //var availableResources = resourceAssembly
+            //    .GetManifestResourceNames()
+            //    .Select(x => Regex.Match(x, $@"^.*{resourcePathName}\.(.+)\.json"))
+            //    .Where(x => x.Success)
+            //    .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
+            //    .ToList();
 
-            using var stream = resourceAssembly.GetManifestResourceStream(resourceName);
+            //var (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
 
-            using var reader = new StreamReader(stream);
+            //if (resourceName == null)
+            //    return options.Value.GetResource(cultureInfo.Name) ?? new Dictionary<string, string>();
 
-            var json = reader.ReadToEnd();
+            //using var stream = resourceAssembly.GetManifestResourceStream(resourceName);
 
-            return JsonSerializer.Deserialize<IDictionary<string, string>>(json, new JsonSerializerOptions
-            {
-                ReadCommentHandling = JsonCommentHandling.Skip,
-            }) ?? throw new InvalidOperationException($"Failed to parse JSON: '{json}'");
+            //using var reader = new StreamReader(stream);
+
+            //var json = reader.ReadToEnd();
+
+            //return JsonSerializer.Deserialize<IDictionary<string, string>>(json, new JsonSerializerOptions
+            //{
+            //    ReadCommentHandling = JsonCommentHandling.Skip,
+            //}) ?? throw new InvalidOperationException($"Failed to parse JSON: '{json}'");
         }
     }
 }

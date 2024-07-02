@@ -312,7 +312,7 @@ namespace AntDesign.Select.Internal
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
                 {
-                    _inputWidth = $"{_inputWidth}width: {4 + _inputString.Length * 8}px;";
+                    _inputWidth = $"{_inputWidth}width: {_inputString.Length}em;";
                     if (ParentSelect.IsResponsive && _lastInputWidth != _inputString.Length)
                     {
                         _lastInputWidth = _inputString.Length;

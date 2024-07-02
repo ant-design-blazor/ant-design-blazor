@@ -96,19 +96,19 @@
                 </div>
             }
 
-            @if (_moreArticles.Any())
+            @if (_sponsors.Any())
             {
                 <div class="home-block-content">
                     <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">
-                        @Localizer["app.home.more"]
-                        @* <div class="home-block-content-extra"><a href="/docs/resources-cn#文章">查看全部</a></div>*@
+                        @Localizer["app.home.sponsors"]
+                        <div class="home-block-content-extra"><a href="@(Localizer["app.home.sponsor-us-href"])" target="_blank">@Localizer["app.home.sponsor-us"]</a></div>
                     </h2>
                     <div class="ant-row" style="margin: -16px -12px 16px;">
-                        @foreach (var item in _moreArticles)
+                        @foreach (var item in _sponsors)
                         {
-                            <div class="ant-col ant-col-xs-24 ant-col-sm-6" style="padding: 16px 12px;">
+                            <div class="ant-col ant-col-xs-24 ant-col-sm-12" style="padding: 16px 12px;">
                                 <a href="@item.Href" target="_blank" rel="noopener noreferrer">
-                                    <Card Class="more-card" Hoverable>
+                                  @*   <Card Class="more-card" Hoverable>
                                         <Cover>
                                             <img alt="@item.Title" src="@item.Img">
                                         </Cover>
@@ -121,6 +121,11 @@
                                                 </span>
                                             </div>
                                         </Body>
+                                    </Card> *@
+                                    <Card Style="margin-top: 16px">
+                                        <CardMeta Avatar="@item.Logo"
+                                                    Title="@item.Name"
+                                                    Description="@item.Comment" />
                                     </Card>
                                 </a>
                             </div>

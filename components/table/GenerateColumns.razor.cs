@@ -21,6 +21,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Range? Range { get; set; }
+        
+        /// <summary>
+        /// Hide the columns by the property name.
+        /// </summary>
+        [Parameter]
+        public IEnumerable<string> HideColumnsByName { get; set; } = new List<string>();
 
         /// <summary>
         /// An Action to defined each column
@@ -29,6 +35,7 @@ namespace AntDesign
         /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
         [Parameter]
         public Action<string, object> Definitions { get; set; }
+        
 
         protected override void OnInitialized()
         {
@@ -47,6 +54,7 @@ namespace AntDesign
             }
             foreach (var property in showPropertys)
             {
+                if (HideColumnsByName.Contains(property.Name)) continue;
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
                 var instance = Activator.CreateInstance(columnType);
 

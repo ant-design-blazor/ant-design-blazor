@@ -1,0 +1,162 @@
+@using System.ComponentModel.DataAnnotations;
+@using System.ComponentModel
+
+<Form Model="@model" TModel="Model"
+      ValidateMode="@FormValidateMode.Complex"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <GenerateFormItem TModel="Model" Definitions="Definitions" ValidateRules="ValidateRules" NotGenerate="NotGenerate"/>
+    <FormItem Label="ListTestOutOfGenerate">
+        <Select @bind-Values="@context.I" Style="width: 120px;" TItemValue="string" TItem="string">
+            <SelectOptions>
+                <SelectOption Value="@("lucy")" Label="Lucy"/>
+            </SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+@code
+{
+    public class Model
+    {
+        [DisplayName("StringTest")] public string A { get; set; }
+
+        [DisplayName("StringTest nullable")] public string? B { get; set; }
+
+        [DisplayName("DateTimeTest")]
+        [Required]
+        public DateTime C { get; set; }
+
+        [DisplayName("DateTimeTestNullable")] public DateTime? D { get; set; }
+
+        [DisplayName("NumericTest")]
+        [Required]
+        public decimal E { get; set; }
+
+        [DisplayName("NumericTestNullable")] public decimal? F { get; set; }
+
+        [DisplayName("EnumTest")] [Required] public TestEnum G { get; set; }
+
+        [DisplayName("EnumTestNullable")] public TestEnum? H { get; set; }
+
+        [DisplayName("ListTestOutOfGenerate")]
+        [Required]
+        public IEnumerable<string> I { get; set; }
+
+        [DisplayName("DefinitionsTest")] public string J { get; set; }
+
+        [ValidateComplexType]
+        public ModelChild ModelChild { get; set; }
+    }
+
+    public enum TestEnum
+    {
+        A,
+        B,
+        C
+    }
+
+    public class ModelChild
+    {
+        [Required] public string AA { get; set; }
+
+        public string? BB { get; set; }
+
+        [Required] public DateTime CC { get; set; }
+
+        public DateTime? DD { get; set; }
+
+        [Required] public decimal EE { get; set; }
+
+        public decimal? FF { get; set; }
+
+        [Required] public TestEnum GG { get; set; }
+
+        public TestEnum? HH { get; set; }
+
+        [Required] public IEnumerable<string> II { get; set; }
+
+        public string JJ { get; set; }
+        
+        [ValidateComplexType]
+        public ModelChild2 ModelChild2 { get; set; }
+    }
+
+    public class ModelChild2
+    {
+        [Required] public string AAA { get; set; }
+    }
+
+    private Model model = new Model()
+    {
+        ModelChild = new ModelChild()
+        {
+            ModelChild2 = new ModelChild2()
+        }
+    };
+
+    public FormValidationRule[]? ValidateRules(string structurePath)
+    {
+        if (structurePath == "A")
+        {
+            return new FormValidationRule[]
+            {
+                new FormValidationRule { Required = true, Min = 5, Max = 10 }
+            };
+        }
+        if (structurePath == "ModelChild.AA")
+        {
+            return new FormValidationRule[]
+            {
+                new FormValidationRule { Required = true, Max = 10 }
+            };
+        }
+
+        return null;
+    }
+
+    public RenderFragment? Definitions(string structurePath)
+    {
+        if (structurePath == "J")
+        {
+            return @<Select @bind-Value="model.J" Style="width: 120px;" TItemValue="string" TItem="string">
+                <SelectOptions>
+                    <SelectOption Value="@("lucy")" Label="Lucy"/>
+                </SelectOptions>
+            </Select>;
+        }
+        if (structurePath == "ModelChild.JJ")
+        {
+            return @<Select @bind-Value="model.ModelChild.JJ" Style="width: 120px;" TItemValue="string" TItem="string">
+                <SelectOptions>
+                    <SelectOption Value="@("lucy")" Label="Lucy"/>
+                </SelectOptions>
+            </Select>;
+        }
+        return null;
+    }
+
+    public bool NotGenerate(string structurePath)
+    {
+        if (structurePath == "I") return true;
+        if (structurePath == "ModelChild.II") return true;
+        return false;
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}

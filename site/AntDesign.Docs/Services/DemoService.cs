@@ -161,5 +161,10 @@ namespace AntDesign.Docs.Services
         {
             return await _httpClient.GetFromJsonAsync<MoreProps[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/more-list.{CurrentLanguage}.json").ToString());
         }
+
+        public async Task<Sponsor[]> GetSponsors()
+        {
+            return await _httpClient.GetFromJsonAsync<Sponsor[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/sponsors.{CurrentLanguage}.json").ToString());
+        }
     }
 }

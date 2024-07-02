@@ -10,7 +10,13 @@ namespace Microsoft.AspNetCore.Components
         public static bool IsParameterChanged<T>(this ParameterView parameters,
             string parameterName, T value)
         {
-            if (parameters.TryGetValue(parameterName, out T newValue))
+            return IsParameterChanged(parameters, parameterName, value, out _);
+        }
+
+        public static bool IsParameterChanged<T>(this ParameterView parameters,
+            string parameterName, T value, out T newValue)
+        {
+            if (parameters.TryGetValue(parameterName, out newValue))
             {
                 if (newValue == null && value == null)
                 {

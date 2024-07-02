@@ -25,8 +25,8 @@ When there is a need for autocomplete functionality.
 | DefaultActiveFirstOption | Whether active first option by default | boolean | true |
 | Width | Custom width, unit px | int | auto |
 | OverlayClassName | Class name of the dropdown root element | string | - |
-| OverlayStyle | Style of the dropdown root element | `bject | - |
-| CompareWith | (o1: object, o2: object) => bool | (o1: object, o2: object) => o1===o2 |
+| OverlayStyle | Style of the dropdown root element | `object` | - |
+| CompareWith | Contrast, used to compare whether two objects are the same  | (o1: object, o2: object) => bool | (o1: object, o2: object) => o1===o2 |
 | PopupContainerSelector | The selector of the container for dropdown element. | string | body |
 | Placeholder | The placeholder of input | string |  |
 | AutoCompleteOptions | Data source for autocomplete | list<AutoCompleteOption> |  |

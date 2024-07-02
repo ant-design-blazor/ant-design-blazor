@@ -85,6 +85,8 @@ namespace AntDesign
             if (!checkbox.IsFromOptions)
             {
                 checkbox.SetValue(_selectedValues.Any(x => x.ToString() == checkbox.Label));
+                checkbox.SetItemValue(checkbox.Label);
+
                 if (_indexConstructedOptionsOffset == -1)
                     _indexConstructedOptionsOffset = _checkboxItems.Count - 1;
             }
@@ -158,23 +160,11 @@ namespace AntDesign
             }
             else
             {
-                var invokeChange = false;
-
                 _checkboxItems.ForEach(x =>
                 {
                     var checkBoxValue = ((TValue)x.ItemValue).IsIn(value);
-                    if (checkBoxValue != x.Value)
-                    {
-                        invokeChange = true;
-                        x.SetValue(checkBoxValue);
-                        OnCheckboxChange(x, false);
-                    }
+                    x.SetValue(checkBoxValue);
                 });
-
-                if (invokeChange)
-                {
-                    InvokeValueChange();
-                }
             }
         }
 
@@ -194,7 +184,7 @@ namespace AntDesign
 
         private OneOf<CheckboxOption<TValue>[], TValue[]> CreateConstructedOptions()
         {
-            if (Options.IsT0)
+            if (Options.Value is not null && Options.IsT0)
             {
                 return _checkboxItems
                     .Where(c => !c.IsFromOptions)

@@ -16,7 +16,7 @@ else
     RenderFragment _affixWarpper(RenderFragment childContent)
     {
         return
-    @<div class="@_affixWarrperClass.Class" style="@Style" id="@Id">
+    @<div class="@_affixWarrperClass.Class" style="@WidthStyle @Style" id="@Id">
         @if (Prefix.Value != null)
         {
             <span class="ant-input-number-prefix">
@@ -46,7 +46,7 @@ else
     RenderFragment _inputNumber()
     {
         return
-    @<div class="@ClassMapper.Class" style="@Style" id="@Id">
+    @<div class="@ClassMapper.Class" style="@WidthStyle @Style" id="@Id">
         <div class="ant-input-number-handler-wrap">
             <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")" @onmousedown="IncreaseDown" @onmouseup="IncreaseUp" @onmouseout="IncreaseUp">
                 <Icon Class="ant-input-number-handler-up-inner" Type="up" />

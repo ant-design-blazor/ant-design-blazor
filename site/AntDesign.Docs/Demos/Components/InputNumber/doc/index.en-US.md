@@ -26,7 +26,8 @@ Nullable types of the above types are also supported. For example, `ushort?`, `i
 | CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DefaultValue            |initial value           | number         |
 | Disabled            | disable the input          | boolean         |-       |
-| Formatter |Specifies the format of the value presented      | function(double,string)        | -         |
+| Formatter | Specifies the format func of the value presented      | Func<double,string>        | -         |
+| Format |  Specifies the format pattern of the value presented      | string        | -         |
 | Max              | max value       | number        | -        |
 | Min |  	min value                            | number        | -         |
 | Parser |  Specifies the value extracted from formatter      | function(string, double)           |
@@ -35,3 +36,4 @@ Nullable types of the above types are also supported. For example, `ushort?`, `i
 | Value            |	current value | string  | -         |
 | ValueChanged |The callback triggered when the value is changed.                     | function(double)        | -        |
 | MaxLength | The max length of the input.| int | - |
+| Width | The width of the input. | string | - |

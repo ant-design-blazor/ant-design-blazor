@@ -1,8 +1,8 @@
 # These are supported funding model platforms
 
-github: ElderJames # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
-patreon: ant_design_blazor # Replace with a single Patreon username
-open_collective: ant-design-blazor # Replace with a single Open Collective username
+github: ant-design-blazor # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
+patreon: # ant_design_blazor # Replace with a single Patreon username
+open_collective: # ant-design-blazor # Replace with a single Open Collective username
 ko_fi: # Replace with a single Ko-fi username
 tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
 community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry

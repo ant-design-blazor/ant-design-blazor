@@ -1,0 +1,54 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using System.ComponentModel
+@using System.Globalization
+
+<Form Model="@model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem>
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem>
+        <InputPassword @bind-Value="@context.Password" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+
+@code
+{
+    public class Model
+    {
+        [Required(ErrorMessageResourceName = nameof(Resources.App.UserNameValidation), ErrorMessageResourceType = typeof(Resources.App))]
+        [Display(Name = nameof(Resources.App.UserName), ResourceType = typeof(Resources.App))]
+        public string Username { get; set; }
+
+        [Required(ErrorMessageResourceName = nameof(Resources.App.PasswordValidation), ErrorMessageResourceType = typeof(Resources.App))]
+        [Display(Name = nameof(Resources.App.Password), ResourceType = typeof(Resources.App))]
+        public string Password { get; set; }
+
+        public bool RememberMe { get; set; } = true;
+    }
+
+    private Model model = new Model();
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}

@@ -202,6 +202,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
 
         public int? Iframe { get; set; }
 
+        public string Link { get; set; }
+
         public Dictionary<string, string> Title { get; set; }
 
         public bool Debug { get; set; }

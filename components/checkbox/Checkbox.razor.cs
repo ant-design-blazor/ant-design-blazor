@@ -68,6 +68,7 @@ namespace AntDesign
             ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
+                .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper
@@ -90,6 +91,15 @@ namespace AntDesign
             }
         }
 
-        internal void SetValue(bool value) => Checked = value;
+        internal void SetValue(bool value)
+        {
+            if (value == Checked)
+                return;
+
+            Checked = value;
+            StateHasChanged();
+        }
+
+        internal void SetItemValue(object itemValue) => ItemValue = itemValue;
     }
 }

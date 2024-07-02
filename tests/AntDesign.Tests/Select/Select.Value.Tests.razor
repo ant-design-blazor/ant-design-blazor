@@ -183,6 +183,32 @@
         input.GetAttribute("value").Should().BeEmpty();
     }
 
+    [Fact] // Issue: #3875
+    public void Exceptions_thrown_from_Event_Callbacks_are_caught()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        Func<int, Task> ValueChanged = async v => await Task.FromException(new NotImplementedException());
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               Value="0"
+                               ValueChanged="@ValueChanged"
+                               AllowClear="false"
+             >
+            </AntDesign.Select>
+        );
+        Action setParametersAction = () => 
+            // Act
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, _persons.Count - 1)
+        );
+
+        // Assert
+        setParametersAction.Should().Throw<NotImplementedException>();
+    }
+
 /*
     [Theory]
     [MemberData(nameof(AllowClearWithValueOnClearTheory))]

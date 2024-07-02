@@ -25,8 +25,7 @@ dotnet add package AntDesign.Extensions.Localization
 
     ```
 
-- 在项目的 `Resources` 目录下创建多语言文件，格式为 `{ResourceName}.{language}.resx`，例如 `Index.en-US.resx` 和 `Index.zh-CN.resx`。
-  Create resource files in the `Resources` directory of the project in the format `{ResourceName}.{language}.resx`, for example `Index.en-US.resx` and `index.en-cn.resx`.
+- Create resource files in the `Resources` directory of the project in the format `{ResourceName}.{language}.resx`, for example `Index.en-US.resx` and `index.en-cn.resx`.
 
   Index.en-US.resx:
   
@@ -41,17 +40,93 @@ dotnet add package AntDesign.Extensions.Localization
   | ---- | ---- |
   | Hello | Hello! |
   | Goodbye | Goodbye! |
+
+It should be noted that, `IStringLocalizer<T>`  needs to specify a generic type parameter as the positioning of the resx file, so you need to ensure that the resource file has a corresponding public type. 
+Or manually modify the csproj file as follows:
+
+```xml
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+```
+  
   
 - When in use, inject the `IStringLocalizer<T>` service in razor, for example:
 
-    ```razor
+    ```html
     @inject IStringLocalizer<Index> localizer
 
     <p>@localizer["Hello"]</p>
     <p>@localizer["Goodbye"]</p>
     ```
 
+- Switch UI languages interactively
+
+    ```html
+    @implements IDisposable
+    @inject ILocalizationService LocalizationService
+
+    <Button OnClick="()=>LocalizationService.SetLanguage("en-US")" >English</Button>
+    <Button OnClick="()=>LocalizationService.SetLanguage("zh-CN")" >中文</Button>
+
+    @code {
+
+        protected override void OnInitialized()
+        {
+            LocalizationService.LanguageChanged += OnLanguageChanged;
+        }
+        private void OnLanguageChanged(object sender, CultureInfo args)
+        {
+            InvokeAsync(StateHasChanged);
+        }
+        public void Dispose()
+        {
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
+        }
+    }
+    ```
+
 - To use a third-party Localization provider, or other configurations, refer to the [Official Documentation](https://learn.microsoft.com/zh-cn/aspnet/core/blazor/globalization-localization?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987)。
+
+### Localization of form validation messages
+
+The default validator for the Form component is [ObjectGraphDataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/validation?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987#nested-models-collection-types-and-complex-types), supports [DataAnnotations localization](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/localization/make-content-localizable?view=aspnetcore-8.0&WT.mc_id=DT-MVP-5003987#dataannotations-localization)。
+
+Demo: [Form-localization ](https://antblazor.com/en-US/components/form#components-form-demo-localization)
+=
+Note: Configuration of validation information in AntDesign locales is not currently supported.
+
+### DisplayAttribute  supports localization
+
+Some UI bindings in the component use the DisplayAttribute feature of the entity model or enumeration type as a Label display, such as FormItem, EnumSelect, EnumRadioGroup, EnumCheckboxGroup, and so on.
+
+  ```cs
+    public class Model
+    {
+        [Display(Name = nameof(Resources.App.UserName), ResourceType = typeof(Resources.App))]
+        public string Username { get; set; }
+    }
+
+    public enum Province
+    {
+        [Display(Name = nameof(Resources.App.Shanghai), ResourceType = typeof(Resources.App))]
+        Shanghai,
+
+        Jiangsu
+    }
+  ```
+
 
 ### Use the simple embedded JSON provider
 
@@ -100,31 +175,7 @@ While we recommend the official localization solution, you can also use the solu
     ```
 
 
-### Interactively switch languages on the UI
 
-```razor
-@implements IDisposable
-@inject ILocalizationService LocalizationService
-
-<Button OnClick="()=>LocalizationService.SetLanguage("en-US")" >English</Button>
-<Button OnClick="()=>LocalizationService.SetLanguage("zh-CN")" >中文</Button>
-
-@code {
-
-    protected override void OnInitialized()
-    {
-        LocalizationService.LanguageChanged += OnLanguageChanged;
-    }
-    private void OnLanguageChanged(object sender, CultureInfo args)
-    {
-        InvokeAsync(StateHasChanged);
-    }
-    public void Dispose()
-    {
-        LocalizationService.LanguageChanged -= OnLanguageChanged;
-    }
-}
-```
 
 ### Language identifier on the route
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
@@ -282,6 +283,15 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual Task OnValueChangeAsync(TValue value)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
         /// </summary>
         /// <param name="value"></param>
@@ -310,8 +320,15 @@ namespace AntDesign
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
                 Value = _getValueDelegate.Invoke(Form.Model);
 
-                var lambda = PathHelper.GetLambda(dataIndex, type);
-                _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
+                {
+                    var perpertyInfo = lambda.Member as PropertyInfo;
+                    _propertyReflector = new PropertyReflector(perpertyInfo);
+                }
+                else
+                {
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                }
             }
 
             FormItem?.AddControl(this);

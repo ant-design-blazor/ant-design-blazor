@@ -11,13 +11,12 @@ namespace AntDesign
         /// <summary>
         /// Root Tree
         /// </summary>
-        [CascadingParameter(Name = "Tree")]
-        public Tree<TItem> TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent => SelfNode.TreeComponent;
 
         /// <summary>
         /// Current Node
         /// </summary>
-        [CascadingParameter(Name = "SelfNode")]
+        [CascadingParameter(Name = "Node")]
         public TreeNode<TItem> SelfNode { get; set; }
 
         [Parameter]

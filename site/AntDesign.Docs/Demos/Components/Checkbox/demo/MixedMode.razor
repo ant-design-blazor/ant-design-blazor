@@ -3,7 +3,7 @@
                    Options="@plainOptions"
                    TValue="string"
                    OnChange="OnChange"
-                   Value="@(new[]{"B", "Pear"})"
+                   @bind-Value="value"
                    MixedMode="mixedMode">
         <Row>
             <Col Span="8">
@@ -21,6 +21,7 @@
 @using System.Text.Json
 @code {
     string[] plainOptions = { "Apple", "Pear", "Orange" };
+    string[] value = new[]{"B", "Pear"};
     CheckboxGroupMixedMode mixedMode = CheckboxGroupMixedMode.ChildContentFirst;
 
     void OnChange(string[] checkedValues)

@@ -97,7 +97,7 @@ namespace AntDesign.TableModels
         {
             TableDataItem.SetSelected(isSelected);
 
-            if (checkStrictly)
+            if (!checkStrictly)
             {
                 CheckedChildren(isSelected, checkStrictly);
             }

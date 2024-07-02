@@ -74,6 +74,8 @@ namespace AntDesign.Extensions.Localization
                 _localizer = _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
             };
 
+            _localizationService.LanguageChanged += _languageChanged;
+
             if (_localizer == null)
             {
                 _languageChanged.Invoke(this, CultureInfo.CurrentCulture);

@@ -1,0 +1,86 @@
+<TreeSelect @ref="_treeSelect" Style=" width:100%;"
+            DataSource="treeData"
+            @bind-Values="@values"
+            Placeholder="Please select"
+            AllowClear
+            TreeCheckable
+            TreeDefaultExpandAll
+            ItemValue="node=> node.Key"
+            ChildrenExpression="node=>node.DataItem.Children"
+            TitleExpression="node=>node.DataItem.Title"
+            KeyExpression="node=>node.DataItem.Key"
+            IsLeafExpression="node=>node.DataItem.Children==null">
+    <DropdownRender Context="originNode">
+        <div>
+            @originNode
+            <Divider Style="margin: 4px 0"></Divider>
+            <Button OnClick="CheckAll">Check All</Button>
+            <Button OnClick="UncheckAll">Uncheck All</Button>
+        </div>
+    </DropdownRender>
+</TreeSelect>
+
+@JsonSerializer.Serialize(values);
+
+@code {
+    private IEnumerable<string> values = new[] { "1", "11" };
+
+    Data[] treeData = new Data[]
+    {
+        new()
+        {
+            Title = "Node1",
+            Key="1",
+            Children = new Data[]
+        {
+                new()
+                {
+                    Title = "Child Node1",
+                    Key="11",
+                },
+        }
+        },
+        new()
+        {
+            Title = "Node2",
+            Key="2",
+            Children = new Data[]
+        {
+                new()
+                {
+                    Title ="Child Node3",
+                    Key="21"
+                },
+                new()
+                {
+                    Title ="Child Node4",
+                    Key="22",
+                },
+                new()
+                {
+                    Title ="Child Node5",
+                    Key="23",
+                }
+        }
+        }
+    };
+
+    public class Data : ITreeData<Data>
+    {
+        public string Key { get; set; }
+        public Data Value => this;
+        public string Title { get; set; }
+        public IEnumerable<Data> Children { get; set; }
+    }
+
+    private TreeSelect<string, Data> _treeSelect;
+
+    private void CheckAll()
+    {
+        _treeSelect.TreeComponent.CheckAll();
+    }
+    private void UncheckAll()
+    {
+        _treeSelect.TreeComponent.UncheckAll();
+    }
+}

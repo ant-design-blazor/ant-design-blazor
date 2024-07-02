@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TestApp.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.WebApp", "site\AntDesign.Docs.WebApp\AntDesign.Docs.WebApp.csproj", "{4734661E-8525-4331-9B3C-DC3C3A3612E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Extensions.Localization", "src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj", "{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Extensions.Localization", "src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj", "{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

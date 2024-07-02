@@ -39,7 +39,10 @@ Uploading is the process of publishing information (web pages, text, pictures, v
 | OnPreview | A callback function, will be executed when file link or preview icon is clicked | Function(file) | - |  |
 | OnRemove | A callback function, will be executed when removing file button is clicked, remove event will be prevented when return value is `false` or a Promise which resolve(false) or reject | Function(file): `boolean | Promise` | - |  |
 | OnSingleCompleted | A callback function, will be executed when an upload is complete | Function(file) | - |  |
-| ShowUploadList | Whether to show default upload list, could be an object to specify `showPreviewIcon`, `showRemoveIcon`, `showDownloadIcon`, `removeIcon` and `downloadIcon` individually | Boolean or { showPreviewIcon?: boolean, showDownloadIcon?: boolean, showRemoveIcon?: boolean, removeIcon?: React.ReactNode, downloadIcon?: React.ReactNode } | true |  |
+| ShowUploadList | Whether to show default upload list | true |  |
+| ShowDownloadIcon | Whether to show download button | Boolean | true |  |
+| ShowPreviewIcon | Whether to show preview button | Boolean | true |  |
+| ShowRemoveIcon | Whether to show remove button | Boolean | true |  |
 
 
 ### onChange

@@ -8,12 +8,21 @@ using System.Text;
 
 namespace AntDesign.Core.Extensions
 {
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         public static void SetValue(this object obj, string name, object value)
         {
             var property = obj.GetType().GetProperty(name);
             property?.SetValue(obj, value);
+        }
+
+        public static bool AllNullOrEquals(this object obj, object other)
+        {
+            if (obj == null && other == null) return true;
+
+            if (obj == null || other == null) return false;
+
+            return obj.Equals(other);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace AntDesign
     {
         #region internal
 
-        internal bool IsCreateByModalService => Service != null;
+        internal bool IsCreateByService { get; set; }
         internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
 
         internal ConfirmRef(ConfirmOptions config)
@@ -24,6 +24,7 @@ namespace AntDesign
         {
             Config = config;
             Service = service;
+            IsCreateByService = service != null;
         }
 
         #endregion

@@ -14,7 +14,7 @@ namespace AntDesign
 
         [Parameter] public string Key { get; set; }
 
-        [Parameter] public bool CheckStrictly { get; set; }
+        [Parameter] public bool CheckStrictly { get; set; } = true;
 
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }

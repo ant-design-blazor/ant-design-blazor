@@ -5,7 +5,7 @@
 @using AntDesign.Filters
 
 <Table DataSource="data" TItem="KnownColor">
-    <PropertyColumn Property="c=>c.ToString()" Title="Name" Sortable Filterable FieldFilterType="simpleStringFiler" />
+    <PropertyColumn Property="c=>c.ToString()" Title="Name" Sortable Filterable FieldFilterType="simpleStringFilter" />
 
      <PropertyColumn Property="c=>Color.FromKnownColor(c)" Title="Color"
                      SorterCompare="(x, y) => x.GetHue().CompareTo(y.GetHue())"
@@ -24,7 +24,7 @@
 
     readonly KnownColor[] data = Enum.GetValues<KnownColor>();
     readonly ColorFieldFilterType colorFilterOptions = new();
-    readonly StringFieldFilterType simpleStringFiler = new() { SupportedCompareOperators = new[] { TableFilterCompareOperator.Contains } };
+    readonly StringFieldFilterType simpleStringFilter = new() { SupportedCompareOperators = new[] { TableFilterCompareOperator.Contains } };
     class ColorFieldFilterType : BaseFieldFilterType
     {
         private static readonly MethodInfo colorGetBrightness = typeof(Color).GetMethod(nameof(Color.GetBrightness), Array.Empty<Type>());

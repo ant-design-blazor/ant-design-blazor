@@ -26,7 +26,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg
 | CultureInfo  | 设置数值与字符串互相转换时使用的语言     | CultureInfo         | CultureInfo.CurrentCulture       |
 | DefaultValue            | 初始值           | number         |
 | Disabled            |禁用           | boolean         |-       |
-| Formatter |指定输入框展示值的格式      | function(double,string)        | -         |
+| Formatter | 指定输入框展示值的格式      | Func<double,string>        | -         |
+| Format | 指定输入框展示值的格式，值为 C# 格式字符串      | string       | -         |
 | Max              | 最大值       | number        | -        |
 | Min |  	最小值                            | number        | -         |
 | Parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用        | function(string, double)           |
@@ -35,5 +36,5 @@ cover: https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg
 | Value            |当前值 | string  | -         |
 | ValueChanged |输入框内容变化时的回调                     | function(double)        | -        |
 | MaxLength | 输入框最大长度 | int | - |
-
+| Width | 输入框宽度 | int | - |
 

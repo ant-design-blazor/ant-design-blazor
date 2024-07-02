@@ -46,7 +46,7 @@ namespace AntDesign
         public bool HidePages { get; set; }
 
         /// <summary>
-        /// The routing information for the current page is a serializable version of <see cref="Microsoft.AspNetCore.Components.RouteData"/>.
+        /// The routing information for the current page, which is a serializable version of <see cref="Microsoft.AspNetCore.Components.RouteData"/>.
         /// </summary>
         [Parameter]
         public ReuseTabsRouteData ReuseTabsRouteData { get; set; }
@@ -92,6 +92,14 @@ namespace AntDesign
             ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
             Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
+        }
+
+        private async Task<bool> OnTabEdit(string key, string action)
+        {
+            if (action != "remove")
+                return false;
+
+            return ReuseTabsService.ClosePage(key);
         }
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)

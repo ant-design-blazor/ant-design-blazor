@@ -1,27 +1,58 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @typeparam TItem
+@using AntDesign.Core.Helpers
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref">
-    <div class="ant-tree-list">
-        <div class="ant-tree-list-holder-inner">
-            <CascadingValue Value="this" Name="Tree" IsFixed="@true">
-                @if (DataSource != null)
-                {
-                    foreach (var item in DataSource)
+<CascadingValue Value="this" Name="Tree" IsFixed="@true">
+    @if (DataSource != null)
+    {
+        foreach (var item in DataSource)
+        {
+            <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
+        }
+    }
+    else if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Nodes
+    }
+
+    <AntDesign.Core.Component.Defer>
+        @{
+            _flattedNodes = TreeDataHelper.FlattenTree(_allNodes.Where(x => x.ParentNode == null), nodes => nodes.ChildNodes);
+        }
+        <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
+            <div class="ant-tree-list">
+                <div class="ant-tree-list-holder-inner">
+                    @if (Virtualize)
                     {
-                        <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
-				    }
-                }
-                else if (ChildContent!=null)
-				{
-					@ChildContent
-				}
-				else
-				{
-                    @Nodes
-                }
-            </CascadingValue>
+                       <Virtualize 
+                         TItem="TItem"
+                         Items="@_flattedNodes"
+                         ItemContent="content"
+                        />
+                    }
+                    else
+                    {
+                        @foreach (var item in _flattedNodes)
+                        {
+                            @item.RenderTreeNote()
+                        }
+                    }
+
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </AntDesign.Core.Component.Defer>
+</CascadingValue>
+
+
+@code{
+    RenderFragment content(TreeNode<TItem> item)
+    {
+        return b => b.AddContent(0, item.RenderTreeNote());
+    }
+}

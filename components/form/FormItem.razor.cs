@@ -184,12 +184,13 @@ namespace AntDesign
 
         private ClassMapper _labelClassMapper = new ClassMapper();
 
-        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
         private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+        private EventHandler<ValidationRequestedEventArgs> _validationRequestedHandler;
         private FormValidateStatus _validateStatus;
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
@@ -338,9 +339,16 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (CurrentEditContext != null && _validationStateChangedHandler != null)
+            if (CurrentEditContext != null)
             {
-                CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+                if (_validationStateChangedHandler != null)
+                {
+                    CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+                }
+                if (_validationRequestedHandler != null)
+                {
+                    CurrentEditContext.OnValidationRequested -= _validationRequestedHandler;
+                }
             }
 
             Form?.RemoveFormItem(this);
@@ -364,14 +372,8 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            _validationStateChangedHandler = (s, e) =>
+            void ValidateDefault()
             {
-                // don't show the vaidation error messages unitl the validate method being called.
-                // However, the default validation process has already been performed because that's how it's designed in the EditContext.
-                if (!Form.IsCallingValidation && !Form.ValidateOnChange)
-                {
-                    return;
-                }
 
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
@@ -385,10 +387,26 @@ namespace AntDesign
                     _validationMessages = new[] { Help };
                 }
 
+                _vaildateStatusChanged?.Invoke();
                 InvokeAsync(StateHasChanged);
-            };
+            }
 
-            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
+            if (Form?.ValidateOnChange == true)
+            {
+                _validationStateChangedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
+                CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
+            }
+            else
+            {
+                _validationRequestedHandler = (s, e) =>
+                {
+                    ValidateDefault();
+                };
+                CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
+            }
 
             if (control.PopertyReflector is not null)
             {
@@ -403,17 +421,13 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (_propertyReflector?.DisplayName != null)
-            {
-                Label ??= _propertyReflector?.DisplayName;
-            }
-
             if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
             {
                 _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             }
 
             SetInternalIsRequired();
+            StateHasChanged();
         }
 
         ValidationResult[] IFormItem.ValidateField()

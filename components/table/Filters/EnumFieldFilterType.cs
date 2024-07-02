@@ -29,33 +29,32 @@ namespace AntDesign.Filters
             SupportedCompareOperators = _supportedCompareOperators;
         }
 
-        public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
+        public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression fieldValueExpr, Expression filterValueExpr)
         {
-            return compareOperator switch
-            {
-                TableFilterCompareOperator.Contains => ContainsExpression(),
-                TableFilterCompareOperator.NotContains => Expression.Not(ContainsExpression()),
-                _ => base.GetFilterExpression(compareOperator, leftExpr, rightExpr)
-            };
-
             Expression ContainsExpression()
             {
-                if (THelper.IsTypeNullable(leftExpr.Type))
-                {
-                    Expression notNull = Expression.NotEqual(leftExpr, Expression.Constant(null));
-                    leftExpr = Expression.MakeMemberAccess(leftExpr, leftExpr.Type.GetMember(nameof(Nullable<int>.Value))[0]);
-                    rightExpr = Expression.MakeMemberAccess(rightExpr, rightExpr.Type.GetMember(nameof(Nullable<int>.Value))[0]);
-                    return Expression.AndAlso(notNull, CallContains());
-                }
-
-                return CallContains();
-
-                Expression CallContains()
-                {
-                    rightExpr = Expression.Convert(rightExpr, typeof(Enum));
-                    return Expression.Call(leftExpr, _enumHasFlag, rightExpr);
-                }
+                filterValueExpr = Expression.Convert(filterValueExpr, typeof(Enum));
+                return Expression.Call(fieldValueExpr, _enumHasFlag, filterValueExpr);
             }
+
+            Expression GetCompareExpr()
+            {
+                return compareOperator switch
+                {
+                    TableFilterCompareOperator.Contains => ContainsExpression(),
+                    TableFilterCompareOperator.NotContains => Expression.Not(ContainsExpression()),
+                    _ => base.GetFilterExpression(compareOperator, fieldValueExpr, filterValueExpr)
+                };
+            }
+
+            if (THelper.IsTypeNullable(fieldValueExpr.Type))
+            {
+                Expression notNull = Expression.NotEqual(fieldValueExpr, Expression.Constant(null));
+                fieldValueExpr = Expression.MakeMemberAccess(fieldValueExpr, fieldValueExpr.Type.GetMember(nameof(Nullable<int>.Value))[0]);
+                return Expression.AndAlso(notNull, GetCompareExpr());
+            }
+
+            return GetCompareExpr();
         }
     }
 }

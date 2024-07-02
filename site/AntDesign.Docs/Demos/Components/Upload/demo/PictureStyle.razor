@@ -1,27 +1,34 @@
 @inject IMessageService _message
 
 <Upload @attributes="attrs"
-         OnSingleCompleted="OnSingleCompleted"
-         OnRemove="HandleRemove">
+        ShowUploadList=true
+        ShowPreviewIcon=true
+        ShowRemoveIcon=false
+        OnSingleCompleted="OnSingleCompleted"
+        OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>Upload</span>
     </Button>
 </Upload>
 <br />
 <br />
-<Upload @attributes="attrs1"
-         OnSingleCompleted="OnSingleCompleted"
-         OnRemove="HandleRemove">
+<Upload @attributes="attrs"
+        ShowUploadList=true
+        ShowPreviewIcon=true
+        ShowRemoveIcon=true
+        OnSingleCompleted="OnSingleCompleted"
+        OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>Upload</span>
     </Button>
 </Upload>
+<br />
+<br />
 
 @code
 {
-
     static List<UploadFileItem> fileList = new List<UploadFileItem>
-{
+    {
         new UploadFileItem
         {
             Id = "1",
