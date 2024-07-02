@@ -23,6 +23,12 @@ namespace AntDesign
         [CascadingParameter(Name = "TreeSelect")]
         public ITreeSelect TreeSelect { get; set; }
 
+        /// <summary>
+        /// bind-[values] will include indeterminate state node
+        /// </summary>
+        [Parameter]
+        public bool IncludeIndeterminate { get; set; }
+
         #region fields
 
         /// <summary>
@@ -433,7 +439,7 @@ namespace AntDesign
 
         internal void UpdateCheckedKeys()
         {
-            _checkedKeys = _allNodes.Where(r => r.Checked).Select(r => r.Key).ToArray();
+            _checkedKeys = _allNodes.Where(r => r.Checked || (IncludeIndeterminate && r.Indeterminate)).Select(r => r.Key).ToArray();
             if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
         }
 

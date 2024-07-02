@@ -30,6 +30,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | DefaultSelectedKeys | Specifies the keys of the default selected treeNodes | string[] | null |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | Checkable |  Add a Checkbox before the node | boolean  | false  |   |
+| IncludeIndeterminate | bind-[values] should include indeterminate state node | boolean  | false  |   |
 | CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | CheckStrictly  |  Check treeNode precisely; parent treeNode and children treeNodes are not associated |  boolean | false  |   |
 | DefaultCheckedKeys  | Specifies the keys of the default checked treeNodes |  string[] | null |   |
