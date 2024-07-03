@@ -1,9 +1,10 @@
 ﻿<Tree
+      Height="233"
       DefaultExpandAll
       DataSource="nodes"
       TitleExpression="x => x.DataItem.title"
-      IsLeafExpression="x => x.DataItem.children?.Count == 0"
       ChildrenExpression="x => x.DataItem.children"
+      IsLeafExpression="x => x.DataItem.children?.Count == 0"
       KeyExpression="x => x.DataItem.key">
 </Tree>
 

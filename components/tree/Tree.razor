@@ -20,39 +20,42 @@
         @Nodes
     }
 
+    @{
+        if (!_initialized)
+            return;
+    }
+
     <AntDesign.Core.Component.Defer>
         @{
             _flattedNodes = TreeDataHelper.FlattenTree(_allNodes.Where(x => x.ParentNode == null), nodes => nodes.ChildNodes);
         }
         <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
             <div class="ant-tree-list">
+            <div class="ant-tree-list-holder" style="@HolderStyle">
                 <div class="ant-tree-list-holder-inner">
-                    @if (Virtualize)
+                    @{
+#if NET5_0_OR_GREATER
+                    if (!string.IsNullOrWhiteSpace(Height))
                     {
-                       <Virtualize 
-                         TItem="TItem"
+                       <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
+                         TItem="TreeNode<TItem>"
                          Items="@_flattedNodes"
-                         ItemContent="content"
+                         ItemContent="item => item.RenderTreeNote()"
                         />
                     }
                     else
+#endif
+
                     {
                         @foreach (var item in _flattedNodes)
                         {
                             @item.RenderTreeNote()
                         }
                     }
-
+                    }
                 </div>
             </div>
+                </div>
         </div>
     </AntDesign.Core.Component.Defer>
 </CascadingValue>
-
-
-@code{
-    RenderFragment content(TreeNode<TItem> item)
-    {
-        return b => b.AddContent(0, item.RenderTreeNote());
-    }
-}
