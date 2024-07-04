@@ -15,31 +15,6 @@ namespace AntDesign
         private readonly NavigationManager _navmgr;
         private IReadOnlyCollection<MenuItem> _menuItems;
 
-        [Parameter]
-        public string Href { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value representing the URL matching behavior.
-        /// </summary>
-        [Parameter]
-        public NavLinkMatch Match { get; set; } = NavLinkMatch.All;
-
-        internal string CurrentUrl
-        {
-            get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
-            set
-            {
-                try
-                {
-                    _navmgr.NavigateTo(value.StartsWith('/') ? value[1..] : value);
-                }
-                catch (NavigationException)
-                {
-                    // would throw exception during static rendering
-                }
-            }
-        }
-
         /// <summary>
         /// The MenuItem information list of the currently opened MenuItem, which can be used for caching and recovery
         /// </summary>
@@ -52,16 +27,6 @@ namespace AntDesign
 
         public string GetMenuTitle(string hrefAbsolutePath, object menuObject)
         {
-            if (string.IsNullOrWhiteSpace(hrefAbsolutePath))
-            {
-                hrefAbsolutePath = CurrentUrl;
-            }
-
-            if (Match != NavLinkMatch.All && hrefAbsolutePath == "/")
-            {
-                Match = NavLinkMatch.All;
-            }
-
             if (menuObject is Menu menu)
             {
                 return GetTitleFromMenu(hrefAbsolutePath, menu);
@@ -78,13 +43,13 @@ namespace AntDesign
 
         private string GetTitleFromMenu(string absolutePath, Menu menu)
         {
-            var menuItem = menu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(Match, s.RouterLink, absolutePath));
+            var menuItem = menu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
             return menuItem?.Title ?? "";
         }
 
         private string GetTitleFromSubMenu(string absolutePath, SubMenu subMenu)
         {
-            var menuItem = subMenu.RootMenu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(Match, s.RouterLink, absolutePath));
+            var menuItem = subMenu.RootMenu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
             return menuItem?.Title ?? "";
         }
     }
