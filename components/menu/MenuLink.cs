@@ -73,7 +73,7 @@ namespace AntDesign
 
             if (MenuItem.FirstRun)
             {
-                _isActive = new MenuHelper().ShouldMatch(Match, NavigationManger.Uri, _hrefAbsolute);
+                _isActive = MenuHelper.ShouldMatch(Match, NavigationManger.Uri, _hrefAbsolute);
                 if (MenuItem != null && _isActive && !MenuItem.IsSelected)
                 {
                     Menu?.SelectItem(MenuItem);
@@ -94,7 +94,7 @@ namespace AntDesign
         {
             // We could just re-render always, but for this component we know the
             // only relevant state change is to the _isActive property.
-            bool shouldBeActiveNow = new MenuHelper().ShouldMatch(Match, args.Location, _hrefAbsolute);
+            bool shouldBeActiveNow = MenuHelper.ShouldMatch(Match, args.Location, _hrefAbsolute);
             if (shouldBeActiveNow != _isActive)
             {
                 _isActive = shouldBeActiveNow;

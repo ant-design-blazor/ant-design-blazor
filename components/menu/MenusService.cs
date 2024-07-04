@@ -43,13 +43,13 @@ namespace AntDesign
 
         private string GetTitleFromMenu(string absolutePath, Menu menu)
         {
-            var menuItem = menu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
+            var menuItem = menu.MenuItems.FirstOrDefault(s => MenuHelper.ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
             return menuItem?.Title ?? "";
         }
 
         private string GetTitleFromSubMenu(string absolutePath, SubMenu subMenu)
         {
-            var menuItem = subMenu.RootMenu.MenuItems.FirstOrDefault(s => new MenuHelper().ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
+            var menuItem = subMenu.RootMenu.MenuItems.FirstOrDefault(s => MenuHelper.ShouldMatch(NavLinkMatch.All, s.RouterLink, absolutePath));
             return menuItem?.Title ?? "";
         }
     }
