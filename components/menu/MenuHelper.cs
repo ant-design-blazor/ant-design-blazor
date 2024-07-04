@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
-    public class MenuHelper
+    public static class MenuHelper
     {
         /// <summary>
         /// Determines if the current URI should match the specified URI based on the given match criteria.
@@ -16,7 +16,7 @@ namespace AntDesign
         /// <param name="currentUriAbsolute">The absolute URI of the current location.</param>
         /// <param name="hrefAbsolute">The absolute URI to match against.</param>
         /// <returns>True if the URIs match based on the criteria; otherwise, false.</returns>
-        public bool ShouldMatch(NavLinkMatch match, string currentUriAbsolute, string hrefAbsolute)
+        public static bool ShouldMatch(NavLinkMatch match, string currentUriAbsolute, string hrefAbsolute)
         {
             if (EqualsHrefExactlyOrIfTrailingSlashAdded(currentUriAbsolute, hrefAbsolute))
             {
@@ -64,7 +64,7 @@ namespace AntDesign
         /// <param name="currentUriAbsolute">The absolute URI of the current location.</param>
         /// <param name="hrefAbsolute">The absolute URI to compare against.</param>
         /// <returns>True if the URIs are equal, or if adding a trailing slash to the current URI makes them equal; otherwise, false.</returns>
-        public bool EqualsHrefExactlyOrIfTrailingSlashAdded(string currentUriAbsolute, string hrefAbsolute)
+        public static bool EqualsHrefExactlyOrIfTrailingSlashAdded(string currentUriAbsolute, string hrefAbsolute)
         {
             if (string.Equals(currentUriAbsolute, hrefAbsolute, StringComparison.OrdinalIgnoreCase))
             {
