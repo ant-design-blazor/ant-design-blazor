@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1.2
 title:
   en-US: Selection
   zh-CN: 行选择
