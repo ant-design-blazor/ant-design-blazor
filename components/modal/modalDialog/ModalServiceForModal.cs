@@ -28,6 +28,7 @@ namespace AntDesign
 
             ModalRef modalRef = new ModalRef(options, this);
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -43,6 +44,7 @@ namespace AntDesign
             }
             var modalRef = new ModalRef<TResult>(options, this);
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -72,6 +74,7 @@ namespace AntDesign
             }
             options.Content = Child;
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -102,6 +105,7 @@ namespace AntDesign
             }
             options.Content = Child;
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
