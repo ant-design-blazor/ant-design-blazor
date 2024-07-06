@@ -67,7 +67,7 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<RowData> GroupTitleTemplate { get; set; }
+        public RenderFragment<RowData<TItem>> GroupTitleTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
@@ -282,6 +282,18 @@ namespace AntDesign
         void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
 
         TableLocale ITable.Locale => this.Locale;
+
+        RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
+        {
+            if (GroupTitleTemplate == null)
+            {
+                return builder => { };
+            }
+            return builder =>
+            {
+                builder.AddContent(0, GroupTitleTemplate((RowData<TItem>)rowData));
+            };
+        };
 
         SortDirection[] ITable.SortDirections => SortDirections;
 

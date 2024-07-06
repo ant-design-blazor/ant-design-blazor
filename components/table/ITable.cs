@@ -30,8 +30,8 @@ namespace AntDesign
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }
-        
-        internal RenderFragment<RowData> GroupTitleTemplate { get; set; }
+
+        internal RenderFragment<RowData> GroupTitleTemplate { get; }
 
         internal bool TreeMode { get; }
 
