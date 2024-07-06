@@ -1,4 +1,5 @@
 ﻿@namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
@@ -61,5 +62,16 @@
         <Icon Type="@item.Icon" />
       }
     </Template>
-  ;
+      ;
+
+    void TitleContent(RenderTreeBuilder __builder)
+    {
+        @icon(this)
+        @content(this)
+    }
+
+    internal RenderFragment GetTitleContent()
+    {
+        return b => TitleContent(b);
+    }
 }
