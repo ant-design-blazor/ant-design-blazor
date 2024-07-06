@@ -107,9 +107,16 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                 }
             }
 
-            @if (RowData.IsGrouping && ColIndex == Table.TreeExpandIconColumnIndex)
+            @if (RowData.IsGrouping)
             {
-                @RowData.Key
+                if (Table.GroupTitleTemplate!=null)
+                {
+                    @Table.GroupTitleTemplate(RowData)
+                }
+                else
+                {
+                    @RowData.Key
+                }
             }
             else if (IsFiexedEllipsis)
             {

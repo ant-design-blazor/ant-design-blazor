@@ -67,6 +67,9 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<RowData> GroupTitleTemplate { get; set; }
+
+        [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
         [Parameter]
