@@ -14,6 +14,6 @@ namespace AntDesign
 
         public Dictionary<string, object> Params { get; set; }
 
-        public Uri Url { get; set; }
+        public string RouterLink { get; set; }
     }
 }
