@@ -69,6 +69,7 @@ namespace AntDesign
             ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
+                .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper

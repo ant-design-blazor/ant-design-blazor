@@ -14,9 +14,6 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
-
         #region Parameter
 
         /// <summary>
@@ -367,6 +364,7 @@ namespace AntDesign
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
+                CreateByService = ModalRef?.Config.CreateByService ?? false,
             };
 
             return options;
@@ -389,32 +387,6 @@ namespace AntDesign
                     await ModalRef.OnOpen();
                 }
             }
-
-            if (_firstShow)
-            {
-                _firstShow = false;
-                NavigationManager.LocationChanged += OnLocationChanged;
-            }
-        }
-
-        private void OnLocationChanged(object sender, LocationChangedEventArgs e)
-        {
-            // Modal create by Service
-            if (ModalRef != null)
-            {
-                return;
-            }
-            // Modal has been destroyed
-            if (!Visible && DestroyOnClose)
-            {
-                return;
-            }
-
-            if (_dialogWrapper.Dialog != null)
-            {
-                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
-                NavigationManager.LocationChanged -= OnLocationChanged;
-            }
         }
 
         private async Task OnAfterHide()
@@ -428,7 +400,6 @@ namespace AntDesign
 
         private async Task OnBeforeDialogWrapperDestroy()
         {
-            NavigationManager.LocationChanged -= OnLocationChanged;
             await InvokeAsync(StateHasChanged);
         }
 

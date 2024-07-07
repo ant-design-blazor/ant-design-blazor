@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Text;
 
 namespace AntDesign.Core.Reflection
 {
-    public static class ExpressionActivator<T>
+#if NETCOREAPP3_1_OR_GREATER
+    internal static class ExpressionActivator<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>
+#else
+    internal static class ExpressionActivator<T>
+#endif
     {
         private static Func<T> _createInstanceFunc;
 
@@ -15,6 +20,7 @@ namespace AntDesign.Core.Reflection
             if (constructor == null)
             {
                 _createInstanceFunc = () => default;
+                return;
             }
 
             var newExpression = Expression.New(constructor);

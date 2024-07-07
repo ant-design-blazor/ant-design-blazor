@@ -41,7 +41,7 @@
             }
             else
             {
-                if (avaliableRoutes.All(x => !relativeUri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+                if (avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
                     return;
 
                 if (currentCulture.Name.IsIn("zh-CN", "en-US"))

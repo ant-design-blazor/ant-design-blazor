@@ -124,7 +124,7 @@ namespace AntDesign
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)
-                .If("ant-tree-unselectable", () => !Selectable)
+                .If("ant-tree-unselectable", () => !Selectable && !CheckOnClickNode)
                 .If("ant-tree-rtl", () => RTL);
         }
 
@@ -224,6 +224,18 @@ namespace AntDesign
             {
                 OnUnselect.InvokeAsync(new TreeEventArgs<TItem>(this, treeNode));
             }
+        }
+
+        public void SelectAll()
+        {
+            if (!Selectable || !Multiple)
+                return;
+            foreach (var item in _allNodes)
+            {
+                item.DoSelect(true, true, true);
+            }
+            UpdateSelectedKeys();
+            StateHasChanged();
         }
 
         /// <summary>
@@ -391,6 +403,12 @@ namespace AntDesign
         public bool Checkable { get; set; }
 
         /// <summary>
+        /// Check or uncheck the node by click TreeNodeTitle if checkable
+        /// </summary>
+        [Parameter]
+        public bool CheckOnClickNode { get; set; } = true;
+
+        /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
         /// </summary>
         [Parameter]
@@ -426,10 +444,9 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.DoCheck(true, false, true);
+                item.CheckAllChildren();
             }
             UpdateCheckedKeys();
-            StateHasChanged();
         }
 
         /// <summary>
@@ -439,22 +456,9 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.DoCheck(false, false, true);
+                item.UnCheckAllChildren();
             }
             UpdateCheckedKeys();
-            StateHasChanged();
-        }
-
-        public void SelectAll()
-        {
-            if (!Selectable || !Multiple)
-                return;
-            foreach (var item in ChildNodes)
-            {
-                item.DoSelect(true, true, true);
-            }
-            UpdateSelectedKeys();
-            StateHasChanged();
         }
 
         /// <summary>
@@ -908,6 +912,12 @@ namespace AntDesign
         }
 
         #region Expand
+
+        /// <summary>
+        /// Expand or collapse the node by click TreeNodeTitle
+        /// </summary>
+        [Parameter]
+        public bool ExpandOnClickNode { get; set; } = false;
 
         /// <summary>
         /// All tree nodes are expanded by default

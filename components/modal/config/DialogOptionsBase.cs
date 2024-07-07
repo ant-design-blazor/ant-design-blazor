@@ -155,5 +155,7 @@ namespace AntDesign
         /// Is RTL
         /// </summary>
         public bool Rtl { get; set; } = false;
+
+        internal bool CreateByService { get; set; }
     }
 }

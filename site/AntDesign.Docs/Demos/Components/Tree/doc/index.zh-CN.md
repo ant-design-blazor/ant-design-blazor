@@ -29,6 +29,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | Selectable |是否可以选择 | boolean | true |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | Checkable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
+| CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | CheckStrictly  |  checkable 状态下节点选择完全受控（父子节点选中状态不再关联） |  boolean | false  |   |
 | DefaultSelectedKey | 默认选中的节点Key | string | null |  |
 | DefaultSelectedKeys | 默认选中的多个节点的key | string[] | null | |
@@ -49,9 +50,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | DefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | DefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
-| DefaultExpandedKeys  |  默认展开的节点数 | string[]  | null |   |
+| DefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 | AutoExpandParent | 是否自动展开父节点 | bool | false | |
+| ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 
 
 ### Bind 绑定值
@@ -86,8 +88,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  展开所有节点  | void  |   |   |
-| CollapseAll |  关闭所有节点 | void  |   |   |
+| ExpandAll  |  展开所有树节点  | void  |   |   |
+| CollapseAll |  折叠所有树节点 | void  |   |   |
+| CheckAll  |  递归勾选所有树节点  | void  |   |   |
+| UnCheckAll |  递归取消勾选所有树节点 | void  |   |   |
+| SelectAll  |  选择所有树节点  | void  |   |   |
+| DeselectAll |  取消选择所有树节点 | void  |   |   |
 
 ### Tree RenderFragment
 
@@ -117,3 +123,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | DataItem | 数据项  |  Type |  |   | 
 | SwitcherIcon | 该节点的展开图标 | string | null | |
 | SwitcherIconTemplate | 该节点的展开图标 | RenderFragment | null | |
+
+### TreeNode Functions
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| CheckAllChildren  |  递归勾选当前节点下的所有子节点（含当前节点）  | void  |   |   |
+| UnCheckAllChildren |  递归取消勾选当前节点下的所有子节点（含当前节点） | void  |   |   |

@@ -40,6 +40,27 @@ dotnet add package AntDesign.Extensions.Localization
   | ---- | ---- |
   | Hello | Hello! |
   | Goodbye | Goodbye! |
+
+It should be noted that, `IStringLocalizer<T>`  needs to specify a generic type parameter as the positioning of the resx file, so you need to ensure that the resource file has a corresponding public type. 
+Or manually modify the csproj file as follows:
+
+```xml
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+```
+  
   
 - When in use, inject the `IStringLocalizer<T>` service in razor, for example:
 

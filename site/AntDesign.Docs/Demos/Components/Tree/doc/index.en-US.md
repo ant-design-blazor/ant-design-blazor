@@ -24,12 +24,13 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Draggable | Whether the node allows drag and drop | boolean | false |  |
 | BlockNode | Whether treeNode fill remaining horizontal space | boolean | false |  |
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
-| SwitcherIcon | Customize toggle icon£¬the value is Icon types | string | null | |
+| SwitcherIcon | Customize toggle icon, the value is Icon types | string | null | |
 | Selectable | Whether can be selected | boolean | true |  |
 | DefaultSelectedKey | Specifies the key of the default selected treeNode | string | null |  |
 | DefaultSelectedKeys | Specifies the keys of the default selected treeNodes | string[] | null |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | Checkable |  Add a Checkbox before the node | boolean  | false  |   |
+| CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | CheckStrictly  |  Check treeNode precisely; parent treeNode and children treeNodes are not associated |  boolean | false  |   |
 | DefaultCheckedKeys  | Specifies the keys of the default checked treeNodes |  string[] | null |   |
 | DisableCheckKeys | Disable node Checkbox |  string[] |  null |   |
@@ -48,9 +49,10 @@ Almost anything can be represented in a tree structure. Examples include directo
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | DefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | DefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
-| DefaultExpandedKeys  |  Expand the specified tree node by default | string[]  | null |   |
+| DefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | AutoExpandParent | Whether to automatically expand a parent treeNode | bool | false |  |
+| ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 
 ### Bind °ó¶¨Öµ
 
@@ -69,7 +71,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| OnNodeLoadDelayAsync  |   Lazy load callbacks ¡£You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
+| OnNodeLoadDelayAsync  |   Lazy load callbacks. You must use async and the return type is Task, otherwise you may experience load lag and display problems | EventCallback  |   |   |
 | OnClick |  Click the tree node callback | EventCallback  |   |   |
 | OnDblClick | Double-click the node callback  |  EventCallback |   |   |
 | OnContextMenu  |  Right-click tree node callback | EventCallback  |  |   |
@@ -79,14 +81,18 @@ Almost anything can be represented in a tree structure. Examples include directo
 | OnDragEnter |  Called when drag and drop into a releasable target  | EventCallback  |   |   |
 | OnDragLeave | Called when drag and drop away from a releasable target  | EventCallback  |   |   |
 | OnDrop | Triggered when drag-and-drop drops succeed  | EventCallback  |   |   |
-| OnDragEnd | Drag-and-drop end callback ¡£this callback method must be set  | EventCallback  |   |   |
+| OnDragEnd | Drag-and-drop end callback. this callback method must be set  | EventCallback  |   |   |
 
 ### Tree Functions
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| ExpandAll  |  All tree nodes are expanded by default  | void  |   |   |
-| CollapseAll |  The parent node is expanded by default | void  |   |   |
+| ExpandAll  |  Expand all the tree nodes  | void  |   |   |
+| CollapseAll |  Collapse all the tree nodes | void  |   |   |
+| CheckAll  |  Recursively check all the tree nodes  | void  |   |   |
+| UnCheckAll |  Recursively uncheck all the tree nodes | void  |   |   |
+| SelectAll  |  Select all the tree nodes  | void  |   |   |
+| DeselectAll |  Deselect all the tree nodes | void  |   |   |
 
 ### Tree RenderFragment
 
@@ -115,5 +121,11 @@ Almost anything can be represented in a tree structure. Examples include directo
 | Icon | icon  |  string |  false |   |
 | IconTemplate | icon template | RenderFragment | null |  |
 | DataItem | dataitem |  Type |  |   | 
-| SwitcherIcon | Customize node toggle icon £¬the value is Icon types  | string | null | |
+| SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |
+
+### TreeNode Functions
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| CheckAllChildren  |  Recursively check all child nodes (including the current node)  | void  |   |   |
+| UnCheckAllChildren |  Recursively uncheck all child nodes (including the current node) | void  |   |   |
