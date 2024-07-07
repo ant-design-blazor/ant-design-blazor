@@ -6,7 +6,7 @@ using CssInCSharp;
 
 namespace AntDesign
 {
-    public class GlobalStyle
+    internal partial class GlobalStyle
     {
         public static CSSObject TextEllipsis = new()
         {
@@ -118,7 +118,7 @@ namespace AntDesign
             return new CSSObject();
         }
 
-        public static CSSObject GenCompactItemStyle(GlobalToken token)
+        public static CSSObject GenCompactItemStyle(GlobalToken token, CompactItemOptions options = null)
         {
             return new CSSObject();
         }
@@ -142,5 +142,12 @@ namespace AntDesign
         {
             return new CSSObject();
         }
+    }
+
+    public class CompactItemOptions
+    {
+        public bool Focus { get; set; }
+        public string BorderElCls { get; set; }
+        public string FocusElCls { get; set; }
     }
 }

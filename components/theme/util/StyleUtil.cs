@@ -15,6 +15,7 @@ namespace AntDesign
     internal class GenOptions
     {
         public bool ResetStyle { get; set; }
+        public int Order { get; set; }
         public List<(string, string)> DeprecatedTokens { get; set; }
     }
 
@@ -89,6 +90,19 @@ namespace AntDesign
                 });
 
                 return (render, hash.HashId);
+            };
+        }
+
+        internal static UseComponentStyleResult GenSubStyleComponent(string[] componentName)
+        {
+            return (prefixCls) =>
+            {
+                var render = UseStyleRegister(new StyleInfo()
+                {
+                    HashId = "",
+                    TokenKey = "",
+                });
+                return (render, "");
             };
         }
     }

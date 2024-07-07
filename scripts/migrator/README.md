@@ -4,7 +4,7 @@ Migrator can migrate antd style to v5.
 ### Usage
 In the root dir, exec migrate command.
 ```sh
-npm run migrate
+npm run migrate:v5
 ```
 
 ### Config

@@ -27,9 +27,9 @@
     "build:doc": "gulp build:preview --max-old-space-size=81920",
     "preinstall": "dotnet tool restore",
     "changelog": "node ./scripts/print-changelog",
-    "migrate:v5": "ts-node ./scripts/migrator/index.ts"
     "lint": "eslint --ext .ts ./components",
-    "lint-fix": "eslint --fix --ext .ts ./components"
+    "lint-fix": "eslint --fix --ext .ts ./components",
+    "migrate:v5": "ts-node ./scripts/migrator/index.ts"
   },
   "devDependencies": {
     "@ant-design/colors": "^6.0.0",

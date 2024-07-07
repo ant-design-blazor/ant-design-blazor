@@ -49,6 +49,14 @@ namespace AntDesign
             TriggerCls = "ant-dropdown-trigger";
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            var hashId = UseStyle(PrefixCls);
+            ClassMapper
+               .Add(hashId);
+        }
+
         protected void ChangeRightButtonIcon(string icon)
         {
             _rightButtonIcon = icon;

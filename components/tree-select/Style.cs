@@ -17,7 +17,7 @@ namespace AntDesign
 
     }
 
-    public partial class TreeSelect<TItem>
+    public partial class TreeSelectStyle
     {
         public CSSInterpolation[] GenBaseStyle(TreeSelectToken token)
         {
@@ -81,7 +81,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "TreeSelect",
@@ -94,7 +94,7 @@ namespace AntDesign
                             TreePrefixCls = "select-tree"
                         });
                     return GenBaseStyle(treeSelectToken);
-                }, 
+                },
                 InitComponentToken);
         }
 
