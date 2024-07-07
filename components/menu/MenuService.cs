@@ -25,7 +25,6 @@ namespace AntDesign
         internal void SetMenuItems(IEnumerable<MenuItem> menuItems)
         {
             _menuItems = menuItems;
-            _breadcrumbCache = menuItems.ToDictionary(x => x.RouterLink, x => GetBreadcrumbOptions(x).ToArray());
         }
 
         private IEnumerable<BreadcrumbOption> GetBreadcrumbOptions(MenuItem menuItem)
