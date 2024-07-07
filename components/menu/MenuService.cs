@@ -34,17 +34,17 @@ namespace AntDesign
             options.Add(new BreadcrumbOption()
             {
                 Label = menuItem.Title,
-                Url = menuItem.RouterLink
+                RouterLink = menuItem.RouterLink
             });
 
             var subMenu = menuItem.ParentMenu;
 
             while (subMenu != null)
             {
-                options.Add(new BreadcrumbOption()
+                options.Insert(0, new BreadcrumbOption()
                 {
                     Label = subMenu.Title,
-                    Url = null
+                    RouterLink = null
                 });
 
                 subMenu = subMenu.Parent;

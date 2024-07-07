@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
-    public static class MenuHelper
+    internal static class MenuHelper
     {
         /// <summary>
         /// Determines if the current URI should match the specified URI based on the given match criteria.
