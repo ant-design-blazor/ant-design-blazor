@@ -41,6 +41,11 @@ namespace AntDesign.TableModels
                 item.Value.SetSelected(isSelected, checkStrictly);
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is RowData<TItem> rowData && Table.Equals(Data, rowData.Data);
+        }
     }
 
     /// <summary>
@@ -130,6 +135,11 @@ namespace AntDesign.TableModels
         protected override void OnSelectedChanged(bool value)
         {
             Table.DataItemSelectedChanged(this, value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TableDataItem<TItem> tableDataItem && Table.Equals(Data, tableDataItem.Data);
         }
     }
 

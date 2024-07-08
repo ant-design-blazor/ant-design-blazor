@@ -7,8 +7,14 @@ namespace AntDesign
     public enum TableRowClickSelect
     {
         Disabled,
+
+        /// <summary>
+        /// Single check
+        /// </summary>
         Single,
-        Multiple, // Multi-selection via Shift or Ctrl Keys
-        BySelection // Follow the Selection column
+        /// <summary>
+        ///  Multi-selection via Shift or Ctrl Keys
+        /// </summary>
+        Multiple,
     }
 }

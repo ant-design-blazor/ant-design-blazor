@@ -8,12 +8,7 @@
     </RadioGroup>
     <br /><br />
     RowClickSelect:&nbsp;
-    <RadioGroup @bind-Value="rowClickSelect">
-        <Radio Value="TableRowClickSelect.Disabled">Disabled</Radio>
-        <Radio Value="TableRowClickSelect.Single" Disabled="@(hasSelection && selectionType=="checkbox")">Single</Radio>
-        <Radio Value="TableRowClickSelect.Multiple" Disabled="@(hasSelection && selectionType=="radio")">Multiple</Radio>
-        <Radio Value="TableRowClickSelect.BySelection" Disabled="!hasSelection">BySelection</Radio>
-    </RadioGroup>
+    <EnumRadioGroup @bind-Value="rowClickSelect" TEnum="TableRowClickSelect"></EnumRadioGroup>
     <h5>
         selections:
         @if (selectedRows != null)
@@ -82,7 +77,7 @@
     bool hasSelection = true;
     IEnumerable<Column> selectedRows;
     string selectionType = "checkbox";
-    TableRowClickSelect rowClickSelect = TableRowClickSelect.BySelection;
+    TableRowClickSelect rowClickSelect = TableRowClickSelect.Disabled;
 
     protected override void OnInitialized()
     {
@@ -96,7 +91,7 @@
 
     private void OnHasSelectionClick()
     {
-        if (!hasSelection && rowClickSelect == TableRowClickSelect.BySelection)
+        if (!hasSelection)
             rowClickSelect = TableRowClickSelect.Disabled;
     }
 

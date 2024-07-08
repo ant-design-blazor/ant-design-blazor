@@ -100,7 +100,7 @@ namespace AntDesign
                 select.SetSelected(false, _selection.CheckStrictly);
             }
 
-             _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
@@ -230,16 +230,24 @@ namespace AntDesign
 
         private IEnumerable<TItem> SelectRow(RowData<TItem> row)
         {
-            _prevSelectedRow = row;
-            return [row.Data];
+            if (_prevSelectedRow == row)
+            {
+                _prevSelectedRow = null;
+                return [];
+            }
+            else
+            {
+                _prevSelectedRow = row;
+                return [row.Data];
+            }
         }
 
         private IEnumerable<TItem> CheckRow(RowData<TItem> row)
         {
-            if (_selectedRows.Contains(row.Data))
+            if (_selectedRows.Contains(row.Data, this))
             {
                 _prevSelectedRow = null;
-                return _selectedRows.Except([row.Data]);
+                return _selectedRows.Except([row.Data], this);
             }
             else
             {
@@ -364,18 +372,8 @@ namespace AntDesign
         void DoRowSelect(MouseEventArgs e, RowData<TItem> row)
         {
             IEnumerable<TItem> toSelectRows;
-            if (RowClickSelect == TableRowClickSelect.BySelection)
-            {
-                if (_selection?.Type == "checkbox")
-                {
-                    toSelectRows = CheckRow(row);
-                }
-                else
-                {
-                    toSelectRows = SelectRow(row);
-                }
-            }
-            else if (RowClickSelect == TableRowClickSelect.Multiple && e.ShiftKey && _prevSelectedRow != null)
+
+            if (RowClickSelect == TableRowClickSelect.Multiple && e.ShiftKey && _prevSelectedRow != null)
             {
                 toSelectRows = SelectRange(row);
             }
@@ -383,10 +381,15 @@ namespace AntDesign
             {
                 toSelectRows = CheckRow(row);
             }
-            else
+            else if (RowClickSelect == TableRowClickSelect.Single || _selection?.Type == "radio")
             {
                 toSelectRows = SelectRow(row);
             }
+            else
+            {
+                toSelectRows = CheckRow(row);
+            }
+
             SetSelection(toSelectRows);
         }
     }
