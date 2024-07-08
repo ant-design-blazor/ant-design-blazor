@@ -715,8 +715,10 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
+            var hashId = UseStyle(ClassPrefix);
             ClassMapper
                 .Add($"{ClassPrefix}")
+                .Add(hashId)
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
@@ -732,6 +734,11 @@ namespace AntDesign
                 .If($"{ClassPrefix}-rtl", () => RTL)
 
                 ;
+        }
+
+        protected override UseComponentStyleResult UseComponentStyle()
+        {
+            return SelectStyle.UseComponentStyle();
         }
 
         /// <summary>

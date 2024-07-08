@@ -175,7 +175,7 @@ namespace AntDesign
     {
         private const double FIXED_ITEM_MARGIN = 2;
 
-        public CSSObject GenSelectorStyle(SelectToken token)
+        public static CSSObject GenSelectorStyle(SelectToken token)
         {
             var componentCls = token.ComponentCls;
             var selectorBg = token.SelectorBg;
@@ -216,7 +216,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStatusStyle(string rootSelectCls, SelectToken token, bool overwriteDefaultBorder = false)
+        public static CSSObject GenStatusStyle(string rootSelectCls, SelectToken token, bool overwriteDefaultBorder = false)
         {
             var componentCls = token.ComponentCls;
             var borderHoverColor = token.BorderHoverColor;
@@ -257,7 +257,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetSearchInputWithoutBorderStyle(SelectToken token)
+        public static CSSObject GetSearchInputWithoutBorderStyle(SelectToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -280,7 +280,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBaseStyle(SelectToken token)
+        public static CSSObject GenBaseStyle(SelectToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -405,7 +405,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenSelectStyle(SelectToken token)
+        public static CSSInterpolation GenSelectStyle(SelectToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSInterpolation[]
@@ -479,7 +479,7 @@ namespace AntDesign
             };
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Select",
@@ -542,7 +542,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenItemStyle(SelectToken token)
+        public static CSSObject GenItemStyle(SelectToken token)
         {
             var optionHeight = token.OptionHeight;
             var optionFontSize = token.OptionFontSize;
@@ -562,7 +562,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenDropdownStyle(SelectToken token)
+        public static CSSInterpolation GenDropdownStyle(SelectToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -678,7 +678,7 @@ namespace AntDesign
             };
         }
 
-        public (double, double) GetSelectItemStyle(SelectToken args)
+        public static (double, double) GetSelectItemStyle(SelectToken args)
         {
             var multipleSelectItemHeight = args.MultipleSelectItemHeight;
             var selectHeight = args.SelectHeight;
@@ -688,7 +688,7 @@ namespace AntDesign
             return (selectItemDist, selectItemMargin);
         }
 
-        public CSSObject GenSizeStyle(SelectToken token, string suffix = null)
+        public static CSSObject GenSizeStyle(SelectToken token, string suffix = null)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -853,7 +853,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenMultipleStyle(SelectToken token)
+        public static CSSInterpolation GenMultipleStyle(SelectToken token)
         {
             var componentCls = token.ComponentCls;
             var smallToken = MergeToken(
@@ -898,7 +898,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSingleSizeStyle(SelectToken token, string suffix = null)
+        public static CSSObject GenSingleSizeStyle(SelectToken token, string suffix = null)
         {
             var componentCls = token.ComponentCls;
             var inputPaddingHorizontalBase = token.InputPaddingHorizontalBase;
@@ -1005,7 +1005,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenSingleStyle(SelectToken token)
+        public static CSSInterpolation GenSingleStyle(SelectToken token)
         {
             var componentCls = token.ComponentCls;
             var inputPaddingHorizontalSM = token.ControlPaddingHorizontalSM - token.LineWidth;

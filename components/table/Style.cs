@@ -449,7 +449,7 @@ namespace AntDesign
 
     public class TableStyle
     {
-        public CSSObject GenTableStyle(TableToken token)
+        public static CSSObject GenTableStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var fontWeightStrong = token.FontWeightStrong;
@@ -582,7 +582,7 @@ namespace AntDesign
             };
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Table",
@@ -751,7 +751,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenBorderedStyle(TableToken token)
+        public static CSSObject GenBorderedStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var tableBorder = @$"{token.LineWidth}px {token.LineType} {token.TableBorderColor}";
@@ -881,7 +881,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenEllipsisStyle(TableToken token)
+        public static CSSObject GenEllipsisStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -913,7 +913,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenEmptyStyle(TableToken token)
+        public static CSSObject GenEmptyStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -933,7 +933,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenExpandStyle(TableToken token)
+        public static CSSObject GenExpandStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -1077,7 +1077,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenFilterStyle(TableToken token)
+        public static CSSInterpolation GenFilterStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -1248,7 +1248,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenFixedStyle(TableToken token)
+        public static CSSObject GenFixedStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var lineWidth = token.LineWidth;
@@ -1364,7 +1364,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationStyle(TableToken token)
+        public static CSSObject GenPaginationStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -1402,7 +1402,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRadiusStyle(TableToken token)
+        public static CSSObject GenRadiusStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var tableRadius = token.TableRadius;
@@ -1457,7 +1457,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRtlStyle(TableToken token)
+        public static CSSObject GenRtlStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -1514,7 +1514,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSelectionStyle(TableToken token)
+        public static CSSObject GenSelectionStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -1617,7 +1617,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSizeStyle(TableToken token)
+        public static CSSObject GenSizeStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var getSizeStyle = (string size, double paddingVertical, double paddingHorizontal, double fontSize) => {
@@ -1663,7 +1663,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSorterStyle(TableToken token)
+        public static CSSObject GenSorterStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var marginXXS = token.MarginXXS;
@@ -1762,7 +1762,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStickyStyle(TableToken token)
+        public static CSSObject GenStickyStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var opacityLoading = token.OpacityLoading;
@@ -1819,7 +1819,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSummaryStyle(TableToken token)
+        public static CSSObject GenSummaryStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var lineWidth = token.LineWidth;
@@ -1850,7 +1850,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenVirtualStyle(TableToken token)
+        public static CSSObject GenVirtualStyle(TableToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationMid = token.MotionDurationMid;

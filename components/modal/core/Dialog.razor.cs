@@ -396,6 +396,25 @@ namespace AntDesign
 
         private bool _hasRendered = false;
 
+        protected override void OnInitialized()
+        {
+            SetClassMap();
+            base.OnInitialized();
+        }
+
+        protected void SetClassMap()
+        {
+            var hashId = UseStyle(Config.PrefixCls);
+            ClassMapper.Clear()
+                .Add(Config.PrefixCls)
+                .Add(hashId);
+        }
+
+        protected override UseComponentStyleResult UseComponentStyle()
+        {
+            return ModalStyle.UseComponentStyle();
+        }
+
         /// <summary>
         ///
         /// </summary>

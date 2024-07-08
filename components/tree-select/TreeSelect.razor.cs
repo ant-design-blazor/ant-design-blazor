@@ -526,6 +526,11 @@ namespace AntDesign
                 ;
         }
 
+        protected override UseComponentStyleResult UseComponentStyle()
+        {
+            return TreeSelectStyle.UseComponentStyle();
+        }
+
         // bind the option once after fetching the data source asynchronously
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
         internal void UpdateValueAfterDataSourceChanged()

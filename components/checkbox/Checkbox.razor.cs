@@ -63,6 +63,11 @@ namespace AntDesign
 
         private string _prefixCls = "ant-checkbox";
 
+        protected override UseComponentStyleResult UseComponentStyle()
+        {
+            return CheckboxStyle.UseComponentStyle();
+        }
+
         protected void SetClass()
         {
             var hashId = UseStyle(_prefixCls);

@@ -112,12 +112,16 @@ namespace AntDesign
 
             var prefixCls = "ant-upload";
 
+            var hashId = UseStyle(prefixCls);
+
             ClassMapper
+                .Add(hashId)
                 .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
                 .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);
 
             _listClassMapper
                 .Add($"{prefixCls}-list")
+                .Add(hashId)
                 .Get(() => $"{prefixCls}-list-{ListType}")
                 .If($"{prefixCls}-list-rtl", () => RTL);
 

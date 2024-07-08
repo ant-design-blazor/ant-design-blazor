@@ -142,9 +142,9 @@ namespace AntDesign
 
     }
 
-    public partial class Modal
+    public partial class ModalStyle
     {
-        public CSSObject Box(string position)
+        public static CSSObject Box(string position)
         {
             return new CSSObject()
             {
@@ -153,7 +153,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenModalMaskStyle(ModalToken token)
+        public static CSSInterpolation GenModalMaskStyle(ModalToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -207,7 +207,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenModalStyle(ModalToken token)
+        public static CSSInterpolation GenModalStyle(ModalToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSInterpolation[]
@@ -383,7 +383,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenWireframeStyle(ModalToken token)
+        public static CSSObject GenWireframeStyle(ModalToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -432,7 +432,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRTLStyle(ModalToken token)
+        public static CSSObject GenRTLStyle(ModalToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -451,7 +451,7 @@ namespace AntDesign
             };
         }
 
-        public ModalToken PrepareToken(TokenWithCommonCls token)
+        public static ModalToken PrepareToken(TokenWithCommonCls token)
         {
             var headerPaddingVertical = token.Padding;
             var headerFontSize = token.FontSizeHeading5;
@@ -479,7 +479,7 @@ namespace AntDesign
             return modalToken;
         }
 
-        public ModalToken PrepareComponentToken(GlobalToken token)
+        public static ModalToken PrepareComponentToken(GlobalToken token)
         {
             return new ModalToken()
             {
@@ -492,7 +492,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Modal",

@@ -84,7 +84,7 @@ namespace AntDesign
 
     public class FormStyle
     {
-        public CSSObject ResetForm(FormToken token)
+        public static CSSObject ResetForm(FormToken token)
         {
             return new CSSObject()
             {
@@ -141,7 +141,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenFormSize(FormToken token, double height)
+        public static CSSObject GenFormSize(FormToken token, double height)
         {
             var formItemCls = token.FormItemCls;
             return new CSSObject()
@@ -160,7 +160,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenFormStyle(FormToken token)
+        public static CSSObject GenFormStyle(FormToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -186,7 +186,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenFormItemStyle(FormToken token)
+        public static CSSObject GenFormItemStyle(FormToken token)
         {
             var formItemCls = token.FormItemCls;
             var iconCls = token.IconCls;
@@ -391,7 +391,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenHorizontalStyle(FormToken token)
+        public static CSSObject GenHorizontalStyle(FormToken token)
         {
             var componentCls = token.ComponentCls;
             var formItemCls = token.FormItemCls;
@@ -419,7 +419,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenInlineStyle(FormToken token)
+        public static CSSObject GenInlineStyle(FormToken token)
         {
             var componentCls = token.ComponentCls;
             var formItemCls = token.FormItemCls;
@@ -460,7 +460,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject MakeVerticalLayoutLabel(FormToken token)
+        public static CSSObject MakeVerticalLayoutLabel(FormToken token)
         {
             return new CSSObject()
             {
@@ -479,7 +479,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject MakeVerticalLayout(FormToken token)
+        public static CSSObject MakeVerticalLayout(FormToken token)
         {
             var componentCls = token.ComponentCls;
             var formItemCls = token.FormItemCls;
@@ -505,7 +505,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenVerticalStyle(FormToken token)
+        public static CSSObject GenVerticalStyle(FormToken token)
         {
             var componentCls = token.ComponentCls;
             var formItemCls = token.FormItemCls;
@@ -566,7 +566,7 @@ namespace AntDesign
             };
         }
 
-        public FormToken PrepareToken(FormToken token, string rootPrefixCls)
+        public static FormToken PrepareToken(FormToken token, string rootPrefixCls)
         {
             var formToken = MergeToken(
                 token,
@@ -578,7 +578,7 @@ namespace AntDesign
             return formToken;
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Form",
@@ -619,7 +619,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenFormValidateMotionStyle(FormToken token)
+        public static CSSObject GenFormValidateMotionStyle(FormToken token)
         {
             var componentCls = token.ComponentCls;
             var helpCls = @$"{componentCls}-show-help";
@@ -670,7 +670,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenFallbackStyle(FormToken token)
+        public static CSSObject GenFallbackStyle(FormToken token)
         {
             var formItemCls = token.FormItemCls;
             return new CSSObject()

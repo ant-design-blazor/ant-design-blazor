@@ -93,9 +93,9 @@ namespace AntDesign
 
     }
 
-    public partial class List
+    public class AntListStyle
     {
-        public CSSObject GenBorderedStyle(ListToken token)
+        public static CSSObject GenBorderedStyle(ListToken token)
         {
             var listBorderedCls = token.ListBorderedCls;
             var componentCls = token.ComponentCls;
@@ -137,7 +137,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenResponsiveStyle(ListToken token)
+        public static CSSObject GenResponsiveStyle(ListToken token)
         {
             var componentCls = token.ComponentCls;
             var screenSM = token.ScreenSM;
@@ -202,7 +202,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBaseStyle(ListToken token)
+        public static CSSObject GenBaseStyle(ListToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -464,7 +464,7 @@ namespace AntDesign
             };
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "List",
