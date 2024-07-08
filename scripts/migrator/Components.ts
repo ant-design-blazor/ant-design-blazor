@@ -1315,6 +1315,49 @@ const completed: Component[] = [
         }
     },
     {
+        name: 'Select',
+        src: [
+            'components/select/style/index.tsx',
+            'components/select/style/dropdown.tsx',
+            'components/select/style/multiple.tsx',
+            'components/select/style/single.tsx',
+        ],
+        dist: 'components/select/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Select',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Padding<string | number>', to: 'string' },
+                { from: 'LineHeight<string | number>', to: 'string' },
+                { from: 'FontWeight', to: 'string' },
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 9]] },
+                { from: 'Unknown1', to: 'SelectToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2, 3] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 5]] },
+                { from: 'Unknown3', to: 'SelectToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 21]] },
+                { from: 'Unknown4', to: 'SelectToken', includes: [2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 21]] },
+                { from: 'Unknown5', to: 'SelectToken', includes: [2, 10, 11, 12, 13] },
+                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [3] },
+                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 3]] },
+                { from: 'Unknown7', to: 'SelectToken', includes: [2] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 22]] },
+                { from: 'Unknown8', to: 'SelectToken', includes: [2] },
+                { from: 'Unknown8', to: 'CSSInterpolation[]', includes: [3] },
+                { from: 'Unknown13', to: 'CSSObject', ranges: [[2, 8]] },
+                { from: 'Unknown13', to: 'SelectToken', includes: [1, 9] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class SelectToken' },
+                { source: 'class SelectToken', target: 'partial class SelectToken : TokenWithCommonCls' },
+                { source: 'class Select', target: 'class SelectStyle' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
+            ]
+        }
+    },
+    {
         name: 'Skeleton',
         src: ['components/skeleton/style/index.tsx'],
         dist: 'components/skeleton/Style.cs',
@@ -1336,33 +1379,6 @@ const completed: Component[] = [
                 { source: 'class SkeletonToken', target: 'partial class SkeletonToken : TokenWithCommonCls' },
                 { source: 'class Skeleton', target: 'partial class Skeleton' },
                 { source: 'skeletonClsLoading', target: '_skeletonClsLoading' },
-                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Slider',
-        src: ['components/slider/style/index.tsx'],
-        dist: 'components/slider/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Slider',
-            propertyMap: '_tokens',
-            typeMap: [
-                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 34]] },
-                { from: 'Unknown1', to: 'SliderToken', includes: [2] },
-                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2] },
-                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 5]] },
-                { from: 'Unknown3', to: 'SliderToken', includes: [2] },
-                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 4]] },
-                { from: 'Unknown4', to: 'SliderToken', includes: [2] },
-                { from: 'Unknown5', to: 'SliderToken', includes: [1, 3] },
-                { from: 'Unknown5', to: 'CSSInterpolation[]', includes: [2] },
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class SliderToken' },
-                { source: 'class SliderToken', target: 'partial class SliderToken : TokenWithCommonCls' },
-                { source: 'class Slider', target: 'partial class Slider<TValue>' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
             ]
         }
@@ -1553,6 +1569,73 @@ const completed: Component[] = [
                 { source: 'class SwitchToken', target: 'partial class SwitchToken : TokenWithCommonCls' },
                 { source: 'class Switch', target: 'partial class Switch' },
                 { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+            ]
+        }
+    },
+    {
+        name: 'Table',
+        src: [
+            'components/table/style/index.ts',
+            'components/table/style/bordered.ts',
+            'components/table/style/ellipsis.ts',
+            'components/table/style/empty.ts',
+            'components/table/style/expand.ts',
+            'components/table/style/filter.ts',
+            'components/table/style/fixed.ts',
+            'components/table/style/pagination.ts',
+            'components/table/style/radius.ts',
+            'components/table/style/rtl.ts',
+            'components/table/style/selection.ts',
+            'components/table/style/size.ts',
+            'components/table/style/sorter.ts',
+            'components/table/style/sticky.ts',
+            'components/table/style/summary.ts',
+            'components/table/style/virtual.ts',
+        ],
+        dist: 'components/table/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'Table',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 22]] },
+                { from: 'Unknown1', to: 'TableToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 34]] },
+                { from: 'Unknown3', to: 'TableToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown4', to: 'TableToken', includes: [2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 6]] },
+                { from: 'Unknown5', to: 'TableToken', includes: [2] },
+                { from: 'Unknown6', to: 'CSSObject', ranges: [[1, 24]] },
+                { from: 'Unknown6', to: 'TableToken', includes: [2] },
+                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown7', to: 'TableToken', includes: [2] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 23]] },
+                { from: 'Unknown8', to: 'TableToken', includes: [2] },
+                { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 10]] },
+                { from: 'Unknown9', to: 'TableToken', includes: [2] },
+                { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 15]] },
+                { from: 'Unknown10', to: 'TableToken', includes: [2] },
+                { from: 'Unknown11', to: 'CSSObject', ranges: [[1, 15]] },
+                { from: 'Unknown11', to: 'TableToken', includes: [2] },
+                { from: 'Unknown12', to: 'CSSObject', ranges: [[1, 22]] },
+                { from: 'Unknown12', to: 'TableToken', includes: [2] },
+                { from: 'Unknown13', to: 'CSSObject', ranges: [[1, 12]] },
+                { from: 'Unknown13', to: 'TableToken', includes: [2] },
+                { from: 'Unknown14', to: 'CSSObject', ranges: [[1, 21]] },
+                { from: 'Unknown14', to: 'TableToken', includes: [2] },
+                { from: 'Unknown15', to: 'CSSObject', ranges: [[1, 10]] },
+                { from: 'Unknown15', to: 'TableToken', includes: [2] },
+                { from: 'Unknown16', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown16', to: 'TableToken', includes: [2] },
+                { from: 'Unknown17', to: 'CSSObject', ranges: [[1, 16]] },
+                { from: 'Unknown17', to: 'TableToken', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class TableToken' },
+                { source: 'class TableToken', target: 'partial class TableToken : TokenWithCommonCls' },
+                { source: 'class Table', target: 'class TableStyle' },
+                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
             ]
         }
     },
@@ -1785,70 +1868,6 @@ const completed: Component[] = [
             ]
         }
     },
-]
-
-// 未完成迁移
-const uncompleted: Component[] = [
-
-    {
-        name: 'Select',
-        src: [
-            'components/select/style/index.tsx',
-            'components/select/style/dropdown.tsx',
-            'components/select/style/multiple.tsx',
-            'components/select/style/single.tsx',
-        ],
-        dist: 'components/select/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Select',
-            propertyMap: '_tokens',
-            typeMap: [
-                { from: 'Padding<string | number>', to: 'string' },
-                { from: 'LineHeight<string | number>', to: 'string' },
-                { from: 'FontWeight', to: 'string' }
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class SelectToken' },
-                { source: 'class SelectToken', target: 'partial class SelectToken : TokenWithCommonCls' },
-                { source: 'class Select', target: 'partial class Select' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
-    {
-        name: 'Table',
-        src: [
-            'components/table/style/index.ts',
-            'components/table/style/bordered.ts',
-            'components/table/style/ellipsis.ts',
-            'components/table/style/empty.ts',
-            'components/table/style/expand.ts',
-            'components/table/style/filter.ts',
-            'components/table/style/fixed.ts',
-            'components/table/style/pagination.ts',
-            'components/table/style/radius.ts',
-            'components/table/style/rtl.ts',
-            'components/table/style/selection.ts',
-            'components/table/style/size.ts',
-            'components/table/style/sorter.ts',
-            'components/table/style/sticky.ts',
-            'components/table/style/summary.ts',
-        ],
-        dist: 'components/table/Style.cs',
-        csOptions: {
-            ...defaultOptions,
-            defaultClass: 'Table',
-            typeMap: [
-            ],
-            transforms: [
-                { source: 'class ComponentToken', target: 'partial class TableToken' },
-                { source: 'class TableToken', target: 'partial class TableToken : TokenWithCommonCls' },
-                { source: 'class Table', target: 'partial class Table' },
-                { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
-            ]
-        }
-    },
     {
         name: 'Upload',
         src: [
@@ -1863,7 +1882,25 @@ const uncompleted: Component[] = [
         csOptions: {
             ...defaultOptions,
             defaultClass: 'Upload',
+            propertyMap: '_tokens',
             typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown2', to: 'CSSObject', includes: [1, 2] },
+                { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 8]] },
+                { from: 'Unknown3', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown5', to: 'CSSObject', ranges: [[1, 15]] },
+                { from: 'Unknown5', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown6', to: 'CSSObject', ranges: [[1, 26]] },
+                { from: 'Unknown6', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown7', to: 'CSSObject', ranges: [[1, 9]] },
+                { from: 'Unknown7', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown7', to: 'CSSInterpolation[]', includes: [3] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 19]] },
+                { from: 'Unknown8', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown9', to: 'CSSObject', ranges: [[1, 29]] },
+                { from: 'Unknown9', to: 'UploadToken', includes: [2] },
+                { from: 'Unknown10', to: 'CSSObject', ranges: [[1, 4]] },
+                { from: 'Unknown10', to: 'UploadToken', includes: [2] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class UploadToken' },
@@ -1872,8 +1909,8 @@ const uncompleted: Component[] = [
                 { source: 'public CSSInterpolation[] GenComponentStyleHook', target: 'protected override CSSInterpolation[] UseStyle' },
             ]
         }
-    }
-];
+    },
+]
 
 // 用于生成的实例，将需要生成的组件配置放到这里
-export const components: Component[] = uncompleted.slice(0, 1);
+export const components: Component[] = [...token, ...completed];

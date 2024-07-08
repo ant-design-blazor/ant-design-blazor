@@ -5,6 +5,7 @@ using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
 using static AntDesign.CollapseMotion;
 using static AntDesign.TreeStyle;
+using static AntDesign.CheckboxStyle;
 using Keyframes = CssInCSharp.Keyframe;
 
 namespace AntDesign

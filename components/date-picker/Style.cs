@@ -10,7 +10,7 @@ using static AntDesign.InputStyle;
 
 namespace AntDesign
 {
-    public partial class PickerToken : InputToken
+    public class PanelComponentToken : InputToken
     {
         public string CellHoverBg
         {
@@ -83,32 +83,9 @@ namespace AntDesign
             get => (double)_tokens["withoutTimeCellHeight"];
             set => _tokens["withoutTimeCellHeight"] = value;
         }
-
     }
 
-    public partial class PickerToken
-    {
-        public double PresetsWidth
-        {
-            get => (double)_tokens["presetsWidth"];
-            set => _tokens["presetsWidth"] = value;
-        }
-
-        public double PresetsMaxWidth
-        {
-            get => (double)_tokens["presetsMaxWidth"];
-            set => _tokens["presetsMaxWidth"] = value;
-        }
-
-        public double ZIndexPopup
-        {
-            get => (double)_tokens["zIndexPopup"];
-            set => _tokens["zIndexPopup"] = value;
-        }
-
-    }
-
-    public partial class PickerToken
+    public class PickerPanelToken : PanelComponentToken
     {
         public string PickerCellCls
         {
@@ -166,6 +143,27 @@ namespace AntDesign
 
     }
 
+    public partial class PickerToken : PickerPanelToken
+    {
+        public double PresetsWidth
+        {
+            get => (double)_tokens["presetsWidth"];
+            set => _tokens["presetsWidth"] = value;
+        }
+
+        public double PresetsMaxWidth
+        {
+            get => (double)_tokens["presetsMaxWidth"];
+            set => _tokens["presetsMaxWidth"] = value;
+        }
+
+        public double ZIndexPopup
+        {
+            get => (double)_tokens["zIndexPopup"];
+            set => _tokens["zIndexPopup"] = value;
+        }
+    }
+
     public class DatePickerStyle
     {
         public static CSSObject GenPikerPadding(PickerToken token, double inputHeight, double fontSize, double paddingHorizontal)
@@ -180,7 +178,7 @@ namespace AntDesign
             };
         }
 
-        public static CSSObject GenPickerCellInnerStyle(PickerToken token)
+        public static CSSObject GenPickerCellInnerStyle(PickerPanelToken token)
         {
             var componentCls = token.ComponentCls;
             var pickerCellCls = token.PickerCellCls;
@@ -361,7 +359,7 @@ namespace AntDesign
             };
         }
 
-        public static CSSObject GenPanelStyle(PickerToken token)
+        public static CSSObject GenPanelStyle(PickerPanelToken token)
         {
             var componentCls = token.ComponentCls;
             var pickerCellCls = token.PickerCellCls;

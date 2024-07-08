@@ -11,9 +11,27 @@ namespace AntDesign
 {
     internal class CollapseMotion
     {
-        public static CSSObject GenCollapseMotion(GlobalToken token)
+        public static CSSObject GenCollapseMotion(TokenWithCommonCls token)
         {
-            return new CSSObject();
+            return new CSSObject()
+            {
+                [token.ComponentCls] = new CSSObject()
+                {
+                    [$"{token.AntCls}-motion-collapse-legacy"] = new CSSObject()
+                    {
+                        Overflow = "hidden",
+                        ["&-active"] = new CSSObject()
+                        {
+                            Transition = $"height {token.MotionDurationMid} {token.MotionEaseInOut},opacity {token.MotionDurationMid} {token.MotionEaseInOut} !important"
+                        }
+                    },
+                    [$"{token.AntCls}-motion-collapse"] = new CSSObject()
+                    {
+                        Overflow = "hidden",
+                        Transition = $"height {token.MotionDurationMid} ${token.MotionEaseInOut},opacity {token.MotionDurationMid} {token.MotionEaseInOut} !important"
+                    }
+                }
+            };
         }
     }
 }

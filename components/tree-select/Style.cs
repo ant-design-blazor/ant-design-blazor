@@ -1,9 +1,9 @@
 ﻿using System;
 using CssInCSharp;
-using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
 using static AntDesign.TreeStyle;
+using static AntDesign.CheckboxStyle;
 
 namespace AntDesign
 {

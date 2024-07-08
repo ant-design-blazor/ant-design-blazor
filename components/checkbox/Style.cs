@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -26,9 +26,9 @@ namespace AntDesign
 
     }
 
-    public partial class Checkbox
+    public partial class CheckboxStyle
     {
-        public CSSInterpolation[] GenCheckboxStyle(CheckboxToken token)
+        public static CSSInterpolation[] GenCheckboxStyle(CheckboxToken token)
         {
             var checkboxCls = token.CheckboxCls;
             var wrapperCls = @$"{checkboxCls}-wrapper";
@@ -247,7 +247,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GetStyle(string prefixCls, TokenWithCommonCls token)
+        public static CSSInterpolation[] GetCheckboxStyle(string prefixCls, TokenWithCommonCls token)
         {
             var checkboxToken = MergeToken(
                 token,
@@ -262,7 +262,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Checkbox",
@@ -271,7 +271,7 @@ namespace AntDesign
                     var prefixCls = token.PrefixCls;
                     return new CSSInterpolation[]
                     {
-                        GetStyle(prefixCls, token),
+                        GetCheckboxStyle(prefixCls, token),
                     };
                 });
         }

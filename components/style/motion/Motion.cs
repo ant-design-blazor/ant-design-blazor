@@ -11,6 +11,24 @@ namespace AntDesign
 {
     internal class Motion
     {
+        public static CSSObject InitMotionCommon(string duration)
+        {
+            return new CSSObject
+            {
+                AnimationDuration = duration,
+                AnimationFillMode = "both",
+            };
+        }
+
+        public static CSSObject InitMotionCommonLeave(string duration)
+        {
+            return new CSSObject
+            {
+                AnimationDuration = duration,
+                AnimationFillMode = "both",
+            };
+        }
+
         public static CSSObject InitMotion(string motionCls, Keyframe inKeyframes, Keyframe outKeyframes, string duration, bool sameLevel = false)
         {
             var sameLevelPrefix = sameLevel ? "&" : "";
@@ -40,15 +58,6 @@ namespace AntDesign
                     AnimationPlayState = "running",
                     PointerEvents = "none"
                 },
-            };
-        }
-
-        public static CSSObject InitMotionCommon(string duration)
-        {
-            return new CSSObject
-            {
-                AnimationDuration = duration,
-                AnimationFillMode = "both",
             };
         }
     }

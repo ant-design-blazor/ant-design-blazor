@@ -2,10 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using CssInCSharp;
+using static AntDesign.Motion;
 
 namespace AntDesign
 {
+    internal class SlideMotion
+    {
+        public Keyframe InKeyframes { get; set; }
+        public Keyframe OutKeyframes { get; set; }
+    }
+
     internal class Slide
     {
         public static Keyframe SlideUpIn = new Keyframe("antSlideUpIn")
@@ -104,7 +112,6 @@ namespace AntDesign
             },
         };
 
-
         public static Keyframe SlideRightIn = new Keyframe("antSlideRightIn")
         {
             ["0%"] = new CSSObject
@@ -137,9 +144,42 @@ namespace AntDesign
             },
         };
 
-        public static CSSObject InitSlideMotion(TokenWithCommonCls token, string motionName)
+        private static Dictionary<string, SlideMotion> _slideMotion = new Dictionary<string, SlideMotion>()
         {
-            return new CSSObject();
+            { "slide-up", new SlideMotion() { InKeyframes = SlideUpIn, OutKeyframes = SlideUpOut } },
+            { "slide-down", new SlideMotion() { InKeyframes = SlideDownIn, OutKeyframes = SlideDownOut } },
+            { "slide-left", new SlideMotion() { InKeyframes = SlideLeftIn, OutKeyframes = SlideLeftOut } },
+            { "slide-right", new SlideMotion() { InKeyframes = SlideRightIn, OutKeyframes = SlideRightOut } },
+        };
+
+        public static CSSInterpolation InitSlideMotion(TokenWithCommonCls token, string motionName)
+        {
+            var antCls = token.AntCls;
+            var motionCls = $"{antCls}-{motionName}";
+            var inKeyframes = _slideMotion[motionName].InKeyframes;
+            var outKeyframes = _slideMotion[motionName].OutKeyframes;
+            return new CSSInterpolation[]
+            {
+                InitMotion(motionCls, inKeyframes, outKeyframes, token.MotionDurationMid),
+                new CSSObject()
+                {
+                    [$"{motionCls}-enter,{motionCls}-appear"] = new CSSObject()
+                    {
+                        Transform = "scale(0)",
+                        TransformOrigin = "0% 0%",
+                        Opacity = 0,
+                        AnimationTimingFunction = token.MotionEaseOutQuint,
+                        ["&-prepare"] = new CSSObject()
+                        {
+                            Transform = "scale(1)",
+                        }
+                    },
+                    ["&-leave"] = new CSSObject()
+                    {
+                        AnimationTimingFunction = token.MotionEaseInQuint,
+                    }
+                }
+            };
         }
     }
 }

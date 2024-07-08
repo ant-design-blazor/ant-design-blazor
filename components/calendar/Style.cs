@@ -1,12 +1,13 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
+using static AntDesign.DatePickerStyle;
 
 namespace AntDesign
 {
-    public partial class CalendarToken : TokenWithCommonCls
+    public partial class CalendarToken : PickerPanelToken
     {
         public double YearControlWidth
         {
