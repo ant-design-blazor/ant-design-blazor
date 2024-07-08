@@ -1,6 +1,8 @@
 ﻿<div>
-    Selection Type:&nbsp;
-    <RadioGroup @bind-Value="selectionType">
+    Selection:&nbsp;
+    <Switch @bind-Checked="hasSelection" OnClick="OnHasSelectionClick" />
+    <Space />
+    <RadioGroup TValue="string" @bind-Value="selectionType" Disabled="!hasSelection" OnChange="@OnSelectionTypeChange">
         <Radio Value="@("checkbox")">Checkbox</Radio>
         <Radio Value="@("radio")">Radio</Radio>
     </RadioGroup>
@@ -8,9 +10,9 @@
     RowClickSelect:&nbsp;
     <RadioGroup @bind-Value="rowClickSelect">
         <Radio Value="TableRowClickSelect.Disabled">Disabled</Radio>
-        <Radio Value="TableRowClickSelect.Single">Single</Radio>
-        <Radio Value="TableRowClickSelect.Multiple">Multiple</Radio>
-        <Radio Value="TableRowClickSelect.BySelection">BySelection</Radio>
+        <Radio Value="TableRowClickSelect.Single" Disabled="@(hasSelection && selectionType=="checkbox")">Single</Radio>
+        <Radio Value="TableRowClickSelect.Multiple" Disabled="@(hasSelection && selectionType=="radio")">Multiple</Radio>
+        <Radio Value="TableRowClickSelect.BySelection" Disabled="!hasSelection">BySelection</Radio>
     </RadioGroup>
     <h5>
         selections:
@@ -25,7 +27,7 @@
     </h5>
 
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowClickSelect="rowClickSelect" RowKey="x=>x.Name">
-        @if (rowClickSelect == TableRowClickSelect.Disabled || rowClickSelect == TableRowClickSelect.BySelection)
+        @if (hasSelection)
         {
             <Selection Key="@context.Name" Type="@selectionType" />
         }
@@ -77,7 +79,7 @@
             Address = "Beijing No. 1 Lake Park",
         }
     };
-
+    bool hasSelection = true;
     IEnumerable<Column> selectedRows;
     string selectionType = "checkbox";
     TableRowClickSelect rowClickSelect = TableRowClickSelect.BySelection;
@@ -90,5 +92,19 @@
     {
         var selected = selectedRows.Where(x => x.Name != key).ToList();
         table.SetSelection(selected.Select(x => x.Name).ToArray());
+    }
+
+    private void OnHasSelectionClick()
+    {
+        if (!hasSelection && rowClickSelect == TableRowClickSelect.BySelection)
+            rowClickSelect = TableRowClickSelect.Disabled;
+    }
+
+    private void OnSelectionTypeChange(string value)
+    {
+        if (value == "radio" && rowClickSelect == TableRowClickSelect.Multiple)
+            rowClickSelect = TableRowClickSelect.Single;
+        if (value == "checkbox" && rowClickSelect == TableRowClickSelect.Single)
+            rowClickSelect = TableRowClickSelect.Multiple;
     }
 }
