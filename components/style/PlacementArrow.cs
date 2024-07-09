@@ -21,8 +21,14 @@ namespace AntDesign
         public string ShowArrowCls { get; set; }
         public double ContentRadius { get; set; }
         public bool LimitVerticalRadius { get; set; }
-        public double ArrowDistance { get; set; }
-        public ArrowPlacement ArrowPlacement { get; set; } = new();
+        public double ArrowDistance { get; set; } = 0;
+        public ArrowPlacement ArrowPlacement { get; set; } = new()
+        {
+            Left = true, 
+            Right = true,
+            Top = true,
+            Bottom = true,
+        };
     }
 
     public class ArrowOffsetOptions
@@ -65,169 +71,176 @@ namespace AntDesign
         public static CSSObject GetArrowStyle(TokenWithCommonCls token, PlacementArrowOptions options)
         {
             var componentCls = token.ComponentCls;
+            var sizePopupArrow = token.SizePopupArrow;
+            var borderRadiusXS = token.BorderRadiusXS;
+            var borderRadiusOuter = token.BorderRadiusOuter;
+            var boxShadowPopoverArrow = token.BoxShadowPopoverArrow;
+            var arrowPlacement = options.ArrowPlacement;
+            var arrowDistance = options.ArrowDistance;
+            var colorBg = options.ColorBg;
+
             var offset = GetArrowOffset(new ArrowOffsetOptions
             {
                 ContentRadius = token.BorderRadiusLG,
                 LimitVerticalRadius = options.LimitVerticalRadius
             });
-            var arrowPlacement = options.ArrowPlacement;
-            var arrowDistance = options.ArrowDistance;
             var dropdownArrowOffset = offset.DropdownArrowOffset;
             var dropdownArrowOffsetVertical = offset.DropdownArrowOffsetVertical;
 
             return new CSSObject()
             {
-                [$"{componentCls}-arrow"] = new CSSObject()
+                [componentCls] = new CSSObject()
                 {
-                    [$"${componentCls}-arrow"] = new CSSObject()
+                    [$"{componentCls}-arrow"] = new CSSObject()
                     {
                         Position = "absolute",
                         ZIndex = 1,
                         Display = "block",
-                        ["..."] = RoundedArrow(token.SizePopupArrow,
-                            token.BorderRadiusXS,
-                            token.BorderRadiusOuter,
-                            options.ColorBg,
-                            token.BoxShadowPopoverArrow
+                        ["..."] = RoundedArrow(
+                            sizePopupArrow,
+                            borderRadiusXS,
+                            borderRadiusOuter,
+                            colorBg,
+                            boxShadowPopoverArrow
                         ),
                         ["&:before"] = new CSSObject()
                         {
-                            Background = options.ColorBg,
+                            Background = colorBg,
                         }
-                    }
-                },
-
-                ["..."] = IsInject(arrowPlacement.Top, new CSSObject()
-                {
-                    [$"&-placement-top {componentCls}-arrow,&-placement-topLeft {componentCls}-arrow,&-placement-topRight {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Bottom = arrowDistance,
-                        Transform = "translateY(100%) rotate(180deg)",
                     },
 
-                    [$"&-placement-top {componentCls}-arrow"] = new CSSObject()
+                    ["..."] = IsInject(arrowPlacement.Top, new CSSObject()
                     {
-                        Left = new PropertySkip()
+                        [$"&-placement-top {componentCls}-arrow,&-placement-topLeft {componentCls}-arrow,&-placement-topRight {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = "50%",
+                            Bottom = arrowDistance,
+                            Transform = "translateY(100%) rotate(180deg)",
                         },
-                        Transform = "translateX(-50%) translateY(100%) rotate(180deg)",
-                    },
 
-                    [$"&-placement-topLeft {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Left = new PropertySkip()
+                        [$"&-placement-top {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = offset.DropdownArrowOffset,
+                            Left = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = "50%",
+                            },
+                            Transform = "translateX(-50%) translateY(100%) rotate(180deg)",
                         },
-                    },
 
-                    [$"&-placement-topRight {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Right = new PropertySkip()
+                        [$"&-placement-topLeft {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = offset.DropdownArrowOffset,
+                            Left = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = dropdownArrowOffset,
+                            },
                         },
-                    },
-                }),
 
-                ["..."] = IsInject(arrowPlacement.Bottom, new CSSObject()
-                {
-                    [$"&-placement-bottom {componentCls}-arrow,&-placement-bottomLeft {componentCls}-arrow,&-placement-bottomRight {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Top = arrowDistance,
-                        Transform = "translateY(-100%)",
-                    },
-
-                    [$"&-placement-bottom {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Left = new PropertySkip()
+                        [$"&-placement-topRight {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = "50%",
+                            Right = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = dropdownArrowOffset,
+                            },
                         },
-                        Transform = "translateX(-50%) translateY(-100%)",
-                    },
+                    }),
 
-                    [$"&-placement-bottomRight {componentCls}-arrow"] = new CSSObject()
+                    ["..."] = IsInject(arrowPlacement.Bottom, new CSSObject()
                     {
-                        Left = new PropertySkip()
+                        [$"&-placement-bottom {componentCls}-arrow,&-placement-bottomLeft {componentCls}-arrow,&-placement-bottomRight {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = dropdownArrowOffset,
+                            Top = arrowDistance,
+                            Transform = "translateY(-100%)",
                         },
-                    },
 
-                    [$"&-placement-topRight {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Right = new PropertySkip()
+                        [$"&-placement-bottom {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = dropdownArrowOffset,
+                            Left = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = "50%",
+                            },
+                            Transform = "translateX(-50%) translateY(-100%)",
                         },
-                    },
-                }),
 
-                ["..."] = IsInject(arrowPlacement.Left, new CSSObject()
-                {
-                    [$"&-placement-left {componentCls}-arrow,&-placement-leftTop {componentCls}-arrow,&-placement-leftBottom {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Right = arrowDistance,
-                        Transform = "translateX(100%) rotate(90deg)",
-                    },
-
-                    [$"&-placement-left {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Top = new PropertySkip()
+                        [$"&-placement-bottomLeft {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = "50%",
+                            Left = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = dropdownArrowOffset,
+                            },
                         },
-                        Transform = "translateY(-50%) translateX(100%) rotate(90deg)",
-                    },
 
-                    [$"&-placement-leftTop {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Top = dropdownArrowOffsetVertical,
-                    },
-
-                    [$"&-placement-leftBottom {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Bottom = dropdownArrowOffsetVertical,
-                    },
-                }),
-
-                ["..."] = IsInject(arrowPlacement.Right, new CSSObject()
-                {
-                    [$"&-placement-right {componentCls}-arrow,&-placement-rightTop {componentCls}-arrow,&-placement-rightBottom {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Left = arrowDistance,
-                        Transform = "translateX(-100%) rotate(-90deg)",
-                    },
-
-                    [$"&-placement-right {componentCls}-arrow"] = new CSSObject()
-                    {
-                        Top = new PropertySkip()
+                        [$"&-placement-bottomRight {componentCls}-arrow"] = new CSSObject()
                         {
-                            SkipCheck = true,
-                            Value = "50%",
+                            Right = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = dropdownArrowOffset,
+                            },
                         },
-                        Transform = "translateY(-50%) translateX(-100%) rotate(-90deg)",
-                    },
+                    }),
 
-                    [$"&-placement-rightTop {componentCls}-arrow"] = new CSSObject()
+                    ["..."] = IsInject(arrowPlacement.Left, new CSSObject()
                     {
-                        Top = dropdownArrowOffsetVertical,
-                    },
+                        [$"&-placement-left {componentCls}-arrow,&-placement-leftTop {componentCls}-arrow,&-placement-leftBottom {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Right = arrowDistance,
+                            Transform = "translateX(100%) rotate(90deg)",
+                        },
 
-                    [$"&-placement-rightBottom {componentCls}-arrow"] = new CSSObject()
+                        [$"&-placement-left {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Top = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = "50%",
+                            },
+                            Transform = "translateY(-50%) translateX(100%) rotate(90deg)",
+                        },
+
+                        [$"&-placement-leftTop {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Top = dropdownArrowOffsetVertical,
+                        },
+
+                        [$"&-placement-leftBottom {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Bottom = dropdownArrowOffsetVertical,
+                        },
+                    }),
+
+                    ["..."] = IsInject(arrowPlacement.Right, new CSSObject()
                     {
-                        Bottom = dropdownArrowOffsetVertical,
-                    },
-                }),
+                        [$"&-placement-right {componentCls}-arrow,&-placement-rightTop {componentCls}-arrow,&-placement-rightBottom {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Left = arrowDistance,
+                            Transform = "translateX(-100%) rotate(-90deg)",
+                        },
+
+                        [$"&-placement-right {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Top = new PropertySkip()
+                            {
+                                SkipCheck = true,
+                                Value = "50%",
+                            },
+                            Transform = "translateY(-50%) translateX(-100%) rotate(-90deg)",
+                        },
+
+                        [$"&-placement-rightTop {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Top = dropdownArrowOffsetVertical,
+                        },
+
+                        [$"&-placement-rightBottom {componentCls}-arrow"] = new CSSObject()
+                        {
+                            Bottom = dropdownArrowOffsetVertical,
+                        },
+                    }),
+                }
             };
         }
     }

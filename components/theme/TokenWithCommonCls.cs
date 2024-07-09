@@ -33,7 +33,7 @@ namespace AntDesign
         public TokenWithCommonCls()
         {
             IconCls = "anticon";
-            AntCls = "ant";
+            AntCls = ".ant";
             this["rootPrefixCls"] = "ant";
         }
     }

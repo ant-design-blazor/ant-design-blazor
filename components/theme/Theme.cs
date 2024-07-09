@@ -5,6 +5,8 @@
 using CssInCSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using CssInCSharp.Colors;
 
 namespace AntDesign
 {
@@ -40,9 +42,25 @@ namespace AntDesign
             return token;
         }
 
-        public static CSSObject GenPresetColor(GlobalToken token, Func<PresetColor, CalcColor, CSSObject> func)
+        public static CSSObject GenPresetColor(GlobalToken token, Func<string, CalcColor, CSSObject> genCss)
         {
-            return new CSSObject();
+            var css = new CSSObject();
+            var colorKeys = Enum.GetNames(typeof(PresetColor)).Select(x => x.ToLower());
+            foreach (var colorKey in colorKeys)
+            {
+                var lightColor = token[$"{colorKey}1"].To<string>();
+                var lightBorderColor = token[$"{colorKey}3"].To<string>();
+                var darkColor = token[$"{colorKey}6"].To<string>();
+                var textColor = token[$"{colorKey}7"].To<string>();
+                css["..."] = genCss(colorKey, new CalcColor()
+                {
+                    LightColor = lightColor,
+                    LightBorderColor = lightBorderColor,
+                    DarkColor = darkColor,
+                    TextColor = textColor
+                });
+            }
+            return css;
         }
 
         public static string Join(this IEnumerable<string> arr, string separator)
