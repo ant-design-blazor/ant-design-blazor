@@ -255,6 +255,10 @@ namespace AntDesign
         {
             var componentCls = token.ComponentCls;
             var compactCls = $"${componentCls}-compact";
+            options ??= new CompactItemOptions()
+            {
+                Focus = true
+            };
             return new CSSObject()
             {
                 [compactCls] = new CSSObject()

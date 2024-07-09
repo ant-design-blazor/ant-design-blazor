@@ -22,7 +22,7 @@ namespace AntDesign
         public double ContentRadius { get; set; }
         public bool LimitVerticalRadius { get; set; }
         public double ArrowDistance { get; set; }
-        public ArrowPlacement ArrowPlacement { get; set; }
+        public ArrowPlacement ArrowPlacement { get; set; } = new();
     }
 
     public class ArrowOffsetOptions

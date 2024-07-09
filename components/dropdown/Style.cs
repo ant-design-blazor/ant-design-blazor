@@ -4,6 +4,8 @@ using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
 using static AntDesign.Slide;
+using static AntDesign.Move;
+using static AntDesign.Zoom;
 using static AntDesign.PlacementArrow;
 
 namespace AntDesign
@@ -326,9 +328,9 @@ namespace AntDesign
                 {
                     InitSlideMotion(token, "slide-up"),
                     InitSlideMotion(token, "slide-down"),
-                    InitSlideMotion(token, "move-up"),
-                    InitSlideMotion(token, "move-down"),
-                    InitSlideMotion(token, "zoom-big"),
+                    InitMoveMotion(token, "move-up"),
+                    InitMoveMotion(token, "move-down"),
+                    InitZoomMotion(token, "zoom-big"),
                 },
             };
         }

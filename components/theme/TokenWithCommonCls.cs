@@ -34,6 +34,7 @@ namespace AntDesign
         {
             IconCls = "anticon";
             AntCls = "ant";
+            this["rootPrefixCls"] = "ant";
         }
     }
 }
