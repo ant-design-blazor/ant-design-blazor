@@ -1,5 +1,5 @@
 ---
-order: 0
+order: 7.1
 title:
   zh-CN: 本地化
   en-US: Localization

@@ -3,6 +3,7 @@
 @page "/reuse/dynamic-title"
 @implements IReuseTabsPage
 
+<PageTitle>@title</PageTitle>
 
 <Input @bind-Value="title" TValue="string" OnChange="UpdateTab"></Input>
 

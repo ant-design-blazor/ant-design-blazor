@@ -98,7 +98,7 @@ Options for the template：
 | Options           | Description                                                        | Type                           | Default |
 | ----------------- | ------------------------------------------------------------------ | ------------------------------ | ------- |
 | `-f` \| `--full`  | If specified, generates all pages of Ant Design Pro                | bool                           | false   |
-| `-ho` \| `--host` | Specify the hosting model                                          | 'wasm' \| 'server' \| 'hosted' | 'wasm'  |
+| `-ho` \| `--host` | Specify the hosting model                                          | 'webapp' \| 'wasm' \| 'server' | 'webapp' |
 | `--styles`        | Whether use NodeJS and Less to compile your custom themes.         | `css` \| `less`                | `css`   |
 | `--no-restore`    | If specified, skips the automatic restore of the project on create | bool                           | false   |
 

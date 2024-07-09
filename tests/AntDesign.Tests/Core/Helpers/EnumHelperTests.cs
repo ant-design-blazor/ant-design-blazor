@@ -23,12 +23,21 @@ namespace AntDesign.Tests.Core.Helpers
 
         public static IEnumerable<object[]> Combine_seeds => new List<object[]>
         {
-            new object[] { null, null },
-            new object[] { Array.Empty<TestColor>(), null },
+            new object[] { null, default(TestColor) },
+            new object[] { Array.Empty<TestColor>(), default(TestColor) },
             new object[] { new TestColor[] { TestColor.Red }, TestColor.Red },
             new object[] { new TestColor[] { TestColor.Red, TestColor.Yellow } , TestColor.Red | TestColor.Yellow },
             new object[] { new TestColor[] { TestColor.Red, TestColor.Yellow, TestColor.Green }, TestColor.Red | TestColor.Yellow | TestColor.Green },
         };
+
+        [Fact]
+        public void CombineNullable()
+        {
+            var result = EnumHelper<TestColor?>.Combine([TestColor.Red, TestColor.Yellow]);
+            var result2 = EnumHelper<TestColor>.Combine([TestColor.Red, TestColor.Yellow]);
+            Assert.Equal(TestColor.Red | TestColor.Yellow, result);
+            Assert.Equal(TestColor.Red | TestColor.Yellow, result2);
+        }
 
         [Theory]
         [MemberData(nameof(Split_seeds))]
@@ -39,10 +48,22 @@ namespace AntDesign.Tests.Core.Helpers
             Assert.True(list.SequenceEqual(expectedList));
         }
 
+        [Fact]
+        public void SplitNullable()
+        {
+            var list = EnumHelper<TestColor?>.Split(TestColor.Red | TestColor.Yellow);
+            var list2 = EnumHelper<TestColor>.Split(TestColor.Red | TestColor.Yellow);
+
+            Assert.True(list.SequenceEqual([TestColor.Red, TestColor.Yellow]));
+            Assert.True(list2.SequenceEqual([TestColor.Red, TestColor.Yellow]));
+        }
+
         public static IEnumerable<object[]> Split_seeds => new List<object[]>
         {
-            new object[] { null, Array.Empty<TestColor>() },
+            new object[] { default(TestColor), Array.Empty<TestColor>() },
             new object[] { (int)TestColor.Red, new TestColor[] { TestColor.Red } },
+            new object[] { (int)(TestColor.Red | TestColor.Green), new TestColor[] { TestColor.Red ,TestColor.Green } },
+            new object[] { TestColor.Red | TestColor.Green, new TestColor[] { TestColor.Red ,TestColor.Green } },
             new object[] { "Red", new TestColor[] { TestColor.Red } },
             new object[] { "Red,Green", new TestColor[] { TestColor.Red, TestColor.Green } },
         };

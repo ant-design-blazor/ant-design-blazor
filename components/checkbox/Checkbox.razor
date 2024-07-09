@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
 
-<label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref">
+<label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
     <span class="@ClassMapper.Class">
         <input id="@Id"
                value="@(CheckboxGroup==null?"true":Label)"
