@@ -61,14 +61,15 @@ namespace AntDesign
                 Footer = null,
 
                 ClassName = confirmOptions.ClassName,
-                Closable = false
+                Closable = false,
+                CreateByService = confirmOptions.CreateByService,
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ConfirmRef.IsCreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.Config.CreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -181,7 +182,7 @@ namespace AntDesign
 
         private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByService)
+            if (ConfirmRef.Config.CreateByService)
             {
                 await HandleOk(e, confirmResult);
             }
@@ -196,7 +197,7 @@ namespace AntDesign
 
         private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByService)
+            if (ConfirmRef.Config.CreateByService)
             {
                 await HandleCancel(e, confirmResult);
             }
