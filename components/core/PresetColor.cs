@@ -1,4 +1,5 @@
-﻿namespace AntDesign {
+﻿namespace AntDesign
+{
     public enum PresetColor
     {
         Blue = 1,
@@ -11,8 +12,8 @@
         Orange,
         Yellow,
         Volcano,
-        Geekblue,
+        GeekBlue,
         Lime,
         Gold,
     }
-} 
+}
