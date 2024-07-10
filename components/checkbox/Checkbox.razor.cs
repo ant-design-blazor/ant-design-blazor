@@ -73,6 +73,7 @@ namespace AntDesign
             var hashId = UseStyle(_prefixCls);
             ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
+                .Add(hashId)
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
                 .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);

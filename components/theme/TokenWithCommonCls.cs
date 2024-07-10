@@ -26,15 +26,8 @@ namespace AntDesign
 
         public string AntCls
         {
-            get => (string)_tokens["iconCls"];
-            set => _tokens["iconCls"] = value;
-        }
-
-        public TokenWithCommonCls()
-        {
-            IconCls = "anticon";
-            AntCls = ".ant";
-            this["rootPrefixCls"] = "ant";
+            get => (string)_tokens["antCls"];
+            set => _tokens["antCls"] = value;
         }
     }
 }

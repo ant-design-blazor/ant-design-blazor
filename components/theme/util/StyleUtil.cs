@@ -14,13 +14,15 @@ namespace AntDesign
 
     internal class GenOptions
     {
-        public bool ResetStyle { get; set; }
-        public int Order { get; set; }
+        public bool ResetStyle { get; set; } = true;
+        public int Order { get; set; } = -999;
         public List<(string, string)> DeprecatedTokens { get; set; }
     }
 
     internal class StyleUtil
     {
+        private const string DefaultIconPrefixCls = "anticon";
+
         internal static UseComponentStyleResult GenComponentStyleHook(
             string componentName,
             Func<TokenWithCommonCls, CSSInterpolation> styleFn)
@@ -35,21 +37,32 @@ namespace AntDesign
             GenOptions options = null) where T : IToken, new()
 
         {
-            return GenComponentStyleHook(new[] { componentName, componentName }, styleFn, getDefaultToken);
+            return GenComponentStyleHook(new[] { componentName, componentName }, styleFn, getDefaultToken, options);
         }
 
-        internal static UseComponentStyleResult GenComponentStyleHook<T>(
+        private static UseComponentStyleResult GenComponentStyleHook<T>(
             string[] componentNames,
             Func<T, CSSInterpolation> styleFn,
-            Func<GlobalToken, T> getDefaultToken = null) where T : IToken, new()
+            Func<GlobalToken, T> getDefaultToken,
+            GenOptions options) where T : IToken, new()
         {
             var concatComponent = string.Join("-", componentNames);
+            options ??= new GenOptions();
             return (prefixCls) =>
             {
                 var token = Seed.DefaultSeedToken;
                 var hash = token.GetTokenHash();
+                var rootPrefixCls = GetPrefixCls();
+                var iconPrefixCls = DefaultIconPrefixCls;
                 var mergedToken = getDefaultToken != null ? getDefaultToken(token) : new T();
-                var componentToken = new TokenWithCommonCls() { PrefixCls = prefixCls, ComponentCls = $".{prefixCls}" };
+                var componentToken = new TokenWithCommonCls()
+                {
+                    ComponentCls = $".{prefixCls}",
+                    PrefixCls = prefixCls,
+                    IconCls = $".{iconPrefixCls}",
+                    AntCls = $".{rootPrefixCls}",
+                    ["rootPrefixCls"] = rootPrefixCls,
+                };
                 mergedToken.Merge(token, componentToken);
 
                 // Generate style for all a tags in antd component.
@@ -57,7 +70,7 @@ namespace AntDesign
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { "Shared", componentToken.AntCls },
+                    Path = new[] { "Shared", rootPrefixCls },
                     StyleFn = () => new CSSObject { ["&"] = GlobalStyle.GenLinkStyle(token) },
                 });
 
@@ -66,7 +79,7 @@ namespace AntDesign
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { "ant-design-icons", componentToken.IconCls },
+                    Path = new[] { "ant-design-icons", iconPrefixCls },
                     StyleFn = () => new CSSObject
                     {
                         [$".{componentToken.IconCls}"] = new CSSObject
@@ -85,8 +98,12 @@ namespace AntDesign
                 {
                     HashId = hash.HashId,
                     TokenKey = hash.TokenKey,
-                    Path = new[] { concatComponent, componentToken.PrefixCls, componentToken.IconCls },
-                    StyleFn = () => styleFn(mergedToken),
+                    Path = new[] { concatComponent, prefixCls, iconPrefixCls },
+                    StyleFn = () => new CSSInterpolation[]
+                    {
+                        options.ResetStyle == false ? null : GlobalStyle.GenCommonStyle(token, prefixCls),
+                        styleFn(mergedToken),
+                    },
                 });
 
                 return (render, hash.HashId);
@@ -104,6 +121,16 @@ namespace AntDesign
                 });
                 return (render, "");
             };
+        }
+
+        internal static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)
+        {
+            if (!string.IsNullOrEmpty(customizePrefixCls))
+            {
+                return customizePrefixCls;
+            }
+
+            return !string.IsNullOrEmpty(suffixCls) ? $"ant-{suffixCls}" : "ant";
         }
     }
 }

@@ -140,7 +140,7 @@ namespace AntDesign
         {
             var fontFamily = token.FontFamily;
             var fontSize = token.FontSize;
-            var rootPrefixSelector = $"[class^=\"${componentPrefixCls}\"], [class*=\" ${componentPrefixCls}\"]";
+            var rootPrefixSelector = $"[class^=\"{componentPrefixCls}\"], [class*=\" {componentPrefixCls}\"]";
 
             return new CSSObject()
             {
