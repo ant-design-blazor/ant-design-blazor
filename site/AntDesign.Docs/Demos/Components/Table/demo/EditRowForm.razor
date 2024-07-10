@@ -1,0 +1,102 @@
+﻿<Table DataSource="listOfData" Bordered TableLayout="fixed" @bind-SelectedRows="selectedRows">
+    <TitleTemplate>
+        <Flex Justify="end" Gap="10">
+            <Button Type="primary" @onclick="()=> StartEdit(default)">Add</Button>
+            <Button Disabled="!selectedRows.Any()" Danger @onclick="DeleteAll">Delete</Button>
+        </Flex>
+    </TitleTemplate>
+    <ColumnDefinitions Context="row">
+        <Selection />
+        <GenerateColumns />
+        <ActionColumn Title="Action">
+            <a @onclick="() => StartEdit(row)">Edit</a>
+            <a @onclick="() => Delete(row)">Delete</a>
+        </ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@code {
+    List<ItemData> listOfData = new();
+    IEnumerable<ItemData> selectedRows = [];
+
+    void StartEdit(ItemData row)
+    {
+        var data = row == null ? new() : row with { };
+        ModalRef<bool> modalRef = default;
+        IForm form = default;
+        modalRef = ModalService.CreateModal<bool>(new()
+        {
+            Title = "Edit",
+            Content =
+                @<Form @ref="form" Model="data" OnFinish="()=> modalRef.OkAsync(true)" LabelColSpan="6" WrapperColSpan="18">
+                    <GenerateFormItem NotGenerate="@(x=> x == "Id")" />
+                </Form>
+    ,
+            OnOk = async (e) =>
+            {
+                if (data.Id > 0)
+                {
+                    // save to db and refresh
+                    var index = listOfData.FindIndex(x => x.Id == data.Id);
+                    listOfData[index] = data;
+                }
+                else
+                {
+                    listOfData.Add(data);
+                }
+
+                modalRef.SetConfirmLoading(true);
+
+                await Task.Delay(1000);
+
+                await modalRef.CloseAsync();
+                StateHasChanged();
+            },
+            OnCancel = async (e) =>
+            {
+                if (form.IsModified && (!await Comfirm("The form have been updated, are you sure quit?")))
+                {
+                    return;
+                }
+                await modalRef.CloseAsync();
+            }
+        });
+    }
+
+    async Task DeleteAll()
+    {
+        if (!await Comfirm($"Are you sure delete {selectedRows.Count()} rows?"))
+            return;
+
+        listOfData = listOfData.Except(selectedRows).ToList();
+        selectedRows = [];
+    }
+
+    async Task Delete(ItemData row)
+    {
+        if (!await Comfirm($"Are you sure delete [{row.Name}]?"))
+            return;
+
+        listOfData = listOfData.Except(new[] { row }).ToList();
+    }
+
+    protected override void OnInitialized()
+    {
+        listOfData = Enumerable.Range(0, 5).Select(i => new ItemData { Id = i + 1, Name = $"Edrward {i}", Age = 32, Address = $"London Park no. {i}" }).ToList();
+    }
+
+    private async Task<bool> Comfirm(string message)
+    {
+        return await ComfirmService.Show(message, "Confirm", ConfirmButtons.YesNo, ConfirmIcon.Warning) == ConfirmResult.Yes;
+    }
+
+    record ItemData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+    }
+}
