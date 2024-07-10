@@ -75,6 +75,20 @@ namespace AntDesign
         }
 
         [Parameter]
+        public ColLayoutParam FormItemCol { get; set; }
+
+        [Parameter]
+        public OneOf<string, int> FormItemColSpan
+        {
+            get { return FormItemCol.Span; }
+            set
+            {
+                FormItemCol ??= new();
+                FormItemCol.Span = value;
+            }
+        }
+
+        [Parameter]
         public string Size { get; set; }
 
         /// <summary>

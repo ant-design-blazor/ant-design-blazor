@@ -333,6 +333,27 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
+        private Dictionary<string, object> GetFormItemColAttributes()
+        {
+            if (NoStyle || ParentFormItem != null)
+            {
+                return _noneColAttributes;
+            }
+
+            ColLayoutParam formItemColParameter;
+
+             if (Form.WrapperCol != null)
+            {
+                formItemColParameter = Form.FormItemCol;
+            }
+            else
+            {
+                formItemColParameter = new ColLayoutParam();
+            }
+
+            return formItemColParameter.ToAttributes();
+        }
+
         private string GetLabelClass() => IsRequired && Form.RequiredMark == FormRequiredMark.Required
             ? $"{_prefixCls}-required"
             : _labelCls;

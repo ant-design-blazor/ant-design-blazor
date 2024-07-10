@@ -17,5 +17,10 @@
         /// 同时使用Default和Rules模式
         /// </summary>
         Complex = 3,
+
+        /// <summary>
+        /// None validate messages
+        /// </summary>
+        Disabled = 10,
     }
 }

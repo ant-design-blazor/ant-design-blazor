@@ -10,6 +10,7 @@ namespace AntDesign.Internal
 
         internal ColLayoutParam LabelCol { get; }
 
+        internal ColLayoutParam FormItemCol { get; }
         internal AntLabelAlignType? LabelAlign { get; }
 
         internal EditContext EditContext { get; }

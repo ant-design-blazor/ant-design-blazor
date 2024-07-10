@@ -3,6 +3,7 @@
 @typeparam TModel
 @using Microsoft.AspNetCore.Components.Forms;
 @using AntDesign.Internal;
+@using Microsoft.AspNetCore.Components.Rendering
 
 <Spin Spinning="Loading">
     <EditForm class="@ClassMapper.Class"
@@ -24,17 +25,33 @@
             @Validator
         }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
-            @if (!string.IsNullOrEmpty(Size))
+            @if (FormItemCol != null)
             {
-                <CascadingValue Value="Size" Name="FormSize">
-                    @ChildContent(Model)
-                </CascadingValue>
+                <Row>
+                    @((RenderFragment)RenderFormItem)
+                </Row>
             }
             else
             {
-                @ChildContent(Model)
+                @((RenderFragment)RenderFormItem)
             }
 
         </CascadingValue>
     </EditForm>
 </Spin>
+
+@code{
+    void RenderFormItem(RenderTreeBuilder __builder)
+    {
+        @if (!string.IsNullOrEmpty(Size))
+        {
+            <CascadingValue Value="Size" Name="FormSize">
+                @ChildContent(Model)
+            </CascadingValue>
+        }
+        else
+        {
+            @ChildContent(Model)
+        }
+    }
+}
