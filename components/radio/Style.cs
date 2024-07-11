@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -116,9 +116,9 @@ namespace AntDesign
 
     }
 
-    public partial class Radio<TValue>
+    public partial class RadioStyle
     {
-        public CSSObject GetGroupRadioStyle(RadioToken token)
+        public static CSSObject GetGroupRadioStyle(RadioToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -146,7 +146,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetRadioBasicStyle(RadioToken token)
+        public static CSSObject GetRadioBasicStyle(RadioToken token)
         {
             var componentCls = token.ComponentCls;
             var wrapperMarginInlineEnd = token.WrapperMarginInlineEnd;
@@ -328,7 +328,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetRadioButtonStyle(RadioToken token)
+        public static CSSObject GetRadioButtonStyle(RadioToken token)
         {
             var buttonColor = token.ButtonColor;
             var controlHeight = token.ControlHeight;
@@ -555,13 +555,13 @@ namespace AntDesign
             };
         }
 
-        public double GetDotSize(double radioSize)
+        public static double GetDotSize(double radioSize)
         {
             var dotPadding = 4;
             return radioSize - dotPadding * 2;
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Radio",

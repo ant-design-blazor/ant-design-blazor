@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -63,9 +63,9 @@ namespace AntDesign
 
     }
 
-    public partial class Progress
+    public partial class ProgressStyle
     {
-        public Keyframes GenAntProgressActive(bool isRtl = false)
+        public static Keyframes GenAntProgressActive(bool isRtl = false)
         {
             var direction = isRtl ? "100%" : "-100%";
             return new Keyframes($"antProgress{(isRtl ? "RTL" : "LTR")}Active",
@@ -89,7 +89,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenBaseStyle(ProgressToken token)
+        public static CSSObject GenBaseStyle(ProgressToken token)
         {
             var progressCls = token.ComponentCls;
             var iconPrefixCls = token.IconCls;
@@ -234,7 +234,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCircleStyle(ProgressToken token)
+        public static CSSObject GenCircleStyle(ProgressToken token)
         {
             var progressCls = token.ComponentCls;
             var iconPrefixCls = token.IconCls;
@@ -297,7 +297,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepStyle(ProgressToken token)
+        public static CSSObject GenStepStyle(ProgressToken token)
         {
             var progressCls = token.ComponentCls;
             return new CSSObject()
@@ -330,7 +330,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSmallLine(ProgressToken token)
+        public static CSSObject GenSmallLine(ProgressToken token)
         {
             var progressCls = token.ComponentCls;
             var iconPrefixCls = token.IconCls;
@@ -346,7 +346,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Progress",

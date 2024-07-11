@@ -9,11 +9,23 @@ namespace AntDesign
 {
     public partial class MentionsToken
     {
-        public double ZIndexPopup { get; set; }
+        public double ZIndexPopup
+        {
+            get => (double)_tokens["zIndexPopup"];
+            set => _tokens["zIndexPopup"] = value;
+        }
 
-        public double DropdownHeight { get; set; }
+        public double DropdownHeight
+        {
+            get => (double)_tokens["dropdownHeight"];
+            set => _tokens["dropdownHeight"] = value;
+        }
 
-        public double ControlItemWidth { get; set; }
+        public double ControlItemWidth
+        {
+            get => (double)_tokens["controlItemWidth"];
+            set => _tokens["controlItemWidth"] = value;
+        }
 
     }
 
@@ -21,9 +33,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Mentions
+    public partial class MentionsStyle
     {
-        public CSSObject GenMentionsStyle(MentionsToken token)
+        public static CSSObject GenMentionsStyle(MentionsToken token)
         {
             var componentCls = token.ComponentCls;
             var colorTextDisabled = token.ColorTextDisabled;
@@ -199,7 +211,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Mentions",

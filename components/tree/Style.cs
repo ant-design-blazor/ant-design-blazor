@@ -526,11 +526,8 @@ namespace AntDesign
                 NodeSelectedBg = token.ControlItemBgActive,
             };
         }
-    }
 
-    public partial class Tree<TItem>
-    {
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Tree",

@@ -128,9 +128,9 @@ namespace AntDesign
 
     }
 
-    public partial class Slider<TValue>
+    public partial class SliderStyle
     {
-        public CSSObject GenBaseStyle(SliderToken token)
+        public static CSSObject GenBaseStyle(SliderToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -346,7 +346,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDirectionStyle(SliderToken token, bool horizontal)
+        public static CSSObject GenDirectionStyle(SliderToken token, bool horizontal)
         {
             var componentCls = token.ComponentCls;
             var railSize = token.RailSize;
@@ -414,7 +414,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenHorizontalStyle(SliderToken token)
+        public static CSSObject GenHorizontalStyle(SliderToken token)
         {
             var componentCls = token.ComponentCls;
             var marginPartWithMark = token.MarginPartWithMark;
@@ -431,7 +431,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenVerticalStyle(SliderToken token)
+        public static CSSObject GenVerticalStyle(SliderToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -444,7 +444,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Slider",

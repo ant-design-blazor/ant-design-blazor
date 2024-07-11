@@ -82,7 +82,7 @@ namespace AntDesign
 
     }
 
-    public class FormStyle
+    public partial class FormStyle
     {
         public static CSSObject ResetForm(FormToken token)
         {

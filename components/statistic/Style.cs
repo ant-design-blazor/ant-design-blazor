@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -26,9 +26,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Statistic<TValue>
+    public partial class StatisticStyle
     {
-        public CSSObject GenStatisticStyle(StatisticToken token)
+        public static CSSObject GenStatisticStyle(StatisticToken token)
         {
             var componentCls = token.ComponentCls;
             var marginXXS = token.MarginXXS;
@@ -80,7 +80,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Statistic",

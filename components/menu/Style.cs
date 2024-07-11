@@ -500,9 +500,9 @@ namespace AntDesign
 
     }
 
-    public partial class Menu
+    public partial class MenuStyle
     {
-        public CSSObject GenMenuItemStyle(MenuToken token)
+        public static CSSObject GenMenuItemStyle(MenuToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -582,7 +582,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSubMenuArrowStyle(MenuToken token)
+        public static CSSObject GenSubMenuArrowStyle(MenuToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -635,7 +635,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GetBaseStyle(MenuToken token)
+        public static CSSInterpolation[] GetBaseStyle(MenuToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -902,7 +902,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             var useOriginHook = GenComponentStyleHook(
                 "Menu",
@@ -1116,7 +1116,7 @@ namespace AntDesign
             return useOriginHook;
         }
 
-        public CSSObject GetHorizontalStyle(MenuToken token)
+        public static CSSObject GetHorizontalStyle(MenuToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -1167,7 +1167,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetVerticalInlineStyle(MenuToken token)
+        public static CSSObject GetVerticalInlineStyle(MenuToken token)
         {
             var componentCls = token.ComponentCls;
             var itemHeight = token.ItemHeight;
@@ -1207,7 +1207,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GetVerticalStyle(MenuToken token)
+        public static CSSInterpolation[] GetVerticalStyle(MenuToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -1380,7 +1380,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetRTLStyle(MenuToken args)
+        public static CSSObject GetRTLStyle(MenuToken args)
         {
             var componentCls = args.ComponentCls;
             var menuArrowOffset = args.MenuArrowOffset;
@@ -1411,7 +1411,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject AccessibilityFocus(MenuToken token)
+        public static CSSObject AccessibilityFocus(MenuToken token)
         {
             return new CSSObject()
             {
@@ -1419,7 +1419,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetThemeStyle(MenuToken token, string themeSuffix)
+        public static CSSObject GetThemeStyle(MenuToken token, string themeSuffix)
         {
             var componentCls = token.ComponentCls;
             var itemColor = token.ItemColor;

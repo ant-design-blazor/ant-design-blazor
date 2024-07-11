@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -56,9 +56,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Breadcrumb
+    public partial class BreadcrumbStyle
     {
-        public CSSObject GenBreadcrumbStyle(BreadcrumbToken token)
+        public static CSSObject GenBreadcrumbStyle(BreadcrumbToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -150,7 +150,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Breadcrumb",

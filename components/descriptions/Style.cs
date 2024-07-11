@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -62,9 +62,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Descriptions
+    public partial class DescriptionsStyle
     {
-        public CSSObject GenBorderedStyle(DescriptionsToken token)
+        public static CSSObject GenBorderedStyle(DescriptionsToken token)
         {
             var componentCls = token.ComponentCls;
             var labelBg = token.LabelBg;
@@ -131,7 +131,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDescriptionStyles(DescriptionsToken token)
+        public static CSSObject GenDescriptionStyles(DescriptionsToken token)
         {
             var componentCls = token.ComponentCls;
             var extraColor = token.ExtraColor;
@@ -271,7 +271,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Descriptions",

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -74,9 +74,9 @@ namespace AntDesign
 
     }
 
-    public partial class Segmented<TValue>
+    public partial class SegmentedStyle
     {
-        public CSSObject GetItemDisabledStyle(string cls, SegmentedToken token)
+        public static CSSObject GetItemDisabledStyle(string cls, SegmentedToken token)
         {
             return new CSSObject()
             {
@@ -88,7 +88,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetItemSelectedStyle(SegmentedToken token)
+        public static CSSObject GetItemSelectedStyle(SegmentedToken token)
         {
             return new CSSObject()
             {
@@ -97,7 +97,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSegmentedStyle(SegmentedToken token)
+        public static CSSObject GenSegmentedStyle(SegmentedToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -250,7 +250,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Segmented",

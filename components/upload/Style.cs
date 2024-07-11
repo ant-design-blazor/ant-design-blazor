@@ -41,9 +41,9 @@ namespace AntDesign
 
     }
 
-    public partial class Upload
+    public partial class UploadStyle
     {
-        private readonly Keyframe _uploadAnimateInlineIn = new Keyframe("uploadAnimateInlineIn",
+        private static readonly Keyframe _uploadAnimateInlineIn = new Keyframe("uploadAnimateInlineIn",
             new CSSObject()
             {
                 ["from"] = new CSSObject()
@@ -56,7 +56,7 @@ namespace AntDesign
                 },
             });
 
-        private readonly Keyframe _uploadAnimateInlineOut = new Keyframe("uploadAnimateInlineOut",
+        private static readonly Keyframe _uploadAnimateInlineOut = new Keyframe("uploadAnimateInlineOut",
             new CSSObject()
             {
                 ["to"] = new CSSObject()
@@ -69,7 +69,7 @@ namespace AntDesign
                 },
             });
 
-        public CSSObject GenBaseStyle(UploadToken token)
+        public static CSSObject GenBaseStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var colorTextDisabled = token.ColorTextDisabled;
@@ -99,7 +99,7 @@ namespace AntDesign
             };
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Upload",
@@ -140,7 +140,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenDraggerStyle(UploadToken token)
+        public static CSSObject GenDraggerStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -211,7 +211,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenListStyle(UploadToken token)
+        public static CSSObject GenListStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -341,7 +341,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenMotionStyle(UploadToken token)
+        public static CSSInterpolation GenMotionStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var inlineCls = @$"{componentCls}-animate-inline";
@@ -376,7 +376,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPictureStyle(UploadToken token)
+        public static CSSObject GenPictureStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -466,7 +466,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPictureCardStyle(UploadToken token)
+        public static CSSObject GenPictureCardStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -630,7 +630,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRtlStyle(UploadToken token)
+        public static CSSObject GenRtlStyle(UploadToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()

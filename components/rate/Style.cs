@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -38,9 +38,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Rate
+    public partial class RateStyle
     {
-        public CSSObject GenRateStarStyle(RateToken token)
+        public static CSSObject GenRateStarStyle(RateToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -100,7 +100,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRateRtlStyle(RateToken token)
+        public static CSSObject GenRateRtlStyle(RateToken token)
         {
             return new CSSObject()
             {
@@ -111,7 +111,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRateStyle(RateToken token)
+        public static CSSObject GenRateStyle(RateToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -141,7 +141,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Rate",

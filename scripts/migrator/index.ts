@@ -4,6 +4,7 @@ import * as path from 'path';
 import { components } from "./Components";
 import { writeAllText } from "./Util";
 import { simpleGit, SimpleGit } from 'simple-git';
+import { genComponentStyleTests } from "./StyleTests";
 
 const config = {
     version: '5.11.4',
@@ -67,7 +68,8 @@ function converTsStyle() {
 
 async function migrate() {
     // await clone();
-    converTsStyle();
+    // converTsStyle();
+    genComponentStyleTests();
 }
 
 migrate();

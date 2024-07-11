@@ -143,7 +143,7 @@ namespace AntDesign
 
     }
 
-    public partial class PickerToken : PickerPanelToken
+    public partial class DatePickerToken : PickerPanelToken
     {
         public double PresetsWidth
         {
@@ -164,9 +164,9 @@ namespace AntDesign
         }
     }
 
-    public class DatePickerStyle
+    public partial class DatePickerStyle
     {
-        public static CSSObject GenPikerPadding(PickerToken token, double inputHeight, double fontSize, double paddingHorizontal)
+        public static CSSObject GenPikerPadding(DatePickerToken token, double inputHeight, double fontSize, double paddingHorizontal)
         {
             var lineHeight = token.LineHeight;
             var fontHeight = Math.Floor(fontSize * lineHeight) + 2;
@@ -964,7 +964,7 @@ namespace AntDesign
             };
         }
 
-        public static CSSObject GenPickerStatusStyle(PickerToken token)
+        public static CSSObject GenPickerStatusStyle(DatePickerToken token)
         {
             var componentCls = token.ComponentCls;
             var colorBgContainer = token.ColorBgContainer;
@@ -991,7 +991,7 @@ namespace AntDesign
                             ["..."] = GenActiveStyle(
                                 MergeToken(
                                     token,
-                                    new PickerToken()
+                                    new DatePickerToken()
                                     {
                                         ActiveBorderColor = colorError,
                                         ActiveShadow = errorActiveShadow,
@@ -1015,7 +1015,7 @@ namespace AntDesign
                             ["..."] = GenActiveStyle(
                                 MergeToken(
                                     token,
-                                    new PickerToken()
+                                    new DatePickerToken()
                                     {
                                         ActiveBorderColor = colorWarning,
                                         ActiveShadow = warningActiveShadow,
@@ -1030,7 +1030,7 @@ namespace AntDesign
             };
         }
 
-        public static CSSInterpolation[] GenPickerStyle(PickerToken token)
+        public static CSSInterpolation[] GenPickerStyle(DatePickerToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -1488,13 +1488,13 @@ namespace AntDesign
             };
         }
 
-        public static PickerToken InitPickerPanelToken(TokenWithCommonCls token)
+        public static DatePickerToken InitPickerPanelToken(TokenWithCommonCls token)
         {
             var componentCls = token.ComponentCls;
             var controlHeightLG = token.ControlHeightLG;
             var paddingXXS = token.PaddingXXS;
             var padding = token.Padding;
-            return new PickerToken()
+            return new DatePickerToken()
             {
                 PickerCellCls = @$"{componentCls}-cell",
                 PickerCellInnerCls = @$"{componentCls}-cell-inner",
@@ -1508,9 +1508,9 @@ namespace AntDesign
             };
         }
 
-        public static PickerToken InitPanelComponentToken(GlobalToken token)
+        public static DatePickerToken InitPanelComponentToken(GlobalToken token)
         {
-            return new PickerToken()
+            return new DatePickerToken()
             {
                 CellHoverBg = token.ControlItemBgHover,
                 CellActiveWithRangeBg = token.ControlItemBgActive,
@@ -1550,7 +1550,7 @@ namespace AntDesign
                 },
                 (token) =>
                 {
-                    return new PickerToken()
+                    return new DatePickerToken()
                     {
                         ["..."] = InitComponentToken(token),
                         ["..."] = InitPanelComponentToken(token),

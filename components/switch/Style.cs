@@ -128,9 +128,9 @@ namespace AntDesign
 
     }
 
-    public partial class Switch
+    public partial class SwitchStyle
     {
-        public CSSObject GenSwitchSmallStyle(SwitchToken token)
+        public static CSSObject GenSwitchSmallStyle(SwitchToken token)
         {
             var componentCls = token.ComponentCls;
             var trackHeightSM = token.TrackHeightSM;
@@ -229,7 +229,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSwitchLoadingStyle(SwitchToken token)
+        public static CSSObject GenSwitchLoadingStyle(SwitchToken token)
         {
             var componentCls = token.ComponentCls;
             var handleSize = token.HandleSize;
@@ -252,7 +252,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSwitchHandleStyle(SwitchToken token)
+        public static CSSObject GenSwitchHandleStyle(SwitchToken token)
         {
             var componentCls = token.ComponentCls;
             var motion = token.Motion;
@@ -312,7 +312,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSwitchInnerStyle(SwitchToken token)
+        public static CSSObject GenSwitchInnerStyle(SwitchToken token)
         {
             var componentCls = token.ComponentCls;
             var trackHeight = token.TrackHeight;
@@ -400,7 +400,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSwitchStyle(SwitchToken token)
+        public static CSSObject GenSwitchStyle(SwitchToken token)
         {
             var componentCls = token.ComponentCls;
             var trackHeight = token.TrackHeight;
@@ -454,7 +454,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Switch",

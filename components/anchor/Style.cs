@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -50,9 +50,9 @@ namespace AntDesign
 
     }
 
-    public partial class Anchor
+    public partial class AnchorStyle
     {
-        public CSSObject GenSharedAnchorStyle(AnchorToken token)
+        public static CSSObject GenSharedAnchorStyle(AnchorToken token)
         {
             var componentCls = token.ComponentCls;
             var holderOffsetBlock = token.HolderOffsetBlock;
@@ -136,7 +136,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSharedAnchorHorizontalStyle(AnchorToken token)
+        public static CSSObject GenSharedAnchorHorizontalStyle(AnchorToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -191,7 +191,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Anchor",

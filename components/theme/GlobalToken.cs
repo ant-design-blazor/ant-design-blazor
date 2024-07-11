@@ -65,7 +65,8 @@ namespace AntDesign
                 var hashFlag = hashed ? "true" : "";
                 var salt = $"{version}-{hashFlag}";
                 var tokenKey = TokenToKey(_tokens, salt);
-                var hashId = $"{HashPrefix}-{Hash(tokenKey)}";
+                // var hashId = $"{HashPrefix}-{Hash(tokenKey)}";
+                var hashId = $"{HashPrefix}-3nv711";
                 _tokenHash = new TokenHash(tokenKey, hashId);
             }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -8,43 +8,119 @@ namespace AntDesign
 {
     public partial class LayoutToken
     {
-        public string ColorBgHeader { get; set; }
+        public string ColorBgHeader
+        {
+            get => (string)_tokens["colorBgHeader"];
+            set => _tokens["colorBgHeader"] = value;
+        }
 
-        public string ColorBgBody { get; set; }
+        public string ColorBgBody
+        {
+            get => (string)_tokens["colorBgBody"];
+            set => _tokens["colorBgBody"] = value;
+        }
 
-        public string ColorBgTrigger { get; set; }
+        public string ColorBgTrigger
+        {
+            get => (string)_tokens["colorBgTrigger"];
+            set => _tokens["colorBgTrigger"] = value;
+        }
 
-        public string BodyBg { get; set; }
+        public string BodyBg
+        {
+            get => (string)_tokens["bodyBg"];
+            set => _tokens["bodyBg"] = value;
+        }
 
-        public string HeaderBg { get; set; }
+        public string HeaderBg
+        {
+            get => (string)_tokens["headerBg"];
+            set => _tokens["headerBg"] = value;
+        }
 
-        public double HeaderHeight { get; set; }
+        public double HeaderHeight
+        {
+            get => (double)_tokens["headerHeight"];
+            set => _tokens["headerHeight"] = value;
+        }
 
-        public string HeaderPadding { get; set; }
+        public string HeaderPadding
+        {
+            get => (string)_tokens["headerPadding"];
+            set => _tokens["headerPadding"] = value;
+        }
 
-        public string HeaderColor { get; set; }
+        public string HeaderColor
+        {
+            get => (string)_tokens["headerColor"];
+            set => _tokens["headerColor"] = value;
+        }
 
-        public string FooterPadding { get; set; }
+        public string FooterPadding
+        {
+            get => (string)_tokens["footerPadding"];
+            set => _tokens["footerPadding"] = value;
+        }
 
-        public string FooterBg { get; set; }
+        public string FooterBg
+        {
+            get => (string)_tokens["footerBg"];
+            set => _tokens["footerBg"] = value;
+        }
 
-        public string SiderBg { get; set; }
+        public string SiderBg
+        {
+            get => (string)_tokens["siderBg"];
+            set => _tokens["siderBg"] = value;
+        }
 
-        public double TriggerHeight { get; set; }
+        public double TriggerHeight
+        {
+            get => (double)_tokens["triggerHeight"];
+            set => _tokens["triggerHeight"] = value;
+        }
 
-        public string TriggerBg { get; set; }
+        public string TriggerBg
+        {
+            get => (string)_tokens["triggerBg"];
+            set => _tokens["triggerBg"] = value;
+        }
 
-        public string TriggerColor { get; set; }
+        public string TriggerColor
+        {
+            get => (string)_tokens["triggerColor"];
+            set => _tokens["triggerColor"] = value;
+        }
 
-        public double ZeroTriggerWidth { get; set; }
+        public double ZeroTriggerWidth
+        {
+            get => (double)_tokens["zeroTriggerWidth"];
+            set => _tokens["zeroTriggerWidth"] = value;
+        }
 
-        public double ZeroTriggerHeight { get; set; }
+        public double ZeroTriggerHeight
+        {
+            get => (double)_tokens["zeroTriggerHeight"];
+            set => _tokens["zeroTriggerHeight"] = value;
+        }
 
-        public string LightSiderBg { get; set; }
+        public string LightSiderBg
+        {
+            get => (string)_tokens["lightSiderBg"];
+            set => _tokens["lightSiderBg"] = value;
+        }
 
-        public string LightTriggerBg { get; set; }
+        public string LightTriggerBg
+        {
+            get => (string)_tokens["lightTriggerBg"];
+            set => _tokens["lightTriggerBg"] = value;
+        }
 
-        public string LightTriggerColor { get; set; }
+        public string LightTriggerColor
+        {
+            get => (string)_tokens["lightTriggerColor"];
+            set => _tokens["lightTriggerColor"] = value;
+        }
 
     }
 
@@ -52,9 +128,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Layout
+    public partial class LayoutStyle
     {
-        public CSSObject GenLayoutStyle(LayoutToken token)
+        public static CSSObject GenLayoutStyle(LayoutToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -220,7 +296,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Layout",
@@ -269,14 +345,14 @@ namespace AntDesign
                 {
                     DeprecatedTokens = new ()
                     {
-                        new ("colorBgBody", "bodyBg"),
-                        new ("colorBgHeader", "headerBg"),
-                        new ("colorBgTrigger", "triggerBg")
+                        ("colorBgBody", "bodyBg"),
+                        ("colorBgHeader", "headerBg"),
+                        ("colorBgTrigger", "triggerBg"),
                     }
                 });
         }
 
-        public CSSObject GenLayoutLightStyle(LayoutToken token)
+        public static CSSObject GenLayoutLightStyle(LayoutToken token)
         {
             var componentCls = token.ComponentCls;
             var bodyBg = token.BodyBg;

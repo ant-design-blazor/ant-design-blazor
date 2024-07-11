@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -56,9 +56,9 @@ namespace AntDesign
 
     }
 
-    public partial class Carousel
+    public partial class CarouselStyle
     {
-        public CSSObject GenCarouselStyle(CarouselToken token)
+        public static CSSObject GenCarouselStyle(CarouselToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -294,7 +294,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCarouselVerticalStyle(CarouselToken token)
+        public static CSSObject GenCarouselVerticalStyle(CarouselToken token)
         {
             var componentCls = token.ComponentCls;
             var carouselDotOffset = token.CarouselDotOffset;
@@ -344,7 +344,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GenCarouselRtlStyle(CarouselToken token)
+        public static CSSInterpolation[] GenCarouselRtlStyle(CarouselToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSInterpolation[]
@@ -379,7 +379,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Carousel",

@@ -56,9 +56,9 @@ namespace AntDesign
 
     }
 
-    public partial class Transfer
+    public partial class TransferStyle
     {
-        public CSSObject GenTransferCustomizeStyle(TransferToken token)
+        public static CSSObject GenTransferCustomizeStyle(TransferToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -104,7 +104,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTransferStatusColor(TransferToken token, string color)
+        public static CSSObject GenTransferStatusColor(TransferToken token, string color)
         {
             var componentCls = token.ComponentCls;
             var colorBorder = token.ColorBorder;
@@ -121,7 +121,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTransferStatusStyle(TransferToken token)
+        public static CSSObject GenTransferStatusStyle(TransferToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -137,7 +137,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTransferListStyle(TransferToken token)
+        public static CSSObject GenTransferListStyle(TransferToken token)
         {
             var componentCls = token.ComponentCls;
             var colorBorder = token.ColorBorder;
@@ -338,7 +338,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTransferStyle(TransferToken token)
+        public static CSSObject GenTransferStyle(TransferToken token)
         {
             var antCls = token.AntCls;
             var iconCls = token.IconCls;
@@ -395,7 +395,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTransferRTLStyle(TransferToken token)
+        public static CSSObject GenTransferRTLStyle(TransferToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -407,7 +407,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Transfer",

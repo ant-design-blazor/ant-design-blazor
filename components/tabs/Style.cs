@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -207,9 +207,9 @@ namespace AntDesign
 
     }
 
-    public partial class Tabs
+    public partial class TabsStyle
     {
-        public CSSObject GenCardStyle(TabsToken token)
+        public static CSSObject GenCardStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var tabsCardPadding = token.TabsCardPadding;
@@ -341,7 +341,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDropdownStyle(TabsToken token)
+        public static CSSObject GenDropdownStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var itemHoverColor = token.ItemHoverColor;
@@ -438,7 +438,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPositionStyle(TabsToken token)
+        public static CSSObject GenPositionStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var margin = token.Margin;
@@ -692,7 +692,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSizeStyle(TabsToken token)
+        public static CSSObject GenSizeStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var cardPaddingSM = token.CardPaddingSM;
@@ -788,7 +788,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTabStyle(TabsToken token)
+        public static CSSObject GenTabStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var itemActiveColor = token.ItemActiveColor;
@@ -898,7 +898,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRtlStyle(TabsToken token)
+        public static CSSObject GenRtlStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var tabsHorizontalItemMarginRTL = token.TabsHorizontalItemMarginRTL;
@@ -1019,7 +1019,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTabsStyle(TabsToken token)
+        public static CSSObject GenTabsStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var tabsCardPadding = token.TabsCardPadding;
@@ -1176,7 +1176,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Tabs",
@@ -1238,7 +1238,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSInterpolation[] GenMotionStyle(TabsToken token)
+        public static CSSInterpolation[] GenMotionStyle(TabsToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;

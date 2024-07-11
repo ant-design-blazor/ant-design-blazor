@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -16,9 +16,9 @@ namespace AntDesign
 
     }
 
-    public partial class Affix
+    public partial class AffixStyle
     {
-        public CSSObject GenSharedAffixStyle(AffixToken token)
+        public static CSSObject GenSharedAffixStyle(AffixToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -31,7 +31,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Affix",

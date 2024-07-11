@@ -298,9 +298,9 @@ namespace AntDesign
         public const string Error = "error";
     }
 
-    public partial class Steps
+    public partial class StepsStyle
     {
-        public CSSObject GenStepsItemStatusStyle(string status, StepsToken token)
+        public static CSSObject GenStepsItemStatusStyle(string status, StepsToken token)
         {
             var prefix = @$"{token.ComponentCls}-item";
             var iconColorKey = @$"{status}IconColor";
@@ -351,7 +351,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsItemStyle(StepsToken token)
+        public static CSSObject GenStepsItemStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -483,7 +483,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsClickableStyle(StepsToken token)
+        public static CSSObject GenStepsClickableStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;
@@ -561,7 +561,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsStyle(StepsToken token)
+        public static CSSObject GenStepsStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -588,7 +588,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Steps",
@@ -679,7 +679,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenStepsCustomIconStyle(StepsToken token)
+        public static CSSObject GenStepsCustomIconStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var customIconTop = token.CustomIconTop;
@@ -718,7 +718,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsInlineStyle(StepsToken token)
+        public static CSSObject GenStepsInlineStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var inlineDotSize = token.InlineDotSize;
@@ -858,7 +858,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsLabelPlacementStyle(StepsToken token)
+        public static CSSObject GenStepsLabelPlacementStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var iconSize = token.IconSize;
@@ -919,7 +919,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsNavStyle(StepsToken token)
+        public static CSSObject GenStepsNavStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var navContentMaxWidth = token.NavContentMaxWidth;
@@ -1074,7 +1074,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsProgressDotStyle(StepsToken token)
+        public static CSSObject GenStepsProgressDotStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var descriptionMaxWidth = token.DescriptionMaxWidth;
@@ -1212,7 +1212,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsProgressStyle(StepsToken token)
+        public static CSSObject GenStepsProgressStyle(StepsToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -1270,7 +1270,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsRTLStyle(StepsToken token)
+        public static CSSObject GenStepsRTLStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -1317,7 +1317,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsSmallStyle(StepsToken token)
+        public static CSSObject GenStepsSmallStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var iconSizeSM = token.IconSizeSM;
@@ -1386,7 +1386,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStepsVerticalStyle(StepsToken token)
+        public static CSSObject GenStepsVerticalStyle(StepsToken token)
         {
             var componentCls = token.ComponentCls;
             var iconSizeSM = token.IconSizeSM;

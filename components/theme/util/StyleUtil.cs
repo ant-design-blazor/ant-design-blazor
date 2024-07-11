@@ -12,7 +12,7 @@ namespace AntDesign
 {
     public delegate (RenderFragment, string) UseComponentStyleResult(string prefixCls);
 
-    internal class GenOptions
+    public class GenOptions
     {
         public bool ResetStyle { get; set; } = true;
         public int Order { get; set; } = -999;
@@ -64,6 +64,26 @@ namespace AntDesign
                     ["rootPrefixCls"] = rootPrefixCls,
                 };
                 mergedToken.Merge(token, componentToken);
+
+                var renderMode = Environment.GetEnvironmentVariable("RENDER_MODE");
+                if (renderMode == "testing")
+                {
+                    var styleFunc = (Func<CSSInterpolation>)(() => new CSSInterpolation[]
+                    {
+                        options.ResetStyle == false ? null : GlobalStyle.GenCommonStyle(token, prefixCls),
+                        styleFn(mergedToken),
+                    });
+                    var testingRender = (RenderFragment)((builder) =>
+                    {
+                        builder.OpenComponent<Style>(0);
+                        builder.AddAttribute(1, "HashId", hash.HashId);
+                        builder.AddAttribute(2, "TokenKey", hash.TokenKey);
+                        builder.AddAttribute(3, "Path", $"{concatComponent}|{prefixCls}|{iconPrefixCls}");
+                        builder.AddAttribute(4, "StyleFn", styleFunc);
+                        builder.CloseComponent();
+                    });
+                    return (testingRender, hash.HashId);
+                }
 
                 // Generate style for all a tags in antd component.
                 UseStyleRegister(new StyleInfo()
@@ -123,7 +143,7 @@ namespace AntDesign
             };
         }
 
-        internal static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)
+        private static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)
         {
             if (!string.IsNullOrEmpty(customizePrefixCls))
             {

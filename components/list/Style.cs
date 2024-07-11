@@ -93,7 +93,7 @@ namespace AntDesign
 
     }
 
-    public class AntListStyle
+    public partial class AntListStyle
     {
         public static CSSObject GenBorderedStyle(ListToken token)
         {

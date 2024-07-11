@@ -26,4 +26,10 @@
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\AntDesign.TestKit\AntDesign.TestKit.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Styles\css\*.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -60,9 +60,9 @@ namespace AntDesign
 
     }
 
-    public partial class Dropdown
+    public partial class DropdownStyle
     {
-        public CSSInterpolation[] GenBaseStyle(DropdownToken token)
+        public static CSSInterpolation[] GenBaseStyle(DropdownToken token)
         {
             var componentCls = token.ComponentCls;
             var menuCls = token.MenuCls;
@@ -335,7 +335,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Dropdown",
@@ -383,7 +383,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenStatusStyle(DropdownToken token)
+        public static CSSObject GenStatusStyle(DropdownToken token)
         {
             var componentCls = token.ComponentCls;
             var menuCls = token.MenuCls;

@@ -113,7 +113,7 @@ namespace AntDesign
     {
     }
 
-    public class InputStyle
+    public partial class InputStyle
     {
         public static CSSObject GenPlaceholderStyle(string color)
         {
@@ -1162,11 +1162,8 @@ namespace AntDesign
                 ActiveBg = "",
             };
         }
-    }
 
-    public partial class Input<TValue>
-    {
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Input",

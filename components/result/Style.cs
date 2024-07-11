@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -74,9 +74,9 @@ namespace AntDesign
 
     }
 
-    public partial class Result
+    public partial class ResultStyle
     {
-        public CSSObject GenBaseStyle(ResultToken token)
+        public static CSSObject GenBaseStyle(ResultToken token)
         {
             var componentCls = token.ComponentCls;
             var lineHeightHeading3 = token.LineHeightHeading3;
@@ -149,7 +149,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStatusIconStyle(ResultToken token)
+        public static CSSObject GenStatusIconStyle(ResultToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -174,7 +174,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GenResultStyle(ResultToken token)
+        public static CSSInterpolation[] GenResultStyle(ResultToken token)
         {
             return new CSSInterpolation[]
             {
@@ -183,12 +183,12 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GetStyle(ResultToken token)
+        public static CSSInterpolation[] GetStyle(ResultToken token)
         {
             return GenResultStyle(token);
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Result",

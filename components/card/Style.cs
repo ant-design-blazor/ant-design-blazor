@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -98,9 +98,9 @@ namespace AntDesign
 
     }
 
-    public partial class Card
+    public partial class CardStyle
     {
-        public CSSObject GenCardHeadStyle(CardToken token)
+        public static CSSObject GenCardHeadStyle(CardToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -155,7 +155,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardGridStyle(CardToken token)
+        public static CSSObject GenCardGridStyle(CardToken token)
         {
             var cardPaddingBase = token.CardPaddingBase;
             var colorBorderSecondary = token.ColorBorderSecondary;
@@ -184,7 +184,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardActionsStyle(CardToken token)
+        public static CSSObject GenCardActionsStyle(CardToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -246,7 +246,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardMetaStyle(CardToken token)
+        public static CSSObject GenCardMetaStyle(CardToken token)
         {
             return new CSSObject()
             {
@@ -280,7 +280,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardTypeInnerStyle(CardToken token)
+        public static CSSObject GenCardTypeInnerStyle(CardToken token)
         {
             var componentCls = token.ComponentCls;
             var cardPaddingBase = token.CardPaddingBase;
@@ -303,7 +303,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardLoadingStyle(CardToken token)
+        public static CSSObject GenCardLoadingStyle(CardToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -316,7 +316,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardStyle(CardToken token)
+        public static CSSObject GenCardStyle(CardToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -423,7 +423,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCardSizeStyle(CardToken token)
+        public static CSSObject GenCardSizeStyle(CardToken token)
         {
             var componentCls = token.ComponentCls;
             var cardPaddingSM = token.CardPaddingSM;
@@ -466,7 +466,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Card",

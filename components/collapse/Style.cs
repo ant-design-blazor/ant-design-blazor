@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -56,9 +56,9 @@ namespace AntDesign
 
     }
 
-    public partial class Collapse
+    public partial class CollapseStyle
     {
-        public CSSObject GenBaseStyle(CollapseToken token)
+        public static CSSObject GenBaseStyle(CollapseToken token)
         {
             var componentCls = token.ComponentCls;
             var contentBg = token.ContentBg;
@@ -245,7 +245,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenArrowStyle(CollapseToken token)
+        public static CSSObject GenArrowStyle(CollapseToken token)
         {
             var componentCls = token.ComponentCls;
             var fixedSelector = @$"> {componentCls}-item > {componentCls}-header {componentCls}-arrow svg";
@@ -261,7 +261,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBorderlessStyle(CollapseToken token)
+        public static CSSObject GenBorderlessStyle(CollapseToken token)
         {
             var componentCls = token.ComponentCls;
             var headerBg = token.HeaderBg;
@@ -298,7 +298,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenGhostStyle(CollapseToken token)
+        public static CSSObject GenGhostStyle(CollapseToken token)
         {
             var componentCls = token.ComponentCls;
             var paddingSM = token.PaddingSM;
@@ -325,7 +325,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Collapse",

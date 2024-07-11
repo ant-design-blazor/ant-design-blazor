@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -32,9 +32,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Drawer
+    public partial class DrawerStyle
     {
-        public CSSObject GenDrawerStyle(DrawerToken token)
+        public static CSSObject GenDrawerStyle(DrawerToken token)
         {
             var componentCls = token.ComponentCls;
             var zIndexPopup = token.ZIndexPopup;
@@ -235,7 +235,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Drawer",
@@ -263,7 +263,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenMotionStyle(DrawerToken token)
+        public static CSSObject GenMotionStyle(DrawerToken token)
         {
             var componentCls = token.ComponentCls;
             var motionDurationSlow = token.MotionDurationSlow;

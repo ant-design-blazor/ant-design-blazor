@@ -45,9 +45,9 @@ namespace AntDesign
 
     }
 
-    public partial class Spin
+    public partial class SpinStyle
     {
-        private Keyframes _antSpinMove = new Keyframes("antSpinMove",
+        private static Keyframes _antSpinMove = new Keyframes("antSpinMove",
             new CSSObject()
             {
                 ["to"] = new CSSObject()
@@ -56,7 +56,7 @@ namespace AntDesign
                 },
             });
 
-        private Keyframes _antRotate = new Keyframes("antRotate",
+        private static Keyframes _antRotate = new Keyframes("antRotate",
             new CSSObject()
             {
                 ["to"] = new CSSObject()
@@ -65,12 +65,12 @@ namespace AntDesign
                 },
             });
 
-        public double DotPadding(SpinToken token)
+        public static double DotPadding(SpinToken token)
         {
             return (token.DotSize - token.FontSize) / 2 + 2;
         }
 
-        public CSSObject GenSpinStyle(SpinToken token)
+        public static CSSObject GenSpinStyle(SpinToken token)
         {
             return new CSSObject()
             {
@@ -308,7 +308,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Spin",

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -123,9 +123,9 @@ namespace AntDesign
 
     }
 
-    public partial class Badge
+    public partial class BadgeStyle
     {
-        private Keyframes _antStatusProcessing = new Keyframes("antStatusProcessing")
+        private static Keyframes _antStatusProcessing = new Keyframes("antStatusProcessing")
         {
             ["0%"] = new CSSObject()
             {
@@ -139,7 +139,7 @@ namespace AntDesign
             },
         };
 
-        private Keyframes _antZoomBadgeIn = new Keyframes("antZoomBadgeIn")
+        private static Keyframes _antZoomBadgeIn = new Keyframes("antZoomBadgeIn")
         {
             ["0%"] = new CSSObject()
             {
@@ -152,7 +152,7 @@ namespace AntDesign
             },
         };
 
-        private Keyframes _antZoomBadgeOut = new Keyframes("antZoomBadgeOut")
+        private static Keyframes _antZoomBadgeOut = new Keyframes("antZoomBadgeOut")
         {
             ["0%"] = new CSSObject()
             {
@@ -165,7 +165,7 @@ namespace AntDesign
             },
         };
 
-        private Keyframes _antNoWrapperZoomBadgeIn = new Keyframes("antNoWrapperZoomBadgeIn")
+        private static Keyframes _antNoWrapperZoomBadgeIn = new Keyframes("antNoWrapperZoomBadgeIn")
         {
             ["0%"] = new CSSObject()
             {
@@ -178,7 +178,7 @@ namespace AntDesign
             },
         };
 
-        private Keyframes _antNoWrapperZoomBadgeOut = new Keyframes("antNoWrapperZoomBadgeOut")
+        private static Keyframes _antNoWrapperZoomBadgeOut = new Keyframes("antNoWrapperZoomBadgeOut")
         {
             ["0%"] = new CSSObject()
             {
@@ -191,7 +191,7 @@ namespace AntDesign
             },
         };
 
-        private Keyframes _antBadgeLoadingCircle = new Keyframes("antBadgeLoadingCircle")
+        private static Keyframes _antBadgeLoadingCircle = new Keyframes("antBadgeLoadingCircle")
         {
             ["0%"] = new CSSObject()
             {
@@ -204,7 +204,7 @@ namespace AntDesign
             },
         };
 
-        public CSSObject GenSharedBadgeStyle(BadgeToken token)
+        public static CSSObject GenSharedBadgeStyle(BadgeToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -460,7 +460,7 @@ namespace AntDesign
             };
         }
 
-        public BadgeToken PrepareToken(BadgeToken token)
+        public static BadgeToken PrepareToken(BadgeToken token)
         {
             var fontSize = token.FontSize;
             var lineHeight = token.LineHeight;
@@ -490,7 +490,7 @@ namespace AntDesign
             return badgeToken;
         }
 
-        public BadgeToken PrepareComponentToken(GlobalToken token)
+        public static BadgeToken PrepareComponentToken(GlobalToken token)
         {
             var fontSize = token.FontSize;
             var lineHeight = token.LineHeight;
@@ -509,7 +509,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Badge",

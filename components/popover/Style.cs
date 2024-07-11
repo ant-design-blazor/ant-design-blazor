@@ -59,9 +59,9 @@ namespace AntDesign
 
     }
 
-    public partial class Popover
+    public partial class PopoverStyle
     {
-        public CSSInterpolation[] GenBaseStyle(PopoverToken token)
+        public static CSSInterpolation[] GenBaseStyle(PopoverToken token)
         {
             var componentCls = token.ComponentCls;
             var popoverColor = token.PopoverColor;
@@ -153,7 +153,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenColorStyle(PopoverToken token)
+        public static CSSObject GenColorStyle(PopoverToken token)
         {
             var componentCls = token.ComponentCls;
 
@@ -183,7 +183,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenWireframeStyle(PopoverToken token)
+        public static CSSObject GenWireframeStyle(PopoverToken token)
         {
             var componentCls = token.ComponentCls;
             var lineWidth = token.LineWidth;
@@ -220,7 +220,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Popover",

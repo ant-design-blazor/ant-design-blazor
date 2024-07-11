@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -50,9 +50,9 @@ namespace AntDesign
 
     }
 
-    public partial class Divider
+    public partial class DividerStyle
     {
-        public CSSObject GenSharedDividerStyle(DividerToken token)
+        public static CSSObject GenSharedDividerStyle(DividerToken token)
         {
             var componentCls = token.ComponentCls;
             var sizePaddingEdgeHorizontal = token.SizePaddingEdgeHorizontal;
@@ -198,7 +198,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Divider",

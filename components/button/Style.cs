@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -176,9 +176,9 @@ namespace AntDesign
 
     }
 
-    public partial class Button
+    public partial class ButtonStyle
     {
-        public CSSObject GenSharedButtonStyle(ButtonToken token)
+        public static CSSObject GenSharedButtonStyle(ButtonToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -289,7 +289,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenHoverActiveButtonStyle(string btnCls, CSSObject hoverStyle = default, CSSObject activeStyle = default)
+        public static CSSObject GenHoverActiveButtonStyle(string btnCls, CSSObject hoverStyle = default, CSSObject activeStyle = default)
         {
             return new CSSObject()
             {
@@ -301,7 +301,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenCircleButtonStyle(ButtonToken token)
+        public static CSSObject GenCircleButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -312,7 +312,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenRoundButtonStyle(ButtonToken token)
+        public static CSSObject GenRoundButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -322,7 +322,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDisabledStyle(ButtonToken token)
+        public static CSSObject GenDisabledStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -334,7 +334,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenGhostButtonStyle(string btnCls, string background, string textColor, string borderColor, string textColorDisabled, string borderColorDisabled, CSSObject hoverStyle = default, CSSObject activeStyle = default)
+        public static CSSObject GenGhostButtonStyle(string btnCls, string background, string textColor, string borderColor, string textColorDisabled, string borderColorDisabled, CSSObject hoverStyle = default, CSSObject activeStyle = default)
         {
             return new CSSObject()
             {
@@ -366,7 +366,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSolidDisabledButtonStyle(ButtonToken token)
+        public static CSSObject GenSolidDisabledButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -377,7 +377,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSolidButtonStyle(ButtonToken token)
+        public static CSSObject GenSolidButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -385,7 +385,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPureDisabledButtonStyle(ButtonToken token)
+        public static CSSObject GenPureDisabledButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -397,7 +397,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDefaultButtonStyle(ButtonToken token)
+        public static CSSObject GenDefaultButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -441,7 +441,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPrimaryButtonStyle(ButtonToken token)
+        public static CSSObject GenPrimaryButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -515,7 +515,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenDashedButtonStyle(ButtonToken token)
+        public static CSSObject GenDashedButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -524,7 +524,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenLinkButtonStyle(ButtonToken token)
+        public static CSSObject GenLinkButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -559,7 +559,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTextButtonStyle(ButtonToken token)
+        public static CSSObject GenTextButtonStyle(ButtonToken token)
         {
             return new CSSObject()
             {
@@ -596,7 +596,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTypeButtonStyle(ButtonToken token)
+        public static CSSObject GenTypeButtonStyle(ButtonToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -610,7 +610,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation[] GenSizeButtonStyle(ButtonToken token, string sizePrefixCls = "")
+        public static CSSInterpolation[] GenSizeButtonStyle(ButtonToken token, string sizePrefixCls = "")
         {
             var componentCls = token.ComponentCls;
             var controlHeight = token.ControlHeight;
@@ -668,7 +668,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenSizeBaseButtonStyle(ButtonToken token)
+        public static CSSInterpolation GenSizeBaseButtonStyle(ButtonToken token)
         {
             return GenSizeButtonStyle(
                 MergeToken(
@@ -679,7 +679,7 @@ namespace AntDesign
                     }));
         }
 
-        public CSSInterpolation GenSizeSmallButtonStyle(ButtonToken token)
+        public static CSSInterpolation GenSizeSmallButtonStyle(ButtonToken token)
         {
             var smallToken = MergeToken(
                 token,
@@ -695,7 +695,7 @@ namespace AntDesign
             return GenSizeButtonStyle(smallToken, $"{token.ComponentCls}-sm");
         }
 
-        public CSSInterpolation GenSizeLargeButtonStyle(ButtonToken token)
+        public static CSSInterpolation GenSizeLargeButtonStyle(ButtonToken token)
         {
             var largeToken = MergeToken(
                 token,
@@ -710,7 +710,7 @@ namespace AntDesign
             return GenSizeButtonStyle(largeToken, $"{token.ComponentCls}-lg");
         }
 
-        public CSSObject GenBlockButtonStyle(ButtonToken token)
+        public static CSSObject GenBlockButtonStyle(ButtonToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -725,7 +725,7 @@ namespace AntDesign
             };
         }
 
-        public ButtonToken PrepareToken(ButtonToken token)
+        public static ButtonToken PrepareToken(ButtonToken token)
         {
             var paddingInline = token.PaddingInline;
             var onlyIconSize = token.OnlyIconSize;
@@ -739,7 +739,7 @@ namespace AntDesign
             return buttonToken;
         }
 
-        public ButtonToken PrepareComponentToken(GlobalToken token)
+        public static ButtonToken PrepareComponentToken(GlobalToken token)
         {
             return new ButtonToken()
             {
@@ -772,7 +772,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Button",
@@ -793,7 +793,7 @@ namespace AntDesign
                 PrepareComponentToken);
         }
 
-        public CSSObject GenButtonBorderStyle(string buttonTypeCls, string borderColor)
+        public static CSSObject GenButtonBorderStyle(string buttonTypeCls, string borderColor)
         {
             return new CSSObject()
             {
@@ -823,7 +823,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenGroupStyle(ButtonToken token)
+        public static CSSObject GenGroupStyle(ButtonToken token)
         {
             var componentCls = token.ComponentCls;
             var fontSize = token.FontSize;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -86,9 +86,9 @@ namespace AntDesign
 
     }
 
-    public partial class Avatar
+    public partial class AvatarStyle
     {
-        public CSSObject GenBaseStyle(AvatarToken token)
+        public static CSSObject GenBaseStyle(AvatarToken token)
         {
             var antCls = token.AntCls;
             var componentCls = token.ComponentCls;
@@ -179,7 +179,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenGroupStyle(AvatarToken token)
+        public static CSSObject GenGroupStyle(AvatarToken token)
         {
             var componentCls = token.ComponentCls;
             var groupBorderColor = token.GroupBorderColor;
@@ -209,7 +209,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Avatar",

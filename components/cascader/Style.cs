@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -56,9 +56,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Cascader
+    public partial class CascaderStyle
     {
-        public CSSInterpolation[] GenBaseStyle(CascaderToken token)
+        public static CSSInterpolation[] GenBaseStyle(CascaderToken token)
         {
             var componentCls = token.ComponentCls;
             var antCls = token.AntCls;
@@ -96,7 +96,7 @@ namespace AntDesign
             };
         }
 
-        public CascaderToken PrepareComponentToken(GlobalToken token)
+        public static CascaderToken PrepareComponentToken(GlobalToken token)
         {
             var itemPaddingVertical = Math.Round((token.ControlHeight - token.FontSize * token.LineHeight) / 2);
             return new CascaderToken()
@@ -111,7 +111,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Cascader",

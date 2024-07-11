@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -20,9 +20,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Popconfirm
+    public partial class PopconfirmStyle
     {
-        public CSSObject GenBaseStyle(PopconfirmToken token)
+        public static CSSObject GenBaseStyle(PopconfirmToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -85,7 +85,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Popconfirm",

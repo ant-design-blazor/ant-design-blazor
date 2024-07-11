@@ -32,9 +32,9 @@ namespace AntDesign
 
     }
 
-    public partial class Space
+    public partial class SpaceStyle
     {
-        public CSSObject GenSpaceStyle(SpaceToken token)
+        public static CSSObject GenSpaceStyle(SpaceToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -78,7 +78,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSpaceGapStyle(SpaceToken token)
+        public static CSSObject GenSpaceGapStyle(SpaceToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -113,7 +113,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Space",
@@ -146,7 +146,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GenSpaceCompactStyle(SpaceToken token)
+        public static CSSObject GenSpaceCompactStyle(SpaceToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()

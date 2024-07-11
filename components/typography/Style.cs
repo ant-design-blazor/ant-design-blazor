@@ -26,9 +26,9 @@ namespace AntDesign
     {
     }
 
-    public partial class TypographyBase
+    public partial class TypographyStyle
     {
-        public CSSObject GenTypographyStyle(TypographyToken token)
+        public static CSSObject GenTypographyStyle(TypographyToken token)
         {
             var componentCls = token.ComponentCls;
             var titleMarginTop = token.TitleMarginTop;
@@ -103,7 +103,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Typography",
@@ -124,7 +124,7 @@ namespace AntDesign
                 });
         }
 
-        public CSSObject GetTitleStyle(double fontSize, double lineHeight, string color, TypographyToken token)
+        public static CSSObject GetTitleStyle(double fontSize, double lineHeight, string color, TypographyToken token)
         {
             var titleMarginBottom = token.TitleMarginBottom;
             var fontWeightStrong = token.FontWeightStrong;
@@ -138,7 +138,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetTitleStyles(TypographyToken token)
+        public static CSSObject GetTitleStyles(TypographyToken token)
         {
             var headings = new [] { 1, 2, 3, 4, 5 };
             var styles = new CSSObject();
@@ -154,7 +154,7 @@ namespace AntDesign
             return styles;
         }
 
-        public CSSObject GetLinkStyles(TypographyToken token)
+        public static CSSObject GetLinkStyles(TypographyToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -184,7 +184,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetResetStyles(TypographyToken token)
+        public static CSSObject GetResetStyles(TypographyToken token)
         {
             return new CSSObject()
             {
@@ -289,7 +289,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetEditableStyles(TypographyToken token)
+        public static CSSObject GetEditableStyles(TypographyToken token)
         {
             var componentCls = token.ComponentCls;
             var paddingSM = token.PaddingSM;
@@ -326,7 +326,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetCopyableStyles(TypographyToken token)
+        public static CSSObject GetCopyableStyles(TypographyToken token)
         {
             return new CSSObject()
             {
@@ -340,7 +340,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GetEllipsisStyles()
+        public static CSSObject GetEllipsisStyles()
         {
             return new CSSObject()
             {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -62,9 +62,9 @@ namespace AntDesign
 
     }
 
-    public partial class Timeline
+    public partial class TimelineStyle
     {
-        public CSSObject GenTimelineStyle(TimelineToken token)
+        public static CSSObject GenTimelineStyle(TimelineToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -273,7 +273,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Timeline",

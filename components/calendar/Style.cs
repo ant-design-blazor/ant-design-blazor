@@ -75,9 +75,9 @@ namespace AntDesign
 
     }
 
-    public partial class Calendar
+    public partial class CalendarStyle
     {
-        public CSSObject GenCalendarStyles(CalendarToken token)
+        public static CSSObject GenCalendarStyles(CalendarToken token)
         {
             var calendarCls = token.CalendarCls;
             var componentCls = token.ComponentCls;
@@ -288,7 +288,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Calendar",

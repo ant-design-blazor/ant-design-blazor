@@ -56,9 +56,9 @@ namespace AntDesign
 
     }
 
-    public partial class Tag
+    public partial class TagStyle
     {
-        public CSSObject GenBaseStyle(TagToken token)
+        public static CSSObject GenBaseStyle(TagToken token)
         {
             var paddingXXS = token.PaddingXXS;
             var lineWidth = token.LineWidth;
@@ -157,7 +157,7 @@ namespace AntDesign
             };
         }
 
-        public TagToken PrepareToken(TagToken token)
+        public static TagToken PrepareToken(TagToken token)
         {
             var lineWidth = token.LineWidth;
             var fontSizeIcon = token.FontSizeIcon;
@@ -176,7 +176,7 @@ namespace AntDesign
             return tagToken;
         }
 
-        public TagToken PrepareCommonToken(GlobalToken token)
+        public static TagToken PrepareCommonToken(GlobalToken token)
         {
             return new TagToken()
             {
@@ -187,7 +187,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Tag",

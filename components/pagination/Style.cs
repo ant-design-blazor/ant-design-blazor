@@ -117,9 +117,9 @@ namespace AntDesign
 
     }
 
-    public partial class Pagination
+    public partial class PaginationStyle
     {
-        public CSSObject GenPaginationDisabledStyle(PaginationToken token)
+        public static CSSObject GenPaginationDisabledStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -225,7 +225,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationMiniStyle(PaginationToken token)
+        public static CSSObject GenPaginationMiniStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -318,7 +318,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationSimpleStyle(PaginationToken token)
+        public static CSSObject GenPaginationSimpleStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -387,7 +387,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationJumpStyle(PaginationToken token)
+        public static CSSObject GenPaginationJumpStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -539,7 +539,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationItemStyle(PaginationToken token)
+        public static CSSObject GenPaginationItemStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -605,7 +605,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationStyle(PaginationToken token)
+        public static CSSObject GenPaginationStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -666,7 +666,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBorderedStyle(PaginationToken token)
+        public static CSSObject GenBorderedStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -771,7 +771,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenPaginationFocusStyle(PaginationToken token)
+        public static CSSObject GenPaginationFocusStyle(PaginationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -808,7 +808,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Pagination",

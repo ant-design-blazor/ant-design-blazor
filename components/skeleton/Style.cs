@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -59,9 +59,9 @@ namespace AntDesign
 
     }
 
-    public partial class Skeleton
+    public partial class SkeletonStyle
     {
-        private Keyframes _skeletonClsLoading = new Keyframes($"ant-skeleton-loading",
+        private static Keyframes _skeletonClsLoading = new Keyframes($"ant-skeleton-loading",
             new CSSObject()
             {
                 ["0%"] = new CSSObject()
@@ -74,7 +74,7 @@ namespace AntDesign
                 },
             });
 
-        public CSSObject GenSkeletonElementCommonSize(double size)
+        public static CSSObject GenSkeletonElementCommonSize(double size)
         {
             return new CSSObject()
             {
@@ -83,7 +83,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementAvatarSize(double size)
+        public static CSSObject GenSkeletonElementAvatarSize(double size)
         {
             return new CSSObject()
             {
@@ -92,7 +92,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonColor(SkeletonToken token)
+        public static CSSObject GenSkeletonColor(SkeletonToken token)
         {
             return new CSSObject()
             {
@@ -105,7 +105,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementInputSize(double size)
+        public static CSSObject GenSkeletonElementInputSize(double size)
         {
             return new CSSObject()
             {
@@ -115,7 +115,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementAvatar(SkeletonToken token)
+        public static CSSObject GenSkeletonElementAvatar(SkeletonToken token)
         {
             var skeletonAvatarCls = token.SkeletonAvatarCls;
             var gradientFromColor = token.GradientFromColor;
@@ -146,7 +146,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementInput(SkeletonToken token)
+        public static CSSObject GenSkeletonElementInput(SkeletonToken token)
         {
             var controlHeight = token.ControlHeight;
             var borderRadiusSM = token.BorderRadiusSM;
@@ -175,7 +175,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementImageSize(double size)
+        public static CSSObject GenSkeletonElementImageSize(double size)
         {
             return new CSSObject()
             {
@@ -184,7 +184,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementImage(SkeletonToken token)
+        public static CSSObject GenSkeletonElementImage(SkeletonToken token)
         {
             var skeletonImageCls = token.SkeletonImageCls;
             var imageSizeBase = token.ImageSizeBase;
@@ -223,7 +223,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementButtonShape(SkeletonToken token, double size, string buttonCls)
+        public static CSSObject GenSkeletonElementButtonShape(SkeletonToken token, double size, string buttonCls)
         {
             var skeletonButtonCls = token.SkeletonButtonCls;
             return new CSSObject()
@@ -241,7 +241,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementButtonSize(double size)
+        public static CSSObject GenSkeletonElementButtonSize(double size)
         {
             return new CSSObject()
             {
@@ -251,7 +251,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenSkeletonElementButton(SkeletonToken token)
+        public static CSSObject GenSkeletonElementButton(SkeletonToken token)
         {
             var borderRadiusSM = token.BorderRadiusSM;
             var skeletonButtonCls = token.SkeletonButtonCls;
@@ -285,7 +285,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBaseStyle(SkeletonToken token)
+        public static CSSObject GenBaseStyle(SkeletonToken token)
         {
             var componentCls = token.ComponentCls;
             var skeletonAvatarCls = token.SkeletonAvatarCls;
@@ -424,7 +424,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Skeleton",

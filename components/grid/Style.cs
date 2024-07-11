@@ -21,7 +21,7 @@ namespace AntDesign
 
     }
 
-    public class GridStyle
+    public partial class GridStyle
     {
         public static CSSObject GenGridRowStyle(GridRowToken token)
         {
@@ -185,22 +185,16 @@ namespace AntDesign
                 },
             };
         }
-    }
 
-    public partial class Row
-    {
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseRowStyle()
         {
             return GenComponentStyleHook("Grid", (token) =>
             {
                 return new CSSInterpolation[] { GenGridRowStyle(MergeToken(token, new GridRowToken())) };
             });
         }
-    }
 
-    public partial class Col
-    {
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseColStyle()
         {
             return GenComponentStyleHook("Grid", (token) =>
             {

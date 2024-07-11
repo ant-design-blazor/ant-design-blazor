@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -32,9 +32,9 @@ namespace AntDesign
     {
     }
 
-    public partial class Alert
+    public partial class AlertStyle
     {
-        public CSSObject GenAlertTypeStyle(string bgColor, string borderColor, string iconColor, AlertToken token, string alertCls)
+        public static CSSObject GenAlertTypeStyle(string bgColor, string borderColor, string iconColor, AlertToken token, string alertCls)
         {
             return new CSSObject()
             {
@@ -47,7 +47,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenBaseStyle(AlertToken token)
+        public static CSSObject GenBaseStyle(AlertToken token)
         {
             var componentCls = token.ComponentCls;
             var duration = token.MotionDurationSlow;
@@ -147,7 +147,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenTypeStyle(AlertToken token)
+        public static CSSObject GenTypeStyle(AlertToken token)
         {
             var componentCls = token.ComponentCls;
             var colorSuccess = token.ColorSuccess;
@@ -182,7 +182,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenActionStyle(AlertToken token)
+        public static CSSObject GenActionStyle(AlertToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -233,7 +233,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenAlertStyle(AlertToken token)
+        public static CSSInterpolation GenAlertStyle(AlertToken token)
         {
             return new CSSInterpolation[]
             {
@@ -243,7 +243,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Alert",

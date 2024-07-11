@@ -58,9 +58,9 @@ namespace AntDesign
 
     }
 
-    public partial class Tooltip
+    public partial class TooltipStyle
     {
-        public CSSInterpolation[] GenTooltipStyle(TooltipToken token)
+        public static CSSInterpolation[] GenTooltipStyle(TooltipToken token)
         {
             var componentCls = token.ComponentCls;
             var tooltipMaxWidth = token.TooltipMaxWidth;
@@ -168,7 +168,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Tooltip",

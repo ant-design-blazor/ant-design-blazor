@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -38,9 +38,9 @@ namespace AntDesign
 
     }
 
-    public partial class Empty
+    public partial class EmptyStyle
     {
-        public CSSObject GenSharedEmptyStyle(EmptyToken token)
+        public static CSSObject GenSharedEmptyStyle(EmptyToken token)
         {
             var componentCls = token.ComponentCls;
             var margin = token.Margin;
@@ -106,7 +106,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Empty",
