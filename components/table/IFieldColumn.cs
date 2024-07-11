@@ -12,13 +12,15 @@ namespace AntDesign
 
         public string FieldName { get; }
 
-        public string Format { get; }
+        public string Format { get; set; }
 
-        public bool Sortable { get; }
+        public bool Sortable { get; set; }
 
-        public int SorterMultiple { get; }
+        public bool Filterable { get; set; }
 
-        public bool Grouping { get; }
+        public int SorterMultiple { get; set; }
+
+        public bool Grouping { get; set; }
 
         public ITableSortModel SortModel { get; }
 
