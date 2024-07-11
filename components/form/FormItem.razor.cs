@@ -266,6 +266,10 @@ namespace AntDesign
 
         private void SetInternalIsRequired()
         {
+            if (Form is null)
+            {
+                return;
+            }
             var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
@@ -421,7 +425,7 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            if (Form?.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex) is true)
             {
                 _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             }
