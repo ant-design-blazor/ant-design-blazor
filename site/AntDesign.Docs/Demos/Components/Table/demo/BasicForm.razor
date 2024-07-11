@@ -1,0 +1,123 @@
+﻿@using AntDesign.TableModels
+@using System.ComponentModel.DataAnnotations
+
+<Table @ref="_table" TItem="ItemData" PageSize="5" Total="_total" DataSource="_dataSource" @bind-SelectedRows="_selectedRows" OnChange="OnChange">
+    <TitleTemplate>
+        <Flex Justify="end" Gap="10">
+            <Button Type="primary" @onclick="()=> StartEdit(default)">New</Button>
+            <Button Disabled="!_selectedRows.Any()" Danger @onclick="DeleteAll">Delete</Button>
+        </Flex>
+    </TitleTemplate>
+    <ColumnDefinitions Context="row">
+        <Selection />
+        <GenerateColumns Definitions="@((n,c) => { c.Filterable = true; c.Sortable = true; })" />
+        <ActionColumn Title="Action">
+            <a @onclick="() => StartEdit(row)">Edit</a>
+            <a @onclick="() => Delete(row)">Delete</a>
+        </ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@code {
+    List<ItemData> mockDb = new();
+    IEnumerable<ItemData> _selectedRows = [];
+    ITable _table;
+    List<ItemData> _dataSource;
+    int _total;
+
+    void OnChange(QueryModel<ItemData> query)
+    {
+        _total = mockDb.AsQueryable().ExecuteTableQuery(query).Count();
+        _dataSource = mockDb.AsQueryable().ExecuteTableQuery(query).CurrentPagedRecords(query).ToList();
+    }
+
+    void StartEdit(ItemData row)
+    {
+        var data = row == null ? new() : row with { };
+        ModalRef<bool> modalRef = default;
+        IForm form = default;
+        modalRef = ModalService.CreateModal<bool>(new()
+        {
+            Title = data.Id > 0? "Edit":"New",
+            Content = @<Form @ref="form" Model="data" OnFinish="()=> modalRef.OkAsync(true)" LabelColSpan="6" WrapperColSpan="18">
+                <GenerateFormItem NotGenerate="@(x=> x == "Id")" />
+            </Form>
+    ,
+            OnOk = async (e) =>
+            {
+                if (!form.Validate())
+                {
+                    return;
+                }
+
+                // save db and refresh
+                modalRef.SetConfirmLoading(true);
+
+                if (data.Id > 0)
+                {
+                    var index = mockDb.FindIndex(x => x.Id == data.Id);
+                    mockDb[index] = data;
+                }
+                else
+                {
+                    data.Id = mockDb.Max(x => x.Id) + 1;
+                    mockDb.Add(data);
+                }
+
+                await Task.Delay(1000);
+
+                await modalRef.CloseAsync();
+                _table.ReloadData();
+                StateHasChanged();
+            },
+            OnCancel = async (e) =>
+            {
+                if (form.IsModified && (!await Comfirm("The form have been updated, are you sure quit?")))
+                {
+                    return;
+                }
+                await modalRef.CloseAsync();
+            }
+        });
+    }
+
+    async Task DeleteAll()
+    {
+        if (!await Comfirm($"Are you sure delete {_selectedRows.Count()} rows?"))
+            return;
+
+        mockDb = mockDb.Except(_selectedRows).ToList();
+        _selectedRows = [];
+        _table.ReloadData();
+    }
+
+    async Task Delete(ItemData row)
+    {
+        if (!await Comfirm($"Are you sure delete [{row.Name}]?"))
+            return;
+
+        mockDb = mockDb.Except(new[] { row }).ToList();
+        _table.ReloadData();
+    }
+
+    protected override void OnInitialized()
+    {
+        mockDb = Enumerable.Range(0, 20).Select(i => new ItemData { Id = i + 1, Name = $"Edrward {i}", Age = 32, Address = $"London Park no. {i}" }).ToList();
+    }
+
+    private async Task<bool> Comfirm(string message)
+    {
+        return await ComfirmService.Show(message, "Confirm", ConfirmButtons.YesNo, ConfirmIcon.Warning) == ConfirmResult.Yes;
+    }
+
+    record ItemData
+    {
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+    }
+}

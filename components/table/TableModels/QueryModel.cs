@@ -88,7 +88,7 @@ namespace AntDesign.TableModels
             return query;
         }
 
-        public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(OffsetRecords).Take(PageSize);
+        public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(StartIndex).Take(PageSize);
 
         public object Clone()
         {
