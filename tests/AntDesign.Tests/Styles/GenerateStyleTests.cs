@@ -190,7 +190,7 @@ namespace AntDesign.Tests.Styles
         public void Generate_GridCol_Style()
         {
             var content = LoadStyleHtml("Styles/css/GridCol.css");
-            var (html, hashId) = GridStyle.UseColStyle()("ant-gridcol");
+            var (html, hashId) = GridStyle.UseColStyle()("ant-col");
             var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
@@ -199,7 +199,16 @@ namespace AntDesign.Tests.Styles
         public void Generate_GridRow_Style()
         {
             var content = LoadStyleHtml("Styles/css/GridRow.css");
-            var (html, hashId) = GridStyle.UseRowStyle()("ant-gridrow");
+            var (html, hashId) = GridStyle.UseRowStyle()("ant-row");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
+        public void Generate_Image_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Image.css");
+            var (html, hashId) = InputStyle.UseComponentStyle()("ant-image");
             var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
@@ -209,6 +218,15 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Input.css");
             var (html, hashId) = InputStyle.UseComponentStyle()("ant-input");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
+        public void Generate_InputNumber_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/InputNumber.css");
+            var (html, hashId) = InputStyle.UseComponentStyle()("ant-input-number");
             var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
@@ -250,10 +268,28 @@ namespace AntDesign.Tests.Styles
         }
 
         [Fact]
+        public void Generate_Message_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Message.css");
+            var (html, hashId) = MenuStyle.UseComponentStyle()("ant-message");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
         public void Generate_Modal_Style()
         {
             var content = LoadStyleHtml("Styles/css/Modal.css");
             var (html, hashId) = ModalStyle.UseComponentStyle()("ant-modal");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
+        public void Generate_Notification_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Notification.css");
+            var (html, hashId) = ModalStyle.UseComponentStyle()("ant-notification");
             var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
