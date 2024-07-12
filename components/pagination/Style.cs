@@ -814,7 +814,7 @@ namespace AntDesign
                 "Pagination",
                 (token) =>
                 {
-                    var paginationToken = MergeToken<PaginationToken>(
+                    var paginationToken = MergeTokens<PaginationToken>(
                         token,
                         new PaginationToken()
                         {

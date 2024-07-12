@@ -71,7 +71,7 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            var hashId = UseStyle(PrefixName);
+            var hashId = UseStyle(PrefixName, TypographyStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixName)
                 .Add(hashId)

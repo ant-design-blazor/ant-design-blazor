@@ -318,7 +318,7 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, InputStyle.UseComponentStyle);
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 

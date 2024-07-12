@@ -130,7 +130,7 @@ namespace AntDesign
         protected void SetClassMap()
         {
             var prefix = "ant-timeline";
-            var hashId = UseStyle(prefix);
+            var hashId = UseStyle(prefix, TimelineStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefix)
                 .Add(hashId)

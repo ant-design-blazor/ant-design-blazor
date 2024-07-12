@@ -30,8 +30,8 @@ namespace AntDesign
 
         public object this[string key]
         {
-            get => _tokens[key];
-            set => _tokens[key] = value;
+            get => GetValue(key);
+            set => SetValue(key, value);
         }
 
         public GlobalToken() { }
@@ -65,8 +65,7 @@ namespace AntDesign
                 var hashFlag = hashed ? "true" : "";
                 var salt = $"{version}-{hashFlag}";
                 var tokenKey = TokenToKey(_tokens, salt);
-                // var hashId = $"{HashPrefix}-{Hash(tokenKey)}";
-                var hashId = $"{HashPrefix}-3nv711";
+                var hashId = $"{HashPrefix}-{Hash(tokenKey)}";
                 _tokenHash = new TokenHash(tokenKey, hashId);
             }
 
@@ -80,10 +79,10 @@ namespace AntDesign
 
         public string TokenToKey(Dictionary<string, object> token, string salt)
         {
-            return Hash($"{salt}_{FlattenToken(token)}");
+            return Hash($"{salt}_{FlattenToken(token, true)}");
         }
 
-        private string FlattenToken(Dictionary<string, object> token)
+        private string FlattenToken(Dictionary<string, object> token, bool hash)
         {
             var sb = new StringBuilder();
             foreach (var item in token)
@@ -98,7 +97,13 @@ namespace AntDesign
                     sb.Append(item.Value);
                 }
             }
-            return sb.ToString();
+            var str = sb.ToString();
+            if (hash)
+            {
+                return Hash(str);
+            }
+
+            return str;
         }
 
         private string Hash(string str)
@@ -136,6 +141,28 @@ namespace AntDesign
             h = ((h & 0xffff) * 0x5bd1e995) + (((int)(h >>> 16) * 0xe995) << 16);
             var val = ((int)(h ^ ((int)h >>> 15)));
             return Convert.ToInt64(Convert.ToString((val >>> 0), toBase: 2), 2).ToString(36);
+        }
+
+        private object GetValue(string key)
+        {
+            if (_tokens.TryGetValue(key, out var value))
+            {
+                return value;
+            }
+
+            return string.Empty;
+        }
+
+        private void SetValue(string key, object value)
+        {
+            if (key == "...")
+            {
+                Merge((IToken)value);
+            }
+            else
+            {
+                _tokens[key] = value;
+            }
         }
     }
 

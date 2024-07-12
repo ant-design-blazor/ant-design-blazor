@@ -79,7 +79,7 @@ namespace AntDesign
         private void SetHostClassMap()
         {
             var prefixCls = "ant-col";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, GridStyle.UseColStyle);
             this.ClassMapper.Clear()
                 .Add(prefixCls)
                 .Add(hashId)

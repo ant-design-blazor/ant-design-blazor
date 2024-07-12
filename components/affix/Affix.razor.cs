@@ -67,7 +67,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, AffixStyle.UseComponentStyle);
             ClassMapper
                .If(PrefixCls, () => _affixed)
                .Add(hashId);

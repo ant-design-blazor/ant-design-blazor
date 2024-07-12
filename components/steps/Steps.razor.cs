@@ -125,7 +125,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-steps";
-            var hashId = UseStyle(prefixName);
+            var hashId = UseStyle(prefixName, StepsStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefixName)
                 .Add(hashId)

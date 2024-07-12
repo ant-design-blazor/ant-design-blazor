@@ -19,7 +19,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            _hashId = UseStyle(ClassPrefix);
+            _hashId = UseStyle(ClassPrefix, NotificationStyle.UseComponentStyle);
             if (NotificationService != null)
             {
                 NotificationService.OnNoticing += NotifyAsync;

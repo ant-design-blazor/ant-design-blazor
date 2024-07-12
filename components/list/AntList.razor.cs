@@ -92,7 +92,7 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
-            var hashId = UseStyle(PrefixName);
+            var hashId = UseStyle(PrefixName, AntListStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(PrefixName)
                 .Add(hashId)
@@ -104,11 +104,6 @@ namespace AntDesign
                 .If($"{PrefixName}-loading", () => (Loading))
                 .If($"{PrefixName}-grid", () => Grid != null)
                 .If($"{PrefixName}-something-after-last-item", () => IsSomethingAfterLastItem);
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return AntListStyle.UseComponentStyle();
         }
 
         private void OnBreakpoint(BreakpointType breakPoint)

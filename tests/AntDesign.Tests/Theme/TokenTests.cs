@@ -12,10 +12,10 @@ namespace AntDesign.Tests.Theme
         [Fact]
         public void Gen_Token_Hash()
         {
-            var token = new GlobalToken();
+            var token = Seed.DefaultSeedToken;
             var tokenHash = token.GetTokenHash(StyleVersion);
             tokenHash.ShouldNotBeNull();
-            tokenHash.TokenKey.ShouldBe("1iw360o");
+            tokenHash.TokenKey.ShouldBe("18wx8kn");
         }
     }
 }

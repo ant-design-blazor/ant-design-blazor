@@ -69,7 +69,7 @@ namespace AntDesign
         protected void SetClass()
         {
             var prefixCls = "ant-radio";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, RadioStyle.UseComponentStyle);
             ClassMapper
                 .Add(hashId)
                 .If($"{prefixCls}-wrapper", () => !RadioButton)

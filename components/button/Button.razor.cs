@@ -134,7 +134,7 @@ namespace AntDesign
         protected void SetClassMap()
         {
             var prefixName = "ant-btn";
-            var hashId = UseStyle(prefixName);
+            var hashId = UseStyle(prefixName, ButtonStyle.UseComponentStyle);
 
             ClassMapper.Clear()
                 .Add(prefixName)

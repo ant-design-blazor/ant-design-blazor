@@ -295,14 +295,14 @@ namespace AntDesign
                 (token) =>
                 {
                     var calendarCls = @$"{token.ComponentCls}-calendar";
-                    var calendarToken = MergeToken(
+                    var calendarToken = MergeTokens(
                         token,
-                        // InitPickerPanelToken(token),
-                        // InitPanelComponentToken(token),
+                        InitPickerPanelToken(token),
+                        InitPanelComponentToken(token),
                         new CalendarToken()
                         {
                             CalendarCls = calendarCls,
-                            // PickerCellInnerCls = @$"{token.ComponentCls}-cell-inner",
+                            PickerCellInnerCls = @$"{token.ComponentCls}-cell-inner",
                             DateValueHeight = token.ControlHeightSM,
                             WeekHeight = token.ControlHeightSM * 0.75,
                             DateContentHeight = (token.FontSizeSM * token.LineHeightSM + token.MarginXS) * 3 + token.LineWidth * 2,

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -87,9 +88,9 @@ namespace AntDesign
 
         protected RenderFragment _styleContent;
 
-        protected string UseStyle(string prefixCls)
+        protected string UseStyle(string prefixCls, Func<UseComponentStyleResult> useStyleFunc)
         {
-            var action = UseComponentStyle();
+            var action = useStyleFunc();
             if (action != null)
             {
                 var (render, hashId) = action(prefixCls);
@@ -97,11 +98,6 @@ namespace AntDesign
                 return hashId;
             }
 
-            return null;
-        }
-
-        protected virtual UseComponentStyleResult UseComponentStyle()
-        {
             return null;
         }
     }

@@ -47,7 +47,7 @@ namespace AntDesign
 
         private void SetClass()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, SpinStyle.UseComponentStyle);
             WrapperClassMapper
                 .If(WrapperClassName, () => !string.IsNullOrWhiteSpace(WrapperClassName))
                 .Add(hashId)

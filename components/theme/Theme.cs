@@ -24,16 +24,15 @@ namespace AntDesign
             value.Merge(token);
             return value;
         }
-
+        
         public static T MergeToken<T>(GlobalToken token, T value) where T : IToken
         {
             value.Merge(token);
             return value;
         }
 
-        public static T MergeToken<T>(params IToken[] tokens) where T : IToken, new()
+        public static T MergeTokens<T>(T token, params IToken[] tokens) where T : IToken
         {
-            var token = new T();
             foreach (var item in tokens)
             {
                 token.Merge(item);

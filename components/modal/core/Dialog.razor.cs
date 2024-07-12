@@ -404,15 +404,10 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
-            var hashId = UseStyle(Config.PrefixCls);
+            var hashId = UseStyle(Config.PrefixCls, ModalStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(Config.PrefixCls)
                 .Add(hashId);
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return ModalStyle.UseComponentStyle();
         }
 
         /// <summary>

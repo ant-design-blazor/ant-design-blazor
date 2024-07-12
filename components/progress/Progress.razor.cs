@@ -155,7 +155,7 @@ namespace AntDesign
 
         private void SetClasses()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, ProgressStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixCls)
                 .Add(hashId)

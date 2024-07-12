@@ -135,7 +135,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, SegmentedStyle.UseComponentStyle);
             ClassMapper.Add(PrefixCls)
                 .Add(hashId)
                 .If($"{PrefixCls}-lg", () => Size == SegmentedSize.Large)

@@ -37,7 +37,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, PopoverStyle.UseComponentStyle);
         }
 
         internal override string GetOverlayEnterClass()

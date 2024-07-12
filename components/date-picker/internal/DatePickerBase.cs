@@ -368,7 +368,7 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, DatePickerStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add(hashId)
@@ -386,11 +386,6 @@ namespace AntDesign
             _panelClassMapper
                 .Add($"{PrefixCls}-panel")
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return DatePickerStyle.UseComponentStyle();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

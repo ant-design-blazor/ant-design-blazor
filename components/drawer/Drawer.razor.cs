@@ -377,7 +377,7 @@ namespace AntDesign
         private void SetClass()
         {
             var prefixCls = "ant-drawer";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, DrawerStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefixCls)
                 .Add(hashId)

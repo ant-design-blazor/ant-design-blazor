@@ -2,14 +2,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { writeAllText } from './Util';
 
+const ignore = ["Flex", "Image", "InputNumber"];
+
 export function genComponentStyleTests() {
     const sourceDir = './tests/AntDesign.Tests/Styles/css';
     const dist = './tests/AntDesign.Tests/Styles/GenerateStyleTests.cs';
-    const ignore = ["Flex", "Image", "InputNumber"]
 
     const methods: string[] = []
     fs.readdirSync(sourceDir).forEach(file => {
-        const name = path.parse(file).name;
+        let name = path.parse(file).name;
         if (ignore.includes(name)) return true;
         const str = `
         [Fact]
@@ -17,7 +18,7 @@ export function genComponentStyleTests() {
         {
             var content = LoadStyleHtml("Styles/css/${name}.css");
             var (html, hashId) = ${name}Style.UseComponentStyle()("ant-${name.toLowerCase()}");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }`;
         methods.push(str);

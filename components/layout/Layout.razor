@@ -20,7 +20,7 @@
     {
         base.OnInitialized();
         var prefixCls = "ant-layout";
-        UseStyle(prefixCls);
+        UseStyle(prefixCls, LayoutStyle.UseComponentStyle);
         ClassMapper
             .Add(prefixCls)
             .If($"{prefixCls}-has-sider", () => _hasSider)

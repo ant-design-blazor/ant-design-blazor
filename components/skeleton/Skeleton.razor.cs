@@ -60,7 +60,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-skeleton";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, SkeletonStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)

@@ -143,7 +143,7 @@ namespace AntDesign
         
         private void UpdateClassMap()
         {
-            var hashId = UseStyle(_prefix);
+            var hashId = UseStyle(_prefix, TagStyle.UseComponentStyle);
             this.ClassMapper.Add(_prefix)
                 .Add(hashId)
                 .If($"{_prefix}-has-color", () => _isCustomColor)

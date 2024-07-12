@@ -23,9 +23,9 @@ namespace AntDesign
 
     }
 
-    public partial class Message
+    public partial class MessageStyle
     {
-        public CSSInterpolation[] GenMessageStyle(MessageToken token)
+        public static CSSInterpolation[] GenMessageStyle(MessageToken token)
         {
             var componentCls = token.ComponentCls;
             var iconCls = token.IconCls;
@@ -184,7 +184,7 @@ namespace AntDesign
             };
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Message",

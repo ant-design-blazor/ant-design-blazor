@@ -65,8 +65,9 @@ namespace AntDesign
                 };
                 mergedToken.Merge(token, componentToken);
 
-                var renderMode = Environment.GetEnvironmentVariable("RENDER_MODE");
-                if (renderMode == "testing")
+                // COMPONENT, HEAD
+                var renderingMode = Environment.GetEnvironmentVariable("RENDERING_MODE");
+                if (renderingMode == "COMPONENT")
                 {
                     var styleFunc = (Func<CSSInterpolation>)(() => new CSSInterpolation[]
                     {

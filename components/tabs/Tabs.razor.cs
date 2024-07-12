@@ -210,7 +210,7 @@ namespace AntDesign
             {
                 Animated = false;
             }
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, TabsStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixCls)
                 .Add(hashId)

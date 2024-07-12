@@ -28,7 +28,7 @@ namespace AntDesign
         private void SetClass()
         {
             var prefixCls = "ant-divider";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, DividerStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefixCls)
                 .Add(hashId)

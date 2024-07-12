@@ -715,7 +715,7 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
-            var hashId = UseStyle(ClassPrefix);
+            var hashId = UseStyle(ClassPrefix, SelectStyle.UseComponentStyle);
             ClassMapper
                 .Add($"{ClassPrefix}")
                 .Add(hashId)
@@ -734,11 +734,6 @@ namespace AntDesign
                 .If($"{ClassPrefix}-rtl", () => RTL)
 
                 ;
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return SelectStyle.UseComponentStyle();
         }
 
         /// <summary>

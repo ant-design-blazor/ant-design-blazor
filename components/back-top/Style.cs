@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
@@ -74,9 +74,9 @@ namespace AntDesign
 
     }
 
-    public partial class BackTop
+    public partial class BackTopStyle
     {
-        public CSSObject GenSharedBackTopStyle(BackTopToken token)
+        public static CSSObject GenSharedBackTopStyle(BackTopToken token)
         {
             var componentCls = token.ComponentCls;
             var backTopFontSize = token.BackTopFontSize;
@@ -123,7 +123,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenMediaBackTopStyle(BackTopToken token)
+        public static CSSObject GenMediaBackTopStyle(BackTopToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()
@@ -145,7 +145,7 @@ namespace AntDesign
             };
         }
 
-        protected override UseComponentStyleResult UseComponentStyle()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "BackTop",

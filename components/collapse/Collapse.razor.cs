@@ -50,7 +50,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-collapse";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, CollapseStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)

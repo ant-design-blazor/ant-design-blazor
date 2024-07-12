@@ -88,9 +88,9 @@ namespace AntDesign
 
     }
 
-    public partial class Notification
+    public partial class NotificationStyle
     {
-        public CSSObject GenNoticeStyle(NotificationToken token)
+        public static CSSObject GenNoticeStyle(NotificationToken token)
         {
             var iconCls = token.IconCls;
             var componentCls = token.ComponentCls;
@@ -211,7 +211,7 @@ namespace AntDesign
             };
         }
 
-        public CSSInterpolation GenNotificationStyle(NotificationToken token)
+        public static CSSInterpolation GenNotificationStyle(NotificationToken token)
         {
             var componentCls = token.ComponentCls;
             var notificationMarginBottom = token.NotificationMarginBottom;
@@ -305,7 +305,7 @@ namespace AntDesign
             };
         }
 
-        public NotificationToken PrepareComponentToken(GlobalToken token)
+        public static NotificationToken PrepareComponentToken(GlobalToken token)
         {
             return new NotificationToken()
             {
@@ -314,7 +314,7 @@ namespace AntDesign
             };
         }
 
-        public NotificationToken PrepareNotificationToken(TokenWithCommonCls token)
+        public static NotificationToken PrepareNotificationToken(TokenWithCommonCls token)
         {
             var notificationPaddingVertical = token.PaddingMD;
             var notificationPaddingHorizontal = token.PaddingLG;
@@ -336,7 +336,7 @@ namespace AntDesign
             return notificationToken;
         }
 
-        public UseComponentStyleResult ExportDefault()
+        public static UseComponentStyleResult UseComponentStyle()
         {
             return GenComponentStyleHook(
                 "Notification",
@@ -353,7 +353,7 @@ namespace AntDesign
                 PrepareComponentToken);
         }
 
-        public CSSObject GenNotificationPlacementStyle(NotificationToken token)
+        public static CSSObject GenNotificationPlacementStyle(NotificationToken token)
         {
             var componentCls = token.ComponentCls;
             var notificationMarginEdge = token.NotificationMarginEdge;
@@ -496,12 +496,12 @@ namespace AntDesign
         //        prepareComponentToken);
         //}
 
-        private Dictionary<string, string> _placementAlignProperty = new Dictionary<string, string>()
+        private static Dictionary<string, string> _placementAlignProperty = new Dictionary<string, string>()
         {
             { "", "" }
         };
 
-        public CSSObject GenPlacementStackStyle(NotificationToken token, string placement)
+        public static CSSObject GenPlacementStackStyle(NotificationToken token, string placement)
         {
             var componentCls = token.ComponentCls;
             var p = _placementAlignProperty[placement];
@@ -518,7 +518,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStackChildrenStyle(NotificationToken token)
+        public static CSSObject GenStackChildrenStyle(NotificationToken token)
         {
             var childrenStyle = new CSSObject()
             {
@@ -548,7 +548,7 @@ namespace AntDesign
             };
         }
 
-        public CSSObject GenStackedNoticeStyle(NotificationToken token)
+        public static CSSObject GenStackedNoticeStyle(NotificationToken token)
         {
             var childrenStyle = new CSSObject();
             for (var i = 1; i < token.NotificationStackLayer; i++)
@@ -576,7 +576,7 @@ namespace AntDesign
             "bottomRight"
         };
 
-        public CSSObject GenStackStyle(NotificationToken token)
+        public static CSSObject GenStackStyle(NotificationToken token)
         {
             var componentCls = token.ComponentCls;
             return new CSSObject()

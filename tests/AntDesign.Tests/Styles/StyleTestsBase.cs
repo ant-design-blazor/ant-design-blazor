@@ -12,7 +12,7 @@ namespace AntDesign.Tests.Styles
     {
         public StyleTestsBase()
         {
-            Environment.SetEnvironmentVariable("RENDER_MODE", "testing");
+            Environment.SetEnvironmentVariable("RENDERING_MODE", "COMPONENT");
         }
 
         protected string LoadStyleHtml(string path)

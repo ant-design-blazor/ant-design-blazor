@@ -250,18 +250,13 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            var hashId = UseStyle(_prefixCls);
+            var hashId = UseStyle(_prefixCls, FormStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .Add(hashId)
                 .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return FormStyle.UseComponentStyle();
         }
 
         private async Task OnValidSubmit(EditContext editContext)

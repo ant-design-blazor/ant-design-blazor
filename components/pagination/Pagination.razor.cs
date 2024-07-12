@@ -204,7 +204,7 @@ namespace AntDesign
 
         private void SetClass()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, PaginationStyle.UseComponentStyle);
             ClassMapper
                .Add(PrefixCls)
                .Add(hashId)

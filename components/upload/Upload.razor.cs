@@ -112,7 +112,7 @@ namespace AntDesign
 
             var prefixCls = "ant-upload";
 
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, UploadStyle.UseComponentStyle);
 
             ClassMapper
                 .Add(hashId)

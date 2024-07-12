@@ -33,7 +33,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            HashId = UseStyle(PrefixCls);
+            HashId = UseStyle(PrefixCls, TooltipStyle.UseComponentStyle);
         }
 
         internal override string GetOverlayEnterClass()

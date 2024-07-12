@@ -72,7 +72,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-mentions";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, MentionsStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(prefixCls)
                 .Add(hashId)

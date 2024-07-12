@@ -91,7 +91,10 @@ namespace AntDesign
                         token,
                         new TreeSelectToken
                         {
-                            TreePrefixCls = "select-tree"
+                            TreePrefixCls = "select-tree",
+                            // 未赋值但后续有引用
+                            ["directoryNodeSelectedColor"] = token.ColorTextLightSolid,
+                            ["directoryNodeSelectedBg"] = token.ColorPrimary,
                         });
                     return GenBaseStyle(treeSelectToken);
                 },

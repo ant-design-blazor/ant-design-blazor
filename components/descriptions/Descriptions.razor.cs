@@ -74,7 +74,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             var prefixCls = "ant-descriptions";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, DescriptionsStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)

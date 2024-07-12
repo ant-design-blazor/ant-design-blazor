@@ -55,6 +55,14 @@ export const isString = (obj: any): boolean => {
     return typeof obj === 'string' || obj instanceof String;
 }
 
+export const isBoolean = (obj: any): boolean => {
+    return typeof obj == "boolean";
+}
+
+export const isNumber = (obj: any) => {
+    return typeof obj === 'number';
+}
+
 export const init = (ops: CsOptions) => {
     emptyMap = {};
     options = { ...ops };
@@ -243,4 +251,11 @@ export const writeAllText = (filePath: string, content: string) => {
         fs.mkdirSync(dir, { recursive: true });
     }
     fs.writeFileSync(distPath, content, 'utf8');
+}
+
+export const readAllText = (filePath: string): string => {
+    if (!fs.existsSync(filePath)) {
+        return '';
+    }
+    return fs.readFileSync(filePath, { encoding: 'utf8' });
 }

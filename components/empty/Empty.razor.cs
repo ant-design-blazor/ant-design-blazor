@@ -34,7 +34,7 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, EmptyStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add(hashId)

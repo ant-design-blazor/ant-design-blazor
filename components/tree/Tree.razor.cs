@@ -115,7 +115,7 @@ namespace AntDesign
         private void SetClassMapper()
         {
             var prefixCls = "ant-tree";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, TreeStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)

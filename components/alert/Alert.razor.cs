@@ -118,7 +118,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-alert";
-            var hashId = UseStyle(prefixName);
+            var hashId = UseStyle(prefixName, AlertStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixName)
                 .Add(hashId)

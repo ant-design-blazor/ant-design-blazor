@@ -126,7 +126,7 @@ namespace AntDesign
         protected void SetClass()
         {
             // todo: move to OnInitialized.
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, CalendarStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add(hashId)

@@ -98,7 +98,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            var hashId = UseStyle(PrefixName);
+            var hashId = UseStyle(PrefixName, TransferStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixName)
                 .Add(hashId)

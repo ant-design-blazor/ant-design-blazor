@@ -44,7 +44,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-statistic";
-            var hashId = UseStyle(prefixName);
+            var hashId = UseStyle(prefixName, StatisticStyle.UseComponentStyle);
             ClassMapper
                 .Add(prefixName)
                 .Add(hashId)

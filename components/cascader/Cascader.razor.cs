@@ -99,7 +99,7 @@ namespace AntDesign
             base.OnInitialized();
             string prefixCls = "ant-cascader";
             string selectCls = "ant-select";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, CascaderStyle.UseComponentStyle);
 
             ClassMapper
                 .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")

@@ -217,7 +217,7 @@ namespace AntDesign
                 "Mentions",
                 (token) =>
                 {
-                    var mentionsToken = MergeToken<MentionsToken>(
+                    var mentionsToken = MergeTokens<MentionsToken>(
                         token,
                         InitInputToken(token));
                     return new CSSInterpolation[]

@@ -52,7 +52,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            var hashId = UseStyle(PrefixCls);
+            var hashId = UseStyle(PrefixCls, DropdownStyle.UseComponentStyle);
             ClassMapper
                .Add(hashId);
         }

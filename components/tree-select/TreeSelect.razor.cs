@@ -506,7 +506,7 @@ namespace AntDesign
 
         protected override void SetClassMap()
         {
-            var hashId = UseStyle(ClassPrefix);
+            var hashId = UseStyle(ClassPrefix, TreeSelectStyle.UseComponentStyle);
             ClassMapper
                 .Add("ant-tree-select")
                 .Add($"{ClassPrefix}")
@@ -524,11 +524,6 @@ namespace AntDesign
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
-        }
-
-        protected override UseComponentStyleResult UseComponentStyle()
-        {
-            return TreeSelectStyle.UseComponentStyle();
         }
 
         // bind the option once after fetching the data source asynchronously

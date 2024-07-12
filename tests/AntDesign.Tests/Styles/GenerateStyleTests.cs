@@ -11,7 +11,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Affix.css");
             var (html, hashId) = AffixStyle.UseComponentStyle()("ant-affix");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -20,7 +20,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Alert.css");
             var (html, hashId) = AlertStyle.UseComponentStyle()("ant-alert");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -29,7 +29,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Anchor.css");
             var (html, hashId) = AnchorStyle.UseComponentStyle()("ant-anchor");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -38,7 +38,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Avatar.css");
             var (html, hashId) = AvatarStyle.UseComponentStyle()("ant-avatar");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -47,7 +47,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Badge.css");
             var (html, hashId) = BadgeStyle.UseComponentStyle()("ant-badge");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -56,7 +56,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Breadcrumb.css");
             var (html, hashId) = BreadcrumbStyle.UseComponentStyle()("ant-breadcrumb");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -64,8 +64,8 @@ namespace AntDesign.Tests.Styles
         public void Generate_Button_Style()
         {
             var content = LoadStyleHtml("Styles/css/Button.css");
-            var (html, hashId) = ButtonStyle.UseComponentStyle()("ant-button");
-            var cut = Render(html);
+            var (html, hashId) = ButtonStyle.UseComponentStyle()("ant-btn");
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -74,7 +74,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Calendar.css");
             var (html, hashId) = CalendarStyle.UseComponentStyle()("ant-calendar");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -83,7 +83,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Card.css");
             var (html, hashId) = CardStyle.UseComponentStyle()("ant-card");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -92,7 +92,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Carousel.css");
             var (html, hashId) = CarouselStyle.UseComponentStyle()("ant-carousel");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -101,7 +101,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Cascader.css");
             var (html, hashId) = CascaderStyle.UseComponentStyle()("ant-cascader");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -110,7 +110,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Checkbox.css");
             var (html, hashId) = CheckboxStyle.UseComponentStyle()("ant-checkbox");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -119,7 +119,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Collapse.css");
             var (html, hashId) = CollapseStyle.UseComponentStyle()("ant-collapse");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -128,7 +128,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/DatePicker.css");
             var (html, hashId) = DatePickerStyle.UseComponentStyle()("ant-datepicker");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -137,7 +137,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Descriptions.css");
             var (html, hashId) = DescriptionsStyle.UseComponentStyle()("ant-descriptions");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -146,7 +146,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Divider.css");
             var (html, hashId) = DividerStyle.UseComponentStyle()("ant-divider");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -155,7 +155,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Drawer.css");
             var (html, hashId) = DrawerStyle.UseComponentStyle()("ant-drawer");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -164,7 +164,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Dropdown.css");
             var (html, hashId) = DropdownStyle.UseComponentStyle()("ant-dropdown");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -173,7 +173,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Empty.css");
             var (html, hashId) = EmptyStyle.UseComponentStyle()("ant-empty");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -182,7 +182,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Form.css");
             var (html, hashId) = FormStyle.UseComponentStyle()("ant-form");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -190,8 +190,8 @@ namespace AntDesign.Tests.Styles
         public void Generate_GridCol_Style()
         {
             var content = LoadStyleHtml("Styles/css/GridCol.css");
-            var (html, hashId) = GridStyle.UseColStyle()("ant-col");
-            var cut = Render(html);
+            var (html, hashId) = GridStyle.UseColStyle()("ant-gridcol");
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -199,8 +199,8 @@ namespace AntDesign.Tests.Styles
         public void Generate_GridRow_Style()
         {
             var content = LoadStyleHtml("Styles/css/GridRow.css");
-            var (html, hashId) = GridStyle.UseRowStyle()("ant-row");
-            var cut = Render(html);
+            var (html, hashId) = GridStyle.UseRowStyle()("ant-gridrow");
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -209,7 +209,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Input.css");
             var (html, hashId) = InputStyle.UseComponentStyle()("ant-input");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -218,7 +218,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Layout.css");
             var (html, hashId) = LayoutStyle.UseComponentStyle()("ant-layout");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -227,7 +227,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/List.css");
             var (html, hashId) = AntListStyle.UseComponentStyle()("ant-list");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -236,7 +236,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Mentions.css");
             var (html, hashId) = MentionsStyle.UseComponentStyle()("ant-mentions");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -245,7 +245,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Menu.css");
             var (html, hashId) = MenuStyle.UseComponentStyle()("ant-menu");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -254,7 +254,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Modal.css");
             var (html, hashId) = ModalStyle.UseComponentStyle()("ant-modal");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -263,7 +263,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Pagination.css");
             var (html, hashId) = PaginationStyle.UseComponentStyle()("ant-pagination");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -272,7 +272,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Popconfirm.css");
             var (html, hashId) = PopconfirmStyle.UseComponentStyle()("ant-popconfirm");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -281,7 +281,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Popover.css");
             var (html, hashId) = PopoverStyle.UseComponentStyle()("ant-popover");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -290,7 +290,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Progress.css");
             var (html, hashId) = ProgressStyle.UseComponentStyle()("ant-progress");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -299,7 +299,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Radio.css");
             var (html, hashId) = RadioStyle.UseComponentStyle()("ant-radio");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -308,7 +308,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Rate.css");
             var (html, hashId) = RateStyle.UseComponentStyle()("ant-rate");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -317,7 +317,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Result.css");
             var (html, hashId) = ResultStyle.UseComponentStyle()("ant-result");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -326,7 +326,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Segmented.css");
             var (html, hashId) = SegmentedStyle.UseComponentStyle()("ant-segmented");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -335,7 +335,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Select.css");
             var (html, hashId) = SelectStyle.UseComponentStyle()("ant-select");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -344,7 +344,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Skeleton.css");
             var (html, hashId) = SkeletonStyle.UseComponentStyle()("ant-skeleton");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -353,7 +353,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Slider.css");
             var (html, hashId) = SliderStyle.UseComponentStyle()("ant-slider");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -362,7 +362,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Space.css");
             var (html, hashId) = SpaceStyle.UseComponentStyle()("ant-space");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -371,7 +371,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Spin.css");
             var (html, hashId) = SpinStyle.UseComponentStyle()("ant-spin");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -380,7 +380,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Statistic.css");
             var (html, hashId) = StatisticStyle.UseComponentStyle()("ant-statistic");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -389,7 +389,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Steps.css");
             var (html, hashId) = StepsStyle.UseComponentStyle()("ant-steps");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -398,7 +398,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Switch.css");
             var (html, hashId) = SwitchStyle.UseComponentStyle()("ant-switch");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -407,7 +407,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Table.css");
             var (html, hashId) = TableStyle.UseComponentStyle()("ant-table");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -416,7 +416,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Tabs.css");
             var (html, hashId) = TabsStyle.UseComponentStyle()("ant-tabs");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -425,7 +425,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Tag.css");
             var (html, hashId) = TagStyle.UseComponentStyle()("ant-tag");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -434,7 +434,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Timeline.css");
             var (html, hashId) = TimelineStyle.UseComponentStyle()("ant-timeline");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -443,7 +443,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Tooltip.css");
             var (html, hashId) = TooltipStyle.UseComponentStyle()("ant-tooltip");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -452,7 +452,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Transfer.css");
             var (html, hashId) = TransferStyle.UseComponentStyle()("ant-transfer");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -461,7 +461,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Tree.css");
             var (html, hashId) = TreeStyle.UseComponentStyle()("ant-tree");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -470,7 +470,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/TreeSelect.css");
             var (html, hashId) = TreeSelectStyle.UseComponentStyle()("ant-treeselect");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -479,7 +479,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Typography.css");
             var (html, hashId) = TypographyStyle.UseComponentStyle()("ant-typography");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
 
@@ -488,7 +488,7 @@ namespace AntDesign.Tests.Styles
         {
             var content = LoadStyleHtml("Styles/css/Upload.css");
             var (html, hashId) = UploadStyle.UseComponentStyle()("ant-upload");
-            var cut = Render(html);
+            var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }
     }

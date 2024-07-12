@@ -62,7 +62,7 @@ namespace AntDesign
         protected void SetClassMap()
         {
             var prefixCls = "ant-card";
-            var hashId = UseStyle(prefixCls);
+            var hashId = UseStyle(prefixCls, CardStyle.UseComponentStyle);
             this.ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)
