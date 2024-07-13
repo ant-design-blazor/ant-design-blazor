@@ -17,7 +17,7 @@ namespace AntDesign
                 return;
             }
             // Clears the cache of rowdata that is not in the current page.
-            var showItemKeys = _showItems.Select(GetHashCode).ToHashSet();
+            var showItemKeys = GetShowItemsIncludeChildren(_showItems).Select(GetHashCode).ToHashSet();
             var removedKeys = _dataSourceCache.Keys.Except(showItemKeys);
             foreach (var key in removedKeys)
             {
@@ -129,6 +129,25 @@ namespace AntDesign
             }
 
             return currentRowData;
+        }
+
+        // TODO: need to cache the children in showItems directly
+        private IEnumerable<TItem> GetShowItemsIncludeChildren(IEnumerable<TItem> showItems)
+        {
+            foreach (var item in showItems)
+            {
+                yield return item;
+
+                var children = TreeChildren?.Invoke(item);
+
+                if (children?.Any() == true)
+                {
+                    foreach (var child in GetShowItemsIncludeChildren(TreeChildren(item)))
+                    {
+                        yield return child;
+                    }
+                }
+            }
         }
     }
 }
