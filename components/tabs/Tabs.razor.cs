@@ -580,6 +580,10 @@ namespace AntDesign
                 return;
             }
 
+            if (_itemRefs is not { Count: > 0 })
+            {
+                return;
+            }
             _activeTabElement = _itemRefs[_activeTab.TabId];
 
             if (IsHorizontal)

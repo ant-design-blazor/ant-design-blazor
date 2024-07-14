@@ -23,12 +23,17 @@ namespace AntDesign.Tests.Tabs
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new HtmlElement());
             jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
-                .ReturnsAsync(new Dictionary<string, HtmlElement>());
+                .ReturnsAsync(new Dictionary<string, HtmlElement>() { 
+                    ["1-nav-list"] = new HtmlElement() { },
+                    ["1-nav-warpper"] = new HtmlElement() { },
+                    ["rc-tabs-2-tab-2"] = new HtmlElement() { },
+                });
 
             Context.Services.AddScoped(_ => jsRuntime.Object);
 
             var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
                 .Add(x => x.DefaultActiveKey, "2")
+                .Add(x => x.Id, "1")
                 .Add(b => b.ChildContent, b => childContent(b))
             );
 
@@ -39,6 +44,7 @@ namespace AntDesign.Tests.Tabs
         {
             var tabPane1Builder = new ComponentParameterCollectionBuilder<TabPane>()
                 .Add(x => x.Key, key)
+                .Add(x => x.Id, key)
                 .Add(x => x.Tab, $"Tab {key}")
                 .Add(x => x.ChildContent, $"Content {key}".ToRenderFragment());
 

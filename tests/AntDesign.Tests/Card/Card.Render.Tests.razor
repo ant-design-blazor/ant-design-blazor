@@ -92,6 +92,7 @@
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true).SetResult(new());
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
         var cut = Render<AntDesign.Card>(
             @<Card Title=@("Card title")>        
                 <CardTabs>
