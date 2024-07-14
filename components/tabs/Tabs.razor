@@ -13,8 +13,8 @@
 				</div>
 			}
 
-			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef">
-				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef">
+			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
+				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
 					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
 						@ChildContent
 					</CascadingValue>
