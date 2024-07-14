@@ -29,10 +29,10 @@ const domInfoDefaults: domInfo = {
   selectionStart: 0,
   absoluteTop: 0,
   absoluteLeft: 0,
-  marginTop: number,
-  marginBottom: number,
-  marginLeft: number,
-  marginRight: number,
+  marginTop: 0,
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
 }
 
 type cooridnates = {
