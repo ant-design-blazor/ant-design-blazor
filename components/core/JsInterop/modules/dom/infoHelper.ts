@@ -49,7 +49,7 @@ export class infoHelper {
       marginBottom: parseFloat(style.marginBottom),
       marginLeft: parseFloat(style.marginLeft),
       marginRight: parseFloat(style.marginRight)
-      };
+    };
     return result;
   }
 
