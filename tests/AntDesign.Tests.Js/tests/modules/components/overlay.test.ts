@@ -28,7 +28,11 @@ const domInfoDefaults: domInfo = {
   clientWidth: 0,
   selectionStart: 0,
   absoluteTop: 0,
-  absoluteLeft: 0
+  absoluteLeft: 0,
+  marginTop: number,
+  marginBottom: number,
+  marginLeft: number,
+  marginRight: number,
 }
 
 type cooridnates = {
