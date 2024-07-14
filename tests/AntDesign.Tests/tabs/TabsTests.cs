@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -21,6 +22,8 @@ namespace AntDesign.Tests.Tabs
             var jsRuntime = new Mock<IJSRuntime>();
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new HtmlElement());
+            jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
+                .ReturnsAsync(new Dictionary<string, HtmlElement>());
 
             Context.Services.AddScoped(_ => jsRuntime.Object);
 
