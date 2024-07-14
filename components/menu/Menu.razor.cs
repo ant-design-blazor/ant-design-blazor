@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -110,7 +111,6 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
-                MenuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
@@ -122,7 +122,7 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowCollapsedTooltip { get; set; } = true;
-       
+
         [Parameter]
         public bool Animation { get; set; }
 
@@ -135,6 +135,16 @@ namespace AntDesign
 
         public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
+            {
+                MenuItems.ForEach(x => x.UpdateStelected());
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
 
         public void SelectItem(MenuItem item)
         {
