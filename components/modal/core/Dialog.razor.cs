@@ -490,7 +490,7 @@ namespace AntDesign
                 _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
             }
 
-            if (!Config.CreateByService)
+            if (!Config.CreateByService && !Config.DestroyOnClose)
             {
                 _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, Config.GetContainer);
             }
