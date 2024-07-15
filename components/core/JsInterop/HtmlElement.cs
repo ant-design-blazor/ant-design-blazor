@@ -48,5 +48,17 @@ namespace AntDesign.JsInterop
 
         [JsonPropertyName("selectionStart")]
         public decimal SelectionStart { get; set; }
+
+        [JsonPropertyName("marginTop")]
+        public decimal MarginTop { get; set; }
+
+        [JsonPropertyName("marginBottom")]
+        public decimal MarginBottom { get; set; }
+
+        [JsonPropertyName("marginLeft")]
+        public decimal MarginLeft { get; set; }
+
+        [JsonPropertyName("marginRight")]
+        public decimal MarginRight { get; set; }
     }
 }
