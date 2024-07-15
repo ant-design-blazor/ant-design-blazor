@@ -31,6 +31,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 指示搜索功能是否处于活动状态。 对于Mode = `tags` 始终为 `true`。 | bool | false |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
+| ItemValue    | 指定 Item 中作为选项 Value 的属性，也可以指定 Item 本身。(替代 ValueName）| Func<TITem,TItemValue> |  -  |
+| ItemLabel    | 指定 Item 中作为选项 Label 的属性。(替代 LabelName）| Func<TITem,string> |  -  |
 | LabelInValue | 是否在 value 中嵌入标签，将 value 的格式从 `TItemValue` 转换为 string (JSON) e.g. { "value": `TItemValue`, "label": "`标签值`" } | bool | false |  |
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |
@@ -75,6 +77,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
 | TreeCheckable |  是否可勾选节点 | boolean  | false  |   |
+| TreeCheckStrictly | checkable 状态下节点选择完全受控（父子节点选中状态不再关联） | boolean  | false  |   |
+| ShowCheckedStrategy | 配置 treeCheckable 时，定义选中项回填的方式。ShowAll: 显示所有选中节点(包括父节点)。ShowParent: 只显示父节点(当父节点下所有子节点都选中时)。 默认只显示子节点 | TreeCheckedStrategy  | ShowChild  |   |
 | CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
@@ -88,6 +92,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 | ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 

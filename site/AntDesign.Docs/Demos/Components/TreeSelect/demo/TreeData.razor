@@ -3,7 +3,8 @@
             DataSource="treeData"
             @bind-Values="@values"
             Placeholder="Please select"
-            ItemValue="c=>c.Key"
+            ItemValue="item=>item"
+            ItemLabel="item=>item.Title"
             AllowClear
             Multiple
             EnableSearch
@@ -19,7 +20,7 @@
 @JsonSerializer.Serialize(values)
 
 @code {
-    private IEnumerable<int> values;
+    private IEnumerable<Data> values;
 
     Data[] treeData = new Data[]
     {
@@ -28,7 +29,7 @@
             Title = "Node1",
             Key = 1,
             Children = new Data[]
-        {
+            {
                 new()
                 {
                     Title = "Child Node1",
@@ -39,18 +40,18 @@
                     Title = "Child Node2",
                     Key = 12,
                 }
-        }
+            }
         },
         new()
         {
             Title = "Node2",
             Key = 13,
         },
-      new()
-      {
-          Title="Node3",
-          Key=14
-      }
+        new()
+        {
+            Title="Node3",
+            Key=14
+        }
     };
 
   public class Data

@@ -15,6 +15,47 @@ timeline: true
 
 ---
 
+### 0.19.5
+
+`2024-7-15`
+
+*公告：我们把文档项目分离到单独的仓库，计划会升级为文档系统，敬请关注和参与贡献：https://github.com/ElderJames/BlazorSiteGenerator*
+
+- 📖 新增 Table 基础的编辑和搜索示例，替换原来Blazor复刻示例。[#3970](https://github.com/ant-design-blazor/ant-design-blazor/pull/3970) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 修复 关闭时会抛出JS异常，且无法再次打开。[#3973](https://github.com/ant-design-blazor/ant-design-blazor/pull/3973) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在跳转到同一个页面时无法再次打开。[#3963](https://github.com/ant-design-blazor/ant-design-blazor/pull/3963) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Menu 在首次加载时会被外部重新渲染时取消选中。[#3976](https://github.com/ant-design-blazor/ant-design-blazor/pull/3976) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Textarea 无边框样式丢失。[#3975](https://github.com/ant-design-blazor/ant-design-blazor/pull/3975) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 在有选项时点击输入框可以打开下拉框。[#3971](https://github.com/ant-design-blazor/ant-design-blazor/pull/3971) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 FormItem 修复空引用异常。[#3967](https://github.com/ant-design-blazor/ant-design-blazor/pull/3967) [@agolub-s](https://github.com/agolub-s)
+- 🐞 修复 Tabs 当 Tab 标题更新时下标长度未更新。[#3978](https://github.com/ant-design-blazor/ant-design-blazor/pull/3978) [@ElderJames](https://github.com/ElderJames)
+
+### 0.19.4
+
+`2024-7-03`
+
+- 🔥 Ant Design Icons Blazor 组件库发布！[ant-design-icons-blazor](https://github.com/ant-design-blazor/ant-design-icons-blazor)
+- 🔥 新增 Form 自动生成组件GenerateFormItem。[#3877](https://github.com/ant-design-blazor/ant-design-blazor/pull/3877) [@dessli](https://github.com/dessli)
+
+- Tree
+  - 🆕 新增 全选/取消全部选择两个方法。[#3937](https://github.com/ant-design-blazor/ant-design-blazor/pull/3937) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 当 CheckOnClickNode 为 true 时hover样式。[#3952](https://github.com/ant-design-blazor/ant-design-blazor/pull/3952) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 全选包括子节点。[#3938](https://github.com/ant-design-blazor/ant-design-blazor/pull/3938) [@pankey888](https://github.com/pankey888)
+
+- TreeSelect
+  - 🆕 新增 TreeCheckStrictly和 ShowCheckedStrategy 来设置勾选的节点和绑定策略。[#3946](https://github.com/ant-design-blazor/ant-design-blazor/pull/3946) [@pankey888](https://github.com/pankey888)
+  - 🆕 新增  的TreeDefaultExpandParent 与 TreeDefaultExpandedKeys 属性。[#3953](https://github.com/ant-design-blazor/ant-design-blazor/pull/3953) [@pankey888](https://github.com/pankey888)
+  - 🆕 新增 利用 DropdownRender 支持自定义下来面板。[#3939](https://github.com/ant-design-blazor/ant-design-blazor/pull/3939) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 指定 item本身作为绑定值。[#3954](https://github.com/ant-design-blazor/ant-design-blazor/pull/3954) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 修复 Checkbox 禁用样式。[#3948](https://github.com/ant-design-blazor/ant-design-blazor/pull/3948) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 数组范围溢出异常。[#3947](https://github.com/ant-design-blazor/ant-design-blazor/pull/3947) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Modal 使用service打开确认框不返回Yes/No结果。[#3945](https://github.com/ant-design-blazor/ant-design-blazor/pull/3945) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.19.3
 
 `2024-6-26`

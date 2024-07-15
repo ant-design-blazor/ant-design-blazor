@@ -25,6 +25,7 @@ namespace AntDesign
         /// <returns></returns>
         public ConfirmRef Confirm(ConfirmOptions props)
         {
+            props.CreateByService = true;
             CheckConfirmOptionsIsNull(props);
             ConfirmRef confirmRef = new ConfirmRef(props, this);
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
@@ -109,6 +110,7 @@ namespace AntDesign
         public async Task<bool> ConfirmAsync(ConfirmOptions props)
         {
             ConfirmRef confirmRef = new ConfirmRef(props, this);
+            props.CreateByService = true;
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
             if (OnConfirmOpenEvent != null)
             {

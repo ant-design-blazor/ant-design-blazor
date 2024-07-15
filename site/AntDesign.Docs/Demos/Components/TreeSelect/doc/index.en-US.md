@@ -31,6 +31,8 @@ Tree selection control.
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
+| ItemValue    | Specify the property in Item that is the Value of the option, can also specify the Item itself. (Used instead of ValueName) | Func<TITem,TItemValue> |  -  |
+| ItemLabel    | Specifies the property in Item that is the option Label. (Used instead of LabelName)| Func<TITem,string> |  -  |
 | LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
@@ -75,6 +77,8 @@ Tree selection control.
 | ShowLeafIcon | Displays the cotyledon icon | boolean | false |  |
 | Multiple  |  Allows selecting multiple treeNodes | boolean | false  |   |
 | TreeCheckable | Whether can be checked | boolean  | false  |   |
+| TreeCheckStrictly | Check treeNode precisely; parent treeNode and children treeNodes are not associated | boolean  | false  |   |
+| ShowCheckedStrategy | The way show selected item in box when treeCheckable set. Default: just show child nodes. ShowAll: show all checked treeNodes (include parent treeNode). ShowParent: show checked treeNodes (just show parent treeNode) | TreeCheckedStrategy  | ShowChild  |   |
 | CheckOnClickNode |  Click title to check or uncheck the node | boolean  | true  |   |
 | SearchExpression  | Customized matching expression  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | Search for matching text styles | string  | null  |   |
@@ -88,6 +92,8 @@ Tree selection control.
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
 | ExpandedKeys  |  (Controlled) expands the specified tree node | string[]  |  null  |   |
 | ExpandOnClickNode |  Click title to expand or collapse the node | boolean  | false  |   |
 

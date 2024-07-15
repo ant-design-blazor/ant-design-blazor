@@ -15,6 +15,49 @@ timeline: true
 
 ---
 
+### 0.19.5
+
+`2024-7-15`
+
+*Announcement: We have separated the document project into a separate repo, and the subsequent iteration will be the document system, please pay attention and contribute. Please pay attention and contribution: https://github.com/ElderJames/BlazorSiteGenerator*
+
+- 📖 docs: achieve a querying & editing demo for table. [#3970](https://github.com/ant-design-blazor/ant-design-blazor/pull/3970) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 Fixed throwing exception when service-opened confirm was closed. [#3973](https://github.com/ant-design-blazor/ant-design-blazor/pull/3973) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed modal can't open again after navagate to a same page. [#3963](https://github.com/ant-design-blazor/ant-design-blazor/pull/3963) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Menu matched item would be unselected on first load. [#3976](https://github.com/ant-design-blazor/ant-design-blazor/pull/3976) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Textarea add missing borderless style. [#3975](https://github.com/ant-design-blazor/ant-design-blazor/pull/3975) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete open dropdown on click when options is not empty by default. [#3971](https://github.com/ant-design-blazor/ant-design-blazor/pull/3971) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed FormItem null reference exception. [#3967](https://github.com/ant-design-blazor/ant-design-blazor/pull/3967) [@agolub-s](https://github.com/agolub-s)
+[@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs update the style of ink after tab title is changed。[#3978](https://github.com/ant-design-blazor/ant-design-blazor/pull/3978) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.19.4
+
+`2024-7-03`
+
+- 🔥Ant Design Icons for Blazor have been released！[ant-design-icons-blazor](https://github.com/ant-design-blazor/ant-design-icons-blazor)
+- 🔥Add Form GenerateFormItem component for automatic generation basic FormItem. [#3877](https://github.com/ant-design-blazor/ant-design-blazor/pull/3877) [@dessli](https://github.com/dessli)
+
+- Tree
+  - 🆕 Add support to check/uncheck all the child nodes recursively. [#3937](https://github.com/ant-design-blazor/ant-design-blazor/pull/3937) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed hover state display when CheckOnClickNode is true. [#3952](https://github.com/ant-design-blazor/ant-design-blazor/pull/3952) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed 'SelectAll' to select all the nodes in the tree. [#3938](https://github.com/ant-design-blazor/ant-design-blazor/pull/3938) [@pankey888](https://github.com/pankey888)
+
+- TreeSelect
+  - 🆕 Add TreeCheckStrictly and ShowCheckedStrategy to customize the checked values' outputting. [#3946](https://github.com/ant-design-blazor/ant-design-blazor/pull/3946) [@pankey888](https://github.com/pankey888)
+  - 🆕 Add TreeDefaultExpandParent & TreeDefaultExpandedKeys. [#3953](https://github.com/ant-design-blazor/ant-design-blazor/pull/3953) [@pankey888](https://github.com/pankey888)
+  - 🆕 Add support customize the dropdown menu via DropdownRender. [#3939](https://github.com/ant-design-blazor/ant-design-blazor/pull/3939) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed setting item itself as value. [#3954](https://github.com/ant-design-blazor/ant-design-blazor/pull/3954) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 Fixed Checkbox diabled style of wrapper. [#3948](https://github.com/ant-design-blazor/ant-design-blazor/pull/3948) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Select Fix a bug which may raise an exception 'Index was out of Range'. (#3942). [#3947](https://github.com/ant-design-blazor/ant-design-blazor/pull/3947) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Modal doesn't return Yes/No result when create confirm by service. [#3945](https://github.com/ant-design-blazor/ant-design-blazor/pull/3945) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.19.3
 
 `2024-6-26`

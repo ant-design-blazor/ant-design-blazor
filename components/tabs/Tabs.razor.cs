@@ -161,6 +161,7 @@ namespace AntDesign
         private TabPane _activePane;
         private TabPane _activeTab;
         private HtmlElement _activeTabElement;
+        private Dictionary<string, HtmlElement> _itemRefs;
 
         private string _activeKey;
         private TabPane _renderedActivePane;
@@ -191,6 +192,7 @@ namespace AntDesign
         private readonly List<TabPane> _panes = new List<TabPane>();
         private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
+
 
         private bool NavWrapPingLeft => _scrollOffset > 0;
         private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
@@ -441,14 +443,11 @@ namespace AntDesign
                 }
 
                 _activeKey = _activePane.Key;
+
+                TryRenderInk();
             }
 
             Card?.SetBody(_activePane.ChildContent);
-
-            _needUpdateScrollListPosition = true;
-
-            _shouldRender = true;
-            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -478,15 +477,18 @@ namespace AntDesign
 
         private async Task ResetSizes()
         {
-            var navList = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navListRef);
-            var navWarp = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navWarpRef);
-
-            _activeTabElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
+            ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
+            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
+            var navList = _itemRefs[Id + "-nav-list"];
+            var navWarp = _itemRefs[Id + "-nav-warpper"];
 
             _scrollListWidth = navList.ClientWidth;
             _scrollListHeight = navList.ClientHeight;
             _wrapperWidth = navWarp.ClientWidth;
             _wrapperHeight = navWarp.ClientHeight;
+
+            _itemRefs.Remove(Id + "-nav-list");
+            _itemRefs.Remove(Id + "-nav-warpper");
         }
 
         private void UpdateScrollListPosition()
@@ -571,6 +573,19 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
+            if (!_afterFirstRender)
+            {
+                _needUpdateScrollListPosition = true;
+                StateHasChanged();
+                return;
+            }
+
+            if (_itemRefs is not { Count: > 0 })
+            {
+                return;
+            }
+            _activeTabElement = _itemRefs[_activeTab.TabId];
+
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
@@ -608,6 +623,7 @@ namespace AntDesign
                 }
             }
 
+            _shouldRender = true;
             StateHasChanged();
             _renderedActivePane = _activePane;
         }
@@ -615,6 +631,12 @@ namespace AntDesign
         protected override bool ShouldRender()
         {
             return _shouldRender || _renderedActivePane != _activePane;
+        }
+
+        internal void UpdateTabsPosition()
+        {
+            _needUpdateScrollListPosition = true;
+            _shouldRender = true;
         }
 
         private void OnVisibleChange(bool visible)
@@ -626,24 +648,37 @@ namespace AntDesign
             }
 
             int invisibleHeadCount;
-            decimal tabSize, visibleCount;
+            int visibleCount;
 
             if (IsHorizontal)
             {
-                tabSize = _scrollListWidth / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
+                var tabWidths = _itemRefs.Values.Select(x => x.OffsetWidth + x.MarginLeft + x.MarginRight).ToArray();
+                invisibleHeadCount = GetOverflowCount(_scrollOffset, tabWidths);
+                visibleCount = GetOverflowCount(_scrollOffset + _wrapperWidth, tabWidths, true) - invisibleHeadCount;
             }
             else
             {
-                tabSize = _scrollListHeight / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
+                var tabHeights = _itemRefs.Values.Select(x => x.ClientHeight + x.MarginTop + x.MarginBottom).ToArray();
+                invisibleHeadCount = GetOverflowCount(_scrollOffset, tabHeights);
+                visibleCount = GetOverflowCount(_scrollOffset + _wrapperHeight, tabHeights, true) - invisibleHeadCount;
             }
 
-            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / tabSize);
-            visibleCount = Math.Min(visibleCount, _tabs.Count - invisibleHeadCount);
-
             _invisibleTabs = _tabs.ToList();
-            _invisibleTabs.RemoveRange(invisibleHeadCount, (int)visibleCount);
+            _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+        }
+
+        private static int GetOverflowCount(decimal maxLength, decimal[] lengths, bool isRight = false)
+        {
+            var sum = 0m;
+            for (var i = 0; i < lengths.Length; i++)
+            {
+                sum += lengths[i];
+                if (sum - maxLength >= lengths[i] * (isRight ? 0.2m : 0.6m))
+                {
+                    return i;
+                }
+            }
+            return lengths.Length;
         }
 
         #region DRAG & DROP

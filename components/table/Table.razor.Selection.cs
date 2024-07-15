@@ -214,7 +214,6 @@ namespace AntDesign
         {
             if (SelectedRowsChanged.HasDelegate && !_preventRowDataTriggerSelectedRowsChanged)
             {
-                _preventRender = true;
                 _outerSelectedRows = _selectedRows;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }

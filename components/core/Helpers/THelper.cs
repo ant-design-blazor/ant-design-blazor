@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Reflection;
 
 namespace AntDesign
@@ -97,5 +98,10 @@ namespace AntDesign
                        or TypeCode.UInt32
                        or TypeCode.UInt64;
         }
+        
+        public static bool IsArrayOrList(this Type that) => that != null && (that.IsArray || typeof(IList).IsAssignableFrom(that));
+
+        public static bool IsUserDefinedClass(this Type thta) =>
+            thta.IsClass && thta.Namespace != null && !thta.Namespace.StartsWith("System");
     }
 }

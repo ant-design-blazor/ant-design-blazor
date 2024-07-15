@@ -51,7 +51,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | DefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | DefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
-| DefaultExpandedKeys  |  默认展开的节点数 | string[]  | null |   |
+| DefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
 | AutoExpandParent | 是否自动展开父节点 | bool | false | |
 | ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
