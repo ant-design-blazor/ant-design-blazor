@@ -28,7 +28,7 @@ namespace AntDesign
                     [$"{token.AntCls}-motion-collapse"] = new CSSObject()
                     {
                         Overflow = "hidden",
-                        Transition = $"height {token.MotionDurationMid} ${token.MotionEaseInOut},opacity {token.MotionDurationMid} {token.MotionEaseInOut} !important"
+                        Transition = $"height {token.MotionDurationMid} {token.MotionEaseInOut},opacity {token.MotionDurationMid} {token.MotionEaseInOut} !important"
                     }
                 }
             };

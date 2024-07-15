@@ -9,17 +9,33 @@ namespace AntDesign
 {
     public partial class MessageToken
     {
-        public double ZIndexPopup { get; set; }
+        public double ZIndexPopup
+        {
+            get => (double)_tokens["zIndexPopup"];
+            set => _tokens["zIndexPopup"] = value;
+        }
 
-        public string ContentBg { get; set; }
+        public string ContentBg
+        {
+            get => (string)_tokens["contentBg"];
+            set => _tokens["contentBg"] = value;
+        }
 
-        public string ContentPadding { get; set; }
+        public string ContentPadding
+        {
+            get => (string)_tokens["contentPadding"];
+            set => _tokens["contentPadding"] = value;
+        }
 
     }
 
     public partial class MessageToken : TokenWithCommonCls
     {
-        public double Height { get; set; }
+        public double Height
+        {
+            get => (double)_tokens["height"];
+            set => _tokens["height"] = value;
+        }
 
     }
 

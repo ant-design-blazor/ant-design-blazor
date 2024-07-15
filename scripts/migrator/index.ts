@@ -69,9 +69,9 @@ function converTsStyle() {
 
 async function migrate() {
     // await clone();
-    // converTsStyle();
+    converTsStyle();
     // genComponentStyleTests();
-    genToken();
+    // genToken();
 }
 
 migrate();

@@ -220,11 +220,11 @@ namespace AntDesign
                                 LineHeight = @$"{titleHeight}px",
                                 TextAlign = "center",
                                 Visibility = "visible",
-                                Opacity = 0.2f,
+                                Opacity = 0.2,
                                 Transition = @$"opacity {token.MotionDurationSlow}",
                                 [$"{treeNodeCls}:hover &"] = new CSSObject()
                                 {
-                                    Opacity = 0.45f,
+                                    Opacity = 0.45,
                                 },
                             },
                             [$"&{treeNodeCls}-disabled"] = new CSSObject()

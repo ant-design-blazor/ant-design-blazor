@@ -975,7 +975,7 @@ namespace AntDesign
                                 Cursor = "pointer",
                                 ["&:hover"] = new CSSObject()
                                 {
-                                    Opacity = 0.85f,
+                                    Opacity = 0.85,
                                 },
                             },
                         },
@@ -1094,7 +1094,7 @@ namespace AntDesign
                         },
                         ["&-tail"] = new CSSObject()
                         {
-                            Top = token.IconSize / 2 - token.PaddingXXS,
+                            Top = Math.Floor((token.DotSize - token.LineWidth * 3) / 2),
                             Width = "100%",
                             MarginTop = 0,
                             MarginBottom = 0,

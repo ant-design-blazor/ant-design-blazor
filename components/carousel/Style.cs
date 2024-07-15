@@ -162,7 +162,7 @@ namespace AntDesign
                         Display = "block",
                         Height = "auto",
                     },
-                    [".Slick-arrow.slick-hidden"] = new CSSObject()
+                    [".slick-arrow.slick-hidden"] = new CSSObject()
                     {
                         Display = "none",
                     },
@@ -194,7 +194,7 @@ namespace AntDesign
                         },
                         ["&.slick-disabled::before"] = new CSSObject()
                         {
-                            Opacity = 0.25f,
+                            Opacity = 0.25,
                         },
                     },
                     [".slick-prev"] = new CSSObject()
@@ -262,11 +262,11 @@ namespace AntDesign
                                 BorderRadius = token.DotHeight,
                                 Outline = "none",
                                 Cursor = "pointer",
-                                Opacity = 0.3f,
+                                Opacity = 0.3,
                                 Transition = @$"all {token.MotionDurationSlow}",
                                 ["&: hover, &:focus"] = new CSSObject()
                                 {
-                                    Opacity = 0.75f,
+                                    Opacity = 0.75,
                                 },
                                 ["&::after"] = new CSSObject()
                                 {

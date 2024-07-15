@@ -1548,7 +1548,11 @@ namespace AntDesign
                             Width = tableSelectionColumnWidth + fontSizeIcon + padding / 4 + paddingXS * 2,
                         },
                     },
-                    [$"tabletrth{componentCls}-selection-column,tabletrtd{componentCls}-selection-column,{componentCls}-selection-column"] = new CSSObject()
+                    [@$"
+                        table tr th{componentCls}-selection-column,
+                        table tr td{componentCls}-selection-column,
+                        {componentCls}-selection-column"
+                    ] = new CSSObject()
                     {
                         PaddingInlineEnd = token.PaddingXS,
                         PaddingInlineStart = token.PaddingXS,

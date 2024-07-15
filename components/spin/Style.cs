@@ -212,12 +212,12 @@ namespace AntDesign
                         [$"{token.ComponentCls}-blur"] = new CSSObject()
                         {
                             Clear = "both",
-                            Opacity = 0.5f,
+                            Opacity = 0.5,
                             UserSelect = "none",
                             PointerEvents = "none",
                             ["&::after"] = new CSSObject()
                             {
-                                Opacity = 0.4f,
+                                Opacity = 0.4,
                                 PointerEvents = "auto",
                             },
                         },
@@ -243,7 +243,7 @@ namespace AntDesign
                             BorderRadius = "100%",
                             Transform = "scale(0.75)",
                             TransformOrigin = "50% 50%",
-                            Opacity = 0.3f,
+                            Opacity = 0.3,
                             AnimationName = _antSpinMove,
                             AnimationDuration = "1s",
                             AnimationIterationCount = "infinite",

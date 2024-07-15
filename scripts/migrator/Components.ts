@@ -460,7 +460,10 @@ const completed: Component[] = [
     },
     {
         name: 'Cascader',
-        src: ['components/cascader/style/index.ts'],
+        src: [
+            'components/cascader/style/index.ts',
+            'components/cascader/style/columns.ts',
+        ],
         dist: 'components/cascader/Style.cs',
         csOptions: {
             ...defaultOptions,
@@ -475,6 +478,8 @@ const completed: Component[] = [
                 { from: 'Unknown1', to: 'CSSInterpolation[]', includes: [7] },
                 { from: 'Unknown2', to: 'CascaderToken', includes: [1, 2] },
                 { from: 'Unknown3', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown4', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown4', to: 'CSSObject', ranges: [[1, 19]] },
             ],
             transforms: [
                 { source: 'class ComponentToken', target: 'partial class CascaderToken : TokenWithCommonCls' },
@@ -483,9 +488,7 @@ const completed: Component[] = [
                 { source: 'prepareComponentToken', target: 'PrepareComponentToken' },
                 { source: 'string MenuPadding', target: 'double MenuPadding' },
                 { source: '(string)_tokens["menuPadding"]', target: '(double)_tokens["menuPadding"]' },
-                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
-                // todo: 临时注释不可用代码
-                { source: 'GetColumnsStyle(token),', target: '// GetColumnsStyle(token),' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'public static UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },

@@ -219,7 +219,7 @@ namespace AntDesign
                     return new DividerToken()
                     {
                         TextPaddingInline = "1em",
-                        OrientationMargin = 0.05f,
+                        OrientationMargin = 0.05,
                         VerticalMarginInline = token.MarginXS,
                     };
                 });

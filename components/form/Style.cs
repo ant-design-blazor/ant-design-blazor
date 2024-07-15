@@ -300,7 +300,7 @@ namespace AntDesign
                             },
                             [$"&{formItemCls}-no-colon::after"] = new CSSObject()
                             {
-                                Content = "\"\\\\a0\"",
+                                Content = "\"\\a0\"",
                             },
                         },
                     },
@@ -309,7 +309,7 @@ namespace AntDesign
                         ["--ant-display"] = "flex",
                         FlexDirection = "column",
                         FlexGrow = 1,
-                        [$"&:first-child:not([class^=\"'{rootPrefixCls}-col-'\"]):not([class*=\"'{rootPrefixCls}-col-'\"])"] = new CSSObject()
+                        [$"&:first-child:not([class^=\"'{rootPrefixCls}-col-'\"]):not([class*=\"' {rootPrefixCls}-col-'\"])"] = new CSSObject()
                         {
                             Width = "100%",
                         },
@@ -530,7 +530,7 @@ namespace AntDesign
                         },
                     },
                 },
-                [$"{componentCls}-vertical{formItemCls}-label,.{rootPrefixCls}-col-24{formItemCls}-label,.{rootPrefixCls}-col-xl-24{formItemCls}-label"] = MakeVerticalLayoutLabel(token),
+                [$"{componentCls}-vertical {formItemCls}-label,.{rootPrefixCls}-col-24{formItemCls}-label,.{rootPrefixCls}-col-xl-24{formItemCls}-label"] = MakeVerticalLayoutLabel(token),
                 [$"@media (max-width: {token.ScreenXSMax}px)"] = new CSSInterpolation[]
                 {
                     MakeVerticalLayout(token),

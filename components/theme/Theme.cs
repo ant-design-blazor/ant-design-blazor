@@ -19,16 +19,20 @@ namespace AntDesign
 
     internal static class Theme
     {
-        public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : IToken
+        public static T MergeToken<T>(TokenWithCommonCls token, T value) where T : IToken, new()
         {
-            value.Merge(token);
-            return value;
+            var merged = new T();
+            merged.Merge(token);
+            merged.Merge(value);
+            return merged;
         }
-        
-        public static T MergeToken<T>(GlobalToken token, T value) where T : IToken
+
+        public static T MergeToken<T>(GlobalToken token, T value) where T : IToken, new()
         {
-            value.Merge(token);
-            return value;
+            var merged = new T();
+            merged.Merge(token);
+            merged.Merge(value);
+            return merged;
         }
 
         public static T MergeTokens<T>(T token, params IToken[] tokens) where T : IToken

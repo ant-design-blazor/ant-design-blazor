@@ -228,10 +228,13 @@ namespace AntDesign
             var avatarMarginRight = token.AvatarMarginRight;
             var titleMarginBottom = token.TitleMarginBottom;
             var descriptionFontSize = token.DescriptionFontSize;
-            var alignCls = new string[] { "start", "center", "end" }.Aggregate(new CSSObject(), (css, item) =>
+            var alignCls = new CSSObject();
+            new [] { "start", "center", "end" }.ForEach((item) =>
             {
-                css[$"&-align-{item}"] = item;
-                return css;
+                alignCls[$"&-align-{item}"] = new CSSObject()
+                {
+                    TextAlign = item,
+                };
             });
             return new CSSObject()
             {

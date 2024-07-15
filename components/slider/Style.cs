@@ -1,5 +1,6 @@
 ﻿using System;
 using CssInCSharp;
+using CssInCSharp.Colors;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
@@ -326,10 +327,7 @@ namespace AntDesign
                             Cursor = "not-allowed",
                             Width = token.HandleSize,
                             Height = token.HandleSize,
-                            BoxShadow = "",
-            //                BoxShadow = @$"0 0 0 {token.HandleLineWidth}px {new TinyColor(token.ColorTextDisabled)
-            //.onBackground(token.ColorBgContainer)
-            //.toHexShortString()}",
+                            BoxShadow = @$"0 0 0 {token.HandleLineWidth}px {new TinyColor(token.ColorTextDisabled).OnBackground(token.ColorBgContainer).ToHexShortString()}",
                             InsetInlineStart = 0,
                             InsetBlockStart = 0,
                         },
@@ -352,11 +350,11 @@ namespace AntDesign
             var railSize = token.RailSize;
             var handleSize = token.HandleSize;
             var dotSize = token.DotSize;
-            var railPadding = horizontal ? "paddingBlock" : "paddingInline";
+            var railPadding = horizontal ? "padding-block" : "padding-inline";
             var full = horizontal ? "width" : "height";
             var part = horizontal ? "height" : "width";
-            var handlePos = horizontal ? "insetBlockStart" : "insetInlineStart";
-            var markInset = horizontal ? "top" : "insetInlineStart";
+            var handlePos = horizontal ? "inset-block-start" : "inset-inline-start";
+            var markInset = horizontal ? "top" : "inset-inline-start";
             var handlePosSize = (railSize * 3 - handleSize) / 2;
             var draggableBorderSize = (handleSize - railSize) / 2;
             var draggableBorder = horizontal

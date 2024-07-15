@@ -280,7 +280,9 @@ namespace AntDesign
                         },
                     },
                 },
-                [$"&{componentCls}-mini{componentCls}-prev{componentCls}-item-link,&{componentCls}-mini{componentCls}-next{componentCls}-item-link"] = new CSSObject()
+                [@$"
+                &{componentCls}-mini {componentCls}-prev {componentCls}-item-link,
+                &{componentCls}-mini {componentCls}-next {componentCls}-item-link"] = new CSSObject()
                 {
                     BackgroundColor = "transparent",
                     BorderColor = "transparent",
@@ -323,7 +325,9 @@ namespace AntDesign
             var componentCls = token.ComponentCls;
             return new CSSObject()
             {
-                [$"&{componentCls}-simple{componentCls}-prev,&{componentCls}-simple{componentCls}-next"] = new CSSObject()
+                [@$"
+                &{componentCls}-simple {componentCls}-prev,
+                &{componentCls}-simple {componentCls}-next"] = new CSSObject()
                 {
                     Height = token.ItemSizeSM,
                     LineHeight = @$"{token.ItemSizeSM}px",

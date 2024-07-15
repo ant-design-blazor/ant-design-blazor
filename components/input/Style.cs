@@ -167,14 +167,11 @@ namespace AntDesign
                 Opacity = 1,
                 ["&:hover"] = new CSSObject()
                 {
-                    ["..."] = GenHoverStyle(
-                        MergeToken(
-                            token,
-                            new InputToken()
-                            {
-                                HoverBorderColor = token.ColorBorder,
-                                HoverBg = token.ColorBgContainerDisabled,
-                            }))
+                    ["..."] = GenHoverStyle(new InputToken()
+                    {
+                        HoverBorderColor = token.ColorBorder,
+                        HoverBg = token.ColorBgContainerDisabled,
+                    })
                 },
             };
         }
@@ -545,7 +542,9 @@ namespace AntDesign
                         VerticalAlign = "top",
                         BorderRadius = 0,
                     },
-                    [$"&>{componentCls}-affix-wrapper,&>{componentCls}-number-affix-wrapper,&>{antCls}-picker-range"] = new CSSObject()
+                    [@$"& > {componentCls}-affix-wrapper,
+                        & > {componentCls}-number-affix-wrapper,
+                        & > {antCls}-picker-range"] = new CSSObject()
                     {
                         Display = "inline-flex",
                     },
@@ -558,7 +557,10 @@ namespace AntDesign
                     {
                         Float = "none",
                     },
-                    [$"&>{antCls}-select>{antCls}-select-selector,&>{antCls}-select-auto-complete{componentCls},&>{antCls}-cascader-picker{componentCls},&>{componentCls}-group-wrapper{componentCls}"] = new CSSObject()
+                    [@$"& > {antCls}-select > {antCls}-select-selector,
+                    & > {antCls}-select-auto-complete {componentCls},
+                    & > {antCls}-cascader-picker {componentCls},
+                    & > {componentCls}-group-wrapper {componentCls}"] = new CSSObject()
                     {
                         BorderInlineEndWidth = token.LineWidth,
                         BorderRadius = 0,
@@ -579,12 +581,18 @@ namespace AntDesign
                     {
                         ZIndex = 1,
                     },
-                    [$"&>*:first-child,&>{antCls}-select:first-child>{antCls}-select-selector,&>{antCls}-select-auto-complete:first-child{componentCls},&>{antCls}-cascader-picker:first-child{componentCls}"] = new CSSObject()
+                    [@$"& > *:first-child,
+                    & > {antCls}-select:first-child > {antCls}-select-selector,
+                    & > {antCls}-select-auto-complete:first-child {componentCls},
+                    & > {antCls}-cascader-picker:first-child {componentCls}"] = new CSSObject()
                     {
                         BorderStartStartRadius = token.BorderRadius,
                         BorderEndStartRadius = token.BorderRadius,
                     },
-                    [$"&>*:last-child,&>{antCls}-select:last-child>{antCls}-select-selector,&>{antCls}-cascader-picker:last-child{componentCls},&>{antCls}-cascader-picker-focused:last-child{componentCls}"] = new CSSObject()
+                    [@$"& > *:last-child,
+                    & > {antCls}-select:last-child > {antCls}-select-selector,
+                    & > {antCls}-cascader-picker:last-child {componentCls},
+                    & > {antCls}-cascader-picker-focused:last-child {componentCls}"] = new CSSObject()
                     {
                         BorderInlineEndWidth = token.LineWidth,
                         BorderStartEndRadius = token.BorderRadius,
@@ -747,7 +755,7 @@ namespace AntDesign
                         Display = "inline-block",
                         Width = 0,
                         Visibility = "hidden",
-                        Content = "'\\\\a0'",
+                        Content = "'\\a0'",
                     },
                     [$"{componentCls}"] = new CSSObject()
                     {
@@ -993,7 +1001,9 @@ namespace AntDesign
                                 BorderRadius = 0,
                             },
                         },
-                        [$">{componentCls}-group-addon{componentCls}-search-button,>{componentCls},{componentCls}-affix-wrapper"] = new CSSObject()
+                        [@$"> {componentCls}-group-addon {componentCls}-search-button,
+                        > {componentCls},
+                        {componentCls}-affix-wrapper"] = new CSSObject()
                         {
                             ["&:hover,&:focus,&:active"] = new CSSObject()
                             {

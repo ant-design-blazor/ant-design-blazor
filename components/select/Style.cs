@@ -737,13 +737,16 @@ namespace AntDesign
                         {
                             Display = "inline-block",
                             Width = 0,
-                            Margin = $"{FIXED_ITEM_MARGIN} px 0",
+                            Margin = $"{FIXED_ITEM_MARGIN}px 0",
                             LineHeight = @$"{selectItemHeight}px",
                             Visibility = "hidden",
-                            Content = "\"\\\\a0\"",
+                            Content = "\"\\a0\"",
                         },
                     },
-                    [$"&{componentCls}-show-arrow{componentCls}-selector,&{componentCls}-allow-clear{componentCls}-selector"] = new CSSObject()
+                    [@$"
+                        &{componentCls}-show-arrow {componentCls}-selector,
+                        &{componentCls}-allow-clear {componentCls}-selector"
+                    ] = new CSSObject()
                     {
                         PaddingInlineEnd = token.FontSizeIcon + token.ControlPaddingHorizontal,
                     },
@@ -827,7 +830,7 @@ namespace AntDesign
                         ["&-input"] = new CSSObject()
                         {
                             Width = "100%",
-                            MinWidth = 4.1f,
+                            MinWidth = 4.1,
                         },
                         ["&-mirror"] = new CSSObject()
                         {
@@ -947,10 +950,13 @@ namespace AntDesign
                             Display = "inline-block",
                             Width = 0,
                             Visibility = "hidden",
-                            Content = "\"\\\\a0\"",
+                            Content = "\"\\a0\"",
                         },
                     },
-                    [$"&{componentCls}-show-arrow{componentCls}-selection-item,&{componentCls}-show-arrow{componentCls}-selection-placeholder"] = new CSSObject()
+                    [@$"
+                        &{componentCls}-show-arrow {componentCls}-selection-item,
+                        &{componentCls}-show-arrow {componentCls}-selection-placeholder"
+                    ] = new CSSObject()
                     {
                         PaddingInlineEnd = selectionItemPadding,
                     },
@@ -1040,7 +1046,10 @@ namespace AntDesign
                             {
                                 InsetInlineEnd = inputPaddingHorizontalSM + token.FontSize * 1.5,
                             },
-                            [$"&{componentCls}-show-arrow{componentCls}-selection-item,&{componentCls}-show-arrow{componentCls}-selection-placeholder"] = new CSSObject()
+                            [@$"
+                                &{componentCls}-show-arrow {componentCls}-selection-item,
+                                &{componentCls}-show-arrow {componentCls}-selection-placeholder"
+                            ] = new CSSObject()
                             {
                                 PaddingInlineEnd = token.FontSize * 1.5,
                             },

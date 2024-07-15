@@ -1,5 +1,6 @@
 ﻿using System;
 using CssInCSharp;
+using CssInCSharp.Colors;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
@@ -501,8 +502,7 @@ namespace AntDesign
                         HandleBg = colorWhite,
                         HandleSize = handleSize,
                         HandleSizeSM = handleSizeSM,
-                        // HandleShadow = @$"0 2px 4px 0 {new TinyColor("#00230b").setAlpha(0.2).toRgbString()}",
-                        HandleShadow = "",
+                        HandleShadow = $"0 2px 4px 0 {new TinyColor("#00230b").SetAlpha(0.2).ToRgbString()}",
                         InnerMinMargin = handleSize / 2,
                         InnerMaxMargin = handleSize + padding + padding * 2,
                         InnerMinMarginSM = handleSizeSM / 2,

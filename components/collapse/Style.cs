@@ -3,6 +3,7 @@ using CssInCSharp;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
+using static AntDesign.CollapseMotion;
 
 namespace AntDesign
 {
@@ -277,7 +278,7 @@ namespace AntDesign
                     {
                         BorderBottom = @$"1px solid {colorBorder}",
                     },
-                    [$">{componentCls}-item:last-child,>{componentCls}-item:last-child{componentCls}-header"] = new CSSObject()
+                    [$"> {componentCls}-item:last-child,> {componentCls}-item:last-child {componentCls}-header"] = new CSSObject()
                     {
                         BorderRadius = 0,
                     },
@@ -345,7 +346,7 @@ namespace AntDesign
                         GenBorderlessStyle(collapseToken),
                         GenGhostStyle(collapseToken),
                         GenArrowStyle(collapseToken),
-                        // GenCollapseMotion(collapseToken),
+                        GenCollapseMotion(collapseToken),
                     };
                 },
                 (token) =>

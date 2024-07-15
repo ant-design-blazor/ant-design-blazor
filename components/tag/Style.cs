@@ -1,5 +1,6 @@
 ﻿using System;
 using CssInCSharp;
+using CssInCSharp.Colors;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
@@ -180,9 +181,7 @@ namespace AntDesign
         {
             return new TagToken()
             {
-                DefaultBg = "",
-    //             DefaultBg = new TinyColor(token.ColorFillQuaternary)
-    // .OnBackground(token.ColorBgContainer),
+                DefaultBg = new TinyColor(token.ColorFillQuaternary).OnBackground(token.ColorBgContainer).ToHexString(),
                 DefaultColor = token.ColorText,
             };
         }

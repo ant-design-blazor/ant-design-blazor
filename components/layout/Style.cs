@@ -186,8 +186,8 @@ namespace AntDesign
                         ["&-children"] = new CSSObject()
                         {
                             Height = "100%",
-                            MarginTop = -0.1f,
-                            PaddingTop = 0.1f,
+                            MarginTop = -0.1,
+                            PaddingTop = 0.1,
                             [$"{antCls}-menu{antCls}-menu-inline-collapsed"] = new CSSObject()
                             {
                                 Width = "auto",

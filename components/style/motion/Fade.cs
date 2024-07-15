@@ -46,13 +46,16 @@ namespace AntDesign
                 InitMotion(motionCls, FadeIn, FadeOut, token.MotionDurationMid, sameLevel),
                 new CSSObject
                 {
-                    [$"{sameLevelPrefix}{motionCls}-enter,{sameLevelPrefix}{motionCls}-appear"] = new CSSObject
+                    [@$"
+                    {sameLevelPrefix}{motionCls}-enter, 
+                    {sameLevelPrefix}{motionCls}-appear"] = new CSSObject
                     {
                         Opacity = 0,
                         AnimationTimingFunction = "linear",
                     },
 
-                    [$"{sameLevelPrefix}{motionCls}-leave"] = new CSSObject
+                    [@$"
+                    {sameLevelPrefix}{motionCls}-leave"] = new CSSObject
                     {
                         AnimationTimingFunction = "linear",
                     },

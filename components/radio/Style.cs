@@ -192,7 +192,7 @@ namespace AntDesign
                         Display = "inline-block",
                         Width = 0,
                         Overflow = "hidden",
-                        Content = "'\\\\a0'",
+                        Content = "\"\\a0\"",
                     },
                     [$"{componentCls}-checked::after"] = new CSSObject()
                     {
@@ -216,7 +216,8 @@ namespace AntDesign
                         AlignSelf = "center",
                         BorderRadius = "50%",
                     },
-                    [$"{componentCls}-wrapper:hover&,&:hover{radioInnerPrefixCls}"] = new CSSObject()
+                    [@$"{componentCls}-wrapper:hover &,
+                        &:hover {radioInnerPrefixCls}"] = new CSSObject()
                     {
                         BorderColor = colorPrimary,
                     },

@@ -100,7 +100,7 @@ namespace AntDesign
                             Position = "absolute",
                             InsetBlock = -dropdownArrowDistance + sizePopupArrow / 2,
                             ZIndex = -9999,
-                            Opacity = 0.0001f,
+                            Opacity = 0.0001,
                             Content = "\"\"",
                         },
                         [$"&-trigger{antCls}-btn"] = new CSSObject()

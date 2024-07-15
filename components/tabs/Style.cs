@@ -1186,7 +1186,7 @@ namespace AntDesign
                         token,
                         new TabsToken()
                         {
-                            TabsCardPadding = token.CardPadding ?? $"{(token.CardHeight - Math.Round(token.FontSize * token.LineHeight)) / 2 - token.LineWidth}px {token.Padding}px",
+                            TabsCardPadding = !string.IsNullOrEmpty(token.CardPadding) ? token.CardPadding : $"{(token.CardHeight - Math.Round(token.FontSize * token.LineHeight)) / 2 - token.LineWidth}px {token.Padding}px",
                             DropdownEdgeChildVerticalPadding = token.PaddingXXS,
                             TabsActiveTextShadow = "0 0 0.25px currentcolor",
                             TabsDropdownHeight = 200,

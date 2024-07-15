@@ -174,7 +174,7 @@ namespace AntDesign
                             Transform = "scale(1)",
                         }
                     },
-                    ["&-leave"] = new CSSObject()
+                    [$"{motionCls}-leave"] = new CSSObject()
                     {
                         AnimationTimingFunction = token.MotionEaseInQuint,
                     }

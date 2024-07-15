@@ -216,7 +216,7 @@ namespace AntDesign
                         : new CSSObject(),
                     [$"&[disabled] {childCombinator}"] = new CSSObject()
                     {
-                        ZIndex = 2,
+                        ZIndex = 0,
                     }
                 }
             };
@@ -254,7 +254,7 @@ namespace AntDesign
         public static CSSObject GenCompactItemStyle(TokenWithCommonCls token, CompactItemOptions options = null)
         {
             var componentCls = token.ComponentCls;
-            var compactCls = $"${componentCls}-compact";
+            var compactCls = $"{componentCls}-compact";
             options ??= new CompactItemOptions()
             {
                 Focus = true
@@ -339,8 +339,8 @@ namespace AntDesign
             {
                 Color = token.ColorLink,
                 TextDecoration = "none",
-                Outline = "",
-                Cursor = "",
+                Outline = "none",
+                Cursor = "pointer",
                 Transition = $"color {token.MotionDurationSlow}",
                 ["&:focus, &:hover"] = new CSSObject()
                 {

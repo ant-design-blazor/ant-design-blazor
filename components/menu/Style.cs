@@ -1,8 +1,12 @@
 ﻿using System;
 using CssInCSharp;
+using CssInCSharp.Colors;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
+using static AntDesign.CollapseMotion;
+using static AntDesign.Slide;
+using static AntDesign.Zoom;
 
 namespace AntDesign
 {
@@ -864,7 +868,8 @@ namespace AntDesign
                             },
                         },
                         ["..."] = GenSubMenuArrowStyle(token),
-                        [$"&-inline-collapsed{componentCls}-submenu-arrow,&-inline{componentCls}-submenu-arrow"] = new CSSObject()
+                        [@$"&-inline-collapsed {componentCls}-submenu-arrow,
+                        &-inline {componentCls}-submenu-arrow"] = new CSSObject()
                         {
                             ["&::before"] = new CSSObject()
                             {
@@ -972,10 +977,10 @@ namespace AntDesign
                         GetThemeStyle(menuToken, "light"),
                         GetThemeStyle(menuDarkToken, "dark"),
                         GetRTLStyle(menuToken),
-                        // GenCollapseMotion(menuToken),
-                        // InitSlideMotion(menuToken, "slide-up"),
-                        // InitSlideMotion(menuToken, "slide-down"),
-                        // InitZoomMotion(menuToken, "zoom-big"),
+                        GenCollapseMotion(menuToken),
+                        InitSlideMotion(menuToken, "slide-up"),
+                        InitSlideMotion(menuToken, "slide-down"),
+                        InitZoomMotion(menuToken, "zoom-big"),
                     };
                 },
                 (token) =>
@@ -1003,7 +1008,7 @@ namespace AntDesign
                     var fontSizeLG = token.FontSizeLG;
                     var colorTextLightSolid = token.ColorTextLightSolid;
                     var colorErrorHover = token.ColorErrorHover;
-                    var colorTextDark = ""; // new TinyColor(colorTextLightSolid).SetAlpha(0.65).ToRgbString();
+                    var colorTextDark = new TinyColor(colorTextLightSolid).SetAlpha(0.65).ToRgbString();
                     return new MenuToken()
                     {
                         DropdownWidth = 160,
@@ -1068,7 +1073,7 @@ namespace AntDesign
                         IconMarginInlineEnd = controlHeightSM - fontSize,
                         CollapsedIconSize = fontSizeLG,
                         GroupTitleFontSize = fontSize,
-                        DarkItemDisabledColor = "", // new TinyColor(colorTextLightSolid).SetAlpha(0.25),
+                        DarkItemDisabledColor = new TinyColor(colorTextLightSolid).SetAlpha(0.25).ToRgbString(),
                         DarkItemColor = colorTextDark,
                         DarkDangerItemColor = colorError,
                         DarkItemBg = "#001529",
@@ -1147,7 +1152,9 @@ namespace AntDesign
                         VerticalAlign = "bottom",
                         PaddingInline = itemPaddingInline,
                     },
-                    [$">{componentCls}-item:hover,>{componentCls}-item-active,>{componentCls}-submenu{componentCls}-submenu-title:hover"] = new CSSObject()
+                    [@$"> {componentCls}-item:hover,
+                        > {componentCls}-item-active,
+                        > {componentCls}-submenu {componentCls}-submenu-title:hover"] = new CSSObject()
                     {
                         BackgroundColor = "transparent",
                     },
@@ -1200,7 +1207,7 @@ namespace AntDesign
                     Height = itemHeight,
                     LineHeight = @$"{itemHeight}px",
                 },
-                [$"{componentCls}-item-group-list{componentCls}-submenu-title,{componentCls}-submenu-title"] = new CSSObject()
+                [$"{componentCls}-item-group-list {componentCls}-submenu-title,{componentCls}-submenu-title"] = new CSSObject()
                 {
                     PaddingInlineEnd = paddingWithArrow,
                 },
@@ -1394,7 +1401,8 @@ namespace AntDesign
                 {
                     TransformOrigin = "100% 0",
                 },
-                [$"{componentCls}-rtl{componentCls}-vertical,{componentCls}-submenu-rtl{componentCls}-vertical"] = new CSSObject()
+                [@$"{componentCls}-rtl{componentCls}-vertical,
+                    {componentCls}-submenu-rtl {componentCls}-vertical"] = new CSSObject()
                 {
                     [$"{componentCls}-submenu-arrow"] = new CSSObject()
                     {
@@ -1580,7 +1588,7 @@ namespace AntDesign
                         [$"> {componentCls}-item, > {componentCls}-submenu"] = new CSSObject()
                         {
                             Top = activeBarBorderWidth,
-                            MarginTop = -activeBarBorderWidth,
+                            MarginTop = activeBarBorderWidth == 0 ? 0 : -activeBarBorderWidth,
                             MarginBottom = 0,
                             BorderRadius = horizontalItemBorderRadius,
                             ["&::after"] = new CSSObject()

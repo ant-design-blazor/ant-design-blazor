@@ -54,7 +54,7 @@ namespace AntDesign
                 var hash = token.GetTokenHash();
                 var rootPrefixCls = GetPrefixCls();
                 var iconPrefixCls = DefaultIconPrefixCls;
-                var mergedToken = getDefaultToken != null ? getDefaultToken(token) : new T();
+                var mergedToken = new T();
                 var componentToken = new TokenWithCommonCls()
                 {
                     ComponentCls = $".{prefixCls}",
@@ -64,6 +64,10 @@ namespace AntDesign
                     ["rootPrefixCls"] = rootPrefixCls,
                 };
                 mergedToken.Merge(token, componentToken);
+                if (getDefaultToken != null)
+                {
+                    mergedToken.Merge(getDefaultToken(token));
+                }
 
                 // COMPONENT, HEAD
                 var renderingMode = Environment.GetEnvironmentVariable("RENDERING_MODE");

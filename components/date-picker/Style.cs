@@ -233,7 +233,8 @@ namespace AntDesign
                         BorderEndEndRadius = 0,
                     },
                 },
-                [$"&:hover:not({pickerCellCls}-in-view),&:hover:not({pickerCellCls}-selected):not({pickerCellCls}-range-start):not({pickerCellCls}-range-end):not({pickerCellCls}-range-hover-start):not({pickerCellCls}-range-hover-end)"] = new CSSObject()
+                [@$"&:hover:not({pickerCellCls}-in-view),
+    &:hover:not({pickerCellCls}-selected):not({pickerCellCls}-range-start):not({pickerCellCls}-range-end):not({pickerCellCls}-range-hover-start):not({pickerCellCls}-range-hover-end)"] = new CSSObject()
                 {
                     [pickerCellInnerCls] = new CSSObject()
                     {
@@ -263,7 +264,9 @@ namespace AntDesign
                         Background = cellActiveWithRangeBg,
                     },
                 },
-                [$"&-in-view{pickerCellCls}-selected{pickerCellInnerCls},&-in-view{pickerCellCls}-range-start{pickerCellInnerCls},&-in-view{pickerCellCls}-range-end{pickerCellInnerCls}"] = new CSSObject()
+                [@$"&-in-view{pickerCellCls}-selected {pickerCellInnerCls},
+      &-in-view{pickerCellCls}-range-start {pickerCellInnerCls},
+      &-in-view{pickerCellCls}-range-end {pickerCellInnerCls}"] = new CSSObject()
                 {
                     Color = colorTextLightSolid,
                     Background = colorPrimary,
@@ -303,7 +306,19 @@ namespace AntDesign
                     InsetInlineEnd = 0,
                     InsetInlineStart = pickerCellBorderGap,
                 },
-                [$"&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover::before,&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-start::before,&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-end::before,&-in-view{pickerCellCls}-range-start{pickerCellCls}-range-hover::before,&-in-view{pickerCellCls}-range-end{pickerCellCls}-range-hover::before,&-in-view{pickerCellCls}-range-start:not({pickerCellCls}-range-start-single){pickerCellCls}-range-hover-start::before,&-in-view{pickerCellCls}-range-end:not({pickerCellCls}-range-end-single){pickerCellCls}-range-hover-end::before,{componentCls}-panel>:not({componentCls}-date-panel)&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-start::before,{componentCls}-panel>:not({componentCls}-date-panel)&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-end::before"] = new CSSObject()
+                [@$"&-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover::before,
+      &-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-start::before,
+      &-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-end::before,
+      &-in-view{pickerCellCls}-range-start{pickerCellCls}-range-hover::before,
+      &-in-view{pickerCellCls}-range-end{pickerCellCls}-range-hover::before,
+      &-in-view{pickerCellCls}-range-start:not({pickerCellCls}-range-start-single){pickerCellCls}-range-hover-start::before,
+      &-in-view{pickerCellCls}-range-end:not({pickerCellCls}-range-end-single){pickerCellCls}-range-hover-end::before,
+      {componentCls}-panel
+      > :not({componentCls}-date-panel)
+      &-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-start::before,
+      {componentCls}-panel
+      > :not({componentCls}-date-panel)
+      &-in-view{pickerCellCls}-in-range{pickerCellCls}-range-hover-end::before"] = new CSSObject()
                 {
                     Background = cellHoverWithRangeBg,
                 },
@@ -572,7 +587,8 @@ namespace AntDesign
                         },
                         ["..."] = GenPickerCellInnerStyle(token)
                     },
-                    [$"&-date-panel{componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-start{pickerCellInnerCls},&-date-panel{componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-end{pickerCellInnerCls}"] = new CSSObject()
+                    [@$"&-date-panel {componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-start {pickerCellInnerCls},
+        &-date-panel {componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-end {pickerCellInnerCls}"] = new CSSObject()
                     {
                         ["&::after"] = new CSSObject()
                         {
@@ -585,7 +601,9 @@ namespace AntDesign
                             Content = "\"\"",
                         },
                     },
-                    [$"&-date-panel{componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-start{pickerCellInnerCls}::after"] = new CSSObject()
+                    [@$"&-date-panel
+        {componentCls}-cell-in-view{componentCls}-cell-in-range{componentCls}-cell-range-hover-start
+        {pickerCellInnerCls}::after"] = new CSSObject()
                     {
                         InsetInlineEnd = -(cellWidth - cellHeight) / 2,
                         InsetInlineStart = 0,
@@ -760,7 +778,9 @@ namespace AntDesign
                         },
                         [$"{componentCls}-cell"] = new CSSObject()
                         {
-                            [$"&:hover{pickerCellInnerCls},&-selected{pickerCellInnerCls},{pickerCellInnerCls}"] = new CSSObject()
+                            [@$"&:hover {pickerCellInnerCls},
+            &-selected {pickerCellInnerCls},
+            {pickerCellInnerCls}"] = new CSSObject()
                             {
                                 Background = "transparent !important",
                             },
@@ -791,7 +811,7 @@ namespace AntDesign
                                     Background = cellHoverBg,
                                 },
                             },
-                            ["&-range-starttd,&-range-endtd,&-selectedtd"] = new CSSObject()
+                            ["&-range-start td,&-range-end td,&-selected td"] = new CSSObject()
                             {
                                 [$"&{pickerCellCls}"] = new CSSObject()
                                 {
@@ -847,7 +867,7 @@ namespace AntDesign
                         {
                             [$"{componentCls}-date-panel,{componentCls}-time-panel"] = new CSSObject()
                             {
-                                Opacity = 0.3f,
+                                Opacity = 0.3,
                                 ["&-active"] = new CSSObject()
                                 {
                                     Opacity = 1,
@@ -1503,7 +1523,7 @@ namespace AntDesign
                 PickerCellPaddingVertical = paddingXXS + paddingXXS / 2,
                 PickerCellBorderGap = 2,
                 PickerControlIconSize = 7,
-                PickerControlIconBorderWidth = 1.5f,
+                PickerControlIconBorderWidth = 1.5,
                 PickerDatePanelPaddingHorizontal = padding + paddingXXS / 2,
             };
         }

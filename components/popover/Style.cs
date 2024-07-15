@@ -174,7 +174,7 @@ namespace AntDesign
                             },
                             [$"{componentCls}-arrow"] = new CSSObject()
                             {
-                                BackgroundColor = "transparent",
+                                Background = "transparent",
                             },
                         }
                     };

@@ -201,7 +201,10 @@ namespace AntDesign
                         },
                         [$"&{componentCls}-disabled"] = new CSSObject()
                         {
-                            [$"p{componentCls}-drag-icon{iconCls},p{componentCls}-text,p{componentCls}-hint"] = new CSSObject()
+                            [@$"p{componentCls}-drag-icon {iconCls},
+                                p{componentCls}-text,
+                                p{componentCls}-hint"
+                            ] = new CSSObject()
                             {
                                 Color = token.ColorTextDisabled,
                             },
@@ -267,7 +270,9 @@ namespace AntDesign
                                         Transform = "scale(1)",
                                     },
                                 },
-                                [$"{actionCls}:focus-visible,&.picture{actionCls}"] = new CSSObject()
+                                [@$"
+                                    {actionCls}:focus-visible,
+                                    &.picture {actionCls}"] = new CSSObject()
                                 {
                                     Opacity = 1,
                                 },

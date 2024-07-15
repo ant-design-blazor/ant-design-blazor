@@ -218,13 +218,17 @@ namespace AntDesign
                             },
                         },
                     },
-                    [$"&{componentCls}-pending{componentCls}-item-last{componentCls}-item-tail"] = new CSSObject()
+                    [@$"&{componentCls}-pending
+  {componentCls}-item-last
+  {componentCls}-item-tail"] = new CSSObject()
                     {
                         Display = "block",
                         Height = @$"calc(100% - {token.Margin}px)",
                         BorderInlineStart = @$"{token.TailWidth}px dotted {token.TailColor}",
                     },
-                    [$"&{componentCls}-reverse{componentCls}-item-last{componentCls}-item-tail"] = new CSSObject()
+                    [@$"&{componentCls}-reverse
+  {componentCls}-item-last
+  {componentCls}-item-tail"] = new CSSObject()
                     {
                         Display = "none",
                     },

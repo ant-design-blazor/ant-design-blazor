@@ -1,5 +1,6 @@
 ﻿using System;
 using CssInCSharp;
+using CssInCSharp.Colors;
 using static AntDesign.GlobalStyle;
 using static AntDesign.Theme;
 using static AntDesign.StyleUtil;
@@ -214,8 +215,7 @@ namespace AntDesign
                 ["mark"] = new CSSObject()
                 {
                     Padding = 0,
-                    // BackgroundColor = gold[2],
-                    BackgroundColor = "",
+                    BackgroundColor = AntDesignColorPalettes.PresetPalettes["gold"][2],
                 },
                 ["u, ins"] = new CSSObject()
                 {
@@ -284,7 +284,7 @@ namespace AntDesign
                     PaddingInline = "0.6em 0",
                     PaddingBlock = 0,
                     BorderInlineStart = "4px solid rgba(100, 100, 100, 0.2)",
-                    Opacity = 0.85f,
+                    Opacity = 0.85,
                 },
             };
         }
@@ -316,7 +316,7 @@ namespace AntDesign
                         FontStyle = "normal",
                         PointerEvents = "none",
                     },
-                    ["Textarea"] = new CSSObject()
+                    ["textarea"] = new CSSObject()
                     {
                         Margin = "0!important",
                         MozTransition = "none",
@@ -377,7 +377,7 @@ namespace AntDesign
                     Display = "-webkit-box",
                     Overflow = "hidden",
                     WebkitLineClamp = 3,
-                    ["-web-kit-box-orient"] = "vertical",
+                    ["-webkit-box-orient"] = "vertical",
                 },
             };
         }
