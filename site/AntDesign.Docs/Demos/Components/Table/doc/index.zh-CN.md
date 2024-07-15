@@ -53,6 +53,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Loading | 表格是否加载中 | bool | false |
 | Title | 表格标题 | string | - |
 | TitleTemplate | 标题模板 | RenderFragment | - |
+| GroupTitleTemplate | 行分组标题模板 | RenderFragment | - |
 | Footer | 表格尾部 | string | - |
 | FooterTemplate | 表格尾部模板 | RenderFragment | - |
 | Size | 表格尺寸大小 | [TableSize](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/table/TableSize.cs) | - |

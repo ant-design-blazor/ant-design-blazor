@@ -53,6 +53,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | Loading | Is the table loading | bool | false |
 | Title | Table title | string | - |
 | TitleTemplate | Title template | RenderFragment | - |
+| GroupTitleTemplate | Row group title template | RenderFragment | - |
 | Footer | Table Footer | string | - |
 | FooterTemplate | Footer Template | RenderFragment | - |
 | Size | Table Size | [TableSize](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/table/TableSize.cs) | - |

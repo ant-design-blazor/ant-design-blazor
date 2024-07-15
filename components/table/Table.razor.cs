@@ -287,7 +287,10 @@ namespace AntDesign
         {
             if (GroupTitleTemplate == null)
             {
-                return builder => { };
+                return builder =>
+                {
+                    builder.AddContent(0, rowData.Key);
+                };
             }
             return builder =>
             {
