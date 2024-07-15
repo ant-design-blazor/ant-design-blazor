@@ -20,7 +20,7 @@
      @ondrop="@(_ => Parent.HandleDrop(this))"
      class="@ClassMapper.Class"
      draggable="@Parent.Draggable.ToString()"
-     id="@($"rc-tabs-{Id}-tab-{Key}")"
+     id="@TabId"
      ondragover="event.preventDefault();">
         <div @onkeydown="@HandleKeydown"
              @ref="_tabBtnRef"

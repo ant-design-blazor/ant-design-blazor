@@ -10,6 +10,7 @@
             .SetResult(new AntDesign.JsInterop.Window());
         JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true);
         JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true);
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
         var model = new Model
         {
             Text = "test"
