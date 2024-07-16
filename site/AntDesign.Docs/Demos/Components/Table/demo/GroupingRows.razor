@@ -1,20 +1,43 @@
 ﻿@using System.ComponentModel
 
 <Table DataSource="data">
-     <Selection CheckStrictly />
-     <PropertyColumn Property="c=>c.Name" />
-     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
-     <PropertyColumn Property="c=>c.Subject" Width="30%" />
-     <PropertyColumn Property="c=>c.Grade" Width="30%" Grouping GroupBy="GradeGroupBy" />
+    <GroupTitleTemplate Context="rowData">
+        <div style="display: flex; align-items: center;">
+            <span style="min-width: 120px;">
+                @rowData.Key
+            </span>
+            <span style="margin-left: -30px;">
+                @if (rowData.Key == "A")
+                {
+                    <Tag Color="red-inverse">Excellent</Tag>
+                }
+                else if (rowData.Key == "B")
+                {
+                    <Tag Color="purple-inverse">Good</Tag>
+                }
+                else
+                {
+                    <Tag Color="rgb(143, 201, 146)">Average</Tag>
+                }
+            </span>
+        </div>
+    </GroupTitleTemplate>
+    <ColumnDefinitions>
+        <Selection />
+        <PropertyColumn Property="c=>c.Name" />
+        <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
+        <PropertyColumn Property="c=>c.Subject" Width="30%" />
+        <PropertyColumn Property="c=>c.Grade" Width="30%" Grouping GroupBy="GradeGroupBy" />
+    </ColumnDefinitions>
  </Table>
 
  @code {
     string GradeGroupBy(int grade)
        => grade switch
        {
-            >= 95 => "A (95 ~ 100)",
-            >= 90 => "B (90 ~ 94)",
-            _ => "C (0 ~ 89 )"
+            >= 95 => "A",
+            >= 90 => "B",
+            _ => "C"
        };
 
     Data[] data =
