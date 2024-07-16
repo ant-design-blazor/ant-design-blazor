@@ -148,7 +148,7 @@ namespace AntDesign
             };
         }
 
-        private static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)
+        internal static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)
         {
             if (!string.IsNullOrEmpty(customizePrefixCls))
             {
@@ -156,6 +156,13 @@ namespace AntDesign
             }
 
             return !string.IsNullOrEmpty(suffixCls) ? $"ant-{suffixCls}" : "ant";
+        }
+
+        internal static (string, GlobalToken) UseToken()
+        {
+            var token = Seed.DefaultSeedToken;
+            var hash = token.GetTokenHash();
+            return (hash.HashId, token);
         }
     }
 }

@@ -307,7 +307,9 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle(_prefixCls, InputNumberStyle.UseComponentStyle);
             _affixWarrperClass
+                .Add(hashId)
                 .Add("ant-input-number-affix-wrapper")
                 .If("ant-input-number-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"ant-input-number-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
@@ -315,6 +317,7 @@ namespace AntDesign
 
             ClassMapper
                 .Add(_prefixCls)
+                .Add(hashId)
                 .If($"{_prefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-focused", () => _focused)

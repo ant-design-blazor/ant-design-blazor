@@ -26,8 +26,10 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var (hashId, _) = StyleUtil.UseToken();
             string prefixName = "ant-btn-group";
             ClassMapper.Add(prefixName)
+                .Add(hashId)
                 .If("ant-dropdown-button", () => _isInDropdown)
                 .If($"{prefixName}-lg", () => this._size == "large")
                 .If($"{prefixName}-sm", () => this._size == "small")
