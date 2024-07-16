@@ -784,10 +784,10 @@ const completed: Component[] = [
                 { from: 'Unknown8', to: 'CSSInterpolation[]', includes: [2] },
             ],
             transforms: [
-                { source: 'class ComponentToken', target: 'partial class ImageToken' },
-                { source: 'class ImageToken', target: 'partial class ImageToken : TokenWithCommonCls' },
-                { source: 'class Image', target: 'partial class Image' },
-                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                { source: 'class ComponentToken', target: 'partial class ImageToken : TokenWithCommonCls' },
+                { source: 'class ImageToken', target: 'partial class ImageToken' },
+                { source: 'class Image', target: 'partial class ImageStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'public static UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -841,6 +841,7 @@ const completed: Component[] = [
                 { from: 'true | "auto"', to: 'bool' },
                 { from: `'lg' | 'sm'`, to: 'string' },
                 { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown1', to: 'InputNumberToken', includes: [2] },
                 { from: 'Unknown2', to: 'CSSInterpolation[]', includes: [1, 2] },
                 { from: 'Unknown2', to: 'CSSObject', ranges: [[3, 46]] },
                 { from: 'Unknown3', to: 'CSSObject', ranges: [[1, 17]] },
@@ -848,10 +849,10 @@ const completed: Component[] = [
                 { from: 'Unknown4', to: 'CSSObject', includes: [2] },
             ],
             transforms: [
-                { source: 'class ComponentToken', target: 'partial class InputNumberToken' },
-                { source: 'class InputNumberToken', target: 'partial class InputNumberToken : TokenWithCommonCls' },
-                { source: 'class InputNumber', target: 'partial class InputNumber' },
-                { source: 'public UseComponentStyleResult ExportDefault', target: 'protected override UseComponentStyleResult UseComponentStyle' },
+                { source: 'class ComponentToken', target: 'partial class InputNumberToken : TokenWithCommonCls' },
+                { source: 'class InputNumberToken', target: 'partial class InputNumberToken' },
+                { source: 'class InputNumber', target: 'partial class InputNumberStyle' },
+                { source: 'public UseComponentStyleResult ExportDefault', target: 'public static UseComponentStyleResult UseComponentStyle' },
             ]
         }
     },
@@ -1916,4 +1917,4 @@ const completed: Component[] = [
 ]
 
 // 用于生成的实例，将需要生成的组件配置放到这里
-export const components: Component[] = [...token, ...completed];
+export const components: Component[] = []; // [...token, ...completed];

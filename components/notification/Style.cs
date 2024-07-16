@@ -498,7 +498,12 @@ namespace AntDesign
 
         private static Dictionary<string, string> _placementAlignProperty = new Dictionary<string, string>()
         {
-            { "", "" }
+            { "topLeft", "left" },
+            { "topRight", "right" },
+            { "bottomLeft", "left" },
+            { "bottomRight", "right" },
+            { "top", "left" },
+            { "bottom", "left" },
         };
 
         public static CSSObject GenPlacementStackStyle(NotificationToken token, string placement)

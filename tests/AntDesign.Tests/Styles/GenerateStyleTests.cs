@@ -204,14 +204,14 @@ namespace AntDesign.Tests.Styles
             cut.MarkupMatches(content);
         }
 
-        // [Fact]
-        // public void Generate_Image_Style()
-        // {
-        //     var content = LoadStyleHtml("Styles/css/Image.css");
-        //     var (html, hashId) = ImageStyle.UseComponentStyle()("ant-image");
-        //     var cut = Render(html).Find("style:first-child");
-        //     cut.MarkupMatches(content);
-        // }
+        [Fact]
+        public void Generate_Image_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Image.css");
+            var (html, hashId) = ImageStyle.UseComponentStyle()("ant-image");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
 
         [Fact]
         public void Generate_Input_Style()
@@ -222,14 +222,14 @@ namespace AntDesign.Tests.Styles
             cut.MarkupMatches(content);
         }
 
-        // [Fact]
-        // public void Generate_InputNumber_Style()
-        // {
-        //     var content = LoadStyleHtml("Styles/css/InputNumber.css");
-        //     var (html, hashId) = InputNumberStyle.UseComponentStyle()("ant-input-number");
-        //     var cut = Render(html).Find("style:first-child");
-        //     cut.MarkupMatches(content);
-        // }
+        [Fact]
+        public void Generate_InputNumber_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/InputNumber.css");
+            var (html, hashId) = InputNumberStyle.UseComponentStyle()("ant-input-number");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
 
         [Fact]
         public void Generate_Layout_Style()
@@ -285,14 +285,14 @@ namespace AntDesign.Tests.Styles
             cut.MarkupMatches(content);
         }
 
-        // [Fact]
-        // public void Generate_Notification_Style()
-        // {
-        //     var content = LoadStyleHtml("Styles/css/Notification.css");
-        //     var (html, hashId) = NotificationStyle.UseComponentStyle()("ant-notification");
-        //     var cut = Render(html).Find("style:first-child");
-        //     cut.MarkupMatches(content);
-        // }
+        [Fact]
+        public void Generate_Notification_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Notification.css");
+            var (html, hashId) = NotificationStyle.UseComponentStyle()("ant-notification");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
 
         [Fact]
         public void Generate_Pagination_Style()
@@ -505,7 +505,7 @@ namespace AntDesign.Tests.Styles
         public void Generate_TreeSelect_Style()
         {
             var content = LoadStyleHtml("Styles/css/TreeSelect.css");
-            var (html, hashId) = TreeSelectStyle.UseComponentStyle()("ant-treeselect");
+            var (html, hashId) = TreeSelectStyle.UseComponentStyle()("ant-tree-select");
             var cut = Render(html).Find("style:first-child");
             cut.MarkupMatches(content);
         }

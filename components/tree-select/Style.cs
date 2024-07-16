@@ -13,7 +13,11 @@ namespace AntDesign
 
     public partial class TreeSelectToken : TokenWithCommonCls
     {
-        public string TreePrefixCls { get; set; }
+        public string TreePrefixCls
+        {
+            get => (string)_tokens["treePrefixCls"];
+            set => _tokens["treePrefixCls"] = value;
+        }
 
     }
 
@@ -91,10 +95,10 @@ namespace AntDesign
                         token,
                         new TreeSelectToken
                         {
-                            TreePrefixCls = "select-tree",
-                            // 未赋值但后续有引用
-                            ["directoryNodeSelectedColor"] = token.ColorTextLightSolid,
-                            ["directoryNodeSelectedBg"] = token.ColorPrimary,
+                            TreePrefixCls = "ant-select-tree",
+                            // 未赋值但后续有引用，这应该是react那边的Bug，导致生成的样式中包含undefined
+                            ["directoryNodeSelectedColor"] = "undefined",
+                            ["directoryNodeSelectedBg"] = "undefined",
                         });
                     return GenBaseStyle(treeSelectToken);
                 },
