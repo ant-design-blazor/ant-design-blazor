@@ -708,6 +708,36 @@ const completed: Component[] = [
         }
     },
     {
+        name: 'Flex',
+        src: [
+            'components/flex/style/index.ts',
+        ],
+        dist: 'components/flex/Style.cs',
+        csOptions: {
+            ...defaultOptions,
+            defaultClass: 'FlexStyle',
+            propertyMap: '_tokens',
+            typeMap: [
+                { from: 'Unknown1', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown1', to: 'FlexToken', includes: [2] },
+                { from: 'Unknown2', to: 'CSSObject', ranges: [[1, 7]] },
+                { from: 'Unknown2', to: 'FlexToken', includes: [2] },
+                { from: 'Unknown3', to: 'CSSObject', includes: [1, 3] },
+                { from: 'Unknown3', to: 'FlexToken', includes: [2] },
+                { from: 'Unknown4', to: 'CSSObject', includes: [1, 3] },
+                { from: 'Unknown4', to: 'FlexToken', includes: [2] },
+                { from: 'Unknown5', to: 'CSSObject', includes: [1, 3] },
+                { from: 'Unknown5', to: 'FlexToken', includes: [2] },
+                { from: 'Unknown6', to: 'FlexToken', includes: [1] },
+                { from: 'Unknown6', to: 'CSSInterpolation[]', includes: [2] },
+            ],
+            transforms: [
+                { source: 'class ComponentToken', target: 'partial class FlexToken : TokenWithCommonCls' },
+                { source: 'class FlexToken', target: 'partial class FlexToken' },
+            ]
+        }
+    },
+    {
         name: 'Form',
         src: [
             'components/form/style/index.ts',

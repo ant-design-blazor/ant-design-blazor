@@ -178,6 +178,15 @@ namespace AntDesign.Tests.Styles
         }
 
         [Fact]
+        public void Generate_Flex_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/Flex.css");
+            var (html, hashId) = FlexStyle.UseComponentStyle()("ant-flex");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
         public void Generate_Form_Style()
         {
             var content = LoadStyleHtml("Styles/css/Form.css");

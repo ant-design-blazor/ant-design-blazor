@@ -70,7 +70,9 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle("ant-flex", AntDesign.FlexStyle.UseComponentStyle);
             ClassMapper.Add("ant-flex")
+                .Add(hashId)
                 .GetIf(() => "ant-flex-vertical", () => Vertical)
                 .GetIf(() => "ant-flex-align-stretch", () => Vertical && Align == "normal")
                 .GetIf(() => $"ant-flex-align-{Align.ToLowerInvariant()}", () => !string.IsNullOrWhiteSpace(Align))
@@ -90,6 +92,8 @@ namespace AntDesign
             builder.AddElementReferenceCapture(5, r => Ref = r);
             builder.AddContent(6, ChildContent);
             builder.CloseElement();
+
+            builder.AddContent(7, _styleContent);
         }
     }
 }
