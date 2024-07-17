@@ -46,6 +46,7 @@ namespace AntDesign
         private string _modalAnimationClsName = "";
         private string _maskHideClsName = "";
         private string _wrapStyle = "";
+        private string _hashId = "";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
@@ -381,6 +382,7 @@ namespace AntDesign
         {
             var clsList = new List<string>()
             {
+                _hashId,
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
@@ -398,16 +400,15 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            _hashId = UseStyle(Config.PrefixCls, ModalStyle.UseComponentStyle);
             SetClassMap();
             base.OnInitialized();
         }
 
         protected void SetClassMap()
         {
-            var hashId = UseStyle(Config.PrefixCls, ModalStyle.UseComponentStyle);
             ClassMapper.Clear()
-                .Add(Config.PrefixCls)
-                .Add(hashId);
+                .Add(Config.PrefixCls);
         }
 
         /// <summary>
