@@ -7,7 +7,7 @@
         @ChildContent
     </section>
 </CascadingValue>
-
+@_styleContent
 @code
      {
     [Parameter]
@@ -20,9 +20,10 @@
     {
         base.OnInitialized();
         var prefixCls = "ant-layout";
-        UseStyle(prefixCls, LayoutStyle.UseComponentStyle);
+        var hashId = UseStyle(prefixCls, LayoutStyle.UseComponentStyle);
         ClassMapper
             .Add(prefixCls)
+            .Add(hashId)
             .If($"{prefixCls}-has-sider", () => _hasSider)
             .If($"{prefixCls}-rtl", () => RTL);
     }
