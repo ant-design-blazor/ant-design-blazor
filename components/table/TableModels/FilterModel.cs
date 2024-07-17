@@ -68,8 +68,16 @@ namespace AntDesign.TableModels
             {
                 return source;
             }
+            return source.Where(FilterExpression<TItem>());
+        }
 
+        public Expression<Func<TItem, bool>> FilterExpression<TItem>()
+        {
             var sourceExpression = _getFieldExpression.Parameters[0];
+            if (Filters?.Any() != true)
+            {
+                return Expression.Lambda<Func<TItem, bool>>(Expression.Constant(false, typeof(bool)), sourceExpression);
+            }
 
             Expression lambda = null;
             if (this.FilterType == TableFilterType.List)
@@ -112,14 +120,8 @@ namespace AntDesign.TableModels
                     }
                 }
             }
-            if (lambda == null)
-            {
-                return source;
-            }
-            else
-            {
-                return source.Where(Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression));
-            }
+
+            return Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression);
         }
     }
 }
