@@ -9,7 +9,7 @@
     var style = GetStyle(placement);
     <div @key="placement">
         <div @key="placement" class="@className" style="@style" @ref="Ref">
-            <div>
+            <div class="ant-notification-notice-wrapper">
                 @foreach (var itemConfig in configs)
                 {
                     <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem"/>
