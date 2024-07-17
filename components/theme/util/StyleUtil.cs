@@ -135,17 +135,14 @@ namespace AntDesign
             };
         }
 
-        internal static UseComponentStyleResult GenSubStyleComponent(string[] componentName)
+        internal static UseComponentStyleResult GenSubStyleComponent<T>(
+            string[] componentName,
+            Func<T, CSSInterpolation> styleFn,
+            Func<GlobalToken, T> getDefaultToken,
+            GenOptions options) where T : IToken, new()
         {
-            return (prefixCls) =>
-            {
-                var render = UseStyleRegister(new StyleInfo()
-                {
-                    HashId = "",
-                    TokenKey = "",
-                });
-                return (render, "");
-            };
+            options.ResetStyle = false;
+            return GenComponentStyleHook<T>(componentName, styleFn, getDefaultToken, options);
         }
 
         internal static string GetPrefixCls(string suffixCls = null, string customizePrefixCls = null)

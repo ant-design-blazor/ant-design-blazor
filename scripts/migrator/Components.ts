@@ -1051,7 +1051,10 @@ const completed: Component[] = [
     },
     {
         name: 'Modal',
-        src: ['components/modal/style/index.tsx'],
+        src: [
+            'components/modal/style/index.tsx',
+            'components/modal/style/confirmCmp.tsx'
+        ],
         dist: 'components/modal/style/Index.cs',
         csOptions: {
             ...defaultOptions,
@@ -1076,6 +1079,10 @@ const completed: Component[] = [
                 { from: 'Unknown5', to: 'ModalToken', includes: [2] },
                 { from: 'Unknown6', to: 'ModalToken', includes: [1, 2, 3] },
                 { from: 'Unknown7', to: 'ModalToken', includes: [1, 2] },
+                { from: 'Unknown8', to: 'CSSObject', ranges: [[1, 19]] },
+                { from: 'Unknown8', to: 'ModalToken', includes: [2] },
+                { from: 'Unknown9', to: 'CSSInterpolation[]', includes: [1] },
+                { from: 'Unknown9', to: 'GenOptions', includes: [2] },
             ],
             transforms: [
                 { source: 'React.CSSProperties', target: 'CSSObject' },

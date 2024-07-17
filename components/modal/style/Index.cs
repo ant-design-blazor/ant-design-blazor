@@ -511,5 +511,118 @@ namespace AntDesign
                 PrepareComponentToken);
         }
 
+        public static CSSObject GenModalConfirmStyle(ModalToken token)
+        {
+            var componentCls = token.ComponentCls;
+            var titleFontSize = token.TitleFontSize;
+            var titleLineHeight = token.TitleLineHeight;
+            var modalConfirmIconSize = token.ModalConfirmIconSize;
+            var fontSize = token.FontSize;
+            var lineHeight = token.LineHeight;
+            var confirmComponentCls = @$"{componentCls}-confirm";
+            var titleHeight = Math.Round(titleFontSize * titleLineHeight);
+            var contentHeight = Math.Round(fontSize * lineHeight);
+            return new CSSObject()
+            {
+                [confirmComponentCls] = new CSSObject()
+                {
+                    ["&-rtl"] = new CSSObject()
+                    {
+                        Direction = "rtl",
+                    },
+                    [$"{token.AntCls}-modal-header"] = new CSSObject()
+                    {
+                        Display = "none",
+                    },
+                    [$"{confirmComponentCls}-body-wrapper"] = new CSSObject()
+                    {
+                        ["..."] = ClearFix()
+                    },
+                    [$"{confirmComponentCls}-body"] = new CSSObject()
+                    {
+                        Display = "flex",
+                        FlexWrap = "nowrap",
+                        AlignItems = "start",
+                        [$"> {token.IconCls}"] = new CSSObject()
+                        {
+                            Flex = "none",
+                            FontSize = modalConfirmIconSize,
+                            MarginInlineEnd = token.MarginSM,
+                            MarginTop = (contentHeight - modalConfirmIconSize) / 2,
+                        },
+                        [$"&-has-title > {token.IconCls}"] = new CSSObject()
+                        {
+                            MarginTop = (titleHeight - modalConfirmIconSize) / 2,
+                        },
+                    },
+                    [$"{confirmComponentCls}-paragraph"] = new CSSObject()
+                    {
+                        Display = "flex",
+                        FlexDirection = "column",
+                        Flex = "auto",
+                        RowGap = token.MarginXS,
+                        MaxWidth = @$"calc(100% - {token.ModalConfirmIconSize + token.MarginSM}px)",
+                    },
+                    [$"{confirmComponentCls}-title"] = new CSSObject()
+                    {
+                        Color = token.ColorTextHeading,
+                        FontWeight = token.FontWeightStrong,
+                        FontSize = titleFontSize,
+                        LineHeight = titleLineHeight,
+                    },
+                    [$"{confirmComponentCls}-content"] = new CSSObject()
+                    {
+                        Color = token.ColorText,
+                        FontSize = fontSize,
+                        LineHeight = lineHeight,
+                    },
+                    [$"{confirmComponentCls}-btns"] = new CSSObject()
+                    {
+                        TextAlign = "end",
+                        MarginTop = token.MarginSM,
+                        [$"{token.AntCls}-btn + {token.AntCls}-btn"] = new CSSObject()
+                        {
+                            MarginBottom = 0,
+                            MarginInlineStart = token.MarginXS,
+                        },
+                    },
+                },
+                [$"{confirmComponentCls}-error {confirmComponentCls}-body > {token.IconCls}"] = new CSSObject()
+                {
+                    Color = token.ColorError,
+                },
+                [$"{confirmComponentCls}-warning{confirmComponentCls}-body>{token.IconCls},{confirmComponentCls}-confirm{confirmComponentCls}-body>{token.IconCls}"] = new CSSObject()
+                {
+                    Color = token.ColorWarning,
+                },
+                [$"{confirmComponentCls}-info {confirmComponentCls}-body > {token.IconCls}"] = new CSSObject()
+                {
+                    Color = token.ColorInfo,
+                },
+                [$"{confirmComponentCls}-success {confirmComponentCls}-body > {token.IconCls}"] = new CSSObject()
+                {
+                    Color = token.ColorSuccess,
+                },
+            };
+        }
+
+        public static UseComponentStyleResult UseModalConfirmStyle()
+        {
+            return GenSubStyleComponent(
+                ["Modal", "confirm"],
+                (token) =>
+                {
+                    var modalToken = PrepareToken(token);
+                    return new CSSInterpolation[]
+                    {
+                        GenModalConfirmStyle(modalToken),
+                    };
+                },
+                PrepareComponentToken,
+                new GenOptions()
+                {
+                    Order = -1000,
+                });
+        }
     }
 }

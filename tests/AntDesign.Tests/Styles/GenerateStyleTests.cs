@@ -295,6 +295,15 @@ namespace AntDesign.Tests.Styles
         }
 
         [Fact]
+        public void Generate_ModalConfirm_Style()
+        {
+            var content = LoadStyleHtml("Styles/css/ModalConfirm.css");
+            var (html, hashId) = ModalStyle.UseModalConfirmStyle()("ant-modal");
+            var cut = Render(html).Find("style:first-child");
+            cut.MarkupMatches(content);
+        }
+
+        [Fact]
         public void Generate_Notification_Style()
         {
             var content = LoadStyleHtml("Styles/css/Notification.css");
