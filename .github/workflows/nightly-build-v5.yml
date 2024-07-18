@@ -35,7 +35,7 @@ jobs:
           npm i
           SUFFIX=`date "+%y%m%d%H%M%S"`
           dotnet build
-          dotnet pack src/AntDesign.Icons/AntDesign.Icons.csproj /p:PackageVersion=$Version-v5-${SUFFIX} -c Release -o publish
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$Version-v5-${SUFFIX} -c Release -o publish
 
       - name: Publish to Nuget ✔
         run: |
