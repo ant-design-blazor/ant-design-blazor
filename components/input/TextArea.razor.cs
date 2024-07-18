@@ -163,7 +163,8 @@ namespace AntDesign
                 ;
 
             ClassMapper
-                .Add("ant-input-textarea ")
+                .Add("ant-input-textarea-affix-wrapper ")
+                .Add(hashId)
                 .If("ant-input-textarea-show-count", () => ShowCount)
                 .If("ant-input-textarea-in-form-item", () => FormItem != null)
                 .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)

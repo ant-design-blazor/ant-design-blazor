@@ -295,6 +295,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            _hashId = UseStyle(PrefixCls, InputStyle.UseComponentStyle);
 
             if (!string.IsNullOrEmpty(DefaultValue?.ToString()) && string.IsNullOrEmpty(Value?.ToString()))
             {
@@ -320,7 +321,6 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            _hashId = UseStyle(PrefixCls, InputStyle.UseComponentStyle);
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {_hashId} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper {_hashId}";
 

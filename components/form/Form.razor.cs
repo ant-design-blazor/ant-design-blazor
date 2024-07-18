@@ -253,8 +253,8 @@ namespace AntDesign
             var hashId = UseStyle(_prefixCls, FormStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add(hashId)
                 .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .Add(hashId)
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
