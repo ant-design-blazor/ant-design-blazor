@@ -15,29 +15,31 @@
                 {
                     @(Config.Icon)
                 }
-
-                @if (Config.TitleTemplate != null)
-                {
-                    <span class="ant-modal-confirm-title">
-                        @Config.TitleTemplate
-                    </span>
-                }
-                else if (!string.IsNullOrWhiteSpace(Config.Title))
-                {
-                    <span class="ant-modal-confirm-title">
-                        @Config.Title
-                    </span>
-                }
-
-                <div class="ant-modal-confirm-content">
-                    @if (Config.Content.IsT0)
+                
+                <div class="ant-modal-confirm-paragraph">
+                    @if (Config.TitleTemplate != null)
                     {
-                        @(Config.Content.AsT0)
+                        <span class="ant-modal-confirm-title">
+                            @Config.TitleTemplate
+                        </span>
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(Config.Title))
                     {
-                        @(Config.Content.AsT1)
+                        <span class="ant-modal-confirm-title">
+                            @Config.Title
+                        </span>
                     }
+
+                    <div class="ant-modal-confirm-content">
+                        @if (Config.Content.IsT0)
+                        {
+                            @(Config.Content.AsT0)
+                        }
+                        else
+                        {
+                            @(Config.Content.AsT1)
+                        }
+                    </div>
                 </div>
             </div>
             <div class="ant-modal-confirm-btns">

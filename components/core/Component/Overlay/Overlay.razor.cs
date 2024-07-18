@@ -104,6 +104,7 @@ namespace AntDesign.Internal
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
+        private string _hashId = "";
 
         protected override bool ShouldRender()
         {
@@ -115,6 +116,8 @@ namespace AntDesign.Internal
 
         protected override void OnInitialized()
         {
+            var (hashId, _) = StyleUtil.UseToken();
+            _hashId = hashId;
             _overlayCls = Trigger.GetOverlayHiddenClass();
             base.OnInitialized();
         }

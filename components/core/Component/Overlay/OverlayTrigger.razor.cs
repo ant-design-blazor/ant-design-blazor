@@ -233,8 +233,6 @@ namespace AntDesign.Internal
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
 
-        internal string HashId { get; set; }
-
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
         private bool _mouseUpInOverlay = false;

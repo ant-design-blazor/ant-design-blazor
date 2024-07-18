@@ -52,7 +52,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            HashId = UseStyle(PrefixCls, DropdownStyle.UseComponentStyle);
+            UseStyle(PrefixCls, DropdownStyle.UseComponentStyle);
         }
 
         protected void ChangeRightButtonIcon(string icon)
