@@ -25,6 +25,11 @@
     void OnInput(ChangeEventArgs e)
     {
         var v = e.Value.ToString();
+        if (string.IsNullOrEmpty(v))
+        {
+            options.Clear();
+            return;
+        }
 
         var r = new Random();
         var i = 0;

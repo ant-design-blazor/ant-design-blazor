@@ -173,6 +173,7 @@ namespace AntDesign
             _textareaClassMapper
                 .Add("ant-input")
                 .Add(hashId)
+                .If("ant-input-borderless", () => !Bordered)
                 .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 ;
         }

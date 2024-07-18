@@ -1,5 +1,5 @@
 ---
-order: 0
+order: 0.1
 title:
   en-US: Basic Usage
   zh-CN: 基本用法

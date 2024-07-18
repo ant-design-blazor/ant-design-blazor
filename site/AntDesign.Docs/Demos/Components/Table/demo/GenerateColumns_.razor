@@ -76,7 +76,7 @@
     /// </summary>
     /// <param name="propertyName">The name of the property binding the column. </param>
     /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
-    void definitions(string propertyName, object column)
+    void definitions(string propertyName, IFieldColumn column)
     {
         if (propertyName == "Tags")
         {
@@ -99,7 +99,7 @@
             return;
         }
 
-        ((dynamic)column).Sortable = true;
-        ((dynamic)column).Filterable= true;
+        column.Sortable = true;
+        column.Filterable = true;
     }
 }

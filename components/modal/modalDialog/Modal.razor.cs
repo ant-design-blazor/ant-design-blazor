@@ -287,6 +287,7 @@ namespace AntDesign
                 Closable = Closable,
                 Draggable = Draggable,
                 DragInViewport = DragInViewport,
+                DestroyOnClose = DestroyOnClose,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
                 Header = Header,

@@ -61,6 +61,8 @@ namespace AntDesign
 
         internal ElementReference TabRef => _tabRef;
 
+        internal string TabId => $"rc-tabs-{Id}-tab-{Key}";
+
         internal ElementReference TabBtnRef => _tabBtnRef;
 
         private ClassMapper _tabPaneClassMapper = new();
@@ -93,6 +95,16 @@ namespace AntDesign
             {
                 _hasRendered = true;
             }
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(Tab), Tab))
+            {
+                Parent?.UpdateTabsPosition();
+            }
+
+            await base.SetParametersAsync(parameters);
         }
 
         private void SetClass()

@@ -64,6 +64,7 @@ namespace AntDesign
                 ClassName = confirmOptions.ClassName,
                 Closable = false,
                 CreateByService = confirmOptions.CreateByService,
+                DestroyOnClose = true
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
