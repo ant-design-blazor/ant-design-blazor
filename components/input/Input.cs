@@ -290,6 +290,8 @@ namespace AntDesign
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
+        private string _hashId = "";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -318,9 +320,9 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            var hashId = UseStyle(PrefixCls, InputStyle.UseComponentStyle);
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
-            GroupWrapperClass = $"{PrefixCls}-group-wrapper";
+            _hashId = UseStyle(PrefixCls, InputStyle.UseComponentStyle);
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {_hashId} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
+            GroupWrapperClass = $"{PrefixCls}-group-wrapper {_hashId}";
 
             if (!string.IsNullOrWhiteSpace(Class))
             {
@@ -330,7 +332,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
-                .Add(hashId)
+                .Add(_hashId)
                 .If($"{PrefixCls}-borderless", () => !Bordered)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
@@ -634,7 +636,7 @@ namespace AntDesign
                 builder.AddAttribute(2, "class", GroupWrapperClass);
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
-                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group {_hashId}");
             }
 
             if (AddOnBefore != null)

@@ -151,6 +151,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            var (hashId, _) = StyleUtil.UseToken();
 
             _warpperClassMapper
                 .Add($"{PrefixCls}-affix-wrapper")
@@ -171,6 +172,7 @@ namespace AntDesign
 
             _textareaClassMapper
                 .Add("ant-input")
+                .Add(hashId)
                 .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 ;
         }

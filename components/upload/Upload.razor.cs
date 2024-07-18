@@ -115,6 +115,7 @@ namespace AntDesign
             var hashId = UseStyle(prefixCls, UploadStyle.UseComponentStyle);
 
             ClassMapper
+                .Add($"{prefixCls}-wrapper")
                 .Add(hashId)
                 .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
                 .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);

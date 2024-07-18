@@ -78,6 +78,7 @@ namespace AntDesign
         protected Stack<string> _prePickerStack = new Stack<string>();
 
         public readonly string PrefixCls = "ant-picker-calendar";
+        private string _hashId;
 
         event EventHandler<bool> IDatePicker.OverlayVisibleChanged
         {
@@ -95,6 +96,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            _hashId = UseStyle("ant-picker", CalendarStyle.UseComponentStyle);
 
             _picker = Mode switch
             {
@@ -125,11 +127,9 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            // todo: move to OnInitialized.
-            var hashId = UseStyle(PrefixCls, CalendarStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Add(hashId)
+                .Add(_hashId)
                 .If($"{PrefixCls}-full", () => FullScreen)
                 .If($"{PrefixCls}-rtl", () => RTL)
                ;

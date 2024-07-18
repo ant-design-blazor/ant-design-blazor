@@ -19,7 +19,7 @@ namespace AntDesign
         public bool Disable { get; set; }
 
         [Parameter]
-        public uint Rows { get; set; } = 3;
+        public uint Rows { get; set; } = 1;
 
         [Parameter]
         public bool Focused { get; set; }
