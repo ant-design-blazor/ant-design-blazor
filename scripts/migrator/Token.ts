@@ -20,22 +20,31 @@ function tokenCode(source: string, tab: string): string {
     return items.join(',\r\n');
 }
 
-export function genToken() {
-    const tokenSeed = './scripts/migrator/token_seed.json';
-    const dist = './components/theme/themes/Seed.cs';
+function genTheme(name: string, source: string, dist: string) {
     const tab = '            ';
-    const template = `namespace AntDesign
+    const template = `namespace AntDesign.Themes
 {
-    public static class Seed
+    public class ${name}
     {
-        public static readonly GlobalToken DefaultSeedToken = new GlobalToken
+        private static readonly GlobalToken _token = new GlobalToken()
         {
-${tokenCode(tokenSeed, tab)}
+${tokenCode(source, tab)}        
         };
+
+        public static GlobalToken Derivative()
+        {
+            return _token;
+        }
     }
 }
 `;
     writeAllText(dist, template);
+}
+
+export function genToken() {
+    genTheme('Default', './scripts/migrator/token_default.json', './components/theme/themes/Default.cs');
+    genTheme('Dark', './scripts/migrator/token_dark.json', './components/theme/themes/Dark.cs');
+    genTheme('Compact', './scripts/migrator/token_compact.json', './components/theme/themes/Compact.cs');
 }
 
 export function genTokenTests() {

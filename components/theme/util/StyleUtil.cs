@@ -50,8 +50,7 @@ namespace AntDesign
             options ??= new GenOptions();
             return (prefixCls) =>
             {
-                var token = Seed.DefaultSeedToken;
-                var hash = token.GetTokenHash();
+                var (hash, token) = UseTheme();
                 var rootPrefixCls = GetPrefixCls();
                 var iconPrefixCls = DefaultIconPrefixCls;
                 var mergedToken = new T();
@@ -157,9 +156,21 @@ namespace AntDesign
 
         internal static (string, GlobalToken) UseToken()
         {
-            var token = Seed.DefaultSeedToken;
-            var hash = token.GetTokenHash();
+            var (hash, token) = UseTheme();
             return (hash.HashId, token);
+        }
+
+        public static (TokenHash, GlobalToken) UseTheme()
+        {
+            /*
+             * 这里依据配置调用不同主题
+             * Themes.Default.Derivative();
+             * Themes.Dark.Derivative();
+             * Themes.Compact.Derivative();
+             */
+            var token = Themes.Default.Derivative();
+            var hash = token.GetTokenHash();
+            return (hash, token);
         }
     }
 }
