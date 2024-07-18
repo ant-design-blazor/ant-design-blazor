@@ -1,0 +1,49 @@
+﻿name: Release antdv5 package
+
+env:
+  Version: 0.0.1
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    branches:
+      - compatibility-v5
+      - feat/v5-ci
+
+jobs:
+  nightly-build:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.100
+
+      - name: Check Building ⚙
+        run: |
+          dotnet build
+
+      - name: Package Nightly Nuget 📦
+        run: |
+          npm i
+          SUFFIX=`date "+%y%m%d%H%M%S"`
+          dotnet build
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$Version-v5-${SUFFIX} -c Release -o publish
+
+      - name: Publish to Nuget ✔
+        run: |
+          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: publish/
+          retention-days: 5
