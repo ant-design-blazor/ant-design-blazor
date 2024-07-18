@@ -95,7 +95,9 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             var prefixCls = "ant-row";
+            var hashId = UseStyle(prefixCls, GridStyle.UseRowStyle);
             ClassMapper.Add(prefixCls)
+                .Add(hashId)
                 .If($"{prefixCls}-top", () => Align == "top")
                 .If($"{prefixCls}-middle", () => Align == "middle")
                 .If($"{prefixCls}-bottom", () => Align == "bottom")

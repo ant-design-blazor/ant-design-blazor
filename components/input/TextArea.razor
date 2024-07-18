@@ -47,14 +47,12 @@
 
 @if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
-    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
-        <span class="@_warpperClassMapper.Class">
-            <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
-            @if (AllowClear)
-            {
-                @ClearIcon
-            }
-        </span>
+    <span class="@_warpperClassMapper.Class @ClassMapper.Class" style="@Style" data-count="@Count">
+        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+        @if (AllowClear)
+        {
+            @ClearIcon
+        }
         <span class="ant-input-textarea-suffix">
             @if (Suffix != null)
             {
@@ -65,7 +63,7 @@
                 @FormItem.FeedbackIcon
             }
         </span>
-    </div>
+    </span>
 }
 else
 {

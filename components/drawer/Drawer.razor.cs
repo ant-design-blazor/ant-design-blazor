@@ -377,8 +377,10 @@ namespace AntDesign
         private void SetClass()
         {
             var prefixCls = "ant-drawer";
+            var hashId = UseStyle(prefixCls, DrawerStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefixCls)
+                .Add(hashId)
                 .If($"{prefixCls}-open", () => _isOpen)
                 .If($"{prefixCls}-{Placement}", () => Placement.IsIn("top", "bottom", "right", "left"))
                 .If($"{prefixCls}-rtl", () => RTL)

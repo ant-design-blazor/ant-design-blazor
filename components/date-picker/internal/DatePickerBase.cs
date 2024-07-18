@@ -368,8 +368,10 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var hashId = UseStyle(PrefixCls, DatePickerStyle.UseComponentStyle);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .Get(() => $"{PrefixCls}-{Size}")
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)

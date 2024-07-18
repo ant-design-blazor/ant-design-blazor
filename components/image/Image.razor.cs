@@ -118,8 +118,12 @@ namespace AntDesign
                 PreviewSrc = _src;
             }
 
-            ClassMapper.Add("ant-image")
-                .If("ant-image-error", () => _isError);
+            var prefixCls = "ant-image";
+            var hashId = UseStyle(prefixCls, ImageStyle.UseComponentStyle);
+            ClassMapper.Add(prefixCls)
+                .Add(hashId)
+                .If($"{prefixCls}-error", () => _isError)
+                ;
 
             Group?.AddImage(this);
         }

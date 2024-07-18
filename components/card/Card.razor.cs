@@ -61,15 +61,18 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
+            var prefixCls = "ant-card";
+            var hashId = UseStyle(prefixCls, CardStyle.UseComponentStyle);
             this.ClassMapper
-                .Add("ant-card")
-                .If("ant-card-loading", () => Loading)
-                .If("ant-card-bordered", () => Bordered)
-                .If("ant-card-hoverable", () => Hoverable)
-                .If("ant-card-small", () => Size == "small")
-                .If("ant-card-contain-grid", () => _hasGrids)
-                .If("ant-card-type-inner", () => Type == "inner")
-                .If("ant-card-contain-tabs", () => CardTabs != null)
+                .Add(prefixCls)
+                .Add(hashId)
+                .If($"{prefixCls}-loading", () => Loading)
+                .If($"{prefixCls}-bordered", () => Bordered)
+                .If($"{prefixCls}-hoverable", () => Hoverable)
+                .If($"{prefixCls}-small", () => Size == "small")
+                .If($"{prefixCls}-contain-grid", () => _hasGrids)
+                .If($"{prefixCls}-type-inner", () => Type == "inner")
+                .If($"{prefixCls}-contain-tabs", () => CardTabs != null)
                 ;
         }
 

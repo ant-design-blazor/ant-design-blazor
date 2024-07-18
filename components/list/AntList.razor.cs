@@ -92,10 +92,10 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
-
-
+            var hashId = UseStyle(PrefixName, AntListStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(PrefixName)
+                .Add(hashId)
                 .If($"{PrefixName}-split", () => Split)
                 .If($"{PrefixName}-rtl", () => RTL)
                 .If($"{PrefixName}-bordered", () => Bordered)

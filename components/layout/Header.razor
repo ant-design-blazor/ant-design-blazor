@@ -4,7 +4,7 @@
 <header class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
     @ChildContent
 </header>
-
+@_styleContent
 @code {
 
     [Parameter]
@@ -13,9 +13,11 @@
 
     protected override void OnInitialized()
     {
+        var hashId = UseStyle("ant-layout", LayoutStyle.UseComponentStyle);
         base.OnInitialized();
         ClassMapper.Clear()
             .Add("ant-layout-header")
+            .Add(hashId)
             .Add("ant-header");
     }
 

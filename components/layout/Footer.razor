@@ -4,7 +4,7 @@
 <footer class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
     @ChildContent
 </footer>
-
+@_styleContent
 @code {
 
     [Parameter]
@@ -12,7 +12,8 @@
 
     protected override void OnInitialized()
     {
-        ClassMapper.Add("ant-layout-footer");
+        var hashId = UseStyle("ant-layout", LayoutStyle.UseComponentStyle);
+        ClassMapper.Add("ant-layout-footer").Add(hashId);
 
         base.OnInitialized();
     }

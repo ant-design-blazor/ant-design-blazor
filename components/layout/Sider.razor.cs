@@ -87,8 +87,10 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var hashId = UseStyle("ant-layout", LayoutStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(_prefixCls)
+                .Add(hashId)
                 .If($"{_prefixCls}-dark", () => Theme == SiderTheme.Dark)
                 .If($"{_prefixCls}-light", () => Theme == SiderTheme.Light)
                 .If($"{_prefixCls}-has-trigger", () => Collapsible)

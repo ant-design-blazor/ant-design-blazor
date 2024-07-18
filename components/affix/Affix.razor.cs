@@ -67,9 +67,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
+            var hashId = UseStyle(PrefixCls, AffixStyle.UseComponentStyle);
             ClassMapper
-               .If(PrefixCls, () => _affixed);
+               .If(PrefixCls, () => _affixed)
+               .Add(hashId);
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

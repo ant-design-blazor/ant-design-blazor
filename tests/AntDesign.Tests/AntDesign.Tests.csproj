@@ -15,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Shouldly" Version="4.2.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -24,5 +25,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\AntDesign.TestKit\AntDesign.TestKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Styles\css\*.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

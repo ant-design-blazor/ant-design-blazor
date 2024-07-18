@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public abstract class TypographyBase : AntDomComponentBase
+    public abstract partial class TypographyBase : AntDomComponentBase
     {
         [Parameter]
         public bool Code { get; set; } = false;
@@ -71,8 +71,10 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var hashId = UseStyle(PrefixName, TypographyStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixName)
+                .Add(hashId)
                 .GetIf(() => $"{PrefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
                 .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)
@@ -187,6 +189,7 @@ namespace AntDesign
 
             builder.AddElementReferenceCapture(47, r => Ref = r);
             builder.CloseElement();
+            _styleContent(builder);
         }
 
         private async Task Copy()

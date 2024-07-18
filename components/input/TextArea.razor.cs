@@ -151,6 +151,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            var (hashId, _) = StyleUtil.UseToken();
 
             _warpperClassMapper
                 .Add($"{PrefixCls}-affix-wrapper")
@@ -162,7 +163,8 @@ namespace AntDesign
                 ;
 
             ClassMapper
-                .Add("ant-input-textarea ")
+                .Add("ant-input-textarea-affix-wrapper ")
+                .Add(hashId)
                 .If("ant-input-textarea-show-count", () => ShowCount)
                 .If("ant-input-textarea-in-form-item", () => FormItem != null)
                 .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)
@@ -171,6 +173,7 @@ namespace AntDesign
 
             _textareaClassMapper
                 .Add("ant-input")
+                .Add(hashId)
                 .If("ant-input-borderless", () => !Bordered)
                 .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 ;

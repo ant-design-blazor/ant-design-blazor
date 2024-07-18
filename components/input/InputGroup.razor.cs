@@ -43,9 +43,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
+            var (hashId, _) = StyleUtil.UseToken();
             ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add(hashId)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-compact", () => Compact)

@@ -68,8 +68,10 @@ namespace AntDesign
 
         protected void SetClass()
         {
-            string prefixCls = "ant-radio";
+            var prefixCls = "ant-radio";
+            var hashId = UseStyle(prefixCls, RadioStyle.UseComponentStyle);
             ClassMapper
+                .Add(hashId)
                 .If($"{prefixCls}-wrapper", () => !RadioButton)
                 .If($"{prefixCls}-button-wrapper", () => RadioButton)
                 .If($"{prefixCls}-wrapper-checked", () => Checked && !RadioButton)
@@ -80,6 +82,7 @@ namespace AntDesign
 
             _radioClassMapper
                 .If(prefixCls, () => !RadioButton)
+                .Add(hashId)
                 .If($"{prefixCls}-checked", () => Checked && !RadioButton)
                 .If($"{prefixCls}-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button", () => RadioButton)
@@ -88,10 +91,12 @@ namespace AntDesign
                 .If($"{prefixCls}-rtl", () => RTL);
 
             _inputClassMapper
+                .Add(hashId)
                 .If($"{prefixCls}-input", () => !RadioButton)
                 .If($"{prefixCls}-button-input", () => RadioButton);
 
             _innerClassMapper
+                .Add(hashId)
                 .If($"{prefixCls}-inner", () => !RadioButton)
                 .If($"{prefixCls}-button-inner", () => RadioButton);
         }

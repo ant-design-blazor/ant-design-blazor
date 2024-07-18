@@ -11,6 +11,7 @@ namespace AntDesign
 {
     public partial class Notification
     {
+        private string _hashId;
         [Inject]
         private NotificationService NotificationService { get; set; }
 
@@ -18,6 +19,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            _hashId = UseStyle(ClassPrefix, NotificationStyle.UseComponentStyle);
             if (NotificationService != null)
             {
                 NotificationService.OnNoticing += NotifyAsync;
@@ -67,7 +69,7 @@ namespace AntDesign
             placementStr = placementStr[0] == 'T'
                 ? "t" + placementStr.Substring(1)
                 : "b" + placementStr.Substring(1);
-            var className = $"{ClassPrefix} {ClassPrefix}-" + placementStr;
+            var className = $"{_hashId} {ClassPrefix} {ClassPrefix}-{placementStr}";
 
             if (IsRtl())
             {

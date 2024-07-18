@@ -125,8 +125,10 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-steps";
+            var hashId = UseStyle(prefixName, StepsStyle.UseComponentStyle);
             ClassMapper.Clear()
                 .Add(prefixName)
+                .Add(hashId)
                 .GetIf(() => $"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
                 .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
                 .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")

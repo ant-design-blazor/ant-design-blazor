@@ -27,14 +27,17 @@ namespace AntDesign
 
         private void SetClass()
         {
+            var prefixCls = "ant-divider";
+            var hashId = UseStyle(prefixCls, DividerStyle.UseComponentStyle);
             ClassMapper.Clear()
-                .Add("ant-divider")
-                .If("ant-divider", () => RTL)
-                .Get(() => $"ant-divider-{this.Type.Name.ToLowerInvariant()}")
-                .If("ant-divider-with-text", () => Text != null || ChildContent != null)
-                .GetIf(() => $"ant-divider-with-text-{this.Orientation.ToLowerInvariant()}", () => Text != null || ChildContent != null)
-                .If($"ant-divider-plain", () => Plain && (Text != null || ChildContent != null))
-                .If("ant-divider-dashed", () => Dashed)
+                .Add(prefixCls)
+                .Add(hashId)
+                .If(prefixCls, () => RTL)
+                .Get(() => $"{prefixCls}-{this.Type.Name.ToLowerInvariant()}")
+                .If($"{prefixCls}-with-text", () => Text != null || ChildContent != null)
+                .GetIf(() => $"{prefixCls}-with-text-{this.Orientation.ToLowerInvariant()}", () => Text != null || ChildContent != null)
+                .If($"{prefixCls}-plain", () => Plain && (Text != null || ChildContent != null))
+                .If($"{prefixCls}-dashed", () => Dashed)
                 ;
         }
 

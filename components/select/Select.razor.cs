@@ -715,8 +715,10 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
+            var hashId = UseStyle(ClassPrefix, SelectStyle.UseComponentStyle);
             ClassMapper
                 .Add($"{ClassPrefix}")
+                .Add(hashId)
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)

@@ -6,14 +6,16 @@
     if (coinfigs.Count > 0)
     {
         <div>
-            <div class="ant-message" style="top: @(_top)px;" @ref="Ref">
-                <span>
+            <div class="@ClassMapper.Class" style="top: @(_top)px;" @ref="Ref">
+                <div class="ant-message-notice-wrapper">
                     @foreach (var config in coinfigs)
                     {
                         <MessageItem @key="config" Config="config"></MessageItem>
                     }
-                </span>
+                </div>
             </div>
         </div>
     }
 }
+
+@_styleContent

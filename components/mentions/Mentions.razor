@@ -27,7 +27,7 @@
         </Overlay>
 
         <Unbound>
-            <div class="@ClassMapper.Class">
+            <div class="@ClassMapper.Class" style="white-space: normal">
                 @if (TextareaTemplate == null)
                 {
                     <textarea value="@Value"
@@ -53,3 +53,4 @@
         </Unbound>
     </OverlayTrigger>
 </CascadingValue>
+@_styleContent

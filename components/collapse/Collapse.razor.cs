@@ -49,12 +49,15 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var prefixCls = "ant-collapse";
+            var hashId = UseStyle(prefixCls, CollapseStyle.UseComponentStyle);
             ClassMapper
-                .Add("ant-collapse")
-                .If("ant-collapse-icon-position-left", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
-                .If("ant-collapse-icon-position-right", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
-                .If("ant-collapse-borderless", () => !this.Bordered)
-                .If("ant-collapse-rtl", () => RTL);
+                .Add(prefixCls)
+                .Add(hashId)
+                .If($"{prefixCls}-icon-position-left", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
+                .If($"{prefixCls}-icon-position-right", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
+                .If($"{prefixCls}-borderless", () => !this.Bordered)
+                .If($"{prefixCls}-rtl", () => RTL);
         }
 
         protected override async Task OnInitializedAsync()

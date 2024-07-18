@@ -13,6 +13,7 @@ namespace AntDesign.Tests
         protected string DateFormat => "dd/MM/yyyy";
         protected string TimeFormat = "yyyy-MM-dd HH:mm:ss";
         protected readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+        protected const string StyleVersion = "5.11.4";
         
         public TestContext Context => this;
         public NavigationManager NavigationManager => Services.GetRequiredService<NavigationManager>();

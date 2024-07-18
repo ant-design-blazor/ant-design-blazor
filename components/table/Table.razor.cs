@@ -605,7 +605,9 @@ namespace AntDesign
         private void SetClass()
         {
             string prefixCls = "ant-table";
+            var hashId = UseStyle(prefixCls, TableStyle.UseComponentStyle);
             ClassMapper.Add(prefixCls)
+                .Add(hashId)
                 .If($"{prefixCls}-fixed-header", () => ScrollY != null)
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
@@ -621,6 +623,7 @@ namespace AntDesign
                 ;
 
             _wrapperClassMapper
+                .Add(hashId)
                 .Add($"{prefixCls}-wrapper")
                 .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);

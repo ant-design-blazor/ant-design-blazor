@@ -86,7 +86,6 @@ namespace AntDesign
 
         protected ElementReference TextEl { get; set; }
 
-        private string _prefixCls = "ant-avatar";
 
         private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
 
@@ -144,12 +143,15 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var prefixCls = "ant-avatar";
+            var hashId = UseStyle(prefixCls, AvatarStyle.UseComponentStyle);
             ClassMapper
-                .Add(_prefixCls)
-                .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .GetIf(() => $"{_prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
-                .If($"{_prefixCls}-image", () => _hasSrc);
+                .Add(prefixCls)
+                .Add(hashId)
+                .GetIf(() => $"{prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .GetIf(() => $"{prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
+                .If($"{prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
+                .If($"{prefixCls}-image", () => _hasSrc);
         }
 
         private void SetSizeStyle()

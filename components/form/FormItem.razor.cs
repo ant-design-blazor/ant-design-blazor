@@ -240,8 +240,11 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var (hashId, _) = StyleUtil.UseToken();
+
             ClassMapper
                 .Add(_prefixCls)
+                .Add(hashId)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => !_isValid)
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)

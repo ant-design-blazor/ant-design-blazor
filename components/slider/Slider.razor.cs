@@ -31,6 +31,7 @@ namespace AntDesign
         private double _initialRightValue;
         private Tooltip _toolTipRight;
         private Tooltip _toolTipLeft;
+        private string _hashId;
 
         private string RightHandleStyleFormat
         {
@@ -405,6 +406,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            _hashId = UseStyle(PreFixCls, SliderStyle.UseComponentStyle); // todo: move to OnInitialized
             SetStyle();
         }
 
@@ -459,9 +461,9 @@ namespace AntDesign
             base.OnParametersSet();
 
             ValidateParameter();
-
             ClassMapper.Clear()
                 .Add(PreFixCls)
+                .Add(_hashId)
                 .If($"{PreFixCls}-disabled", () => Disabled)
                 .If($"{PreFixCls}-horizontal", () => !Vertical)
                 .If($"{PreFixCls}-vertical", () => Vertical)

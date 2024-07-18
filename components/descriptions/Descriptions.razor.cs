@@ -73,12 +73,15 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            var prefixCls = "ant-descriptions";
+            var hashId = UseStyle(prefixCls, DescriptionsStyle.UseComponentStyle);
             ClassMapper
-                .Add("ant-descriptions")
-                .If("ant-descriptions", () => RTL)
-                .If("ant-descriptions-bordered", () => this.Bordered)
-                .If("ant-descriptions-middle", () => this.Size == DescriptionsSize.Middle)
-                .If("ant-descriptions-small", () => this.Size == DescriptionsSize.Small);
+                .Add(prefixCls)
+                .Add(hashId)
+                .If($"{prefixCls}", () => RTL)
+                .If($"{prefixCls}-bordered", () => this.Bordered)
+                .If($"{prefixCls}-middle", () => this.Size == DescriptionsSize.Middle)
+                .If($"{prefixCls}-small", () => this.Size == DescriptionsSize.Small);
         }
 
         protected override async Task OnInitializedAsync()

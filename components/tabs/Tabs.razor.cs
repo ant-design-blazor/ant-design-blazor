@@ -212,9 +212,10 @@ namespace AntDesign
             {
                 Animated = false;
             }
-
+            var hashId = UseStyle(PrefixCls, TabsStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixCls)
+                .Add(hashId)
                 .Get(() => $"{PrefixCls}-{TabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-line", () => Type == TabType.Line)
                 .If($"{PrefixCls}-editable-card", () => Type == TabType.EditableCard)
@@ -227,20 +228,24 @@ namespace AntDesign
                 .If($"{PrefixCls}-rtl", () => RTL);
 
             _inkClassMapper
+                .Add(hashId)
                 .Add($"{PrefixCls}-ink-bar")
                 .If($"{PrefixCls}-ink-bar-animated", () => InkBarAnimated);
 
             _contentClassMapper
+                .Add(hashId)
                 .Add($"{PrefixCls}-content")
                 .Get(() => $"{PrefixCls}-content-{TabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-content-animated", () => Animated);
 
             _tabsNavWarpPingClassMapper
+                .Add(hashId)
                 .Add("ant-tabs-nav-wrap")
                 .If("ant-tabs-nav-wrap-ping-left", () => NavWrapPingLeft)
                 .If("ant-tabs-nav-wrap-ping-right", () => NavWrapPingRight);
 
             _tabBarClassMapper
+                .Add(hashId)
                 .Add($"{PrefixCls}-nav")
                 .If(TabBarClass, () => !string.IsNullOrWhiteSpace(TabBarClass));
         }

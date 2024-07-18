@@ -155,8 +155,10 @@ namespace AntDesign
 
         private void SetClasses()
         {
+            var hashId = UseStyle(PrefixCls, ProgressStyle.UseComponentStyle);
             ClassMapper
                 .Add(PrefixCls)
+                .Add(hashId)
                 .Get(() => $"{PrefixCls}-{Size.Name}")
                 .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)

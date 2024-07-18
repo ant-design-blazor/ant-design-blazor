@@ -38,6 +38,7 @@ namespace AntDesign
 
         private string _okBtnId = "ant-blazor-" + Guid.NewGuid();
         private string _cancelBtnId = "ant-blazor-" + Guid.NewGuid();
+        private string _hashId = "";
 
         DialogOptions _dialogOptions;
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
@@ -82,6 +83,7 @@ namespace AntDesign
         /// <returns></returns>
         protected override async Task OnInitializedAsync()
         {
+            _hashId = UseStyle("ant-modal", ModalStyle.UseModalConfirmStyle);
             _dialogOptions = BuildDialogOptions(Config);
             if (ConfirmRef.OnOpen != null)
                 await ConfirmRef.OnOpen.Invoke();
