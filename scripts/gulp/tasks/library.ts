@@ -3,7 +3,7 @@
  * found in the LICENSE file at https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE
  */
 
-import { dest, parallel, series, src, task } from 'gulp';
+import { dest, series, src, task } from 'gulp';
 
 import { join } from 'path';
 import { mkdirsSync } from 'fs-extra';
@@ -54,7 +54,9 @@ task(
   series(
     'clean',
     'library:mkdir-dir',
-    parallel('library:scripts', 'library:compile-less'),
-    parallel('library:copy-libs-css', 'library:copy-libs-js', 'library:copy-libs-less'),
+    // parallel('library:scripts', 'library:compile-less'),
+    // parallel('library:copy-libs-css', 'library:copy-libs-js', 'library:copy-libs-less'),
+    'library:scripts',
+    'library:copy-libs-js',
   )
 );

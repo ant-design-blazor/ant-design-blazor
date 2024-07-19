@@ -4,6 +4,27 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
+  </Target>
+
+  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
+    <!--<Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />-->
+  </Target>
+
+  <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
+    <!--<Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />-->
+  </Target>
+
   <PropertyGroup>
     <CLIProjectDir>site/AntDesign.Docs.Build.CLI</CLIProjectDir>
     <CLIPath>$(CLIProjectDir)/AntDesign.Docs.Build.CLI.csproj</CLIPath>
