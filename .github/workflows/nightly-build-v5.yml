@@ -26,6 +26,10 @@ jobs:
         with:
           dotnet-version: 8.0.100
 
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
       - name: Check Building ⚙
         run: |
           dotnet build
