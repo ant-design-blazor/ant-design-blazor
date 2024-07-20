@@ -221,7 +221,7 @@ namespace AntDesign
             {
                 CurrentValue = InternalConvert.FromDateTimeOffset<TValue>(newValue);
 
-                _ = InvokeOnChange();
+                InvokeOnChange();
             }
         }
 
@@ -281,9 +281,9 @@ namespace AntDesign
             await OnInputClick();
         }
 
-        private async Task InvokeOnChange()
+        protected override void InvokeOnChange()
         {
-            await OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
                 Date = Value,
                 DateString = GetInputValue(0)

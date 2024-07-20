@@ -595,7 +595,7 @@ namespace AntDesign
             }
         }
 
-        private void InvokeOnChange()
+        protected override void InvokeOnChange()
         {
             OnChange.InvokeAsync(new DateRangeChangedEventArgs<TValue>
             {
