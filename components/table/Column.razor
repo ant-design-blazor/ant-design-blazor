@@ -49,8 +49,8 @@ else if (IsHeader && HeaderColSpan != 0)
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
     <CascadingValue Name="IsHeader" Value="false" IsFixed>
-     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
-         @if (IsFiexedEllipsis)
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
+            @if (IsFiexedEllipsis)
             {
                 <span class="ant-table-cell-content">
                     @HeaderCellContent()
@@ -78,7 +78,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     }
 
     <CascadingValue Name="IsBody" Value="false" IsFixed>
-     @{
+        @{
             var cellAttributes = new Dictionary<string, object>();
             var cellData = new CellData<TData>(RowData, default, Format);
 
@@ -107,9 +107,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                 }
             }
 
-            @if (RowData.IsGrouping && ColIndex == Table.TreeExpandIconColumnIndex)
+            @if (RowData.IsGrouping)
             {
-                @RowData.Key
+                @Table.GroupTitleTemplate(RowData)
             }
             else if (IsFiexedEllipsis)
             {
@@ -130,16 +130,16 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     RenderFragment ColumnTitle()
     {
         return @<span class="ant-table-column-title">
-            @if (TitleTemplate != null)
-            {
-                @TitleTemplate
-            }
-            else
-            {
-                @Title
-            }
-        </span>
-        ;
+        @if (TitleTemplate != null)
+    {
+        @TitleTemplate
+    }
+    else
+    {
+        @Title
+    }
+    </span>
+    ;
     }
 
     RenderFragment CellContent(CellData<TData> cellData)
@@ -176,24 +176,24 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         bool hasAscendingSorter = SortDirection.Ascending.IsIn(SortDirections);
 
         return builder =>
-        {
-            builder.AddContent(1, ColumnTitle());
+    {
+        builder.AddContent(1, ColumnTitle());
 
-            builder.AddContent(2,
-                @<span class="ant-table-column-sorter@(hasDescendingSorter && hasAscendingSorter ? " ant-table-column-sorter-full" : "")">
-                    <span class="ant-table-column-sorter-inner">
-                        @if (hasAscendingSorter)
-                        {
-                            <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up{(_sortDirection == SortDirection.Ascending ? " active" : "")}") />
-                        }
-                        @if (hasDescendingSorter)
-                        {
-                            <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down{(_sortDirection == SortDirection.Descending ? " active" : "")}") />
-                        }
-                    </span>
-                </span>
-            );
-        };
+        builder.AddContent(2,
+    @<span class="ant-table-column-sorter@(hasDescendingSorter && hasAscendingSorter ? " ant-table-column-sorter-full" : "")">
+        <span class="ant-table-column-sorter-inner">
+            @if (hasAscendingSorter)
+        {
+            <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up{(_sortDirection == SortDirection.Ascending ? " active" : "")}") />
+        }
+            @if (hasDescendingSorter)
+        {
+            <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down{(_sortDirection == SortDirection.Descending ? " active" : "")}") />
+        }
+        </span>
+    </span>
+    );
+    };
     }
 
     RenderFragment ToolTipSorter()
@@ -201,20 +201,20 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         if (ShowSorterTooltip)
         {
             return@<Tooltip Title="@SorterTooltip">
-                <Unbound>
-                    <div class="ant-table-column-sorters" @ref="context.Current" @onclick="HandleSort">
-                        @SortHeader()
-                    </div>
-                </Unbound>
-            </Tooltip>
-        ;
+        <Unbound>
+            <div class="ant-table-column-sorters" @ref="context.Current" @onclick="HandleSort">
+                @SortHeader()
+            </div>
+        </Unbound>
+    </Tooltip>
+    ;
         }
         else
         {
             return@<div class="ant-table-column-sorters" @onclick="HandleSort">
-                @SortHeader()
-            </div>
-        ;
+        @SortHeader()
+    </div>
+    ;
         }
     }
 
@@ -223,36 +223,36 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         @if (_filterable)
         {
             return@<div class="ant-table-filter-column">
-                @if (Sortable)
+        @if (Sortable)
+    {
+        @ToolTipSorter()
+    }
+    else
+    {
+        @ColumnTitle()
+    }
+
+        <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }" OnVisibleChange="FilterDropdownOnVisibleChange">
+            <Unbound>
+                <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
+                      @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
+                    <Icon Type="filter" Theme="fill" />
+                </span>
+            </Unbound>
+            <Overlay>
+                <div class="ant-table-filter-dropdown">
+                    @if (FilterDropdown != null)
                 {
-                    @ToolTipSorter()
+                    @FilterDropdown
                 }
                 else
                 {
-                    @ColumnTitle()
+                    @_renderDefaultFilterDropdown
                 }
-
-                <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }" OnVisibleChange="FilterDropdownOnVisibleChange">
-                    <Unbound>
-                        <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
-                              @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
-                            <Icon Type="filter" Theme="fill" />
-                        </span>
-                    </Unbound>
-                    <Overlay>
-                        <div class="ant-table-filter-dropdown">
-                            @if (FilterDropdown != null)
-                            {
-                                @FilterDropdown
-                            }
-                            else
-                            {
-                                @_renderDefaultFilterDropdown
-                            }
-                        </div>
-                    </Overlay>
-                </Dropdown>
-            </div>
+                </div>
+            </Overlay>
+        </Dropdown>
+    </div>
     ;
         }
         else
