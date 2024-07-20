@@ -1,5 +1,5 @@
 ﻿<div>
-   <RangePicker  TValue="DateTime?[]" Ranges="dayRanges" ShowTime="true" />
+   <RangePicker  TValue="DateTime?[]" Ranges="dayRanges" ShowTime="true" OnChange="OnRangeChange" />
 </div>
 <div>
   <RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" Ranges="monthRanges" />
@@ -23,4 +23,10 @@
     Dictionary<string,DateTime?[]> yearRanges = new Dictionary<string, DateTime?[]>() { 
         { "ThisCentury",new DateTime?[] { new DateTime(2000,1,1), new DateTime(2099,12,31)}}
     };
+
+    private void OnRangeChange(DateRangeChangedEventArgs<DateTime?[]> args)
+    {
+        Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(args.Dates)}");
+        Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(args.DateStrings)}");
+    }
 }
