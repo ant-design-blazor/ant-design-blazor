@@ -165,10 +165,11 @@ namespace AntDesign.TableModels
 
             _selected = selected;
 
-            OnSelectedChanged(_selected);
-
             if (triggersSelectedChanged)
+            {
+                OnSelectedChanged(_selected);
                 SelectedChanged?.Invoke(this, _selected);
+            }
         }
     }
 }
