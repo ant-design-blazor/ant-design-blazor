@@ -14,6 +14,18 @@ timeline: true
 - 主版本号：含有破坏性更新和新特性，不在发布周期内。
 
 ---
+### 0.19.6
+
+`2024-7-22`
+
+- Table
+  - 🐞 修复 Table 树形数据单选问题。[#4002](https://github.com/ant-design-blazor/ant-design-blazor/pull/4002) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 树形数据选择行导致循环渲染。[#3998](https://github.com/ant-design-blazor/ant-design-blazor/pull/3998) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 RangePicker 的预设范围按钮点击后不触发OnChange事件。[#3999](https://github.com/ant-design-blazor/ant-design-blazor/pull/3999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 当只有第一个子节点在CheckedKeys/DefaultCheckedKeys中，父节点和其他兄弟节点也被勾选的问题。[#3985](https://github.com/ant-design-blazor/ant-design-blazor/pull/3985) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Modal 当 DestroyOnClose 为true 时，关闭弹窗会出现异常。[#3982](https://github.com/ant-design-blazor/ant-design-blazor/pull/3982) [@ElderJames](https://github.com/ElderJames)
+
 
 ### 0.19.5
 
