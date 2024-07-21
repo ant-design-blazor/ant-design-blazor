@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\..\\site\\AntDesign.Docs\\AntDesign.Docs.csproj"
+    }
+  }
+}

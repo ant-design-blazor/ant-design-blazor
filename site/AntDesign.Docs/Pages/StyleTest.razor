@@ -1,0 +1,21 @@
+﻿@page "/style"
+@inherits AntDomComponentBase
+
+@{
+    var styles = UseStylesFunc();
+}
+
+<div class="@styles.container">
+  <Space Direction="DirectionVHType.Vertical" style="width:100%" Size=@("16")>
+    <Space>
+      <Button> <SmileOutlined /> 功能按钮的说明</Button>
+      操作按钮
+    </Space>
+    <div class="@styles.defaultCard">普通卡片</div>
+    <div class="@styles.primaryCard">主要卡片</div>
+  </Space>
+</div>
+
+@code {
+   
+}
