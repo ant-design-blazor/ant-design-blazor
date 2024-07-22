@@ -54,7 +54,7 @@ jobs:
       - name: Publish Docs 🎉
         id: publish
         run: |
-          VERSION=`git describe --tags`
+          VERSION=`git describe --abbrev=0 --tags`
           echo "::set-output name=package_version::${VERSION}"
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
