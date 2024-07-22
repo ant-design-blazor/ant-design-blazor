@@ -55,6 +55,7 @@ jobs:
       - name: Publish Docs 🎉
         id: publish
         run: |
+          git fetch --all
           VERSION=`git describe --abbrev=0 --tags`
           echo "::set-output name=package_version::${VERSION}"
           npm install
