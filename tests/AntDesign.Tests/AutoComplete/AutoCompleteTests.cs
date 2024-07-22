@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Bunit;
 using FluentAssertions;
 using Xunit;
@@ -18,6 +19,7 @@ namespace AntDesign.Tests.AutoComplete
         [Fact]
         public void AutoComplete_apply_class()
         {
+            JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true);
             var component = RenderComponent<AutoComplete<string>>(parameters => parameters
                 .Add(x => x.Class, "test"));
 
