@@ -11,27 +11,22 @@
 
 @code
 {
-    static RenderFragment<(Select<TItemValue, TItem> select, RenderFragment<TItem> itemTemplate)> selectOptionsRender = ctx =>
-        @<Template>
-@{ #if NET5_0_OR_GREATER }
-            @if(ctx.select.EnableVirtualization)
+        RenderFragment SelectOptionsRender()
+        {
+#if NET5_0_OR_GREATER
+            if(EnableVirtualization)
             {
-                <Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize 
-                    Items=@ctx.select.SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
-                    ChildContent="optionRender(ctx.itemTemplate)"/>
+                return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
+                    Items=@SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
+                    ChildContent="optionRender(ItemTemplate)"/>;
             }
-            else
-            {
-#endif 
-                <ForeachLoop 
-                    Items=@ctx.select.SortedSelectOptionItems
-                    ChildContent="optionRender(ctx.itemTemplate)"/>
-#if NET5_0_OR_GREATER 
-            }
-@{ #endif }
-        </Template>;
+#endif
 
-    static Func<RenderFragment<TItem>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender = 
+            return @<ForeachLoop Items=@SortedSelectOptionItems  ChildContent="optionRender(ItemTemplate)" />;
+        }
+
+
+     Func<RenderFragment<TItem>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender = 
         itemTemplate => option =>
         @<CascadingValue Value=@itemTemplate Name="ItemTemplate">
             <CascadingValue Value="@option.InternalId" Name="InternalId">
@@ -88,7 +83,7 @@
                         @{
                             @if (!IsGroupingEnabled)
                             {
-                                @selectOptionsRender((this, ItemTemplate))
+                                @SelectOptionsRender()
                             }
                             else
                             {
