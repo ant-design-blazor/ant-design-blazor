@@ -57,7 +57,7 @@
                 <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput />
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
                     }
                     else
                     {
