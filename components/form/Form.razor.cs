@@ -405,6 +405,9 @@ namespace AntDesign
                 }
             }
             _editContext = newContext;
+            // because EditForm's editcontext CascadingValue is fixed,so there need invoke StateHasChanged,
+            // otherwise, the child component's(FormItem) EditContext will not update.
+            InvokeAsync(StateHasChanged);
         }
 
         private static BindingFlags AllBindings
