@@ -99,7 +99,7 @@
     {
         string? value = null;
         string className = "test-class";
-        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value Class="className" />);
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" Class="@className" />);
 
         cut.Find("input").ClassList.Contains(className).Should().BeTrue();
     }
