@@ -492,7 +492,7 @@ namespace AntDesign
 
             if (!Config.CreateByService && !Config.DestroyOnClose)
             {
-                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, Config.GetContainer);
+                //_ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id);
             }
         }
     }
