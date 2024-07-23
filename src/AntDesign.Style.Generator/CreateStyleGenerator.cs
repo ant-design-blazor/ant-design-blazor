@@ -91,11 +91,11 @@ namespace AntDesign.Docs.Generator
                         
                             public Func<ClassProperty> UseStylesFunc = default!;
 
-                            Dictionary<string, CSSObject> CreateCssObject(GlobalToken token)
+                            Dictionary<string, string> CreateCssObject(GlobalToken token)
                             {
                                 {{localStatements}}
 
-                                var dict = new Dictionary<string, CSSObject>()
+                                var dict = new Dictionary<string, string>()
                                 {
                                     {{cssObjectStatements}}
                                 };
@@ -113,19 +113,21 @@ namespace AntDesign.Docs.Generator
                         }
                         """;
 
+                        var propertyHashDict = properties.ToDictionary(x => x.Key, x => "css-" + Guid.NewGuid());
+
                         var sb = new StringBuilder();
                         var sb3 = new StringBuilder();
                         foreach (var property in properties)
                         {
                             sb.AppendLine($"    public string {property.Key} {{ get;set; }}");
 
-                            sb3.AppendLine($"   [\"{property.Key}\"] = {property.Value},");
+                            sb3.AppendLine($"   [\"{propertyHashDict[property.Key]}\"] = {property.Value}.SerializeCss(\"{propertyHashDict[property.Key]}\"),");
                         }
 
                         var sb2 = new StringBuilder();
                         foreach (var property in properties.Keys)
                         {
-                            sb2.AppendLine($"   {property} = dict[\"{property}\"].ToString(),");
+                            sb2.AppendLine($"   {property} = \"{propertyHashDict[property]}\",");
                         }
 
                         var source = template

@@ -11,8 +11,10 @@ using CssInCSharp;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class StyleTest: AntDomComponentBase
+    public partial class StyleTest : AntDomComponentBase
     {
+        string _style = "";
+
         private CreateStyles _useStyles = (token) =>
         {
             var commonCard = new CSSObject()
@@ -46,7 +48,10 @@ namespace AntDesign.Docs.Pages
         protected override void OnInitialized()
         {
             var css = CreateCssObject(Themes.Default.Derivative());
-
+            foreach (var item in css)
+            {
+                _style += $" .{item.Key}{{ {item.Value} }}";
+            }
 
             base.OnInitialized();
         }
