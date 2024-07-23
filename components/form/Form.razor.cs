@@ -116,6 +116,9 @@ namespace AntDesign
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
         [Parameter]
+        public EventCallback<EditContext> OnEditContextChanged { get; set; }
+
+        [Parameter]
         public EventCallback<FieldChangedEventArgs> OnFieldChanged { get; set; }
 
         [Parameter]
@@ -375,6 +378,7 @@ namespace AntDesign
             return result;
         }
 
+
         public void ValidationReset() => BuildEditContext();
 
         public EditContext EditContext => _editContext;
@@ -405,9 +409,33 @@ namespace AntDesign
                 }
             }
             _editContext = newContext;
+            if (OnEditContextChanged.HasDelegate)
+            {
+                InvokeAsync(() => OnEditContextChanged.InvokeAsync(_editContext));
+            }
             // because EditForm's editcontext CascadingValue is fixed,so there need invoke StateHasChanged,
             // otherwise, the child component's(FormItem) EditContext will not update.
             InvokeAsync(StateHasChanged);
+        }
+
+        public void UpdateValidateMessage()
+        {
+            foreach (var item in _formItems)
+            {
+                item.UpdateValidateMessage();
+            }
+        }
+        public void UpdateValidateMessage(params FieldIdentifier[] fileds)
+        {
+            foreach (var filed in fileds)
+            {
+                var formItem = _formItems.FirstOrDefault(t => t.GetFieldIdentifier().Equals(filed));
+                if (formItem == null)
+                {
+                    continue;
+                }
+                formItem.UpdateValidateMessage();
+            }
         }
 
         private static BindingFlags AllBindings
@@ -435,5 +463,6 @@ namespace AntDesign
             }
             return _eventInfos;
         }
+
     }
 }

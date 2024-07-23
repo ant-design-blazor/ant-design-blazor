@@ -13,6 +13,7 @@ namespace AntDesign.Internal
         public RenderFragment FeedbackIcon { get; }
 
         public string Name { get; }
+        public void UpdateValidateMessage();
 
         internal IForm Form { get; }
 
@@ -23,5 +24,6 @@ namespace AntDesign.Internal
         internal ValidationResult[] ValidateField();
 
         internal FieldIdentifier GetFieldIdentifier();
+
     }
 }

@@ -196,6 +196,7 @@ namespace AntDesign
         private Action _vaildateStatusChanged;
 
         private Action _nameChanged;
+        private Action<string[]> _onValidated;
 
         private string _name;
 
@@ -360,12 +361,39 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        public void UpdateValidateMessage()
+        {
+            if (_control == null)
+            {
+                return;
+            }
+            _validationMessages = CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct().ToArray();
+            _isValid = !_validationMessages.Any();
+
+            _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
+
+        internal bool IsExistError(string msg)
+        {
+            return _validationMessages.Any(x => x == msg);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;
 
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
+            _onValidated = control.OnValidated;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -376,30 +404,11 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            void ValidateDefault()
-            {
-
-                _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                _isValid = !_validationMessages.Any();
-
-                _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
-
-                control.OnValidated(_validationMessages);
-
-                if (!string.IsNullOrWhiteSpace(Help))
-                {
-                    _validationMessages = new[] { Help };
-                }
-
-                _vaildateStatusChanged?.Invoke();
-                InvokeAsync(StateHasChanged);
-            }
-
             if (Form?.ValidateOnChange == true)
             {
                 _validationStateChangedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
@@ -407,7 +416,7 @@ namespace AntDesign
             {
                 _validationRequestedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
             }
