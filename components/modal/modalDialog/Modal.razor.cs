@@ -393,15 +393,20 @@ namespace AntDesign
                 _modalRef.SetConfirmLoading(newVal);
             }
 
+            var visibleChanged = parameters.IsParameterChanged(nameof(Visible), Visible, out var newVisible);
+
             await base.SetParametersAsync(parameters);
 
-            if (Visible)
+            if (visibleChanged)
             {
-                await _modalRef?.OpenAsync();
-            }
-            else
-            {
-                await _modalRef?.CloseAsync();
+                if (Visible)
+                {
+                    await _modalRef?.OpenAsync();
+                }
+                else
+                {
+                    await _modalRef?.CloseAsync();
+                }
             }
         }
 
