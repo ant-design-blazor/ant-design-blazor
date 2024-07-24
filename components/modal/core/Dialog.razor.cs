@@ -440,7 +440,7 @@ namespace AntDesign
                 if (_hasDestroy)
                 {
                     _hasDestroy = false;
-                    await AppendToContainer();
+                    //await AppendToContainer();
                     Show();
                     await InvokeStateHasChangedAsync();
                 }

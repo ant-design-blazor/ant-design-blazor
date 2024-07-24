@@ -337,15 +337,15 @@ namespace AntDesign
                     {
                         await (_modalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
 
+                        if (OnOk.HasDelegate)
+                        {
+                            await OnOk.InvokeAsync(e);
+                        }
+
                         await _modalRef.CloseAsync();
                         if (VisibleChanged.HasDelegate)
                         {
                             await VisibleChanged.InvokeAsync(false);
-                        }
-
-                        if (OnOk.HasDelegate)
-                        {
-                            await OnOk.InvokeAsync(e);
                         }
                     }
                     else
@@ -388,6 +388,11 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            if (parameters.IsParameterChanged(nameof(ConfirmLoading), ConfirmLoading, out var newVal))
+            {
+                _modalRef.SetConfirmLoading(newVal);
+            }
+
             await base.SetParametersAsync(parameters);
 
             if (Visible)

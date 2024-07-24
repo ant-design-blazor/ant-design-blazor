@@ -20,7 +20,7 @@ namespace AntDesign
             _service = modalService;
         }
 
-        public RenderFragment Render => Modal.GetModalRender(this);
+        internal RenderFragment Render => Modal.GetModalRender(this);
 
         /// <summary>
         /// open the Modal dialog
@@ -59,6 +59,10 @@ namespace AntDesign
         /// <param name="loading"></param>
         public void SetConfirmLoading(bool loading)
         {
+            if (Config.ConfirmLoading == loading)
+            {
+                return;
+            }
             Config.ConfirmLoading = loading;
             _service.UpdateModal(this);
         }
