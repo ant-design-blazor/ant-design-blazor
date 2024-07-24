@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AntDesign.Core.Style;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
@@ -15,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
+            services.AddScoped<StyleManager>();
 
             services.AddSimpleEmbeddedJsonLocalization(options =>
             {

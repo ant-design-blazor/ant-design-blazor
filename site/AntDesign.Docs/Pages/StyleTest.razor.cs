@@ -7,13 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Core.Style;
 using CssInCSharp;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
     public partial class StyleTest : AntDomComponentBase
     {
         string _style = "";
+
+        [Inject] private StyleManager StyleManager { get; set; }
 
         private CreateStyles _useStyles = (token) =>
         {
@@ -47,11 +51,7 @@ namespace AntDesign.Docs.Pages
 
         protected override void OnInitialized()
         {
-            var css = CreateCssObject(Themes.Default.Derivative());
-            foreach (var item in css)
-            {
-                _style += $" .{item.Key}{{ {item.Value} }}";
-            }
+            StyleManager.AddStyleBuilder(CreateCssObject);
 
             base.OnInitialized();
         }

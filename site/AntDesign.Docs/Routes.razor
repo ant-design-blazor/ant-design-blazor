@@ -1,5 +1,10 @@
 ﻿@using System.Reflection
 @using System.Globalization
+@using AntDesign.Core.Style
+
+<style>
+    @StyleManager.BuildCss()
+</style>
 
 <ConfigProvider>
     <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
@@ -18,9 +23,17 @@
 
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
+@inject StyleManager StyleManager;
 @code {
 
     static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
+
+    protected override void OnInitialized()
+    {
+        StyleManager.OnStyleChanged += StateHasChanged;
+
+        base.OnInitialized();
+    }
 
     async Task OnNavigateAsync(NavigationContext navigationContext)
     {
