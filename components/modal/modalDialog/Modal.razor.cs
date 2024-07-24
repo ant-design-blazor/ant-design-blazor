@@ -281,6 +281,7 @@ namespace AntDesign
                 CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
                 Closable = Closable,
+                Content = ChildContent,
                 Draggable = Draggable,
                 DragInViewport = DragInViewport,
                 DestroyOnClose = DestroyOnClose,
@@ -377,12 +378,18 @@ namespace AntDesign
 
         private ModalRef _modalRef;
 
+        protected override void OnInitialized()
+        {
+            var options = BuildDialogOptions();
+            _modalRef = new ModalRef(options, ModalService);
+
+            base.OnInitialized();
+        }
+
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
 
-            var options = BuildDialogOptions();
-            _modalRef = new ModalRef(options, ModalService);
             if (Visible)
             {
                 await _modalRef?.OpenAsync();

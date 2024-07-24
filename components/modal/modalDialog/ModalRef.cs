@@ -41,10 +41,6 @@ namespace AntDesign
         /// <returns></returns>
         public override async Task CloseAsync()
         {
-            if (Config.Visible)
-            {
-                Config.Visible = false;
-            }
             await _service.CloseModalAsync(this);
         }
 

@@ -11,13 +11,8 @@ namespace AntDesign
     /// </summary>
     public class ModalOptions : DialogOptions
     {
-        public ModalOptions()
-        {
-            _onCancel = DefaultOnCancelOrOk;
-            _onOk = DefaultOnCancelOrOk;
-            Width = 520;
-            MaskClosable = true;
-        }
+        private Func<MouseEventArgs, Task> _onCancel;
+        private Func<MouseEventArgs, Task> _onOk;
 
         internal ModalRef ModalRef { get; set; }
 
@@ -32,28 +27,28 @@ namespace AntDesign
         public bool Visible { get; set; } = true;
 
 
-        private Func<MouseEventArgs, Task> _onCancel;
-
         /// <summary>
         /// Specify a function that will be called when a user clicks mask, close button on top right or Cancel button.
         /// </summary>
         public override Func<MouseEventArgs, Task> OnCancel { get => _onCancel; set => _onCancel = value; }
 
-        private Func<MouseEventArgs, Task> _onOk;
 
         /// <summary>
         /// Specify a function that will be called when a user clicks the OK button
         /// </summary>
         public override Func<MouseEventArgs, Task> OnOk { get => _onOk; set => _onOk = value; }
 
-
-        #region internal
+        public ModalOptions()
+        {
+            _onCancel = DefaultOnCancelOrOk;
+            _onOk = DefaultOnCancelOrOk;
+            Width = 520;
+            MaskClosable = true;
+        }
 
         public async Task DefaultOnCancelOrOk(MouseEventArgs e)
         {
             await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }
-
-        #endregion
     }
 }
