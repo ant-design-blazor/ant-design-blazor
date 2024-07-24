@@ -14,7 +14,7 @@
 
         void GetRender(RenderTreeBuilder __builder)
         {
-            <Dialog Config="@options"
+            <Dialog @ref="modalRef.Dialog" Config="@options"
                     Visible="@options.Visible"
                     Style="@options.Style"
                     Class="@options.ClassName"

@@ -12,6 +12,7 @@ namespace AntDesign
     public class ModalRef : FeedbackRefWithOkCancelBase
     {
         public ModalOptions Config { get; private set; }
+        internal Dialog Dialog { get; set; }
         private readonly ModalService _service;
 
         internal ModalRef(ModalOptions config, ModalService modalService)

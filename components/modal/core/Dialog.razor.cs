@@ -442,6 +442,13 @@ namespace AntDesign
                     _hasDestroy = false;
                     //await AppendToContainer();
                     Show();
+                    CallAfterRender(async () =>
+                    {
+                        if (Config.AfterOpen != null)
+                        {
+                            await Config.AfterOpen.Invoke();
+                        }
+                    });
                     await InvokeStateHasChangedAsync();
                 }
 

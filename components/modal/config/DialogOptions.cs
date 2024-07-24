@@ -17,6 +17,8 @@ namespace AntDesign
         /// </summary>
         public Func<Task> AfterClose { get; set; } = () => Task.CompletedTask;
 
+        public Func<Task> AfterOpen { get; set; } = () => Task.CompletedTask;
+
         /// <summary>
         /// ant-modal-body style
         /// </summary>

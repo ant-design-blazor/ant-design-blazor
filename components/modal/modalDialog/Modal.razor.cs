@@ -218,11 +218,6 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Is RTL
-        /// </summary>
-        public bool Rtl => base.RTL;
-
-        /// <summary>
         /// Modal Locale
         /// </summary>
         [Parameter]
@@ -264,19 +259,18 @@ namespace AntDesign
         [Parameter]
         public bool Resizable { get; set; } = false;
 
+        public ModalRef ModalRef => _modalRef;
+
         #endregion Parameter
 
-        [Inject] private ModalService ModalService {  get; set; }
-
-#pragma warning disable 649
-        private Dialog _dialog;
-#pragma warning restore 649
+        [Inject] private ModalService ModalService { get; set; }
 
         private ModalOptions BuildDialogOptions()
         {
             ModalOptions options = new ModalOptions()
             {
                 AfterClose = AfterClose,
+                AfterOpen = OnAfterDialogShow,
                 BodyStyle = BodyStyle,
                 CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
@@ -289,13 +283,11 @@ namespace AntDesign
                 ConfirmLoading = ConfirmLoading,
                 Header = Header,
                 Footer = Footer,
-
                 GetContainer = GetContainer,
                 Keyboard = Keyboard,
                 Mask = Mask,
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
-
                 OkText = OkText ?? Locale.OkText,
                 OkType = OkType,
                 Title = Title,
@@ -355,16 +347,15 @@ namespace AntDesign
                     }
                 },
                 OkButtonProps = OkButtonProps,
-
                 CancelButtonProps = CancelButtonProps,
-                Rtl = Rtl,
+                Rtl = base.RTL,
                 MaxBodyHeight = MaxBodyHeight,
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
-                CreateByService = _modalRef?.Config.CreateByService ?? false,
+                CreateByService = false,
             };
 
             return options;
@@ -414,7 +405,7 @@ namespace AntDesign
         {
             if (!_hasFocus)
             {
-                //await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
+                await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_modalRef.Dialog.SentinelStart}");
                 _hasFocus = true;
                 if (_modalRef?.OnOpen != null)
                 {
