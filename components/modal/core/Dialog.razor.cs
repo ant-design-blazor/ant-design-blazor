@@ -350,9 +350,9 @@ namespace AntDesign
                 _maskHideClsName = "ant-modal-mask-hidden";
 
                 await InvokeStateHasChangedAsync();
-                if (Config.OnClosed != null)
+                if (Config.AfterClose != null)
                 {
-                    await Config.OnClosed.Invoke();
+                    await Config.AfterClose.Invoke();
                 }
             }
         }

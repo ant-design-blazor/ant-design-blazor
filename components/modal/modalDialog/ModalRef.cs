@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -19,6 +20,8 @@ namespace AntDesign
             _service = modalService;
         }
 
+        public RenderFragment Render => Modal.GetModalRender(this);
+
         /// <summary>
         /// open the Modal dialog
         /// </summary>
@@ -29,10 +32,8 @@ namespace AntDesign
             {
                 Config.Visible = true;
             }
-
             await _service.CreateOrOpenModalAsync(this);
         }
-
 
         /// <summary>
         /// close the Modal dialog
@@ -40,6 +41,10 @@ namespace AntDesign
         /// <returns></returns>
         public override async Task CloseAsync()
         {
+            if (Config.Visible)
+            {
+                Config.Visible = false;
+            }
             await _service.CloseModalAsync(this);
         }
 

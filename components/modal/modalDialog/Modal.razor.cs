@@ -12,15 +12,9 @@ namespace AntDesign
     /// <summary>
     /// Modal Dialog
     /// </summary>
-    public partial class Modal
+    public partial class Modal: AntDomComponentBase
     {
         #region Parameter
-
-        /// <summary>
-        ///
-        /// </summary>
-        [Parameter]
-        public ModalRef ModalRef { get; set; }
 
         /// <summary>
         /// Specify a function that will be called when modal is closed
@@ -272,15 +266,17 @@ namespace AntDesign
 
         #endregion Parameter
 
+        [Inject] private ModalService ModalService {  get; set; }
+
 #pragma warning disable 649
-        private DialogWrapper _dialogWrapper;
+        private Dialog _dialog;
 #pragma warning restore 649
 
-        private DialogOptions BuildDialogOptions()
+        private ModalOptions BuildDialogOptions()
         {
-            DialogOptions options = new DialogOptions()
+            ModalOptions options = new ModalOptions()
             {
-                OnClosed = AfterClose,
+                AfterClose = AfterClose,
                 BodyStyle = BodyStyle,
                 CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
@@ -310,13 +306,14 @@ namespace AntDesign
                 {
                     var args = new ModalClosingEventArgs(e, false);
 
-                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
                     if (modalTemplate != null)
                         await modalTemplate.OnFeedbackCancelAsync(args);
                     if (!args.Cancel)
                     {
-                        await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
+                        await (_modalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
 
+                        await _modalRef.CloseAsync();
                         if (VisibleChanged.HasDelegate)
                         {
                             await VisibleChanged.InvokeAsync(false);
@@ -332,13 +329,14 @@ namespace AntDesign
                 {
                     var args = new ModalClosingEventArgs(e, false);
 
-                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
                     if (modalTemplate != null)
                         await modalTemplate.OnFeedbackOkAsync(args);
                     if (!args.Cancel)
                     {
-                        await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+                        await (_modalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
 
+                        await _modalRef.CloseAsync();
                         if (VisibleChanged.HasDelegate)
                         {
                             await VisibleChanged.InvokeAsync(false);
@@ -365,7 +363,7 @@ namespace AntDesign
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
-                CreateByService = ModalRef?.Config.CreateByService ?? false,
+                CreateByService = _modalRef?.Config.CreateByService ?? false,
             };
 
             return options;
@@ -377,15 +375,33 @@ namespace AntDesign
 
         private bool _firstShow = true;
 
+        private ModalRef _modalRef;
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            await base.SetParametersAsync(parameters);
+
+            var options = BuildDialogOptions();
+            _modalRef = new ModalRef(options, ModalService);
+            if (Visible)
+            {
+                await _modalRef?.OpenAsync();
+            }
+            else
+            {
+                await _modalRef?.CloseAsync();
+            }
+        }
+
         private async Task OnAfterDialogShow()
         {
             if (!_hasFocus)
             {
-                await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
+                //await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
                 _hasFocus = true;
-                if (ModalRef?.OnOpen != null)
+                if (_modalRef?.OnOpen != null)
                 {
-                    await ModalRef.OnOpen();
+                    await _modalRef.OnOpen();
                 }
             }
         }
@@ -393,9 +409,9 @@ namespace AntDesign
         private async Task OnAfterHide()
         {
             _hasFocus = false;
-            if (ModalRef?.OnClose != null)
+            if (_modalRef?.OnClose != null)
             {
-                await ModalRef.OnClose();
+                await _modalRef.OnClose();
             }
         }
 
