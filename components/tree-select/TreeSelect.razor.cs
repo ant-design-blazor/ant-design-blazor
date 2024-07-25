@@ -423,6 +423,11 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
+
+            if (EnableSearch)
+            {
+                await SetInputFocusAsync();
+            }
         }
 
 
