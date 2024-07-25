@@ -147,6 +147,9 @@ namespace AntDesign
                     _ = radio.UnSelect();
                 }
             }
+
+            // refresh ui in modal
+            InvokeStateHasChanged();
         }
 
         internal async Task OnRadioChange(TValue value)
