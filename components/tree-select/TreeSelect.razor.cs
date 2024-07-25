@@ -397,6 +397,8 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
+            _searchValue = string.Empty;
+
             var key = node.Key;
             if (Multiple)
             {
@@ -420,6 +422,11 @@ namespace AntDesign
             if (SelectMode == SelectMode.Default)
             {
                 await CloseAsync();
+            }
+
+            if (EnableSearch)
+            {
+                await SetInputFocusAsync();
             }
         }
 
