@@ -24,8 +24,7 @@ namespace AntDesign
         /// <summary>
         /// 
         /// </summary>
-        public bool Visible { get; set; } = true;
-
+        public bool Visible { get; set; }
 
         /// <summary>
         /// Specify a function that will be called when a user clicks mask, close button on top right or Cancel button.

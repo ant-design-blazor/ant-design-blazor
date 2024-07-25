@@ -269,7 +269,7 @@ namespace AntDesign
         {
             ModalOptions options = new ModalOptions()
             {
-                AfterClose = AfterClose,
+                AfterClose = OnAfterHide,
                 AfterOpen = OnAfterDialogShow,
                 BodyStyle = BodyStyle,
                 CancelText = CancelText ?? Locale.CancelText,
@@ -280,7 +280,6 @@ namespace AntDesign
                 DragInViewport = DragInViewport,
                 DestroyOnClose = DestroyOnClose,
                 CloseIcon = CloseIcon,
-                ConfirmLoading = ConfirmLoading,
                 Header = Header,
                 Footer = Footer,
                 GetContainer = GetContainer,
@@ -295,57 +294,8 @@ namespace AntDesign
                 Width = Width,
                 WrapClassName = WrapClassName,
                 ZIndex = ZIndex,
-                OnCancel = async (e) =>
-                {
-                    var args = new ModalClosingEventArgs(e, false);
-
-                    var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
-                    if (modalTemplate != null)
-                        await modalTemplate.OnFeedbackCancelAsync(args);
-                    if (!args.Cancel)
-                    {
-                        await (_modalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
-
-                        await _modalRef.CloseAsync();
-                        if (VisibleChanged.HasDelegate)
-                        {
-                            await VisibleChanged.InvokeAsync(false);
-                        }
-
-                        if (OnCancel.HasDelegate)
-                        {
-                            await OnCancel.InvokeAsync(e);
-                        }
-                    }
-                },
-                OnOk = async (e) =>
-                {
-                    var args = new ModalClosingEventArgs(e, false);
-
-                    var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
-                    if (modalTemplate != null)
-                        await modalTemplate.OnFeedbackOkAsync(args);
-                    if (!args.Cancel)
-                    {
-                        await (_modalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
-
-                        if (OnOk.HasDelegate)
-                        {
-                            await OnOk.InvokeAsync(e);
-                        }
-
-                        await _modalRef.CloseAsync();
-                        if (VisibleChanged.HasDelegate)
-                        {
-                            await VisibleChanged.InvokeAsync(false);
-                        }
-                    }
-                    else
-                    {
-                        ConfirmLoading = false;
-                        await InvokeStateHasChangedAsync();
-                    }
-                },
+                OnCancel = HandleOnCancel,
+                OnOk = HandleOnOk,
                 OkButtonProps = OkButtonProps,
                 CancelButtonProps = CancelButtonProps,
                 Rtl = base.RTL,
@@ -356,7 +306,12 @@ namespace AntDesign
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
                 CreateByService = false,
+                Visible = Visible,
+                Style = Style,
+                ClassName = ClassMapper.Class,
             };
+
+            options.ConfirmLoading = ConfirmLoading;
 
             return options;
         }
@@ -369,28 +324,25 @@ namespace AntDesign
 
         private ModalRef _modalRef;
 
-        protected override void OnInitialized()
-        {
-            var options = BuildDialogOptions();
-            _modalRef = new ModalRef(options, ModalService);
-
-            base.OnInitialized();
-        }
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            if (parameters.IsParameterChanged(nameof(ConfirmLoading), ConfirmLoading, out var newVal))
-            {
-                _modalRef.SetConfirmLoading(newVal);
-            }
-
             var visibleChanged = parameters.IsParameterChanged(nameof(Visible), Visible, out var newVisible);
 
-            await base.SetParametersAsync(parameters);
+            parameters.SetParameterProperties(this);
+
+            if (_modalRef == null)
+            {
+                var options = BuildDialogOptions();
+                _modalRef = new ModalRef(options, ModalService);
+            }
+            else
+            {
+                _modalRef.UpdateConfig(BuildDialogOptions());
+            }
 
             if (visibleChanged)
             {
-                if (Visible)
+                if (newVisible)
                 {
                     await _modalRef?.OpenAsync();
                 }
@@ -420,6 +372,65 @@ namespace AntDesign
             if (_modalRef?.OnClose != null)
             {
                 await _modalRef.OnClose();
+            }
+            if (AfterClose != null)
+            {
+                await AfterClose.Invoke();
+            }
+        }
+
+        private async Task HandleOnCancel(MouseEventArgs e)
+        {
+            var args = new ModalClosingEventArgs(e, false);
+
+            var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
+            if (modalTemplate != null)
+                await modalTemplate.OnFeedbackCancelAsync(args);
+            if (!args.Cancel)
+            {
+                await (_modalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
+
+                await _modalRef.CloseAsync();
+
+                Visible = false;
+                if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+
+                if (OnCancel.HasDelegate)
+                {
+                    await OnCancel.InvokeAsync(e);
+                }
+            }
+        }
+
+        private async Task HandleOnOk(MouseEventArgs e)
+        {
+            var args = new ModalClosingEventArgs(e, false);
+
+            var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
+            if (modalTemplate != null)
+                await modalTemplate.OnFeedbackOkAsync(args);
+            if (!args.Cancel)
+            {
+                await (_modalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                if (OnOk.HasDelegate)
+                {
+                    await OnOk.InvokeAsync(e);
+                }
+
+                await _modalRef.CloseAsync();
+                if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+            }
+            else
+            {
+                ConfirmLoading = false;
+                await InvokeStateHasChangedAsync();
             }
         }
 

@@ -23,16 +23,18 @@ namespace AntDesign
 
         internal RenderFragment Render => Modal.GetModalRender(this);
 
+        internal void UpdateConfig(ModalOptions config)
+        {
+            Config = config;
+            _service.UpdateModal(this);
+        }
+
         /// <summary>
         /// open the Modal dialog
         /// </summary>
         /// <returns></returns>
         public override async Task OpenAsync()
         {
-            if (!Config.Visible)
-            {
-                Config.Visible = true;
-            }
             await _service.CreateOrOpenModalAsync(this);
         }
 
