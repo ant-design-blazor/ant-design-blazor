@@ -2,6 +2,12 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
+    <div style="display:none;">
+        <CascadingValue Value="true" Name="CardInitialize" IsFixed>
+            @ChildContent
+        </CascadingValue>
+    </div>
+
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @if (TitleTemplate != null || Title != null || Extra != null || CardTabs != null)
         {
@@ -29,10 +35,7 @@
                     }
                 </div>
 
-                @if (CardTabs != null)
-                {
-                    @CardTabs
-                }
+                @CardTabs
             </div>
         }
 

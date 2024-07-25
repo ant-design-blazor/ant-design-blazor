@@ -53,8 +53,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Extra { get; set; }
 
-        [Parameter]
-        public RenderFragment CardTabs { get; set; }
+        //[Parameter]
+        public Tabs CardTabs { get; set; }
 
         private bool _hasGrids;
         internal IList<CardAction> _cardActions;
@@ -95,6 +95,16 @@ namespace AntDesign
         {
             _cardActions ??= new List<CardAction>();
             _cardActions.Add(action);
+        }
+
+        internal void AddTabs(Tabs tabs)
+        {
+            CardTabs = tabs;
+        }
+
+        internal void RemoveTabs(Tabs tabs)
+        {
+            //CardTabs = null;
         }
     }
 }

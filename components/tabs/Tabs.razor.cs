@@ -153,6 +153,9 @@ namespace AntDesign
         [CascadingParameter]
         public Card Card { get; set; }
 
+        [CascadingParameter(Name = "CardInitialize")]
+        public bool CardInitialize { get; set; }
+
         #endregion Parameters
 
         private const string PrefixCls = "ant-tabs";
@@ -211,6 +214,11 @@ namespace AntDesign
             if (Type == TabType.Card)
             {
                 Animated = false;
+            }
+
+            if (CardInitialize)
+            {
+                Card?.AddTabs(this);
             }
 
             ClassMapper
@@ -734,7 +742,14 @@ namespace AntDesign
             _tabs.Clear();
             _invisibleTabs.Clear();
 
+            if (CardInitialize)
+            {
+                Card?.RemoveTabs(this);
+            }
+
             base.Dispose(disposing);
         }
+
+        internal RenderFragment TabsRender => Render;
     }
 }
