@@ -397,6 +397,8 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
+            _searchValue = string.Empty;
+
             var key = node.Key;
             if (Multiple)
             {
