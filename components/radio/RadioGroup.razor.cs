@@ -149,7 +149,7 @@ namespace AntDesign
             }
 
             // refresh ui in modal
-            StateHasChanged();
+            InvokeStateHasChanged();
         }
 
         internal async Task OnRadioChange(TValue value)
