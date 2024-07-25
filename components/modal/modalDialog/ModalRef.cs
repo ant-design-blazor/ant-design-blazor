@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -11,6 +12,7 @@ namespace AntDesign
     public class ModalRef : FeedbackRefWithOkCancelBase
     {
         public ModalOptions Config { get; private set; }
+        internal Dialog Dialog { get; set; }
         private readonly ModalService _service;
 
         internal ModalRef(ModalOptions config, ModalService modalService)
@@ -18,6 +20,8 @@ namespace AntDesign
             Config = config;
             _service = modalService;
         }
+
+        internal RenderFragment Render => Modal.GetModalRender(this);
 
         /// <summary>
         /// open the Modal dialog
@@ -29,10 +33,8 @@ namespace AntDesign
             {
                 Config.Visible = true;
             }
-
             await _service.CreateOrOpenModalAsync(this);
         }
-
 
         /// <summary>
         /// close the Modal dialog
@@ -58,6 +60,10 @@ namespace AntDesign
         /// <param name="loading"></param>
         public void SetConfirmLoading(bool loading)
         {
+            if (Config.ConfirmLoading == loading)
+            {
+                return;
+            }
             Config.ConfirmLoading = loading;
             _service.UpdateModal(this);
         }
