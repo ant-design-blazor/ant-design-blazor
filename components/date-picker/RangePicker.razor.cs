@@ -457,7 +457,7 @@ namespace AntDesign
             var currentValueArray = Value as Array;
             var currentIndexValue = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index));
 
-            var newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), defaultValue?.Offset ?? currentIndexValue?.Offset ?? DateTimeOffset.Now.Offset);
+            var newValue = new DateTimeOffset(DateTime.SpecifyKind(FormatDateTime(value), DateTimeKind.Unspecified), defaultValue?.Offset ?? currentIndexValue?.Offset ?? DateTimeOffset.Now.Offset);
 
             var isValueChanged = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index)) != newValue;
 
@@ -517,7 +517,7 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
+                CurrentValue =  DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
 
                 InvokeOnChange();
             }

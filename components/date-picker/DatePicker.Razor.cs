@@ -215,7 +215,7 @@ namespace AntDesign
                 return;
             }
 
-            ToDateTimeOffset(value, out DateTimeOffset? currentValue, out DateTimeOffset newValue);
+            ToDateTimeOffset(FormatDateTime(value), out DateTimeOffset? currentValue, out DateTimeOffset newValue);
 
             if (currentValue != newValue)
             {
