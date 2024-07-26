@@ -1165,6 +1165,19 @@ namespace AntDesign
 
         protected DateTime FormatDateTime(DateTime dateTime)
         {
+            switch (Picker)
+            {
+                case DatePickerType.Time:
+                    return dateTime;
+
+                case DatePickerType.Year:
+                    return new DateTime(dateTime.Year, 1, 1);
+
+                case DatePickerType.Month:
+                case DatePickerType.Quarter:
+                    return new DateTime(dateTime.Year, dateTime.Month, 1);
+            }
+
             if (ShowTime.Value != null)
             {
                 if (ShowTime.IsT0 && ShowTime.AsT0)
