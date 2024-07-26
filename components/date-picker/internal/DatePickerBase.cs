@@ -1162,5 +1162,35 @@ namespace AntDesign
                 DateString = _picker
             });
         }
+
+        protected DateTime FormatDateTime(DateTime dateTime)
+        {
+            if (ShowTime.Value != null)
+            {
+                if (ShowTime.IsT0 && ShowTime.AsT0)
+                {
+                    return dateTime.AddMilliseconds(-dateTime.Millisecond);
+                }
+
+                if (ShowTime.IsT1 && !string.IsNullOrEmpty(ShowTime.AsT1))
+                {
+                    var date = dateTime.Date;
+                    var splits = ShowTime.AsT1.Split(':');
+                    foreach (var item in splits)
+                    {
+                        switch (item.ToLowerInvariant())
+                        {
+                            case "hh": date = date.AddHours(dateTime.Hour); break;
+                            case "mm": date = date.AddMinutes(dateTime.Minute); break;
+                            case "ss": date = date.AddSeconds(dateTime.Second); break;
+                        }
+                    }
+
+                    return date;
+                }
+            }
+
+            return dateTime.Date;
+        }
     }
 }
