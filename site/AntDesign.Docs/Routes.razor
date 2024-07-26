@@ -23,14 +23,14 @@
 
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
-@inject StyleManager StyleManager;
+@inject IStyleManager StyleManager;
 @code {
 
     static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
 
     protected override void OnInitialized()
     {
-        StyleManager.OnStyleChanged += StateHasChanged;
+        StyleManager.OnStyleChanged += () => InvokeAsync(StateHasChanged);
 
         base.OnInitialized();
     }

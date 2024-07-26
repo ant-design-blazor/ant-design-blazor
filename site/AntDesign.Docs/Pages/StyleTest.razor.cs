@@ -15,9 +15,6 @@ namespace AntDesign.Docs.Pages
 {
     public partial class StyleTest : AntDomComponentBase
     {
-        string _style = "";
-
-        [Inject] private StyleManager StyleManager { get; set; }
 
         private CreateStyles _useStyles = (token) =>
         {
@@ -48,12 +45,5 @@ namespace AntDesign.Docs.Pages
                 }
             };
         };
-
-        protected override void OnInitialized()
-        {
-            StyleManager.AddStyleBuilder(CreateCssObject);
-
-            base.OnInitialized();
-        }
     }
 }

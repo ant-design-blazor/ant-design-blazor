@@ -21,7 +21,6 @@ namespace AntDesign.Docs.Generator
                 public delegate object CreateStyles(GlobalToken token);
                 """, Encoding.UTF8)));
 
-
             var declares = context.SyntaxProvider.CreateSyntaxProvider((s, _) =>
             {
                 if (s is not ClassDeclarationSyntax ctx) return false;
@@ -77,38 +76,32 @@ namespace AntDesign.Docs.Generator
                         using System.Text;
                         using System.Threading.Tasks;
                         using CssInCSharp;
-
+                        using AntDesign.Core.Style;
 
                         namespace {{namespace}};
 
-                        public partial class {{className}}
+                        public class ClassProperty
                         {
+                            {{properties}}
+                        }
 
-                            public class ClassProperty
+                        public static class StyleManagerExtensions
+                        {
+                            public static ClassProperty AddCreateStyle(this AntDesign.Core.Style.IStyleManager styleManager)
                             {
-                                {{properties}}
-                            }
-                        
-                            public Func<ClassProperty> UseStylesFunc = default!;
-
-                            Dictionary<string, string> CreateCssObject(GlobalToken token)
-                            {
-                                {{localStatements}}
-
-                                var dict = new Dictionary<string, string>()
+                                ((StyleManager)styleManager).AddStyleBuilder("{{className}}",token =>
                                 {
-                                    {{cssObjectStatements}}
-                                };
+                                    {{localStatements}}
 
-                                UseStylesFunc = () =>
-                                {
-                                    return new ClassProperty
+                                    var dict = new Dictionary<string, string>()
                                     {
-                                        {{propertiesValues}}
+                                        {{cssObjectStatements}}
                                     };
-                                };
+                        
+                                    return dict;
+                                });
 
-                                return dict;
+                                return new ClassProperty();
                             }
                         }
                         """;
@@ -119,7 +112,7 @@ namespace AntDesign.Docs.Generator
                         var sb3 = new StringBuilder();
                         foreach (var property in properties)
                         {
-                            sb.AppendLine($"    public string {property.Key} {{ get;set; }}");
+                            sb.AppendLine($"    public string {property.Key} => \"{propertyHashDict[property.Key]}\";");
 
                             sb3.AppendLine($"   [\"{propertyHashDict[property.Key]}\"] = {property.Value}.SerializeCss(\"{propertyHashDict[property.Key]}\"),");
                         }
