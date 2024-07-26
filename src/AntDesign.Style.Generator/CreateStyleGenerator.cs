@@ -21,7 +21,6 @@ namespace AntDesign.Docs.Generator
                 public delegate object CreateStyles(GlobalToken token);
                 """, Encoding.UTF8)));
 
-
             var declares = context.SyntaxProvider.CreateSyntaxProvider((s, _) =>
             {
                 if (s is not ClassDeclarationSyntax ctx) return false;
@@ -77,55 +76,51 @@ namespace AntDesign.Docs.Generator
                         using System.Text;
                         using System.Threading.Tasks;
                         using CssInCSharp;
-
+                        using AntDesign.Core.Style;
 
                         namespace {{namespace}};
 
-                        public partial class {{className}}
+                        public class ClassProperty
                         {
+                            {{properties}}
+                        }
 
-                            public class ClassProperty
+                        public static class StyleManagerExtensions
+                        {
+                            public static ClassProperty AddCreateStyle(this AntDesign.Core.Style.IStyleManager styleManager)
                             {
-                                {{properties}}
-                            }
-                        
-                            public Func<ClassProperty> UseStylesFunc = default!;
-
-                            Dictionary<string, CSSObject> CreateCssObject(GlobalToken token)
-                            {
-                                {{localStatements}}
-
-                                var dict = new Dictionary<string, CSSObject>()
+                                ((StyleManager)styleManager).AddStyleBuilder("{{className}}",token =>
                                 {
-                                    {{cssObjectStatements}}
-                                };
+                                    {{localStatements}}
 
-                                UseStylesFunc = () =>
-                                {
-                                    return new ClassProperty
+                                    var dict = new Dictionary<string, string>()
                                     {
-                                        {{propertiesValues}}
+                                        {{cssObjectStatements}}
                                     };
-                                };
+                        
+                                    return dict;
+                                });
 
-                                return dict;
+                                return new ClassProperty();
                             }
                         }
                         """;
+
+                        var propertyHashDict = properties.ToDictionary(x => x.Key, x => "css-" + Guid.NewGuid());
 
                         var sb = new StringBuilder();
                         var sb3 = new StringBuilder();
                         foreach (var property in properties)
                         {
-                            sb.AppendLine($"    public string {property.Key} {{ get;set; }}");
+                            sb.AppendLine($"    public string {property.Key} => \"{propertyHashDict[property.Key]}\";");
 
-                            sb3.AppendLine($"   [\"{property.Key}\"] = {property.Value},");
+                            sb3.AppendLine($"   [\"{propertyHashDict[property.Key]}\"] = {property.Value}.SerializeCss(\"{propertyHashDict[property.Key]}\"),");
                         }
 
                         var sb2 = new StringBuilder();
                         foreach (var property in properties.Keys)
                         {
-                            sb2.AppendLine($"   {property} = dict[\"{property}\"].ToString(),");
+                            sb2.AppendLine($"   {property} = \"{propertyHashDict[property]}\",");
                         }
 
                         var source = template

@@ -1,8 +1,11 @@
 ﻿@page "/style"
 @inherits AntDomComponentBase
+@using AntDesign.Core.Style;
+@inject IStyleManager StyleManager
+@using AntDesign.Docs.Pages;
 
 @{
-    var styles = UseStylesFunc();
+    var styles = StyleManager.AddCreateStyle();
 }
 
 <div class="@styles.container">
@@ -15,7 +18,3 @@
     <div class="@styles.primaryCard">主要卡片</div>
   </Space>
 </div>
-
-@code {
-   
-}

@@ -7,12 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Core.Style;
 using CssInCSharp;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class StyleTest: AntDomComponentBase
+    public partial class StyleTest : AntDomComponentBase
     {
+
         private CreateStyles _useStyles = (token) =>
         {
             var commonCard = new CSSObject()
@@ -42,13 +45,5 @@ namespace AntDesign.Docs.Pages
                 }
             };
         };
-
-        protected override void OnInitialized()
-        {
-            var css = CreateCssObject(Themes.Default.Derivative());
-
-
-            base.OnInitialized();
-        }
     }
 }
