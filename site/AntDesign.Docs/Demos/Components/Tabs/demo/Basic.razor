@@ -1,11 +1,6 @@
 ﻿<Tabs @bind-ActiveKey="@activeKey" OnChange="OnTabChange" Animated>
-	  <TabPane Key="1">
-          <TabTemplate>
-            @tab
-          </TabTemplate>
-   <ChildContent>
-            Content of Tab Pane 1
-   </ChildContent>
+    <TabPane Tab="tab1" Key="1">
+        Content of Tab Pane 1
     </TabPane>
     <TabPane Tab="Tab 2" Key="2">
         Content of Tab Pane 2
@@ -15,17 +10,8 @@
     </TabPane>
 </Tabs>
 
-<Button OnClick="OnClick">Click</Button>
-
 @code{
     string activeKey { get; set; } = "1";
-
-    string tab = "tab1";
-
-    void OnClick()
-    {
-        tab += tab;
-    }
 
     void OnTabChange(string key)
     {

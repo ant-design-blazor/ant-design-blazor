@@ -302,7 +302,7 @@ namespace AntDesign
         public Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
-
+            config.CreateByService = true;
             ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
             OnConfirmOpenEvent?.Invoke(confirmRef);
 

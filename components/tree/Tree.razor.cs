@@ -529,7 +529,7 @@ namespace AntDesign
             }
             else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                searchDatas = allList.Where(x => x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                searchDatas = allList.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
 
             if (searchDatas != null && searchDatas.Any())

@@ -651,6 +651,7 @@ namespace AntDesign
         internal void OnRangeItemClicked(DateTime?[] range)
         {
             CurrentValue = DataConversionExtensions.Convert<DateTime?[], TValue>(range);
+            InvokeOnChange();
             Close();
         }
 
@@ -783,6 +784,11 @@ namespace AntDesign
             }
 
             return 0;
+        }
+
+        protected virtual void InvokeOnChange()
+        {
+
         }
 
         /// <summary>
@@ -1157,6 +1163,49 @@ namespace AntDesign
                 Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
                 DateString = _picker
             });
+        }
+
+        protected DateTime FormatDateTime(DateTime dateTime)
+        {
+            switch (Picker)
+            {
+                case DatePickerType.Time:
+                    return dateTime.AddMilliseconds(-dateTime.Millisecond);
+
+                case DatePickerType.Year:
+                    return new DateTime(dateTime.Year, 1, 1);
+
+                case DatePickerType.Month:
+                case DatePickerType.Quarter:
+                    return new DateTime(dateTime.Year, dateTime.Month, 1);
+            }
+
+            if (ShowTime.Value != null)
+            {
+                if (ShowTime.IsT0 && ShowTime.AsT0)
+                {
+                    return dateTime.AddMilliseconds(-dateTime.Millisecond);
+                }
+
+                if (ShowTime.IsT1 && !string.IsNullOrEmpty(ShowTime.AsT1))
+                {
+                    var date = dateTime.Date;
+                    var splits = ShowTime.AsT1.Split(':');
+                    foreach (var item in splits)
+                    {
+                        switch (item.ToLowerInvariant())
+                        {
+                            case "hh": date = date.AddHours(dateTime.Hour); break;
+                            case "mm": date = date.AddMinutes(dateTime.Minute); break;
+                            case "ss": date = date.AddSeconds(dateTime.Second); break;
+                        }
+                    }
+
+                    return date;
+                }
+            }
+
+            return dateTime.Date;
         }
     }
 }

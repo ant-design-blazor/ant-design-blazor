@@ -351,9 +351,9 @@ namespace AntDesign
                 _maskHideClsName = "ant-modal-mask-hidden";
 
                 await InvokeStateHasChangedAsync();
-                if (Config.OnClosed != null)
+                if (Config.AfterClose != null)
                 {
-                    await Config.OnClosed.Invoke();
+                    await Config.AfterClose.Invoke();
                 }
             }
         }
@@ -455,8 +455,15 @@ namespace AntDesign
                 if (_hasDestroy)
                 {
                     _hasDestroy = false;
-                    await AppendToContainer();
+                    //await AppendToContainer();
                     Show();
+                    CallAfterRender(async () =>
+                    {
+                        if (Config.AfterOpen != null)
+                        {
+                            await Config.AfterOpen.Invoke();
+                        }
+                    });
                     await InvokeStateHasChangedAsync();
                 }
 
@@ -507,7 +514,7 @@ namespace AntDesign
 
             if (!Config.CreateByService && !Config.DestroyOnClose)
             {
-                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, Config.GetContainer);
+                //_ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id);
             }
         }
     }

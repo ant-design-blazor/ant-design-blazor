@@ -324,12 +324,6 @@ namespace AntDesign
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {_hashId} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper {_hashId}";
 
-            if (!string.IsNullOrWhiteSpace(Class))
-            {
-                AffixWrapperClass = string.Join(" ", Class, AffixWrapperClass);
-                ClassMapper.OriginalClass = "";
-            }
-
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
                 .Add(_hashId)
@@ -655,6 +649,9 @@ namespace AntDesign
 
             if (_hasAffixWrapper)
             {
+                AffixWrapperClass = string.Join(" ", Class ?? "", AffixWrapperClass);
+                ClassMapper.OriginalClass = "";
+
                 builder.OpenElement(21, "span");
                 builder.AddAttribute(22, "class", AffixWrapperClass);
                 if (container == "input")

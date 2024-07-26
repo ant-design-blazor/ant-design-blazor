@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 0.19.6
+
+`2024-7-22`
+
+- Table
+  - 🐞 Fixed selection with radio mode can't work with tree data. [#4002](https://github.com/ant-design-blazor/ant-design-blazor/pull/4002) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed dead loop render for tree data. [#3998](https://github.com/ant-design-blazor/ant-design-blazor/pull/3998) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed RangePicker OnChange won't be invoke after applying the presetted range. [#3999](https://github.com/ant-design-blazor/ant-design-blazor/pull/3999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree that the parent & other siblings will be checked if only the first child is in CheckedKeys/DefaultCheckedKeys. [#3985](https://github.com/ant-design-blazor/ant-design-blazor/pull/3985) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Modal broken on close which DestroyOnClose is true. [#3982](https://github.com/ant-design-blazor/ant-design-blazor/pull/3982) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.19.5
 
 `2024-7-15`
