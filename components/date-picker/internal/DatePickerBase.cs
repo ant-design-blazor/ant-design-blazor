@@ -1168,7 +1168,7 @@ namespace AntDesign
             switch (Picker)
             {
                 case DatePickerType.Time:
-                    return dateTime;
+                    return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
                 case DatePickerType.Year:
                     return new DateTime(dateTime.Year, 1, 1);
