@@ -66,7 +66,16 @@ namespace AntDesign.Filters
 
     public class DateTimeFieldFilterType : DateFieldFilterType
     {
-        public override RenderFragment<TableFilterInputRenderOptions> FilterInput => FilterInputs.Instance.DateTimeInput;
+        public override RenderFragment<TableFilterInputRenderOptions> FilterInput => filter =>
+        {
+            InputAttributes.TryAdd("ShowTime", (OneOf.OneOf<bool, string>)(filter.FilterCompareOperator != TableFilterCompareOperator.TheSameDateWith));
+            return FilterInputs.Instance.GetDatePicker<DateTime?>()(filter);
+        };
+
+        public DateTimeFieldFilterType()
+        {
+            SupportedCompareOperators = [.. base.SupportedCompareOperators, TableFilterCompareOperator.TheSameDateWith];
+        }
 
         protected override Expression GetNonNullFilterExpression(TableFilterCompareOperator compareOperator,
             Expression leftExpr, Expression rightExpr)
@@ -92,6 +101,21 @@ namespace AntDesign.Filters
                     Expression.Subtract(Expression.Constant(0),
                         Expression.MakeMemberAccess(dateTimeExpression,
                             typeof(DateTime).GetMember(nameof(DateTime.Millisecond)).First())), typeof(double)));
+        }
+    }
+
+    public class DateTimeFieldFilterType<TData> : DateFieldFilterType
+    {
+        public override RenderFragment<TableFilterInputRenderOptions> FilterInput => FilterInputs.Instance.GetDatePicker<TData>();
+    }
+
+    public class TimeOnlyFieldFilterType<TData> : DateFieldFilterType
+    {
+        public override RenderFragment<TableFilterInputRenderOptions> FilterInput => FilterInputs.Instance.GetDatePicker<TData>();
+
+        public TimeOnlyFieldFilterType()
+        {
+            InputAttributes.Add(nameof(DatePicker<TData>.Picker), DatePickerType.Time);
         }
     }
 }
