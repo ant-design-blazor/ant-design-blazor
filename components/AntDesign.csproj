@@ -104,4 +104,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="AntDesign.Tests" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\AntDesign.Style.Generator\AntDesign.Style.Generator.csproj" OutputItemType="Analyzer" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" />
+  </ItemGroup>
 </Project>
