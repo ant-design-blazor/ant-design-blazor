@@ -45,5 +45,35 @@ namespace AntDesign.Docs.Pages
                 }
             };
         };
+
+        private CreateStyles _useStyles2 = (token) =>
+        {
+            var commonCard = new CSSObject()
+            {
+                BorderRadius = token.BorderRadiusLG,
+                Padding = token.PaddingLG,
+            };
+
+            return new
+            {
+                container = new CSSObject
+                {
+                    BackgroundColor = token.ColorBgLayout,
+                    Padding = "24px"
+                },
+                defaultCard = new CSSObject()
+                {
+                    ["..."] = commonCard,
+                    Background = token.ColorBgContainer,
+                    Color = token.ColorText
+                },
+                primaryCard = new CSSObject()
+                {
+                    ["..."] = commonCard,
+                    Background = token.ColorPrimary,
+                    Color = token.ColorTextLightSolid,
+                }
+            };
+        };
     }
 }
