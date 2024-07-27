@@ -142,7 +142,7 @@ namespace AntDesign
         {
             if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
             {
-                MenuItems.ForEach(x => x.UpdateStelected());
+                _menuItems.ForEach(x => x.UpdateStelected());
             }
 
             return base.SetParametersAsync(parameters);
