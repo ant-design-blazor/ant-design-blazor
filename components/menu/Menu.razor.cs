@@ -111,7 +111,6 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
-                _menuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
@@ -138,6 +137,16 @@ namespace AntDesign
 
         private List<SubMenu> _submenus = [];
         private List<MenuItem> _menuItems = [];
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
+            {
+                MenuItems.ForEach(x => x.UpdateStelected());
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
 
         public void SelectItem(MenuItem item)
         {

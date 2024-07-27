@@ -199,7 +199,7 @@ namespace AntDesign
         {
             if (!_isOptionsZero)
             {
-                //this.OpenPanel();
+                this.OpenPanel();
             }
 
             return Task.CompletedTask;
@@ -234,7 +234,7 @@ namespace AntDesign
             }
             else if (!_isOptionsZero)
             {
-                //this.OpenPanel();
+                this.OpenPanel();
             }
 
             if (key == "ArrowUp")
@@ -248,6 +248,12 @@ namespace AntDesign
         }
 
         #endregion 子控件触发事件 / Child controls trigger events
+
+        protected override void OnInitialized()
+        {
+            _isOptionsZero = Options?.Any() != true;
+            base.OnInitialized();
+        }
 
         protected override async Task OnFirstAfterRenderAsync()
         {

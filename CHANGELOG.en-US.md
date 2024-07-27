@@ -15,6 +15,38 @@ timeline: true
 
 ---
 
+### 0.19.6
+
+`2024-7-22`
+
+- Table
+  - 🐞 Fixed selection with radio mode can't work with tree data. [#4002](https://github.com/ant-design-blazor/ant-design-blazor/pull/4002) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed dead loop render for tree data. [#3998](https://github.com/ant-design-blazor/ant-design-blazor/pull/3998) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed RangePicker OnChange won't be invoke after applying the presetted range. [#3999](https://github.com/ant-design-blazor/ant-design-blazor/pull/3999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree that the parent & other siblings will be checked if only the first child is in CheckedKeys/DefaultCheckedKeys. [#3985](https://github.com/ant-design-blazor/ant-design-blazor/pull/3985) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Modal broken on close which DestroyOnClose is true. [#3982](https://github.com/ant-design-blazor/ant-design-blazor/pull/3982) [@ElderJames](https://github.com/ElderJames)
+
+### 0.19.5
+
+`2024-7-15`
+
+*Announcement: We have separated the document project into a separate repo, and the subsequent iteration will be the document system, please pay attention and contribute. Please pay attention and contribution: https://github.com/ElderJames/BlazorSiteGenerator*
+
+- 📖 docs: achieve a querying & editing demo for table. [#3970](https://github.com/ant-design-blazor/ant-design-blazor/pull/3970) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 Fixed throwing exception when service-opened confirm was closed. [#3973](https://github.com/ant-design-blazor/ant-design-blazor/pull/3973) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed modal can't open again after navagate to a same page. [#3963](https://github.com/ant-design-blazor/ant-design-blazor/pull/3963) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Menu matched item would be unselected on first load. [#3976](https://github.com/ant-design-blazor/ant-design-blazor/pull/3976) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Textarea add missing borderless style. [#3975](https://github.com/ant-design-blazor/ant-design-blazor/pull/3975) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete open dropdown on click when options is not empty by default. [#3971](https://github.com/ant-design-blazor/ant-design-blazor/pull/3971) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed FormItem null reference exception. [#3967](https://github.com/ant-design-blazor/ant-design-blazor/pull/3967) [@agolub-s](https://github.com/agolub-s)
+[@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs update the style of ink after tab title is changed。[#3978](https://github.com/ant-design-blazor/ant-design-blazor/pull/3978) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.19.4
 
 `2024-7-03`

@@ -13,7 +13,11 @@
   clientWidth: number,
   selectionStart: number,
   absoluteTop: number,
-  absoluteLeft: number
+  absoluteLeft: number,
+  marginTop: number,
+  marginBottom: number,
+  marginLeft: number,
+  marginRight: number,
 }
 
 export type position = {

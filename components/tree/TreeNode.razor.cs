@@ -1013,17 +1013,18 @@ namespace AntDesign
             if (Checkable)
             {
                 var isChecked = false;
+                var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
+                var ancestorKeys = GetAncestorKeys();
                 if (_checked)
                 {
                     isChecked = true;
                 }
-                else if (!TreeComponent.CheckStrictly && ParentNode != null && ParentNode.Checked)
+                else if (!TreeComponent.CheckStrictly && (checkedKeys != null) && ancestorKeys.Any(k => checkedKeys.Contains(k)))
                 {
                     isChecked = true;
                 }
                 else
                 {
-                    var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
                     if (checkedKeys != null)
                         isChecked = checkedKeys.Any(k => k == Key);
                 }
@@ -1046,6 +1047,19 @@ namespace AntDesign
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
             base.OnInitialized();
+        }
+
+        private IEnumerable<string> GetAncestorKeys()
+        {
+            var ancestorKeys = new List<string>();
+            var parentNode = ParentNode;
+            while (parentNode != null)
+            {
+                ancestorKeys.Add(parentNode.Key);
+                parentNode = parentNode.ParentNode;
+            }
+
+            return ancestorKeys;
         }
     }
 }

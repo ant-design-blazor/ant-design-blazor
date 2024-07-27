@@ -14,6 +14,36 @@ timeline: true
 - 主版本号：含有破坏性更新和新特性，不在发布周期内。
 
 ---
+### 0.19.6
+
+`2024-7-22`
+
+- Table
+  - 🐞 修复 Table 树形数据单选问题。[#4002](https://github.com/ant-design-blazor/ant-design-blazor/pull/4002) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 树形数据选择行导致循环渲染。[#3998](https://github.com/ant-design-blazor/ant-design-blazor/pull/3998) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 RangePicker 的预设范围按钮点击后不触发OnChange事件。[#3999](https://github.com/ant-design-blazor/ant-design-blazor/pull/3999) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 当只有第一个子节点在CheckedKeys/DefaultCheckedKeys中，父节点和其他兄弟节点也被勾选的问题。[#3985](https://github.com/ant-design-blazor/ant-design-blazor/pull/3985) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Modal 当 DestroyOnClose 为true 时，关闭弹窗会出现异常。[#3982](https://github.com/ant-design-blazor/ant-design-blazor/pull/3982) [@ElderJames](https://github.com/ElderJames)
+
+
+### 0.19.5
+
+`2024-7-15`
+
+*公告：我们把文档项目分离到单独的仓库，计划会升级为文档系统，敬请关注和参与贡献：https://github.com/ElderJames/BlazorSiteGenerator*
+
+- 📖 新增 Table 基础的编辑和搜索示例，替换原来Blazor复刻示例。[#3970](https://github.com/ant-design-blazor/ant-design-blazor/pull/3970) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🐞 修复 关闭时会抛出JS异常，且无法再次打开。[#3973](https://github.com/ant-design-blazor/ant-design-blazor/pull/3973) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 在跳转到同一个页面时无法再次打开。[#3963](https://github.com/ant-design-blazor/ant-design-blazor/pull/3963) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Menu 在首次加载时会被外部重新渲染时取消选中。[#3976](https://github.com/ant-design-blazor/ant-design-blazor/pull/3976) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Textarea 无边框样式丢失。[#3975](https://github.com/ant-design-blazor/ant-design-blazor/pull/3975) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 在有选项时点击输入框可以打开下拉框。[#3971](https://github.com/ant-design-blazor/ant-design-blazor/pull/3971) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 FormItem 修复空引用异常。[#3967](https://github.com/ant-design-blazor/ant-design-blazor/pull/3967) [@agolub-s](https://github.com/agolub-s)
+- 🐞 修复 Tabs 当 Tab 标题更新时下标长度未更新。[#3978](https://github.com/ant-design-blazor/ant-design-blazor/pull/3978) [@ElderJames](https://github.com/ElderJames)
 
 ### 0.19.4
 

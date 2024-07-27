@@ -194,25 +194,19 @@ namespace AntDesign
         /// </summary>
         public Tree<TItem> TreeComponent { get => _tree; }
 
+        private TItemValue _cachedValue;
         [Parameter]
         public override TItemValue Value
         {
             get => base.Value;
             set
             {
-                if (base.Value.AllNullOrEquals(value))
+                if (_cachedValue.AllNullOrEquals(value))
                     return;
 
-                base.Value = value;
+                _cachedValue = value;
 
-                if (value == null)
-                {
-                    ClearOptions();
-                }
-                else
-                {
-                    UpdateValueAndSelection();
-                }
+                UpdateValueAndSelection();
             }
         }
 
@@ -247,11 +241,6 @@ namespace AntDesign
                 _cachedValues ??= [];
 
                 UpdateValuesSelection();
-
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
             }
         }
 
@@ -304,7 +293,7 @@ namespace AntDesign
 
         protected override Task OnFirstAfterRenderAsync()
         {
-            if (Value != null)
+            if (_cachedValue != null)
             {
                 UpdateValueAndSelection();
             }
@@ -397,6 +386,8 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
+            _searchValue = string.Empty;
+
             var key = node.Key;
             if (Multiple)
             {
@@ -420,6 +411,11 @@ namespace AntDesign
             if (SelectMode == SelectMode.Default)
             {
                 await CloseAsync();
+            }
+
+            if (EnableSearch)
+            {
+                await SetInputFocusAsync();
             }
         }
 
@@ -528,13 +524,13 @@ namespace AntDesign
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
         internal void UpdateValueAfterDataSourceChanged()
         {
-            if (Value != null)
+            if (_cachedValue != null && !_cachedValue.Equals(Value))
             {
                 UpdateValueAndSelection();
                 StateHasChanged();
             }
 
-            if (Values != null)
+            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
@@ -543,24 +539,39 @@ namespace AntDesign
 
         private void UpdateValueAndSelection()
         {
-            if (SelectOptionItems.Any(o => o.Value.AllNullOrEquals(Value)))
+            if (_tree == null)
+                return;
+            if (_tree._allNodes.Count == 0)
+                return;
+
+            if (_cachedValue == null)
             {
-                _ = SetValueAsync(SelectOptionItems.First(o => o.Value.AllNullOrEquals(Value)));
+                ClearOptions();
             }
             else
             {
-                var data = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(Value));
-                if (data != null)
+                if (SelectOptionItems.Any(o => o.Value.AllNullOrEquals(_cachedValue)))
                 {
-                    var o = CreateOption(data, true);
-                    _ = SetValueAsync(o);
+                    _ = SetValueAsync(SelectOptionItems.First(o => o.Value.AllNullOrEquals(_cachedValue)));
+                }
+                else
+                {
+                    var data = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(_cachedValue));
+                    if (data != null)
+                    {
+                        var o = CreateOption(data, true);
+                        _ = SetValueAsync(o);
+                    }
                 }
             }
+            base.Value = _cachedValue;
         }
 
         private void UpdateValuesSelection()
         {
             if (_tree == null)
+                return;
+            if (_tree._allNodes.Count == 0)
                 return;
 
             if (_cachedValues?.Any() != true)
@@ -570,6 +581,10 @@ namespace AntDesign
             _newValues.Clear();
             CreateOptions(_cachedValues);
             base.Values = _newValues.ToArray();
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            {
+                EditContext?.NotifyFieldChanged(FieldIdentifier);
+            }
         }
 
         void ITreeSelect.UpdateValueAfterDataSourceChanged()

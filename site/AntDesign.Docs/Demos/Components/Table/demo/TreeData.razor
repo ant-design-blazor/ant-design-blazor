@@ -2,9 +2,13 @@
 
 CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
 <br/>
+<RadioGroup @bind-Value="selectionType">
+    <Radio Value="@("checkbox")">Checkbox</Radio>
+    <Radio Value="@("radio")">radio</Radio>
+</RadioGroup>
 
 <Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
-    <Selection CheckStrictly="_checkStrictly" />
+    <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
     <PropertyColumn Property="c=>c.Address" Width="30%" />
@@ -14,7 +18,7 @@ CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
 
 @code {
     bool _checkStrictly;
-
+    string selectionType = "checkbox";
     Data[] _data;
 
     IEnumerable<Data> _selectedRows = [];

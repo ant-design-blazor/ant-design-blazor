@@ -62,6 +62,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AutoSize | Will adjust (grow or shrink) the `TextArea` according to content. Can work in connection with `MaxRows` & `MinRows`. Sets `resize` attribute of the `textarea` HTML element to: `none`. | boolean        | false         |
+| Bordered | Whether has border style         | boolean         | true
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = `MinRows` (will not shrink further). Using this property will autoset `AutoSize = true`.  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = `MaxRows` (will not grow further). Using this property will autoset `AutoSize = true`.  | int        | uint.MaxValue         |

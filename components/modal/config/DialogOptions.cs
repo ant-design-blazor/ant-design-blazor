@@ -15,7 +15,9 @@ namespace AntDesign
         /// <summary>
         /// trigger after Dialog is closed
         /// </summary>
-        public Func<Task> OnClosed { get; set; }
+        public Func<Task> AfterClose { get; set; } = () => Task.CompletedTask;
+
+        public Func<Task> AfterOpen { get; set; } = () => Task.CompletedTask;
 
         /// <summary>
         /// ant-modal-body style
@@ -45,7 +47,26 @@ namespace AntDesign
         /// <summary>
         /// Whether to apply loading visual effect for OK button or not
         /// </summary>
-        public bool ConfirmLoading { get; set; }
+        public bool ConfirmLoading
+        {
+            get
+            {
+                if (OkButtonProps != null)
+                {
+                    return OkButtonProps.Loading;
+                }
+                return false;
+            }
+            set
+            {
+                if (OkButtonProps == null)
+                {
+                    OkButtonProps = new ButtonProps();
+                }
+
+                OkButtonProps.Loading = value;
+            }
+        }
 
         /// <summary>
         /// modal header
@@ -65,7 +86,7 @@ namespace AntDesign
         /// <summary>
         /// ChildContent
         /// </summary>
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment Content { get; set; }
 
         /// <summary>
         /// the class name of the element of ".ant-modal"
@@ -76,13 +97,13 @@ namespace AntDesign
         /// for OK-Cancel Confirm dialog, cancel button clicked callback.
         /// It's only trigger in Confirm created by ModalService mode
         /// </summary>
-        public Func<MouseEventArgs, Task> OnCancel { get; set; }
+        public virtual Func<MouseEventArgs, Task> OnCancel { get; set; }
 
         /// <summary>
         /// for OK-Cancel Confirm dialog, OK button clicked callback.
         /// It's only trigger in Confirm created by ModalService mode
         /// </summary>
-        public Func<MouseEventArgs, Task> OnOk { get; set; }
+        public virtual Func<MouseEventArgs, Task> OnOk { get; set; }
 
         /// <summary>
         /// max modal body content height
@@ -113,6 +134,11 @@ namespace AntDesign
         /// Resizable (Horizontal direction only)
         /// </summary>
         public bool Resizable { get; set; }
+
+        /// <summary>
+        /// Whether to remove Modal from DOM after the Modal closed
+        /// </summary>
+        public bool DestroyOnClose { get; set; }
 
         #region internal
 
