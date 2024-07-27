@@ -12,6 +12,51 @@ namespace AntDesign.Docs.Generator
     [Generator]
     public class CreateStyleGenerator : IIncrementalGenerator
     {
+        private const string ExtensionMethodTemplate = """
+                public static {{fieldName}}Property Create{{fieldName}}(this AntDesign.Core.Style.IStyleManager styleManager)
+                {
+                    ((StyleManager)styleManager).AddStyleBuilder("{{fieldName}}",token =>
+                    {
+                        {{localStatements}}
+            
+                        var dict = new Dictionary<string, string>()
+                        {
+                            {{cssObjectStatements}}
+                        };
+            
+                        return dict;
+                    });
+            
+                    return new {{fieldName}}Property();
+                }
+                """;
+
+        private const string ProprtyClassTemplate = """
+            public class {{fieldName}}Property
+            {
+                {{properties}}
+            }
+            """;
+
+        private const string Template = """
+                        using System;
+                        using System.Collections.Generic;
+                        using System.Linq;
+                        using System.Text;
+                        using System.Threading.Tasks;
+                        using CssInCSharp;
+                        using AntDesign.Core.Style;
+
+                        namespace {{namespace}};
+
+                        {{propertyClass}}
+
+                        public static class StyleManagerExtensions
+                        {
+                            {{extensionMethods}}
+                        }
+                        """;
+
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             context.RegisterPostInitializationOutput(ctx => ctx.AddSource("CreateStyles.g.cs",
@@ -41,70 +86,37 @@ namespace AntDesign.Docs.Generator
                 var assembly = pair.Left;
                 var members = pair.Right;
 
+                var properites = new StringBuilder();
+                var methods = new StringBuilder();
+
                 foreach (var member in members)
                 {
-
                     var classSymbol = member.Item1;
                     //var actions = classSymbol.GetMembers().OfType<IFieldSymbol>().Where(x => x.Type.Name == "CreateStyles").ToList();
-                    foreach (var action in member.Item2)
+                    foreach (var variable in member.Item2.SelectMany(x => x.Declaration.Variables))
                     {
                         var properties = new Dictionary<string, string>();
                         var localStatements = new List<string>();
+                        var fieldName = ToPascalCase(variable.Identifier.Text.Replace("_", "").Replace("use", ""));
 
-                        foreach (var statement in action.Declaration.Variables.Select(x => x.Initializer.Value)
-                        .OfType<LambdaExpressionSyntax>().Select(x => x.Body).OfType<BlockSyntax>().SelectMany(x => x.Statements))
+                        if (variable.Initializer.Value is LambdaExpressionSyntax lambda && lambda.Body is BlockSyntax block)
                         {
-                            if (statement is ReturnStatementSyntax returnStatement && returnStatement.Expression is AnonymousObjectCreationExpressionSyntax anonymousObjectCreationExpression)
+                            foreach (var statement in block.Statements)
                             {
-                                foreach (var initializer in anonymousObjectCreationExpression.Initializers)
+                                if (statement is ReturnStatementSyntax returnStatement && returnStatement.Expression is AnonymousObjectCreationExpressionSyntax anonymousObjectCreationExpression)
                                 {
-                                    properties.Add(initializer.NameEquals.Name.Identifier.Text, initializer.Expression.ToFullString());
+                                    foreach (var initializer in anonymousObjectCreationExpression.Initializers)
+                                    {
+                                        properties.Add(initializer.NameEquals.Name.Identifier.Text, initializer.Expression.ToFullString());
+                                    }
+                                }
+
+                                if (statement is LocalDeclarationStatementSyntax localDeclarationStatement)
+                                {
+                                    localStatements.Add(statement.ToString());
                                 }
                             }
-
-                            if (statement is LocalDeclarationStatementSyntax localDeclarationStatement)
-                            {
-                                localStatements.Add(statement.ToString());
-                            }
                         }
-
-
-                        var template = """
-                        using System;
-                        using System.Collections.Generic;
-                        using System.Linq;
-                        using System.Text;
-                        using System.Threading.Tasks;
-                        using CssInCSharp;
-                        using AntDesign.Core.Style;
-
-                        namespace {{namespace}};
-
-                        public class ClassProperty
-                        {
-                            {{properties}}
-                        }
-
-                        public static class StyleManagerExtensions
-                        {
-                            public static ClassProperty AddCreateStyle(this AntDesign.Core.Style.IStyleManager styleManager)
-                            {
-                                ((StyleManager)styleManager).AddStyleBuilder("{{className}}",token =>
-                                {
-                                    {{localStatements}}
-
-                                    var dict = new Dictionary<string, string>()
-                                    {
-                                        {{cssObjectStatements}}
-                                    };
-                        
-                                    return dict;
-                                });
-
-                                return new ClassProperty();
-                            }
-                        }
-                        """;
 
                         var propertyHashDict = properties.ToDictionary(x => x.Key, x => "css-" + Guid.NewGuid());
 
@@ -123,18 +135,33 @@ namespace AntDesign.Docs.Generator
                             sb2.AppendLine($"   {property} = \"{propertyHashDict[property]}\",");
                         }
 
-                        var source = template
-                         .Replace("{{namespace}}", classSymbol.ContainingNamespace.ToString())
-                         .Replace("{{className}}", classSymbol.Name)
-                         .Replace("{{properties}}", sb.ToString())
-                         .Replace("{{localStatements}}", string.Join("\r\n", localStatements))
-                         .Replace("{{cssObjectStatements}}", sb3.ToString())
-                         .Replace("{{propertiesValues}}", sb2.ToString());
+                        properites.AppendLine(ProprtyClassTemplate
+                            .Replace("{{fieldName}}", fieldName)
+                             .Replace("{{properties}}", sb.ToString())
+                            );
 
-                        spc.AddSource($"{classSymbol.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
+                        methods.AppendLine(ExtensionMethodTemplate
+                             .Replace("{{fieldName}}", fieldName)
+                             .Replace("{{localStatements}}", string.Join("\r\n", localStatements))
+                             .Replace("{{cssObjectStatements}}", sb3.ToString())
+                             .Replace("{{propertiesValues}}", sb2.ToString()));
                     }
+
+                    var source = Template
+                        .Replace("{{namespace}}", classSymbol.ContainingNamespace.ToString())
+                        .Replace("{{className}}", classSymbol.Name)
+                        .Replace("{{propertyClass}}", properites.ToString())
+                        .Replace("{{extensionMethods}}", methods.ToString())
+                     ;
+
+                    spc.AddSource($"{classSymbol.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
                 }
             });
+        }
+
+        private string ToPascalCase(string name)
+        {
+            return name.Substring(0, 1).ToUpper() + name.Substring(1);
         }
     }
 }
