@@ -154,7 +154,8 @@
       "lessThanOrEquals": "Less Than Or Equals",
       "isNull": "Is Null",
       "isNotNull": "Is Not Null",
-      "theSameDateWith": "The Same Date With"
+      "theSameDateWith": "The Same Date With",
+      "between": "Between"
     }
   },
   "Modal": {

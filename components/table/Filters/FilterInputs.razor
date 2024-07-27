@@ -26,8 +26,13 @@
 
     public RenderFragment<TableFilterInputRenderOptions> GetDatePicker<TData>() => filter =>
     {
+        if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
+        {
+            return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+        }
         return @<DatePicker Value="(TData)filter.Value" TValue="TData" ValueChanged="value => filter.Value = value"
-                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
     };
 
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>

@@ -123,7 +123,8 @@
       "greaterThanOrEquals": "Greater Than Or Equals",
       "lessThanOrEquals": "Less Than Or Equals",
       "isNull": "Is Null",
-      "isNotNull": "Is Not Null"
+      "isNotNull": "Is Not Null",
+      "between": "Between"
     }
   },
   "Modal": {

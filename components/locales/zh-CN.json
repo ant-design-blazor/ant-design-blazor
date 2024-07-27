@@ -150,7 +150,8 @@
       "lessThanOrEquals": "小于或等于",
       "isNull": "为 Null",
       "isNotNull": "不为 Null",
-      "theSameDateWith": "等于该日期"
+      "theSameDateWith": "等于该日期",
+      "between": "在区间"
     }
   },
   "Modal": {
