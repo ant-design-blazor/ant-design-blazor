@@ -1,28 +1,20 @@
 ﻿@namespace AntDesign
-@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
-@code {
-    internal static RenderFragment GetModalRender(ModalRef modalRef)
-    {
-        var options = modalRef.Config;
-        var attributes = new Dictionary<string, object>()
-        {
-            ["OnOk"] = EventCallback.Factory.Create(modalRef, options.OnOk),
-            ["OnCancel"] = EventCallback.Factory.Create(modalRef, options.OnCancel),
-        };
-
-        void GetRender(RenderTreeBuilder __builder)
-        {
-            <Dialog @ref="modalRef.Dialog" Config="@options"
-                    Visible="@options.Visible"
-                    Style="@options.Style"
-                    Class="@options.ClassName"
-                    >
-                @options.Content
-            </Dialog>
-        }
-
-        return GetRender;
-    }
-}
+<DialogWrapper @ref="_dialogWrapper"
+               Config="@BuildDialogOptions()"
+               Visible="@Visible"
+               OnAfterShow="@OnAfterDialogShow"
+               OnAfterHide="@OnAfterHide"
+               OnBeforeDestroy="@OnBeforeDialogWrapperDestroy"
+               Style="@Style"
+               Class="@Class"
+               Id="@Id">
+    <CascadingValue Value=@($"#ant-modal-wrap_{_dialogWrapper.Id}") Name="PopupContainerSelector">
+        <CascadingValue Value="true" Name="InModal">
+            <CascadingValue Value="@_dialogWrapper.Dialog.IsShow()" Name="ModalCompleteShow">
+                    @ChildContent
+            </CascadingValue>
+        </CascadingValue>
+    </CascadingValue>
+</DialogWrapper>
