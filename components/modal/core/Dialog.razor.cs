@@ -289,7 +289,7 @@ namespace AntDesign
 
         private string CalcWrapStyle()
         {
-            string style;
+            string style = "";
             if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
@@ -302,10 +302,12 @@ namespace AntDesign
                     style += "align-items: flex-start;";
                 }
             }
-            else
+
+            if (!Config.Mask)
             {
-                style = "";
+                style += "pointer-events:none;";
             }
+
             return style;
         }
 
@@ -384,6 +386,7 @@ namespace AntDesign
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
+                Config.Resizable ? "ant-modal-resizable":"",
                 Class
             };
 
