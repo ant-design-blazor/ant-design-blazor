@@ -40,6 +40,8 @@ namespace AntDesign
         #endregion Parameters
 
         [CascadingParameter(Name = "DialogWrapperId")]
+
+        [Inject] private NavigationManager NavigationManager { get; set; }
         public string DialogWrapperId { get; set; } = "";
 
         private string _maskAnimationClsName = "";
@@ -51,6 +53,7 @@ namespace AntDesign
         private bool _hasDestroy = true;
         private bool _disableBodyScroll;
         private bool _doDraggable;
+        private string _prevUrl = "";
 
 #pragma warning disable 649
 
@@ -136,7 +139,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task AppendToContainer()
         {
-            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, Config.GetContainer);
+            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, "body");
         }
 
         #region mask and dialog click event
@@ -350,9 +353,9 @@ namespace AntDesign
                 _maskHideClsName = "ant-modal-mask-hidden";
 
                 await InvokeStateHasChangedAsync();
-                if (Config.AfterClose != null)
+                if (Config.OnClosed != null)
                 {
-                    await Config.AfterClose.Invoke();
+                    await Config.OnClosed.Invoke();
                 }
             }
         }
@@ -393,6 +396,13 @@ namespace AntDesign
         #endregion build element's class name
 
         #region override
+
+        protected override void OnInitialized()
+        {
+            _prevUrl = NavigationManager.Uri;
+
+            base.OnInitialized();
+        }
 
         private bool _hasRendered = false;
 
@@ -440,15 +450,8 @@ namespace AntDesign
                 if (_hasDestroy)
                 {
                     _hasDestroy = false;
-                    //await AppendToContainer();
+                    await AppendToContainer();
                     Show();
-                    CallAfterRender(async () =>
-                    {
-                        if (Config.AfterOpen != null)
-                        {
-                            await Config.AfterOpen.Invoke();
-                        }
-                    });
                     await InvokeStateHasChangedAsync();
                 }
 
@@ -497,9 +500,13 @@ namespace AntDesign
                 _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
             }
 
-            if (!Config.CreateByService && !Config.DestroyOnClose)
+            _ = TryResetModalStyle();
+            // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.
+            // but sometime the opened modal dom would not be removed from body, and sometime it would...
+            // so we remove it manually, and set a delay to avoid the dom being removed before the page is navigated.
+            if (!Config.CreateByService && !Config.DestroyOnClose && _prevUrl != NavigationManager.Uri)
             {
-                //_ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id);
+                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, "body", 1000);
             }
         }
     }

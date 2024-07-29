@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -28,7 +27,7 @@ namespace AntDesign
 
         private void OnLocationChanged(object sender, EventArgs e)
         {
-            _modalRefs.RemoveAll(x => x.Config.CreateByService);
+            _modalRefs.Clear();
             InvokeStateHasChanged();
         }
 
