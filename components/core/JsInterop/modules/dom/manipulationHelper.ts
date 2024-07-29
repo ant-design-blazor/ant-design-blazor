@@ -29,12 +29,14 @@ export class manipulationHelper {
     return false;
   }
 
-  static delElementFrom(delElementSelector, elementSelector) {
-    const delElement = domInfoHelper.get(delElementSelector);
-    const parent = domInfoHelper.get(elementSelector);
-    if (parent && delElement) {
-      parent.removeChild(delElement);
-    }
+  static delElementFrom(delElementSelector, elementSelector, delay = 0) {
+    setTimeout(() => {
+      const delElement = domInfoHelper.get(delElementSelector);
+      const parent = domInfoHelper.get(elementSelector);
+        if (parent && delElement) {
+        parent.removeChild(delElement);
+      }
+    }, delay);
   }
 
   static setDomAttribute(element, attributes) {
