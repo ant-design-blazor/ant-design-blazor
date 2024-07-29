@@ -25,8 +25,14 @@ namespace AntDesign.Internal
             }
             set
             {
+                //It is necessary to determine whether the PopupContainerSelector has been manually set by the user,
+                //otherwise it will be overwritten by the default value
+                //issue https://github.com/ant-design-blazor/ant-design-blazor/issues/3494
+                if (PopupContainerSelector == "body")
+                {
+                    PopupContainerSelector = value;
+                }
                 _popupContainerSelectorFromCascade = value;
-                PopupContainerSelector = value;
             }
         }
 
