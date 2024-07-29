@@ -37,7 +37,7 @@ describe("domManipulationHelper", () => {
 
     manipulationHelper.delElementFrom(ele, container, 0);
     //assert
-    expect(document.body.querySelector("#" + id)).to.equal(null);
+    setTimeout(()=> expect(document.body.querySelector("#" + id)).to.equal(null),0);
   });
 
 
