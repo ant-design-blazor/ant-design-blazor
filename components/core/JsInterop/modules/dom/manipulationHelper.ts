@@ -33,7 +33,7 @@ export class manipulationHelper {
     setTimeout(() => {
       const delElement = domInfoHelper.get(delElementSelector);
       const parent = domInfoHelper.get(elementSelector);
-        if (parent && delElement) {
+      if (parent && delElement) {
         parent.removeChild(delElement);
       }
     }, delay);
