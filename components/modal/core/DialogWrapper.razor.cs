@@ -148,7 +148,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _ = _dialog?.TryResetModalStyle();
             base.Dispose(disposing);
         }
     }

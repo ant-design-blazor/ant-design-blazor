@@ -81,6 +81,7 @@ namespace AntDesign
                 Closable = false,
                 Footer = null,
                 MaskClosable = true,
+                CreateByService = true,
                 OnCancel = async (e) =>
                 {
                     await HandleClose();
