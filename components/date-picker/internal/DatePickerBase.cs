@@ -31,7 +31,7 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnClose { get; set; }
+        public bool ChangeOnClose { get; set; } = true;
 
         protected string _picker;
         protected bool _isSetPicker = false;
@@ -521,7 +521,7 @@ namespace AntDesign
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexPickerValue(index);
             }
         }
 
@@ -1044,6 +1044,7 @@ namespace AntDesign
                 }
             }
 
+            _duringManualInput = false;
             OverlayVisibleChanged?.Invoke(this, visible);
         }
 
