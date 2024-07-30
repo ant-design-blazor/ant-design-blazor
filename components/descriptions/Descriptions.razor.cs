@@ -42,7 +42,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
+        private IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
         private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
 
@@ -113,16 +113,25 @@ namespace AntDesign
         protected override async Task OnFirstAfterRenderAsync()
         {
             await SetRealColumn();
-            PrepareMatrix();
-            await InvokeAsync(StateHasChanged);
             await base.OnFirstAfterRenderAsync();
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected void ReRender()
         {
             PrepareMatrix();
-            await InvokeAsync(StateHasChanged);
-            await base.OnParametersSetAsync();
+            this.StateHasChanged();
+        }
+
+        public void AddItem(IDescriptionsItem item)
+        {
+            this.Items.Add(item);
+            ReRender();
+        }
+
+        public void RemoveItem(IDescriptionsItem item)
+        {
+            this.Items.Remove(item);
+            ReRender();
         }
 
         private void PrepareMatrix()
