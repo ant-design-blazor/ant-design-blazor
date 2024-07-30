@@ -46,8 +46,8 @@ namespace AntDesign
 
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
-        private string _maskHideClsName = "";
-        private string _wrapStyle = "";
+        private string _maskHideClsName = "ant-modal-mask-hidden";
+        private string _wrapStyle = "display: none;";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
@@ -470,6 +470,11 @@ namespace AntDesign
                     _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
+            }
+            else if (!_hasRendered && Config.ForceRender)
+            {
+                _hasRendered = true;
+                await AppendToContainer();
             }
             else
             {
