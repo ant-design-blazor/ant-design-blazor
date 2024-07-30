@@ -40,9 +40,9 @@ namespace AntDesign
         #endregion Parameters
 
         [CascadingParameter(Name = "DialogWrapperId")]
+        public string DialogWrapperId { get; set; } = "";
 
         [Inject] private NavigationManager NavigationManager { get; set; }
-        public string DialogWrapperId { get; set; } = "";
 
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
