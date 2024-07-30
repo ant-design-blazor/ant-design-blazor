@@ -69,7 +69,7 @@ namespace AntDesign
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
             config.Title = null;
             config.CloseIcon = null;
-            config.AfterClose = Close;
+            config.OnClosed = Close;
             config.OnCancel = ConfirmRef.Config.CreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }

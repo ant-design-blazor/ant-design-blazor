@@ -276,7 +276,7 @@ namespace AntDesign
         [Parameter]
         public bool ForceRender { get; set; }
 
-        #endregion Parameter
+      #endregion Parameter
 
 #pragma warning disable 649
         private DialogWrapper _dialogWrapper;
