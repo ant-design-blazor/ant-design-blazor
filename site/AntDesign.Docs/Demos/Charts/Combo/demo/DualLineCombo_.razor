@@ -6,21 +6,21 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <DualLine Data="@(new[] {data1, data2})" Config="config1" />
+            <DualAxes Data="@(new[] {data1, data2})" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <DualLine Data="@(new[] {data1_2, data2_2})" Config="config2" />
+            <DualAxes Data="@(new[] {data1_2, data2_2})" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
             <TabTemplate>示例3</TabTemplate>
             <ChildContent>
-                <DualLine Data="@(new[] {data1_3, data2_3})" Config="config3" />
+            <DualAxes Data="@(new[] {data1_3, data2_3})" Config="config3" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -55,7 +55,7 @@
         new {year = "1999", count = 20}
     };
 
-    readonly DualLineConfig config1 = new DualLineConfig
+    readonly DualAxesConfig config1 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -101,7 +101,7 @@
         new {year = "1999", count = 20}
     };
 
-    readonly DualLineConfig config2 = new DualLineConfig
+    readonly DualAxesConfig config2 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -173,7 +173,7 @@
         new {year = "1999", count = 20}
     };
 
-    readonly DualLineConfig config3 = new DualLineConfig
+    readonly DualAxesConfig config3 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -187,14 +187,14 @@
         },
         XField = "year",
         YField = new[] { "value", "count" },
-        YAxis = new ComboYAxis
-        {
-            Max = 35,
-            RightConfig = new ComboYAxisConfig
-            {
-                Visible = false,
-            }
-        }
+        // YAxis = new ComboYAxis
+        // {
+        //     Max = 35,
+        //     RightConfig = new ComboYAxisConfig
+        //     {
+        //         Visible = false,
+        //     }
+        // }
     };
 
     #endregion 示例3

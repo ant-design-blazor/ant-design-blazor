@@ -5,7 +5,7 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <GroupedColumn Data="data1" Config="config1"/>
+            <AntDesign.Charts.Column Data="data1" Config="config1" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -114,7 +114,7 @@
         }
     };
 
-    readonly GroupedColumnConfig config1 = new GroupedColumnConfig
+    readonly ColumnConfig config1 = new ColumnConfig
     {
         Title = new Title
         {
@@ -132,7 +132,7 @@
         {
             Visible = true
         },
-        GroupField = "name",
+        SeriesField = "name",
         Color = new[] {"#1ca9e6", "#f88c24"}
     };
 

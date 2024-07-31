@@ -5,35 +5,35 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <StackedColumn Data="data1" Config="config1" />
+            <AntDesign.Charts.Column Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <StackedColumn Data="data2" Config="config2" OtherConfig="config2_2" />
+            <AntDesign.Charts.Column Data="data2" Config="config2" OtherConfig="config2_2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
             <TabTemplate>示例3</TabTemplate>
             <ChildContent>
-                <StackedColumn Data="data3" Config="config3" />
+            <AntDesign.Charts.Column Data="data3" Config="config3" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="4">
             <TabTemplate>示例4</TabTemplate>
             <ChildContent>
-                <StackedColumn Data="data4" Config="config4" />
+            <AntDesign.Charts.Column Data="data4" Config="config4" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="5">
             <TabTemplate>示例5</TabTemplate>
             <ChildContent>
-                <StackedColumn Data="data5" Config="config5" />
+            <AntDesign.Charts.Column Data="data5" Config="config5" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -154,7 +154,7 @@
         }
     };
 
-    readonly StackedColumnConfig config1 = new StackedColumnConfig
+    readonly ColumnConfig config1 = new ColumnConfig
     {
         Title = new Title
         {
@@ -170,7 +170,7 @@
             Min = 0
         },
         Color = new[] {"#ae331b", "#1a6179"},
-        StackField = "type"
+        SeriesField = "type"
     };
 
     #endregion 示例1
@@ -218,7 +218,7 @@
           new  { year =  "2014", type =  "pears", value =  5 },
     };
 
-    readonly StackedColumnConfig config2 = new StackedColumnConfig
+    readonly ColumnConfig config2 = new ColumnConfig
     {
         ForceFit = true,
         Title = new Title
@@ -235,7 +235,7 @@
         Padding = "auto",
         XField = "year",
         YField = "value",
-        StackField = "type",
+        SeriesField = "type",
         Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
         YAxis = new ValueAxis
         {
@@ -245,11 +245,11 @@
         {
             Visible = true,
         },
-        ConnectedArea = new
-        {
-            visible= true,
-            triggerOn= false,
-        }
+        // ConnectedArea = new
+        // {
+        //     visible= true,
+        //     triggerOn= false,
+        // }
 
 
     };
@@ -304,7 +304,7 @@
           new  { year =  "2014", type =  "pears", value =  5 },
     };
 
-    readonly StackedColumnConfig config3 = new StackedColumnConfig
+    readonly ColumnConfig config3 = new ColumnConfig
     {
         ForceFit = true,
         Title = new Title
@@ -329,14 +329,14 @@
         {
             Visible = false,
         },
-        StackField = "type",
+        SeriesField = "type",
         Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
-
-        ConnectedArea = new
-        {
-            visible = true,
-            triggerOn= "mouseenter",
-        }
+        //
+        // ConnectedArea = new
+        // {
+        //     visible = true,
+        //     triggerOn= "mouseenter",
+        // }
     };
 
     #endregion 示例3
@@ -383,7 +383,7 @@
           new  { year =  "2014", type =  "pears", value =  5 },
     };
 
-    readonly StackedColumnConfig config4 = new StackedColumnConfig
+    readonly ColumnConfig config4 = new ColumnConfig
     {
         ForceFit = true,
         Title = new Title
@@ -394,7 +394,7 @@
         Padding = "auto",
         XField = "year",
         YField = "value",
-        StackField = "type",
+        SeriesField = "type",
         Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
         YAxis = new ValueAxis
         {
@@ -404,21 +404,21 @@
         {
             Visible = true,
         },
-        ConnectedArea = new
-        {
-            visible = true,
-            triggerOn = false,
-            lineStyle = new
-            {
-                stroke =  "#afb1b5",
-                opacity =  0.8,
-            },
-            areaStyle =  new
-            {
-                fill =  "#e8e8e8",
-                opacity =  0.5,
-            },
-        }
+        // ConnectedArea = new
+        // {
+        //     visible = true,
+        //     triggerOn = false,
+        //     lineStyle = new
+        //     {
+        //         stroke =  "#afb1b5",
+        //         opacity =  0.8,
+        //     },
+        //     areaStyle =  new
+        //     {
+        //         fill =  "#e8e8e8",
+        //         opacity =  0.5,
+        //     },
+        // }
     };
 
     #endregion 示例4
@@ -564,7 +564,7 @@
           },
     };
 
-    readonly StackedColumnConfig config5 = new StackedColumnConfig
+    readonly ColumnConfig config5 = new ColumnConfig
     {
         Title = new Title
         {
@@ -582,7 +582,7 @@
         {
             Min = 0
         },
-        StackField = "type",
+        SeriesField = "type",
         Color = new[] { "#ae331b", "#dadada", "#609db7", "#1a6179" },
         Label = new ColumnViewConfigLabel
         {

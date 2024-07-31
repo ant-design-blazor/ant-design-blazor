@@ -21,9 +21,9 @@
 
 @code{
 
-        GDPItem[] data2;
+    GDPItem[] data2;
 
-protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
 
@@ -307,7 +307,7 @@ protected override async Task OnInitializedAsync()
         }
     };
 
-    readonly StepLineConfig config1 = new StepLineConfig
+    readonly LineConfig config1 = new LineConfig
     {
         Title = new Title
         {
@@ -323,6 +323,7 @@ protected override async Task OnInitializedAsync()
         ForceFit = true,
         XField = "date",
         YField = "value",
+        StepType = "hvh",
         YAxis = new ValueAxis
         {
             Label = new BaseAxisLabel()
@@ -339,7 +340,7 @@ protected override async Task OnInitializedAsync()
 
     #region 示例2
 
-    readonly StepLineConfig config2 = new StepLineConfig
+    readonly LineConfig config2 = new LineConfig
     {
         Title = new Title
         {
