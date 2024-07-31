@@ -1,5 +1,6 @@
 ---
 order: 17
+debug: true
 title:
   en-US: Tree data with circular reference
   zh-CN: 带有循环引用的树形数据

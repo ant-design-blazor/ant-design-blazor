@@ -49,6 +49,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Style | 设置 Input 的 CSS 样式 | string | - |  |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
 | Type            |声明 input 类型，同原生 input 标签的 type 属性，见：MDN(请直接使用 TextArea 代替 type="textarea")。         | string  | -         |
+| Width | 输入框宽度                              | string        | -         |
 | WrapperStyle | 设置外部 `<span>` 元素的样式。当使用了 `Prefix` 、 `Suffix`、 `AllowClear` 属性或者是 `Password` 或 `Search` 组件时，需要用 `WrapperStyle` 来设置整个组件的样式。  | string | - |  |
 
 ### Common Methods
@@ -62,6 +63,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AutoSize | 将根据内容调整（扩大或缩小）“TextArea”。 可以与 `MaxRows` 和 `MinRows` 结合使用。 将 `textarea` 组件的 `resize` 属性设置为：`none`. | boolean        | false         |
+| Bordered | 是否有边框        | boolean         | true
 | DefaultToEmptyString |设置为`false`时，当内容为空或空白时，值将被设置为`null`,当为 `true` 时，值将被设置为空字符串(string.Empty). | boolean        | false         |
 | MinRows |`TextArea` 将允许用户拖动缩小，直到可见行等于 `MinRows` 。 使用此属性将自动设置“AutoSize = true”。  | int        | 1         |
 | MaxRows |`TextArea` 将允许用户拖动放大,直到可见行等于 `MaxRows` 。 使用此属性将自动设置“AutoSize = true”。  | int        | uint.MaxValue         |

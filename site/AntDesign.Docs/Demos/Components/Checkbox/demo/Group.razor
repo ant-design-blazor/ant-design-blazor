@@ -2,7 +2,7 @@
     <CheckboxGroup Options="@plainOptions" @bind-Value="@_value" TValue="string" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@options" @bind-Value="@_value" TValue="string" OnChange="OnChange" />
+    <CheckboxGroup Options="@options" @bind-Value="@_value" TValue="string" OnChange="OnChange2" />
     <br />
     <br />
     <CheckboxGroup Options="@OptionsWithDisabled" Disabled @bind-Value="@_value" TValue="string" OnChange="OnChange" />
@@ -40,5 +40,10 @@
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+
+    void OnChange2(string[] checkedValues)
+    {
+        Console.WriteLine($"2 checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 }

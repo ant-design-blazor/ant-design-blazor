@@ -114,6 +114,11 @@ namespace AntDesign
         /// </summary>
         public bool Resizable { get; set; }
 
+        /// <summary>
+        /// Whether to remove Modal from DOM after the Modal closed
+        /// </summary>
+        public bool DestroyOnClose { get; set; }
+
         #region internal
 
         internal string GetHeaderStyle()

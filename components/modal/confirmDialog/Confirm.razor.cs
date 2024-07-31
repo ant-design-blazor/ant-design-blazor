@@ -61,14 +61,16 @@ namespace AntDesign
                 Footer = null,
 
                 ClassName = confirmOptions.ClassName,
-                Closable = false
+                Closable = false,
+                CreateByService = confirmOptions.CreateByService,
+                DestroyOnClose = true
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ConfirmRef.IsCreateByModalService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.Config.CreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -125,7 +127,7 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleOk(MouseEventArgs e)
+        private async Task HandleOk(MouseEventArgs e, ConfirmResult confirmResult)
         {
             var args = new ModalClosingEventArgs(e, false);
 
@@ -148,11 +150,11 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.OK);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
-        private async Task HandleCancel(MouseEventArgs e)
+        private async Task HandleCancel(MouseEventArgs e, ConfirmResult confirmResult)
         {
             var args = new ModalClosingEventArgs(e, false);
 
@@ -175,15 +177,15 @@ namespace AntDesign
             else
             {
                 await Close();
-                ConfirmRef.TaskCompletionSource?.TrySetResult(ConfirmResult.Cancel);
+                ConfirmRef.TaskCompletionSource?.TrySetResult(confirmResult);
             }
         }
 
         private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByModalService)
+            if (ConfirmRef.Config.CreateByService)
             {
-                await HandleOk(e);
+                await HandleOk(e, confirmResult);
             }
             else
             {
@@ -196,9 +198,9 @@ namespace AntDesign
 
         private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByModalService)
+            if (ConfirmRef.Config.CreateByService)
             {
-                await HandleCancel(e);
+                await HandleCancel(e, confirmResult);
             }
             else
             {

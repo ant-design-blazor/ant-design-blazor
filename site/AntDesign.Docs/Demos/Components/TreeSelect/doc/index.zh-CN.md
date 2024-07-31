@@ -27,9 +27,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | Disabled | 是否禁用 | bool | false |  |
 | DropdownMatchSelectWidth |  将匹配下拉宽度： <br/>- for boolean: `true` - 下拉列表中最宽的项目 <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | 不允许下拉菜单的宽度超过此处的值（例如“768px”）. | string | "auto" |  |
+| DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 指示搜索功能是否处于活动状态。 对于Mode = `tags` 始终为 `true`。 | bool | false |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
+| ItemValue    | 指定 Item 中作为选项 Value 的属性，也可以指定 Item 本身。(替代 ValueName）| Func<TITem,TItemValue> |  -  |
+| ItemLabel    | 指定 Item 中作为选项 Label 的属性。(替代 LabelName）| Func<TITem,string> |  -  |
 | LabelInValue | 是否在 value 中嵌入标签，将 value 的格式从 `TItemValue` 转换为 string (JSON) e.g. { "value": `TItemValue`, "label": "`标签值`" } | bool | false |  |
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |
@@ -73,7 +76,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ShowIcon | 显示节点图标 | boolean | false |  |
 | ShowLeafIcon | 显示子叶图标（如果 ShowLeafIcon 未赋值, 会等于 `ShowLine` 的值） | boolean | false |  |
 | Multiple  |  允许选择多个树节点 | boolean | false  |   |
-| TreeCheckable |  节点前添加 Checkbox 复选框 | boolean  | false  |   |
+| TreeCheckable |  是否可勾选节点 | boolean  | false  |   |
+| TreeCheckStrictly | checkable 状态下节点选择完全受控（父子节点选中状态不再关联） | boolean  | false  |   |
+| ShowCheckedStrategy | 配置 treeCheckable 时，定义选中项回填的方式。ShowAll: 显示所有选中节点(包括父节点)。ShowParent: 只显示父节点(当父节点下所有子节点都选中时)。 默认只显示子节点 | TreeCheckedStrategy  | ShowChild  |   |
+| CheckOnClickNode |  点击节点标题选中或取消选中节点 | boolean  | true  |   |
 | SearchExpression  | 自定义搜索匹配方法  |  Func\<TreeNode\<TItem\>, bool\> | null  |   |
 | MatchedStyle  | 搜索匹配关键字高亮样式 | string  | null  |   |
 | MatchedClass  | 搜索匹配关键字高亮样式 | string  | null  |   |
@@ -84,14 +90,19 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | IsLeafExpression  | 返回一个值是否是页节点  | Func  |   |   |
 | ChildrenExpression  | 返回子节点的方法  | Func  |   |   |
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
+| CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
+| TreeDefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
+| TreeDefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
 | ExpandedKeys  |  （受控）展开指定的树节点 | string[]  |  null  |   |
+| ExpandOnClickNode |  点击节点标题展开或收缩节点 | boolean  | false  |   |
 
 ### Tree EventCallback
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | OnNodeLoadDelayAsync  |  异步加载时回调，方法异步使用 async  | EventCallback  |   |   |
+| OnTreeNodeSelect  |  选择节点时触发  | EventCallback  |   |   |
 
 ### Tree RenderFragment
 
@@ -106,9 +117,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | --- | --- | --- | --- | --- |
 | Key  |  节点key  | string  |   |   |
 | Disabled |  是否禁用 | string  |   |   |
-| Checked | 勾选  |  boolean |  false |   |
+| Checkable | 是否可勾选  |  boolean |  true |   |
+| Checked | 是否勾选（支持双向绑定）  |  boolean |  false |   |
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
-| Checked | 勾选  |  boolean |  false |   |
+| Selected | 是否选中（支持双向绑定）  |  boolean |  false |   |
+| Expanded | 是否展开（支持双向绑定）  |  boolean |  false |   |
 | Title | 标题  |  string |  false |   |
 | TitleTemplate | 标题模板 | RenderFragment | null |  |
 | Icon | 标题前图标  |  string |  false |   |

@@ -1,8 +1,9 @@
 ﻿using System;
 using AntDesign.Forms;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace AntDesign.Internal
+namespace AntDesign
 {
     public interface IForm
     {

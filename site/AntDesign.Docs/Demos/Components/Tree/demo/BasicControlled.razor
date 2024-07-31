@@ -1,6 +1,8 @@
 <Tree @ref="_tree"
       TItem="string"
       Checkable
+      Multiple
+      CheckOnClickNode="false"
       @bind-ExpandedKeys="expandedKeys"
       @bind-CheckedKeys="checkedKeys"
       @bind-SelectedKeys="selectedKeys"
@@ -33,6 +35,8 @@
 
 <Tree TItem="string"
       Checkable
+      Multiple
+      CheckOnClickNode="false"
       @bind-ExpandedKeys="expandedKeys"
       @bind-CheckedKeys="checkedKeys"
       @bind-SelectedKeys="selectedKeys"
@@ -62,7 +66,6 @@
 </Tree>
 
 <br />
-@*<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>*@
 
 <Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
 
@@ -71,8 +74,8 @@
 <br />
 <br />
 
-@*<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>*@
-
+<Button OnClick="PrintSelectedKeys">Print Selected Nodes Key</Button>
+<Button OnClick="SelectAll">Select All</Button>
 <Button OnClick="DeselectAll">Deselect All</Button>
 <br />
 <br />
@@ -113,11 +116,6 @@
 
     bool autoExpandParent;
 
-    //private void PrintCheckedNodesTitle()
-    //{
-    //    printType = "CheckedNodesTitle";
-    //    printTexts = tree.CheckedTitles;
-    //}
 
     private void PrintCheckedNodesKey()
     {
@@ -135,11 +133,16 @@
         _tree.UncheckAll();
     }
 
-    //private void PrintSelectedNodes()
-    //{
-    //    printType = "SelectedNodes";
-    //    printTexts = tree.SelectedTitles;
-    //}
+    private void PrintSelectedKeys()
+    {
+       printType = "SelectedNodesKey";
+       printTexts = _tree.SelectedKeys;
+    }
+
+    private void SelectAll()
+    {
+        _tree.SelectAll();
+    }
 
     private void DeselectAll()
     {

@@ -152,10 +152,8 @@ namespace AntDesign
             if (!skipParentSelection)
                 ParentMenu?.Select(isInitializing);
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
 
         public void Deselect(bool sameParentAsSelected = false)
@@ -165,10 +163,8 @@ namespace AntDesign
             if (!sameParentAsSelected)
                 ParentMenu?.Deselect();
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
     }
 }

@@ -3,7 +3,7 @@
 
 @if (_hasAdd)
 {
-    <CascadingValue Value="@this.Id" Name="DialogWrapperId">
+    <CascadingValue Value="@this.Id" Name="DialogWrapperId" IsFixed>
         <Dialog @ref="_dialog"
                 Config="Config"
                 Visible="@Visible"

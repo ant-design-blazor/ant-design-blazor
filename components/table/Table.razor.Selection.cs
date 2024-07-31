@@ -63,14 +63,14 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
-            foreach (var select in _dataSourceCache.Values)
+            foreach (var select in _rootRowDataCache.Values)
             {
-                if (select.Disabled)
+                if (select.DataItem.Disabled)
                     continue;
 
-                select.SetSelected(true);
-                _selectedRows.Add(select.Data);
+                select.SetSelected(true, _selection.CheckStrictly);
             }
+
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
@@ -84,9 +84,15 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
-            ClearSelectedRows();
+            foreach (var select in _rootRowDataCache.Values)
+            {
+                if (select.DataItem.Disabled)
+                    continue;
 
-            _preventRowDataTriggerSelectedRowsChanged = false;
+                select.SetSelected(false, _selection.CheckStrictly);
+            }
+
+             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
@@ -117,7 +123,7 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = true;
 
             ClearSelectedRows();
-            selectItem.RowData.SetSelected(true, selectItem.CheckStrictly);
+            selectItem.RowData.SetSelected(true, selectItem.Type == "radio" || selectItem.CheckStrictly);
 
             _preventRowDataTriggerSelectedRowsChanged = false;
 
@@ -208,7 +214,6 @@ namespace AntDesign
         {
             if (SelectedRowsChanged.HasDelegate && !_preventRowDataTriggerSelectedRowsChanged)
             {
-                _preventRender = true;
                 _outerSelectedRows = _selectedRows;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }

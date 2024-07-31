@@ -14,6 +14,9 @@ using Microsoft.JSInterop;
 using System.Reflection;
 using AntDesign.core.Services;
 using AntDesign.Table.Internal;
+using AntDesign.Core.Reflection;
+using System.Diagnostics.CodeAnalysis;
+
 
 #if NET5_0_OR_GREATER
 
@@ -27,10 +30,15 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
 #endif
 
+#if NETCOREAPP3_1_OR_GREATER
+    public partial class Table<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
+#else
     public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
+#endif
     {
         private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
-            : !typeof(TItem).IsAbstract ? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
+            : !typeof(TItem).IsAbstract ? ExpressionActivator<TItem>.CreateInstance()
+            ?? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
             : default;
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();

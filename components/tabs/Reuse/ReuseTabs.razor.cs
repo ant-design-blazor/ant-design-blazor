@@ -71,7 +71,7 @@ namespace AntDesign
             }
             base.OnInitialized();
             ReuseTabsService.Init(true);
-            ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
+            ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
 
             if (RouteData != null)
             {
@@ -89,7 +89,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
+            ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
             Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
         }
@@ -113,12 +113,7 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            StateHasChanged();
-        }
-
-        private void OnStateHasChanged()
-        {
-            _ = InvokeStateHasChangedAsync();
+            InvokeStateHasChanged();
         }
     }
 }

@@ -30,12 +30,6 @@ namespace AntDesign
         /// 
         /// </summary>
         [Parameter]
-        public bool DestroyOnClose { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Parameter]
         public bool Visible { get; set; }
 
         /// <summary>
@@ -126,7 +120,7 @@ namespace AntDesign
                         await OnAfterHide.InvokeAsync(null);
                     }
 
-                    if (DestroyOnClose && !_hasDestroy)
+                    if (Config.DestroyOnClose && !_hasDestroy)
                     {
                         _hasDestroy = true;
                         await DestroyAsync();
@@ -154,7 +148,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _ = _dialog?.TryResetModalStyle();
             base.Dispose(disposing);
         }
     }

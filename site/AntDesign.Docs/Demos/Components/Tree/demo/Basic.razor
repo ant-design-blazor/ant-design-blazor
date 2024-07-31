@@ -1,17 +1,18 @@
 <Tree TItem="string" 
-      Checkable 
+      Checkable
+      CheckOnClickNode="false"
       DefaultExpandAll
-	  DefaultExpandedKeys="@(new[] { "0-0-0", "0-0-1"})"
-	  DefaultSelectedKeys="@(new[] {"0-0-0", "0-0-1" })"
-	  DefaultCheckedKeys="@(new[] {"0-0-0", "0-0-1" })"
+      DefaultSelectedKey="0-0-1-0"
+      DefaultCheckedKeys="@(new[] {"0-0-0-0", "0-0-0-1", "0-0-1", "0-0-1-0"})"
 	  SelectedNodeChanged="SelectedNodeChanged"
 	  OnSelect="OnSelect"
       OnCheck="OnCheck"
       OnContextMenu="OnContextMenu">
 	<TreeNode Title="parent 1" Key="0-0" >
-		<TreeNode Title="parent 1-0" Key="0-0-0" Disabled >
+		<TreeNode Title="parent 1-0" Key="0-0-0" >
 			<TreeNode Title="leaf" Key="0-0-0-0" DisableCheckbox ></TreeNode>
-			<TreeNode Title="leaf" Key="0-0-0-1" ></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-1" Disabled></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-2" ></TreeNode>
 		</TreeNode>
 		<TreeNode Title="parent 1-1" Key="0-0-1" >
 			<TreeNode Key="0-0-1-0" Title="sss">
