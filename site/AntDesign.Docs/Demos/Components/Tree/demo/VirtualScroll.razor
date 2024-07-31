@@ -1,5 +1,41 @@
-﻿<h3>VirtualScroll</h3>
+﻿<Tree
+      Height="233"
+      DefaultExpandAll
+      DataSource="nodes"
+      TitleExpression="x => x.DataItem.title"
+      ChildrenExpression="x => x.DataItem.children"
+      IsLeafExpression="x => x.DataItem.children?.Count == 0"
+      KeyExpression="x => x.DataItem.key">
+</Tree>
 
 @code {
+    List<DataNode> nodes = [];
 
+    protected override void OnInitialized()
+    {
+        nodes = Dig();
+    }
+
+    List<DataNode> Dig(string path="0", int level=3)
+    {
+        List<DataNode> list=[];
+        for (int i = 0; i < 10; i ++)
+        {
+            var key = $"{path}-{i}";
+            var treeNode = new DataNode(key, key);
+            if (level>0)
+            {
+                treeNode.children = Dig(key, level - 1);
+            }
+
+            list.Add(treeNode);
+        }
+
+        return list;
+    }
+
+    record DataNode(string key, string title)
+    { 
+        public List<DataNode> children { get; set; }
+    }
 }

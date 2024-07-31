@@ -12,6 +12,7 @@ using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
 
 namespace AntDesign
 {
@@ -30,13 +31,15 @@ namespace AntDesign
         /// </summary>
         internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
 
+        internal List<TreeNode<TItem>> _flattedNodes = new List<TreeNode<TItem>>();
+
         /// <summary>
         /// All the checked nodes
         /// </summary>
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
 
         private bool _nodeHasChanged;
-
+        private bool _initialized;
         #endregion fields
 
         #region Tree
@@ -110,6 +113,10 @@ namespace AntDesign
         [Parameter]
         public string SwitcherIcon { get; set; }
 
+        [Parameter] public string Height { get; set; }
+
+        private string HolderStyle => Height != null ? $"max-height: {(CssSizeLength)Height}; overflow-y: hidden; overflow-anchor: none;" : string.Empty;
+
         public bool Directory { get; set; }
 
         private void SetClassMapper()
@@ -155,6 +162,10 @@ namespace AntDesign
         {
             _allNodes.Add(treeNode);
             _nodeHasChanged = true;
+            _initialized = ChildrenExpression?.Invoke(treeNode)?.Any() != true;
+            if (_initialized)
+                StateHasChanged();
+
             CallAfterRender(() =>
             {
                 if (_nodeHasChanged)
@@ -1043,6 +1054,11 @@ namespace AntDesign
             }
 
             base.OnAfterRender(firstRender);
+        }
+
+        protected override bool ShouldRender()
+        {
+            return _initialized;
         }
 
         protected virtual void OnKeyDown(KeyboardEventArgs eventArgs)
