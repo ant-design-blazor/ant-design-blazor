@@ -7,65 +7,65 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <AntDesign.Charts.Calendar @ref="chart1" Data="data1" Config="config1" OtherConfig="otherConfig1"/>
+            @* <AntDesign.Charts.Calendar @ref="chart1" Data="data1" Config="config1" OtherConfig="otherConfig1"/> *@
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
     IChartComponent chart1;
-    ContributionsItem[] data1;
+    // ContributionsItem[] data1;
 
-    protected override async Task OnInitializedAsync()
-    {
-        data1 = await ChartsDemoData.ContributionsItemAsync(NavigationManager, HttpClient);
-        await chart1.ChangeData(data1);
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     data1 = await ChartsDemoData.ContributionsItemAsync(NavigationManager, HttpClient);
+    //     await chart1.ChangeData(data1);
 
-        await base.OnInitializedAsync();
-    }
+    //     await base.OnInitializedAsync();
+    // }
 
-    #region 示例1
+    // #region 示例1
 
-    CalendarConfig config1 = new CalendarConfig
-    {
-        Title = new Title
-        {
-            Visible = true,
-            Text = "GitHub contribution"
-        },
-        Description = new Description
-        {
-            Visible = true,
-            Text = "853 contributions in the last year."
-        },
-        Width = 650,
-        Height = 300,
-        Padding = "auto",
-        XAxis = new Axis
-        {
-            Title = new BaseAxisTitle
-            {
-                Text = "月份"
-            }
-        },
-        YAxis = new Axis
-        {
-            Title = null
-        },
-        Label = new Label
-        {
-            Visible = true
-        }
-    };
+    // CalendarConfig config1 = new CalendarConfig
+    // {
+    //     Title = new Title
+    //     {
+    //         Visible = true,
+    //         Text = "GitHub contribution"
+    //     },
+    //     Description = new Description
+    //     {
+    //         Visible = true,
+    //         Text = "853 contributions in the last year."
+    //     },
+    //     Width = 650,
+    //     Height = 300,
+    //     Padding = "auto",
+    //     XAxis = new Axis
+    //     {
+    //         Title = new BaseAxisTitle
+    //         {
+    //             Text = "月份"
+    //         }
+    //     },
+    //     YAxis = new Axis
+    //     {
+    //         Title = null
+    //     },
+    //     Label = new Label
+    //     {
+    //         Visible = true
+    //     }
+    // };
 
-    object otherConfig1 = new
-    {
-        DateField = "date",
-        ValueField = "commits",
-        DateRange = new[] {"2017-05-01", "2017-10-31"},
-        Colors = "#BAE7FF-#1890FF-#0050B3"
-    };
+    // object otherConfig1 = new
+    // {
+    //     DateField = "date",
+    //     ValueField = "commits",
+    //     DateRange = new[] {"2017-05-01", "2017-10-31"},
+    //     Colors = "#BAE7FF-#1890FF-#0050B3"
+    // };
 
-    #endregion 示例1
+    // #endregion 示例1
 
 }
