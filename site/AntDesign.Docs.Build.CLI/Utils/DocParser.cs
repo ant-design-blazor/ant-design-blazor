@@ -209,5 +209,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
         public bool Debug { get; set; }
 
         public bool? Docs { get; set; }
+
+        public string Version { get; set; }
     }
 }

@@ -1,0 +1,181 @@
+﻿<div class="site-space-compact-wrapper">
+    <SpaceCompact Block>
+        <Input Style=" width: 20%;" DefaultValue="0571" />
+        <Input Style="width: 30%" DefaultValue="26888888" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block Size="small">
+        <Input TValue="string" Style="width: calc(100% - 200px);" />
+        <Button Style="primary">Submit</Button>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Input TValue="string" Style="width: calc(100% - 200px);" />
+        <Button Type="primary">Submit</Button>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Input TValue="string"
+               Style="width: calc(100% - 200px);" />
+        <Tooltip Title="copy git url">
+            <Button Icon="copy" />
+        </Tooltip>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect DefaultValue="Zhejiang">
+            <SimpleSelectOption Value="Zhejiang">Zhejiang</SimpleSelectOption>
+            <SimpleSelectOption Value="Jiangsu">Jiangsu</SimpleSelectOption>
+        </SimpleSelect>
+        <Input TValue="string" Style="width: 50%;" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect Mode="multiple" DefaultValue="Zhejianggggg" Style=" width: 50%;">
+            <SimpleSelectOption Value="Zhejianggggg">Zhejianggggg</SimpleSelectOption>
+            <SimpleSelectOption Value="Jiangsu">Jiangsu</SimpleSelectOption>
+        </SimpleSelect>
+        <Input TValue="string" Style=" width: 50%;" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Search Style="width: 30%;" DefaultValue="0571" />
+        <Search AllowClear Style="width: 50%;" DefaultValue="26888888" />
+        <Search Style="width: 20%;" DefaultValue="+1" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect DefaultValue="Option1">
+            <SimpleSelectOption Value="Option1">Option1</SimpleSelectOption>
+            <SimpleSelectOption Value="Option2">Option2</SimpleSelectOption>
+        </SimpleSelect>
+        <Input TValue="string" Style="width: 50%;" />
+        <AntDesign.InputNumber TValue="int" DefaultValue="12" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Input TValue="string" Style="width: 50%;" />
+        <DatePicker TValue="DateTime?" Style="width: 50%;" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <RangePicker TValue="DateTime?[]" Style="width: 70%;" />
+        <Input TValue="string" Style="width: 30%;" />
+        <Button Type="primary">查询</Button>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <Input TValue="string" Style=" width: 30%" />
+        <RangePicker TValue="DateTime?[]" Style="width: 70%;" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect TItem="string" TItemValue="string" DefaultValue="Option1-1">
+            <SimpleSelectOption Value="Option1-1">Option1-1</SimpleSelectOption>
+            <SimpleSelectOption Value="Option1-2">Option1-2</SimpleSelectOption>
+        </SimpleSelect>
+        <SimpleSelect DefaultValue="Option2-2">
+            <SimpleSelectOption Value="Option2-1">Option2-1</SimpleSelectOption>
+            <SimpleSelectOption Value="Option2-2">Option2-2</SimpleSelectOption>
+        </SimpleSelect>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect TItem="string" TItemValue="string" DefaultValue="1">
+            <SimpleSelectOption Value="1">Between</SimpleSelectOption>
+            <SimpleSelectOption Value="2">Except</SimpleSelectOption>
+        </SimpleSelect>
+        <Input TValue="string" Style=" width: 100px; text-align: center;" Placeholder="Minimum" />
+        <Input TValue="string"
+               Class="site-input-split"
+               Style=" width: 30px;borderLeft: 0;border-right: 0;pointer-events: none;"
+               Placeholder="~"
+               Disabled />
+        <Input TValue="string"
+               Class="site-input-right"
+               Style=" width: 100px; text-align: center;"
+               Placeholder="Maximum" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SimpleSelect TItem="string" TItemValue="string" DefaultValue="Sign Up" Style="width: 30%;">
+            <SimpleSelectOption Value="Sign Up">Sign Up</SimpleSelectOption>
+            <SimpleSelectOption Value="Sign In">Sign In</SimpleSelectOption>
+        </SimpleSelect>
+        <AutoComplete Style="width: 70%;"
+                      Placeholder="Email"
+                      Options="@(new[]{"text 1","text 2"})" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <TimePicker TValue="DateTime?" Style="width: 70%;" />
+        <Cascader Style="width: 70%;"
+                  Options="options"
+                  Placeholder="SimpleSelect Address" />
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <RangePicker TValue="DateTime?[]" />
+        <TreeSelect TItem="string"
+                    Style="width: 60%;"
+                    Value="leaf1"
+                    DropdownStyle="max-height: 400px; overflow: auto; "
+                    Placeholder="Please SimpleSelect"
+                        AllowClear
+                        TreeDefaultExpandAll>
+            <TreeNode TItem="string" Key="parent 1" Title="parent 1">
+                <TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0">
+                    <TreeNode TItem="string" Key="leaf1" Title="leaf1" />
+                    <TreeNode TItem="string" Key="leaf2" Title="leaf2" />
+                </TreeNode>
+                <TreeNode TItem="string" Key="parent 1-1" Title="parent 1-1">
+                    <TreeNode TItem="string" Key="leaf3">
+                        <TitleTemplate><b style="color: #08c;">leaf3</b></TitleTemplate>
+                    </TreeNode>
+                </TreeNode>
+            </TreeNode>
+        </TreeSelect>
+        <Button Type="primary">Submit</Button>
+    </SpaceCompact>
+    <br />
+</div>
+
+@code {
+    List<CascaderNode> options = new List<CascaderNode>()
+        {
+            new() {
+                Value= "zhejiang",
+                Label= "Zhejiang",
+                Children= new CascaderNode[] {
+                 new() {
+                    Value= "hangzhou",
+                    Label= "Hangzhou",
+                    Children= new CascaderNode[]{
+                        new() {
+                            Value= "xihu",
+                            Label= "West Lake",
+                        },
+        },
+                }   ,
+    },
+            },
+            new() {
+                Value= "jiangsu",
+                Label= "Jiangsu",
+                Children=new  CascaderNode[]{
+
+                new() {
+                    Value= "nanjing",
+                    Label= "Nanjing",
+                    Children=new CascaderNode[]{
+
+                      new()   {
+                        Value= "zhonghuamen",
+                        Label= "Zhong Hua Men",
+                        },
+            },
+                },
+     },
+          },
+    };
+}

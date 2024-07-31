@@ -15,6 +15,8 @@ namespace AntDesign
 
         protected bool RTL => ConfigProvider?.Direction == "RTL";
 
+        internal virtual string PrefixClassName { get; }
+
         //[Parameter(CaptureUnmatchedValues = true)]
         //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
@@ -33,7 +35,7 @@ namespace AntDesign
             }
         }
 
-        protected ClassMapper ClassMapper { get; } = new ClassMapper();
+        internal ClassMapper ClassMapper { get; } = new ClassMapper();
 
         protected AntDomComponentBase()
         {
