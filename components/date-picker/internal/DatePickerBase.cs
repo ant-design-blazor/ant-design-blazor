@@ -1034,7 +1034,8 @@ namespace AntDesign
 
             if (IsRange)
             {
-                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
+                // don't reset the other one on close
+                //_pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
