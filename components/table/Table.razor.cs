@@ -287,6 +287,7 @@ namespace AntDesign
             _dataSourceCache = new();
             _rootRowDataCache = new();
             _selectedRows = new(this);
+            _showItemHashs = new(this);
         }
 
         private List<IFieldColumn> _groupedColumns = [];
