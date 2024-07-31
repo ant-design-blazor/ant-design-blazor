@@ -1,32 +1,42 @@
-﻿<div>
-    <RadioGroup @bind-Value="selectionType">
-        <Radio Value="@("checkbox")">Checkbox</Radio>
-        <Radio Value="@("radio")">radio</Radio>
-    </RadioGroup>
+﻿
 
-    <h5>
-        selections: 
-        @if (selectedRows != null)
-        {
-            @foreach (var selected in selectedRows)
+<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    Open Modal
+</Button>
+<Modal Title="BasicModal"
+       @bind-Visible="@_visible">
+    <div>
+        <RadioGroup @bind-Value="selectionType">
+            <Radio Value="@("checkbox")">Checkbox</Radio>
+            <Radio Value="@("radio")">radio</Radio>
+        </RadioGroup>
+
+        <h5>
+            selections:
+            @if (selectedRows != null)
             {
-                <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
+                @foreach (var selected in selectedRows)
+                {
+                    <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
+                }
+                <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
-        }
-    </h5>
+        </h5>
 
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
-        <PropertyColumn Property="c=>c.Name">
-            <a>@context.Name</a>
-        </PropertyColumn>
-        <PropertyColumn Property="c=>c.Age" />
-        <PropertyColumn Property="c=>c.Address" />
-    </Table>
-</div>
+        <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
+            <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+            <PropertyColumn Property="c=>c.Name">
+                <a>@context.Name</a>
+            </PropertyColumn>
+            <PropertyColumn Property="c=>c.Age" />
+            <PropertyColumn Property="c=>c.Address" />
+        </Table>
+    </div>
+</Modal>
+
 
 @code {
+    bool _visible = false;
 
     ITable table;
 
