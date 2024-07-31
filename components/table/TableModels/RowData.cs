@@ -21,6 +21,8 @@ namespace AntDesign.TableModels
         /// </summary>
         public Dictionary<int, RowData<TItem>> Children { get; set; }
 
+        public RowData<TItem> Parent { get; set; }
+
         public RowData()
         { }
 
@@ -38,6 +40,11 @@ namespace AntDesign.TableModels
             {
                 item.Value.SetSelected(isSelected, checkStrictly);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is RowData<TItem> rowData && Table.Equals(Data, rowData.Data);
         }
     }
 
@@ -128,6 +135,11 @@ namespace AntDesign.TableModels
         protected override void OnSelectedChanged(bool value)
         {
             Table.DataItemSelectedChanged(this, value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TableDataItem<TItem> tableDataItem && Table.Equals(Data, tableDataItem.Data);
         }
     }
 

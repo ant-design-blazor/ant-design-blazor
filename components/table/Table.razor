@@ -242,7 +242,7 @@
         {
                 return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize TItem="RowData<TItem>"
                  OverscanCount="10"
-                 Items="showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children )).ToList()"
+                 Items="showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children , parentRowData)).ToList()"
                  ItemContent="bodyRow()">
                  </Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize>;
         }
@@ -250,7 +250,7 @@
         else
         {
             { @*Build will fail without this block*@ }
-            return showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children))
+            return showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children, parentRowData))
                 .ForeachLoop(bodyRow());
         }
     }
@@ -261,12 +261,18 @@
         {
             return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.RowIndex">
             @{
-                var currentDataItem = currentRowData.DataItem;
+                var currentDataItem = currentRowData.DataItem;                
                 var rowAttributes = OnRow?.Invoke(currentRowData);
-                if (OnRowClick.HasDelegate)
+                if (RowClickSelect != TableRowClickSelect.Disabled || OnRowClick.HasDelegate)
                 {
                     rowAttributes ??= new Dictionary<string, object>();
-                    rowAttributes.TryAdd("onclick", ((Action)delegate { OnRowClick.InvokeAsync(currentRowData); }));
+                    rowAttributes.TryAdd("id", RowKey(currentRowData.Data));
+                    rowAttributes.TryAdd("onclick", (MouseEventArgs e) => {
+                        if (RowClickSelect != TableRowClickSelect.Disabled)
+                            DoRowSelect(e, currentRowData);
+                        if (OnRowClick.HasDelegate)
+                            OnRowClick.InvokeAsync(currentRowData); 
+                    });
                 }
 
                 var rowClassName = RowClassName(currentRowData);

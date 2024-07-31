@@ -1,0 +1,105 @@
+﻿<div>
+    Selection:&nbsp;
+    <Switch @bind-Checked="hasSelection" OnClick="OnHasSelectionClick" />
+    <Space />
+    <RadioGroup TValue="string" @bind-Value="selectionType" Disabled="!hasSelection" OnChange="@OnSelectionTypeChange">
+        <Radio Value="@("checkbox")">Checkbox</Radio>
+        <Radio Value="@("radio")">Radio</Radio>
+    </RadioGroup>
+    <br /><br />
+    RowClickSelect:&nbsp;
+    <EnumRadioGroup @bind-Value="rowClickSelect" TEnum="TableRowClickSelect"></EnumRadioGroup>
+    <h5>
+        selections:
+        @if (selectedRows != null)
+        {
+            @foreach (var selected in selectedRows)
+            {
+                <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
+            }
+            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+        }
+    </h5>
+
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowClickSelect="rowClickSelect" RowKey="x=>x.Name">
+        @if (hasSelection)
+        {
+            <Selection Key="@context.Name" Type="@selectionType" />
+        }
+        <PropertyColumn Property="c=>c.Name">
+            <a>@context.Name</a>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age" />
+        <PropertyColumn Property="c=>c.Address" />
+    </Table>
+</div>
+
+@code {
+
+    ITable table;
+
+    class Column
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Column[] data =
+    {
+        new Column()
+        {
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+        },
+        new Column()
+        {
+            Name = "Li Lei",
+            Age = 99,
+            Address = "Beijing No. 1 Lake Park",
+        }
+    };
+    bool hasSelection = true;
+    IEnumerable<Column> selectedRows;
+    string selectionType = "checkbox";
+    TableRowClickSelect rowClickSelect = TableRowClickSelect.Disabled;
+
+    protected override void OnInitialized()
+    {
+    }
+
+    public void RemoveSelection(string key)
+    {
+        var selected = selectedRows.Where(x => x.Name != key).ToList();
+        table.SetSelection(selected.Select(x => x.Name).ToArray());
+    }
+
+    private void OnHasSelectionClick()
+    {
+        if (!hasSelection)
+            rowClickSelect = TableRowClickSelect.Disabled;
+    }
+
+    private void OnSelectionTypeChange(string value)
+    {
+        if (value == "radio" && rowClickSelect == TableRowClickSelect.Multiple)
+            rowClickSelect = TableRowClickSelect.Single;
+        if (value == "checkbox" && rowClickSelect == TableRowClickSelect.Single)
+            rowClickSelect = TableRowClickSelect.Multiple;
+    }
+}
