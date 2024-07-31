@@ -1024,10 +1024,12 @@ namespace AntDesign
                 {
                     ClearValue(index);
                 }
+
+                _duringManualInput = false;
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexValue(index);
             }
 
             if (IsRange)
@@ -1044,7 +1046,6 @@ namespace AntDesign
                 }
             }
 
-            _duringManualInput = false;
             OverlayVisibleChanged?.Invoke(this, visible);
         }
 
