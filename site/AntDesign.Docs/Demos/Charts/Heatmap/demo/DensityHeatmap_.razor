@@ -16,12 +16,13 @@
     IChartComponent chart1;
     JobpayingItem[] data1;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        data1 = await ChartsDemoData.JobpayingItemAsync(NavigationManager, HttpClient);
-        await chart1.ChangeData(data1);
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            data1 = await ChartsDemoData.JobpayingItemAsync(NavigationManager, HttpClient);
+            await chart1.ChangeData(data1);
+        }
     }
 
     #region 示例1

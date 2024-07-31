@@ -37,12 +37,13 @@
     IChartComponent chart1;
     BasementProdItem[] data1;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        data1 = await ChartsDemoData.BasementProdAsync(NavigationManager, HttpClient);
-        await chart1.ChangeData(data1);
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            data1 = await ChartsDemoData.BasementProdAsync(NavigationManager, HttpClient);
+            await chart1.ChangeData(data1);
+        }
     }
 
     #region 示例1
