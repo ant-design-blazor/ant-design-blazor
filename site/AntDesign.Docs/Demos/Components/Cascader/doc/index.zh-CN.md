@@ -22,13 +22,14 @@ Cascader
 | 参数                 |  说明	                                          |  类型               |  默认值  |  
 | -------------------- | ---------------------------------------------------- | --------------------- | --------- |  
 | AllowClear           |  是否支持清除                                      |  bool               |  true	      |
-| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
+| BoundaryAdjustMode   |  边界自动调整的模式，默认在可视范围调整        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  当此项为 true 时，点选每级菜单选项值都会发生变化  |  bool               |  false	      |
 | Style                |  自定义类名                                        |  string             |  -	          |
 | DefaultValue         |  默认的选中项                                      |  string             |  -	          |
 | ExpandTrigger        |  次级菜单的展开方式，可选 'click' 和 'hover'       |  string             |  'click'	  |
 | Options	           |  可选项数据源                                      |  IList<AntCheckbox> |  -	          |
 | Placeholder          |  输入框占位文本                                    |  string             |  '请选择'	  |
+| Placement            |  浮层预设位置                                      | `BottomLeft` \| `BottomRight` \| `TopLeft` \| `TopRight` |  -  |
 | Size                 |  输入框大小，可选 'large','middle' 'small'         |  string           |  无	          |
 | OnChange             |  选择完成后的回调 (List<CascaderNode>, string, string) => void  |   -   |  -            |
 
