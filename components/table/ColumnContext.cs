@@ -65,7 +65,7 @@ namespace AntDesign
 
             if (column.RowSpan > 1)
             {
-                ColIndexOccupied ??= new int[Columns.Count];
+                ColIndexOccupied ??= new int[1024];
                 for (var i = column.ColIndex; i <= CurrentColIndex; i++)
                 {
                     ColIndexOccupied[i] = column.RowSpan;
