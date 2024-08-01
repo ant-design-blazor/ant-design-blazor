@@ -376,7 +376,6 @@ namespace AntDesign
 
             void ValidateDefault()
             {
-
                 _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 _isValid = !_validationMessages.Any();
 

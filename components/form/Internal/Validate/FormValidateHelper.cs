@@ -16,6 +16,7 @@ namespace AntDesign.Internal.Form.Validate
             if (!LenIsValid(validationContext, out result)) return result;
             if (!MinIsValid(validationContext, out result)) return result;
             if (!MaxIsValid(validationContext, out result)) return result;
+            if (!RangeIsValid(validationContext, out result)) return result;
             if (!PatternIsValid(validationContext, out result)) return result;
             if (!ValidatorIsValid(validationContext, out result)) return result;
             if (!DefaultFieldIsValid(validationContext, out result)) return result;
@@ -110,6 +111,8 @@ namespace AntDesign.Internal.Form.Validate
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Min;
                 }
 
+                attribute.ErrorMessage = ReplaceLength(attribute.ErrorMessage);
+
                 if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
@@ -149,6 +152,49 @@ namespace AntDesign.Internal.Form.Validate
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
                 }
 
+                attribute.ErrorMessage = ReplaceLength(attribute.ErrorMessage);
+
+                if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool RangeIsValid(FormValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+
+            if (rule.Range != null)
+            {
+                ValidationAttribute attribute = null;
+
+                if (rule.Type.IsIn(FormFieldType.String))
+                {
+                    attribute = new StringRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Max;
+                }
+
+                if (rule.Type.IsIn(FormFieldType.Array))
+                {
+                    attribute = new ArrayRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Max;
+                }
+
+                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
+                {
+                    attribute = new RangeAttribute(rule.Range.Value.Min, rule.Range.Value.Max);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
+                }
+
+                attribute.ErrorMessage = ReplaceLength(attribute.ErrorMessage, max: 2);
+
                 if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
@@ -168,7 +214,7 @@ namespace AntDesign.Internal.Form.Validate
             if (!string.IsNullOrEmpty(rule.Pattern))
             {
                 var attribute = new RegularExpressionAttribute(rule.Pattern);
-                attribute.ErrorMessage = validationContext.ValidateMessages.Pattern.Mismatch;
+                attribute.ErrorMessage = ReplacePattern(validationContext.ValidateMessages.Pattern.Mismatch);
 
                 if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
@@ -206,7 +252,7 @@ namespace AntDesign.Internal.Form.Validate
             var rule = validationContext.Rule;
 
             var attribute = new TypeAttribute(rule.Type);
-            attribute.ErrorMessage = validationContext.ValidateMessages.GetTypeMessage(rule.Type);
+            attribute.ErrorMessage = ReplaceType(validationContext.ValidateMessages.GetTypeMessage(rule.Type));
 
             if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
             {
@@ -331,10 +377,21 @@ namespace AntDesign.Internal.Form.Validate
         {
             var rule = validationContext.Rule;
 
+            object[] values = [];
+
             if (rule.Type != FormFieldType.Array && rule.OneOf != null)
             {
-                var attribute = new OneOfAttribute(rule.OneOf);
-                attribute.ErrorMessage = validationContext.ValidateMessages.OneOf;
+                values = rule.OneOf;
+            }
+            else if (rule.Enum != null && rule.Enum.IsEnum)
+            {
+                var enumValues = rule.Enum.GetEnumValues();
+            }
+
+            if (values.Length > 0)
+            {
+                var attribute = new OneOfAttribute(values);
+                attribute.ErrorMessage = ReplaceEnum(validationContext.ValidateMessages.Enum);
 
                 if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
@@ -360,8 +417,6 @@ namespace AntDesign.Internal.Form.Validate
                     validationAttribute.ErrorMessage = validationContext.Rule.Message;
                 }
 
-                validationAttribute.ErrorMessage= validationAttribute.ErrorMessage
-
                 string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
 
                 result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
@@ -374,10 +429,33 @@ namespace AntDesign.Internal.Form.Validate
             return true;
         }
 
+        #region message replacement
         private static string ReplaceTypeMessage(string message) => message.Replace("${label}", "{0}").Replace("${type}", "{1}");
 
         private static string ReplaceLabel(string message) => message.Replace("${label}", "{0}");
 
-        public static string ReplaceLength(string message, int min = 1, int max = 2) => message.Replace("${label}", "{0}").Replace("${min}", $"{{{min}}}").Replace("${max}", $"{{{max}}}");
+        private static string ReplaceLength(string message, int min = 1, int max = 1, int len = 1)
+            => message
+            .Replace("${label}", "{0}")
+            .Replace("${len}", $"{{{len}}}")
+            .Replace("${min}", $"{{{min}}}")
+            .Replace("${max}", $"{{{max}}}");
+
+        private static string ReplacePattern(string message)
+            => message
+            .Replace("${label}", "{0}")
+            .Replace("${pattern}", "{1}");
+
+        private static string ReplaceType(string message)
+            => message
+            .Replace("${label}", "{0}")
+            .Replace("${type}", "{1}");
+
+        private static string ReplaceEnum(string message)
+            => message
+            .Replace("${label}", "{0}")
+            .Replace("${enum}", "{1}");
+
+        #endregion
     }
 }

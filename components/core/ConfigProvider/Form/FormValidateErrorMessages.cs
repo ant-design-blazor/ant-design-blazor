@@ -6,7 +6,7 @@
 
         public string Default { get; set; } = "Validation error on field '{0}'";
         public string Required { get; set; } = "'{0}' is required";
-        public string OneOf { get; set; } = "'{0}' must be one of [{1}]";
+        public string Enum { get; set; } = "'{0}' must be one of [{1}]";
         public string Whitespace { get; set; } = "'{0}' cannot be empty";
 
         public DateMessage Date { get; set; } = new()
