@@ -157,6 +157,9 @@ namespace AntDesign
         [Parameter]
         public string Autocomplete { get; set; } = "off";
 
+        [Parameter]
+        public FormLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Form;
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
@@ -183,7 +186,7 @@ namespace AntDesign
         bool IForm.IsModified => _editContext.IsModified();
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
-        FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
+        FormLocale IForm.Locale => Locale;
 
         public event Action<IForm> OnFinishEvent;
 

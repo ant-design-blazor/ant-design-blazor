@@ -2,7 +2,7 @@
 {
     public class FormLocale
     {
-        public DefaultValidateMessages DefaultValidateMessages { get; set; }
+        public FormValidateErrorMessages DefaultValidateMessages { get; set; } = new();
 
         public string Optional { get; set; } = "(optional)";
     }

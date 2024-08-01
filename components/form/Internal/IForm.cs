@@ -1,4 +1,5 @@
 ﻿using System;
+using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components.Forms;
@@ -16,7 +17,6 @@ namespace AntDesign
         internal EditContext EditContext { get; }
 
         internal FormValidateMode ValidateMode { get; }
-        internal FormValidateErrorMessages ValidateMessages { get; }
 
         internal string Size { get; }
 
@@ -29,6 +29,8 @@ namespace AntDesign
         internal void RemoveControl(IControlValueAccessor valueAccessor);
 
         internal bool ValidateOnChange { get; }
+
+        internal FormLocale Locale { get; }
 
         event Action<IForm> OnFinishEvent;
 

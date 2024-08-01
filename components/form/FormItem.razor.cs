@@ -156,8 +156,6 @@ namespace AntDesign
         [Parameter]
         public string Help { get; set; }
 
-        private readonly FormLocale _locale = LocaleProvider.CurrentLocale.Form;
-
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
@@ -449,7 +447,7 @@ namespace AntDesign
             {
                 var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
-                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
+                var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
                 foreach (var rule in Rules)
                 {

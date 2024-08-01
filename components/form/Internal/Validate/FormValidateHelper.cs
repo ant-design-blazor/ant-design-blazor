@@ -31,7 +31,7 @@ namespace AntDesign.Internal.Form.Validate
             if (validationContext.Rule.Required == true)
             {
                 var attribute = new RequiredAttribute();
-                attribute.ErrorMessage = validationContext.ValidateMessages.Required;
+                attribute.ErrorMessage = ReplaceLabel(validationContext.ValidateMessages.Required);
 
                 if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
@@ -68,6 +68,8 @@ namespace AntDesign.Internal.Form.Validate
                     attribute = new ArrayLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Len;
                 }
+
+                attribute.ErrorMessage = ReplaceLength(attribute.ErrorMessage);
 
                 if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
@@ -358,6 +360,8 @@ namespace AntDesign.Internal.Form.Validate
                     validationAttribute.ErrorMessage = validationContext.Rule.Message;
                 }
 
+                validationAttribute.ErrorMessage= validationAttribute.ErrorMessage
+
                 string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
 
                 result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
@@ -369,5 +373,11 @@ namespace AntDesign.Internal.Form.Validate
 
             return true;
         }
+
+        private static string ReplaceTypeMessage(string message) => message.Replace("${label}", "{0}").Replace("${type}", "{1}");
+
+        private static string ReplaceLabel(string message) => message.Replace("${label}", "{0}");
+
+        public static string ReplaceLength(string message, int min = 1, int max = 2) => message.Replace("${label}", "{0}").Replace("${min}", $"{{{min}}}").Replace("${max}", $"{{{max}}}");
     }
 }
