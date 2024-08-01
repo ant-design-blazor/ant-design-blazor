@@ -422,10 +422,7 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (Form?.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex) is true)
-            {
-                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
-            }
+            _fieldValueGetter = _propertyReflector?.GetValueDelegate;
 
             SetInternalIsRequired();
             StateHasChanged();
@@ -433,10 +430,12 @@ namespace AntDesign
 
         ValidationResult[] IFormItem.ValidateField()
         {
-            if (Rules == null)
+            if (Form?.UseLocaleValidateMessage != true)
             {
-                return Array.Empty<ValidationResult>();
+                return [];
             }
+
+            var rules = Form.ValidateMode == FormValidateMode.Default ? GetRulesFromAttributes() : Rules;
 
             var results = new List<ValidationResult>();
 
@@ -448,7 +447,7 @@ namespace AntDesign
 
                 var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
-                foreach (var rule in Rules)
+                foreach (var rule in rules)
                 {
                     var validationContext = new FormValidationContext()
                     {
@@ -472,5 +471,35 @@ namespace AntDesign
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
+
+        private IEnumerable<FormValidationRule> GetRulesFromAttributes()
+        {
+            var attributes = _propertyReflector?.ValidationAttributes;
+
+            foreach (var attribute in attributes)
+            {
+                switch (attribute)
+                {
+                    case RequiredAttribute _:
+                        yield return new FormValidationRule { Required = true };
+                        break;
+                    case RangeAttribute range:
+                        yield return new FormValidationRule { Min = (decimal)range.Minimum, Max = (decimal)range.Maximum };
+                        break;
+                    case MinLengthAttribute minLength:
+                        yield return new FormValidationRule { Min = minLength.Length };
+                        break;
+                    case MaxLengthAttribute maxLength:
+                        yield return new FormValidationRule { Max = maxLength.Length };
+                        break;
+                    case StringLengthAttribute stringLength:
+                        yield return new FormValidationRule { Len = stringLength.MaximumLength };
+                        break;
+                    default:
+                        yield return new FormValidationRule { ValidationAttribute = attribute };
+                        break;
+                }
+            }
+        }
     }
 }

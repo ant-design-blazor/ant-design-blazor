@@ -20,6 +20,8 @@ namespace AntDesign
 
         internal string Size { get; }
 
+        internal bool UseLocaleValidateMessage { get; }
+
         internal void AddFormItem(IFormItem formItem);
 
         internal void RemoveFormItem(IFormItem formItem);

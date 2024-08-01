@@ -22,7 +22,7 @@ namespace AntDesign.Internal.Form.Validate
             if (!DefaultFieldIsValid(validationContext, out result)) return result;
             if (!FieldsIsValid(validationContext, out result)) return result;
             if (!OneOfIsValid(validationContext, out result)) return result;
-
+            if (!IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result)) return result;
             return null;
         }
 
@@ -410,7 +410,7 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
-            if (validationAttribute.IsValid(validationContext.Value) == false)
+            if (validationAttribute?.IsValid(validationContext.Value) != true)
             {
                 if (validationContext.Rule.Message != null)
                 {

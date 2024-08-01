@@ -21,5 +21,6 @@ namespace AntDesign
         public Func<FormValidationContext, ValidationResult> Validator { get; set; }
         public Func<object, object> Transform { get; set; } = (value) => value;
         public FormFieldType Type { get; set; } = FormFieldType.String;
+        public ValidationAttribute ValidationAttribute { get; set; }
     }
 }
