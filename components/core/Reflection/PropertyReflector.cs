@@ -68,6 +68,13 @@ namespace AntDesign.Core.Reflection
                 return new PropertyReflector(memberExpression.Member);
             }
 
+            if (accessorBody.NodeType == ExpressionType.ArrayIndex)
+            {
+                var parameterExpression = Expression.Parameter(typeof(object), "parameter");
+                var func = Expression.Lambda<Func<object, object>>(Expression.Convert(accessorBody, typeof(object)), parameterExpression).Compile();
+                return new PropertyReflector() { GetValueDelegate = func };
+            }
+
             return new PropertyReflector();
         }
     }
