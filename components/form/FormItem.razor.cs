@@ -478,6 +478,12 @@ namespace AntDesign
 
             foreach (var attribute in attributes)
             {
+                if (attribute is { ErrorMessage: { Length: > 0 } })
+                {
+                    yield return new FormValidationRule { ValidationAttribute = attribute };
+                    yield break;
+                }
+
                 switch (attribute)
                 {
                     case RequiredAttribute _:
