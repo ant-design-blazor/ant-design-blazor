@@ -11,6 +11,12 @@ namespace AntDesign.Internal.Form.Validate
 
             ValidationResult result;
 
+            if (validationContext.Rule.ValidationAttribute != null)
+            {
+                if (!IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result)) return result;
+                return null;
+            }
+
             if (!RequiredIsValid(validationContext, out result)) return result;
             if (!TypeIsValid(validationContext, out result)) return result;
             if (!LenIsValid(validationContext, out result)) return result;
@@ -22,7 +28,7 @@ namespace AntDesign.Internal.Form.Validate
             if (!DefaultFieldIsValid(validationContext, out result)) return result;
             if (!FieldsIsValid(validationContext, out result)) return result;
             if (!OneOfIsValid(validationContext, out result)) return result;
-            if (!IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result)) return result;
+
             return null;
         }
 
@@ -59,7 +65,7 @@ namespace AntDesign.Internal.Form.Validate
                     attribute = new StringLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Len;
                 }
-                if (rule.Type == FormFieldType.Number)
+                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
                 {
                     attribute = new NumberAttribute((decimal)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Len;
@@ -178,19 +184,19 @@ namespace AntDesign.Internal.Form.Validate
                 if (rule.Type.IsIn(FormFieldType.String))
                 {
                     attribute = new StringRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
-                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Max;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Range;
                 }
 
                 if (rule.Type.IsIn(FormFieldType.Array))
                 {
                     attribute = new ArrayRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
-                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Max;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Range;
                 }
 
                 if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
                 {
                     attribute = new RangeAttribute(rule.Range.Value.Min, rule.Range.Value.Max);
-                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Range;
                 }
 
                 attribute.ErrorMessage = ReplaceLength(attribute.ErrorMessage, max: 2);
@@ -410,7 +416,7 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
-            if (validationAttribute?.IsValid(validationContext.Value) != true)
+            if (validationAttribute?.IsValid(validationContext.Value) == false)
             {
                 if (validationContext.Rule.Message != null)
                 {
