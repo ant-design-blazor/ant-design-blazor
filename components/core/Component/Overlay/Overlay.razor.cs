@@ -217,6 +217,11 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(true);
+            }
+
             await InvokeAsync(StateHasChanged);
 
             if (OnShow.HasDelegate)
@@ -259,6 +264,11 @@ namespace AntDesign.Internal
             _isOverlayHiding = false;
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
+
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(false);
+            }
 
             StateHasChanged();
 
