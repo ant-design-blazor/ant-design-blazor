@@ -210,7 +210,7 @@ namespace AntDesign
 
             if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
             {
-                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.RealScrollBarSize}");
+                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
             var fixedWidth = fixedWidths.Length switch
@@ -231,6 +231,12 @@ namespace AntDesign
         {
             RowData.Expanded = !RowData.Expanded;
             Table?.OnExpandChange(RowData);
+        }
+
+        void IColumn.UpdateFixedStyle()
+        {
+            _fixedStyle = CalcFixedStyle();
+            StateHasChanged();
         }
     }
 }
