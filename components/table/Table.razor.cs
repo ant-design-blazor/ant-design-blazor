@@ -135,7 +135,7 @@ namespace AntDesign
         public string ScrollY { get; set; }
 
         [Parameter]
-        public string ScrollBarWidth { get => _scrollBarWidth; set => _scrollBarWidth = value; }
+        public string ScrollBarWidth { get; set; }
 
         [Parameter]
         public int IndentSize { get; set; } = 15;
@@ -225,7 +225,6 @@ namespace AntDesign
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
         private string _scrollBarWidth;
-        private string _realScrollBarSize = "15px";
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
@@ -266,8 +265,7 @@ namespace AntDesign
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
-        string ITable.ScrollBarWidth => _scrollBarWidth;
-        string ITable.RealScrollBarSize => _scrollBarWidth ?? _realScrollBarSize;
+        string ITable.ScrollBarWidth => _scrollBarWidth ?? "15px";
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -645,6 +643,8 @@ namespace AntDesign
                 TableLayout = "fixed";
             }
 
+            _scrollBarWidth = ScrollBarWidth;
+
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
@@ -717,10 +717,11 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
-                if (ScrollY != null && ScrollBarWidth == null)
+                if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)
                 {
                     var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
-                    _realScrollBarSize = $"{scrollBarSize}px";
+                    _scrollBarWidth = $"{scrollBarSize}px";
+                    ColumnContext.HeaderColumns.LastOrDefault()?.UpdateFixedStyle();
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.

@@ -164,7 +164,7 @@
 
     static RenderFragment colGroup(Table<TItem> table, bool header)
     {
-        var realSize = (CssSizeLength)((table as ITable).RealScrollBarSize);
+        var realSize = (CssSizeLength)((table as ITable).ScrollBarWidth);
         return @<colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                 @if (_fieldModel is not null)
