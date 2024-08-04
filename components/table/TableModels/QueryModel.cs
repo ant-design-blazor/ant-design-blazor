@@ -90,7 +90,8 @@ namespace AntDesign.TableModels
         }
 
         /// <summary>
-        /// Get current filters' expression for ORMs like Entity Framework
+        /// Get current filters' expression for ORMs like Entity Framework.
+        /// And you can get the filtered data by executing the expression with the data source.
         /// </summary>
         /// <returns></returns>
         public Expression<Func<TItem, bool>> GetFilterExpression()
