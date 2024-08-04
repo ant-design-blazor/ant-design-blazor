@@ -7,19 +7,20 @@
     <a>Delete a task</a>
 </Popconfirm>
 
+@inject IMessageService _message;
 @code{
-    private bool loading = false;
-
+    private bool _loading = false;
+    private bool _visible;
     private async Task Confirm()
     {
-        loading = true;
+        _loading = true;
         StateHasChanged();
 
         await Task.Delay(1000);
 
         _visible = false;
-        _message.Success("Next step.");
+        _ = _message.Success("Next step.");
 
-        loading = false;
+        _loading = false;
     }
 }
