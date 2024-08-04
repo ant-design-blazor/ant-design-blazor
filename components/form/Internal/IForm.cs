@@ -13,8 +13,6 @@ namespace AntDesign
 
         internal AntLabelAlignType? LabelAlign { get; }
 
-        internal EditContext EditContext { get; }
-
         internal FormValidateMode ValidateMode { get; }
         internal FormValidateErrorMessages ValidateMessages { get; }
 
@@ -30,7 +28,12 @@ namespace AntDesign
 
         internal bool ValidateOnChange { get; }
 
-        event Action<IForm> OnFinishEvent;
+        internal event Action<IForm> OnFinishEvent;
+
+        /// <summary>
+        /// Get the current EditContext from the Form.
+        /// </summary>
+        EditContext EditContext { get; }
 
         bool IsModified { get; }
 
@@ -43,5 +46,7 @@ namespace AntDesign
         void Submit();
 
         bool Validate();
+
+        void AddValidationMessage(string field, string[] errorMessages);
     }
 }

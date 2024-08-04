@@ -361,7 +361,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        public void UpdateValidateMessage()
+        private void UpdateValidateMessage()
         {
             if (_control == null)
             {
@@ -484,5 +484,17 @@ namespace AntDesign
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
+
+        void IFormItem.AddValidationMessage(string[] errorMessages)
+        {
+            _validationMessages = errorMessages;
+            _isValid = !errorMessages.Any();
+            _validateStatus = _isValid ? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
     }
 }

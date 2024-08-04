@@ -116,9 +116,6 @@ namespace AntDesign
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
         [Parameter]
-        public EventCallback<EditContext> OnEditContextChanged { get; set; }
-
-        [Parameter]
         public EventCallback<FieldChangedEventArgs> OnFieldChanged { get; set; }
 
         [Parameter]
@@ -188,7 +185,20 @@ namespace AntDesign
         FormValidateMode IForm.ValidateMode => ValidateMode;
         FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
 
-        public event Action<IForm> OnFinishEvent;
+        private event Action<IForm> OnFinishEvent;
+
+        event Action<IForm> IForm.OnFinishEvent
+        {
+            add
+            {
+                OnFinishEvent += value;
+            }
+
+            remove
+            {
+                OnFinishEvent -= value;
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -409,33 +419,10 @@ namespace AntDesign
                 }
             }
             _editContext = newContext;
-            if (OnEditContextChanged.HasDelegate)
-            {
-                InvokeAsync(() => OnEditContextChanged.InvokeAsync(_editContext));
-            }
+
             // because EditForm's editcontext CascadingValue is fixed,so there need invoke StateHasChanged,
             // otherwise, the child component's(FormItem) EditContext will not update.
             InvokeAsync(StateHasChanged);
-        }
-
-        public void UpdateValidateMessage()
-        {
-            foreach (var item in _formItems)
-            {
-                item.UpdateValidateMessage();
-            }
-        }
-        public void UpdateValidateMessage(params FieldIdentifier[] fileds)
-        {
-            foreach (var filed in fileds)
-            {
-                var formItem = _formItems.FirstOrDefault(t => t.GetFieldIdentifier().Equals(filed));
-                if (formItem == null)
-                {
-                    continue;
-                }
-                formItem.UpdateValidateMessage();
-            }
         }
 
         private static BindingFlags AllBindings
@@ -464,5 +451,16 @@ namespace AntDesign
             return _eventInfos;
         }
 
+        public void AddValidationMessage(string field, string[] errorMessages)
+        {
+            var fieldIdentifier = new FieldIdentifier(Model, field);
+            var formItem = _formItems
+              .FirstOrDefault(t => t.GetFieldIdentifier().Equals(fieldIdentifier));
+
+            if (formItem != null)
+            {
+                formItem.AddValidationMessage(errorMessages);
+            }
+        }
     }
 }
