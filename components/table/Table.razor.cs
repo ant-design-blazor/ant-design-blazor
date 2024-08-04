@@ -552,6 +552,18 @@ namespace AntDesign
             return queryModel;
         }
 
+        /// <summary>
+        /// Call this method after data source has changed to refresh the state of the table.
+        /// </summary>
+        /// Make the method protected to allow derived classes to call it.
+        protected void InvokeDataSourceHasChanged()
+        {
+            if (_hasInitialized)
+            {
+                InternalReload();
+            }
+        }
+
 #if NET5_0_OR_GREATER
         private async ValueTask<ItemsProviderResult<RowData<TItem>>> ItemsProvider(ItemsProviderRequest request)
         {
@@ -713,10 +725,7 @@ namespace AntDesign
             else if (_waitingDataSourceReload)
             {
                 _waitingDataSourceReload = false;
-                if (_hasInitialized)
-                {
-                    InternalReload();
-                }
+                InvokeDataSourceHasChanged();
             }
         }
 
