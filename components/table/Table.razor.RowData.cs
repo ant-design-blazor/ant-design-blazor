@@ -7,17 +7,21 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        private Dictionary<int, TableDataItem<TItem>> _dataSourceCache;
-        private Dictionary<int, RowData<TItem>> _rootRowDataCache;
+        private readonly Dictionary<int, TableDataItem<TItem>> _dataSourceCache;
+        private readonly Dictionary<int, RowData<TItem>> _rootRowDataCache;
+        private readonly HashSet<TItem> _showItemHashs;
 
         private void FlushCache()
         {
-            if (!_hasInitialized)
+            if (!_hasInitialized || !_dataSourceCache.Any())
             {
                 return;
             }
+
             // Clears the cache of rowdata that is not in the current page.
-            var showItemKeys = GetShowItemsIncludeChildren(_showItems).Select(GetHashCode).ToHashSet();
+            var showItemKeys = GetShowItemsIncludeChildren(_showItems).Select(GetHashCode);
+            _showItemHashs.Clear();
+
             var removedKeys = _dataSourceCache.Keys.Except(showItemKeys);
             foreach (var key in removedKeys)
             {
@@ -136,13 +140,18 @@ namespace AntDesign
         {
             foreach (var item in showItems)
             {
+                if (_showItemHashs.Contains(item))
+                    continue;
+
+                _showItemHashs.Add(item);
+
                 yield return item;
 
                 var children = TreeChildren?.Invoke(item);
 
                 if (children?.Any() == true)
                 {
-                    foreach (var child in GetShowItemsIncludeChildren(TreeChildren(item)))
+                    foreach (var child in GetShowItemsIncludeChildren(children))
                     {
                         yield return child;
                     }

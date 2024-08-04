@@ -1313,7 +1313,7 @@ namespace AntDesign
             if (activeCanditate is null)
             {
                 //label has to be cast-able to value
-                TItemValue value = CustomTagLabelToValue.Invoke(searchValue);
+                TItemValue value = GetItemValueFromLabel(searchValue);
                 if (CustomTagSelectOptionItem is null)
                 {
                     CustomTagSelectOptionItem = CreateSelectOptionItem(searchValue, true);

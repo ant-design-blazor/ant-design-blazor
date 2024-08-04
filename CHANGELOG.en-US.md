@@ -15,6 +15,24 @@ timeline: true
 
 ---
 
+### 0.19.7
+
+`2024-7-31`
+
+- 📖 Update Charts docs for version 0.5.5. [#4047](https://github.com/ant-design-blazor/ant-design-blazor/pull/4047) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+- 🆕 Enhance DatePicker value format. [#4029](https://github.com/ant-design-blazor/ant-design-blazor/pull/4029) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 fix(module: tree-select): fix the issue of TreeSelect's bind-values(#4000). [#4012](https://github.com/ant-design-blazor/ant-design-blazor/pull/4012) [@pankey888](https://github.com/pankey888)
+  - 🐞 fix(module: tree-select): exception when searching with nodes have no title. [#4024](https://github.com/ant-design-blazor/ant-design-blazor/pull/4024) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Radio can't refresh the UI in Modal. [#4023](https://github.com/ant-design-blazor/ant-design-blazor/pull/4023) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input can't apply Class to input element. [#4005](https://github.com/ant-design-blazor/ant-design-blazor/pull/4005) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor Select friendly error message for CustomTagLabelToValue. [#4049](https://github.com/ant-design-blazor/ant-design-blazor/pull/4049) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal navigating exception (#4039). [#4039](https://github.com/ant-design-blazor/ant-design-blazor/pull/4039) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed Segmented that the bound value may be changed by AddItem if it is equal to default. [#4051](https://github.com/ant-design-blazor/ant-design-blazor/pull/4051) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Table to avoid circular reference in caching. [#4048](https://github.com/ant-design-blazor/ant-design-blazor/pull/4048) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.19.6
 
 `2024-7-22`

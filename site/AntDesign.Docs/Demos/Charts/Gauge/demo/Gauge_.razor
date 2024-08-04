@@ -5,28 +5,28 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <Gauge TItem="string" Config="config1" />
+                <Gauge Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <Gauge TItem="string" Config="config2" />
+                <Gauge Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
             <TabTemplate>示例3</TabTemplate>
             <ChildContent>
-                <Gauge TItem="string" Config="config3" />
+                <Gauge Config="config3" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="4">
             <TabTemplate>示例4</TabTemplate>
             <ChildContent>
-                <Gauge TItem="string" Config="config4" />
+                <Gauge Config="config4" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -44,7 +44,7 @@
         },
         Width = 400,
         Height = 400,
-        Value = 64,
+        Percent = new decimal(0.64),
         Min = 0,
         Max = 100,
         Range = new double[] {0, 25, 50, 75, 100},
@@ -70,7 +70,7 @@
         },
         Width = 400,
         Height = 400,
-        Value = 75,
+        Percent = new decimal(0.75),
         Min = 0,
         Max = 100,
         Range = new double[] { 0, 75 },
@@ -132,7 +132,7 @@
         },
         Width = 400,
         Height = 400,
-        Value = 40,
+        Percent = new decimal(0.4),
         Min = 0,
         Max = 100,
         Range = new double[] { 0, 25, 50, 75, 100 },    
@@ -160,7 +160,7 @@
         },
         Width = 400,
         Height = 400,
-        Value = 34,
+        Percent = new decimal(0.34),
         Min = 0,
         Max = 100,
         Range = new double[] { 0, 70 },

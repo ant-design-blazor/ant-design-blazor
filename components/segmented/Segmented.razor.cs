@@ -90,11 +90,11 @@ namespace AntDesign
                 if (_value is null && value is null)
                     return;
 
+                _valueSet = true;
                 if (_value?.Equals(value) == true)
                     return;
 
                 _value = value;
-                _valueSet = true;
                 ChangeValue(_value);
             }
         }

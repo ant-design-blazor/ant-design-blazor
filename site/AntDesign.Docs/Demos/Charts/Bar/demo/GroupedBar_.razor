@@ -5,7 +5,7 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <GroupedBar Data="data1" Config="config1"/>
+            <Bar Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -78,7 +78,7 @@
         }
     };
 
-    readonly GroupedBarConfig config1 = new GroupedBarConfig
+    readonly BarConfig config1 = new BarConfig
     {
         Title = new Title
         {
@@ -87,7 +87,8 @@
         },
         XField = "value",
         YField = "label",
-        GroupField = "type",
+        IsGroup = true,
+        SeriesField = "type",
         Color = new[] {"#1383ab", "#c52125"},
         Label = new BarViewConfigLabel()
     };

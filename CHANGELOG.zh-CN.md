@@ -14,6 +14,26 @@ timeline: true
 - 主版本号：含有破坏性更新和新特性，不在发布周期内。
 
 ---
+
+### 0.19.7
+
+`2024-7-31`
+
+- 📖 升级图表组件到0.5.5。[#4047](https://github.com/ant-design-blazor/ant-design-blazor/pull/4047) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+- 🆕 优化 DatePicker 绑定值根据 ShowTime 的格式，日期则去掉时间。[#4029](https://github.com/ant-design-blazor/ant-design-blazor/pull/4029) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 修复 TreeSelect 值绑定问题 (#4000)。[#4012](https://github.com/ant-design-blazor/ant-design-blazor/pull/4012) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 TreeSelect 当不设置title时的搜索异常。[#4024](https://github.com/ant-design-blazor/ant-design-blazor/pull/4024) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Radio 在 Modal 不刷新。[#4023](https://github.com/ant-design-blazor/ant-design-blazor/pull/4023) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input 未绑定 Class 到 input 元素。[#4005](https://github.com/ant-design-blazor/ant-design-blazor/pull/4005) [@ElderJames](https://github.com/ElderJames)
+- 🛠 重构 Select 友好提示设置 CustomTagLabelToValue。[#4049](https://github.com/ant-design-blazor/ant-design-blazor/pull/4049) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 的导航移除异常。[#4039](https://github.com/ant-design-blazor/ant-design-blazor/pull/4039) [@James Yeung](https://github.com/James Yeung)
+- 🐞 修复 Segmented 绑定 Value 会被 AddItem 修改。[#4051](https://github.com/ant-design-blazor/ant-design-blazor/pull/4051) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Table 缓存的循环引用问题。[#4048](https://github.com/ant-design-blazor/ant-design-blazor/pull/4048) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 0.19.6
 
 `2024-7-22`
