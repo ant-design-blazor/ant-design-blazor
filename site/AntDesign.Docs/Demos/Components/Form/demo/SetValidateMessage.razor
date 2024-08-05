@@ -35,6 +35,6 @@
         await Task.Delay(1000);
         
         // occurs error from server
-        _form?.AddValidationMessage("Username", ["Username has error."]);
+        _form?.SetValidationMessages("Username", ["Username has error."]);
     }
 }

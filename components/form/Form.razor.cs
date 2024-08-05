@@ -451,13 +451,13 @@ namespace AntDesign
             return _eventInfos;
         }
 
-        public void AddValidationMessage(string field, string[] errorMessages)
+        public void SetValidationMessages(string field, string[] errorMessages)
         {
             var fieldIdentifier = _editContext.Field(field);
             var formItem = _formItems
               .FirstOrDefault(t => t.GetFieldIdentifier().Equals(fieldIdentifier));
 
-            formItem?.AddValidationMessage(errorMessages);
+            formItem?.SetValidationMessage(errorMessages);
         }
     }
 }

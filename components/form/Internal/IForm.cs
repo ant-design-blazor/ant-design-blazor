@@ -30,23 +30,50 @@ namespace AntDesign
 
         internal event Action<IForm> OnFinishEvent;
 
+
+        internal FormRequiredMark RequiredMark { get; set; }
+
+        /// <summary>
+        /// The data object that the form is bound to.
+        /// </summary>
+        public object Model { get; }
+
+        /// <summary>
+        /// The name of the form.
+        /// </summary>
+        public string Name { get; }
+
         /// <summary>
         /// Get the current EditContext from the Form.
         /// </summary>
         EditContext EditContext { get; }
 
+        /// <summary>
+        /// Whether the form has been modified.
+        /// </summary>
         bool IsModified { get; }
 
-        string Name { get; }
-        object Model { get; }
-        FormRequiredMark RequiredMark { get; set; }
-
+        /// <summary>
+        /// Reset the values and validation messages of all fields.
+        /// </summary>
         void Reset();
 
+        /// <summary>
+        /// Trigger `OnFinish` while all fields are valid, otherwise, trigger `OnFinishFailed`.
+        /// </summary>
         void Submit();
 
+        /// <summary>
+        /// Validate all fields.
+        /// </summary>
+        /// <returns></returns>
         bool Validate();
 
-        void AddValidationMessage(string field, string[] errorMessages);
+        /// <summary>
+        /// Set validation messages for a specific field.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="errorMessages"></param>
+        void SetValidationMessages(string field, string[] errorMessages);
     }
 }

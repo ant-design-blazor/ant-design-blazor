@@ -485,7 +485,7 @@ namespace AntDesign
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
 
-        void IFormItem.AddValidationMessage(string[] errorMessages)
+        void IFormItem.SetValidationMessage(string[] errorMessages)
         {
             _validationMessages = errorMessages;
             _isValid = !errorMessages.Any();

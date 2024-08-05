@@ -24,6 +24,6 @@ namespace AntDesign.Internal
 
         internal FieldIdentifier GetFieldIdentifier();
 
-        internal void AddValidationMessage(string[] errorMessages);
+        internal void SetValidationMessage(string[] errorMessages);
     }
 }
