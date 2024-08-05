@@ -1,4 +1,5 @@
 ﻿using System;
+using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components.Forms;
@@ -14,9 +15,10 @@ namespace AntDesign
         internal AntLabelAlignType? LabelAlign { get; }
 
         internal FormValidateMode ValidateMode { get; }
-        internal FormValidateErrorMessages ValidateMessages { get; }
 
         internal string Size { get; }
+
+        internal bool UseLocaleValidateMessage { get; }
 
         internal void AddFormItem(IFormItem formItem);
 
@@ -27,6 +29,8 @@ namespace AntDesign
         internal void RemoveControl(IControlValueAccessor valueAccessor);
 
         internal bool ValidateOnChange { get; }
+
+        internal FormLocale Locale { get; }
 
         internal event Action<IForm> OnFinishEvent;
 

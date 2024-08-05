@@ -157,6 +157,9 @@ namespace AntDesign
         [Parameter]
         public string Autocomplete { get; set; } = "off";
 
+        [Parameter]
+        public FormLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Form;
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
@@ -183,7 +186,7 @@ namespace AntDesign
         bool IForm.IsModified => _editContext.IsModified();
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
-        FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
+        FormLocale IForm.Locale => Locale;
 
         private event Action<IForm> OnFinishEvent;
 
@@ -223,11 +226,8 @@ namespace AntDesign
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged += OnValidationStateChangedHandler;
 
-            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                _editContext.OnFieldChanged += RulesModeOnFieldChanged;
-                _editContext.OnValidationRequested += RulesModeOnValidationRequested;
-            }
+            _editContext.OnFieldChanged += RulesModeOnFieldChanged;
+            _editContext.OnValidationRequested += RulesModeOnValidationRequested;
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -284,10 +284,6 @@ namespace AntDesign
 
         private void RulesModeOnFieldChanged(object sender, FieldChangedEventArgs args)
         {
-            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                return;
-            }
 
             _rulesValidator.ClearError(args.FieldIdentifier);
 
@@ -312,11 +308,6 @@ namespace AntDesign
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
         {
-            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                return;
-            }
-
             _rulesValidator.ClearErrors();
 
             var errors = new Dictionary<FieldIdentifier, List<string>>();
@@ -392,6 +383,10 @@ namespace AntDesign
         public void ValidationReset() => BuildEditContext();
 
         public EditContext EditContext => _editContext;
+
+        bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
+
+        bool IForm.UseLocaleValidateMessage => UseLocaleValidateMessage;
 
         public void BuildEditContext()
         {

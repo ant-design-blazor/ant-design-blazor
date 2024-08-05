@@ -142,8 +142,7 @@ namespace AntDesign
 
         private static void AddClonedLocale(string cultureName, ref Locale locale)
         {
-            locale = JsonSerializer.Deserialize<Locale>(
-                JsonSerializer.Serialize(locale, new JsonSerializerOptions { IgnoreReadOnlyProperties = true }));
+            locale = locale with { };
             locale.SetCultureInfo(cultureName);
             _localeCache.TryAdd(cultureName, locale);
         }

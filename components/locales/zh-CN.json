@@ -197,7 +197,7 @@
     "defaultValidateMessages": {
       "default": "字段验证错误${label}",
       "required": "请输入${label}",
-      "enum": "${label}必须是其中一个[${enum}]",
+      "enum": "${label}必须是[${enum}]中的一个",
       "whitespace": "${label}不能为空字符",
       "date": {
         "format": "${label}日期格式无效",
