@@ -51,11 +51,13 @@ export class inputHelper {
     }
   }
 
-  static disposeResizeTextArea(element: HTMLTextAreaElement) {
-    element.removeEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
-    resize.unobserve(element.id + "-resize", element);
-    state.objReferenceDict[element.id] = null;
-    state.eventCallbackRegistry[element.id + "input"] = null;
+    static disposeResizeTextArea(element: HTMLTextAreaElement) {
+    if (element && element.removeEventListener) {
+      element.removeEventListener("input", state.eventCallbackRegistry[element.id + "input"]);
+      resize.unobserve(element.id + "-resize", element);
+      state.objReferenceDict[element.id] = null;
+      state.eventCallbackRegistry[element.id + "input"] = null;
+    }
   }
 
   static resizeTextArea(element: HTMLTextAreaElement, minRows: number, maxRows: number) {

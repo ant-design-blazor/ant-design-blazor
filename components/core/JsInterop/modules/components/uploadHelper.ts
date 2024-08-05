@@ -13,7 +13,9 @@ export class uploadHelper {
   }
 
   static removeFileClickEventListener(btn: HTMLElement) {
-    btn.removeEventListener("click", uploadHelper.fileClickEvent);
+    if (btn && btn.removeEventListener) {
+      btn.removeEventListener("click", uploadHelper.fileClickEvent);
+    }
   }
 
   private static fileClickEvent(e: MouseEvent) {
@@ -94,5 +96,12 @@ export class uploadHelper {
       }
     }
     req.send(formData)
+    element.req = req;
+  }
+
+  static abortUpload(element) {
+    if (element.req != null) {
+      element.req.abort();
+    }
   }
 }

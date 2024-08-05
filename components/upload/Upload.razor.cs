@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -106,6 +107,8 @@ namespace AntDesign
 
         internal bool _dragHover;
 
+        private ForwardRef _btn;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -137,6 +140,11 @@ namespace AntDesign
                 this.FileList.Remove(item);
                 await this.FileListChanged.InvokeAsync(this.FileList);
                 StateHasChanged();
+            }
+
+            if (!this.FileList.Any())
+            {
+                await JsInvokeAsync(JSInteropConstants.AbortUpload, this.Ref);
             }
         }
 

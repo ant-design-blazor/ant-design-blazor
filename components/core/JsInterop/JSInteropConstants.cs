@@ -60,6 +60,8 @@ namespace AntDesign
         public static string UploadFile => UploadComponentHelper.UploadFile;
         public static string GetFileInfo => UploadComponentHelper.GetFileInfo;
 
+        public static string AbortUpload => UploadComponentHelper.AbortUpload;
+
         #endregion upload
 
         #region download
@@ -294,6 +296,7 @@ namespace AntDesign
             public static string ClearFile => $"{FUNC_PREFIX}clearFile";
             public static string UploadFile => $"{FUNC_PREFIX}uploadFile";
             public static string GetFileInfo => $"{FUNC_PREFIX}getFileInfo";
+            public static string AbortUpload => $"{FUNC_PREFIX}abortUpload";
         }
 
         public static class DownloadComponentHelper
