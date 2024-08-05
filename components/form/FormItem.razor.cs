@@ -380,11 +380,6 @@ namespace AntDesign
             InvokeAsync(StateHasChanged);
         }
 
-        internal bool IsExistError(string msg)
-        {
-            return _validationMessages.Any(x => x == msg);
-        }
-
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;

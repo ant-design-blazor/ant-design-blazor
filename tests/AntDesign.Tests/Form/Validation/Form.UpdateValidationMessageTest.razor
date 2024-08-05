@@ -9,19 +9,15 @@
     Form<Model>? form;
     FormItem? formItem;
     ValidationMessageStore? validationMessageStore;
+   
     [Fact]
     public void Form_UpdateValidateMessage()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
     .SetResult(new AntDesign.JsInterop.Window());
-        var onEditContextChanged = (EditContext e) =>
-        {
-    validationMessageStore = new ValidationMessageStore(e);
-    form!.UpdateValidateMessage();
-        };
         var cut = Render(
-    @<Form Model="@_model" @ref="form" OnEditContextChanged="onEditContextChanged" >
+    @<Form Model="@_model" @ref="form">
         <FormItem @ref="formItem"> <AntDesign.Input @bind-Value=@_model.ValidateField /></FormItem>
         <FormItem >
             <Button Type="@ButtonType.Primary" HtmlType="submit">
@@ -30,19 +26,11 @@
         </FormItem>
     </Form>
     );
-        var filed = form!.EditContext.Field(nameof(_model.ValidateField));
-        validationMessageStore = new ValidationMessageStore(form!.EditContext);
-        validationMessageStore.Add(filed, "Error message");
-        form.UpdateValidateMessage(filed);
-        Assert.True(formItem!.IsExistError("Error message"));
-        form.BuildEditContext();
-        filed = form!.EditContext.Field(nameof(_model.ValidateField));
-        Assert.True(!formItem!.IsExistError("Error message"));
-        validationMessageStore.Add(filed, "New Error message");
-        formItem.UpdateValidateMessage();
-        Assert.True(formItem!.IsExistError("New Error message"));
-        validationMessageStore.Add(filed, "New Error message2");
-        form.UpdateValidateMessage();
-        Assert.True(formItem!.IsExistError("New Error message2"));
+
+        form.SetValidationMessages(nameof(_model.ValidateField), ["Error message"]);
+        cut.Find(".ant-form-item-explain-error").Text().Trim().Should().Be("Error message");
+
+        form.SetValidationMessages(nameof(_model.ValidateField), ["New Error message"]);
+        cut.Find(".ant-form-item-explain-error").Text().Trim().Should().Be("New Error message");
     }
 }
