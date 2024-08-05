@@ -6,8 +6,6 @@
       OnFinish="OnFinish"
       LabelColSpan="8"
       WrapperColSpan="16"
-      OnEditContextChanged="OnEditContextChanged"
-      OnValidationRequested="OnValidationRequested"
       @ref="_form">
     <FormItem Label="User Name">
         <Input @bind-Value="@context.Username" />
@@ -16,7 +14,7 @@
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
-        <Button Type="@ButtonType.Primary" HtmlType="button" OnClick="() => { _validationMessageStore?.Clear();  _form?.UpdateValidateMessage();}">
+        <Button Type="@ButtonType.Primary" HtmlType="button">
             Clear
         </Button>
     </FormItem>
@@ -31,24 +29,12 @@
 
     private Model _model = new Model();
     Form<Model> _form;
-    ValidationMessageStore _validationMessageStore;
 
-    private void OnFinish(EditContext editContext)
+    private async Task OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
-        _validationMessageStore ??= new ValidationMessageStore(editContext);
-        var filed = editContext.Field("Username");
-        _validationMessageStore.Add(filed, "Username has error.");
-        _form?.UpdateValidateMessage(filed);
-    }
-
-    private void OnEditContextChanged(EditContext editContext)
-    {
-        _validationMessageStore = new ValidationMessageStore(editContext);
-    }
-
-    void OnValidationRequested(ValidationRequestedEventArgs args)
-    {
-        _validationMessageStore?.Clear();
+        await Task.Delay(1000);
+        
+        // occurs error from server
+        _form?.AddValidationMessage("Username", ["Username has error."]);
     }
 }

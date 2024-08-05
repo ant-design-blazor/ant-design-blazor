@@ -453,14 +453,11 @@ namespace AntDesign
 
         public void AddValidationMessage(string field, string[] errorMessages)
         {
-            var fieldIdentifier = new FieldIdentifier(Model, field);
+            var fieldIdentifier = _editContext.Field(field);
             var formItem = _formItems
               .FirstOrDefault(t => t.GetFieldIdentifier().Equals(fieldIdentifier));
 
-            if (formItem != null)
-            {
-                formItem.AddValidationMessage(errorMessages);
-            }
+            formItem?.AddValidationMessage(errorMessages);
         }
     }
 }
