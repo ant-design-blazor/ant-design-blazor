@@ -73,7 +73,7 @@ namespace AntDesign
         /// <returns></returns>
         protected override async Task OnParametersSetAsync()
         {
-            if (Visible && !_hasAdd)
+            if ((Visible || Config.ForceRender) && !_hasAdd)
             {
                 _hasAdd = true;
             }

@@ -86,7 +86,27 @@
     "filterConfirm": "確 定",
     "filterReset": "重 置",
     "selectAll": "全部選取",
-    "selectInvert": "反向選取"
+    "selectInvert": "反向選取",
+    "filterOptions": {
+      "true": "是",
+      "false": "否",
+      "and": "且",
+      "or": "或",
+      "equals": "等於",
+      "notEquals": "不等於",
+      "contains": "包含",
+      "notContains": "不包含",
+      "startsWith": "開頭為",
+      "endsWith": "結尾為",
+      "greaterThan": "大於",
+      "lessThan": "小於",
+      "greaterThanOrEquals": "大於或等於",
+      "lessThanOrEquals": "小於或對於",
+      "isNull": "為 Null",
+      "isNotNull": "不為 Null",
+      "theSameDateWith": "等於該日期",
+      "between": "在區間"
+    }
   },
   "Modal": {
     "okText": "確 定",

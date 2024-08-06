@@ -46,8 +46,8 @@ namespace AntDesign
 
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
-        private string _maskHideClsName = "";
-        private string _wrapStyle = "";
+        private string _maskHideClsName = "ant-modal-mask-hidden";
+        private string _wrapStyle = "display: none;";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
@@ -297,7 +297,7 @@ namespace AntDesign
 
         private string CalcWrapStyle()
         {
-            string style;
+            string style = "";
             if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
@@ -310,10 +310,12 @@ namespace AntDesign
                     style += "align-items: flex-start;";
                 }
             }
-            else
+
+            if (!Config.Mask)
             {
-                style = "";
+                style += "pointer-events:none;";
             }
+
             return style;
         }
 
@@ -392,6 +394,7 @@ namespace AntDesign
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
+                Config.Resizable ? "ant-modal-resizable":"",
                 Class
             };
 
@@ -472,6 +475,11 @@ namespace AntDesign
                     _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
+            }
+            else if (!_hasRendered && Config.ForceRender)
+            {
+                _hasRendered = true;
+                await AppendToContainer();
             }
             else
             {

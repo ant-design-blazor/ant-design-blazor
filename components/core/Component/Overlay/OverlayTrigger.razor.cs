@@ -109,6 +109,7 @@ namespace AntDesign.Internal
         /// <summary>
         /// Callback when overlay visibility is changing.
         /// </summary>
+        [Obsolete("Use VisibleChanged instead")]
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
 
@@ -229,6 +230,9 @@ namespace AntDesign.Internal
         /// </summary>
         [Parameter]
         public bool Visible { get; set; } = false;
+
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
@@ -511,6 +515,10 @@ namespace AntDesign.Internal
         protected virtual async Task OverlayVisibleChange(bool visible)
         {
             await OnVisibleChange.InvokeAsync(visible);
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(visible);
+            }
         }
 
         protected virtual async Task OverlayHiding(bool visible)

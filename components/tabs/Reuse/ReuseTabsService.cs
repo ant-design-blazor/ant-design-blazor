@@ -13,6 +13,7 @@ namespace AntDesign
     public partial class ReuseTabsService
     {
         private readonly NavigationManager _navmgr;
+        private readonly MenuService _menusService;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
         private IReadOnlyCollection<ReuseTabsPageItem> _pages;
 
@@ -39,9 +40,10 @@ namespace AntDesign
         /// </summary>
         public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
 
-        public ReuseTabsService(NavigationManager navmgr)
+        public ReuseTabsService(NavigationManager navmgr, MenuService menusService)
         {
-            this._navmgr = navmgr;
+            _navmgr = navmgr;
+            _menusService = menusService;
         }
 
         /// <summary>
@@ -205,7 +207,7 @@ namespace AntDesign
             OnStateHasChanged?.Invoke();
         }
 
-        private static RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
         {
             return builder =>
             {
@@ -224,7 +226,7 @@ namespace AntDesign
             };
         }
 
-        private static void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
+        private void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
         {
             if (page is IReuseTabsPage resuse)
             {
@@ -248,7 +250,7 @@ namespace AntDesign
                 pageItem.Order = attr.Order;
             }
 
-            pageItem.Title ??= url.ToRenderFragment();
+            pageItem.Title ??= _menusService.GetMenuTitle(url) ?? url.ToRenderFragment();
         }
 
         /// <summary>

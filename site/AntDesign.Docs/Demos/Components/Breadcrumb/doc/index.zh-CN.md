@@ -21,9 +21,8 @@ Breakcrumb
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| ItemRender | 自定义链接函数，和 react-router 配置使用 | int   | -         |
-| Params   | 	路由的参数| int   |-      |
-| Routes | 	router 的路由栈信息 | string         |-       |
+| AutoGenerate | 自动通过路由匹配菜单数据生成路径 | bool | - | 
+| ChildContent | 子内容 | RenderFragment   | -         |
 | Separator |分隔符自定义| string  | -  |
 
 
@@ -32,8 +31,8 @@ BreadcrumbItem
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | Href | 链接的目的地 | int         | -         |
-| Overlay   | 下拉菜单的内容 | int         |-         |
+| Overlay   | 下拉菜单的内容 | RenderFragment         |-         |
 | OnClick | 单击事件 | EventCallback<MouseEventArgs>  |-       |
-| DropdownProps |弹出下拉菜单的自定义配置 | string  | -  |
+| ChildContent | 标题模板内容 | RenderFragment  | -  |
 
 

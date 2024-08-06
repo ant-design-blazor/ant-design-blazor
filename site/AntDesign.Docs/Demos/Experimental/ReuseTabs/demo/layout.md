@@ -1,7 +1,7 @@
 ---
 order: 0
 iframe: 360
-link: /reuse/title-attribute
+link: /reuse
 title:
   zh-CN: 布局
   en-US: Layout

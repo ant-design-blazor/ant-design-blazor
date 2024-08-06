@@ -39,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
             services.TryAddScoped<ReuseTabsService>();
+            services.TryAddScoped<MenuService>();
             services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
             services.TryAddScoped<ClientDimensionService>();
 

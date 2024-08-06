@@ -24,12 +24,15 @@ namespace AntDesign.Internal.Form.Validate
                 return true;
             }
 
-            if (!(value is decimal valueAsDecimal))
+            return value switch
             {
-                return false;
-            }
-
-            return Number == valueAsDecimal;
+                decimal valueAsDecimal => Number == valueAsDecimal,
+                double valueAsDouble => Number == (decimal)valueAsDouble,
+                float valueAsFloat => Number == (decimal)valueAsFloat,
+                int valueAsInt => Number == (decimal)valueAsInt,
+                long valueAsLong => Number == (decimal)valueAsLong,
+                _ => false,
+            };
         }
     }
 }
