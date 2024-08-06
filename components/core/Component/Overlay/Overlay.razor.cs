@@ -104,6 +104,7 @@ namespace AntDesign.Internal
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
+        private bool _afterFirstRender = false;
 
         protected override bool ShouldRender()
         {
@@ -138,6 +139,7 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
@@ -344,6 +346,11 @@ namespace AntDesign.Internal
 
         private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (!_hasAddOverlayToBody)
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;

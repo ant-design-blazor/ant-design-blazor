@@ -91,6 +91,12 @@ namespace AntDesign.Charts
             return await httpClient.GetFromJsonAsync<FertilityItem[]>(
                 "https://gw.alipayobjects.com/os/antvdemo/assets/data/fertility.json");
         }
+        public static async Task<HeatMapItem[]> HeadMapDataAsync(NavigationManager navigationManager, HttpClient httpClient)
+        {
+            var baseUrl = navigationManager.ToAbsoluteUri(navigationManager.BaseUri);
+            return await httpClient.GetFromJsonAsync<HeatMapItem[]>(
+                new Uri(baseUrl, "_content/AntDesign.Docs/chartsdata/heatmap.json").ToString());
+        }
     }
 
 #pragma warning disable IDE1006 // 命名样式
@@ -206,6 +212,13 @@ namespace AntDesign.Charts
         public object country { get; set; }
         public object year { get; set; }
         public object value { get; set; }
+    }
+
+    public class HeatMapItem
+    {
+        public int g { get; set; }
+        public int l { get; set; }
+        public int tmp { get; set; }
     }
 
 #pragma warning restore IDE1006 // 命名样式

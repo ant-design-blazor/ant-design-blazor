@@ -40,9 +40,9 @@ namespace AntDesign
         #endregion Parameters
 
         [CascadingParameter(Name = "DialogWrapperId")]
+        public string DialogWrapperId { get; set; } = "";
 
         [Inject] private NavigationManager NavigationManager { get; set; }
-        public string DialogWrapperId { get; set; } = "";
 
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
@@ -54,6 +54,8 @@ namespace AntDesign
         private bool _disableBodyScroll;
         private bool _doDraggable;
         private string _prevUrl = "";
+
+        private bool _resizing;
 
 #pragma warning disable 649
 
@@ -256,10 +258,12 @@ namespace AntDesign
         {
             if (Status == ModalStatus.Default)
             {
+                _resizing = false;
                 SetModalStatus(ModalStatus.Max);
             }
             else
             {
+                _resizing = Config.Resizable;
                 SetModalStatus(ModalStatus.Default);
             }
             return Task.CompletedTask;
@@ -283,6 +287,7 @@ namespace AntDesign
             if (!_hasShow && Visible)
             {
                 _hasShow = true;
+                _resizing = Config.Resizable;
                 _wrapStyle = CalcWrapStyle();
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
