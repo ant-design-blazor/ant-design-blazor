@@ -19,7 +19,7 @@
                  style="@GetStyle()"
                  >
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="@(Visible?"true":"false")" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class=@($"{Config.PrefixCls}-content") style="@(Config.Resizable ? "resize:horizontal; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
+                <div class=@($"{Config.PrefixCls}-content") style="@(_resizing ? "resize:horizontal; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
                     @if (Config.Header != null)
                     {
                         <CascadingValue Value="@Config">
