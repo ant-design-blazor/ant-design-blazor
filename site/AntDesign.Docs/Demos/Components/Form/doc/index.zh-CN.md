@@ -129,6 +129,22 @@ var formConfig = new FormConfig {
 | SubformStyle | 嵌套表单风格，默认为Collapse风格，可选Block风格                                    | string                                    | Collapse |
 
 
+### 引用实例
+
+IForm
+
+| Name                                                        | Description                             | 
+| ----------------------------------------------------------- | --------------------------------------- | 
+| EditContext                                                 | 获取 Form 当前的 EditContext |
+| IsModified                                                  | 表单值是否被修改过 |
+| Model                                                       | Form 绑定的数据对象 |
+| Name                                                        | 表单名称 |
+| Reset()                                                     | 重置表单值和验证信息 |
+| SetValidationMessages(string field, string[] errorMessages) | 给指定的字段设置验证信息 | 
+| Submit()                                                    | 当验证通过会触发 OnFinish，验证不通过则触发 OnFinishFailed  |
+| Validate()                                                  | 验证所有字段                            |
+
+
 <style>
 .code-box-demo .ant-form:not(.ant-form-inline):not(.ant-form-vertical) {
   max-width: 600px;

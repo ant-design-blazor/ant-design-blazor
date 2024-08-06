@@ -188,7 +188,20 @@ namespace AntDesign
         FormValidateMode IForm.ValidateMode => ValidateMode;
         FormLocale IForm.Locale => Locale;
 
-        public event Action<IForm> OnFinishEvent;
+        private event Action<IForm> OnFinishEvent;
+
+        event Action<IForm> IForm.OnFinishEvent
+        {
+            add
+            {
+                OnFinishEvent += value;
+            }
+
+            remove
+            {
+                OnFinishEvent -= value;
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -366,6 +379,7 @@ namespace AntDesign
             return result;
         }
 
+
         public void ValidationReset() => BuildEditContext();
 
         public EditContext EditContext => _editContext;
@@ -400,6 +414,10 @@ namespace AntDesign
                 }
             }
             _editContext = newContext;
+
+            // because EditForm's editcontext CascadingValue is fixed,so there need invoke StateHasChanged,
+            // otherwise, the child component's(FormItem) EditContext will not update.
+            InvokeAsync(StateHasChanged);
         }
 
         private static BindingFlags AllBindings
@@ -426,6 +444,15 @@ namespace AntDesign
                 }
             }
             return _eventInfos;
+        }
+
+        public void SetValidationMessages(string field, string[] errorMessages)
+        {
+            var fieldIdentifier = _editContext.Field(field);
+            var formItem = _formItems
+              .FirstOrDefault(t => t.GetFieldIdentifier().Equals(fieldIdentifier));
+
+            formItem?.SetValidationMessage(errorMessages);
         }
     }
 }
