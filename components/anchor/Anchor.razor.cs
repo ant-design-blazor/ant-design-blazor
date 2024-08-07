@@ -242,7 +242,7 @@ namespace AntDesign
                 {
                     _ballClass = "ant-anchor-ink-ball visible";
                     decimal top = (_activeLink.LinkDom.Top - _selfDom.Top) + _activeLink.LinkDom.Height / 2 - 2;
-                    _ballStyle = $"top: {top}px;";
+                    _ballStyle = $"top: {(CssSizeLength)top};";
                 }
                 else
                 {

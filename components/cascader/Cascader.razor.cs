@@ -153,7 +153,7 @@ namespace AntDesign
             if (!_dropdownOpened)
             {
                 var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-                _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+                _menuStyle = $"width:{(CssSizeLength)inputElemnet.ClientWidth};";
                 if (!_nodelist.Any())
                 {
                     _menuStyle += "height:auto;";
@@ -253,7 +253,7 @@ namespace AntDesign
             }
 
             var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-            _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+            _menuStyle = $"width:{(CssSizeLength)inputElemnet.ClientWidth};";
             _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
             _showClearIcon = true;
             if (!_matchList.Any())

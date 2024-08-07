@@ -87,7 +87,7 @@ namespace AntDesign
             }
 
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
-            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
+            _hiddenStyle = $"width: {(CssSizeLength)domRect.Width}; height: {(CssSizeLength)domRect.Height};";
 
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
@@ -134,7 +134,7 @@ namespace AntDesign
                 return;
             }
 
-            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
+            _hiddenStyle = $"width: {(CssSizeLength)domRect.Width}; height: {(CssSizeLength)domRect.Height};";
 
             DomRect containerRect;
             if (string.IsNullOrEmpty(TargetSelector))
@@ -158,7 +158,7 @@ namespace AntDesign
             {
                 if (domRect.Bottom > bottomDist)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: {window.InnerHeight - bottomDist}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + $"bottom: {(CssSizeLength)(window.InnerHeight - bottomDist)}; position: fixed;";
                     Affixed = true;
                 }
                 else
@@ -169,7 +169,7 @@ namespace AntDesign
             }
             else if (domRect.Top < topDist)
             {
-                _affixStyle = _hiddenStyle + $"top: {topDist}px; position: fixed;";
+                _affixStyle = _hiddenStyle + $"top: {(CssSizeLength)topDist}; position: fixed;";
                 Affixed = true;
             }
             else
