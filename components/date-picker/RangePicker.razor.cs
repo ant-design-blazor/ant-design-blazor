@@ -187,6 +187,7 @@ namespace AntDesign
             }
 
             await _dropDown.Show();
+            AutoFocus = true;
 
             if (index == 0)
             {
@@ -708,7 +709,8 @@ namespace AntDesign
             if (!isVisible)
             {
                 var index = GetOnFocusPickerIndex();
-                await Focus(index);
+                await Blur(index);
+                AutoFocus = false;
             }
         }
 
