@@ -521,7 +521,7 @@ namespace AntDesign
             }
             else
             {
-                _pickerStatus[index].SelectedValue = GetIndexPickerValue(index);
+                _pickerStatus[index].SelectedValue = null;
             }
         }
 
@@ -725,6 +725,7 @@ namespace AntDesign
         {
             _duringManualInput = false;
             _dropDown?.Hide();
+            AutoFocus = false;
         }
 
         public async Task Focus(int index = 0)
