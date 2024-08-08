@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -30,6 +31,8 @@ namespace AntDesign
 
         internal ISelectionColumn Selection { get; set; }
 
+        internal RenderFragment<RowData> GroupTitleTemplate { get; }
+
         internal bool TreeMode { get; }
 
         internal int IndentSize { get; }
@@ -39,8 +42,6 @@ namespace AntDesign
         internal string ScrollY { get; }
 
         internal string ScrollBarWidth { get; }
-
-        internal string RealScrollBarSize { get; }
 
         internal int ExpandIconColumnIndex { get; }
 

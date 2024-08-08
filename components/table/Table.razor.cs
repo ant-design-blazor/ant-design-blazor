@@ -67,6 +67,9 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<RowData<TItem>> GroupTitleTemplate { get; set; }
+
+        [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
         [Parameter]
@@ -135,7 +138,7 @@ namespace AntDesign
         public string ScrollY { get; set; }
 
         [Parameter]
-        public string ScrollBarWidth { get => _scrollBarWidth; set => _scrollBarWidth = value; }
+        public string ScrollBarWidth { get; set; }
 
         [Parameter]
         public int IndentSize { get; set; } = 15;
@@ -225,7 +228,6 @@ namespace AntDesign
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
         private string _scrollBarWidth;
-        private string _realScrollBarSize = "15px";
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
@@ -266,8 +268,7 @@ namespace AntDesign
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
-        string ITable.ScrollBarWidth => _scrollBarWidth;
-        string ITable.RealScrollBarSize => _scrollBarWidth ?? _realScrollBarSize;
+        string ITable.ScrollBarWidth => _scrollBarWidth ?? "15px";
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
@@ -280,6 +281,21 @@ namespace AntDesign
 
         TableLocale ITable.Locale => this.Locale;
 
+        RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
+        {
+            if (GroupTitleTemplate == null)
+            {
+                return builder =>
+                {
+                    builder.AddContent(0, rowData.Key);
+                };
+            }
+            return builder =>
+            {
+                builder.AddContent(0, GroupTitleTemplate((RowData<TItem>)rowData));
+            };
+        };
+
         SortDirection[] ITable.SortDirections => SortDirections;
 
         public Table()
@@ -287,6 +303,7 @@ namespace AntDesign
             _dataSourceCache = new();
             _rootRowDataCache = new();
             _selectedRows = new(this);
+            _showItemHashs = new(this);
         }
 
         private List<IFieldColumn> _groupedColumns = [];
@@ -534,6 +551,18 @@ namespace AntDesign
             return queryModel;
         }
 
+        /// <summary>
+        /// Call this method after data source has changed to refresh the state of the table.
+        /// </summary>
+        /// Make the method protected to allow derived classes to call it.
+        protected void InvokeDataSourceHasChanged()
+        {
+            if (_hasInitialized)
+            {
+                InternalReload();
+            }
+        }
+
 #if NET5_0_OR_GREATER
         private async ValueTask<ItemsProviderResult<RowData<TItem>>> ItemsProvider(ItemsProviderRequest request)
         {
@@ -644,6 +673,8 @@ namespace AntDesign
                 TableLayout = "fixed";
             }
 
+            _scrollBarWidth = ScrollBarWidth;
+
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
@@ -695,10 +726,7 @@ namespace AntDesign
             else if (_waitingDataSourceReload)
             {
                 _waitingDataSourceReload = false;
-                if (_hasInitialized)
-                {
-                    InternalReload();
-                }
+                InvokeDataSourceHasChanged();
             }
         }
 
@@ -716,10 +744,11 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
                 }
 
-                if (ScrollY != null && ScrollBarWidth == null)
+                if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)
                 {
                     var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
-                    _realScrollBarSize = $"{scrollBarSize}px";
+                    _scrollBarWidth = $"{scrollBarSize}px";
+                    ColumnContext.HeaderColumns.LastOrDefault()?.UpdateFixedStyle();
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.

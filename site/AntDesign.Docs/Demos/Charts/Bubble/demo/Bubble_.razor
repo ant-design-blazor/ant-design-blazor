@@ -6,14 +6,14 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <Bubble @ref="chart1" Data="data1" Config="config1" />
+            <Scatter @ref="chart1" Data="data1" Config="config1" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="2">
         <TabTemplate>示例2</TabTemplate>
         <ChildContent>
-            <Bubble @ref="chart2" Data="data2" Config="config2" />
+            <Scatter @ref="chart2" Data="data2" Config="config2" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -54,73 +54,119 @@
     #region 示例1
 
     //smoking-rate
-    readonly BubbleConfig config1 = new BubbleConfig
-    {
-        XField = "change in female rate",
-        YField = "change in male rate",
-        SizeField = "pop",
-        PointSize = new[] { 4, 30 },
-        ColorField = new[] { "continent" },
-        Color = new[] { "#ffd500", "#82cab2", "#193442", "#d18768", "#7e827a" },
-        XAxis = new ValueTimeAxis
+    readonly ScatterConfig config1 = new ScatterConfig
         {
-            Visible = true,
-            Max = 5,
-            Min = -25
-        }
-    };
+            XField = "change in female rate",
+            YField = "change in male rate",
+            SizeField = "pop",
+            ColorField = "continent",
+            Color = new[] { "#ffd500", "#82cab2", "#193442", "#d18768", "#7e827a" },
+            Size = new[] { 4, 30 },
+            Shape = "circle",
+            PointStyle = new GraphicStyle()
+            {
+                FillOpacity = new decimal(0.8),
+                Stroke = "#bbb"
+
+            },
+            XAxis = new ValueTimeAxis
+            {
+                Min = -25,
+                Max = 5,
+                Grid = new BaseAxisGrid()
+                {
+                    Line = new BaseAxisGridLine()
+                    {
+                        Style = new LineStyle()
+                        {
+                            Stroke = "#eee"
+                        }
+                    }
+                }
+            },
+            YAxis = new ValueTimeAxis()
+            {
+                Line = new BaseAxisLine()
+                {
+                    Style = new LineStyle()
+                    {
+                        Stroke = "#aaa"
+                    }
+                }
+            },
+            Quadrant = new QuadrantConfig()
+            {
+                Label = new[]
+                 {
+                new
+                {
+                    Content ="Male decrease,\\nfemale increase"
+                },
+                new
+                {
+                    Content ="Female decrease,\nmale increase"
+                },
+                new
+                {
+                    Content ="Female & male decrease"
+                },
+                new
+                {
+                    Content ="Female &\n male increase"
+                },
+            }
+            }
+        };
 
     #endregion 示例1
 
     #region 示例2
 
     //smoking-rate
-    readonly BubbleConfig config2 = new BubbleConfig
-    {
-        XField = "change in female rate",
-        YField = "change in male rate",
-        SizeField = "pop",
-        PointSize = new[] { 4, 30 },
-        ColorField = new[] { "continent" },
-        Color = new[] { "#ffd500", "#82cab2", "#193442", "#d18768", "#7e827a" },
-        PointStyle = new GraphicStyle
+    readonly ScatterConfig config2 = new ScatterConfig
         {
-            Stroke = "#777777",
-            LineWidth = 1,
-            Opacity = 0.8,
-        },
-        XAxis = new ValueTimeAxis
-        {
-            Visible = true,
-            Max = 5,
-            Min = -25
-        },
-        Quadrant = new QuadrantConfig
-        {
-            Visible = true,
-            XBaseline = 0,
-            YBaseline = 0,
-
-            RegionStyle = new object[]
+            XField = "change in female rate",
+            YField = "change in male rate",
+            SizeField = "pop",
+            PointSize = new[] { 4, 30 },
+            ColorField = new[] { "continent" },
+            Color = new[] { "#ffd500", "#82cab2", "#193442", "#d18768", "#7e827a" },
+            PointStyle = new GraphicStyle
             {
-               new {fill = "#d8d0c0",opacity = 0.2,},
-               new {fill = "#a3dda1",opacity = 0.1,},
-               new {fill = "white",opacity = 0,},
-               new {fill = "#d8d0c0",opacity = 0.2,},
-                },
-            Label = new Label
+                Stroke = "#777777",
+                LineWidth = 1,
+                Opacity = 0.8,
+            },
+            XAxis = new ValueTimeAxis
             {
-                Text = new string[]
+                Visible = true,
+                Max = 5,
+                Min = -25
+            },
+            Quadrant = new QuadrantConfig
+            {
+                Visible = true,
+                XBaseline = 0,
+                YBaseline = 0,
+                RegionStyle = new object[]
+                 {
+                new {fill= "#d8d0c0", opacity= 0.2},
+                new {fill= "#a3dda1", opacity= 0.1},
+                new {fill= "white", opacity= 0},
+                new {fill="#d8d0c0", opacity=0.2}
+                         },
+                Label = new
                 {
+                    Text = new[]
+                     {
                     "Female decrease,\nmale increase",
                     "Female & male decrease",
                     "Female &\n male increase",
-                    "Male decrease,\nfemale increase",
-                    }
+                    "Male decrease,\nfemale increase"
+                },
+                }
             }
-
-        }
-    };
+        };
 
     #endregion 示例2
 

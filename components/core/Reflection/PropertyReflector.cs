@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,6 +11,8 @@ namespace AntDesign.Core.Reflection
     internal struct PropertyReflector
     {
         public RequiredAttribute RequiredAttribute { get; set; }
+
+        public ValidationAttribute[] ValidationAttributes { get; set; }
 
         public string DisplayName { get => _displayName ?? _getDisplayName?.Invoke(); set => _displayName = value; }
 
@@ -23,7 +26,8 @@ namespace AntDesign.Core.Reflection
 
         public PropertyReflector(MemberInfo propertyInfo)
         {
-            this.RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
+            RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
+            ValidationAttributes = propertyInfo?.GetCustomAttributes<ValidationAttribute>(true).ToArray();
 
             if (propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true) is DisplayNameAttribute displayNameAttribute && !string.IsNullOrEmpty(displayNameAttribute.DisplayName))
             {
@@ -66,6 +70,13 @@ namespace AntDesign.Core.Reflection
             if (accessorBody is MemberExpression memberExpression)
             {
                 return new PropertyReflector(memberExpression.Member);
+            }
+
+            if (accessorBody.NodeType == ExpressionType.ArrayIndex)
+            {
+                var parameterExpression = Expression.Parameter(typeof(object), "parameter");
+                var func = Expression.Lambda<Func<object, object>>(Expression.Convert(accessorBody, typeof(object)), parameterExpression).Compile();
+                return new PropertyReflector() { GetValueDelegate = func };
             }
 
             return new PropertyReflector();

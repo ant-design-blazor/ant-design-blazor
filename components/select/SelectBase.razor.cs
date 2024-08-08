@@ -318,8 +318,7 @@ namespace AntDesign
         ///     Converts custom tag (a string) to TItemValue type.
         /// </summary>
         [Parameter]
-        public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
-            label => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+        public Func<string, TItemValue> CustomTagLabelToValue { get; set; }
 
         /// <summary>
         ///     Determines if SelectOptions has any selected items
@@ -618,7 +617,7 @@ namespace AntDesign
         /// <returns></returns>
         protected SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
         {
-            var value = CustomTagLabelToValue.Invoke(label);
+            var value = GetItemValueFromLabel(label);
             TItem item;
             if (_isPrimitive)
             {
@@ -1083,6 +1082,20 @@ namespace AntDesign
         internal override void ResetValue()
         {
             _ = ClearSelectedAsync();
+        }
+
+        protected TItemValue GetItemValueFromLabel(string label)
+        {
+            try
+            {
+                CustomTagLabelToValue ??= label => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+                return CustomTagLabelToValue.Invoke(label);
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new InvalidOperationException("Please set the correct CustomTagLabelToValue parameter to convert the label to the Value type. See https://github.com/ant-design-blazor/ant-design-blazor/issues/2126", ex);
+            }
+
         }
 
         /// <summary>

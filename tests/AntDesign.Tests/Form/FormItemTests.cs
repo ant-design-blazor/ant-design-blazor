@@ -46,7 +46,7 @@ namespace AntDesign.Tests.Form.Validation
                 .Add(x => x.RequiredMark, requiredMark)
                 .Add(x => x.ValidateMode, FormValidateMode.Rules)
                 .Add(x => x.Model, new { }));
-            
+
             wrappedSystemUnderTest.WaitForAssertion(
                 () => wrappedSystemUnderTest
                 .FindComponent<FormItem>()

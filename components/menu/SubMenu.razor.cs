@@ -165,7 +165,7 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
 
-            RootMenu?.Submenus.Add(this);
+            RootMenu?.AddSubmenu(this);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
@@ -188,6 +188,12 @@ namespace AntDesign
                     IsOpen = true;
                 }
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveSubmenu(this);
+            base.Dispose(disposing);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

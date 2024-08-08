@@ -270,7 +270,13 @@ namespace AntDesign
         [Parameter]
         public bool Resizable { get; set; } = false;
 
-        #endregion Parameter
+        /// <summary>
+        /// Whether to force to render the Modal dom before opening.   
+        /// </summary>
+        [Parameter]
+        public bool ForceRender { get; set; }
+
+      #endregion Parameter
 
 #pragma warning disable 649
         private DialogWrapper _dialogWrapper;
@@ -365,6 +371,7 @@ namespace AntDesign
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
+                ForceRender = ForceRender,
                 CreateByService = ModalRef?.Config.CreateByService ?? false,
             };
 
