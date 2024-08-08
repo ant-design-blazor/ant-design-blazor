@@ -10,7 +10,8 @@
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
         <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
             <OverlayTrigger @ref="@_dropDown"
-                            Visible="Open"
+                            Visible="@Open"
+                            VisibleChanged="OpenChanged"
                             Disabled="Disabled"
                             Trigger="new[] { Trigger.Click }"
                             HiddenMode
