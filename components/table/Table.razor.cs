@@ -67,6 +67,9 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<RowData<TItem>> GroupTitleTemplate { get; set; }
+
+        [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
         [Parameter]
@@ -277,6 +280,21 @@ namespace AntDesign
         void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
 
         TableLocale ITable.Locale => this.Locale;
+
+        RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
+        {
+            if (GroupTitleTemplate == null)
+            {
+                return builder =>
+                {
+                    builder.AddContent(0, rowData.Key);
+                };
+            }
+            return builder =>
+            {
+                builder.AddContent(0, GroupTitleTemplate((RowData<TItem>)rowData));
+            };
+        };
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
@@ -533,6 +551,18 @@ namespace AntDesign
             return queryModel;
         }
 
+        /// <summary>
+        /// Call this method after data source has changed to refresh the state of the table.
+        /// </summary>
+        /// Make the method protected to allow derived classes to call it.
+        protected void InvokeDataSourceHasChanged()
+        {
+            if (_hasInitialized)
+            {
+                InternalReload();
+            }
+        }
+
 #if NET5_0_OR_GREATER
         private async ValueTask<ItemsProviderResult<RowData<TItem>>> ItemsProvider(ItemsProviderRequest request)
         {
@@ -696,10 +726,7 @@ namespace AntDesign
             else if (_waitingDataSourceReload)
             {
                 _waitingDataSourceReload = false;
-                if (_hasInitialized)
-                {
-                    InternalReload();
-                }
+                InvokeDataSourceHasChanged();
             }
         }
 

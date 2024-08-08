@@ -26,6 +26,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 | Closable | 值标签是否可以关闭| boolean         |false       |
 | Color | 预设标签色 | string   | "default"         |
 | Icon | 设置图标  | string        | -         |
+| IconTheme |  设置图标风格 | string   | `fill` \| `outline` \| `twotone`       |
 | OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
 | OnClose | 关闭时的回调     | Action<MouseEventArgs>         | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |

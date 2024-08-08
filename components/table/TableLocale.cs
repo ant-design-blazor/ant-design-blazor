@@ -71,6 +71,8 @@ namespace AntDesign
 
         public string TheSameDateWith { get; set; } = "The Same Date With";
 
+        public string Between { get; set; } = "Between";
+
         public string Operator(TableFilterCompareOperator compareOperator)
             => compareOperator switch
             {
@@ -87,6 +89,7 @@ namespace AntDesign
                 TableFilterCompareOperator.IsNotNull => IsNotNull,
                 TableFilterCompareOperator.NotContains => NotContains,
                 TableFilterCompareOperator.TheSameDateWith => TheSameDateWith,
+                TableFilterCompareOperator.Between => Between,
                 _ => throw new ArgumentOutOfRangeException(nameof(compareOperator), compareOperator, null)
             };
     }

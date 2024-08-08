@@ -156,8 +156,6 @@ namespace AntDesign
         [Parameter]
         public string Help { get; set; }
 
-        private readonly FormLocale _locale = LocaleProvider.CurrentLocale.Form;
-
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
@@ -186,6 +184,8 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
+        private string DisplayName => Label ?? _propertyReflector?.DisplayName;
+
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
@@ -196,6 +196,7 @@ namespace AntDesign
         private Action _vaildateStatusChanged;
 
         private Action _nameChanged;
+        private Action<string[]> _onValidated;
 
         private string _name;
 
@@ -360,12 +361,34 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        private void UpdateValidateMessage()
+        {
+            if (_control == null)
+            {
+                return;
+            }
+            _validationMessages = CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct().ToArray();
+            _isValid = !_validationMessages.Any();
+
+            _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;
 
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
+            _onValidated = control.OnValidated;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -376,30 +399,11 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            void ValidateDefault()
-            {
-
-                _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                _isValid = !_validationMessages.Any();
-
-                _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
-
-                control.OnValidated(_validationMessages);
-
-                if (!string.IsNullOrWhiteSpace(Help))
-                {
-                    _validationMessages = new[] { Help };
-                }
-
-                _vaildateStatusChanged?.Invoke();
-                InvokeAsync(StateHasChanged);
-            }
-
             if (Form?.ValidateOnChange == true)
             {
                 _validationStateChangedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
@@ -407,7 +411,7 @@ namespace AntDesign
             {
                 _validationRequestedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
             }
@@ -425,10 +429,7 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (Form?.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex) is true)
-            {
-                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
-            }
+            _fieldValueGetter = _propertyReflector?.GetValueDelegate;
 
             SetInternalIsRequired();
             StateHasChanged();
@@ -436,29 +437,29 @@ namespace AntDesign
 
         ValidationResult[] IFormItem.ValidateField()
         {
-            if (Rules == null)
+            if (Form?.UseLocaleValidateMessage != true)
             {
-                return Array.Empty<ValidationResult>();
+                return [];
             }
 
-            var results = new List<ValidationResult>();
+            var rules = Form.ValidateMode == FormValidateMode.Default ? GetRulesFromAttributes() : Rules;
 
-            var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
+            var results = new List<ValidationResult>();
 
             if (_fieldValueGetter != null)
             {
                 var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
-                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
+                var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
-                foreach (var rule in Rules)
+                foreach (var rule in rules)
                 {
                     var validationContext = new FormValidationContext()
                     {
                         Rule = rule,
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = displayName,
+                        DisplayName = DisplayName,
                         ValidateMessages = validateMessages,
                     };
 
@@ -475,5 +476,53 @@ namespace AntDesign
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
+
+        void IFormItem.SetValidationMessage(string[] errorMessages)
+        {
+            _validationMessages = errorMessages;
+            _isValid = !errorMessages.Any();
+            _validateStatus = _isValid ? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
+
+        private IEnumerable<FormValidationRule> GetRulesFromAttributes()
+        {
+            var attributes = _propertyReflector?.ValidationAttributes;
+
+            foreach (var attribute in attributes)
+            {
+                if (attribute is { ErrorMessage: { Length: > 0 } })
+                {
+                    yield return new FormValidationRule { ValidationAttribute = attribute };
+                    yield break;
+                }
+
+                switch (attribute)
+                {
+                    case RequiredAttribute _:
+                        yield return new FormValidationRule { Required = true };
+                        break;
+                    case RangeAttribute range:
+                        yield return new FormValidationRule { Min = (decimal)range.Minimum, Max = (decimal)range.Maximum };
+                        break;
+                    case MinLengthAttribute minLength:
+                        yield return new FormValidationRule { Min = minLength.Length };
+                        break;
+                    case MaxLengthAttribute maxLength:
+                        yield return new FormValidationRule { Max = maxLength.Length };
+                        break;
+                    case StringLengthAttribute stringLength:
+                        yield return new FormValidationRule { Len = stringLength.MaximumLength };
+                        break;
+                    default:
+                        yield return new FormValidationRule { ValidationAttribute = attribute };
+                        break;
+                }
+            }
+        }
     }
 }

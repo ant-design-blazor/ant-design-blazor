@@ -406,7 +406,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 new FormValidationRule { Type= FormFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
-                string.Format($"{_defValidateMsgs.OneOf}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
+                string.Format($"{_defValidateMsgs.Enum}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
             },
             new object[] { new FormValidationRule { Type = FormFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, FormFieldType.String) },
             new object[] { new FormValidationRule { Type = FormFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, FormFieldType.Array) },
@@ -428,7 +428,7 @@ namespace AntDesign.Tests.Form.Validation
             var customValidateMessage = new FormValidateErrorMessages();
             customValidateMessage.Default = $"{customValidateMessage.Default}{suffix}";
             customValidateMessage.Required = $"{customValidateMessage.Required}{suffix}";
-            customValidateMessage.OneOf = $"{customValidateMessage.OneOf}{suffix}";
+            customValidateMessage.Enum = $"{customValidateMessage.Enum}{suffix}";
 
             customValidateMessage.Types.String = $"{customValidateMessage.Types.String}{suffix}";
             customValidateMessage.Types.Array = $"{customValidateMessage.Types.Array}{suffix}";

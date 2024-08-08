@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using AntDesign.Filters;
 
@@ -17,5 +18,7 @@ namespace AntDesign.TableModels
         public IList<TableFilter> Filters { get; }
 
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source);
+
+        public Expression<Func<TItem, bool>> FilterExpression<TItem>();
     }
 }

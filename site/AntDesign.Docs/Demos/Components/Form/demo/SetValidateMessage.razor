@@ -1,0 +1,40 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using System.ComponentModel
+
+<Form Model="@_model"
+      OnFinish="OnFinish"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      @ref="_form">
+    <FormItem Label="User Name">
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+        <Button Type="@ButtonType.Primary" HtmlType="button">
+            Clear
+        </Button>
+    </FormItem>
+</Form>
+@code
+{
+    public class Model
+    {
+        [Required]
+        public string Username { get; set; }
+    }
+
+    private Model _model = new Model();
+    Form<Model> _form;
+
+    private async Task OnFinish(EditContext editContext)
+    {
+        await Task.Delay(1000);
+        
+        // occurs error from server
+        _form?.SetValidationMessages("Username", ["Username has error."]);
+    }
+}

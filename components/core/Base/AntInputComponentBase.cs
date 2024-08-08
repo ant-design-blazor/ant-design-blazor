@@ -370,6 +370,8 @@ namespace AntDesign
             }
         }
 
+        FieldIdentifier IControlValueAccessor.FieldIdentifier => FieldIdentifier;
+
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -481,6 +483,11 @@ namespace AntDesign
                 CurrentValue = _getValueDelegate.Invoke(Form.Model);
                 InvokeAsync(StateHasChanged);
             }
+        }
+
+        void IControlValueAccessor.OnValidated(string[] validationMessages)
+        {
+            OnValidated(validationMessages);
         }
     }
 }

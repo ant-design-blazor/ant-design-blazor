@@ -15,6 +15,42 @@ timeline: true
 
 ---
 
+
+### 0.20.0
+
+`2024-08-07`
+
+- Form
+  - 🔥 新增 验证信息内置本地化。[#4058](https://github.com/ant-design-blazor/ant-design-blazor/pull/4058) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 增加 直接设置模型字段的验证信息。[#4014](https://github.com/ant-design-blazor/ant-design-blazor/pull/4014) [@PengYuee](https://github.com/PengYuee)
+  - 🆕 新增 支持数组索引值的验证。[#4053](https://github.com/ant-design-blazor/ant-design-blazor/pull/4053) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🔥 新增 内置筛选器支持时间区间条件，筛选指定时间范围内的数据。[#4036](https://github.com/ant-design-blazor/ant-design-blazor/pull/4036) [@ElderJames](https://github.com/ElderJames)
+  - 🔥 新增 内置筛选器支持 DateOnly 与 TimeOnly 类型的属性。[#4034](https://github.com/ant-design-blazor/ant-design-blazor/pull/4034) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 行分组标题模板。[#3962](https://github.com/ant-design-blazor/ant-design-blazor/pull/3962) [@moumousoup](https://github.com/moumousoup)
+  - 🆕 新增 滚动条自适应。[#4064](https://github.com/ant-design-blazor/ant-design-blazor/pull/4064) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 GetFilterExpression 方法获取当前的筛选表达式。[#3991](https://github.com/ant-design-blazor/ant-design-blazor/pull/3991) [@Ashhhhhh520](https://github.com/Ashhhhhh520)
+  - 🆕 增加 InvokeDataSourceHasChanged 方法给派生类在刷新 DataSource 后调用，以刷新 Table 状态。[#4067](https://github.com/ant-design-blazor/ant-design-blazor/pull/4067) [@ElderJames](https://github.com/ElderJames)
+
+- Modal
+  - 🆕 新增支持 ForceRender 属性，提前渲染 DOM。[#4041](https://github.com/ant-design-blazor/ant-design-blazor/pull/4041) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 支持在关闭 Mask 时选择弹框下层的文本。[#4040](https://github.com/ant-design-blazor/ant-design-blazor/pull/4040) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 支持最大化垂直调整。[#4040](https://github.com/ant-design-blazor/ant-design-blazor/pull/4040) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 调整大小后最大化不正常。[#4070](https://github.com/ant-design-blazor/ant-design-blazor/pull/4070) [@ElderJames](https://github.com/ElderJames)
+
+- Overlay
+  - 🆕 新增 支持 @bind-Visible 双向绑定。[#4057](https://github.com/ant-design-blazor/ant-design-blazor/pull/4057) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 预渲染时调用 JS。[#4068](https://github.com/ant-design-blazor/ant-design-blazor/pull/4068) [@ElderJames](https://github.com/ElderJames)
+
+- 🔥 新增 ReuseTabs 页签的标题自动从页面路由匹配的菜单数据中生成。[#3960](https://github.com/ant-design-blazor/ant-design-blazor/pull/3960) [@JaneConan](https://github.com/JaneConan)
+- 🔥 新增 Breadcrumb 从菜单获取当前路径。[#4065](https://github.com/ant-design-blazor/ant-design-blazor/pull/4065) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tag 图标主题属性。[#4063](https://github.com/ant-design-blazor/ant-design-blazor/pull/4063) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Carousel 的 Dots 与 DotsClass 属性用于隐藏翻页或设置样式。[#4062](https://github.com/ant-design-blazor/ant-design-blazor/pull/4062) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Cascader 的 Placement 属性。[#4046](https://github.com/ant-design-blazor/ant-design-blazor/pull/4046) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Watermark 支持内容更新。[#4043](https://github.com/ant-design-blazor/ant-design-blazor/pull/4043) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 同时设置 DataItem 时 TreeNods 不生效 (#2759)。[#4054](https://github.com/ant-design-blazor/ant-design-blazor/pull/4054) [@pankey888](https://github.com/pankey888)
+
 ### 0.19.7
 
 `2024-7-31`

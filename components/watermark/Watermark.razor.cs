@@ -62,8 +62,15 @@ namespace AntDesign
 
         private string BackgroundRepeat => Scrolling ? "no-repeat" : Repeat ? "repeat" : "no-repeat";
 
+        private bool _haveRrender;
+
         private async Task GenerateBase64Url()
         {
+            if (!_haveRrender)
+            {
+                return;
+            }
+
             var options = new
             {
                 alpha = Alpha,
@@ -104,10 +111,25 @@ namespace AntDesign
             await Js.InvokeAsync<string>(JSInteropConstants.WatermarkHelper.GenerateBase64Url, options, DotNetObjectReference.Create(this), _watermarkContentRef, Ref);
         }
 
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var contentChanged = parameters.IsParameterChanged(nameof(Content), Content)
+                || parameters.IsParameterChanged(nameof(Contents), Contents)
+                || parameters.IsParameterChanged(nameof(Image), Image);
+
+            await base.SetParametersAsync(parameters);
+
+            if (contentChanged)
+            {
+                await GenerateBase64Url();
+            }
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                _haveRrender = true;
                 await GenerateBase64Url();
             }
 

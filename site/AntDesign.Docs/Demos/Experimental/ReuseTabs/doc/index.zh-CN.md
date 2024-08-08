@@ -68,7 +68,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | Ignore | 如果 `Ignore=true`, 页面将不会显示在tab中，而是跟原来一样在整个页面展示。 | boolean | false |
 | Closable | 是否显示关闭按钮并且不可被关闭。 | boolean | false |
 | Pin | 是否在启动时就固定加载改页面。一般用于主页或默认页。 | boolean | false |
-| PinUrl | 固定加载页面的 Url，再打开路由有参数的页面时需要，比如 `/order/1` | string | - |
+| PinUrl | 固定加载页面的 Url，在打开路由有参数的页面时需要，比如 `/order/1` | string | - |
 | KeepAlive| 是否缓存页面状态 | bool | true |
 | Order | 标签顺序 | int | 999 |
 

@@ -70,6 +70,12 @@ namespace AntDesign
                 return;
             }
             base.OnInitialized();
+
+            Navmgr.LocationChanged += OnLocationChanged;
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
 
@@ -82,7 +88,7 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            Navmgr.LocationChanged += OnLocationChanged;
+            return base.OnFirstAfterRenderAsync();
         }
 
         protected override bool ShouldRender() => !InReusePageContent;

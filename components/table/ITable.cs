@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -29,6 +30,8 @@ namespace AntDesign
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }
+
+        internal RenderFragment<RowData> GroupTitleTemplate { get; }
 
         internal bool TreeMode { get; }
 
