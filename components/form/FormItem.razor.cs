@@ -184,6 +184,8 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
+        private string DisplayName => Label ?? _propertyReflector?.DisplayName;
+
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
@@ -444,8 +446,6 @@ namespace AntDesign
 
             var results = new List<ValidationResult>();
 
-            var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
-
             if (_fieldValueGetter != null)
             {
                 var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
@@ -459,7 +459,7 @@ namespace AntDesign
                         Rule = rule,
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = displayName,
+                        DisplayName = DisplayName,
                         ValidateMessages = validateMessages,
                     };
 

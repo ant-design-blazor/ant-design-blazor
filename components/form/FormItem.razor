@@ -2,12 +2,9 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal;
 
-@{
-    var realLabel = Label ?? _propertyReflector?.DisplayName;
-}
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     <Row Class="ant-form-item-row">
-        @if (!string.IsNullOrEmpty(realLabel) || LabelTemplate != null)
+        @if (!string.IsNullOrEmpty(DisplayName) || LabelTemplate != null)
         {
             <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
                 @if (LabelTemplate != null)
@@ -17,7 +14,7 @@
                 else
                 {
                     <label class=@GetLabelClass() style="@LabelStyle">
-                        @realLabel
+                        @DisplayName
                         @if (Form?.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                         {
                             <span class="ant-form-item-optional">@Form.Locale.Optional</span>
