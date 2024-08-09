@@ -15,7 +15,7 @@
               EditContext="_editContext"
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
-        @if(UseLocaleValidateMessage)
+        @if (UseRulesValidator)
         {
             <FormRulesValidator @ref="_rulesValidator" />
         }
@@ -34,7 +34,6 @@
             {
                 @ChildContent(Model)
             }
-
         </CascadingValue>
     </EditForm>
 </Spin>

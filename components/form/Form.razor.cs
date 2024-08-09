@@ -226,8 +226,11 @@ namespace AntDesign
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged += OnValidationStateChangedHandler;
 
-            _editContext.OnFieldChanged += RulesModeOnFieldChanged;
-            _editContext.OnValidationRequested += RulesModeOnValidationRequested;
+            if (UseRulesValidator)
+            {
+                _editContext.OnFieldChanged += RulesModeOnFieldChanged;
+                _editContext.OnValidationRequested += RulesModeOnValidationRequested;
+            }
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -245,7 +248,7 @@ namespace AntDesign
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
 
-            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            if (UseRulesValidator)
             {
                 _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
                 _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
@@ -295,7 +298,7 @@ namespace AntDesign
                 return;
             }
 
-            var result = formItem.ValidateField();
+            var result = formItem.ValidateFieldWithRules();
 
             if (result.Length > 0)
             {
@@ -314,7 +317,7 @@ namespace AntDesign
 
             foreach (var formItem in _formItems)
             {
-                var result = formItem.ValidateField();
+                var result = formItem.ValidateFieldWithRules();
                 if (result.Length > 0)
                 {
                     errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
@@ -387,6 +390,8 @@ namespace AntDesign
         bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
 
         bool IForm.UseLocaleValidateMessage => UseLocaleValidateMessage;
+
+        bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
 
         public void BuildEditContext()
         {

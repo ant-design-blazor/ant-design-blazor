@@ -20,7 +20,7 @@ namespace AntDesign
         public Dictionary<object, FormValidationRule> Fields { get; set; }
         public Func<FormValidationContext, ValidationResult> Validator { get; set; }
         public Func<object, object> Transform { get; set; } = (value) => value;
-        public FormFieldType Type { get; set; } = FormFieldType.String;
+        public FormFieldType? Type { get; set; }
         public ValidationAttribute ValidationAttribute { get; set; }
     }
 }

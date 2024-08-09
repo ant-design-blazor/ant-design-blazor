@@ -20,7 +20,7 @@ namespace AntDesign.Internal
 
         internal void AddControl<TValue>(AntInputComponentBase<TValue> control);
 
-        internal ValidationResult[] ValidateField();
+        internal ValidationResult[] ValidateFieldWithRules();
 
         internal FieldIdentifier GetFieldIdentifier();
 
