@@ -125,6 +125,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool Open { get; set; }
 
+        [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
         /// <summary>
         /// Placeholder of select.
         /// </summary>
