@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -27,7 +28,7 @@ namespace AntDesign.Tests
             Services.AddScoped<DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime, MockedDomEventListener));
             JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, _ => true);
             JSInterop.SetupVoid("AntDesign.interop.tableHelper.bindTableScroll", _ => true);
-            JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.blur", _ => true);
+            JSInterop.Setup<Task>("AntDesign.interop.domManipulationHelper.blur").SetResult(Task.CompletedTask);
             JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.smoothScrollTo", _ => true);
 
             JSInterop.Mode = JSRuntimeMode.Strict;
