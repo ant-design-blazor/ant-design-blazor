@@ -14,7 +14,7 @@ Multiple: <Switch @bind-Value="multiple"></Switch>
         EnableSearch
         OnSearch="OnSearch">
     <DropdownRender>
-        <Table @ref="table" TItem="Column" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnRowClick="OnRowClick">
+        <Table @ref="table" TItem="Column" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnRowClick="OnRowClick" Size="TableSize.Small">
             <ColumnDefinitions Context="ctx">
                 <Selection Hidden="@(!multiple)" />
                 <PropertyColumn Property="c=>c.Name">
