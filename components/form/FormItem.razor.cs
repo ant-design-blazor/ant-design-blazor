@@ -524,34 +524,8 @@ namespace AntDesign
 
             foreach (var attribute in attributes)
             {
-                // if user has set the ErrorMessage, we will use it directly
-                if (attribute is { ErrorMessage.Length: > 0 })
-                {
-                    yield return new FormValidationRule { ValidationAttribute = attribute };
-                    yield break;
-                }
 
-                switch (attribute)
-                {
-                    case RequiredAttribute _:
-                        yield return new FormValidationRule { Required = true };
-                        break;
-                    case RangeAttribute range:
-                        yield return new FormValidationRule { Type = FormFieldType.Number, Range = (Convert.ToDouble(range.Minimum), Convert.ToDouble(range.Maximum)) };
-                        break;
-                    case MinLengthAttribute minLength:
-                        yield return new FormValidationRule { Min = minLength.Length };
-                        break;
-                    case MaxLengthAttribute maxLength:
-                        yield return new FormValidationRule { Max = maxLength.Length };
-                        break;
-                    case StringLengthAttribute stringLength:
-                        yield return new FormValidationRule { Type = FormFieldType.String, Len = stringLength.MaximumLength };
-                        break;
-                    default:
-                        yield return new FormValidationRule { ValidationAttribute = attribute };
-                        break;
-                }
+                yield return new FormValidationRule { ValidationAttribute = attribute };
             }
         }
     }

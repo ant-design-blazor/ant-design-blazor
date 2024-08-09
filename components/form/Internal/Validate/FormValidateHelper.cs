@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace AntDesign.Internal.Form.Validate
 {
@@ -11,12 +12,7 @@ namespace AntDesign.Internal.Form.Validate
 
             ValidationResult result;
 
-            if (validationContext.Rule.ValidationAttribute != null)
-            {
-                if (!IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result)) return result;
-                return null;
-            }
-
+            if (!AttributeIsValid(validationContext, out result)) return result;
             if (!RequiredIsValid(validationContext, out result)) return result;
             if (!TypeIsValid(validationContext, out result)) return result;
             if (!LenIsValid(validationContext, out result)) return result;
@@ -33,6 +29,39 @@ namespace AntDesign.Internal.Form.Validate
         }
 
         #region Validations
+
+        private static bool AttributeIsValid(FormValidationContext validationContext, out ValidationResult result)
+        {
+            result = null;
+
+            if (validationContext.Rule.ValidationAttribute is null)
+            {
+                return true;
+            }
+
+            ValidationAttribute attribute = validationContext.Rule.ValidationAttribute;
+
+            var templates = validationContext.ValidateMessages;
+
+            attribute.ErrorMessage = attribute switch
+            {
+                // if user has set the ErrorMessage, we will use it directly
+                { ErrorMessage.Length: > 0 } => attribute.ErrorMessage,
+                RequiredAttribute => ReplaceLabel(templates.Required),
+                RangeAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Range : templates.Number.Range, max: 2),
+                MinLengthAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Min : templates.Number.Min),
+                MaxLengthAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Max : templates.Number.Max),
+                StringLengthAttribute => ReplaceLength(templates.String.Range, max: 2),
+                _ => attribute.ErrorMessage,
+            };
+
+            if (attribute is RangeAttribute or MinLengthAttribute or MaxLengthAttribute)
+            {
+                validationContext.Value ??= 0;
+            }
+
+            return IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result);
+        }
         private static bool RequiredIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             if (validationContext.Rule.Required == true)
