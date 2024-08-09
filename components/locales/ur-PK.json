@@ -1,0 +1,233 @@
+{
+  "locale": "ur",
+  "Pagination": {
+    // Options
+    "items_per_page": "/ صفحہ",
+    "jump_to": "پاس جاؤ",
+    "jump_to_confirm": "تصدیق کریں",
+    "page": "",
+
+    // Pagination
+    "prev_page": "پچھلا صفحہ",
+    "next_page": "اگلا صفحہ",
+    "prev_5": "پچھلے 5 صفحات",
+    "next_5": "اگلے 5 صفحات",
+    "prev_3": "پچھلے 3 صفحات",
+    "next_3": "اگلے 3 صفحات",
+    "page_size": "Page Size"
+  },
+  "DatePicker": {
+    "lang": {
+      "placeholder": "تاریخ منتخب کریں",
+      "yearPlaceholder": "سال کو منتخب کریں",
+      "quarterPlaceholder": "کوارٹر منتخب کریں",
+      "monthPlaceholder": "ماہ منتخب کریں",
+      "weekPlaceholder": "ہفتہ منتخب کریں",
+      "rangePlaceholder": [ "شروع کرنے کی تاریخ", "آخری تاریخ" ],
+      "rangeYearPlaceholder": [ "آغاز سال", "آخر سال" ],
+      "rangeMonthPlaceholder": [ "مہینہ شروع", "اختتامی مہینہ" ],
+      "rangeWeekPlaceholder": [ "ہفتے شروع کریں", "اختتام ہفتہ" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "uk_UA",
+      "today": "Сьогодні",
+      "now": "Зараз",
+      "backToToday": "Поточна дата",
+      "ok": "OK",
+      "clear": "Очистити",
+      "month": "Місяць",
+      "year": "Рік",
+      "timeSelect": "Обрати час",
+      "dateSelect": "Обрати дату",
+      "monthSelect": "Обрати місяць",
+      "yearSelect": "Обрати рік",
+      "decadeSelect": "Обрати десятиріччя",
+
+      "dateFormat": "D-M-YYYY",
+
+      "dateTimeFormat": "D-M-YYYY HH:mm:ss",
+
+      "previousMonth": "Попередній місяць (PageUp)",
+      "nextMonth": "Наступний місяць (PageDown)",
+      "previousYear": "Попередній рік (Control + left)",
+      "nextYear": "Наступний рік (Control + right)",
+      "previousDecade": "Попереднє десятиріччя",
+      "nextDecade": "Наступне десятиріччя",
+      "previousCentury": "Попереднє століття",
+      "nextCentury": "Наступне століття"
+    },
+    "timePickerLocale": {
+      "placeholder": "وقت منتخب کریں",
+      "rangePlaceholder": [ "وقت منتخب کریں", "آخر وقت" ]
+    }
+  },
+  "TimePicker": {
+    "placeholder": "وقت منتخب کریں",
+    "rangePlaceholder": [ "وقت منتخب کریں", "آخر وقت" ]
+  },
+  "Calendar": {
+    "lang": {
+      "placeholder": "تاریخ منتخب کریں",
+      "yearPlaceholder": "سال کو منتخب کریں",
+      "quarterPlaceholder": "کوارٹر منتخب کریں",
+      "monthPlaceholder": "ماہ منتخب کریں",
+      "weekPlaceholder": "ہفتہ منتخب کریں",
+      "rangePlaceholder": [ "شروع کرنے کی تاریخ", "آخری تاریخ" ],
+      "rangeYearPlaceholder": [ "آغاز سال", "آخر سال" ],
+      "rangeMonthPlaceholder": [ "مہینہ شروع", "اختتامی مہینہ" ],
+      "rangeWeekPlaceholder": [ "ہفتے شروع کریں", "اختتام ہفتہ" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "uk_UA",
+      "today": "Сьогодні",
+      "now": "Зараз",
+      "backToToday": "Поточна дата",
+      "ok": "OK",
+      "clear": "Очистити",
+      "month": "Місяць",
+      "year": "Рік",
+      "timeSelect": "Обрати час",
+      "dateSelect": "Обрати дату",
+      "monthSelect": "Обрати місяць",
+      "yearSelect": "Обрати рік",
+      "decadeSelect": "Обрати десятиріччя",
+
+      "dateFormat": "D-M-YYYY",
+
+      "dateTimeFormat": "D-M-YYYY HH:mm:ss",
+
+      "previousMonth": "Попередній місяць (PageUp)",
+      "nextMonth": "Наступний місяць (PageDown)",
+      "previousYear": "Попередній рік (Control + left)",
+      "nextYear": "Наступний рік (Control + right)",
+      "previousDecade": "Попереднє десятиріччя",
+      "nextDecade": "Наступне десятиріччя",
+      "previousCentury": "Попереднє століття",
+      "nextCentury": "Наступне століття"
+    },
+    "timePickerLocale": {
+      "placeholder": "وقت منتخب کریں",
+      "rangePlaceholder": [ "وقت منتخب کریں", "آخر وقت" ]
+    }
+  },
+  "global": {
+    "placeholder": "منتخب کریں"
+  },
+  "Table": {
+    "filterTitle": "فلٹر مینو",
+    "filterConfirm": "ٹھیک ہے",
+    "filterReset": "ری سیٹ کریں",
+    "filterEmptyText": "فلٹرز نہیں",
+    "emptyText": "کوئی ڈیٹا نہیں",
+    "selectAll": "موجودہ صفحہ منتخب کریں",
+    "selectInvert": "موجودہ صفحے کو الٹ دیں",
+    "selectNone": "تمام ڈیٹا صاف کریں",
+    "selectionAll": "تمام ڈیٹا کو منتخب کریں",
+    "sortTitle": "ترتیب دیں",
+    "expand": "پھیلائیں",
+    "collapse": "سمیٹیں",
+    "triggerDesc": "نزولی کو ترتیب دینے کیلئے کلک کریں",
+    "triggerAsc": "چڑھنے کو ترتیب دینے کیلئے کلک کریں",
+    "cancelSort": "ترتیب کو منسوخ کرنے کیلئے دبائیں"
+  },
+  "Modal": {
+    "okText": "ٹھیک ہے",
+    "cancelText": "منسوخ کریں",
+    "justOkText": "ٹھیک ہے"
+  },
+  "Popconfirm": {
+    "okText": "ٹھیک ہے",
+    "cancelText": "منسوخ کریں"
+  },
+  "Transfer": {
+    "titles": [ "", "" ],
+    "searchPlaceholder": "یہاں تلاش کریں",
+    "itemUnit": "شے",
+    "itemsUnit": "اشیاء",
+    "remove": "ہٹائیں",
+    "selectCurrent": "موجودہ صفحہ منتخب کریں",
+    "removeCurrent": "موجودہ صفحہ ہٹائیں",
+    "selectAll": "تمام ڈیٹا کو منتخب کریں",
+    "removeAll": "تمام ڈیٹا کو ہٹا دیں",
+    "selectInvert": "موجودہ صفحے کو الٹ دیں"
+  },
+  "Upload": {
+    "uploading": "اپ لوڈ ہو رہا ہے…",
+    "removeFile": "فائل کو ہٹا دیں",
+    "uploadError": "اپ لوڈ کی خرابی",
+    "previewFile": "پیش نظار فائل",
+    "downloadFile": "فائل ڈاؤن لوڈ کریں"
+  },
+  "Empty": {
+    "description": "کوئی ڈیٹا نہیں"
+  },
+  "Icon": {
+    "icon": "آئیکن"
+  },
+  "Text": {
+    "edit": "ترمیم",
+    "copy": "کاپی",
+    "copied": "کاپی ہوگیا",
+    "expand": "پھیلائیں"
+  },
+  "PageHeader": {
+    "back": "پیچھے"
+  },
+  "Form": {
+    "optional": "(اختیاری)",
+    "defaultValidateMessages": {
+      "default": " ${label} کیلئے فیلڈ کی توثیق میں نقص",
+      "required": "درج کریں ${label}",
+      "enum": "${label} ایک ہونا ضروری ہے [${enum}]",
+      "whitespace": "${label} خالی نہیں ہوسکتا",
+      "date": {
+        "format": "${label} تاریخ کی شکل غلط ہے",
+        "parse": "${label} تاریخ میں تبدیل نہیں کیا جاسکتا",
+        "invalid": "${label} غلط تاریخ ہے"
+      },
+      "types": {
+        "string": "${label} درست نہیں ہے ${type}",
+        "method": "${label} درست نہیں ہے ${type}",
+        "array": "${label} درست نہیں ہے ${type}",
+        "object": "${label} درست نہیں ہے ${type}",
+        "number": "${label} درست نہیں ہے ${type}",
+        "date": "${label} درست نہیں ہے ${type}",
+        "boolean": "${label} درست نہیں ہے ${type}",
+        "integer": "${label} درست نہیں ہے ${type}",
+        "float": "${label} درست نہیں ہے ${type}",
+        "regexp": "${label} درست نہیں ہے ${type}",
+        "email": "${label} درست نہیں ہے ${type}",
+        "url": "${label} درست نہیں ہے ${type}",
+        "hex": "${label} درست نہیں ہے ${type}"
+      },
+      "string": {
+        "len": "${label} ضروری ہے ${len} حروف",
+        "min": "${label} کم از کم ہونا چاہئے ${min} حروف",
+        "max": "${label} تک ہونا چاہئے ${max} حروف",
+        "range": "${label} کے درمیان ہونا چاہئے ${min}-${max} حروف"
+      },
+      "number": {
+        "len": "${label} کے برابر ہونا چاہئے ${len}",
+        "min": "${label} کم از کم ہونا چاہئے ${min}",
+        "max": "${label} زیادہ سے زیادہ ہونا چاہئے ${max}",
+        "range": "${label} کے درمیان ہونا چاہئے ${min}-${max}"
+      },
+      "array": {
+        "len": "ضروری ہے ${len} ${label}",
+        "min": "کم از کم ${min} ${label}",
+        "max": "زیادہ سے زیادہ ${max} ${label}",
+        "range": "کی رقم ${label} کے درمیان ہونا چاہئے ${min}-${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} پیٹرن سے ملتا نہیں ہے ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "پیش نظارہ"
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "locale": "uz",
+  "Pagination": {
+    // Options
+    "items_per_page": "/ sah.",
+    "jump_to": "O'tish",
+    "jump_to_confirm": "tasdiqlash",
+    "page": "Sahifa",
+
+    // Pagination
+    "prev_page": "Orqaga",
+    "next_page": "Oldinga",
+    "prev_5": "Oldingi 5",
+    "next_5": "Keyingi 5",
+    "prev_3": "Oldingi 3",
+    "next_3": "Keyingi 3",
+    "page_size": "sahifa hajmi"
+  },
+  "DatePicker": {
+    "lang": {
+      "placeholder": "Sanani tanlang",
+      "yearPlaceholder": "Yilni tanlang",
+      "quarterPlaceholder": "Chorakni tanlang",
+      "monthPlaceholder": "Oyni tanlang",
+      "weekPlaceholder": "Haftani tanlang",
+      "rangePlaceholder": [ "Bosh sana", "Oxirigi sana" ],
+      "rangeYearPlaceholder": [ "Yilning boshi", "Yilning oxiri" ],
+      "rangeMonthPlaceholder": [ "Oyning boshi", "Oyning oxiri" ],
+      "rangeWeekPlaceholder": [ "Haftaning boshi", "Haftaning oxiri" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "uz_UZ",
+      "today": "Bugun",
+      "now": "Hozir",
+      "backToToday": "Bugunga qaytish",
+      "ok": "OK",
+      "clear": "Toza",
+      "month": "Oy",
+      "year": "Yil",
+      "timeSelect": "vaqtni tanlang",
+      "dateSelect": "sanani tanlang",
+      "weekSelect": "Haftani tanlang",
+      "monthSelect": "Oyni tanlang",
+      "yearSelect": "Yilni tanlang",
+      "decadeSelect": "O'n yilni tanlang",
+      "dateFormat": "M/D/YYYY",
+      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "previousMonth": "Oldingi oy (PageUp)",
+      "nextMonth": "Keyingi oy (PageDown)",
+      "previousYear": "O'tgan yili (Control + left)",
+      "nextYear": "Keyingi yil (Control + right)",
+      "previousDecade": "Oxirgi o'n yil",
+      "nextDecade": "Keyingi o'n yil",
+      "previousCentury": "O'tgan asr",
+      "nextCentury": "Keyingi asr"
+    },
+    "timePickerLocale": {
+      "placeholder": "Vaqtni tanlang",
+      "rangePlaceholder": [ "Boshlanish vaqti", "Yakunlash vaqti" ]
+    }
+  },
+  "TimePicker": {
+    "placeholder": "Vaqtni tanlang",
+    "rangePlaceholder": [ "Boshlanish vaqti", "Yakunlash vaqti" ]
+  },
+  "Calendar": {
+    "lang": {
+      "placeholder": "Sanani tanlang",
+      "yearPlaceholder": "Yilni tanlang",
+      "quarterPlaceholder": "Chorakni tanlang",
+      "monthPlaceholder": "Oyni tanlang",
+      "weekPlaceholder": "Haftani tanlang",
+      "rangePlaceholder": [ "Bosh sana", "Oxirigi sana" ],
+      "rangeYearPlaceholder": [ "Yilning boshi", "Yilning oxiri" ],
+      "rangeMonthPlaceholder": [ "Oyning boshi", "Oyning oxiri" ],
+      "rangeWeekPlaceholder": [ "Haftaning boshi", "Haftaning oxiri" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "uz_UZ",
+      "today": "Bugun",
+      "now": "Hozir",
+      "backToToday": "Bugunga qaytish",
+      "ok": "OK",
+      "clear": "Toza",
+      "month": "Oy",
+      "year": "Yil",
+      "timeSelect": "vaqtni tanlang",
+      "dateSelect": "sanani tanlang",
+      "weekSelect": "Haftani tanlang",
+      "monthSelect": "Oyni tanlang",
+      "yearSelect": "Yilni tanlang",
+      "decadeSelect": "O'n yilni tanlang",
+      "dateFormat": "M/D/YYYY",
+      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "previousMonth": "Oldingi oy (PageUp)",
+      "nextMonth": "Keyingi oy (PageDown)",
+      "previousYear": "O'tgan yili (Control + left)",
+      "nextYear": "Keyingi yil (Control + right)",
+      "previousDecade": "Oxirgi o'n yil",
+      "nextDecade": "Keyingi o'n yil",
+      "previousCentury": "O'tgan asr",
+      "nextCentury": "Keyingi asr"
+    },
+    "timePickerLocale": {
+      "placeholder": "Vaqtni tanlang",
+      "rangePlaceholder": [ "Boshlanish vaqti", "Yakunlash vaqti" ]
+    }
+  },
+  "global": {
+    "placeholder": "Iltimos tanlang"
+  },
+  "Table": {
+    "filterTitle": "Filtr",
+    "filterConfirm": "OK",
+    "filterReset": "Qayta tiklash",
+    "filterEmptyText": "Filtrsiz",
+    "emptyText": "Ma'lumot yo'q",
+    "selectAll": "Hammasini tanlash",
+    "selectInvert": "Tanlovni kiritish",
+    "selectNone": "Ma'lumotni ochirib tashlash",
+    "selectionAll": "Ma'lumotning hammasini tanlash",
+    "sortTitle": "Saralash",
+    "expand": "Satirni kengaytirish",
+    "collapse": "Satirni qisqartirish",
+    "triggerDesc": "Kamayib borish tartibida saralashni bosing",
+    "triggerAsc": "Ko'payib borish tartibida saralashni bosing",
+    "cancelSort": "Saralashni yakunlash uchun bosing"
+  },
+  "Modal": {
+    "okText": "OK",
+    "cancelText": "Bekor qilish",
+    "justOkText": "OK"
+  },
+  "Popconfirm": {
+    "okText": "OK",
+    "cancelText": "Bekor qilish"
+  },
+  "Transfer": {
+    "titles": [ "", "" ],
+    "searchPlaceholder": "Qidirish",
+    "itemUnit": "elem.",
+    "itemsUnit": "elem.",
+    "remove": "O'chirish",
+    "selectAll": "Ma'lumotning hammasini tanlash",
+    "selectCurrent": "Joriy sahifani tanlang",
+    "selectInvert": "Kamayib borish tartibida ko'rsatish",
+    "removeAll": "Ma'lumotning hammasini ochirish",
+    "removeCurrent": "Joriy sahifani ochirish"
+  },
+  "Upload": {
+    "uploading": "Yuklash...",
+    "removeFile": "Faylni ochirish",
+    "uploadError": "Yuklashda xatolik yuz berdi",
+    "previewFile": "Faylni oldindan ko'rib chiqish",
+    "downloadFile": "Faylni yuklash"
+  },
+  "Empty": {
+    "description": "Ma'lumot yo'q"
+  },
+  "Icon": {
+    "icon": "belgi"
+  },
+  "Text": {
+    "edit": "Tahrirlash",
+    "copy": "Kopiya qilish'",
+    "copied": "Kopiya qilingan",
+    "expand": "Ochish"
+  },
+  "PageHeader": {
+    "back": "Orqaga"
+  },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Maydonni tekshirish xatosi ${label}",
+      "required": "Iltimos, ${label} kiriting",
+      "enum": "${label} [${enum}] dan biri bo'lishi kerak",
+      "whitespace": "${label} bo'sh bo'la olmaydi",
+      "date": {
+        "format": "${label} noto'g'ri sana ko'rinishi",
+        "parse": "${label} sanaga aylanmadi",
+        "invalid": "${label} noto'g'ri sana hisoblanadi"
+      },
+      "types": {
+        "string": "${label} ${type}-ning usulidan emas",
+        "method": "${label} ${type}-ning usulidan emas",
+        "array": "${label} ${type}-ning usulidan emas",
+        "object": "${label} ${type}-ning usulidan emas",
+        "number": "${label} ${type}-ning usulidan emas",
+        "date": "${label} ${type}-ning usulidan emas",
+        "boolean": "${label} ${type}-ning usulidan emas",
+        "integer": "${label} ${type}-ning usulidan emas",
+        "float": "${label} ${type}-ning usulidan emas",
+        "regexp": "${label} ${type}-ning usulidan emas",
+        "email": "${label} ${type}-ning usulidan emas",
+        "url": "${label} ${type}-ning usulidan emas",
+        "hex": "${label} ${type}-ning usulidan emas"
+      },
+      "string": {
+        "len": "${label} ${len} belgilar bo'lishi kerak",
+        "min": "${label} ${min} belgilaridan katta yoki teng bo'lishi kerak",
+        "max": "${label} ${max} belgilaridan kam yoki teng bo'lishi kerak",
+        "range": "${label} uzunligi ${min} - ${max} belgilar orasida bo'lishi kerak"
+      },
+      "number": {
+        "len": "${label} ${len}ga teng bo'lishi kerak",
+        "min": "${label} ${min} dan katta yoki teng bo'lishi kerak",
+        "max": "${label} ${max} dan kam yoki unga teng bo'lishi kerak"
+      },
+      "array": {
+        "len": "${label} elementlari soni ${len} ga teng bo'lishi kerak",
+        "min": "${label} elementlari soni ${min} dan katta yoki teng bo'lishi kerak",
+        "max": "${label} elementlari soni ${max} dan kam yoki unga teng bo'lishi kerak",
+        "range": "${label} elementlari soni ${min} va ${max} orasida bo'lishi kerak"
+      },
+      "pattern": {
+        "mismatch": "${label} ${pattern} naqshga mos kelmaydi"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Oldindan ko'rish"
+  }
+}
