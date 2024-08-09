@@ -137,19 +137,19 @@
         "invalid": "Не валідна дата у ${label}"
       },
       "types": {
-        "string": "typeTemplate",
-        "method": "typeTemplate",
-        "array": "typeTemplate",
-        "object": "typeTemplate",
-        "number": "typeTemplate",
-        "date": "typeTemplate",
-        "boolean": "typeTemplate",
-        "integer": "typeTemplate",
-        "float": "typeTemplate",
-        "regexp": "typeTemplate",
-        "email": "typeTemplate",
-        "url": "typeTemplate",
-        "hex": "typeTemplate"
+        "string": "${label} не є типом ${type}",
+        "method": "${label} не є типом ${type}",
+        "array": "${label} не є типом ${type}",
+        "object": "${label} не є типом ${type}",
+        "number": "${label} не є типом ${type}",
+        "date": "${label} не є типом ${type}",
+        "boolean": "${label} не є типом ${type}",
+        "integer": "${label} не є типом ${type}",
+        "float": "${label} не є типом ${type}",
+        "regexp": "${label} не є типом ${type}",
+        "email": "${label} не є типом ${type}",
+        "url": "${label} не є типом ${type}",
+        "hex": "${label} не є типом ${type}"
       },
       "string": {
         "len": "${label} має містити ${len} символів",

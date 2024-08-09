@@ -1,17 +1,22 @@
 @using AntDesign.Docs.Services
+@using AntDesign.TableModels
+
+Multiple: <Switch @bind-Value="multiple"></Switch>
+<br/>
 <Select Style="width: 200px;"
-        ValueProperty="c=>c"
-        LabelProperty="c=>c.Name"
+        ItemValue="c=>c"
+        ItemLabel="c=>c.Name"
         DataSource="data"
+        @bind-Open="selectOpen"
         @bind-Values="@selectedRows"
-        Mode="multiple"
+        Mode="@(multiple?"multiple":"default")"
         DropdownMatchSelectWidth="false"
         EnableSearch
         OnSearch="OnSearch">
     <DropdownRender>
-        <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
+        <Table @ref="table" TItem="Column" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnRowClick="OnRowClick" Size="TableSize.Small">
             <ColumnDefinitions Context="ctx">
-                <Selection Key="@ctx.Name" />
+                <Selection Hidden="@(!multiple)" />
                 <PropertyColumn Property="c=>c.Name">
                     <a>@ctx.Name</a>
                 </PropertyColumn>
@@ -27,6 +32,8 @@
     ITable table;
     IEnumerable<Column> selectedRows=[];
     Column[] data;
+    bool selectOpen = false;
+    bool multiple;
 
     protected override void OnInitialized()
     {
@@ -38,7 +45,21 @@
         data = dataSource.Where(x => x.Name.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase)).ToArray();
     }
 
-    class Column
+    void OnRowClick(RowData<Column> rowData)
+    {
+        if (multiple)
+        {
+            selectedRows = selectedRows.Contains(rowData.Data)? selectedRows.Except([rowData.Data]) : selectedRows.Concat([rowData.Data]);
+        }
+        else
+        {
+            selectedRows = [rowData.Data];
+            selectOpen = false;
+        }
+
+    }
+
+    record Column
     {
         public string Name { get; set; }
 
