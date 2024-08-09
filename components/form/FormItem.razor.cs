@@ -199,6 +199,7 @@ namespace AntDesign
         private Action<string[]> _onValidated;
 
         private string _name;
+        private IEnumerable<FormValidationRule> _rules;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
@@ -239,7 +240,7 @@ namespace AntDesign
             SetInternalIsRequired();
         }
 
-        protected void SetClass()
+        private void SetClass()
         {
             ClassMapper
                 .Add(_prefixCls)
@@ -255,6 +256,16 @@ namespace AntDesign
                 .Add($"{_prefixCls}-label")
                 .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
                 ;
+        }
+
+        private void SetRules()
+        {
+            _rules = Form.ValidateMode switch
+            {
+                FormValidateMode.Default => GetRulesFromAttributes(),
+                FormValidateMode.Rules => Rules ?? [],
+                _ => [.. GetRulesFromAttributes(), .. Rules ?? []]
+            };
         }
 
         protected override void OnParametersSet()
@@ -432,17 +443,22 @@ namespace AntDesign
             _fieldValueGetter = _propertyReflector?.GetValueDelegate;
 
             SetInternalIsRequired();
+            SetRules();
+
             StateHasChanged();
         }
 
-        ValidationResult[] IFormItem.ValidateField()
+        ValidationResult[] IFormItem.ValidateFieldWithRules()
         {
-            if (Form?.UseLocaleValidateMessage != true)
+            if (_propertyReflector is null)
             {
                 return [];
             }
 
-            var rules = Form.ValidateMode == FormValidateMode.Default ? GetRulesFromAttributes() : Rules;
+            if (_rules?.Any() != true)
+            {
+                return [];
+            }
 
             var results = new List<ValidationResult>();
 
@@ -452,7 +468,7 @@ namespace AntDesign
 
                 var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
-                foreach (var rule in rules)
+                foreach (var rule in _rules)
                 {
                     var validationContext = new FormValidationContext()
                     {
@@ -489,13 +505,23 @@ namespace AntDesign
             InvokeAsync(StateHasChanged);
         }
 
+        /// <summary>
+        /// tansform attributes to FormValidationRule for using locale validation message templates
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<FormValidationRule> GetRulesFromAttributes()
         {
+            if (_propertyReflector is null)
+            {
+                yield break;
+            }
+
             var attributes = _propertyReflector?.ValidationAttributes;
 
             foreach (var attribute in attributes)
             {
-                if (attribute is { ErrorMessage: { Length: > 0 } })
+                // if user has set the ErrorMessage, we will use it directly
+                if (attribute is { ErrorMessage.Length: > 0 })
                 {
                     yield return new FormValidationRule { ValidationAttribute = attribute };
                     yield break;
