@@ -260,6 +260,10 @@ namespace AntDesign
 
         private void SetRules()
         {
+            if (Form == null)
+            {
+                return;
+            }
             _rules = Form.ValidateMode switch
             {
                 FormValidateMode.Default => GetRulesFromAttributes(),
