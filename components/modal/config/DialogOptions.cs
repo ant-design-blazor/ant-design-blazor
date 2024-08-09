@@ -143,7 +143,7 @@ namespace AntDesign
             }
             else
             {
-                return $"width:{Width.AsT1}px;";
+                return $"width:{(CssSizeLength)Width.AsT1};";
             }
         }
 
