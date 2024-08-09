@@ -537,7 +537,7 @@ namespace AntDesign
                         yield return new FormValidationRule { Required = true };
                         break;
                     case RangeAttribute range:
-                        yield return new FormValidationRule { Min = (decimal)range.Minimum, Max = (decimal)range.Maximum };
+                        yield return new FormValidationRule { Type = FormFieldType.Number, Range = (Convert.ToDouble(range.Minimum), Convert.ToDouble(range.Maximum)) };
                         break;
                     case MinLengthAttribute minLength:
                         yield return new FormValidationRule { Min = minLength.Length };
@@ -546,7 +546,7 @@ namespace AntDesign
                         yield return new FormValidationRule { Max = maxLength.Length };
                         break;
                     case StringLengthAttribute stringLength:
-                        yield return new FormValidationRule { Len = stringLength.MaximumLength };
+                        yield return new FormValidationRule { Type = FormFieldType.String, Len = stringLength.MaximumLength };
                         break;
                     default:
                         yield return new FormValidationRule { ValidationAttribute = attribute };
