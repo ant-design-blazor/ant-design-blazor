@@ -43,25 +43,33 @@ namespace AntDesign.Internal.Form.Validate
 
             var templates = validationContext.ValidateMessages;
 
+            var compareMessage = validationContext.Rule.Type switch
+            {
+                FormFieldType.Number => templates.Number,
+                FormFieldType.Array => templates.Array,
+                _ => templates.String
+            };
+
             attribute.ErrorMessage = attribute switch
             {
                 // if user has set the ErrorMessage, we will use it directly
                 { ErrorMessage.Length: > 0 } => attribute.ErrorMessage,
                 RequiredAttribute => ReplaceLabel(templates.Required),
-                RangeAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Range : templates.Number.Range, max: 2),
-                MinLengthAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Min : templates.Number.Min),
-                MaxLengthAttribute => ReplaceLength(validationContext.Value is string ? templates.String.Max : templates.Number.Max),
+                RangeAttribute => ReplaceLength(compareMessage.Range, max: 2),
+                MinLengthAttribute => ReplaceLength(compareMessage.Min),
+                MaxLengthAttribute => ReplaceLength(compareMessage.Max),
                 StringLengthAttribute => ReplaceLength(templates.String.Range, max: 2),
                 _ => attribute.ErrorMessage,
             };
 
-            if (attribute is RangeAttribute or MinLengthAttribute or MaxLengthAttribute)
+            if (attribute is RangeAttribute)
             {
                 validationContext.Value ??= 0;
             }
 
             return IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result);
         }
+
         private static bool RequiredIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             if (validationContext.Rule.Required == true)

@@ -32,7 +32,7 @@
             Url = _typeTemplate,
         };
 
-        public StringMessage String { get; set; } = new()
+        public CompareMessage String { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} characters",
             Min = "'{0}' must be at least {1} characters",
@@ -40,7 +40,7 @@
             Range = "'{0}' must be between {1} and {2} characters",
         };
 
-        public NumberMessage Number { get; set; } = new()
+        public CompareMessage Number { get; set; } = new()
         {
             Len = "'{0}' must equal {1}",
             Min = "'{0}' cannot be less than {1}",
@@ -48,7 +48,7 @@
             Range = "'{0}' must be between {1} and {2}",
         };
 
-        public ArrayMessage Array { get; set; } = new()
+        public CompareMessage Array { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} in length",
             Min = "'{0}' cannot be less than {1} in length",
@@ -98,30 +98,12 @@
             public string Url { get; set; }
         }
 
-        public class StringMessage
+        public class CompareMessage
         {
             public string Len { get; set; }
             public string Min { get; set; }
             public string Max { get; set; }
             public string Range { get; set; }
-        }
-
-        public class NumberMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
-        }
-
-        public class ArrayMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
         }
 
         public class PatternMessage

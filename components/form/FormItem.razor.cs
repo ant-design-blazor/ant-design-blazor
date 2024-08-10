@@ -186,6 +186,11 @@ namespace AntDesign
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
+        private string _name;
+        private Action _nameChanged;
+
+        private Type _valueUnderlyingType;
+
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
@@ -195,10 +200,8 @@ namespace AntDesign
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
 
-        private Action _nameChanged;
         private Action<string[]> _onValidated;
 
-        private string _name;
         private IEnumerable<FormValidationRule> _rules;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
@@ -404,6 +407,7 @@ namespace AntDesign
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
             _onValidated = control.OnValidated;
+            _valueUnderlyingType = control.ValueUnderlyingType;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -524,8 +528,15 @@ namespace AntDesign
 
             foreach (var attribute in attributes)
             {
-
-                yield return new FormValidationRule { ValidationAttribute = attribute };
+                FormFieldType? type = _valueUnderlyingType switch
+                {
+                    { IsGenericType: true } => FormFieldType.Number,
+                    { IsEnum: true } => FormFieldType.Enum,
+                    { IsArray: true } => FormFieldType.Array,
+                    _ when _valueUnderlyingType == typeof(string) => FormFieldType.String,
+                    _ => null
+                };
+                yield return new FormValidationRule { ValidationAttribute = attribute, Type = type };
             }
         }
     }

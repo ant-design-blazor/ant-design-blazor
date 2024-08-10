@@ -38,6 +38,8 @@ namespace AntDesign
 
         internal PropertyReflector? PopertyReflector => _propertyReflector;
 
+        internal Type ValueUnderlyingType => _nullableUnderlyingType ?? typeof(TValue);
+
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
@@ -370,8 +372,6 @@ namespace AntDesign
             }
         }
 
-        FieldIdentifier IControlValueAccessor.FieldIdentifier => FieldIdentifier;
-
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -483,11 +483,6 @@ namespace AntDesign
                 CurrentValue = _getValueDelegate.Invoke(Form.Model);
                 InvokeAsync(StateHasChanged);
             }
-        }
-
-        void IControlValueAccessor.OnValidated(string[] validationMessages)
-        {
-            OnValidated(validationMessages);
         }
     }
 }
