@@ -403,9 +403,9 @@ namespace AntDesign
                     }
 
                     EditContext = Form?.EditContext;
-
-                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
                 }
+
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
 

@@ -21,7 +21,6 @@
             String = _typeTemplate,
             Array = _typeTemplate,
             Object = _typeTemplate,
-            Enum = _typeTemplate,
             Number = _typeTemplate,
             Date = _typeTemplate,
             Boolean = _typeTemplate,
@@ -73,7 +72,6 @@
                 FormFieldType.Float => Types.Float,
                 FormFieldType.Array => Types.Array,
                 FormFieldType.Object => Types.Object,
-                FormFieldType.Enum => Types.Enum,
                 FormFieldType.Date => Types.Date,
                 FormFieldType.Url => Types.Url,
                 FormFieldType.Email => Types.Email,
@@ -87,7 +85,6 @@
             public string String { get; set; }
             public string Array { get; set; }
             public string Object { get; set; }
-            public string Enum { get; set; }
             public string Number { get; set; }
             public string Date { get; set; }
             public string Boolean { get; set; }

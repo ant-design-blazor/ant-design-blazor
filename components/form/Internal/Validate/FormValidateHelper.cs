@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Numerics;
 
 namespace AntDesign.Internal.Form.Validate
@@ -308,11 +309,11 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool TypeIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
+            result = null;
             var rule = validationContext.Rule;
 
             if (rule.Type == null)
             {
-                result = null;
                 return true;
             }
 
@@ -325,8 +326,6 @@ namespace AntDesign.Internal.Form.Validate
 
                 return false;
             }
-
-            result = null;
 
             return true;
         }
@@ -443,19 +442,25 @@ namespace AntDesign.Internal.Form.Validate
             var rule = validationContext.Rule;
 
             object[] values = [];
+            string[] labels = null;
 
-            if (rule.Type != FormFieldType.Array && rule.OneOf != null)
+            if (rule.Type != FormFieldType.Array)
             {
-                values = rule.OneOf;
-            }
-            else if (rule.Enum != null && rule.Enum.IsEnum)
-            {
-                var enumValues = rule.Enum.GetEnumValues();
+                if (rule.OneOf != null)
+                {
+                    values = rule.OneOf;
+                }
+                else if (rule.Type == FormFieldType.Enum && rule.Enum != null)
+                {
+                    var enumValues = Enum.GetValues(rule.Enum);
+                    values = enumValues.Cast<object>().ToArray();
+                    labels = values.Select(v => EnumHelper.GetDisplayName(rule.Enum, v)).ToArray();
+                }
             }
 
             if (values.Length > 0)
             {
-                var attribute = new OneOfAttribute(values);
+                var attribute = new OneOfAttribute(values, labels);
                 attribute.ErrorMessage = ReplaceEnum(validationContext.ValidateMessages.Enum);
 
                 if (!IsValid(attribute, validationContext, out ValidationResult validationResult))

@@ -540,13 +540,14 @@ namespace AntDesign
             {
                 FormFieldType? type = _valueUnderlyingType switch
                 {
-                    { IsGenericType: true } => FormFieldType.Number,
                     { IsEnum: true } => FormFieldType.Enum,
-                    { IsArray: true } => FormFieldType.Array,
                     _ when _valueUnderlyingType == typeof(string) => FormFieldType.String,
+                    _ when THelper.IsEnumerable(_valueUnderlyingType) => FormFieldType.Array,
+                    _ when THelper.IsNumericType(_valueUnderlyingType) => FormFieldType.Number,
+                    _ when THelper.IsDateType(_valueUnderlyingType) => FormFieldType.Date,
                     _ => null
                 };
-                yield return new FormValidationRule { ValidationAttribute = attribute, Type = type };
+                yield return new FormValidationRule { ValidationAttribute = attribute, Type = type, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
             }
         }
     }
