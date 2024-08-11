@@ -1,6 +1,8 @@
 ﻿@using AntDesign.JsInterop
 @using AntDesign.Docs.Services
 @using System.Reflection;
+@using System.Globalization
+@implements IDisposable
 @inherits ComponentBase
 
 <div class="code-box" id="@DemoId">
@@ -92,6 +94,8 @@
     {
         await base.OnInitializedAsync();
 
+        lang.LanguageChanged += OnLangeChanged;
+
 #if DEBUG
         DebugIcon =
     @<a href="@($"{(Demo.Link??"mock")}?type={Demo.Type}")" class="code-box-code-action" target="_blank">
@@ -100,6 +104,11 @@
     ;
 #endif
     }
+
+    void IDisposable.Dispose()
+    {
+        lang.LanguageChanged -= OnLangeChanged;
+    } 
 
     async Task Copy()
     {
@@ -127,5 +136,11 @@
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();
         }
+    }
+
+    private void OnLangeChanged(object sender, CultureInfo e)
+    {
+        _demoType = null;
+        StateHasChanged();
     }
 }
