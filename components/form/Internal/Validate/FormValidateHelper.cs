@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Numerics;
 
 namespace AntDesign.Internal.Form.Validate
 {
@@ -44,10 +43,11 @@ namespace AntDesign.Internal.Form.Validate
 
             var templates = validationContext.ValidateMessages;
 
-            var compareMessage = validationContext.Rule.Type switch
+            var compareMessage = validationContext.FieldType switch
             {
-                FormFieldType.Number => templates.Number,
-                FormFieldType.Array => templates.Array,
+                Type t when t == typeof(string) => templates.String,
+                Type t when THelper.IsNumericType(t) => templates.Number,
+                Type t when THelper.IsEnumerable(t) => templates.Array,
                 _ => templates.String
             };
 
@@ -62,11 +62,6 @@ namespace AntDesign.Internal.Form.Validate
                 StringLengthAttribute => ReplaceLength(templates.String.Range, max: 2),
                 _ => attribute.ErrorMessage,
             };
-
-            if (attribute is RangeAttribute)
-            {
-                validationContext.Value ??= 0;
-            }
 
             return IsValid(validationContext.Rule.ValidationAttribute, validationContext, out result);
         }
@@ -95,21 +90,22 @@ namespace AntDesign.Internal.Form.Validate
         {
             result = null;
             var rule = validationContext.Rule;
+            var fieldType = validationContext.FieldType;
             if (rule.Len != null)
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type == FormFieldType.String)
+                if (fieldType == typeof(string))
                 {
                     attribute = new StringLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Len;
                 }
-                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
+                else if (THelper.IsNumericType(fieldType))
                 {
                     attribute = new NumberAttribute((decimal)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Len;
                 }
-                if (rule.Type == FormFieldType.Array)
+                else if (THelper.IsEnumerable(fieldType))
                 {
                     attribute = new ArrayLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Len;
@@ -136,24 +132,22 @@ namespace AntDesign.Internal.Form.Validate
         {
             result = null;
             var rule = validationContext.Rule;
-
+            var fieldType = validationContext.FieldType;
             if (rule.Min != null)
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type.IsIn(FormFieldType.String))
+                if (fieldType == typeof(string))
                 {
                     attribute = new MinLengthAttribute((int)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Min;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Array))
+                else if (THelper.IsEnumerable(fieldType))
                 {
                     attribute = new MinLengthAttribute((int)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Min;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
+                else if (THelper.IsNumericType(fieldType))
                 {
                     attribute = new NumberMinAttribute((decimal)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Min;
@@ -181,24 +175,23 @@ namespace AntDesign.Internal.Form.Validate
         {
             result = null;
             var rule = validationContext.Rule;
+            var fieldType = validationContext.FieldType;
 
             if (rule.Max != null)
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type.IsIn(FormFieldType.String))
+                if (fieldType == typeof(string))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Max;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Array))
+                else if (THelper.IsEnumerable(fieldType))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Max;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
+                else if (THelper.IsNumericType(fieldType))
                 {
                     attribute = new NumberMaxAttribute((decimal)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
@@ -226,24 +219,23 @@ namespace AntDesign.Internal.Form.Validate
         {
             result = null;
             var rule = validationContext.Rule;
+            var fieldType = validationContext.FieldType;
 
             if (rule.Range != null)
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type.IsIn(FormFieldType.String))
+                if (fieldType == typeof(string))
                 {
                     attribute = new StringRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Range;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Array))
+                else if (THelper.IsEnumerable(fieldType))
                 {
                     attribute = new ArrayRangeAttribute((int)rule.Range.Value.Min, (int)rule.Range.Value.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Range;
                 }
-
-                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
+                else if (THelper.IsNumericType(fieldType))
                 {
                     attribute = new RangeAttribute(rule.Range.Value.Min, rule.Range.Value.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Range;
@@ -332,7 +324,7 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool DefaultFieldIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
-            if (validationContext.Rule.Type == FormFieldType.Array && validationContext.Rule.DefaultField != null)
+            if (THelper.IsEnumerable(validationContext.FieldType) && validationContext.Rule.DefaultField != null)
             {
                 Array values = validationContext.Value as Array;
 
@@ -450,7 +442,7 @@ namespace AntDesign.Internal.Form.Validate
                 {
                     values = rule.OneOf;
                 }
-                else if (rule.Type == FormFieldType.Enum && rule.Enum != null)
+                else if (rule.Enum != null)
                 {
                     var enumValues = Enum.GetValues(rule.Enum);
                     values = enumValues.Cast<object>().ToArray();

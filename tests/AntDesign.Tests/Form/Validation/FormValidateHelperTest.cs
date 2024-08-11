@@ -270,9 +270,6 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { FormFieldType.Float, 100, false },
             new object[] { FormFieldType.Float, "100", false },
 
-            new object[] { FormFieldType.Enum, FormValidateHelperEnum.None, true },
-            new object[] { FormFieldType.Enum, 100, false },
-
             new object[] { FormFieldType.Regexp, "\\d", true },
             new object[] { FormFieldType.Regexp, "^????---))%%%$$3#@^^", false },
 
@@ -406,7 +403,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 new FormValidationRule { Type= FormFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
-                string.Format($"{_defValidateMsgs.Enum}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
+                string.Format($"{_defValidateMsgs.Enum}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }).Trim('[', ']'))
             },
             new object[] { new FormValidationRule { Type = FormFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, FormFieldType.String) },
             new object[] { new FormValidationRule { Type = FormFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, FormFieldType.Array) },

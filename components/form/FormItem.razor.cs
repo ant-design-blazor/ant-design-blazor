@@ -494,6 +494,7 @@ namespace AntDesign
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
                         DisplayName = DisplayName,
+                        FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
                     };
 
@@ -538,16 +539,7 @@ namespace AntDesign
 
             foreach (var attribute in attributes)
             {
-                FormFieldType? type = _valueUnderlyingType switch
-                {
-                    { IsEnum: true } => FormFieldType.Enum,
-                    _ when _valueUnderlyingType == typeof(string) => FormFieldType.String,
-                    _ when THelper.IsEnumerable(_valueUnderlyingType) => FormFieldType.Array,
-                    _ when THelper.IsNumericType(_valueUnderlyingType) => FormFieldType.Number,
-                    _ when THelper.IsDateType(_valueUnderlyingType) => FormFieldType.Date,
-                    _ => null
-                };
-                yield return new FormValidationRule { ValidationAttribute = attribute, Type = type, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
+                yield return new FormValidationRule { ValidationAttribute = attribute, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
             }
         }
     }
