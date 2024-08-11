@@ -273,6 +273,11 @@ namespace AntDesign
                 FormValidateMode.Rules => Rules ?? [],
                 _ => [.. GetRulesFromAttributes(), .. Rules ?? []]
             };
+
+            if (Required && !_rules.Any(rule => rule.Required == true || rule.ValidationAttribute is RequiredAttribute))
+            {
+                _rules = [.. _rules, new FormValidationRule { Required = true }];
+            }
         }
 
         protected override void OnParametersSet()
@@ -461,6 +466,11 @@ namespace AntDesign
             if (_propertyReflector is null)
             {
                 return [];
+            }
+
+            if (IsRequired)
+            {
+                _rules ??= [];
             }
 
             if (_rules?.Any() != true)
