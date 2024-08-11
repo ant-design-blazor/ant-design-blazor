@@ -391,6 +391,7 @@ namespace AntDesign.Internal.Form.Validate
 
                     context.Value = arrValues.GetValue(index);
                     context.DisplayName = $"{validationContext.DisplayName}[{index}]";
+                    context.FieldType = context.Value.GetType();
                 }
                 else
                 {
@@ -398,6 +399,7 @@ namespace AntDesign.Internal.Form.Validate
                     if (propertyValue != null)
                     {
                         context.Value = propertyValue.GetValue(validationContext.Value);
+                        context.FieldType = propertyValue.GetType();
                     }
                     else
                     {
@@ -409,6 +411,7 @@ namespace AntDesign.Internal.Form.Validate
                             continue;
                         }
 
+                        context.FieldType = fieldValue.GetType();
                         context.Value = fieldValue.GetValue(validationContext.Value);
                     }
 

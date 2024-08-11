@@ -467,6 +467,13 @@ namespace AntDesign.Tests.Form.Validation
                 Value = value,
                 FieldName = _fieldName,
                 DisplayName = _displayName,
+                FieldType = rule.Type switch
+                {
+                    FormFieldType.String=>typeof(string),
+                    FormFieldType.Number =>typeof(int),
+                    FormFieldType.Array =>typeof(string[]),
+                    _=> typeof(object)
+                }
             };
 
             return FormValidateHelper.GetValidationResult(validationContext);
