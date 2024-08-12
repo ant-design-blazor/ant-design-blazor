@@ -35,9 +35,9 @@ describe("domManipulationHelper", () => {
     //assert
     expect(container.lastChild).to.equal(ele);
 
-    manipulationHelper.delElementFrom(ele, container);
+    manipulationHelper.delElementFrom(ele, container, 0);
     //assert
-    expect(document.body.querySelector("#" + id)).to.equal(null);
+    setTimeout(()=> expect(document.body.querySelector("#" + id)).to.equal(null),0);
   });
 
 

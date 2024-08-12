@@ -21,13 +21,14 @@ Cascader
 | 参数                 |  说明	                                          |  类型               |  默认值  |  
 | -------------------- | ---------------------------------------------------- | --------------------- | --------- |  
 | AllowClear           |  whether allow clear                                      |  bool               |  true	      |
-| BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
+| BoundaryAdjustMode   | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  change value on each selection if set to true, see above demo for details  |  bool               |  false	      |
 | Style                |  additional css class                                       |  string             |  -	          |
 | DefaultValue         |  initial selected value                                      |  string             |  -	          |
 | ExpandTrigger        |  expand current item when click or hover, one of 'click' 'hover'       |  string             |  'click'	  |
 | Options	           |  data options of cascade                                    |  IList<AntCheckbox> |  -	          |
 | Placeholder          |  input placeholder                                   |  string             |  'Please Select'	  |
+| Placement            |  Use preset popup align config from builtinPlacements.    | `BottomLeft` \| `BottomRight` \| `TopLeft` \| `TopRight` |  -  |
 | Size                 |  input size, one of 'large','middle' 'small'             |  string           |  无	          |
 | OnChange             |  callback when finishing cascader select (List<CascaderNode>, string, string) => void  |   -   |  -            |
 

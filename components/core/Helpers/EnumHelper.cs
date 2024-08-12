@@ -30,7 +30,7 @@ namespace AntDesign
             _enumType = THelper.GetUnderlyingType<T>();
             _aggregateFunction = BuildAggregateFunction();
             _valueList = Enum.GetValues(_enumType).Cast<T>();
-            _valueLabelList = _valueList.Select(value => (value, GetDisplayName(value)));
+            _valueLabelList = _valueList.Select(value => (value, EnumHelper.GetDisplayName(_enumType, value)));
             _isFlags = _enumType.GetCustomAttribute<FlagsAttribute>() != null;
             _hasFlagFunction = BuildHasFlagFunction();
         }
@@ -68,11 +68,9 @@ namespace AntDesign
             return _valueLabelList;
         }
 
-        public static string GetDisplayName(T enumValue)
+        public static string GetDisplayName<TEnum>(TEnum item)
         {
-            var enumName = Enum.GetName(_enumType, enumValue);
-            var fieldInfo = _enumType.GetField(enumName);
-            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? enumName;
+            return EnumHelper.GetDisplayName(_enumType, item);
         }
 
         private static Func<T, T, T> BuildAggregateFunction()
@@ -109,6 +107,16 @@ namespace AntDesign
                 var body = Expression.Call(param1, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
                 return Expression.Lambda<Func<T, T, bool>>(body, param1, param2).Compile();
             }
+        }
+    }
+
+    internal static class EnumHelper
+    {
+        public static string GetDisplayName(Type enumType, object enumValue)
+        {
+            var enumName = Enum.GetName(enumType, enumValue);
+            var fieldInfo = enumType.GetField(enumName);
+            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? enumName;
         }
     }
 }

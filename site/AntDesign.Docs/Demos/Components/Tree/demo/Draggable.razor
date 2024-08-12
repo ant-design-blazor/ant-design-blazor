@@ -1,14 +1,19 @@
-﻿<Tree @ref="tree" DefaultExpandAll Draggable BlockNode
+﻿<Tree @ref="tree"
+      DefaultExpandAll
+      Draggable
+      BlockNode
       ShowIcon DataSource="games"
       TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
       IconExpression="x => x.DataItem.Icon"
       IsLeafExpression="x => x.DataItem.Items?.Count == 0"
       KeyExpression="x => x.DataItem.Id"
-      TItem="GameElement" OnDragEnd="e=> { }" OnDrop="onDrop">
+      TItem="GameElement"
+      OnDragEnd="e=> { }"
+      OnDrop="onDrop">
 </Tree>
 
-@code{
+@code {
 
     Tree<GameElement> tree;
 

@@ -23,6 +23,7 @@ A carousel component. Scales with its container.
 | Autoplay   | Whether to scroll automatically | TimeSpan         |
 | BeforeChange    | (ToDo)Callback function called before the current index changes | function(from, to)         |-       |
 | DotPosition |The position of the dots, which can be one of `top` `bottom` `left` `right` | string  | -  |
-| Dots | (ToDo)Whether to show the dots at the bottom of the gallery, `object` for `dotsClass` and any others | string | -  |
+| Dots | Whether to show the dots at the bottom of the gallery | bool | -  |
+| DotsClass | The class name of the dots | string        | -         |
 | Easing | (ToDo)Transition interpolation function name   | string        | -         |
 | Effect | Transition effect `scrollx` or `fade` | string        | -         |

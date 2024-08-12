@@ -128,7 +128,7 @@ namespace AntDesign
         /// Filter expression
         /// </summary>
         [Parameter]
-        public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? true : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
+        public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? false : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// 允许过滤
@@ -210,11 +210,11 @@ namespace AntDesign
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
         }
 
-        public Task InputValueChange(string value)
+        public async Task InputValueChange(string value)
         {
             SelectedValue = value;
-            ResetActiveItem();
-            return Task.CompletedTask;
+            UpdateFilteredOptions();
+            await ResetActiveItem();
         }
 
         public async Task InputKeyDown(KeyboardEventArgs args)
@@ -249,10 +249,10 @@ namespace AntDesign
 
         #endregion 子控件触发事件 / Child controls trigger events
 
-        protected override void OnParametersSet()
+        protected override void OnInitialized()
         {
-            base.OnParametersSet();
-            UpdateFilteredOptions();
+            _isOptionsZero = Options?.Any() != true;
+            base.OnInitialized();
         }
 
         protected override async Task OnFirstAfterRenderAsync()
@@ -371,7 +371,7 @@ namespace AntDesign
             _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
         }
 
-        private void ResetActiveItem()
+        private async Task ResetActiveItem()
         {
             var items = _filteredOptions;
 
@@ -398,12 +398,12 @@ namespace AntDesign
                 // if options count == 0 then close overlay
                 if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
                 {
-                    _overlayTrigger.Close();
+                    await _overlayTrigger.Close();
                 }
                 // if options count > 0 then open overlay
                 else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
                 {
-                    _overlayTrigger.Show();
+                    await _overlayTrigger.Show();
                 }
             }
         }

@@ -3,7 +3,7 @@
 <br />
 <EnumSelect TEnum="Fruits?" @bind-Value="_value" Mode="multiple" />
 
-Value: @Convert.ToUInt64(_value), @_value.ToString()
+Flags Enum Value: @Convert.ToUInt64(_value), @_value.ToString()
 
 @using System.ComponentModel.DataAnnotations
 @code {

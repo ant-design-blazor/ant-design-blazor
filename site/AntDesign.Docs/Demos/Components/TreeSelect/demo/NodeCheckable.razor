@@ -1,0 +1,93 @@
+﻿<TreeSelect Style="width:100%;"
+            DataSource="treeData"
+            @bind-Values="@values"
+            Placeholder="Please select"
+            AllowClear
+            Multiple
+            TreeCheckable
+            ExpandOnClickNode
+            TreeDefaultExpandAll
+            ItemValue="node=> node.Key"
+            ChildrenExpression="node=>node.DataItem.Children"
+            TitleExpression="node=>node.DataItem.Title"
+            KeyExpression="node=>node.DataItem.Key"
+            CheckableExpression="node=>node.DataItem.Type==NodeType.ntEmployeee"
+            IsLeafExpression="node=>node.DataItem.Children==null">
+</TreeSelect>
+
+
+
+@JsonSerializer.Serialize(values)
+
+@code {
+    private IEnumerable<string> values;
+
+    Data[] treeData = new Data[]
+    {
+        new()
+        {
+            Title = "Company",
+            Key = "1",
+            Type = NodeType.ntCompany,
+            Children = new Data[]
+    {
+                new()
+                {
+                    Title = "Department1",
+                    Key = "11",
+                    Type = NodeType.ntDepartment,
+                    Children = new Data[]
+            {
+                        new()
+                        {
+                            Title = "Tom",
+                            Key = "111",
+                            Type = NodeType.ntEmployeee
+                        },
+                        new()
+                        {
+                            Title = "John",
+                            Key = "112",
+                            Type = NodeType.ntEmployeee
+                        }
+            }
+                },
+                new()
+                {
+                    Title = "Department2",
+                    Key = "12",
+                    Type = NodeType.ntDepartment,
+                    Children = new Data[]
+            {
+                        new()
+                        {
+                            Title = "Jim",
+                            Key = "121",
+                            Type = NodeType.ntEmployeee
+                        },
+                        new()
+                        {
+                            Title = "Lili",
+                            Key = "122",
+                            Type = NodeType.ntEmployeee
+                        }
+            }
+                }
+    }
+        }
+    };
+
+    public enum NodeType
+    {
+        ntCompany, ntDepartment, ntEmployeee
+    }
+
+    public class Data : ITreeData<Data>
+    {
+        public string Key { get; set; }
+        public Data Value => this;
+        public string Title { get; set; }
+        public NodeType Type { get; set; }
+        public IEnumerable<Data> Children { get; set; }
+    }
+}

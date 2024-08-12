@@ -1,15 +1,16 @@
 <div>
-    <Tree DataSource="_datas" @ref="_tree"
+    <Tree TItem="Data"
+          DataSource="_datas" @ref="_tree"
           TitleExpression="x => x.DataItem.Title"
           ChildrenExpression="x => x.DataItem.Childs"
           IsLeafExpression="x => x.TreeLevel > 2"
-          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync" TItem="Data"></Tree>
+          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"></Tree>
 </div>
 
 <Button OnClick="ExpandAll">Expand All</Button>
 <Button OnClick="ExpandAllChild">Expand Node "C" And Expand All Child Nodes</Button>
 
-@code{
+@code {
     public record Data(string Title)
     {
         public List<Data> Childs { get; set; } = new List<Data>();

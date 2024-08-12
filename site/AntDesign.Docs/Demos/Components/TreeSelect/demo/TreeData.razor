@@ -3,12 +3,16 @@
             DataSource="treeData"
             @bind-Values="@values"
             Placeholder="Please select"
-            ItemValue="c=>c.Key"
+            ItemValue="item=>item"
+            ItemLabel="item=>item.Title"
             AllowClear
             Multiple
+            EnableSearch
             TreeDefaultExpandAll
+            MatchedStyle="font-weight: bold"
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
+            TitleTemplate="node=>node.DataItem.Title.ToRenderFragment()"
             KeyExpression="node=>node.DataItem.Key.ToString()"
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
@@ -16,10 +20,10 @@
 @JsonSerializer.Serialize(values)
 
 @code {
-  private IEnumerable<int> values;
+    private IEnumerable<Data> values;
 
-  Data[] treeData = new Data[]
-  {
+    Data[] treeData = new Data[]
+    {
         new()
         {
             Title = "Node1",
@@ -42,8 +46,13 @@
         {
             Title = "Node2",
             Key = 13,
+        },
+        new()
+        {
+            Title="Node3",
+            Key=14
         }
-  };
+    };
 
   public class Data
   {

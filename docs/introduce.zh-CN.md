@@ -87,10 +87,10 @@ title: Ant Design of Blazor
 
 模板的参数：
 
-| 参数              | 说明                                             | 类型                           | 认 值  |
+| 参数              | 说明                                             | 类型                           | 默 认 值  |
 | ----------------- | ------------------------------------------------ | ------------------------------ | ------ |
 | `-f` \| `--full`  | 如果设置这个参数，会生成所有 Ant Design Pro 页面 | bool                           | false  |
-| `-ho` \| `--host` | 指定托管模型                                     | 'wasm' \| 'server' \| 'hosted' | 'wasm' |
+| `-ho` \| `--host` | 指定托管模型                                    | 'webapp' \| 'wasm' \| 'server' | 'webapp' |
 | `--styles`        | 指定样式构建类型                                 | `css` \| `less`                | `css`  |
 | `--no-restore`    | 如果设置这个参数，就不会自动恢复包引用           | bool                           | false  |
 

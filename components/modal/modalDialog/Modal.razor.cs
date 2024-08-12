@@ -14,9 +14,6 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
-
         #region Parameter
 
         /// <summary>
@@ -273,7 +270,13 @@ namespace AntDesign
         [Parameter]
         public bool Resizable { get; set; } = false;
 
-        #endregion Parameter
+        /// <summary>
+        /// Whether to force to render the Modal dom before opening.   
+        /// </summary>
+        [Parameter]
+        public bool ForceRender { get; set; }
+
+      #endregion Parameter
 
 #pragma warning disable 649
         private DialogWrapper _dialogWrapper;
@@ -290,6 +293,7 @@ namespace AntDesign
                 Closable = Closable,
                 Draggable = Draggable,
                 DragInViewport = DragInViewport,
+                DestroyOnClose = DestroyOnClose,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
                 Header = Header,
@@ -367,6 +371,8 @@ namespace AntDesign
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
+                ForceRender = ForceRender,
+                CreateByService = ModalRef?.Config.CreateByService ?? false,
             };
 
             return options;
@@ -389,32 +395,6 @@ namespace AntDesign
                     await ModalRef.OnOpen();
                 }
             }
-
-            if (_firstShow)
-            {
-                _firstShow = false;
-                NavigationManager.LocationChanged += OnLocationChanged;
-            }
-        }
-
-        private void OnLocationChanged(object sender, LocationChangedEventArgs e)
-        {
-            // Modal create by Service
-            if (ModalRef != null)
-            {
-                return;
-            }
-            // Modal has been destroyed
-            if (!Visible && DestroyOnClose)
-            {
-                return;
-            }
-
-            if (_dialogWrapper.Dialog != null)
-            {
-                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + _dialogWrapper.Dialog.Id, GetContainer);
-                NavigationManager.LocationChanged -= OnLocationChanged;
-            }
         }
 
         private async Task OnAfterHide()
@@ -428,7 +408,6 @@ namespace AntDesign
 
         private async Task OnBeforeDialogWrapperDestroy()
         {
-            NavigationManager.LocationChanged -= OnLocationChanged;
             await InvokeAsync(StateHasChanged);
         }
 

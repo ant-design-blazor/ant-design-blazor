@@ -49,7 +49,6 @@ namespace AntDesign
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
-
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
         private int Padding => RootMenu?.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
@@ -70,20 +69,13 @@ namespace AntDesign
                 .If($"{prefixCls}-disabled", () => Disabled);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            RootMenu?.MenuItems?.Remove(this);
-
-            base.Dispose(disposing);
-        }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             SetClass();
 
-            RootMenu?.MenuItems.Add(this);
+            RootMenu?.AddMenuItem(this);
 
             if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
@@ -95,6 +87,13 @@ namespace AntDesign
 
             if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
                 Select();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveMenuItem(this);
+
+            base.Dispose(disposing);
         }
 
         internal void UpdateStelected()
@@ -152,10 +151,8 @@ namespace AntDesign
             if (!skipParentSelection)
                 ParentMenu?.Select(isInitializing);
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
 
         public void Deselect(bool sameParentAsSelected = false)
@@ -165,10 +162,8 @@ namespace AntDesign
             if (!sameParentAsSelected)
                 ParentMenu?.Deselect();
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
     }
 }

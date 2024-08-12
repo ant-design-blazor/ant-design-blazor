@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using AntDesign.JsInterop;
 using OneOf;
 using System.Linq;
@@ -15,6 +14,11 @@ using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+    [CascadingTypeParameter(nameof(TItemValue))]
+#endif
+
     public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
         [Parameter] public bool ShowExpand { get; set; } = true;
@@ -33,17 +37,35 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public bool TreeCheckable { get; set; }
+        [Parameter]
+        public bool TreeCheckable
+        {
+            get => _treeCheckable;
+            set
+            {
+                _treeCheckable = value;
+                if (_treeCheckable)
+                {
+                    Mode = SelectMode.Multiple.ToString("G");
+                }
+            }
+        }
 
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
+        /// <summary>
+        /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
+        /// </summary>
+        [Parameter]
+        public bool TreeCheckStrictly { get; set; }
 
-        [Parameter] public Action OnMouseEnter { get; set; }
+        /// <summary>
+        /// Specify how to show checked values when TreeCheckable is true and TreeCheckStrictly is false 
+        /// </summary>
+        [Parameter]
+        public TreeCheckedStrategy ShowCheckedStrategy { get; set; } = TreeCheckedStrategy.ShowChild;
 
-        [Parameter] public Action OnMouseLeave { get; set; }
+        [Parameter] public bool CheckOnClickNode { get; set; } = true;
 
         [Parameter] public Action OnBlur { get; set; }
-
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
 
         [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
 
@@ -53,10 +75,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
 
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
-
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
-
         [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
 
         [Parameter] public IEnumerable<TItem> DataSource { get; set; }
@@ -64,6 +82,14 @@ namespace AntDesign
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
+
+        [Parameter]
+        public bool TreeDefaultExpandParent { get; set; }
+
+        [Parameter]
+        public string[] TreeDefaultExpandedKeys { get; set; }
+
+        [Parameter] public bool ExpandOnClickNode { get; set; } = false;
 
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
@@ -98,6 +124,9 @@ namespace AntDesign
         [Parameter] public IDictionary<string, object> TreeAttributes { get; set; }
 
         [Parameter] public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeEventArgs<TItem>> OnTreeNodeSelect { get; set; }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -136,12 +165,16 @@ namespace AntDesign
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
         /// <summary>
+        /// Specifies a method to return a checkable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
+
+        /// <summary>
         /// (Controlled) expands the specified tree node
         /// </summary>
         [Parameter]
         public string[] ExpandedKeys { get; set; }
-
-        private const string ClassPrefix = "ant-select";
 
         private bool IsMultiple => Multiple || TreeCheckable;
 
@@ -149,30 +182,36 @@ namespace AntDesign
 
         internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
 
-        private string _dropdownStyle = string.Empty;
         private bool _multiple;
+        private bool _treeCheckable;
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
 
+        private bool _checkedEventDisabled = false;
+
+        /// <summary>
+        /// 树控件本身
+        /// </summary>
+        public Tree<TItem> TreeComponent { get => _tree; }
+
+        private TItemValue _cachedValue;
         [Parameter]
         public override TItemValue Value
         {
             get => base.Value;
             set
             {
-                if (base.Value.AllNullOrEquals(value))
+                if (_cachedValue.AllNullOrEquals(value))
                     return;
 
-                base.Value = value;
-
-                if (value == null)
-                {
-                    ClearOptions();
-                }
+                _cachedValue = value;
 
                 UpdateValueAndSelection();
             }
         }
+
+        private TItemValue[] _cachedValues;
+        private List<TItemValue> _newValues = [];
 
         [Parameter]
         public override IEnumerable<TItemValue> Values
@@ -180,33 +219,28 @@ namespace AntDesign
             get => base.Values;
             set
             {
-                if (value != null && _selectedValues != null)
+                if (value != null && _cachedValues != null)
                 {
-                    var hasChanged = !value.SequenceEqual(_selectedValues);
+                    var hasChanged = !value.SequenceEqual(_cachedValues);
 
                     if (!hasChanged)
                         return;
 
-                    _selectedValues = value.ToArray();
+                    _cachedValues = value.ToArray();
                 }
-                else if (value != null && _selectedValues == null)
+                else if (value != null && _cachedValues == null)
                 {
-                    _selectedValues = value.ToArray();
+                    _cachedValues = value.ToArray();
                 }
-                else if (value == null && _selectedValues != null)
+                else if (value == null && _cachedValues != null)
                 {
-                    _selectedValues = default;
+                    _cachedValues = default;
                     ClearOptions();
                 }
 
-                _selectedValues ??= [];
+                _cachedValues ??= [];
 
                 UpdateValuesSelection();
-
-                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
-                {
-                    EditContext?.NotifyFieldChanged(FieldIdentifier);
-                }
             }
         }
 
@@ -220,60 +254,51 @@ namespace AntDesign
                 _tree?._allNodes.ForEach(x => x.SetSelected(false));
         }
 
-        private void CreateOptions(IEnumerable<TItemValue> data)
+        private void CreateOptions(IEnumerable<TItemValue> values)
         {
-            if (IsTemplatedNodes)
+            values.ForEach(value =>
             {
-                var d1 = data.Where(d => !SelectOptionItems.Any(o => o.Value.AllNullOrEquals(d)));
-                CreateOptionsByTreeNode(d1);
-                return;
+                var d = _tree._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
+                if (d != null)
+                {
+                    _ = CreateOption(d, true);
+                }
+            });
+        }
+
+        private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> node, bool append = false)
+        {
+            if (!TreeCheckable || TreeCheckStrictly || (ShowCheckedStrategy == TreeCheckedStrategy.ShowAll)
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(_getValue(node.ParentNode.DataItem)))))
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowChild) && !node.HasChildNodes))
+            {
+                var o = new SelectOptionItem<TItemValue, TItem>()
+                {
+                    Label = node.Title,
+                    LabelTemplate = node.TitleTemplate,
+                    Value = GetValueFromNode(node),
+                    Item = node.DataItem,
+                    IsAddedTag = SelectMode != SelectMode.Default,
+                };
+                if (append && !SelectOptionItems.Any(m => m.Value.AllNullOrEquals(o.Value)))
+                    SelectOptionItems.Add(o);
+                if (IsMultiple)
+                {
+                    _newValues.Add(o.Value);
+                }
+                return o;
             }
-
-            data.ForEach(menuId =>
-            {
-                var d = _tree._allNodes.FirstOrDefault(m => m.Key.AllNullOrEquals(menuId));
-                if (d != null)
-                {
-                    var o = CreateOption(d, true);
-                }
-            });
-        }
-
-        private void CreateOptionsByTreeNode(IEnumerable<TItemValue> data)
-        {
-            data.ForEach(menuId =>
-            {
-                var d = _tree.FindFirstOrDefaultNode(n => n.Key == GetTreeKeyFormValue(menuId));
-                if (d != null)
-                {
-                    var o = CreateOption(d, true);
-                }
-            });
-        }
-
-        private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> data, bool append = false)
-        {
-            var o = new SelectOptionItem<TItemValue, TItem>()
-            {
-                Label = data.Title,
-                LabelTemplate = data.TitleTemplate,
-                Value = THelper.ChangeType<TItemValue>(data.Key),
-                Item = data.DataItem,
-                IsAddedTag = SelectMode != SelectMode.Default,
-            };
-            if (append && !SelectOptionItems.Any(m => m.Value.AllNullOrEquals(o.Value)))
-                SelectOptionItems.Add(o);
-            return o;
+            return null;
         }
 
         protected override Task OnFirstAfterRenderAsync()
         {
-            if (Value != null)
+            if (_cachedValue != null)
             {
                 UpdateValueAndSelection();
             }
 
-            if (Values != null)
+            if (_cachedValues != null)
             {
                 UpdateValuesSelection();
             }
@@ -281,11 +306,7 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
-        private void OnKeyDownAsync(KeyboardEventArgs args)
-        {
-        }
-
-        protected async void OnInputAsync(ChangeEventArgs e)
+        protected override async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)
@@ -307,21 +328,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected async Task OnKeyUpAsync(KeyboardEventArgs e)
-        {
-        }
-
-        protected async Task OnInputFocusAsync(FocusEventArgs _)
-        {
-            await SetInputFocusAsync();
-        }
-
-        protected async Task OnInputBlurAsync(FocusEventArgs _)
-        {
-            await SetInputBlurAsync();
-        }
-
-        protected async Task SetInputBlurAsync()
+        protected override async Task SetInputBlurAsync()
         {
             if (Focused)
             {
@@ -335,7 +342,7 @@ namespace AntDesign
             }
         }
 
-        private async Task OnOverlayVisibleChangeAsync(bool visible)
+        protected override async Task OnOverlayVisibleChangeAsync(bool visible)
         {
             if (visible)
             {
@@ -349,7 +356,7 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
+        protected override async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
@@ -363,61 +370,59 @@ namespace AntDesign
                 item.SetSelected(false);
         }
 
-        private async Task OnTreeNodeClick(TreeEventArgs<TItem> args)
+        private TItemValue GetValueFromNode(TreeNode<TItem> node)
+        {
+            if (node == null) return default;
+            if (_getValue == null || node.DataItem == null)
+            {
+                return THelper.ChangeType<TItemValue>(node.Key);
+            }
+            return _getValue(node.DataItem);
+        }
+
+        private async Task DoTreeNodeClick(TreeEventArgs<TItem> args)
         {
             if (TreeCheckable)
                 return;
             var node = args.Node;
 
-            if (!node.Selected)
-                return;
+            _searchValue = string.Empty;
 
             var key = node.Key;
-            if (Value != null && Value.Equals(key))
-                return;
-            if (Values != null && Values.Select(x => GetTreeKeyFormValue(x)).Contains(key))
-                return;
-
-            var option = CreateOption(node, true);
-
-            await SetValueAsync(option);
-
-            if (!Multiple)
+            if (Multiple)
             {
-                var unselectedNodes = _tree._allNodes.Where(x => x.Key != node.Key);
-                unselectedNodes.ForEach(x => x.SetSelected(false));
+                if (_tree.SelectedKeys is not { Length: > 0 })
+                {
+                    Values = [];
+                    return;
+                }
+                var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
+                Values = selectedNodes.Select(GetValueFromNode).ToArray();
+            }
+            else
+            {
+                if (node.Selected)
+                {
+                    var option = CreateOption(node, true);
+                    await SetValueAsync(option);
+                }
             }
 
             if (SelectMode == SelectMode.Default)
             {
                 await CloseAsync();
             }
-        }
 
-        protected async Task OnTreeNodeUnSelect(TreeEventArgs<TItem> args)
-        {
-            if (TreeCheckable)
-                return;
-            // Prevent deselect in sigle selection mode
-            if (!Multiple && args.Node.Key == GetTreeKeyFormValue(Value))
+            if (EnableSearch)
             {
-                args.Node.SetSelected(true);
-                return;
-            }
-
-            if (Multiple)
-            {
-                // Deselect in Multiple mode
-                var node = SelectOptionItems.Where(o => GetTreeKeyFormValue(o.Value) == args.Node.Key).FirstOrDefault();
-                if (node != null)
-                {
-                    await SetValueAsync(node);
-                }
+                await SetInputFocusAsync();
             }
         }
 
-        private void OnTreeCheckedKeysChanged(string[] checkedKeys)
+
+        private void DoTreeCheckedKeysChanged(string[] checkedKeys)
         {
+            if (_checkedEventDisabled) return;
             if (!TreeCheckable)
                 return;
 
@@ -426,9 +431,23 @@ namespace AntDesign
                 Values = [];
                 return;
             }
-
             var checkedNodes = _tree._allNodes.Where(x => checkedKeys.Contains(x.Key));
-            Values = checkedNodes.Select(node => _getValue(node.DataItem)).ToArray();
+            Values = checkedNodes.Select(GetValueFromNode).ToArray();
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            bool checkStricklyChanged = parameters.IsParameterChanged("TreeCheckStrictly", TreeCheckStrictly);
+            bool checkedStrategyChanged = parameters.IsParameterChanged("ShowCheckedStrategy", ShowCheckedStrategy);
+            await base.SetParametersAsync(parameters);
+            if ((Values != null) && TreeCheckable && (checkStricklyChanged || checkedStrategyChanged))
+            {
+                UpdateTreeCheckedKeys(Values.Select(x => GetTreeKeyFormValue(x)));
+                var checkedNodes = _tree._allNodes.Where(x => _tree.CheckedKeys.Contains(x.Key));
+                // Force to update values
+                _cachedValues = [];
+                Values = checkedNodes.Select(GetValueFromNode).ToArray();
+            }
         }
 
         protected async Task SetDropdownStyleAsync()
@@ -449,24 +468,36 @@ namespace AntDesign
                 maxWidth = $"max-width: {DropdownMaxWidth};";
             _dropdownStyle = minWidth + definedWidth + maxWidth + DropdownStyle ?? "";
 
-            if (Multiple)
+            if (IsMultiple)
             {
                 if (Values == null)
                     return;
                 var checkedKeys = Values.Select(x => GetTreeKeyFormValue(x));
                 if (TreeCheckable)
                 {
-                    _tree._allNodes.ForEach(n => n.SetChecked(checkedKeys.Contains(n.Key)));
+                    UpdateTreeCheckedKeys(checkedKeys);
                 }
                 else
                 {
-                    _tree._allNodes.ForEach(n => n.SetSelected(checkedKeys.Contains(n.Key)));
+                    _tree._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
+                    _tree.UpdateSelectedKeys();
                 }
             }
             else
             {
+                if (Value == null)
+                    return;
                 _tree?.FindFirstOrDefaultNode(node => node.Key == GetTreeKeyFormValue(Value))?.SetSelected(true);
             }
+        }
+
+        private void UpdateTreeCheckedKeys(IEnumerable<string> checkedKeys)
+        {
+            _checkedEventDisabled = true;
+            _tree._allNodes.ForEach(n => n.DoCheck(false, true, false));
+            _tree._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
+            _tree.UpdateCheckedKeys();
+            _checkedEventDisabled = false;
         }
 
         protected override void SetClassMap()
@@ -493,13 +524,13 @@ namespace AntDesign
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3446
         internal void UpdateValueAfterDataSourceChanged()
         {
-            if (Value != null)
+            if (_cachedValue != null && !_cachedValue.Equals(Value))
             {
                 UpdateValueAndSelection();
                 StateHasChanged();
             }
 
-            if (Values != null)
+            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
@@ -508,33 +539,52 @@ namespace AntDesign
 
         private void UpdateValueAndSelection()
         {
-            if (SelectOptionItems.Any(o => o.Value.AllNullOrEquals(Value)))
+            if (_tree == null)
+                return;
+            if (_tree._allNodes.Count == 0)
+                return;
+
+            if (_cachedValue == null)
             {
-                _ = SetValueAsync(SelectOptionItems.First(o => o.Value.AllNullOrEquals(Value)));
+                ClearOptions();
             }
             else
             {
-                var data = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(Value));
-                if (data != null)
+                if (SelectOptionItems.Any(o => o.Value.AllNullOrEquals(_cachedValue)))
                 {
-                    var o = CreateOption(data, true);
-                    _ = SetValueAsync(o);
+                    _ = SetValueAsync(SelectOptionItems.First(o => o.Value.AllNullOrEquals(_cachedValue)));
+                }
+                else
+                {
+                    var data = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(_cachedValue));
+                    if (data != null)
+                    {
+                        var o = CreateOption(data, true);
+                        _ = SetValueAsync(o);
+                    }
                 }
             }
+            base.Value = _cachedValue;
         }
 
         private void UpdateValuesSelection()
         {
             if (_tree == null)
                 return;
+            if (_tree._allNodes.Count == 0)
+                return;
 
-            if (_selectedValues?.Any() != true)
+            if (_cachedValues?.Any() != true)
             {
                 ClearOptions();
             }
-
-            CreateOptions(_selectedValues);
-            _ = OnValuesChangeAsync(_selectedValues);
+            _newValues.Clear();
+            CreateOptions(_cachedValues);
+            base.Values = _newValues.ToArray();
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            {
+                EditContext?.NotifyFieldChanged(FieldIdentifier);
+            }
         }
 
         void ITreeSelect.UpdateValueAfterDataSourceChanged()

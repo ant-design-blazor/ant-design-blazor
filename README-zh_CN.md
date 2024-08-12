@@ -98,10 +98,10 @@ WebAssembly 静态托管页面示例
 
 | 参数              | 说明                                             | 类型                           | 默认值 |
 | ----------------- | ------------------------------------------------ | ------------------------------ | ------ |
-| `-f` \| `--full`  | 如果设置这个参数，会生成所有 Ant Design Pro 页面 | bool                           | false  |
-| `-ho` \| `--host` | 指定托管模型                                     | 'wasm' \| 'server' \| 'hosted' | 'wasm' |
-| `--styles`        | 指定样式构建类型                                 | `css` \| `less`                | `css`  |
-| `--no-restore`    | 如果设置这个参数，就不会自动恢复包引用           | bool                           | false  |
+| `-f` \| `--full`  | 如果设置这个参数，会生成所有 Ant Design Pro 页面    | bool                           | false  |
+| `-ho` \| `--host` | 指定托管模型                                      | 'webapp' \| 'wasm' \| 'server' | 'webapp' |
+| `--styles`        | 指定样式构建类型                                   | `css` \| `less`                | `css`  |
+| `--no-restore`    | 如果设置这个参数，就不会自动恢复包引用               | bool                           | false  |
 
 ### 选择二：在已有项目中引入 Ant Design Blazor
 
@@ -128,6 +128,13 @@ WebAssembly 静态托管页面示例
   ```csharp
   @using AntDesign
   ```
+
+- 适当的位置引入 CSS 和 JS 文件。WebApp 项目在App.razor 中引入，WebAssembly 项目在 index.html 中引入
+
+```html
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+```
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
 

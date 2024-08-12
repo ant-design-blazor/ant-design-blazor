@@ -4,7 +4,7 @@
 
 <Table TItem="Data" DataSource="@data">
 
-    <GenerateColumns Range="1.." Definitions=definitions />
+    <GenerateColumns Range="1.." HideColumnsByName="@(new []{ "IdCard" })" Definitions=definitions />
 
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
@@ -27,7 +27,8 @@
             Name = "John Brown",
             Age = 32,
             Address = "New York No. 1 Lake Park",
-            Tags = new[] {"nice", "developer"}
+            Tags = new[] {"nice", "developer"},
+            IdCard = ""
         },
         new()
         {
@@ -35,7 +36,8 @@
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
-            Tags = new[] { "loser"}
+            Tags = new[] { "loser"},
+            IdCard = ""
         },
         new()
         {
@@ -43,7 +45,8 @@
             Name = "Joe Black",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
-            Tags = new[] { "cool", "teacher" }
+            Tags = new[] { "cool", "teacher" },
+            IdCard = ""
         }
     };
 
@@ -63,6 +66,9 @@
 
         [DisplayName("Tags")]
         public string[] Tags { get; set; }
+        
+        [DisplayName("IdCard")]
+        public string IdCard { get; set; }
     }
 
     /// <summary>
@@ -70,7 +76,7 @@
     /// </summary>
     /// <param name="propertyName">The name of the property binding the column. </param>
     /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
-    void definitions(string propertyName, object column)
+    void definitions(string propertyName, IFieldColumn column)
     {
         if (propertyName == "Tags")
         {
@@ -93,7 +99,7 @@
             return;
         }
 
-        ((dynamic)column).Sortable = true;
-        ((dynamic)column).Filterable= true;
+        column.Sortable = true;
+        column.Filterable = true;
     }
 }

@@ -62,6 +62,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public Placement Placement { get; set; }
+
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();

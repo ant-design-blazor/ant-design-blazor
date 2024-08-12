@@ -58,6 +58,10 @@ namespace AntDesign
         /// <param name="loading"></param>
         public void SetConfirmLoading(bool loading)
         {
+            if (Config.ConfirmLoading == loading)
+            {
+                return;
+            }
             Config.ConfirmLoading = loading;
             _service.UpdateModal(this);
         }

@@ -53,6 +53,10 @@ namespace AntDesign
             if (visible)
             {
                 _imageRef = ImageService.OpenImages(_images);
+                if (_imageRef == null)
+                {
+                    return;
+                }
                 _imageRef.SwitchTo(0);
                 _imageRef.OnClosed += OnPreviewClose;
             }

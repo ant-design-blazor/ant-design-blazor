@@ -23,7 +23,11 @@ using AntDesign.Core.Helpers.MemberPath;
 
 namespace AntDesign
 {
-    public abstract class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+    [CascadingTypeParameter(nameof(TItemValue))]
+#endif
+    public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected const string DefaultWidth = "width: 100%;";
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
@@ -37,6 +41,8 @@ namespace AntDesign
         protected bool _isInitialized;
 
         protected bool _isPrimitive;
+
+        protected virtual bool IsSelectFixed() => true;
 
         /// <summary>
         ///     How long (number of characters) a tag will be.
@@ -118,6 +124,8 @@ namespace AntDesign
         /// Controlled open state of dropdown.
         /// </summary>
         [Parameter] public bool Open { get; set; }
+
+        [Parameter] public EventCallback<bool> OpenChanged { get; set; }
 
         /// <summary>
         /// Placeholder of select.
@@ -312,8 +320,7 @@ namespace AntDesign
         ///     Converts custom tag (a string) to TItemValue type.
         /// </summary>
         [Parameter]
-        public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
-            label => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+        public Func<string, TItemValue> CustomTagLabelToValue { get; set; }
 
         /// <summary>
         ///     Determines if SelectOptions has any selected items
@@ -612,7 +619,7 @@ namespace AntDesign
         /// <returns></returns>
         protected SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
         {
-            var value = CustomTagLabelToValue.Invoke(label);
+            var value = GetItemValueFromLabel(label);
             TItem item;
             if (_isPrimitive)
             {
@@ -982,6 +989,10 @@ namespace AntDesign
 
         private async Task ClearDefaultMode()
         {
+            if (SelectedOptionItems.Count == 0)
+            {
+                return;
+            }
             if (_hasValueOnClear && EqualityComparer<TItemValue>.Default.Equals(Value, _valueOnClear))
             {
                 return; //nothing to do, already cleared; mostly to avoid redoing OnInputClearClickAsync when issued from OnParameterSet() => OnValueChange() => OnInputClearClickAsync()
@@ -1075,6 +1086,20 @@ namespace AntDesign
             _ = ClearSelectedAsync();
         }
 
+        protected TItemValue GetItemValueFromLabel(string label)
+        {
+            try
+            {
+                CustomTagLabelToValue ??= label => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+                return CustomTagLabelToValue.Invoke(label);
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new InvalidOperationException("Please set the correct CustomTagLabelToValue parameter to convert the label to the Value type. See https://github.com/ant-design-blazor/ant-design-blazor/issues/2126", ex);
+            }
+
+        }
+
         /// <summary>
         ///     Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
         /// </summary>
@@ -1131,5 +1156,112 @@ namespace AntDesign
         {
             return obj.GetHashCode();
         }
+
+        #region Move from Select/TreeSelect
+
+        /// <summary>
+        /// Called when mouse enter.
+        /// </summary>
+        [Parameter] public Action OnMouseEnter { get; set; }
+
+        /// <summary>
+        /// Called when mouse leave.
+        /// </summary>
+        [Parameter] public Action OnMouseLeave { get; set; }
+
+        /// <summary>
+        /// Use this to fix overlay problems e.g. #area
+        /// </summary>
+        [Parameter] public string PopupContainerSelector { get; set; } = "body";
+
+        /// <summary>
+        /// Customize dropdown content. The context is the original content.
+        /// </summary>
+        [Parameter] public RenderFragment<RenderFragment> DropdownRender { get; set; }
+
+        /// <summary>
+        /// Is used to customize the label style.
+        /// </summary>
+        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
+
+        /// <summary>
+        /// Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.
+        /// </summary>
+        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
+
+        /// <summary>
+        /// Whether show search input in single mode.
+        /// </summary>
+        [Parameter] public bool ShowSearchIcon { get; set; } = true;
+
+        [Parameter] public virtual bool ShowArrowIcon { get; set; } = true;
+
+        /// <summary>
+        /// When newly set Value is not found in SelectOptionItems, it is reset to
+        /// default. This property holds the value before reset. It may be needed
+        /// to be reaplied (for example when new Value is set at the same time
+        /// as new SelectOption is added, but Value in the component is set
+        /// before new SelectOptionItem has been created).
+        /// </summary>
+        internal TItemValue LastValueBeforeReset { get; set; }
+
+        protected string _dropdownStyle = string.Empty;
+
+        protected const string ClassPrefix = "ant-select";
+
+        protected abstract Task OnOverlayVisibleChangeAsync(bool visible);
+
+        protected abstract void OnInputAsync(ChangeEventArgs e);
+
+        protected virtual async Task OnKeyUpAsync(KeyboardEventArgs e)
+        {
+            await Task.CompletedTask;
+        }
+
+        protected virtual async Task OnKeyDownAsync(KeyboardEventArgs e)
+        {
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Method is called via EventCallBack if the Input element get the focus
+        /// </summary>
+        protected async Task OnInputFocusAsync(FocusEventArgs _)
+        {
+            await SetInputFocusAsync();
+        }
+
+        /// <summary>
+        /// Method is called via EventCallBack if the Input element loses the focus
+        /// </summary>
+        protected async Task OnInputBlurAsync(FocusEventArgs _)
+        {
+            await SetInputBlurAsync();
+        }
+
+        /// <summary>
+        /// Check if Focused property is true;  Set the Focused property to false, change the
+        /// style and blures the Input element via DOM. It also invoke the OnBlur Action.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task SetInputBlurAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Method is called via EventCallBack if the user clicked on the Close icon of a Tag.
+        /// </summary>
+        protected virtual async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
+        {
+            await Task.CompletedTask;
+        }
+
+        internal virtual async Task ProcessSelectedSelectOptions()
+        {
+            await Task.CompletedTask;
+        }
+
+        #endregion
     }
 }

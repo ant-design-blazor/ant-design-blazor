@@ -7,12 +7,12 @@ title:
 
 ## zh-CN
 
-对于使用 [iconfont.cn](http://iconfont.cn/) 的用户，通过设置 `createFromIconfontCN` 方法参数对象中的 `scriptUrl` 字段， 即可轻松地使用已有项目中的图标。
+对于使用 [iconfont.cn](http://iconfont.cn/) 的用户，通过设置 `<script>` 引入 "symbol 引用" 中的 JS， 即可轻松地使用已有项目中的图标。
 
-> 注意：这个方法会涉及JS互操作，因此需要确保在 `firstRender=true` 时调用。
+JS 获取方法：创建项目 -> 导入图标 -> 选择 “Symbol” -> 查看在线链接
 
 ## en-US
 
-If you are using [iconfont.cn](http://iconfont.cn/), you can use the icons in your project gracefully.
+If you are using [iconfont.cn](http://iconfont.cn/), you can use `<script>` to import JS of 'Quote as Symbol' so that the icons in your project gracefully.
 
-> Note: This method involves JS interope, so make sure you call it when 'firstRender=true'.
+JS to get: Create project -> Import icon -> Select 'Symbol' -> View online links

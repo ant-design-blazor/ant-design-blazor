@@ -38,6 +38,7 @@ namespace AntDesign
                 Content = content,
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
+                CreateByService = true,
             };
 
             if (autoFocusButton != null)
@@ -71,7 +72,7 @@ namespace AntDesign
 
             var confirmRef = new ConfirmRef(confirmOptions)
             {
-                TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
+                TaskCompletionSource = new TaskCompletionSource<ConfirmResult>(),
             };
             if (OnOpenEvent != null)
             {

@@ -156,8 +156,6 @@ namespace AntDesign
         [Parameter]
         public string Help { get; set; }
 
-        private readonly FormLocale _locale = LocaleProvider.CurrentLocale.Form;
-
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
@@ -186,6 +184,13 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
+        private string DisplayName => Label ?? _propertyReflector?.DisplayName;
+
+        private string _name;
+        private Action _nameChanged;
+
+        private Type _valueUnderlyingType;
+
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
@@ -195,9 +200,9 @@ namespace AntDesign
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
 
-        private Action _nameChanged;
+        private Action<string[]> _onValidated;
 
-        private string _name;
+        private IEnumerable<FormValidationRule> _rules;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
         {
@@ -238,7 +243,7 @@ namespace AntDesign
             SetInternalIsRequired();
         }
 
-        protected void SetClass()
+        private void SetClass()
         {
             ClassMapper
                 .Add(_prefixCls)
@@ -256,6 +261,25 @@ namespace AntDesign
                 ;
         }
 
+        private void SetRules()
+        {
+            if (Form == null)
+            {
+                return;
+            }
+            _rules = Form.ValidateMode switch
+            {
+                FormValidateMode.Default => GetRulesFromAttributes(),
+                FormValidateMode.Rules => Rules ?? [],
+                _ => [.. GetRulesFromAttributes(), .. Rules ?? []]
+            };
+
+            if (Required && !_rules.Any(rule => rule.Required == true || rule.ValidationAttribute is RequiredAttribute))
+            {
+                _rules = [.. _rules, new FormValidationRule { Required = true }];
+            }
+        }
+
         protected override void OnParametersSet()
         {
             if (!string.IsNullOrWhiteSpace(Help))
@@ -266,6 +290,10 @@ namespace AntDesign
 
         private void SetInternalIsRequired()
         {
+            if (Form is null)
+            {
+                return;
+            }
             var isRequired = false;
 
             if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
@@ -356,12 +384,35 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        private void UpdateValidateMessage()
+        {
+            if (_control == null)
+            {
+                return;
+            }
+            _validationMessages = CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct().ToArray();
+            _isValid = !_validationMessages.Any();
+
+            _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            if (!string.IsNullOrWhiteSpace(Help))
+            {
+                _validationMessages = new[] { Help };
+            }
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;
 
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
+            _onValidated = control.OnValidated;
+            _valueUnderlyingType = control.ValueUnderlyingType;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -372,30 +423,11 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
-            void ValidateDefault()
-            {
-
-                _validationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
-                _isValid = !_validationMessages.Any();
-
-                _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
-
-                control.OnValidated(_validationMessages);
-
-                if (!string.IsNullOrWhiteSpace(Help))
-                {
-                    _validationMessages = new[] { Help };
-                }
-
-                _vaildateStatusChanged?.Invoke();
-                InvokeAsync(StateHasChanged);
-            }
-
             if (Form?.ValidateOnChange == true)
             {
                 _validationStateChangedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
@@ -403,7 +435,7 @@ namespace AntDesign
             {
                 _validationRequestedHandler = (s, e) =>
                 {
-                    ValidateDefault();
+                    UpdateValidateMessage();
                 };
                 CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
             }
@@ -421,40 +453,48 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
             }
 
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
-            {
-                _fieldValueGetter = _propertyReflector?.GetValueDelegate;
-            }
+            _fieldValueGetter = _propertyReflector?.GetValueDelegate;
 
             SetInternalIsRequired();
+            SetRules();
+
             StateHasChanged();
         }
 
-        ValidationResult[] IFormItem.ValidateField()
+        ValidationResult[] IFormItem.ValidateFieldWithRules()
         {
-            if (Rules == null)
+            if (_propertyReflector is null)
             {
-                return Array.Empty<ValidationResult>();
+                return [];
+            }
+
+            if (IsRequired)
+            {
+                _rules ??= [];
+            }
+
+            if (_rules?.Any() != true)
+            {
+                return [];
             }
 
             var results = new List<ValidationResult>();
-
-            var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
 
             if (_fieldValueGetter != null)
             {
                 var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
 
-                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
+                var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
-                foreach (var rule in Rules)
+                foreach (var rule in _rules)
                 {
                     var validationContext = new FormValidationContext()
                     {
                         Rule = rule,
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = displayName,
+                        DisplayName = DisplayName,
+                        FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
                     };
 
@@ -471,5 +511,36 @@ namespace AntDesign
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
+
+        void IFormItem.SetValidationMessage(string[] errorMessages)
+        {
+            _validationMessages = errorMessages;
+            _isValid = !errorMessages.Any();
+            _validateStatus = _isValid ? FormValidateStatus.Default : FormValidateStatus.Error;
+
+            _onValidated(_validationMessages);
+
+            _vaildateStatusChanged?.Invoke();
+            InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// tansform attributes to FormValidationRule for using locale validation message templates
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<FormValidationRule> GetRulesFromAttributes()
+        {
+            if (_propertyReflector is null)
+            {
+                yield break;
+            }
+
+            var attributes = _propertyReflector?.ValidationAttributes;
+
+            foreach (var attribute in attributes)
+            {
+                yield return new FormValidationRule { ValidationAttribute = attribute, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
+            }
+        }
     }
 }

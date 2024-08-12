@@ -38,6 +38,8 @@ namespace AntDesign
 
         internal PropertyReflector? PopertyReflector => _propertyReflector;
 
+        internal Type ValueUnderlyingType => _nullableUnderlyingType ?? typeof(TValue);
+
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
@@ -283,6 +285,15 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual Task OnValueChangeAsync(TValue value)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// When this method is called, Value and CurrentValue have been modified, and the ValueChanged has been triggered, so the outside bound Value is changed.
         /// </summary>
         /// <param name="value"></param>
@@ -392,9 +403,9 @@ namespace AntDesign
                     }
 
                     EditContext = Form?.EditContext;
-
-                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
                 }
+
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
 

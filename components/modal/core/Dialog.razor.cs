@@ -42,15 +42,20 @@ namespace AntDesign
         [CascadingParameter(Name = "DialogWrapperId")]
         public string DialogWrapperId { get; set; } = "";
 
+        [Inject] private NavigationManager NavigationManager { get; set; }
+
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
-        private string _maskHideClsName = "";
-        private string _wrapStyle = "";
+        private string _maskHideClsName = "ant-modal-mask-hidden";
+        private string _wrapStyle = "display: none;";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
         private bool _disableBodyScroll;
         private bool _doDraggable;
+        private string _prevUrl = "";
+
+        private bool _resizing;
 
 #pragma warning disable 649
 
@@ -136,7 +141,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task AppendToContainer()
         {
-            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, Config.GetContainer);
+            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, "body");
         }
 
         #region mask and dialog click event
@@ -253,10 +258,12 @@ namespace AntDesign
         {
             if (Status == ModalStatus.Default)
             {
+                _resizing = false;
                 SetModalStatus(ModalStatus.Max);
             }
             else
             {
+                _resizing = Config.Resizable;
                 SetModalStatus(ModalStatus.Default);
             }
             return Task.CompletedTask;
@@ -280,6 +287,7 @@ namespace AntDesign
             if (!_hasShow && Visible)
             {
                 _hasShow = true;
+                _resizing = Config.Resizable;
                 _wrapStyle = CalcWrapStyle();
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
@@ -289,7 +297,7 @@ namespace AntDesign
 
         private string CalcWrapStyle()
         {
-            string style;
+            string style = "";
             if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
@@ -302,10 +310,12 @@ namespace AntDesign
                     style += "align-items: flex-start;";
                 }
             }
-            else
+
+            if (!Config.Mask)
             {
-                style = "";
+                style += "pointer-events:none;";
             }
+
             return style;
         }
 
@@ -384,6 +394,7 @@ namespace AntDesign
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
+                Config.Resizable ? "ant-modal-resizable":"",
                 Class
             };
 
@@ -393,6 +404,13 @@ namespace AntDesign
         #endregion build element's class name
 
         #region override
+
+        protected override void OnInitialized()
+        {
+            _prevUrl = NavigationManager.Uri;
+
+            base.OnInitialized();
+        }
 
         private bool _hasRendered = false;
 
@@ -458,6 +476,11 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
             }
+            else if (!_hasRendered && Config.ForceRender)
+            {
+                _hasRendered = true;
+                await AppendToContainer();
+            }
             else
             {
                 // enable body scroll
@@ -488,6 +511,15 @@ namespace AntDesign
                 _disableBodyScroll = false;
                 _ = Task.Delay(250);
                 _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            }
+
+            _ = TryResetModalStyle();
+            // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.
+            // but sometime the opened modal dom would not be removed from body, and sometime it would...
+            // so we remove it manually, and set a delay to avoid the dom being removed before the page is navigated.
+            if (!Config.CreateByService && !Config.DestroyOnClose && _prevUrl != NavigationManager.Uri)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, "body", 1000);
             }
         }
     }

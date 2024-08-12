@@ -48,6 +48,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
 | Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |
 | Type            |The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)         | string  | -         |
+| Width         | The width of the input box. | string | - |
 | WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has parameter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
 
 ### Common Methods
@@ -61,6 +62,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AutoSize | Will adjust (grow or shrink) the `TextArea` according to content. Can work in connection with `MaxRows` & `MinRows`. Sets `resize` attribute of the `textarea` HTML element to: `none`. | boolean        | false         |
+| Bordered | Whether has border style         | boolean         | true
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = `MinRows` (will not shrink further). Using this property will autoset `AutoSize = true`.  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = `MaxRows` (will not grow further). Using this property will autoset `AutoSize = true`.  | int        | uint.MaxValue         |

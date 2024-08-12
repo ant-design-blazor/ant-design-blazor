@@ -14,7 +14,7 @@
     <FormItem>
         <InputPassword @bind-Value="@context.Password" />
     </FormItem>
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+    <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
         <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
@@ -29,12 +29,14 @@
 {
     public class Model
     {
-        [Required(ErrorMessageResourceName = nameof(Resources.App.UserNameValidation), ErrorMessageResourceType = typeof(Resources.App))]
-        [Display(Name = nameof(Resources.App.UserName), ResourceType = typeof(Resources.App))]
+        [Required]
+        [MaxLength(12)]
+        [DisplayName("User Name")]
         public string Username { get; set; }
 
         [Required(ErrorMessageResourceName = nameof(Resources.App.PasswordValidation), ErrorMessageResourceType = typeof(Resources.App))]
         [Display(Name = nameof(Resources.App.Password), ResourceType = typeof(Resources.App))]
+        [MaxLength(16)]
         public string Password { get; set; }
 
         public bool RememberMe { get; set; } = true;
