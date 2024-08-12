@@ -469,10 +469,10 @@ namespace AntDesign.Tests.Form.Validation
                 DisplayName = _displayName,
                 FieldType = rule.Type switch
                 {
-                    FormFieldType.String=>typeof(string),
-                    FormFieldType.Number =>typeof(int),
-                    FormFieldType.Array =>typeof(string[]),
-                    _=> typeof(object)
+                    FormFieldType.String => typeof(string),
+                    FormFieldType.Number => typeof(int),
+                    FormFieldType.Array => typeof(string[]),
+                    _ => typeof(object)
                 }
             };
 

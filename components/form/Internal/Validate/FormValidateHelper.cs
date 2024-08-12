@@ -372,6 +372,7 @@ namespace AntDesign.Internal.Form.Validate
                 ValidateMessages = validationContext.ValidateMessages,
                 DisplayName = validationContext.DisplayName,
                 FieldName = validationContext.FieldName,
+                FieldType = validationContext.FieldType,
             };
 
             Array arrValues = validationContext.Value as Array;
