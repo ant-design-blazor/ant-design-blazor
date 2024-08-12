@@ -333,6 +333,7 @@ namespace AntDesign.Internal.Form.Validate
                     ValidateMessages = validationContext.ValidateMessages,
                     Rule = validationContext.Rule.DefaultField,
                     FieldName = validationContext.FieldName,
+                    FieldType = validationContext.FieldType,
                 };
 
                 int index = 0;
