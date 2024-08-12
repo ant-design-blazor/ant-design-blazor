@@ -186,6 +186,11 @@ namespace AntDesign
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
+        private string _name;
+        private Action _nameChanged;
+
+        private Type _valueUnderlyingType;
+
         private FieldIdentifier _fieldIdentifier;
         private Func<object, object> _fieldValueGetter;
 
@@ -195,10 +200,8 @@ namespace AntDesign
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
 
-        private Action _nameChanged;
         private Action<string[]> _onValidated;
 
-        private string _name;
         private IEnumerable<FormValidationRule> _rules;
 
         RenderFragment IFormItem.FeedbackIcon => IsShowIcon ? builder =>
@@ -270,6 +273,11 @@ namespace AntDesign
                 FormValidateMode.Rules => Rules ?? [],
                 _ => [.. GetRulesFromAttributes(), .. Rules ?? []]
             };
+
+            if (Required && !_rules.Any(rule => rule.Required == true || rule.ValidationAttribute is RequiredAttribute))
+            {
+                _rules = [.. _rules, new FormValidationRule { Required = true }];
+            }
         }
 
         protected override void OnParametersSet()
@@ -404,6 +412,7 @@ namespace AntDesign
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;
             _onValidated = control.OnValidated;
+            _valueUnderlyingType = control.ValueUnderlyingType;
 
             if (control.FieldIdentifier.Model == null)
             {
@@ -459,6 +468,11 @@ namespace AntDesign
                 return [];
             }
 
+            if (IsRequired)
+            {
+                _rules ??= [];
+            }
+
             if (_rules?.Any() != true)
             {
                 return [];
@@ -480,6 +494,7 @@ namespace AntDesign
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
                         DisplayName = DisplayName,
+                        FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
                     };
 
@@ -524,8 +539,7 @@ namespace AntDesign
 
             foreach (var attribute in attributes)
             {
-
-                yield return new FormValidationRule { ValidationAttribute = attribute };
+                yield return new FormValidationRule { ValidationAttribute = attribute, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
             }
         }
     }

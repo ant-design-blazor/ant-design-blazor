@@ -393,7 +393,7 @@ namespace AntDesign
 
         bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
 
-        public void BuildEditContext()
+        private void BuildEditContext()
         {
             if (_editContext == null)
                 return;

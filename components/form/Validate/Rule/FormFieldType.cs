@@ -10,7 +10,6 @@
         Float,
         Array,
         Object,
-        Enum,
         Date,
         Url,
         Email,

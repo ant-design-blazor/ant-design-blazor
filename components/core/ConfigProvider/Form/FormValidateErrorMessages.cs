@@ -21,7 +21,6 @@
             String = _typeTemplate,
             Array = _typeTemplate,
             Object = _typeTemplate,
-            Enum = _typeTemplate,
             Number = _typeTemplate,
             Date = _typeTemplate,
             Boolean = _typeTemplate,
@@ -32,7 +31,7 @@
             Url = _typeTemplate,
         };
 
-        public StringMessage String { get; set; } = new()
+        public CompareMessage String { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} characters",
             Min = "'{0}' must be at least {1} characters",
@@ -40,7 +39,7 @@
             Range = "'{0}' must be between {1} and {2} characters",
         };
 
-        public NumberMessage Number { get; set; } = new()
+        public CompareMessage Number { get; set; } = new()
         {
             Len = "'{0}' must equal {1}",
             Min = "'{0}' cannot be less than {1}",
@@ -48,7 +47,7 @@
             Range = "'{0}' must be between {1} and {2}",
         };
 
-        public ArrayMessage Array { get; set; } = new()
+        public CompareMessage Array { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} in length",
             Min = "'{0}' cannot be less than {1} in length",
@@ -73,7 +72,6 @@
                 FormFieldType.Float => Types.Float,
                 FormFieldType.Array => Types.Array,
                 FormFieldType.Object => Types.Object,
-                FormFieldType.Enum => Types.Enum,
                 FormFieldType.Date => Types.Date,
                 FormFieldType.Url => Types.Url,
                 FormFieldType.Email => Types.Email,
@@ -87,7 +85,6 @@
             public string String { get; set; }
             public string Array { get; set; }
             public string Object { get; set; }
-            public string Enum { get; set; }
             public string Number { get; set; }
             public string Date { get; set; }
             public string Boolean { get; set; }
@@ -98,30 +95,12 @@
             public string Url { get; set; }
         }
 
-        public class StringMessage
+        public class CompareMessage
         {
             public string Len { get; set; }
             public string Min { get; set; }
             public string Max { get; set; }
             public string Range { get; set; }
-        }
-
-        public class NumberMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
-        }
-
-        public class ArrayMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
         }
 
         public class PatternMessage

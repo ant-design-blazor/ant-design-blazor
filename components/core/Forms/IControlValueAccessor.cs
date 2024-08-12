@@ -7,8 +7,6 @@ namespace AntDesign.Forms
 {
     public interface IControlValueAccessor
     {
-        internal FieldIdentifier FieldIdentifier { get; }
-        void OnValidated(string[] validationMessages);
         internal void Reset();
     }
 }
