@@ -142,9 +142,6 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
-        [Parameter]
-        public FormValidateErrorMessages ValidateMessages { get; set; }
-
         /// <summary>
         /// If enabled, form submission is performed without fully reloading the page. This is equivalent to adding data-enhance to the form.
         /// </summary>
