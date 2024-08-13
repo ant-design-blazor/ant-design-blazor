@@ -29,12 +29,8 @@ CheckStrictly:
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         await Task.Delay(500);
-
         _data = data;
-        await InvokeAsync(StateHasChanged);
     }
 
     async Task AddChildren(Data row)
@@ -75,7 +71,7 @@ CheckStrictly:
                               Age= 16,
                               Address= "New York No. 3 Lake Park",
                         },
-                }
+                    }
                 },
                 new() {
                     Key= "13",
@@ -101,11 +97,11 @@ CheckStrictly:
                                    Age= 18,
                                    Address= "London No. 4 Lake Park",
                                 },
+                            },
                         },
-                        },
+                    },
                 },
-                },
-        },
+            },
         },
         new() {
             Key = "2",
