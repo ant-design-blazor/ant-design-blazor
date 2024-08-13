@@ -5,6 +5,12 @@
 @page "/experimental/{name}"
 @page "/experimental"
 
+@page "/{locale}/components"
+@page "/{locale}/components/{name}"
+@page "/{locale}/charts/{name}"
+@page "/{locale}/charts"
+@page "/{locale}/experimental/{name}"
+@page "/{locale}/experimental"
 <section class="main-container main-container-component">
     <article>
 
@@ -38,7 +44,7 @@
                     @_demoComponent.Title
                     <span class="subtitle">@_demoComponent.SubTitle</span>
                     <span class="widget"></span>
-                    <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
+                    <Tooltip Title="@Localizer["app.content.edit-demo"]">
                         <Unbound>
                             <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
                                 <Icon Type="edit" />
@@ -47,18 +53,24 @@
                     </Tooltip>
                 </h1>
                 <section class="markdown">
-                    @((MarkupString) _demoComponent.Desc)
+                    @((MarkupString)_demoComponent.Desc)
                 </section>
 
-                @foreach (var docDemo in docDemos)
+                @if (_rendered)
                 {
-                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")" />
+                    @foreach (var docDemo in docDemos)
+                    {
+                        <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
+                    }
                 }
-
+                else
+                {
+                    <Skeleton ParagraphRows="3" Active></Skeleton>
+                }
                 @if (demos.Any())
                 {
                     <h2 data-scrollama-index="1">
-                        @LanguageService.Resources["app.component.examples"]
+                        @Localizer["app.component.examples"]
                         <span class="all-code-box-controls">
                             @if (_demoComponent.Cols != 1)
                             {
@@ -77,6 +89,7 @@
                     </h2>
                 }
             </section>
+
             @if (demos.Any())
             {
                 <Row Style="margin-left: -8px; margin-right: -8px;">
@@ -85,7 +98,7 @@
                         foreach (var demo in demos)
                         {
                             <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
                     }
@@ -97,22 +110,27 @@
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }
                 </Row>
             }
+           
             <section class="markdown api-container">
+                @((MarkupString)_demoComponent.ApiDoc)
                 @((MarkupString) _demoComponent.ApiDoc)
             </section>
-
+        }
+        else
+        {
+            <Skeleton ParagraphRows="3" Active></Skeleton>
         }
     </article>
     <ContributorsList FilePaths="_filePaths" />

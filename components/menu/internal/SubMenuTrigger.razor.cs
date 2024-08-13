@@ -9,5 +9,25 @@ namespace AntDesign.Internal
 
         [Parameter]
         public string TriggerClass { get; set; }
+
+        internal override string GetOverlayEnterClass()
+        {
+            if (Placement == Placement.RightTop)
+            {
+                return "ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big";
+            }
+
+            return base.GetOverlayEnterClass();
+        }
+
+        internal override string GetOverlayLeaveClass()
+        {
+            if (Placement == Placement.RightTop)
+            {
+                return "ant-zoom-big-leave ant-zoom-big-leave-active ant-zoom-big";
+            }
+
+            return base.GetOverlayLeaveClass();
+        }
     }
 }

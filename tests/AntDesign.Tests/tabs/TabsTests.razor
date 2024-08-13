@@ -4,7 +4,7 @@
     {
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
       .SetResult(new HtmlElement());
-
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
         JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true);
     }
@@ -80,19 +80,20 @@
     public async Task Render_tab_pane_with_aniamted()
     {
         var activeKey = "tab1";
-        var cut = Context.Render( 
+        var cut = Context.Render<Tabs>( 
             @<Tabs Animated @bind-ActiveKey="activeKey">
                 <TabPane Key="tab1" Tab="Tab 1"></TabPane>
                 <TabPane Key="tab2" Tab="Tab 2"></TabPane>
-        </Tabs>
+            </Tabs>
     );
-        var paneElements = cut.FindAll(".ant-tabs-tabpane");
-        paneElements[0].ClassList.Should().Contain("ant-tabs-tabpane-active");
+        cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-active");
+        cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
 
         cut.FindAll("div.ant-tabs-tab")[1].Click();
-
+     
         activeKey.Should().Be("tab2");
-        paneElements[1].OuterHtml.Should().Contain("visibility: hidden; height: 0px; overflow-y: hidden;");
+        cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
+        cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-active");
     }
 
     [Fact]

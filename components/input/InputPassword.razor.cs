@@ -63,8 +63,6 @@ namespace AntDesign
             {
                 Suffix = new RenderFragment((builder) =>
                 {
-                    builder.OpenElement(0, "span");
-                    builder.AddAttribute(1, "class", $"{PrefixCls}-suffix");
                     if (IconRender is null)
                     {
                         builder.OpenComponent<Icon>(2);
@@ -82,7 +80,6 @@ namespace AntDesign
                     {
                         builder.AddContent(6, IconRender);
                     }
-                    builder.CloseElement();
                 });
             }
         }
@@ -98,8 +95,8 @@ namespace AntDesign
             await base.Focus(behavior, preventScroll);
             //delay enforces focus - it counters the js blur that is called on button pressed
             await Task.Delay(5);
-            //An ugly solution for InputPassword in wasm to receive focus and keep 
-            //cursor at the last character. Any improvements are very welcome. 
+            //An ugly solution for InputPassword in wasm to receive focus and keep
+            //cursor at the last character. Any improvements are very welcome.
             if (Js.IsBrowser())
             {
                 await base.Focus(behavior, preventScroll);

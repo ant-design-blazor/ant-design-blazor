@@ -10,8 +10,10 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -52,6 +54,9 @@ namespace AntDesign
         /// Parser to extract number from the formatter
         /// </summary>
         [Parameter]
+        public string Format { get; set; }
+
+        [Parameter]
         public Func<string, string> Parser { get; set; }
 
         /// <summary>
@@ -69,17 +74,10 @@ namespace AntDesign
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
                 var stepStr = Convert.ToDecimal(_step).ToString(nfi);
-                if (string.IsNullOrEmpty(_format))
-                {
-                    _format = string.Join('.', stepStr.Split(nfi.NumberDecimalSeparator).Select(n => new string('0', n.Length)));
-                }
+                if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
+                    _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
                 else
-                {
-                    if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
-                        _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
-                    else
-                        _decimalPlaces = 0;
-                }
+                    _decimalPlaces = 0;
             }
         }
 
@@ -114,6 +112,9 @@ namespace AntDesign
         /// </summary>
         /// <default value="false"/>
         [Parameter]
+        public int? MaxLength { get; set; }
+
+        [Parameter]
         public bool Disabled { get; set; }
 
         /// <summary>
@@ -133,6 +134,16 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string PlaceHolder { get; set; }
+
+        [Parameter]
+        public bool Bordered { get; set; } = true;
+
+        [Parameter]
+        public OneOf<string, RenderFragment> Prefix { get; set; }
+
+
+        [Parameter]
+        public string Width { get; set; }
 
         private static readonly Type _surfaceType = typeof(TValue);
 
@@ -219,7 +230,6 @@ namespace AntDesign
 
         private string _inputString;
         private bool _focused;
-        private string _format;
         private bool _hasDefaultValue;
         private int? _decimalPlaces;
         private TValue _step;
@@ -227,6 +237,12 @@ namespace AntDesign
 
         private string _prefixCls = "ant-input-number";
         private string _inputNumberMode = "numeric";
+
+        private ClassMapper _affixWarrperClass = new ClassMapper();
+
+        private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
+
+        private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
         public InputNumber()
         {
@@ -264,7 +280,7 @@ namespace AntDesign
             _equalToFunc = fexpEqualTo.Compile();
 
             //四舍五入 rounding
-            if (_floatTypes.Contains(_surfaceType))
+            if (_floatTypes.Contains(underlyingType))
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
                 ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
@@ -322,11 +338,11 @@ namespace AntDesign
         {
             validationErrorMessage = null;
 
-            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
-            {
-                result = Value;
-                return true;
-            }
+            //if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
+            //{
+            //    result = Value;
+            //    return true;
+            //}
 
             if (value == "-" || value == "+")
             {
@@ -348,13 +364,20 @@ namespace AntDesign
 
         private void SetClass()
         {
+            _affixWarrperClass
+                .Add("ant-input-number-affix-wrapper")
+                .If("ant-input-number-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"ant-input-number-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
+            ;
+
             ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-focused", () => _focused)
                 .If($"{_prefixCls}-disabled", () => this.Disabled)
-                .If($"{_prefixCls}-status-error", () => ValidationMessages.Length > 0)
+                .If($"{_prefixCls}-borderless", () => !Bordered)
+                .GetIf(() => $"{_prefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{_prefixCls}-rtl", () => RTL);
         }
 
@@ -370,13 +393,15 @@ namespace AntDesign
             {
                 return;
             }
-            await SetFocus();
-            var num = _increaseFunc(Value, _step);
-            await ChangeValueAsync(num);
 
             _increaseTokenSource?.Cancel();
             _increaseTokenSource = new CancellationTokenSource();
+
             _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
+
+            await SetFocus();
+            var num = _increaseFunc(Value, _step);
+            await ChangeValueAsync(num);
         }
 
         private void IncreaseUp() => _increaseTokenSource?.Cancel();
@@ -551,6 +576,15 @@ namespace AntDesign
             {
                 return Formatter(Value);
             }
+            else if (Format is { Length: > 0 })
+            {
+                return Formatter<TValue>.Format(value, Format);
+            }
+
+            if (EqualityComparer<TValue>.Default.Equals(value, default))
+            {
+                return default(TValue)?.ToString();
+            }
 
             if (Precision > 0 || _decimalPlaces > 0)
             {
@@ -558,10 +592,7 @@ namespace AntDesign
                 return _toStringFunc(value, nN);
             }
 
-            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
-                return _toStringFunc(value, _format);
-            else
-                return default(TValue)?.ToString();
+            return _toStringFunc(value, null);
         }
     }
 }

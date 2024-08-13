@@ -29,6 +29,12 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
+        public string Role { get; set; } = "img";
+
+        [Parameter]
+        public string AriaLabel { get; set; }
+
+        [Parameter]
         public bool Spin { get; set; }
 
         /// <summary>
@@ -134,17 +140,28 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
-            if (Type == "loading")
-            {
-                Spin = true;
-            }
-
             ClassMapper.Add($"anticon")
                 .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
             if (OnClick.HasDelegate)
             {
                 _attributes.Add("onclick", (Delegate)HandleOnClick);
+            }
+
+            _attributes.Add("aria-label", AriaLabel);
+
+            if (String.IsNullOrEmpty(Role))
+            {
+                _attributes.Add("aria-hidden", "true");
+            }
+            else
+            {
+                _attributes.Add("role", Role);
+            }
+
+            if (Role == "img")
+            {
+                _attributes.Add("alt", Alt);
             }
 
             await base.OnInitializedAsync();

@@ -1,5 +1,5 @@
 ﻿---
-order: 20
+order: 17
 title:
   zh-CN: 最大化
   en-US: Maximizable

@@ -6,11 +6,12 @@
 	public void Input_Bordered_sets_class()
 	{
 		//Arrange
-		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>
-	);
+		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>);
+
 		//Act
 		ITokenList classList = cut.Find("input").ClassList;		
-		//Assert           
+		
+        //Assert
 		classList.Contains("ant-input-borderless").Should().BeTrue();
 	}
 
@@ -93,19 +94,39 @@
 		classList.Contains("testClass").Should().BeTrue();
 	}
 
+    [Fact]
+    public void Input_no_warpper_apply_class()
+    {
+        string? value = null;
+        string className = "test-class";
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" Class="@className" />);
+
+        cut.Find("input").ClassList.Contains(className).Should().BeTrue();
+    }
+
 	[Fact]
 	public void Input_show_clearButton_when_input_set()
 	{
 		//Arrange
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input TValue="string" AllowClear/>);
-		//Act
-		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: hidden");
-		cut.Find("input").Input("test");		
+        //Act
+        bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
+        cut.Find("input").Input("test");		
 		//Assert  
 		isClearButtonHidden.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: visible");
-	}
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeFalse();
+    }
+
+    [Fact]
+	public void Input_show_clearButton_with_suffix()
+	{
+		//Arrange
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input TValue="string" AllowClear ><Suffix>suffix</Suffix></AntDesign.Input>);
+        //Assert
+         cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-has-suffix").Should().BeTrue();
+    }
 
 	[Fact]
 	public void Input_hide_clearButton_when_input_reset()
@@ -116,11 +137,11 @@
 		var cut = Render<AntDesign.Input<string>>(
 			@<AntDesign.Input @ref="@input" Value="@("test")" AllowClear/>);
 		//Act
-		bool isClearButtonVisible = cut.Find("span.ant-input-clear-icon").GetAttribute("style")!.Contains("visibility: visible");
+		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden");
 		cut.Find("input").Input("");		
 		//Assert  
-		isClearButtonVisible.Should().BeTrue();
-		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
+		isClearButtonHidden.Should().BeFalse();
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeTrue();
 	}
 
     [Fact]
@@ -168,21 +189,45 @@
     }
 
     [Fact]
-    public async Task Input_with_changeOnInput()
+    public async Task Input_with_bindOnInput()
     {
         //Arrange
         string? value = null;
 
-        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value ChangeOnInput />);
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value BindOnInput />);
         //Act
         cut.Find("input").Input("newValue");
         cut.Find("input").KeyUp(String.Empty);
         //Assert
-        await Task.Delay(250);
+        await Task.Delay(300);
 
+        value.Should().Be("newValue");
         cut.Instance.Value.Should().Be("newValue");
     }
 
+    [Fact]
+    public void Input_MaxLength_Adds_Attribute_To_Input()
+    {
+        string? value = null;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value MaxLength="50" />);
+
+        var textAreaElement = cut.Find("input");
+
+        textAreaElement.Attributes.Single(x => x.Name.ToLowerInvariant() == "maxlength").Value.Should().Be("50");
+    }
+
+    [Fact]
+    public void Input_MaxLength_Adds_Attribute_To_Input_After_Initial_Render()
+    {
+        string? value = null;
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value=@value />);
+
+        cut.Find("input").Attributes.SingleOrDefault(x => x.Name.ToLowerInvariant() == "maxlength").Should().BeNull();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(x => x.MaxLength, 50));
+
+        cut.WaitForAssertion(() => cut.Find("input").Attributes.Single(x => x.Name.ToLowerInvariant() == "maxlength").Value.Should().Be("50"));
+    }
 
     class TestModel
     {

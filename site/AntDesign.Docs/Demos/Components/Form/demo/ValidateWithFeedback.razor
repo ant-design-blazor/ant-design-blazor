@@ -1,6 +1,6 @@
 @using System.ComponentModel.DataAnnotations;
 
-<Switch @bind-Value="@auto" CheckedChildren="True" UnCheckedChildren="False" />
+<Switch @bind-Value="@auto" CheckedChildren="Validate On Change" UnCheckedChildren="Validate On Submit" />
 <Form @ref="form"
        ValidateOnChange="@auto"
        Model="@model"

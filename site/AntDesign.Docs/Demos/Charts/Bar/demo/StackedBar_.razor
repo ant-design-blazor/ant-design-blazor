@@ -5,13 +5,13 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <StackedBar Data="data1" Config="config1"/>
+            <Bar Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <TabTemplate>示例2</TabTemplate>
         <ChildContent>
-            <StackedBar Data="data2" Config="config2"/>
+            <Bar Data="data2" Config="config2"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -82,7 +82,7 @@
         }
     };
 
-    readonly StackedBarConfig config1 = new StackedBarConfig
+    readonly BarConfig config1 = new BarConfig
     {
         ForceFit = true,
         Title = new Title
@@ -96,7 +96,7 @@
         {
             Visible = true
         },
-        StackField = "细分"
+        SeriesField = "细分"
     };
 
     #endregion 示例1
@@ -215,7 +215,7 @@
         }
     };
 
-    readonly StackedBarConfig config2 = new StackedBarConfig
+    readonly BarConfig config2 = new BarConfig
     {
         ForceFit = true,
         Title = new Title
@@ -230,7 +230,7 @@
         },
         YField = "地区",
         XField = "销售额",
-        StackField = "细分",
+        SeriesField = "细分",
         Label = new BarViewConfigLabel
         {
             Offset = 0,

@@ -115,7 +115,7 @@ namespace AntDesign
 
         private int _motionStage;
 
-        private int _height;
+        private decimal _height;
 
         private string _innerStyle = string.Empty;
 

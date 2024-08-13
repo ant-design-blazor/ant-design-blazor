@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -97,12 +98,14 @@ namespace AntDesign
         /// <summary>
         /// Title section
         /// </summary>
+        [Obsolete("Use TitleTemplate instead")]
         [Parameter]
         public RenderFragment PageHeaderTitle { get; set; }
 
         /// <summary>
         /// Sub title section
         /// </summary>
+        [Obsolete("Use SubtitleTemplate instead")]
         [Parameter]
         public RenderFragment PageHeaderSubtitle { get; set; }
 

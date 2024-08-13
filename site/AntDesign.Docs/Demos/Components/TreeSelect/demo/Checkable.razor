@@ -1,57 +1,59 @@
-﻿<TreeSelect TItem="Data"
+﻿<TreeSelect 
             Style="width:100%;"
             DataSource="treeData"
-            @bind-Value="@value"
+            @bind-Values="@values"
             Placeholder="Please select"
             AllowClear
-            Multiple
             TreeCheckable
+            CheckOnClickNode
             TreeDefaultExpandAll
+            ItemValue="node=> node.Key"
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
             KeyExpression="node=>node.DataItem.Key"
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
 
+@JsonSerializer.Serialize(values);
 
 @code {
-  private string value;
+    private IEnumerable<string> values = new[] { "1", "11" };
 
   Data[] treeData = new Data[]
   {
         new()
         {
             Title = "Node1",
-            Key="0-0",
+            Key="1",
             Children = new Data[]
             {
                 new()
                 {
                     Title = "Child Node1",
-                    Key="0-0-0",
+                    Key="11",
                 },
             }
         },
         new()
         {
             Title = "Node2",
-            Key="0-1",
+            Key="2",
             Children = new Data[]
             {
                 new()
                 {
                     Title ="Child Node3",
-                    Key="0-1-0"
+                    Key="21"
                 },
                 new()
                 {
                     Title ="Child Node4",
-                    Key="0-1-1",
+                    Key="22",
                 },
                 new()
                 {
                     Title ="Child Node5",
-                    Key="0-1-2",
+                    Key="23",
                 }
             }
         }

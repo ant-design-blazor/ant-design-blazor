@@ -33,6 +33,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        [Parameter]
+        public string LabelStyle { get; set; }
+
+        [Parameter]
+        public string ContentStyle { get; set; }
+
         [CascadingParameter]
         public Descriptions Descriptions { get; set; }
 

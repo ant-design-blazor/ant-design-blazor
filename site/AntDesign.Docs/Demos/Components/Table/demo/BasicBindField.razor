@@ -1,0 +1,101 @@
+﻿@using System.ComponentModel
+@using AntDesign.TableModels
+
+<Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
+    <Column @bind-Field="@context.Name">
+        <a>@context.Name</a>
+    </Column>
+    <Column TData="int" DataIndex="Age"></Column>
+    <Column @bind-Field="@context.Address">
+        <TitleTemplate>
+            <span> <Icon Type="environment" /> Address </span>
+        </TitleTemplate>
+    </Column>
+    <Column @bind-Field="@context.Tags">
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
+            {
+                color = "volcano";
+            }
+            <Tag Color="@color">@tag</Tag>
+        }
+    </Column>
+    <ActionColumn Title="Action">
+        <Space Size=@("middle")>
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+@code {
+    IData[] data = new Data[]
+      {
+        new()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+            Tags = new[] {"nice", "developer"}
+        },
+        new()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+            Tags = new[] { "loser"}
+        },
+        new()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+            Tags = new[] { "cool", "teacher" }
+        }
+      };
+
+    public interface IData
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
+        [DisplayName("Name")]
+        public string Name { get; set; }
+
+        [DisplayName("🔢Age")]
+        public int Age { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
+
+    public class Data : IData
+    {
+        public string Key { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+
+        public string[] Tags { get; set; }
+    }
+
+    void OnRowClick(RowData<IData> row)
+    {
+        Console.WriteLine($"row {row.Data.Key} was clicked.");
+    }
+}

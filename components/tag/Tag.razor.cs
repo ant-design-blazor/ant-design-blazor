@@ -112,9 +112,11 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
-        /// 
+        /// 'fill' | 'outline' | 'twotone';
         /// </summary>
-        /// <default value="false" />
+        [Parameter]
+        public string IconTheme { get; set; } = IconThemeType.Outline;
+
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]
         public bool NoAnimation { get; set; }

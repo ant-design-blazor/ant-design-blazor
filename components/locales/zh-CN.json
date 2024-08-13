@@ -150,7 +150,8 @@
       "lessThanOrEquals": "小于或等于",
       "isNull": "为 Null",
       "isNotNull": "不为 Null",
-      "theSameDateWith": "等于该日期"
+      "theSameDateWith": "等于该日期",
+      "between": "在区间"
     }
   },
   "Modal": {
@@ -192,10 +193,11 @@
   },
   "PageHeader": { "back": "返回" },
   "Form": {
+    "optional": "（可选）",
     "defaultValidateMessages": {
       "default": "字段验证错误${label}",
       "required": "请输入${label}",
-      "enum": "${label}必须是其中一个[${enum}]",
+      "enum": "${label}必须是[${enum}]中的一个",
       "whitespace": "${label}不能为空字符",
       "date": {
         "format": "${label}日期格式无效",
@@ -245,6 +247,7 @@
     "Close": "关闭",
     "CloseAllTabs": "关闭所有选项卡",
     "CloseAllButThis": "除此之外全部关闭",
-    "PinTab": "固定选项卡"
+    "PinTab": "固定选项卡",
+    "Reload": "刷新"
   }
 }

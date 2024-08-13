@@ -137,7 +137,7 @@ namespace AntDesign.Internal
             foreach (var fileItem in flist)
             {
                 var fileName = fileItem.FileName;
-                fileItem.Ext = fileItem.FileName.Substring(fileName.LastIndexOf('.'));
+                fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
                 var id = Guid.NewGuid().ToString();
                 if (Upload.BeforeUpload != null && !Upload.BeforeUpload.Invoke(fileItem))
                 {

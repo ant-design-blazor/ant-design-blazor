@@ -58,14 +58,14 @@ namespace AntDesign
         /// </summary>
         /// <default value="Cancel" />
         [Parameter]
-        public string CancelText { get; set; } = "Cancel";
+        public string CancelText { get; set; }
 
         /// <summary>
         /// Okay button text
         /// </summary>
         /// <default value="OK" />
         [Parameter]
-        public string OkText { get; set; } = "OK";
+        public string OkText { get; set; }
 
         /// <summary>
         /// Okay button type
@@ -77,6 +77,9 @@ namespace AntDesign
         /// <summary>
         /// Properties to pass through to the okay button
         /// </summary>
+        [Parameter]
+        public PopconfirmLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Popconfirm;
+
         [Parameter]
         public ButtonProps OkButtonProps { get; set; }
 
@@ -137,6 +140,12 @@ namespace AntDesign
             PrefixCls = "ant-popover";
             Placement = Placement.Top;
             Trigger = new[] { AntDesign.Trigger.Click };
+        }
+
+        protected override void OnInitialized()
+        {
+            OkText ??= Locale.OkText ?? "Ok";
+            CancelText ??= Locale.CancelText ?? "Cancel";
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)

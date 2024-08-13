@@ -10,7 +10,6 @@ namespace AntDesign
     {
         #region internal
 
-        internal bool IsCreateByModalService => Service != null;
         internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
 
         internal ConfirmRef(ConfirmOptions config)

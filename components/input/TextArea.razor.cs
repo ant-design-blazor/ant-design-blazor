@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -111,23 +112,13 @@ namespace AntDesign
         /// </summary>
         /// <default value="3"/>
         [Parameter]
-        public uint Rows { get; set; } = 3;
+        public uint Rows { get; set; } = 2;
 
         /// <summary>
         /// Callback executed when the size changes
         /// </summary>
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
-
-        /// <summary>
-        /// Show character counting.
-        /// </summary>
-        [Parameter]
-        public bool ShowCount
-        {
-            get => _showCount && MaxLength >= 0;
-            set => _showCount = value;
-        }
 
         /// <inheritdoc/>
         [Parameter]
@@ -139,25 +130,53 @@ namespace AntDesign
                 if (base.Value != value)
                 {
                     _valueHasChanged = true;
+                    _inputString = value;
                 }
                 base.Value = value;
             }
         }
 
         private uint InnerMinRows => _hasMinSet ? MinRows : Rows;
+        private string Count => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
 
-        private bool _showCount;
+        private string _inputString;
 
-        private ClassMapper _warpperClassMapper = new ClassMapper();
+        private ClassMapper _warpperClassMapper = new();
+        private ClassMapper _textareaClassMapper = new();
+
+        private bool _afterFirstRender = false;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             _warpperClassMapper
-                .Get(() => $"{PrefixCls}-affix-wrapper")
-                .Get(() => $"{PrefixCls}-affix-wrapper-textarea-with-clear-btn")
-                .GetIf(() => $"{PrefixCls}-affix-wrapper-rtl", () => RTL);
+                .Add($"{PrefixCls}-affix-wrapper")
+                .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
+                .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
+                ;
+
+            ClassMapper
+                .Add("ant-input-textarea ")
+                .If("ant-input-textarea-show-count", () => ShowCount)
+                .If("ant-input-textarea-in-form-item", () => FormItem != null)
+                .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"ant-input-textarea-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                ;
+
+            _textareaClassMapper
+                .Add("ant-input")
+                .If("ant-input-borderless", () => !Bordered)
+                .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                ;
+        }
+
+        protected override void SetClasses()
+        {
+            //  override the classmapper setting
         }
 
         protected override void OnParametersSet()
@@ -185,33 +204,48 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (AutoSize && _valueHasChanged)
+            if (firstRender)
             {
-                _valueHasChanged = false;
-                if (_isInputing)
-                {
-                    _isInputing = false;
-                }
-                else
-                {
-                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
-                }
+                _afterFirstRender = true;
             }
-            if (_styleHasChanged)
+
+            if (_afterFirstRender)
             {
-                _styleHasChanged = false;
-                if (AutoSize && !string.IsNullOrWhiteSpace(Style))
+                if (AutoSize && _valueHasChanged)
                 {
-                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    _valueHasChanged = false;
+                    if (_isInputing)
+                    {
+                        _isInputing = false;
+                    }
+                    else if (_afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                    }
+                }
+                if (_styleHasChanged)
+                {
+                    _styleHasChanged = false;
+                    if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    }
                 }
             }
         }
 
         /// <inheritdoc/>
-        protected override void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
             _isInputing = true;
-            base.OnInputAsync(args);
+            _inputString = args.Value.ToString();
+            await base.OnInputAsync(args);
+        }
+
+        protected override void OnCurrentValueChange(string value)
+        {
+            base.OnCurrentValueChange(value);
+            _inputString = value;
         }
 
         protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
@@ -290,16 +324,6 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
-        }
-
-        internal class TextAreaInfo
-        {
-            public double ScrollHeight { get; set; }
-            public double LineHeight { get; set; }
-            public double PaddingTop { get; set; }
-            public double PaddingBottom { get; set; }
-            public double BorderTop { get; set; }
-            public double BorderBottom { get; set; }
         }
     }
 }

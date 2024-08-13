@@ -134,6 +134,8 @@ namespace AntDesign
 
         public static implicit operator CssSizeLength(string value) => new(value);
 
+        public static implicit operator string(CssSizeLength value) => value.ToString();
+
         public override bool Equals(object obj) => obj is CssSizeLength other && Equals(other);
 
         public override int GetHashCode() => HashCode.Combine(_value, _unit);

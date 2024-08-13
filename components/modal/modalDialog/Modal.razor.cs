@@ -5,6 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
@@ -101,6 +102,12 @@ namespace AntDesign
         public bool DestroyOnClose { get; set; }
 
         /// <summary>
+        /// Header content
+        /// </summary>
+        [Parameter]
+        public RenderFragment Header { get; set; } = DialogOptions.DefaultHeader;
+
+        /// <summary>
         /// Footer content, set as Footer=null when you don't need default buttons
         /// </summary>
         [Parameter]
@@ -174,6 +181,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Visible { get; set; }
+
+        /// <summary>
+        /// Specify a function invoke when the modal dialog is visible or not
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
         /// <summary>
         /// Width of the modal dialog, the default value is 520
@@ -283,7 +296,19 @@ namespace AntDesign
         [Parameter]
         public bool DefaultMaximized { get; set; } = false;
 
-        #endregion Parameter
+        /// <summary>
+        /// Resizable (Horizontal direction only)
+        /// </summary>
+        [Parameter]
+        public bool Resizable { get; set; } = false;
+
+        /// <summary>
+        /// Whether to force to render the Modal dom before opening.   
+        /// </summary>
+        [Parameter]
+        public bool ForceRender { get; set; }
+
+      #endregion Parameter
 
 #pragma warning disable 649
         private DialogWrapper _dialogWrapper;
@@ -300,8 +325,10 @@ namespace AntDesign
                 Closable = Closable,
                 Draggable = Draggable,
                 DragInViewport = DragInViewport,
+                DestroyOnClose = DestroyOnClose,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
+                Header = Header,
                 Footer = Footer,
 
                 GetContainer = GetContainer,
@@ -328,6 +355,11 @@ namespace AntDesign
                     {
                         await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
 
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
+
                         if (OnCancel.HasDelegate)
                         {
                             await OnCancel.InvokeAsync(e);
@@ -344,6 +376,11 @@ namespace AntDesign
                     if (!args.Cancel)
                     {
                         await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
 
                         if (OnOk.HasDelegate)
                         {
@@ -364,7 +401,10 @@ namespace AntDesign
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
-                DefaultMaximized = DefaultMaximized
+                DefaultMaximized = DefaultMaximized,
+                Resizable = Resizable,
+                ForceRender = ForceRender,
+                CreateByService = ModalRef?.Config.CreateByService ?? false,
             };
 
             return options;
@@ -373,6 +413,8 @@ namespace AntDesign
         #region Sustainable Dialog
 
         private bool _hasFocus = false;
+
+        private bool _firstShow = true;
 
         private async Task OnAfterDialogShow()
         {

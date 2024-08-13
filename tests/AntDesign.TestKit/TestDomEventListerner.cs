@@ -21,7 +21,7 @@ namespace AntDesign.Tests
             return;
         }
 
-        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
         {
             return;
         }

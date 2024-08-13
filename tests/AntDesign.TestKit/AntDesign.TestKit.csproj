@@ -8,13 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.web" Version="1.9.8" />
+    <PackageReference Include="bunit.web" Version="1.26.64" />
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
     <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+    <PackageReference Include="xunit" Version="2.5.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

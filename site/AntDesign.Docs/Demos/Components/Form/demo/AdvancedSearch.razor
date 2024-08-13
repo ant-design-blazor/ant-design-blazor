@@ -4,9 +4,10 @@
             @for (var i = 0; i < (_expand ? 10 : 6); i++)
             {
                 var index = i;
+                var field = $"field-{index}";
                 <GridCol Span="8" @key="index">
                     <FormItem Label="@($"Field {index}")">
-                        <Input @bind-Value="@(context[$"field-{index}"].Value)" Placeholder="placeholder" />
+                        <Input @bind-Value="@(context[field].Value)" Placeholder="placeholder" />
                     </FormItem>
                 </GridCol>
             }
@@ -47,7 +48,7 @@
 
 @code {
     bool _expand = false;
-    AntDesign.Internal.IForm _form;
+    IForm _form;
     Dictionary<string, FormValue> formData = new();
 
     protected override void OnInitialized()

@@ -46,6 +46,16 @@ namespace AntDesign
         [Parameter]
         public int Precision { get; set; }
 
+        [Parameter] public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
+
+        protected override void OnInitialized()
+        {
+            DecimalSeparator ??= CultureInfo.NumberFormat.NumberDecimalSeparator;
+            GroupSeparator ??= CultureInfo.NumberFormat.NumberGroupSeparator;
+
+            base.OnInitialized();
+        }
+
         private (string integerPart, string fractionalPart) SeparateDecimal()
         {
             decimal decimalValue;

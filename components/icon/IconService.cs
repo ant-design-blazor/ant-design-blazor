@@ -33,7 +33,7 @@ namespace AntDesign
 
         internal static string GetStyledSvg(Icon icon)
         {
-            string svgClass = icon.Spin ? "anticon-spin" : null;
+            string svgClass = icon.Spin || icon.Type == "loading" ? "anticon-spin" : null;
 
             var svg = !string.IsNullOrEmpty(icon.IconFont) ?
                 $"<svg><use xlink:href=#{icon.IconFont} /></svg>"

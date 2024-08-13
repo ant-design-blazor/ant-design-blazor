@@ -6,6 +6,6 @@ namespace AntDesign
 {
     public record struct SegmentedOption<TValue>(TValue Value, string Label = null, bool Disabled = false)
     {
-        public string Label { get; set; } = Value.ToString();
+        public string Label { get; set; } = Label ?? Value.ToString();
     }
 }

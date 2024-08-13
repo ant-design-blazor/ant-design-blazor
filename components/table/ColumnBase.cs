@@ -31,6 +31,8 @@ namespace AntDesign
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
 
+        protected TableDataItem DataItem => RowData.TableDataItem;
+
         [CascadingParameter(Name = "IsMeasure")]
         public bool IsMeasure { get; set; }
 
@@ -226,9 +228,13 @@ namespace AntDesign
                 return cssStyleBuilder.Build();
             }
 
-            var fixedWidths = Array.Empty<string>();
-
             Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+            if (string.IsNullOrWhiteSpace(Fixed))
+            {
+                return cssStyleBuilder.Build();
+            }
+
+            var fixedWidths = Array.Empty<string>();
 
             if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
             {
@@ -268,6 +274,12 @@ namespace AntDesign
         {
             RowData.Expanded = !RowData.Expanded;
             Table?.OnExpandChange(RowData);
+        }
+
+        void IColumn.UpdateFixedStyle()
+        {
+            _fixedStyle = CalcFixedStyle();
+            StateHasChanged();
         }
     }
 }

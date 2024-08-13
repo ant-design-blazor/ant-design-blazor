@@ -10,7 +10,7 @@
 
 A rich set of enterprise-class UI components based on Ant Design and Blazor.
 
-![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/ant-design-blazor/ant-design-blazor/nightly-build.yml?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
@@ -32,28 +32,23 @@ English | [简体中文](README-zh_CN.md)
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
 - 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ .NET Standard 2.1/.NET 5/.NET 6 based, with direct reference to the rich .NET ecosystem.
+- 🌍 Internationalization support for dozens of languages.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
 
-WebAssembly static hosting examples:
+WebAssembly static hosting on:
 
-- [Azure Static WebApp](https://antblazor.com/)
+- [Document site](https://antblazor.com/)
+- [Enterprise system dashboard](https://pro.antblazor.com/)
 
 ## 🖥 Environment Support
 
-- Compatible with .NET Core 3.1 / .NET 5 / .NET 6.
-- Blazor WebAssembly 3.2 / .NET 5 / .NET 6 Release.
-- Supports two-way binding on the server side.
+- Supports .NET Core 3.1 / .NET 5 / .NET 6 / .Net 7 / .NET 8.
 - Supports WebAssembly static file deployment.
-- Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) only)
-- Run directly on [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987) / [WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) / [Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) and other Blazor Hybrid workloads.
-- Run directly on [Electron](http://electron.atom.io/) and other Web standards-based environments.
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                                                          Edge 16 / IE 11†                                                                                           |                                                                                                 522                                                                                                  |                                                                                                57                                                                                                |                                                                                                11                                                                                                |                                                                                              44                                                                                              |                                                                                               Chromium 57                                                                                                |
+- Supports 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) only)
+- Supports [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987) / [WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) / [Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) and other Blazor Hybrid workloads.
+- Supports [Electron](http://electron.atom.io/) and other Web standards-based environments.
 
 > Due to [WebAssembly](https://webassembly.org) restriction, Blazor WebAssembly doesn't support IE browser, but Blazor Server supports IE 11† with additional polyfills. See [official documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987).
 
@@ -72,11 +67,15 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 Therefore, you can use the custom theme styles of Ant Design directly.
 
+**Before the 1.0 release, we will only sync antd 4.x styles.**
+
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 or later, .NET 6 is even better.
+### Prerequirement
 
-### Create a new project from the dotnet new template [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1.300 or later, .NET 8 is even better.
+
+### Option 1: Create a new project from the dotnet new template [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
 We have provided the `dotnet new` template to create a [Boilerplate](https://github.com/ant-design-blazor/ant-design-pro-blazor) project out of the box：
 
@@ -99,11 +98,11 @@ Options for the template：
 | Options           | Description                                                        | Type                           | Default |
 | ----------------- | ------------------------------------------------------------------ | ------------------------------ | ------- |
 | `-f` \| `--full`  | If specified, generates all pages of Ant Design Pro                | bool                           | false   |
-| `-ho` \| `--host` | Specify the hosting model                                          | 'wasm' \| 'server' \| 'hosted' | 'wasm'  |
+| `-ho` \| `--host` | Specify the hosting model                                          | 'webapp' \| 'wasm' \| 'server' | 'webapp' |
 | `--styles`        | Whether use NodeJS and Less to compile your custom themes.         | `css` \| `less`                | `css`   |
 | `--no-restore`    | If specified, skips the automatic restore of the project on create | bool                           | false   |
 
-### Import Ant Design Blazor into an existing project
+### Option 2: Import Ant Design Blazor into an existing project
 
 - Go to the project folder of the application and install the Nuget package reference
 
@@ -111,23 +110,16 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services in `Program.cs` (client-side WebAssembly Blazor)
+- Register the services in `Program.cs`
 
   ```csharp
   builder.Services.AddAntDesign();
   ```
 
-  or `Startup.cs` (server-side Blazor)
+  or `Startup.cs`
 
   ```csharp
   services.AddAntDesign();
-  ```
-
-- Link the static files in `wwwroot/index.html` (client-side WebAssembly Blazor) or `Pages/_Host.cshtml` (server-side Blazor)
-
-  ```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - Add namespace in `_Imports.razor`
@@ -138,7 +130,16 @@ Options for the template：
 
 - To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.
 
+  - For Blazor WebApp, you also need to specify render mode  to `<Routes />` for interactivity.
+
+  ```diff
+  <Routes @rendermode="RenderMode.InteractiveAuto" />            <-- specify the rendermode ✨
+  + <AntContainer @rendermode="RenderMode.InteractiveAuto" />    <-- add this component ✨
   ```
+ 
+  - For legacy blazor apps just add a line of code:
+
+  ```diff
   <Router AppAssembly="@typeof(MainLayout).Assembly">
       <Found Context="routeData">
           <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -150,7 +151,7 @@ Options for the template：
       </NotFound>
   </Router>
 
-  <AntContainer />   <-- add this component ✨
+  +  <AntContainer />   <-- add this component ✨
   ```
 
 - Finally, it can be referenced in the `.razor` component!
@@ -159,7 +160,7 @@ Options for the template：
   <Button Type="@ButtonType.Primary">Hello World!</Button>
   ```
 
-## ⌨️ Development
+## 🔨 Development
 
 ### Gitpod
 
@@ -169,7 +170,7 @@ Click the button below to start a new workspace for development for free.
 
 ### Local
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/7.0?WT.mc_id=DT-MVP-5003987) 7.0.100 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/8.0?WT.mc_id=DT-MVP-5003987) 8.0.100 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -187,27 +188,21 @@ Click the button below to start a new workspace for development for free.
 
 ## 🔗 Links
 
-- [Ant Design Blazor Documentation](https://ant-design-blazor.github.io)
+- [Ant Design Blazor Documentation](https://antblazor.com)
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 
 ## 🗺 Roadmap
 
-Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) to learn about our development plans for 2020.
+Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) to learn about our development plans for the 1.0 release.
+
+You can also find the [latest news](https://github.com/ant-design-blazor/ant-design-blazor/issues/2870) about the features we will implement in the future with antd5.0 style.
 
 ## 🤝 Contributing
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/pulls)
 
 If you would like to contribute, feel free to create a [Pull Request](https://github.com/ant-design-blazor/ant-design-blazor/pulls), or give us [Bug Report](https://github.com/ant-design-blazor/ant-design-blazor/issues/new).
-
-### Contributors
-
-This project exists thanks to all the people who contribute.
-
-<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor" />
-</a>
 
 ## 💕 Donation
 
@@ -231,6 +226,15 @@ If you encounter any problems in the process, feel free to ask for help via foll
     <summary>Scan QR Code with DingTalk</summary>
     <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/docs/assets/dingtalk.jpg" width="300">
   </details>
+
+## Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/ant-design-blazor/ant-design-blazor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ant-design-blazor/ant-design-blazor&max=1000&columns=15&anon=1" />
+</a>
+
 
 ## Code of Conduct
 

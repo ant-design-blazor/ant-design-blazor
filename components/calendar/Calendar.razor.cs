@@ -74,6 +74,7 @@ namespace AntDesign
         /// <summary>
         /// Callback executed when a date is selected
         /// </summary>
+        [Obsolete("Use OnChange instead")]
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
 

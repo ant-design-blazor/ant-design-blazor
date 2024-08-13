@@ -11,7 +11,7 @@ namespace AntDesign.Tests.Core.Helpers
     public class MomentHelperTests
     {
         [Theory]
-        [MemberData(nameof(FromNow_seeds))]
+        [MemberData(nameof(FromNow_seeds), DisableDiscoveryEnumeration = true)]
         public void FromNow(DateTime date, string expectedSuffix)
         {
             var str = MomentHelper.FromNow(date);

@@ -171,5 +171,58 @@
   },
   "Empty": {
     "description": "Brak danych"
+  },
+  "Form": {
+    "optional": "(opcjonalne)",
+    "defaultValidateMessages": {
+      "default": "Błąd walidacji dla pola ${label}",
+      "required": "Pole ${label} jest wymagane",
+      "enum": "Pole ${label} musi posiadać wartość z listy: [${enum}]",
+      "whitespace": "Pole ${label} nie może być puste",
+      "date": {
+        "format": "${label} posiada zły format daty",
+        "parse": "${label} nie może zostać zinterpretowane jako data",
+        "invalid": "${label} jest niepoprawną datą"
+      },
+      "types": {
+        "string": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "method": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "array": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "object": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "number": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "date": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "boolean": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "integer": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "float": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "regexp": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "email": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "url": "${label} nie posiada poprawnej wartości dla typu ${type}",
+        "hex": "${label} nie posiada poprawnej wartości dla typu ${type}"
+      },
+      "string": {
+        "len": "${label} musi posiadać ${len} znaków",
+        "min": "${label} musi posiadać co namniej ${min} znaków",
+        "max": "${label} musi posiadać maksymalnie ${max} znaków",
+        "range": "${label} musi posiadać między ${min} a ${max} znaków"
+      },
+      "number": {
+        "len": "${label} musi mieć wartość o długości ${len}",
+        "min": "${label} musi mieć wartość większą lub równą ${min}",
+        "max": "${label} musi mieć wartość mniejszą lub równą ${max}",
+        "range": "${label} musi mieć wartość pomiędzy ${min} a ${max}"
+      },
+      "array": {
+        "len": "${label} musi posiadać ${len} elementów",
+        "min": "${label} musi posiadać co najmniej ${min} elementów",
+        "max": "${label} musi posiadać maksymalnie ${max} elementów",
+        "range": "${label} musi posiadać między ${min} a ${max} elementów"
+      },
+      "pattern": {
+        "mismatch": "${label} nie posiada wartości zgodnej ze wzorem ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Podgląd"
   }
 }

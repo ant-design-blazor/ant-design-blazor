@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Zpět" },
   "Form": {
+    "optional": "(nepovinné)",
     "defaultValidateMessages": {
       "default": "Chybně vyplněné pole ${label}",
       "required": "Prosím zadejte ${label}",

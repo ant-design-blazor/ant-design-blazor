@@ -140,5 +140,55 @@
     "previewFile": "استعرض الملف",
     "downloadFile": "تحميل الملف"
   },
-  "Empty": { "description": "لا توجد بيانات" }
+  "Empty": { "description": "لا توجد بيانات" },
+  "Form": {
+    "optional": "(اختياري)",
+    "defaultValidateMessages": {
+      "default": "خطأ في حقل الإدخال ${label}",
+      "required": "يرجى إدخال ${label}",
+      "enum": "${label} يجب أن يكون واحدا من [${enum}]",
+      "whitespace": "${label} لا يمكن أن يكون حرفًا فارغًا",
+      "date": {
+        "format": "${label} تنسيق التاريخ غير صحيح",
+        "parse": "${label} لا يمكن تحويلها إلى تاريخ",
+        "invalid": "تاريخ ${label} غير صحيح"
+      },
+      "types": {
+        "string": "ليس ${label} من نوع ${type} صالحًا",
+        "method": "ليس ${label} من نوع ${type} صالحًا",
+        "array": "ليس ${label} من نوع ${type} صالحًا",
+        "object": "ليس ${label} من نوع ${type} صالحًا",
+        "number": "ليس ${label} من نوع ${type} صالحًا",
+        "date": "ليس ${label} من نوع ${type} صالحًا",
+        "boolean": "ليس ${label} من نوع ${type} صالحًا",
+        "integer": "ليس ${label} من نوع ${type} صالحًا",
+        "float": "ليس ${label} من نوع ${type} صالحًا",
+        "regexp": "ليس ${label} من نوع ${type} صالحًا",
+        "email": "ليس ${label} من نوع ${type} صالحًا",
+        "url": "ليس ${label} من نوع ${type} صالحًا",
+        "hex": "ليس ${label} من نوع ${type} صالحًا"
+      },
+      "string": {
+        "len": "يجب ${label} ان يكون ${len} أحرف",
+        "min": "${label} على الأقل ${min} أحرف",
+        "max": "${label} يصل إلى ${max} أحرف",
+        "range": "يجب ${label} ان يكون مابين ${min}-${max} أحرف"
+      },
+      "number": {
+        "len": "${len} ان يساوي ${label} يجب",
+        "min": "${min} الأدنى هو ${label} حد",
+        "max": "${max} الأقصى هو ${label} حد",
+        "range": "${max}-${min} ان يكون مابين ${label} يجب"
+      },
+      "array": {
+        "len": "يجب أن يكون ${label} طوله ${len}",
+        "min": "يجب أن يكون ${label} طوله الأدنى ${min}",
+        "max": "يجب أن يكون ${label} طوله الأقصى ${max}",
+        "range": "يجب أن يكون ${label} طوله مابين ${min}-${max}"
+      },
+      "pattern": {
+        "mismatch": "لا يتطابق ${label} مع ${pattern}"
+      }
+    }
+  }
 }

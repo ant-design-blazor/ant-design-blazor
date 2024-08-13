@@ -5,6 +5,7 @@
 
 @{
     var calendar = CultureInfo.Calendar;
+    var calendarWeekRule = CultureInfo.DateTimeFormat.CalendarWeekRule;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -71,8 +72,8 @@
         <RenderFirstCol>
             @if (IsWeek)
             {
-                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
-                    @DateHelper.GetWeekOfYear(context, Locale.FirstDayOfWeek)
+                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">  
+                    @calendar.GetWeekOfYear(context,calendarWeekRule, Locale.FirstDayOfWeek)
                 </td>
             }
         </RenderFirstCol>

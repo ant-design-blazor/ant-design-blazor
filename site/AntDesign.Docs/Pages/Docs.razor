@@ -1,5 +1,8 @@
 ﻿@page "/docs/{fileName}"
 @page "/docs"
+@page "/{locale}/docs/{fileName}"
+@page "/{locale}/docs"
+
 <section class="main-container">
     <article class="markdown">
         @if (_file != null)
@@ -8,7 +11,7 @@
             <PageTitle>@title</PageTitle>
             <h1>
                 @_file.Title
-                <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
+                <Tooltip Title="@Localizer["app.content.edit-demo"]">
                     <Unbound>
                         <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
                             <Icon Type="edit" />
@@ -18,6 +21,10 @@
             </h1>
 
             @((MarkupString) _file.Html)
+        }
+        else
+        {
+            <Skeleton Paragraph ParagraphRows="5"></Skeleton>
         }
     </article>
     <ContributorsList FilePaths="@_filePaths" />

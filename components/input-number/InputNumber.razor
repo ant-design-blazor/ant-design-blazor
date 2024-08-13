@@ -2,17 +2,65 @@
 @typeparam TValue
 @inherits AntInputComponentBase<TValue>
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id">
-    <div class="ant-input-number-handler-wrap">
-        <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")" @onmousedown="IncreaseDown" @onmouseup="IncreaseUp" @onmouseout="IncreaseUp">
-            <Icon Class="ant-input-number-handler-up-inner" Type="up"  />
-        </span>
-        <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")" @onmousedown="DecreaseDown" @onmouseup="DecreaseUp" @onmouseout="DecreaseUp">
-            <Icon Class="ant-input-number-handler-down-inner" Type="down"  />
-        </span>
+
+@if (HasAffixWarrper)
+{
+    @_affixWarpper(_inputNumber())
+}
+else
+{
+    @_inputNumber()
+}
+
+@code {
+    RenderFragment _affixWarpper(RenderFragment childContent)
+    {
+        return
+    @<div class="@_affixWarrperClass.Class" style="@WidthStyle @Style" id="@Id">
+        @if (Prefix.Value != null)
+        {
+            <span class="ant-input-number-prefix">
+                @if (Prefix.IsT0)
+                {
+                    @Prefix.AsT0
+                }
+                else
+                {
+                    @Prefix.AsT1
+                }
+            </span>
+        }
+
+        @childContent
+
+        @if (FormItem?.FeedbackIcon != null)
+        {
+            <span class="ant-input-number-suffix">
+                @FormItem.FeedbackIcon
+            </span>
+        }
     </div>
-    <div class="ant-input-number-input-wrap">
-        <input @ref="Ref" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step" inputmode="@_inputNumberMode" placeholder="@PlaceHolder"
-               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onkeydown="OnKeyDown" @onfocus="@OnFocusAsync" @onblur="@OnBlurAsync" disabled="@Disabled" />
-    </div>
-</div>
+    ;
+    }
+
+    RenderFragment _inputNumber()
+    {
+        return
+    @<div class="@ClassMapper.Class" style="@WidthStyle @Style" id="@Id">
+        <div class="ant-input-number-handler-wrap">
+            <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")" @onmousedown="IncreaseDown" @onmouseup="IncreaseUp" @onmouseout="IncreaseUp">
+                <Icon Class="ant-input-number-handler-up-inner" Type="up" />
+            </span>
+            <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")" @onmousedown="DecreaseDown" @onmouseup="DecreaseUp" @onmouseout="DecreaseUp">
+                <Icon Class="ant-input-number-handler-down-inner" Type="down" />
+            </span>
+        </div>
+        <div class="ant-input-number-input-wrap">
+            <input id="@(Id)_input" @ref="Ref" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step" inputmode="@_inputNumberMode" placeholder="@PlaceHolder"
+               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onkeydown="OnKeyDown" @onfocus="@OnFocusAsync" @onblur="@OnBlurAsync" disabled="@Disabled" 
+               maxlength="@MaxLength" name="@NameAttributeValue" />
+        </div>
+    </div>;
+    }
+}
+

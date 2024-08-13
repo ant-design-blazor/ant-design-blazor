@@ -71,6 +71,7 @@ namespace AntDesign
         IsNotNull = 12,
         NotContains = 13,
         TheSameDateWith = 14,
+        Between = 15
     }
 
     public enum TableFilterCondition

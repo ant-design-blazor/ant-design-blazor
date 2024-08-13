@@ -119,6 +119,7 @@ namespace AntDesign.Internal
         /// <summary>
         /// Callback when overlay visibility is changing.
         /// </summary>
+        [Obsolete("Use VisibleChanged instead")]
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
 
@@ -251,6 +252,9 @@ namespace AntDesign.Internal
         [Parameter]
         public bool Visible { get; set; } = false;
 
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
+
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
 
@@ -356,7 +360,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
 
                 await Show();
             }
@@ -366,7 +370,7 @@ namespace AntDesign.Internal
             }
 
             if (OnMouseEnter.HasDelegate)
-                OnMouseEnter.InvokeAsync(null);
+                _ = OnMouseEnter.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -375,7 +379,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(_mouseInOverlay);
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
 
                 await Hide();
             }
@@ -394,7 +398,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
 
                 await Show();
             }
@@ -406,7 +410,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.PreventHide(_mouseInOverlay);
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
 
                 await Hide();
             }
@@ -418,7 +422,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
             }
         }
 
@@ -428,8 +432,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(_mouseInTrigger);
-
+                _overlay.SetMouseInOverlay(_mouseInTrigger);
                 await Hide();
             }
         }
@@ -444,7 +447,7 @@ namespace AntDesign.Internal
         /// </summary>
         /// <param name="args">MouseEventArgs</param>
         /// <returns></returns>
-        public virtual async Task OnClickDiv(MouseEventArgs args)
+        protected virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
             {
@@ -466,6 +469,7 @@ namespace AntDesign.Internal
             {
                 if (_overlay.IsPopup())
                 {
+                    _overlay.PreventHide(false);
                     await Hide();
                 }
                 else
@@ -475,6 +479,7 @@ namespace AntDesign.Internal
             }
             else if (IsContainTrigger(TriggerType.ContextMenu) && _overlay.IsPopup())
             {
+                _overlay.PreventHide(false);
                 await Hide();
             }
             if (resetMouseInTrigger)
@@ -500,6 +505,10 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// on document mouse up
+        /// </summary>
+        /// <param name="element"></param>
         protected virtual void OnMouseUp(JsonElement element)
         {
             if (_mouseUpInOverlay)
@@ -512,10 +521,10 @@ namespace AntDesign.Internal
             {
                 if (OnMaskClick.HasDelegate)
                 {
-                    OnMaskClick.InvokeAsync(null);
+                    _ = OnMaskClick.InvokeAsync(null);
                 }
-
-                Hide();
+                _overlay?.PreventHide(false);
+                _ = Hide();
             }
         }
 
@@ -527,6 +536,10 @@ namespace AntDesign.Internal
         protected virtual async Task OverlayVisibleChange(bool visible)
         {
             await OnVisibleChange.InvokeAsync(visible);
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(visible);
+            }
         }
 
         protected virtual async Task OverlayHiding(bool visible)
@@ -587,6 +600,10 @@ namespace AntDesign.Internal
 
         internal virtual async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
+            if (!_mouseInTrigger && IsContainTrigger(TriggerType.Hover))
+            {
+                return;
+            }
             await _overlay.Show(overlayLeft, overlayTop);
         }
 

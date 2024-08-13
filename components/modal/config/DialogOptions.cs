@@ -23,7 +23,7 @@ namespace AntDesign
         public string BodyStyle { get; set; }
 
         /// <summary>
-        /// show ant-modal-closer 
+        /// show ant-modal-closer
         /// </summary>
         public bool Closable { get; set; } = true;
 
@@ -48,12 +48,17 @@ namespace AntDesign
         public bool ConfirmLoading { get; set; }
 
         /// <summary>
+        /// modal header
+        /// </summary>
+        public RenderFragment Header { get; set; } = DefaultHeader;
+
+        /// <summary>
         /// modal footer
         /// </summary>
         public OneOf<string, RenderFragment>? Footer { get; set; } = DefaultFooter;
 
         /// <summary>
-        /// The class name of the container of the modal dialog	
+        /// The class name of the container of the modal dialog
         /// </summary>
         public string WrapClassName { get; set; }
 
@@ -63,7 +68,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// the class name of the element of ".ant-modal" 
+        /// the class name of the element of ".ant-modal"
         /// </summary>
         public string ClassName { get; set; }
 
@@ -104,8 +109,22 @@ namespace AntDesign
         /// </summary>
         public bool DefaultMaximized { get; set; } = false;
 
-        #region internal
+        /// <summary>
+        /// Resizable (Horizontal direction only)
+        /// </summary>
+        public bool Resizable { get; set; }
 
+        /// <summary>
+        /// Whether to remove Modal from DOM after the Modal closed
+        /// </summary>
+        public bool DestroyOnClose { get; set; }
+
+        /// <summary>
+        /// Whether to force render the Modal dom before opening.   
+        /// </summary>
+        public bool ForceRender { get; set; }
+
+        #region internal
 
         internal string GetHeaderStyle()
         {
@@ -128,29 +147,19 @@ namespace AntDesign
             }
         }
 
-        internal string GetWrapClassNameExtended(Modal modal = null)
+        internal string GetWrapClassNameExtended(ModalStatus status)
         {
             var classNameArray = new List<string>();
-            if (modal == null)
-            {
-                classNameArray.AddIf(
-                        !string.IsNullOrWhiteSpace(WrapClassName),
-                        WrapClassName)
-                    .AddIf(Centered, $"{PrefixCls}-centered")
-                    .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
-
-                return string.Join(' ', classNameArray);
-            }
 
             classNameArray.AddIf(
-                    !string.IsNullOrWhiteSpace(modal.WrapClassName),
-                    modal.WrapClassName)
-                .AddIf(modal.Centered, $"{PrefixCls}-centered")
-                .AddIf(modal.Rtl, $"{PrefixCls}-wrap-rtl");
+                    !string.IsNullOrWhiteSpace(WrapClassName),
+                    WrapClassName)
+                .AddIf(Centered && status != ModalStatus.Max, $"{PrefixCls}-centered")
+                .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
 
             return string.Join(' ', classNameArray);
         }
 
-        #endregion
+        #endregion internal
     }
 }

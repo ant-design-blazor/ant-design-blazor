@@ -204,6 +204,7 @@ namespace AntDesign
                 .If($"{prefixName}-small", () => Size == "small")
                 .If($"{prefixName}-navigation", () => Type == "navigation")
                 .If($"{prefixName}-with-progress", () => Percent != null)
+                .If($"{prefixName}-rtl", () => RTL)
                 ;
         }
     }

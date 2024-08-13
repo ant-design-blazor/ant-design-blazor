@@ -18,13 +18,17 @@
      @ondragover:preventDefault="@ondragoverPreventDefault"
      @ondragstart="@(e => Parent.HandleDragStart(e, this))"
      @ondrop="@(_ => Parent.HandleDrop(this))"
-     aria-controls="@($"rc-tabs-{Id}-tab-{Key}")"
-     aria-selected="@(_isActive)"
      class="@ClassMapper.Class"
      draggable="@Parent.Draggable.ToString()"
-     id="@($"rc-tabs-{Id}-tab-{Key}")"
+     id="@TabId"
      ondragover="event.preventDefault();">
-        <div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="0">
+        <div @onkeydown="@HandleKeydown"
+             @ref="_tabBtnRef"
+             role="tab"
+             aria-selected="@(_isActive ? "true" : "false")"
+             class="ant-tabs-tab-btn"
+             aria-controls="@($"rc-tabs-{Id}-panel-{Key}")"
+             tabindex="0">
             @if (TabTemplate != null)
             {
                 @TabTemplate
@@ -55,11 +59,12 @@ else if (IsPane)
 {
     <div @key="Key"
      tabindex="@(_isActive ? "0" : "-1")"
-     class="ant-tabs-tabpane @(_isActive ? "ant-tabs-tabpane-active" : "")"
+     class="@_tabPaneClassMapper.Class"
      id="@($"rc-tabs-{Id}-panel-{Key}")"
-     role="tabpanel" aria-hidden="@(_isActive ? "false" : "true")"
-     aria-labelledby="@($"rc-tabs-{Id}-panel-{Key}")"
-     style="@(_isActive  ? "" : Parent.Animated? "visibility: hidden; height: 0px; overflow-y: hidden;":"display: none;")">
+     role="tabpanel" 
+     aria-hidden="@(_isActive ? "false" : "true")"
+     aria-labelledby="@($"rc-tabs-{Id}-tab-{Key}")"
+     >
         @if (_isActive || _hasRendered || ForceRender)
         {
             _hasRendered = true;

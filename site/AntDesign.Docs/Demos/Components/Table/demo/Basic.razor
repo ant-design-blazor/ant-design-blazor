@@ -1,27 +1,27 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data" OnRowClick="OnRowClick">
-  <PropertyColumn Property="c=>c.Name">
-    <a>@context.Name</a>
-  </PropertyColumn>
-  <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Address">
-    <TitleTemplate>
-      <span> <Icon Type="environment" /> Address </span>
-    </TitleTemplate>
-  </PropertyColumn>
-  <PropertyColumn Property="c=>c.Tags">
-    @foreach (var tag in context.Tags)
-    {
-      var color = tag.Length > 5 ? "geekblue" : "green";
-      if (tag == "loser")
-      {
-        color = "volcano";
-      }
-      <Tag Color="@color">@tag</Tag>
-    }
-  </PropertyColumn>
+<Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
+    <PropertyColumn Property="c=>c.Name">
+        <a>@context.Name</a>
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Address">
+        <TitleTemplate>
+            <span> <Icon Type="environment" /> Address </span>
+        </TitleTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Tags">
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
+            {
+                color = "volcano";
+            }
+            <Tag Color="@color">@tag</Tag>
+        }
+    </PropertyColumn>
   <ActionColumn Title="Action">
     <Space Size=@("middle")>
       <SpaceItem>
@@ -35,7 +35,7 @@
 </Table>
 
 @code {
-  Data[] data = new Data[]
+  IData[] data = new Data[]
   {
         new()
         {
@@ -63,7 +63,20 @@
         }
   };
 
-  public class Data
+    public interface IData
+    {
+        public string Key { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+
+        public string[] Tags { get; set; }
+    }
+
+    public class Data : IData
   {
     [DisplayName("Key")]
     public string Key { get; set; }
@@ -81,7 +94,7 @@
     public string[] Tags { get; set; }
   }
 
-  void OnRowClick(RowData<Data> row)
+    void OnRowClick(RowData<IData> row)
   {
     Console.WriteLine($"row {row.Data.Key} was clicked.");
   }

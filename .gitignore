@@ -341,7 +341,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-package-lock.json
 /components/wwwroot/less
 /components/wwwroot/css
 /components/wwwroot/js/ant-design-blazor.js
@@ -361,6 +360,7 @@ scripts/previewEditor/index.html
 /tests/AntDesign.Tests.Js/coverage.xml
 /lib
 site/AntDesign.Docs/wwwroot/color.less
+.history
 
 # Diff/Comparison files
 *.orig

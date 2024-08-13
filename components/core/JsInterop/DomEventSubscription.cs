@@ -45,6 +45,11 @@ namespace AntDesign.JsInterop
         }
     }
 
-    public record DomEventKey(string Selector, string EventName, string ListenerId);
-
+    public record DomEventKey(string Selector, string EventName, string ListenerId)
+    {
+        public override string ToString()
+        {
+            return $"{Selector}-{EventName}-{ListenerId}";
+        }
+    }
 }

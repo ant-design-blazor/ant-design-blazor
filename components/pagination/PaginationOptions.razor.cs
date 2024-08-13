@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -85,8 +86,15 @@ namespace AntDesign
 
         private string BuildOptionText(int value) => $"{value} {Locale.ItemsPerPage}";
 
-        private async void ChangePaginationSize(int value)
+        private async Task ChangePaginationSize(int value)
         {
+            if (PageSize == value)
+            {
+                return;
+            }
+
+            PageSize = value;
+
             if (ChangeSize.HasDelegate)
             {
                 await ChangeSize.InvokeAsync(value);
@@ -107,7 +115,7 @@ namespace AntDesign
 
             _goInputText = string.Empty;
 
-            // relatedTarget not implemented 
+            // relatedTarget not implemented
             // if (e.RelatedTarget && (e.relatedTarget.className.indexOf($"{rootPrefixCls}-item-link") >= 0 || e.relatedTarget.className.indexOf($"{rootPrefixCls}-item") >= 0))
             // {
             //     return;

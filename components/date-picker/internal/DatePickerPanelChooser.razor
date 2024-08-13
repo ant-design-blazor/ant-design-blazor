@@ -3,16 +3,16 @@
 @inherits AntDomComponentBase
 
 @{
-	Action ClosePanel = () => { DatePicker.Close(); };
+    Action ClosePanel = () => { DatePicker.Close(); };
     Action<DateTime, int?> ChangePickerValue = (date, index) => { DatePicker.ChangePickerValue(date, index); };
     Action<DateTime, int> ChangeValue = (date, index) => { DatePicker.ChangeValue(date, index); };
     Action<string, int> ChangePickerType = (type, index) => { DatePicker.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => DatePicker.GetIndexPickerValue(index);
-    Func<int, DateTime?> GetIndexValue = (index) => DatePicker.GetIndexValue(index);		
+    Func<int, DateTime?> GetIndexValue = (index) => DatePicker.GetIndexValue(index);
 
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
-        {
+                {
             { "PrefixCls", DatePicker.PrefixCls },
             { "Picker", DatePicker.Picker },
             { "Locale", DatePicker.Locale },
@@ -23,14 +23,14 @@
             { "ChangePickerType", ChangePickerType },
             { "GetIndexPickerValue", GetIndexPickerValue },
             { "GetIndexValue", GetIndexValue },
-            { "DisabledDate", DatePicker.DisabledDate },
+            { "DisabledDate", (Func<DateTime,bool>)(d => DatePicker.IsDisabledDate(d)) },
             { "DateRender", DatePicker.DateRender },
             { "MonthCellRender", DatePicker.MonthCellRender },
             { "RenderExtraFooter", DatePicker.RenderExtraFooter },
             { "IsRange", DatePicker.IsRange },
             { "OnSelect", OnSelect },
             { "PickerIndex", PickerIndex },
-        };
+                };
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
     dateAttributes.Add("ShowToday", DatePicker.ShowToday);	

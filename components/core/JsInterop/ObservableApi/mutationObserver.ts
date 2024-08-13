@@ -1,12 +1,9 @@
 ﻿import { infoHelper as domInfoHelper } from '../modules/dom/infoHelper';
 
 export class mutationObserver {
-  // @ts-ignore: TS2304: Cannot find name 'MutationObserver'
   private static mutationObservers: Map<string, MutationObserver> = new Map<string, MutationObserver>();
 
-
   static create(key: string, invoker, isDotNetInvoker: boolean = true) {
-    // @ts-ignore: TS2304: Cannot find name 'MutationObserver'
     let observer;
 
     if (isDotNetInvoker) {
@@ -20,7 +17,7 @@ export class mutationObserver {
   static observe(key: string, element, options?: MutationObserverInit) {
     const observer = mutationObserver.mutationObservers.get(key);
     if (observer) {
-      let domElement = domInfoHelper.get(element);
+      const domElement = domInfoHelper.get(element);
       observer.observe(domElement, options);
     }
   }

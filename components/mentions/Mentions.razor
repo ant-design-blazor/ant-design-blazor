@@ -10,12 +10,12 @@
                     InlineFlexMode=false>
         <Overlay>
             <CascadingValue Value=this>
-                @if (OriginalOptions.Count > 0)
+                @if (ShowOptions.Count > 0)
                 {
                     <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
                         @foreach (var item in ShowOptions)
                         {
-                            <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
+                            <MentionsOption Value="@item.Value">@item.Display</MentionsOption>
                         }
                     </ul>
                 }
@@ -27,15 +27,29 @@
         </Overlay>
 
         <Unbound>
-            @*！！！！！！！！！！！这里不能缩进换行代码！！！！！！！！！！！！！！！*@
-            <div class="@ClassMapper.Class"><textarea value="@Value"
+            <div class="@ClassMapper.Class">
+                @if (TextareaTemplate == null)
+                {
+                    <textarea value="@Value"
                           @ref="context.Current"
                           @attributes="@Attributes"
                           @onkeydown="OnKeyDown"
-                          @oninput="OnInput" style="@Style"
+                          @oninput="OnInput"
+                          style="@Style"
                           class="rc-textarea"
                           placeholder="@Placeholder"
-                          rows="@Rows" /></div>
+                          rows="@Rows" />
+                }
+                else
+                {
+                    @TextareaTemplate(new MentionsTextareaTemplateOptions{
+                        Value = Value,
+                        OnInput = OnInput,
+                        OnKeyDown = OnKeyDown,
+                        RefBack = context
+                    });
+                }
+            </div>
         </Unbound>
     </OverlayTrigger>
 </CascadingValue>

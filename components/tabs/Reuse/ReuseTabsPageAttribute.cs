@@ -15,5 +15,11 @@ namespace AntDesign
         public bool Closable { get; set; } = true;
 
         public bool Pin { get; set; } = false;
+
+        public string PinUrl { get; set; }
+
+        public bool KeepAlive { get; set; } = true;
+
+        public int Order { get; set; } = 999;
     }
 }

@@ -1,0 +1,35 @@
+﻿<Flex Gap="middle" Align="start" Vertical>
+    <p>Select justify :</p>
+    <Segmented TValue="string" Labels="justifyOptions" @bind-Value="justify" />
+    <p>Select align :</p>
+    <Segmented Labels="alignOptions" @bind-Value="alignItems" />
+    <Flex style="@boxStyle" Justify="@justify" Align="@alignItems">
+        <Button Type="primary">Primary</Button>
+        <Button Type="primary">Primary</Button>
+        <Button Type="primary">Primary</Button>
+        <Button Type="primary">Primary</Button>
+    </Flex>
+</Flex>
+
+@code {
+    string boxStyle = "width:100%;height:120px;border-radius:6px;border:1px solid #40a9ff;";
+
+    string[] justifyOptions = [
+         "flex-start",
+        "center",
+        "flex-end",
+        "space-between",
+        "space-around",
+        "space-evenly",
+    ];
+
+    string[] alignOptions = [
+        "flex-start",
+        "center",
+        "flex-end"
+    ];
+
+    string justify;
+    string alignItems;
+
+}

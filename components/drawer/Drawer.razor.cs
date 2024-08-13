@@ -209,6 +209,12 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// EventCallback trigger on Visible was changed.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
+
+        /// <summary>
         /// Specify a callback that will be called before drawer displayed
         /// </summary>
         [Parameter]
@@ -229,7 +235,7 @@ namespace AntDesign
 
         private RenderFragment ContentTemplate { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         private ComponentStatus _status;
         private bool _hasInvokeClosed;
@@ -329,19 +335,13 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             _originalPlacement = Placement;
-
-            // TODO: remove
-            SetClass();
-
             base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
             SetClass();
-
             _drawerStyle = "";
-
             base.OnParametersSet();
         }
 
@@ -358,6 +358,11 @@ namespace AntDesign
                             await OnOpen.Invoke();
                         }
 
+                        if (Visible == false && VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(true);
+                        }
+
                         _hasInvokeClosed = false;
                         if (string.IsNullOrWhiteSpace(Style))
                         {
@@ -371,8 +376,8 @@ namespace AntDesign
                         CalcDrawerStyle();
                         StateHasChanged();
                         await Task.Delay(3000);
-                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) 
-                            ? $"transform: {OffsetTransform};" 
+                        _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
+                            ? $"transform: {OffsetTransform};"
                             : string.Empty;
                         StateHasChanged();
                         break;
@@ -380,18 +385,17 @@ namespace AntDesign
                 case ComponentStatus.Closing:
                     {
                         _status = ComponentStatus.Closed;
+                        StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
                             await HandleClose(true);
                         }
-                        await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                         break;
                     }
             }
             await base.OnAfterRenderAsync(isFirst);
         }
 
-        private Timer _timer;
         private int _zIndex = DefaultZIndez;
         private string _zIndexStyle = "";
 
@@ -401,7 +405,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task MaskClick(MouseEventArgs _)
         {
-            if (MaskClosable && Mask && OnClose.HasDelegate)
+            if (MaskClosable && Mask)
             {
                 await HandleClose();
             }
@@ -413,12 +417,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task CloseClick()
         {
-            if (OnClose.HasDelegate)
-            {
-                _timer?.Dispose();
-
-                await HandleClose();
-            }
+            await HandleClose();
         }
 
         /// <summary>
@@ -429,10 +428,15 @@ namespace AntDesign
         private async Task HandleClose(bool isChangeByParamater = false)
         {
             _hasInvokeClosed = true;
-            if (!isChangeByParamater)
+            if (!isChangeByParamater && OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(this);
             }
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(false);
+            }
+            await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
         }
 
         private void CalcDrawerStyle()
@@ -457,7 +461,11 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _timer?.Dispose();
+            if (_isOpen)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            }
+
             base.Dispose(disposing);
         }
     }

@@ -1,47 +1,41 @@
 ﻿@namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    @* There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu  *@
-    @if (RootMenu.Mode == MenuMode.Inline && ParentMenu is null)
+    @if (ShowTooltip)
     {
         <Tooltip TitleTemplate="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
             <Unbound Context="tooltip">
-                <li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key" @ref="tooltip.Current">
-                    @icon(this)
-                    <span class="ant-menu-title-content">
-                        @if (RouterLink == null)
-                        {
-                            @content(this)
-                        }
-                        else
-                        {
-                            <MenuLink Href="@RouterLink" Match="@RouterMatch">@content(this)</MenuLink>
-                        }
-                    </span>
-                </li>
+                @MenuItemContent(tooltip.Current)
             </Unbound>
         </Tooltip>
     }
     else
     {
-        <li class="@ClassMapper.Class" role="menuitem" style="@((PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"")+@Style)" @onclick="HandleOnClick" @key="Key">
-            @icon(this)
-            <span class="ant-menu-title-content">
-                @if (RouterLink == null)
-                {
-                    @content(this)
-                }
-                else
-                {
-                    <MenuLink Href="@RouterLink" Match="@RouterMatch">@content(this)</MenuLink>
-                }
-            </span>
-        </li>
+        @MenuItemContent(Ref)
     }
 </CascadingValue>
 
 @code {
+
+    RenderFragment MenuItemContent(ElementReference reference)
+    {
+        return @<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="reference">
+        @icon(this)
+        <span class="ant-menu-title-content">
+            @if (RouterLink == null)
+            {
+                @content(this)
+            }
+            else
+            {
+                <MenuLink Href="@RouterLink" Match="@RouterMatch">@content(this)</MenuLink>
+            }
+        </span>
+    </li>;
+    }
+
   RenderFragment<MenuItem> content = item =>
   @<Template>
     @if (item.Title != null)
@@ -68,5 +62,16 @@
         <Icon Type="@item.Icon" />
       }
     </Template>
-  ;
+      ;
+
+    void TitleContent(RenderTreeBuilder __builder)
+    {
+        @icon(this)
+        @content(this)
+    }
+
+    internal RenderFragment GetTitleContent()
+    {
+        return b => TitleContent(b);
+    }
 }

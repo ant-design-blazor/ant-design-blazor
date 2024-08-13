@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -81,7 +82,7 @@ namespace AntDesign.Internal
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
-        private bool _isChildOverlayShow = false;
+        private List<Overlay> _childrenToShow = new();
         private bool _mouseInOverlay = false;
 
         private bool _isOverlayFirstRender = true;
@@ -103,6 +104,7 @@ namespace AntDesign.Internal
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
+        private bool _afterFirstRender = false;
 
         protected override bool ShouldRender()
         {
@@ -137,6 +139,7 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
@@ -216,10 +219,15 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(true);
+            }
+
             await InvokeAsync(StateHasChanged);
 
             if (OnShow.HasDelegate)
-                OnShow.InvokeAsync(null);
+                _ = OnShow.InvokeAsync(null);
         }
 
         internal async Task Hide(bool force = false)
@@ -236,7 +244,7 @@ namespace AntDesign.Internal
             }
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
+            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0)))
             {
                 return;
             }
@@ -259,25 +267,55 @@ namespace AntDesign.Internal
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(false);
+            }
+
             StateHasChanged();
 
             if (OnHide.HasDelegate)
-                OnHide.InvokeAsync(null);
+                _ = OnHide.InvokeAsync(null);
         }
 
         internal void PreventHide(bool prevent)
         {
+            if (!prevent && _childrenToShow.Count > 0)
+            {
+                return;
+            }
             _isPreventHide = prevent;
+        }
+
+        internal void SetMouseInOverlay(bool mouseInOverlay)
+        {
+            _mouseInOverlay = mouseInOverlay;
         }
 
         /// <summary>
         /// set if there any child overlay show or hide
         /// overlay would not hide if any child is showing
         /// </summary>
+        /// <param name="child"></param>
         /// <param name="isChildOverlayShow"></param>
-        internal void UpdateChildState(bool isChildOverlayShow)
+        internal void UpdateChildState(Overlay child, bool isChildOverlayShow)
         {
-            _isChildOverlayShow = isChildOverlayShow;
+            if (isChildOverlayShow)
+                AddVisibleChild(child);
+            else
+                RemoveVisibleChild(child);
+        }
+
+        internal void AddVisibleChild(Overlay child)
+        {
+            if (!_childrenToShow.Contains(child))
+                _childrenToShow.Add(child);
+        }
+
+        internal void RemoveVisibleChild(Overlay child)
+        {
+            if (_childrenToShow.Contains(child))
+                _childrenToShow.Remove(child);
         }
 
         internal bool IsPopup()
@@ -308,6 +346,11 @@ namespace AntDesign.Internal
 
         private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (!_hasAddOverlayToBody)
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
@@ -335,7 +378,7 @@ namespace AntDesign.Internal
                     await Task.Delay(10);
                     await AddOverlayToBody(overlayLeft, overlayTop);
                 }
-                else
+                else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
                     _overlayStyle = _position.PositionCss + GetTransformOrigin();
@@ -401,11 +444,16 @@ namespace AntDesign.Internal
             {
                 return;
             }
-
-            ParentTrigger.GetOverlayComponent().UpdateChildState(visible);
+            var parentOverlay = ParentTrigger.GetOverlayComponent();
+            parentOverlay.UpdateChildState(this, visible);
 
             if (!visible)
             {
+                if (parentOverlay.IsContainTrigger(TriggerType.Click) || parentOverlay.IsContainTrigger(TriggerType.ContextMenu))
+                {
+                    parentOverlay.PreventHide(true);
+                    return;
+                }
                 await ParentTrigger.Hide();
             }
         }
@@ -459,7 +507,7 @@ namespace AntDesign.Internal
             }
         }
 
-        private int ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
+        private decimal ChangeOverlayLeftToRight(int left, HtmlElement overlay, HtmlElement container)
         {
             return container.ClientWidth - left - overlay.OffsetWidth;
         }

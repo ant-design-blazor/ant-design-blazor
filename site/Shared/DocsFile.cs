@@ -2,7 +2,7 @@
 {
     public class DocsFile
     {
-        public int Order { get; set; }
+        public float Order { get; set; }
 
         public string Title { get; set; }
 

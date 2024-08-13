@@ -4,12 +4,23 @@
 
 <h3>TestTabs</h3>
 
-<Button OnClick="ClosePage">关闭Counter1</Button>
-<Button OnClick="CloseOther">关闭其他</Button>
-<Button OnClick="CloseAll">关闭所有</Button>
-<Button OnClick="CloseCurrent">关闭当前</Button>
+<Button OnClick="ClosePage">Close Counter1</Button>
+<Button OnClick="CloseOther">Close Other</Button>
+<Button OnClick="CloseAll">Close All</Button>
+<Button OnClick="CloseCurrent">Close current</Button>
+<Button OnClick="Reload">Reload Current</Button>
+
+Render count: @count
 
 @code {
+    int count;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        count++;
+        base.OnAfterRender(firstRender);
+    }
+
     void ClosePage()
     {
         _reuseTabsService.ClosePage("/counter/1");
@@ -30,5 +41,8 @@
         _reuseTabsService.CloseCurrent();
     }
 
-
+    void Reload()
+    {
+        _reuseTabsService.ReloadPage();
+    }
 }

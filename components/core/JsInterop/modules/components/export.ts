@@ -7,3 +7,5 @@ export { modalHelper } from './modalHelper';
 export { inputHelper } from './inputHelper';
 export { tableHelper } from './tableHelper';
 export { iconHelper } from './iconHelper';
+export { imageHelper } from './imageHelper';
+export { watermarkHelper } from './watermarkHelper';

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
@@ -88,6 +89,7 @@ namespace AntDesign
         /// <summary>
         /// Callback executed when sider is changes from open to collapsed, regardless of what caused it
         /// </summary>
+        [Obsolete("Use CollapsedChanged instead")]
         [Parameter]
         public EventCallback<bool> OnCollapse { get; set; }
 
@@ -96,6 +98,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
+
+        [Parameter]
+        public bool DefaultCollapsed { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -146,12 +151,21 @@ namespace AntDesign
                 Trigger = DefaultTrigger;
             }
 
+            if (DefaultCollapsed)
+            {
+                Collapsed = true;
+            }
+
             SetClass();
         }
 
         internal void AddMenu(Menu menu)
         {
             _menu = menu;
+            if (_isCollapsed)
+            {
+                _menu.CollapseUpdated(true);
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -165,7 +179,7 @@ namespace AntDesign
             }
         }
 
-        private void OnResize(Window window)
+        internal void OnResize(Window window)
         {
             OptimizeSize(window.InnerWidth);
         }
@@ -224,11 +238,12 @@ namespace AntDesign
                 }
             }
 
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         protected override void Dispose(bool disposing)
         {
+            _menu = null;
             DomEventListener?.Dispose();
             base.Dispose(disposing);
         }

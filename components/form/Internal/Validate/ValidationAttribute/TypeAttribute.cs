@@ -35,7 +35,6 @@ namespace AntDesign.Internal.Form.Validate
                 FormFieldType.Regexp => IsRegexp(value),
                 FormFieldType.Array => value is Array,
                 FormFieldType.Object => value is object,
-                FormFieldType.Enum => value is Enum,
                 FormFieldType.Date => value is DateTime,
                 FormFieldType.Url => new UrlAttribute().IsValid(value),
                 FormFieldType.Email => new EmailAddressAttribute().IsValid(value),

@@ -6,9 +6,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
@@ -28,8 +31,14 @@ namespace AntDesign
     <seealso cref="TreeNode{TItem}" />
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg")]
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TItem))]
+#endif
     public partial class Tree<TItem> : AntDomComponentBase
     {
+        [CascadingParameter(Name = "TreeSelect")]
+        public ITreeSelect TreeSelect { get; set; }
+
         #region fields
 
         /// <summary>
@@ -41,6 +50,8 @@ namespace AntDesign
         /// All the checked nodes
         /// </summary>
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
+
+        private bool _nodeHasChanged;
 
         #endregion fields
 
@@ -126,7 +137,7 @@ namespace AntDesign
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)
-                .If("ant-tree-unselectable", () => !Selectable)
+                .If("ant-tree-unselectable", () => !Selectable && !CheckOnClickNode)
                 .If("ant-tree-rtl", () => RTL);
         }
 
@@ -156,10 +167,25 @@ namespace AntDesign
         /// Add a node
         /// </summary>
         /// <param name="treeNode"></param>
-        internal void AddNode(TreeNode<TItem> treeNode)
+        internal void AddChildNode(TreeNode<TItem> treeNode)
         {
             treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
+        }
+
+        internal void AddNode(TreeNode<TItem> treeNode)
+        {
+            _allNodes.Add(treeNode);
+            _nodeHasChanged = true;
+            CallAfterRender(() =>
+            {
+                if (_nodeHasChanged)
+                {
+                    _nodeHasChanged = false;
+                    TreeSelect?.UpdateValueAfterDataSourceChanged();
+                }
+                return Task.CompletedTask;
+            });
         }
 
         #endregion Node
@@ -181,21 +207,24 @@ namespace AntDesign
         [Parameter]
         public string[] DefaultSelectedKeys { get; set; }
 
-        /// <summary>
-        /// The selected tree node
-        /// </summary>
-        internal Dictionary<long, TreeNode<TItem>> SelectedNodesDictionary { get; set; } = new Dictionary<long, TreeNode<TItem>>();
+        [Parameter]
+        public string DefaultSelectedKey
+        {
+            get => DefaultSelectedKeys?.FirstOrDefault();
+            set
+            {
+                if (value == null)
+                    DefaultSelectedKeys = [];
+                DefaultSelectedKeys = [value];
+            }
+        }
 
-        internal List<string> SelectedTitles => SelectedNodesDictionary.Select(x => x.Value.Title).ToList();
-
         /// <summary>
-        /// Add the selected node
+        /// Trigger the event OnSelect
         /// </summary>
         /// <param name="treeNode"></param>
-        internal void SelectedNodeAdd(TreeNode<TItem> treeNode)
+        internal void TriggerOnSelect(TreeNode<TItem> treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == false)
-                SelectedNodesDictionary.Add(treeNode.NodeId, treeNode);
 
             if (OnSelect.HasDelegate)
             {
@@ -204,13 +233,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// remove the selected node
+        /// Trigger the event OnUnselect
         /// </summary>
         /// <param name="treeNode"></param>
-        internal void SelectedNodeRemove(TreeNode<TItem> treeNode)
+        internal void TriggerOnUnselect(TreeNode<TItem> treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
-                SelectedNodesDictionary.Remove(treeNode.NodeId);
 
             if (OnUnselect.HasDelegate)
             {
@@ -218,14 +245,35 @@ namespace AntDesign
             }
         }
 
+        public void SelectAll()
+        {
+            if (!Selectable || !Multiple)
+                return;
+            foreach (var item in _allNodes)
+            {
+                item.DoSelect(true, true, true);
+            }
+            UpdateSelectedKeys();
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Deselect all selections
         /// </summary>
         public void DeselectAll()
         {
-            foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
+            if (!Selectable)
+                return;
+            DoDeselectAll(true);
+            UpdateSelectedKeys();
+            StateHasChanged();
+        }
+
+        internal void DoDeselectAll(bool isManual)
+        {
+            foreach (var item in _allNodes.Where(r => r.Selected))
             {
-                item.SetSelected(false);
+                item.DoSelect(false, false, isManual);
             }
         }
 
@@ -233,7 +281,13 @@ namespace AntDesign
         /// @bind-SelectedKey
         /// </summary>
         [Parameter]
-        public string SelectedKey { get; set; }
+        public string SelectedKey
+        {
+            get => _selectedKey;
+            set => _selectedKey = value;
+        }
+
+        private string _selectedKey;
 
         /// <summary>
         ///
@@ -245,7 +299,13 @@ namespace AntDesign
         /// @bind-SelectedNode
         /// </summary>
         [Parameter]
-        public TreeNode<TItem> SelectedNode { get; set; }
+        public TreeNode<TItem> SelectedNode
+        {
+            get => _selectedNode;
+            set => _selectedNode = value;
+        }
+
+        private TreeNode<TItem> _selectedNode;
 
         [Parameter]
         public EventCallback<TreeNode<TItem>> SelectedNodeChanged { get; set; }
@@ -254,7 +314,13 @@ namespace AntDesign
         /// @bing-SelectedData
         /// </summary>
         [Parameter]
-        public TItem SelectedData { get; set; }
+        public TItem SelectedData
+        {
+            get => _selectedData;
+            set => _selectedData = value;
+        }
+
+        private TItem _selectedData;
 
         [Parameter]
         public EventCallback<TItem> SelectedDataChanged { get; set; }
@@ -263,52 +329,86 @@ namespace AntDesign
         ///
         /// </summary>
         [Parameter]
-        public string[] SelectedKeys { get; set; }
+        public string[] SelectedKeys
+        {
+            get => _selectedKeys;
+            set => _selectedKeys = value;
+        }
+
+        private string[] _selectedKeys;
 
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
+
+        internal string[] CachedSelectedKeys { get; set; }
 
         /// <summary>
         /// The collection of selected nodes
         /// </summary>
         [Parameter]
-        public TreeNode<TItem>[] SelectedNodes { get; set; }
+        public TreeNode<TItem>[] SelectedNodes
+        {
+            get => _selectedNodes;
+            set => _selectedNodes = value;
+        }
+
+        private TreeNode<TItem>[] _selectedNodes;
+
+        [Parameter]
+        public EventCallback<TreeNode<TItem>[]> SelectedNodesChanged { get; set; }
 
         /// <summary>
         /// The selected data set
         /// </summary>
         [Parameter]
-        public TItem[] SelectedDatas { get; set; }
+        public TItem[] SelectedDatas
+        {
+            get => _selectedDatas;
+            set => _selectedDatas = value;
+        }
+
+        private TItem[] _selectedDatas;
+
+        [Parameter]
+        public EventCallback<TItem[]> SelectedDatasChanged { get; set; }
 
         /// <summary>
         /// Update binding data
         /// </summary>
-        internal void UpdateBindData()
+        internal void UpdateSelectedKeys()
         {
-            if (SelectedNodesDictionary.Count == 0)
+            var selectedNodes = _allNodes.Where(r => r.Selected).ToList();
+            if (selectedNodes.Count == 0)
             {
-                SelectedKey = null;
-                SelectedNode = null;
-                SelectedData = default(TItem);
-                SelectedKeys = Array.Empty<string>();
-                SelectedNodes = Array.Empty<TreeNode<TItem>>();
-                SelectedDatas = Array.Empty<TItem>();
+                ResetSelectedKeys();
             }
             else
             {
-                var selectedFirst = SelectedNodesDictionary.FirstOrDefault();
-                SelectedKey = selectedFirst.Value?.Key;
-                SelectedNode = selectedFirst.Value;
-                SelectedData = selectedFirst.Value.DataItem;
-                SelectedKeys = SelectedNodesDictionary.Select(x => x.Value.Key).ToArray();
-                SelectedNodes = SelectedNodesDictionary.Select(x => x.Value).ToArray();
-                SelectedDatas = SelectedNodesDictionary.Select(x => x.Value.DataItem).ToArray();
+                var selectedFirst = selectedNodes.FirstOrDefault();
+                _selectedKey = selectedFirst?.Key;
+                _selectedNode = selectedFirst;
+                _selectedData = selectedFirst.DataItem;
+                _selectedKeys = selectedNodes.Select(x => x.Key).ToArray();
+                _selectedNodes = [.. selectedNodes];
+                _selectedDatas = selectedNodes.Select(x => x.DataItem).ToArray();
             }
 
-            if (SelectedKeyChanged.HasDelegate) SelectedKeyChanged.InvokeAsync(SelectedKey);
-            if (SelectedNodeChanged.HasDelegate) SelectedNodeChanged.InvokeAsync(SelectedNode);
-            if (SelectedDataChanged.HasDelegate) SelectedDataChanged.InvokeAsync(SelectedData);
-            if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(SelectedKeys);
+            if (SelectedKeyChanged.HasDelegate) SelectedKeyChanged.InvokeAsync(_selectedKey);
+            if (SelectedNodeChanged.HasDelegate) SelectedNodeChanged.InvokeAsync(_selectedNode);
+            if (SelectedDataChanged.HasDelegate) SelectedDataChanged.InvokeAsync(_selectedData);
+            if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(_selectedKeys);
+            if (SelectedNodesChanged.HasDelegate) SelectedNodesChanged.InvokeAsync(_selectedNodes);
+            if (SelectedDatasChanged.HasDelegate) SelectedDatasChanged.InvokeAsync(_selectedDatas);
+        }
+
+        private void ResetSelectedKeys()
+        {
+            _selectedKey = null;
+            _selectedNode = null;
+            _selectedData = default;
+            _selectedKeys = [];
+            _selectedNodes = [];
+            _selectedDatas = [];
         }
 
         #endregion Selected
@@ -322,12 +422,18 @@ namespace AntDesign
         public bool Checkable { get; set; }
 
         /// <summary>
+        /// Check or uncheck the node by click TreeNodeTitle if checkable
+        /// </summary>
+        [Parameter]
+        public bool CheckOnClickNode { get; set; } = true;
+
+        /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
         /// </summary>
         [Parameter]
         public bool CheckStrictly { get; set; }
 
-        private string[] _checkedKeys = Array.Empty<string>();
+        private string[] _checkedKeys = [];
 
         /// <summary>
         /// Checked  keys
@@ -336,18 +442,10 @@ namespace AntDesign
         public string[] CheckedKeys
         {
             get => _checkedKeys;
-            set
-            {
-                if (value == null)
-                {
-                    _checkedKeys = Array.Empty<string>();
-                }
-                else if (!value.SequenceEqual(_checkedKeys))
-                {
-                    _checkedKeys = value;
-                }
-            }
+            set => _checkedKeys = value;
         }
+
+        internal string[] CachedCheckedKeys { get; set; }
 
         /// <summary>
         ///  @bind-CheckedKeys
@@ -355,15 +453,19 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
 
-        /// <summary>
-        /// Checks all nodes
-        /// </summary>
+        internal void UpdateCheckedKeys()
+        {
+            _checkedKeys = _allNodes.Where(r => r.Checked).Select(r => r.Key).ToArray();
+            if (CheckedKeysChanged.HasDelegate) CheckedKeysChanged.InvokeAsync(_checkedKeys);
+        }
+
         public void CheckAll()
         {
             foreach (var item in ChildNodes)
             {
-                item.SetChecked(true);
+                item.CheckAllChildren();
             }
+            UpdateCheckedKeys();
         }
 
         /// <summary>
@@ -373,16 +475,9 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.SetChecked(false);
+                item.UnCheckAllChildren();
             }
-        }
-
-        public void SelectAll()
-        {
-            foreach (var item in ChildNodes)
-            {
-                item.SetSelected(true);
-            }
+            UpdateCheckedKeys();
         }
 
         /// <summary>
@@ -395,24 +490,6 @@ namespace AntDesign
         /// Disable node Checkbox
         /// </summary>
         public string[] DisableCheckKeys { get; set; }
-
-        /// <summary>
-        /// Adds or removes a checkbox node
-        /// </summary>
-        /// <param name="treeNode"></param>
-        internal void AddOrRemoveCheckNode(TreeNode<TItem> treeNode)
-        {
-            var old = _checkedKeys;
-            if (treeNode.Checked)
-                _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
-            else
-                _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
-
-            _checkedKeys = _checkedNodes.Select(x => x.Value.Key).ToArray();
-
-            if (!old.SequenceEqual(_checkedKeys) && CheckedKeysChanged.HasDelegate)
-                CheckedKeysChanged.InvokeAsync(_checkedKeys);
-        }
 
         #endregion Checkable
 
@@ -457,8 +534,17 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        [Parameter]
+        public bool HideUnmatched { get; set; }
+
         private void SearchNodes()
         {
+            if (string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; m.Hidden = false; });
+                return;
+            }
+
             var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
@@ -468,7 +554,7 @@ namespace AntDesign
             }
             else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                searchDatas = allList.Where(x => x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                searchDatas = allList.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
 
             if (searchDatas != null && searchDatas.Any())
@@ -476,12 +562,30 @@ namespace AntDesign
 
             if (exceptList?.Any() == true || searchDatas?.Any() == true)
             {
-                exceptList?.ForEach(m => { m.Expand(false); m.Matched = false; });
-                searchDatas?.ForEach(node => { node.OpenPropagation(); node.Matched = true; });
+                exceptList?.ForEach(m =>
+                {
+                    _ = m.Expand(false);
+                    m.Matched = false;
+                    if (HideUnmatched)
+                        m.Hidden = true;
+                });
+
+                foreach (TreeNode<TItem> matchedNode in searchDatas)
+                {
+                    matchedNode.OpenPropagation(true);
+                    matchedNode.Matched = true;
+                }
             }
             else
             {
-                allList.ForEach(m => { m.Expand(false); m.Matched = false; });
+                var hide = HideUnmatched && !string.IsNullOrWhiteSpace(_searchValue);
+                var expand = DefaultExpandAll && string.IsNullOrWhiteSpace(_searchValue);
+                allList.ForEach(m =>
+                {
+                    _ = m.Expand(expand);
+                    m.Matched = false;
+                    m.Hidden = hide;
+                });
             }
         }
 
@@ -531,6 +635,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
+
+        /// <summary>
+        /// Specifies a method to return a checkable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
 
         #endregion DataBind
 
@@ -655,32 +765,150 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override Task OnFirstAfterRenderAsync()
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            this.DefaultCheckedKeys?.ForEach(k =>
-            {
-                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
-                if (node != null)
-                    node.SetCheckedDefault(true);
-            });
+            IsSelectedKeysChanged(parameters, out var newSelectedKeys);
+            if (!parameters.IsParameterChanged(nameof(CheckedKeys), CheckedKeys, out var newCheckedKeys))
+                newCheckedKeys = null;
+            if (!parameters.IsParameterChanged(nameof(ExpandedKeys), ExpandedKeys, out var newExpandedKeys))
+                newExpandedKeys = null;
+            UpdateKeysByDataSource(parameters, ref newSelectedKeys, ref newCheckedKeys, ref newExpandedKeys);
 
-            this.DefaultSelectedKeys?.ForEach(k =>
+            await base.SetParametersAsync(parameters);
+
+            if (newExpandedKeys != null)
             {
-                var node = this._allNodes.FirstOrDefault(x => x.Key == k);
-                if (node != null)
-                    node.SetSelected(true);
-            });
-            if (!this.DefaultExpandAll)
-            {
-                this.DefaultExpandedKeys?.ForEach(k =>
+                if (_allNodes.Count == 0)
                 {
-                    var node = this._allNodes.FirstOrDefault(x => x.Key == k);
-                    if (node != null)
-                        node.OpenPropagation();
-                });
+                    CachedExpandedKeys = newExpandedKeys;
+                }
+                else
+                {
+                    _allNodes.ForEach(n => _ = n.DoExpand(newExpandedKeys != null && newExpandedKeys.Contains(n.Key)));
+                    await UpdateExpandedKeys();
+                }
             }
-            return base.OnFirstAfterRenderAsync();
+            if (newSelectedKeys != null && Selectable)
+            {
+                if (_allNodes.Count == 0)
+                {
+                    CachedSelectedKeys = newSelectedKeys;
+                }
+                else
+                {
+                    _allNodes.ForEach(n => n.DoSelect(newSelectedKeys != null && newSelectedKeys.Contains(n.Key), Multiple, false));
+                    UpdateSelectedKeys();
+                }
+            }
+            if (newCheckedKeys != null && Checkable)
+            {
+                if (_allNodes.Count == 0)
+                {
+                    CachedCheckedKeys = newCheckedKeys;
+                }
+                else
+                {
+                    _allNodes.ForEach(n => n.DoCheck(false, true, false));
+                    newCheckedKeys.ForEach(key => _allNodes.Where(n => n.Key == key).First()?.DoCheck(true, false, false));
+                    UpdateCheckedKeys();
+                }
+            }
         }
+
+        private bool _updateAllKeysAfterRender = true;
+
+        private void UpdateKeysByDataSource(ParameterView parameters, ref string[] newSelectedKeys, ref string[] newCheckedKeys, ref string[] newExpandedKeys)
+        {
+            if (parameters.IsParameterChanged(nameof(DataSource), DataSource))
+            {
+                // SelectedKeys
+                if (newSelectedKeys != null)
+                {
+                    CachedSelectedKeys = newSelectedKeys;
+                    newSelectedKeys = null;
+                }
+                else
+                {
+                    CachedSelectedKeys = GetReassignedSelectedKeys(parameters);
+                }
+                // CheckedKeys
+                if (newCheckedKeys != null)
+                {
+                    CachedCheckedKeys = newCheckedKeys;
+                    newCheckedKeys = null;
+                }
+                else
+                {
+                    if (IsParameterReassigned(parameters, nameof(CheckedKeys), CheckedKeys))
+                        CachedCheckedKeys = CheckedKeys;
+                    else
+                        CachedCheckedKeys = null;
+                }
+                // ExpandedKeys
+                if (newExpandedKeys != null)
+                {
+                    CachedExpandedKeys = newExpandedKeys;
+                    newExpandedKeys = null;
+                }
+                else
+                {
+                    if (IsParameterReassigned(parameters, nameof(ExpandedKeys), ExpandedKeys))
+                        CachedExpandedKeys = ExpandedKeys;
+                    else
+                        CachedExpandedKeys = null;
+                }
+                _allNodes.Clear();
+                ChildNodes.Clear();
+                ResetSelectedKeys();
+                CheckedKeys = [];
+                ExpandedKeys = [];
+                _updateAllKeysAfterRender = true;
+            }
+        }
+
+        private bool IsParameterReassigned<T>(ParameterView parameters,
+            string parameterName, T value)
+        {
+            var isChanged = parameters.IsParameterChanged(parameterName, value, out var newValue);
+            return !isChanged && newValue != null;
+        }
+
+        private string[] GetReassignedSelectedKeys(ParameterView parameters)
+        {
+            if (IsParameterReassigned(parameters, nameof(SelectedKeys), SelectedKeys))
+            {
+                return SelectedKeys;
+            }
+            if (IsParameterReassigned(parameters, nameof(SelectedKey), SelectedKey))
+            {
+                return [SelectedKey];
+            }
+            return null;
+        }
+
+        private bool IsSelectedKeysChanged(ParameterView parameters, out string[] newSelectedKeys)
+        {
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys, out newSelectedKeys))
+            {
+                return true;
+            }
+            else if (parameters.IsParameterChanged(nameof(SelectedKey), SelectedKey, out var newSelectedKey))
+            {
+                if (newSelectedKey == null)
+                    newSelectedKeys = null;
+                else
+                    newSelectedKeys = [newSelectedKey];
+                return true;
+            }
+            newSelectedKeys = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Get TreeNode from Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x => x.Key == key);
 
         /// <summary>
         /// Find Node
@@ -712,6 +940,12 @@ namespace AntDesign
         #region Expand
 
         /// <summary>
+        /// Expand or collapse the node by click TreeNodeTitle
+        /// </summary>
+        [Parameter]
+        public bool ExpandOnClickNode { get; set; } = false;
+
+        /// <summary>
         /// Whether to default to all nodes expanded or not
         /// </summary>
         /// <default value="false"/>
@@ -736,6 +970,17 @@ namespace AntDesign
         [Parameter]
         public string[] ExpandedKeys { get; set; }
 
+        internal string[] CachedExpandedKeys { get; set; }
+
+        internal async Task UpdateExpandedKeys()
+        {
+            ExpandedKeys = _allNodes.Where(x => x.Expanded).Select(x => x.Key).ToArray();
+            if (ExpandedKeysChanged.HasDelegate)
+            {
+                await ExpandedKeysChanged.InvokeAsync(ExpandedKeys);
+            }
+        }
+
         [Parameter]
         public EventCallback<string[]> ExpandedKeysChanged { get; set; }
 
@@ -748,48 +993,39 @@ namespace AntDesign
         /// <summary>
         /// Expand all nodes
         /// </summary>
-        public void ExpandAll()
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, true));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+            else
+                ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
 
         /// <summary>
         /// Collapse all nodes
         /// </summary>
-        public void CollapseAll()
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            this.ChildNodes.ForEach(node => Switch(node, false));
-        }
-
-        /// <summary>
-        /// 节点展开关闭
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="expanded"></param>
-        private void Switch(TreeNode<TItem> node, bool expanded)
-        {
-            node.Expand(expanded);
-            node.ChildNodes.ForEach(n => Switch(n, expanded));
+            if (predicate != null)
+                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+            else
+                ChildNodes.ForEach(node => _ = node.CollapseAll());
         }
 
         internal async Task OnNodeExpand(TreeNode<TItem> node, bool expanded, MouseEventArgs args)
         {
-            var expandedKeys = _allNodes.Select(x => x.Key).ToArray();
+            var expandedKeys = _allNodes.Where(x => x.Expanded).Select(x => x.Key).ToArray();
             if (OnNodeLoadDelayAsync.HasDelegate && expanded == true)
             {
                 node.SetLoading(true);
                 await OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
                 node.SetLoading(false);
+                StateHasChanged();
             }
 
             if (OnExpandChanged.HasDelegate)
             {
                 await OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(this, node, args));
-            }
-
-            if (ExpandedKeysChanged.HasDelegate)
-            {
-                await ExpandedKeysChanged.InvokeAsync(expandedKeys);
             }
 
             if (OnExpand.HasDelegate)
@@ -799,10 +1035,66 @@ namespace AntDesign
 
             if (AutoExpandParent && expanded)
             {
-                node.ParentNode?.Expand(true);
+                node.ParentNode?.DoExpand(true);
             }
         }
 
         #endregion Expand
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+
+        internal bool IsCtrlKeyDown { get; set; } = false;
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (TreeSelect is not null)
+                {
+                    IsCtrlKeyDown = true;
+                }
+                else
+                {
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keydown", OnKeyDown);
+                    DomEventListener.AddShared<KeyboardEventArgs>("document", "keyup", OnKeyUp);
+                }
+            }
+            if (_updateAllKeysAfterRender)
+            {
+                // Make sure keys updated after all nodes' OnInitialized.
+                if (_allNodes.FirstOrDefault(n => n.Selected) != null)
+                    UpdateSelectedKeys();
+                if (_allNodes.FirstOrDefault(n => n.Checked) != null)
+                    UpdateCheckedKeys();
+                if (_allNodes.FirstOrDefault(n => n.Expanded) != null)
+                    _ = UpdateExpandedKeys();
+                _updateAllKeysAfterRender = false;
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected virtual void OnKeyDown(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        protected virtual void OnKeyUp(KeyboardEventArgs eventArgs)
+        {
+            HanldeCtrlKeyPress(eventArgs);
+        }
+
+        private void HanldeCtrlKeyPress(KeyboardEventArgs eventArgs)
+        {
+            IsCtrlKeyDown = eventArgs.CtrlKey || eventArgs.MetaKey;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener?.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }

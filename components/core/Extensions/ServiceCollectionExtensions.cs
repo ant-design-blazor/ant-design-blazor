@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
 using System.Text.Encodings.Web;
 using AntDesign;
+using AntDesign.core.Services;
+using AntDesign.Filters;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,14 +29,19 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<NotificationService>();
+            services.TryAddScoped<INotificationService>(provider => provider.GetRequiredService<NotificationService>());
             services.TryAddScoped<MessageService>();
             services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+            services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
             services.TryAddScoped<ImageService>();
             services.TryAddScoped<ConfigService>();
-            services.TryAddSingleton<ReuseTabsService>();
+            services.TryAddScoped<ReuseTabsService>();
+            services.TryAddScoped<MenuService>();
+            services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
+            services.TryAddScoped<ClientDimensionService>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

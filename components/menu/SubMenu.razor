@@ -9,18 +9,20 @@
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
     <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style" @ref="Ref">
-        <div class="@(prefixCls)-title" style="padding-left: @(PaddingLeft)px; " role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
-            @if (TitleTemplate != null)
-            {
-                @TitleTemplate
-            }
-            else if (Title != null)
-            {
-                <span>@Title</span>
-            }
+        <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+            <span class="ant-menu-title-content">
+                @if (TitleTemplate != null)
+                {
+                    @TitleTemplate
+                }
+                else if (Title != null)
+                {
+                    @Title
+                }
+            </span>
             <i class="@(prefixCls)-arrow"></i>
         </div>
-        <ul direction="ltr" class="@SubMenuMapper.Class" role="menu" aria-expanded="@IsOpen">
+        <ul direction="ltr" class="@SubMenuMapper.Class" style="@_warpperStyle" @ref="@_warpperRef" role="menu" aria-expanded="@IsOpen">
             <CascadingValue Value="this" IsFixed="@true">
                 @ChildContent
             </CascadingValue>
@@ -45,20 +47,20 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             OnVisibleChange="OnOverlayVisibleChange"
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
-                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme} {prefixCls}-placement-{_placement.Name}")"
-                            OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
-                            OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
-                            OverlayHiddenCls="@($"{prefixCls}-hidden")">
+                            OverlayClassName="@PopupClassName"
+                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
                     <div class="@(prefixCls)-title" role="button">
-                        @if (TitleTemplate != null)
-                        {
-                            @TitleTemplate
-                        }
-                        else if (Title != null)
-                        {
-                            <span>@Title</span>
-                        }
+                        <span class="ant-menu-title-content">
+                            @if (TitleTemplate != null)
+                            {
+                                @TitleTemplate
+                            }
+                            else if (Title != null)
+                            {
+                                @Title
+                            }
+                        </span>
                         @GetArrow()
                     </div>
                 </ChildContent>
@@ -77,7 +79,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 @code
 {
     private RenderFragment GetArrow()
-    {        
+    {
         string prefixCls = $"{RootMenu.PrefixCls}-submenu";
         if (RootMenu.PrefixCls.Contains("dropdown"))
         {
@@ -91,8 +93,8 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
         }
         else if (Parent is AntDesign.SubMenu || RootMenu.Mode == MenuMode.Vertical)
         {
-            return @<i class="@(prefixCls)-arrow"></i>;    
-        }        
+            return @<i class="@(prefixCls)-arrow"></i>;
+        }
         return default;
     }
 }

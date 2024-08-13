@@ -6,6 +6,7 @@ namespace AntDesign
 {
     public class ReuseTabsLocale
     {
+        public string Reload { get; set; } = "Reload";
         public string Close { get; set; } = "Close";
         public string CloseAllButThis { get; set; } = "Close All But This";
         public string CloseAllTabs { get; set; } = "Close All Tabs";

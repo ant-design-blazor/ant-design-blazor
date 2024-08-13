@@ -115,5 +115,58 @@
     "previewFile": "Faili eelvaade",
     "downloadFile": "Laadige fail alla"
   },
-  "Empty": { "description": "Andmed puuduvad" }
+  "Empty": { "description": "Andmed puuduvad" },
+  "Form": {
+    "optional": "(valikuline)",
+    "defaultValidateMessages": {
+      "default": "${label} välja valideerimise viga",
+      "required": "Palun sisesta ${label}",
+      "enum": "${label} peab olema üks järgmistest: [${enum}]",
+      "whitespace": "${label} ei saa olla tühi märk",
+      "date": {
+        "format": "${label} kuupäevavorming on kehtetu",
+        "parse": "${label} ei saa kuupäevaks teisendada",
+        "invalid": "${label} on vale kuupäev"
+      },
+      "types": {
+        "string": "${label} ei ole kehtiv ${type}",
+        "method": "${label} ei ole kehtiv ${type}",
+        "array": "${label} ei ole kehtiv ${type}",
+        "object": "${label} ei ole kehtiv ${type}",
+        "number": "${label} ei ole kehtiv ${type}",
+        "date": "${label} ei ole kehtiv ${type}",
+        "boolean": "${label} ei ole kehtiv ${type}",
+        "integer": "${label} ei ole kehtiv ${type}",
+        "float": "${label} ei ole kehtiv ${type}",
+        "regexp": "${label} ei ole kehtiv ${type}",
+        "email": "${label} ei ole kehtiv ${type}",
+        "url": "${label} ei ole kehtiv ${type}",
+        "hex": "${label} ei ole kehtiv ${type}"
+      },
+      "string": {
+        "len": "${label} peab koosnema ${len} tähemärgist",
+        "min": "${label} peab olema vähemalt ${min} tähemärki",
+        "max": "${label} peab olema kuni ${max} tähemärki",
+        "range": "${label} peab olema vahemikus ${min}–${max} tähemärki"
+      },
+      "number": {
+        "len": "${label} must be equal to ${len}",
+        "min": "${label} peab olema vähemalt ${min}",
+        "max": "${label} peab olema maksimaalne ${max}",
+        "range": "${label} peab olema vahemikus ${min}–${max}"
+      },
+      "array": {
+        "len": "Peab olema ${len} ${label}",
+        "min": "Vähemalt ${min} ${label}",
+        "max": "Maksimaalselt ${max} ${label}",
+        "range": "${label} summa peab olema vahemikus ${min}–${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} ei vasta mustrile ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Eelvaade"
+  }
 }

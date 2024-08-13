@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace AntDesign.TableModels
 {
@@ -14,5 +16,7 @@ namespace AntDesign.TableModels
         public IList<TableFilter> Filters { get; }
 
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source);
+
+        public Expression<Func<TItem, bool>> FilterExpression<TItem>();
     }
 }

@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6;net7</TargetFrameworks>
+    <TargetFrameworks>net6;net7;net8</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="AntDesign.Charts" Version="0.5.5" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,22 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Compile Update="Resources\App.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>App.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\App.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>App.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

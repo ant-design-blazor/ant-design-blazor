@@ -2,14 +2,15 @@
 
 @attribute [Documentation(DocumentationCategory.Components, DocumentationType.Overview, null, Title = "Overview")]
 @implements IStaticComponentPage
-@inject ILanguageService LanguageService
+@inject IStringLocalizer<App> L
+@inject ILocalizationService LocalizationService
 @inject DemoService demoService
 
-@((MarkupString)LanguageService.Resources["app.components.overview.description"])
+@((MarkupString)L["app.components.overview.description"].Value)
 
 <Divider />
 
-<AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@LanguageService.Resources["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
+<AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@L["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
     <Suffix>
         <Icon Type="search" />
     </Suffix>
@@ -60,7 +61,7 @@
 }
 
 @code{
-    private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+    private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
     
     DemoMenuItem[] menuItems = { };
 
@@ -71,7 +72,7 @@
         var menu = await demoService.GetMenuAsync();
         menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
 
-        LanguageService.LanguageChanged += async (sender, args) =>
+        LocalizationService.LanguageChanged += async (sender, args) =>
         {
             var menu = await demoService.GetMenuAsync();
             menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();

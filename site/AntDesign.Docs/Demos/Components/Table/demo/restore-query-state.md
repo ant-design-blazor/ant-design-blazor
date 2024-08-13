@@ -1,5 +1,5 @@
 ﻿---
-order: 6.6
+order: 6.7
 title:
   en-US: Restore query state
   zh-CN: 筛选状态

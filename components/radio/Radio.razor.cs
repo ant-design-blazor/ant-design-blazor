@@ -88,6 +88,7 @@ namespace AntDesign
         /// <summary>
         /// Callback executed when the checked state changes
         /// </summary>
+        [Obsolete("Use CheckedChanged instead")]
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 

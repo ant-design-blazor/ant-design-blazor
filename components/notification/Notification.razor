@@ -7,12 +7,14 @@
     var configs = configKv.Value;
     var className = GetClassName(placement);
     var style = GetStyle(placement);
-    <div @key="placement" class="@className" style="@style" @ref="Ref">
-        <span>
-            @foreach (var itemConfig in configs)
-            {
-                <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem" />
-            }
-        </span>
+    <div @key="placement">
+        <div @key="placement" class="@className" style="@style" @ref="Ref">
+            <div>
+                @foreach (var itemConfig in configs)
+                {
+                    <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem"/>
+                }
+            </div>
+        </div>
     </div>
 }

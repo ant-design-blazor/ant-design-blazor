@@ -1,0 +1,27 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div style="position: relative; overflow: hidden; width: 100%; @Style" @ref="Ref" id="@Id" class="@Class">
+    @ChildContent
+    <div @ref="_watermarkContentRef" 
+        style=@($@"
+         z-index: {ZIndex};
+         position: absolute;
+         left: 0;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         width: 100%;
+         height: 100%;
+         background-size: {(Scrolling ? 0: Gap.X) + Width}px;
+         pointer-events: none;
+         background-repeat: {BackgroundRepeat};
+         background-image: url('{_backgroundImage}');
+         animation: {(Scrolling ? $"{(ScrollingSpeed * 4) / 60}s  ease 0s infinite normal none running watermark;":"none")};"
+         )>
+    </div>
+</div>
+
+<style>
+    @RandomMovingStyle()
+</style>

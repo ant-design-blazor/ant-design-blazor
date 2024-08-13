@@ -2,9 +2,9 @@
 
 namespace AntDesign
 {
-    public class DateTimeChangedEventArgs
+    public class DateTimeChangedEventArgs<TValue>
     {
-        public DateTime? Date { get; set; }
+        public TValue Date { get; set; }
         public string DateString { get; set; }
     }
 }

@@ -10,7 +10,7 @@
             <Radio Value="4">D</Radio>
         </RadioGroup>);
         cut.MarkupMatches(
-        @<div class="ant-radio-group ant-radio-group-outline" id:ignore>
+        @<div class="ant-radio-group" id:ignore>
             <label class="ant-radio-wrapper ant-radio-wrapper-checked" id:ignore>
                 <span class="ant-radio ant-radio-checked">
                     <input type="radio" class="ant-radio-input" value="1" name:ignore checked="">
@@ -83,10 +83,62 @@
     }
 
     [Fact]
+    public void Bind_default_null_value_radioGroup()
+    {
+        //Arrange
+        int? value = null;
+        var cut = Context.Render(@<RadioGroup @bind-Value="@value">
+        <Radio TValue="int?" Value="1">A</Radio>
+        <Radio TValue="int?" Value="2">B</Radio>
+        <Radio TValue="int?" Value="3">C</Radio>
+        <Radio TValue="int?" Value="4">D</Radio>
+        </RadioGroup>
+    );
+
+        var defaultCheckedElement = cut.FindAll(".ant-radio-checked");
+
+        var inputElement = cut.Find("[type=radio][value=2]");
+        //Act
+        inputElement.Click();
+
+        //Assert
+        defaultCheckedElement.Should().BeEmpty();
+        value.Should().Be(2);
+    }
+
+    [Fact]
+    public void set_value_to_null_radioGroup()
+    {
+        //Arrange
+        int? value = 1;
+        var cut = Context.Render<RadioGroup<int?>>(
+    @<RadioGroup @bind-Value="@value">
+        <Radio TValue="int?" Value="1">A</Radio>
+        <Radio TValue="int?" Value="2">B</Radio>
+        <Radio TValue="int?" Value="3">C</Radio>
+        <Radio TValue="int?" Value="4">D</Radio>
+        </RadioGroup>
+    );
+
+        var defaultValueChecked = cut.Find("[type=radio][value=1]").HasAttribute("checked");
+
+        cut.Instance.Value = null;
+        cut.Render();
+
+        cut.FindComponents<Radio<string>>().ForEach(x => x.Render());
+
+        // Assert
+        defaultValueChecked.Should().BeTrue();
+        cut.FindAll("[type=radio][checked]").Should().BeEmpty();
+    }
+
+
+    [Fact]
     public void Bind_Default_radioGroup()
     {
         //Arrange
-        var cut = Render<RadioGroup<int>>(@<RadioGroup DefaultValue="2">
+        var cut = Render<RadioGroup<int>>(
+    @<RadioGroup DefaultValue="2">
             <Radio Value="1">A</Radio>
             <Radio Value="2">B</Radio>
             <Radio Value="3">C</Radio>
@@ -171,4 +223,35 @@
         members[1].Instance.Disabled.Should().Be(!initGroupDisabled);
     }
 
+    [Fact]
+    public void Change_radio_list_and_binding_value_at_same_time()
+    {
+        // Arrange
+        var radioList = new[] { "1", "2", "3" };
+        var seletedValue = "1";
+        var cut = Render<RadioGroup<string>>(
+        @<RadioGroup @bind-Value="seletedValue">
+            @foreach (var item in radioList)
+                {
+                    <Radio Value="item" @key="item" />
+                }
+            </RadioGroup>
+    );
+
+        var defaultValueChecked = cut.Find("[type=radio][value=1]").HasAttribute("checked");
+
+        // Act
+        radioList = new[] { "2", "3", "4" };
+        seletedValue = "4";
+
+        cut.Instance.Value = seletedValue;
+        cut.Render();
+
+        cut.WaitForElement("[type=radio][value=4]");
+        cut.FindComponents<Radio<string>>().ForEach(x => x.Render());
+
+        // Assert
+        defaultValueChecked.Should().BeTrue();
+        cut.Find("[type=radio][value=4]").HasAttribute("checked").Should().BeTrue();
+    }
 }

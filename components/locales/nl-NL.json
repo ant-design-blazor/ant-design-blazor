@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Terug" },
   "Form": {
+    "optional": "(optioneel)",
     "defaultValidateMessages": {
       "default": "Validatiefout ${label}",
       "required": "${label} is verplicht",
@@ -238,6 +239,6 @@
     }
   },
   "Image": {
-    "preview": "Preview"
+    "preview": "Voorbeeld"
   }
 }

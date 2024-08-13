@@ -1,0 +1,18 @@
+﻿<div>
+    onchange:
+    <Input Placeholder="onblur change" @bind-Value="@txtValue"  />
+    <br />
+    <br />
+    oninput:
+    <Input Placeholder="oninput change" @bind-Value="@txtValue" BindOnInput />
+    <br />
+    <br />
+    oninput without debounce:
+    <Input Placeholder="oninput change" @bind-Value="@txtValue" DebounceMilliseconds="0" />
+    <br />
+    <br />
+    <Text>@txtValue</Text>
+</div>
+@code{
+    string txtValue { get; set; }
+}

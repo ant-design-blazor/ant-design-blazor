@@ -1,4 +1,5 @@
-﻿using AntDesign.TableModels;
+﻿using System.Linq;
+using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -8,11 +9,15 @@ namespace AntDesign
 
         public string FieldName { get; }
 
-        public string Format { get; }
+        public string Format { get; set; }
 
-        public bool Sortable { get; }
+        public bool Sortable { get; set; }
 
-        public int SorterMultiple { get; }
+        public bool Filterable { get; set; }
+
+        public int SorterMultiple { get; set; }
+
+        public bool Grouping { get; set; }
 
         public ITableSortModel SortModel { get; }
 
@@ -25,5 +30,7 @@ namespace AntDesign
         internal void SetFilterModel(ITableFilterModel filterModel);
 
         internal void SetSortModel(ITableSortModel sortModel);
+
+        internal IQueryable<IGrouping<object, TItem>> Group<TItem>(IQueryable<TItem> source);
     }
 }

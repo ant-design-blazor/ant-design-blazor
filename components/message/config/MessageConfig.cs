@@ -7,6 +7,8 @@ namespace AntDesign
 {
     public class MessageConfig
     {
+        internal int Order { get; set; }
+
         internal string AnimationClass { get; set; } = MessageAnimationType.Enter;
 
         internal CancellationTokenSource Cts { get; set; }

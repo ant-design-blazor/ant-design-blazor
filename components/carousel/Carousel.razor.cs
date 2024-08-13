@@ -94,6 +94,12 @@ namespace AntDesign
         [Parameter]
         public string Effect { get; set; } = CarouselEffect.ScrollX;
 
+        [Parameter]
+        public bool Dots { get; set; }
+
+        [Parameter]
+        public string DotsClass { get; set; }
+
         #endregion Parameters
 
         [Inject] 

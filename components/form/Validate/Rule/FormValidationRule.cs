@@ -35,6 +35,7 @@ namespace AntDesign
         /// Custom error message. Will be auto generated if not provided.
         /// </summary>
         public string Message { get; set; }
+        public (double Min, double Max)? Range { get; set; }
 
         /// <summary>
         /// Validate rule for all array elements. Valid <see cref="Type"/>s: Array. (<c>FormItem</c> not supported now)
@@ -45,6 +46,7 @@ namespace AntDesign
         /// Whether the value is in specified values
         /// </summary>
         public object[] OneOf { get; set; }
+        public Type Enum { get; set; }
 
         /// <summary>
         /// Validate rule for child elements. Valid <see cref="Type"/>s: Array, Object (<c>FormItem</c> not supported now)
@@ -64,7 +66,8 @@ namespace AntDesign
         /// <summary>
         /// Type of form field. See <see cref="FormFieldType"/> for all possible values.
         /// </summary>
-        /// <default value="FormFieldType.String"/>
-        public FormFieldType Type { get; set; } = FormFieldType.String;
+        public FormFieldType? Type { get; set; }
+
+        public ValidationAttribute ValidationAttribute { get; set; }
     }
 }

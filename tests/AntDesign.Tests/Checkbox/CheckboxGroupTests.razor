@@ -2,40 +2,40 @@
 @code {
 	string[] plainOptions = { "Apple", "Pear", "Orange" };
 
-    CheckboxOption[] options = new CheckboxOption[]
+    CheckboxOption<string>[] options = new CheckboxOption<string>[]
     {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear"},
-        new CheckboxOption {Label = "Orange", Value = "Orange"},
+        new() {Label = "Apple", Value = "Apple"},
+        new() {Label = "Pear", Value = "Pear"},
+        new() {Label = "Orange", Value = "Orange"},
     };
 	
 
 	[Fact]
 	public void Renders_CheckboxGroup_From_StringArray()
 	{
-		var cut = Render(@<CheckboxGroup Options="@plainOptions"/>);
-		cut.MarkupMatches(
-			@<div class="ant-checkbox-group" id:ignore>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+		var cut = Render(@<CheckboxGroup TValue="string" Options="@plainOptions"/>);
+        cut.MarkupMatches(
+            @<div class="ant-checkbox-group" id:ignore>
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Apple" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Apple</span></span>
+					<span>Apple</span>
 				</label>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Pear" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Pear</span></span>
+					<span>Pear</span>
 				</label>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Orange" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Orange</span></span>
+					<span>Orange</span>
 				</label>
 			</div>);
 	}
@@ -43,29 +43,29 @@
 	[Fact]
 	public void Renders_CheckboxGroup_From_CheckboxOptionArray()
 	{
-		var cut = Render(@<CheckboxGroup Options="@options"/>);
+		var cut = Render(@<CheckboxGroup TValue="string" Options="@options"/>);
 		cut.MarkupMatches(
 			@<div class="ant-checkbox-group" id:ignore>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+				<label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Apple" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Apple</span></span>
+					<span>Apple</span>
 				</label>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Pear" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Pear</span></span>
+					<span>Pear</span>
 				</label>
-				<label class="ant-checkbox-wrapper" for:ignore>
-					<span class="ant-checkbox-group-item ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
+					<span class="ant-checkbox">
 						<input id:ignore type="checkbox" value="Orange" class="ant-checkbox-input">
 						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span><span>Orange</span></span>
+					<span>Orange</span>
 				</label>
 			</div>);
 	}
@@ -76,7 +76,7 @@
 		//Arrange		
 		string[] selectedValues = Array.Empty<string>();
 		Action<string[]> onChangeHandler = value => { selectedValues = value; };
-		var cut = Render(@<CheckboxGroup Options="@options" OnChange="onChangeHandler"/>);
+		var cut = Render(@<CheckboxGroup TValue="string" Options="@options" OnChange="onChangeHandler"/>);
 		var inputElement = cut.Find("[type=checkbox]");
 		//Act
 		inputElement.Change(true);
@@ -91,7 +91,7 @@
 	{
 		//Arrange				
 		var cut = Render(
-			@<CheckboxGroup Options="@(new string[] {"A"})" MixedMode=@mode>
+			@<CheckboxGroup TValue="string" Options="@(new string[] {"A"})" MixedMode=@mode>
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>
 			);
@@ -108,7 +108,7 @@
 		Action<string[]> onChangeHandler = value => { selectedValues = value; };
 		
 		var cut = Render(
-			@<CheckboxGroup Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixedMode=@CheckboxGroupMixedMode.OptionsFirst>
+			@<CheckboxGroup TValue="string" Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixedMode=@CheckboxGroupMixedMode.OptionsFirst>
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>
 	);
@@ -128,8 +128,8 @@
 		//Arrange				
 		string[] values = new[] { "A", "B" };
 		//Act
-		var cut = Render<CheckboxGroup>(
-			@<CheckboxGroup Options="@(new string[] {"A"})" Value="@values">
+		var cut = Render<CheckboxGroup<string>>(
+			@<CheckboxGroup TValue="string" Options="@(new string[] {"A"})" Value="@values">
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>);
 		var inputElements = cut.FindComponents<Checkbox>();
@@ -145,8 +145,8 @@
 		//Arrange				
 		string[] values = new[] { "Pear" };
 		//Act
-		var cut = Render<CheckboxGroup>(
-			@<CheckboxGroup Options="@options" Value="@values"/>);
+		var cut = Render<CheckboxGroup<string>>(
+			@<CheckboxGroup TValue="string" Options="@options" Value="@values"/>);
 		var inputElements = cut.FindComponents<Checkbox>();
 		var actual = inputElements.Where(e => e.Instance.Checked)
 			.Select(e => e.Instance.Label).ToArray();

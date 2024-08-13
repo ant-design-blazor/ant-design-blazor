@@ -19,14 +19,15 @@ namespace AntDesign
         /// Default validation message for the Required rule
         /// </summary>
         public string Required { get; set; } = "'{0}' is required";
-
-        /// <summary>
-        /// Default validation message for the OneOf rule
-        /// </summary>
-        public string OneOf { get; set; } = "'{0}' must be one of [{1}]";
-
-        [Obsolete("Currently unused")]
+        public string Enum { get; set; } = "'{0}' must be one of [{1}]";
         public string Whitespace { get; set; } = "'{0}' cannot be empty";
+
+        public DateMessage Date { get; set; } = new()
+        {
+            Format = "'{0}' date format is invalid",
+            Parse = "'{0}' cannot be converted to a date",
+            Invalid = "'{0}' is an invalid date",
+        };
 
         /// <summary>
         /// Messages for when a field's type does not match the expected type
@@ -36,7 +37,6 @@ namespace AntDesign
             String = _typeTemplate,
             Array = _typeTemplate,
             Object = _typeTemplate,
-            Enum = _typeTemplate,
             Number = _typeTemplate,
             Date = _typeTemplate,
             Boolean = _typeTemplate,
@@ -50,7 +50,7 @@ namespace AntDesign
         /// <summary>
         /// Messages for string type
         /// </summary>
-        public StringMessage String { get; set; } = new()
+        public CompareMessage String { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} characters",
             Min = "'{0}' must be at least {1} characters",
@@ -59,9 +59,9 @@ namespace AntDesign
         };
 
         /// <summary>
-        /// Messages for number type
+        /// Messages for string type
         /// </summary>
-        public NumberMessage Number { get; set; } = new()
+        public CompareMessage Number { get; set; } = new()
         {
             Len = "'{0}' must equal {1}",
             Min = "'{0}' cannot be less than {1}",
@@ -72,7 +72,7 @@ namespace AntDesign
         /// <summary>
         /// Messages for array type
         /// </summary>
-        public ArrayMessage Array { get; set; } = new()
+        public CompareMessage Array { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} in length",
             Min = "'{0}' cannot be less than {1} in length",
@@ -100,7 +100,6 @@ namespace AntDesign
                 FormFieldType.Float => Types.Float,
                 FormFieldType.Array => Types.Array,
                 FormFieldType.Object => Types.Object,
-                FormFieldType.Enum => Types.Enum,
                 FormFieldType.Date => Types.Date,
                 FormFieldType.Url => Types.Url,
                 FormFieldType.Email => Types.Email,
@@ -114,7 +113,6 @@ namespace AntDesign
             public string String { get; set; }
             public string Array { get; set; }
             public string Object { get; set; }
-            public string Enum { get; set; }
             public string Number { get; set; }
             public string Date { get; set; }
             public string Boolean { get; set; }
@@ -125,30 +123,12 @@ namespace AntDesign
             public string Url { get; set; }
         }
 
-        public class StringMessage
+        public class CompareMessage
         {
             public string Len { get; set; }
             public string Min { get; set; }
             public string Max { get; set; }
             public string Range { get; set; }
-        }
-
-        public class NumberMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
-        }
-
-        public class ArrayMessage
-        {
-            public string Len { get; set; }
-            public string Min { get; set; }
-            public string Max { get; set; }
-            public string Range { get; set; }
-
         }
 
         public class PatternMessage

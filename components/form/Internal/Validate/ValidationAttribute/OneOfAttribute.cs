@@ -9,18 +9,27 @@ namespace AntDesign.Internal.Form.Validate
     {
         internal object[] Values { get; set; }
 
-        internal OneOfAttribute(object[] values)
+        internal string EnumOptions { get; set; }
+
+        internal OneOfAttribute(object[] values, string[] enumOptions = null)
         {
             Values = values;
+            EnumOptions = enumOptions != null ? string.Join(",", enumOptions) : null;
         }
 
         public override string FormatErrorMessage(string name)
         {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, JsonSerializer.Serialize(Values));
+            var options = EnumOptions ?? JsonSerializer.Serialize(Values).Trim('[', ']');
+            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, options);
         }
 
         public override bool IsValid(object value)
         {
+            if (value == null)
+            {
+                return true;
+            }
+
             if (value is Array)
             {
                 return false;

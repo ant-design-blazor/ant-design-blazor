@@ -15,14 +15,14 @@ namespace AntDesign.Docs.Highlight
 
         public async ValueTask<MarkupString> HighlightAsync(string code, string language)
         {
-            string highlighted = await jsRuntime.InvokeAsync<string>("AntDesign.Prism.highlight", code, language);
+            string highlighted = await jsRuntime.InvokeAsync<string>("XPrism.highlight", code, language);
 
             return new MarkupString(highlighted);
         }
 
         public async Task HighlightAllAsync()
         {
-            await jsRuntime.InvokeVoidAsync("AntDesign.Prism.highlightAll");
+            await jsRuntime.InvokeVoidAsync("XPrism.highlightAll");
         }
     }
 }

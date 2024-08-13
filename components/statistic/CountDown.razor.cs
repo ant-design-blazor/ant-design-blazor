@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -45,53 +46,66 @@ namespace AntDesign
         [Parameter]
         public int RefreshInterval { get; set; } = REFRESH_INTERVAL;
 
-        private Timer _timer;
-
-        private const int REFRESH_INTERVAL = 100;
+        private const int REFRESH_INTERVAL = 1000 / 10;
 
         private TimeSpan _countDown = TimeSpan.Zero;
+        private CancellationTokenSource _cts = new();
+        private bool _firstAfterRender;
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            SetTimer();
-        }
-
-        private void SetTimer()
+        protected override async Task OnInitializedAsync()
         {
             _countDown = Value - DateTime.Now;
-            _timer = new Timer(StartCountDownForTimeSpan);
-            _timer.Change(0, RefreshInterval);
+            await base.OnInitializedAsync();
         }
 
-        private void StartCountDownForTimeSpan(object o)
+        protected override void OnAfterRender(bool firstRender)
         {
-            _countDown = _countDown.Add(TimeSpan.FromMilliseconds(-RefreshInterval));
-            if (_countDown.Ticks <= 0)
+            if (firstRender)
             {
-                _countDown = TimeSpan.Zero;
-                _timer.Dispose();
-                if (OnFinish.HasDelegate)
-                {
-                    InvokeAsync(() => OnFinish.InvokeAsync(o));
-                }
+                _firstAfterRender = true;
+                _ = StartCountDownForTimeSpan();
             }
-            InvokeStateHasChanged();
+            base.OnAfterRender(firstRender);
+        }
+
+        private async Task StartCountDownForTimeSpan()
+        {
+            if (!_firstAfterRender)
+            {
+                return;
+            }
+            if (_cts.Token.IsCancellationRequested)
+            {
+                _cts = new();
+            }
+            while (!_cts.Token.IsCancellationRequested)
+            {
+                _countDown = Value - DateTime.Now;
+
+                if (_countDown.Ticks <= 0)
+                {
+                    _countDown = TimeSpan.Zero;
+                    if (OnFinish.HasDelegate)
+                    {
+                        await OnFinish.InvokeAsync(this);
+                    }
+                    _cts.Cancel();
+                    break;
+                }
+
+                InvokeStateHasChanged();
+                await Task.Delay(RefreshInterval, _cts.Token);
+            }
         }
 
         public void Reset()
         {
-            //避免初始化时调用Reset
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                SetTimer();
-            }
+            _ = StartCountDownForTimeSpan();
         }
 
         protected override void Dispose(bool disposing)
         {
-            _timer?.Dispose();
+            _cts?.Cancel();
             base.Dispose(disposing);
         }
     }

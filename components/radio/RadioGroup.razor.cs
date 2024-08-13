@@ -4,12 +4,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TValue))]
+#endif
+
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
         [Inject]
@@ -43,7 +48,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="RadioButtonStyle.Outline"/>
         [Parameter]
-        public RadioButtonStyle ButtonStyle { get; set; } = RadioButtonStyle.Outline;
+        public RadioButtonStyle? ButtonStyle { get; set; }
 
         /// <summary>
         /// Input name for all the radios in the group
@@ -77,6 +82,8 @@ namespace AntDesign
         [Parameter]
         public OneOf<string[], RadioOption<TValue>[]> Options { get; set; }
 
+        private bool IsButton => ButtonStyle.HasValue;
+
         private bool _disabled;
         private Action<bool> OnDisabledValueChanged { get; set; }
 
@@ -86,6 +93,7 @@ namespace AntDesign
         private bool _defaultValueSetted;
 
         private readonly List<Radio<TValue>> _radioItems = new();
+        private Radio<TValue> _selectedRadio;
 
         private static readonly Dictionary<RadioButtonStyle, string> _buttonStyleDics = new()
         {
@@ -99,7 +107,7 @@ namespace AntDesign
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
-                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle]}", () => ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
+                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle.Value]}", () => ButtonStyle.HasValue && ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
@@ -113,7 +121,7 @@ namespace AntDesign
 
             if (string.IsNullOrEmpty(Name))
             {
-                Name = PropertyName ?? ComponentIdGenerator.Generate(this);
+                Name = NameAttributeValue ?? PropertyName ?? ComponentIdGenerator.Generate(this);
             }
         }
 
@@ -133,8 +141,7 @@ namespace AntDesign
             }
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
-                await radio.Select();
-                StateHasChanged();
+                OnValueChange(radio.Value);
             }
         }
 
@@ -144,20 +151,31 @@ namespace AntDesign
             OnDisabledValueChanged -= radio.SetDisabledValue;
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnValueChange(TValue value)
         {
+            if (_selectedRadio != null && EqualsValue(CurrentValue, _selectedRadio.Value))
+            {
+                return;
+            }
+
+            _ = _selectedRadio?.UnSelect();
+            _selectedRadio = null;
+
             foreach (var radio in _radioItems)
             {
                 if (EqualsValue(this.CurrentValue, radio.Value))
                 {
-                    await radio.Select();
+                    _ = radio.Select();
+                    _selectedRadio = radio;
                 }
                 else
                 {
-                    await radio.UnSelect();
+                    _ = radio.UnSelect();
                 }
             }
-            await base.OnParametersSetAsync();
+
+            // refresh ui in modal
+            InvokeStateHasChanged();
         }
 
         internal async Task OnRadioChange(TValue value)

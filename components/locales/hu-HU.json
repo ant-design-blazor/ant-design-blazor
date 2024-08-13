@@ -116,5 +116,8 @@
     "previewFile": "Fájl előnézet",
     "downloadFile": "Fájl letöltése"
   },
-  "Empty": { "description": "Nincs adat" }
+  "Empty": { "description": "Nincs adat" },
+  "Form": {
+    "optional": "(optional)"
+  }
 }

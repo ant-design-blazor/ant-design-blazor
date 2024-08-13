@@ -17,18 +17,24 @@ namespace AntDesign
         public string Key { get; set; }
 
         [Parameter]
-        public bool CheckStrictly { get; set; }
+        public bool CheckStrictly { get; set; } = true;
 
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
         private bool Indeterminate => IsHeader
-                                      && !Table.AllSelected
-                                      && Table.AnySelected;
+                                   && Table.AnySelected
+                                   && !Table.AllSelected;
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
-        private bool IsHeaderDisabled => RowSelections.All(x => x.Disabled);
+        //private int[] _selectedIndexes;
+
+        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
+
+        public bool Selected => DataItem.Selected;
+
+        private bool? _selected;
 
         private void OnCheckedChange(bool selected)
         {
@@ -47,12 +53,11 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table.SetSelection(new[] { Key });
+                    Table.SetSelection(this);
                 }
                 else
                 {
-                    RowData.Selected = selected;
-                    Table.Selection.StateHasChanged();
+                    RowData.SetSelected(selected, CheckStrictly);
                 }
             }
         }
@@ -74,20 +79,21 @@ namespace AntDesign
             else if (IsBody)
             {
                 Table?.Selection?.RowSelections.Add(this);
+                DataItem.Disabled = Disabled;
             }
         }
 
-        protected override void OnParametersSet()
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
+        private void HandleSelected()
         {
-            base.OnParametersSet();
-            //if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
-            //{
-            //    var first = RowSelections.FirstOrDefault(x => x.Checked);
-            //    if (first != null)
-            //    {
-            //        Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.SetSelected(false));
-            //    }
-            //}
+            // avoid check the disabled one but allow default checked
+            if (Disabled && _selected.HasValue)
+            {
+                DataItem.SetSelected(_selected.Value);
+            }
+
+            _selected = DataItem.Selected;
         }
 
         void ISelectionColumn.StateHasChanged()
@@ -102,7 +108,7 @@ namespace AntDesign
         {
             if (!IsHeader)
             {
-                Table.Selection.RowSelections.Remove(this);
+                Table?.Selection?.RowSelections?.Remove(this);
             }
 
             base.Dispose(disposing);

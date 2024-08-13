@@ -45,7 +45,7 @@ namespace AntDesign
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>
         [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.None;
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         /// <summary>
         /// Change value on each selection if set to true, only chage on final selection if false.
@@ -139,6 +139,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public Placement Placement { get; set; }
+
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
@@ -175,9 +178,10 @@ namespace AntDesign
         {
             base.OnInitialized();
             string prefixCls = "ant-cascader";
+            string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-allow-clear ant-select-show-arrow")
+                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
                 .Add($"{prefixCls}-picker")
                 .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
                 .If("ant-select-open", () => _dropdownOpened)
@@ -187,7 +191,10 @@ namespace AntDesign
                 .If($"ant-select-lg", () => Size == "large")
                 .If($"ant-select-sm", () => Size == "small")
                 .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-status-error", () => ValidationMessages.Length > 0)
+                .If("ant-select-allow-clear ", () => AllowClear)
+                .If($"{selectCls}-in-form-item ", () => FormItem != null)
+                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper

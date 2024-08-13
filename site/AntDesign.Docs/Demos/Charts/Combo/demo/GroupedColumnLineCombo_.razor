@@ -5,13 +5,13 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <GroupedColumnLine Data="@(new[] {uvBillData, transformData})" Config="config1" />
+            <DualAxes Data="@(new[] {uvBillData, transformData})" Config="config1" />
             </ChildContent>
         </TabPane>
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <GroupedColumnLine Data="@(new[] {uvBillData_2, transformData_2})" Config="config2" />
+            <DualAxes Data="@(new[] {uvBillData_2, transformData_2})" Config="config2" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -43,7 +43,7 @@
         new {time = "2019-07", count = 220}
     };
 
-    readonly GroupedColumnLineConfig config1 = new GroupedColumnLineConfig
+    readonly DualAxesConfig config1 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -59,7 +59,23 @@
         },
         XField = "time",
         YField = new[] {"value", "count"},
-        ColumnGroupField = "type"
+        GeometryOptions = new object[]
+        {
+            new
+            {
+                Geometry = "column",
+                IsGroup = true,
+                seriesField = "type"
+            },
+            new
+            {
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2
+                }
+            },
+        },
     };
 
     #endregion 示例1
@@ -99,7 +115,7 @@
           new { time =  "2019-07", count =  200, name =  "c" },
     };
 
-    readonly GroupedColumnLineConfig config2 = new GroupedColumnLineConfig
+    readonly DualAxesConfig config2 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -115,8 +131,23 @@
         },
         XField = "time",
         YField = new[] { "value", "count" },
-        ColumnGroupField = "type",
-        LineSeriesField = "name"
+        GeometryOptions = new object[]
+        {
+            new
+            {
+                Geometry = "column",
+                IsGroup = true,
+                seriesField = "type"
+            },
+            new
+            {
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2
+                }
+            },
+        },
     };
 
     #endregion 示例2

@@ -10,7 +10,7 @@ namespace AntDesign.Core.HashCodes
     /// Represents a parameter descriptor for a component
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
-    class ParameterDescriptor<TComponent>
+    internal class ParameterDescriptor<TComponent>
     {
         private readonly bool _isParameter;
 

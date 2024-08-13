@@ -138,5 +138,8 @@
   },
   "PageHeader": {
     "back": "Назад"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

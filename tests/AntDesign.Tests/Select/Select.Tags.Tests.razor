@@ -27,7 +27,8 @@
         var cut = Render<AntDesign.Select<string, string>>(
         @<AntDesign.Select Mode="tags"
 			TItemValue="string"
-			TItem="string"		
+			TItem="string"
+            SearchDebounceMilliseconds="0"
 			EnableSearch>
 			<SelectOptions>						
 				<SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="1" />			
@@ -71,26 +72,54 @@
 						<SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />									
 					}
 				</SelectOptions>
-			</AntDesign.Select>
-		);
-		//Act
+            </AntDesign.Select>
+    );
+        //Act
 
-		//TOOD: When using @bind-Values, bUnit does not render the selected items. This 
-		//		Requires investigation - more likely scenario is that Select components
-		//		should be refactored.
-		cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));   		
-		//Assert
-		var items = cut.Find("div.ant-select-selection-overflow").Children;
-		var tags = items.Where(i => i.ClassList.Count() == 1);
-		var rest = items.Filter(".ant-select-selection-overflow-item-rest");
-		var input = items.Filter(".ant-select-selection-overflow-item-suffix");
+        //TOOD: When using @bind-Values, bUnit does not render the selected items. This 
+        //		Requires investigation - more likely scenario is that Select components
+        //		should be refactored.
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));   		
+        //Assert
+        var items = cut.Find("div.ant-select-selection-overflow").Children;
+        var tags = items.Where(i => i.ClassList.Count() == 1);
+        var rest = items.Filter(".ant-select-selection-overflow-item-rest");
+        var input = items.Filter(".ant-select-selection-overflow-item-suffix");
 
-		items.Should().HaveCount(4);
-		tags.Should().HaveCount(2);
-		rest.Should().HaveCount(1);
-		rest.ElementAt(0).GetAttribute("style").Should().Contain("order: 5");
-		input.Should().HaveCount(1);
-		input.ElementAt(0).GetAttribute("style").Should().Contain("order: 6");
+        items.Should().HaveCount(4);
+        tags.Should().HaveCount(2);
+        rest.Should().HaveCount(1);
+        rest.ElementAt(0).GetAttribute("style").Should().Contain("order: 5");
+        input.Should().HaveCount(1);
+        input.ElementAt(0).GetAttribute("style").Should().Contain("order: 6");
+    }
+
+    [Fact]
+    public async Task ItShouldAddTags_WhenDatasourceIsEmpty()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var datasource = new List<string>();
+
+        var systemUnderTest = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
+        );
+
+        var input = systemUnderTest.Find("input.ant-select-selection-search-input");
+
+        await systemUnderTest.InvokeAsync(() => input.Input("Tag1"));
+        await systemUnderTest.InvokeAsync(() => systemUnderTest.WaitForState(() => systemUnderTest.Instance.ActiveOption is not null));
+        input.KeyUp("ENTER");
+
+        input.Input("Tag2");
+        await systemUnderTest.InvokeAsync(() => systemUnderTest.WaitForState(() => systemUnderTest.Instance.ActiveOption.Value.Equals("Tag2")));
+        input.KeyUp("ENTER");
+        systemUnderTest.WaitForAssertion(() => systemUnderTest.FindAll("span.ant-select-selection-item-content")
+            .Select(x => x.TextContent.Trim())
+            .Should()
+            .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
 }
 }

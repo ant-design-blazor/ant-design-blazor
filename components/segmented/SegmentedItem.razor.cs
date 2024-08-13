@@ -44,8 +44,6 @@ namespace AntDesign
 
         protected string PrefixCls => "ant-segmented-item";
 
-        internal int Index { get; set; }
-
         private bool _selected;
 
         protected override void OnInitialized()

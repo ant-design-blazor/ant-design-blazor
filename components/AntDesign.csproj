@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5;net6;net7</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5;net6;net7;net8</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
@@ -22,6 +22,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -46,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'netstandard2.1'">
+    <PackageReference Include="System.Text.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
   </ItemGroup>
 
@@ -67,7 +69,15 @@
 
   <ItemGroup Condition="$(TargetFramework) == 'net7'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net8'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -89,4 +99,8 @@
     <Message Importance="high" Text="If you have modified the style, documentation or added a new demo, please rebuild the entire solution." />
     <Message Importance="high" Text="如果您修改了样式、文档或者新增了Demo，请重新构建整个解决方案。" />
   </Target>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AntDesign.Tests" />
+  </ItemGroup>
 </Project>

@@ -7,13 +7,13 @@
           OnFinishFailed="OnFinishFailed"
           LabelColSpan="8"
           WrapperColSpan="16">
-        <FormItem>
+        <FormItem Label="User Name">
             <Input @bind-Value="@context.Username" />
         </FormItem>
         <FormItem Label="Password">
             <InputPassword @bind-Value="@context.Password" />
         </FormItem>
-        <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
             <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
@@ -26,7 +26,7 @@
 {
     public class Model
     {
-        [Required, DisplayName("User Name")]
+        [Required]
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }

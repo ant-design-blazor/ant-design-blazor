@@ -9,14 +9,14 @@
   {
     "title": "Show case highlight - Azure Design Studio",
     "description": "A web app which helps you create the architecture design diagram for your Azure solutions and automatically generate IaC code from it.",
-    "img": "/docs/assets/news/AzureDesignStudio.gif",
+    "img": "/docs/assets/news/AzureDesignStudio.png",
     "href": "https://github.com/chunliu/AzureDesignStudio",
     "popularize": false
   },
   {
     "title": "Ant Design Blazor Reuse Tabs",
     "description": "The Blazor community has been clamouring for multiple tabs for over a year now, and it's been quite an achievement to finally implement a ReuseTabs component based on the Tabs component in conjunction with Blazor's built-in routing component in the last few days.",
-    "img": "/docs/assets/news/reuse-tabs-demo.gif",
-    "href": "https://github.com/ant-design-blazor/demo-reuse-tabs"
+    "img": "/docs/assets/news/reuse-tabs-demo.png",
+    "href": "https://antblazor.com/en-US/experimental/reusetabs"
   }
 ]

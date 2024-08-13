@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -34,10 +35,10 @@ namespace AntDesign
     public partial class Menu : AntDomComponentBase
     {
         [CascadingParameter(Name = "PrefixCls")]
-        public string PrefixCls { get; set; } = "ant-menu";
+        internal string PrefixCls { get; set; } = "ant-menu";
 
         [CascadingParameter]
-        public Sider Parent { get; set; }
+        private Sider Parent { get; set; }
 
         [CascadingParameter(Name = "Overlay")]
         private Overlay Overlay { get; set; }
@@ -194,7 +195,6 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
-                MenuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
@@ -211,6 +211,14 @@ namespace AntDesign
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
+        [Parameter]
+        public bool ShowCollapsedTooltip { get; set; } = true;
+
+        [Parameter]
+        public bool Animation { get; set; }
+
+        [Inject] private MenuService MenusService { get; set; }
+
         internal MenuMode InternalMode { get; private set; }
 
         private string[] _openKeys;
@@ -218,21 +226,36 @@ namespace AntDesign
         private bool _inlineCollapsed;
         private MenuMode _mode = MenuMode.Vertical;
 
-        internal List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
+        private List<SubMenu> _submenus = [];
+        private List<MenuItem> _menuItems = [];
 
-        internal List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
+            {
+                _menuItems.ForEach(x => x.UpdateStelected());
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
 
         public void SelectItem(MenuItem item)
         {
+            if (Overlay != null && AutoCloseDropdown)
+            {
+                Overlay.Hide(true);
+            }
+
             if (item == null || item.IsSelected)
             {
                 return;
             }
+
             var selectedKeys = new List<string>();
             bool skipParentSelection = false;
             if (!Multiple)
             {
-                foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+                foreach (MenuItem menuitem in _menuItems.Where(x => x != item))
                 {
                     if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
                     {
@@ -259,11 +282,6 @@ namespace AntDesign
 
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
-
-            if (Overlay != null && AutoCloseDropdown)
-            {
-                Overlay.Hide(true);
-            }
         }
 
         public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
@@ -275,7 +293,7 @@ namespace AntDesign
 
             if (Accordion)
             {
-                foreach (SubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
+                foreach (SubMenu item in _submenus.Where(x => x != menu && x != menu.Parent))
                 {
                     item.Close();
                 }
@@ -293,7 +311,7 @@ namespace AntDesign
             if (OnSubmenuClicked.HasDelegate)
                 OnSubmenuClicked.InvokeAsync(menu);
 
-            var openKeys = Submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
+            var openKeys = _submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
             HandleOpenChange(openKeys);
 
             StateHasChanged();
@@ -319,7 +337,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (InternalMode != MenuMode.Inline && _inlineCollapsed)
+            if (Mode != MenuMode.Inline && _inlineCollapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
@@ -329,6 +347,32 @@ namespace AntDesign
             OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
 
             SetClass();
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            MenusService.SetMenuItems(_menuItems);
+            return base.OnFirstAfterRenderAsync();
+        }
+
+        internal void AddSubmenu(SubMenu menu)
+        {
+            _submenus.Add(menu);
+        }
+
+        internal void AddMenuItem(MenuItem item)
+        {
+            _menuItems.Add(item);
+        }
+
+        internal void RemoveSubmenu(SubMenu menu)
+        {
+            _submenus.Remove(menu);
+        }
+
+        internal void RemoveMenuItem(MenuItem item)
+        {
+            _menuItems.Remove(item);
         }
 
         public void CollapseUpdated(bool collapsed)
@@ -343,7 +387,7 @@ namespace AntDesign
             if (_inlineCollapsed)
             {
                 InternalMode = MenuMode.Vertical;
-                foreach (SubMenu item in Submenus)
+                foreach (SubMenu item in _submenus)
                 {
                     item.Close();
                 }
@@ -367,12 +411,12 @@ namespace AntDesign
 
         private void HandleOpenKeySet()
         {
-            foreach (SubMenu item in Submenus.Where(x => x.Key.IsIn(this.OpenKeys)))
+            foreach (SubMenu item in _submenus.Where(x => x.Key.IsIn(this.OpenKeys)))
             {
                 item.Open();
             }
 
-            foreach (SubMenu item in Submenus.Where(x => !x.Key.IsIn(this.OpenKeys)))
+            foreach (SubMenu item in _submenus.Where(x => !x.Key.IsIn(this.OpenKeys)))
             {
                 item.Close();
             }

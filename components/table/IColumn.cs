@@ -29,5 +29,7 @@ namespace AntDesign
         public int RowSpan { get; set; }
 
         public int HeaderColSpan { get; set; }
+
+        internal void UpdateFixedStyle();
     }
 }

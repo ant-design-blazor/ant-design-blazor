@@ -18,5 +18,11 @@ namespace AntDesign
 
         [Parameter]
         RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string LabelStyle { get; set; }
+
+        [Parameter]
+        public string ContentStyle { get; set; }
     }
 }

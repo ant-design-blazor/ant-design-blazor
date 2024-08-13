@@ -1,8 +1,8 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
-<CascadingValue Value="@($"#ant-drawer-wrap_{Id}")" Name="PopupContainerSelector">
+<CascadingValue Value="@($"#ant-drawer-wrap_{Id} .ant-drawer-wrapper-body")" Name="PopupContainerSelector">
     <div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @InnerZIndexStyle @Style" id="@Id">
-        @if (Mask)
+        @if (Mask && Visible)
         {
             <div class="ant-drawer-mask" @onclick="MaskClick" style="@MaskStyle"></div>
         }
@@ -27,7 +27,7 @@
                             }
                             @if (Closable)
                             {
-                                <button @onclick="_=>CloseClick()" aria-label="Close" class="ant-drawer-close">
+                                <button @onclick="_=>CloseClick()" type="button" aria-label="Close" class="ant-drawer-close">
                                     <Icon Type="close" />
                                 </button>
                             }

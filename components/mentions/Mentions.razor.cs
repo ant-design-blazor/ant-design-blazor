@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -25,83 +26,70 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg")]
     public partial class Mentions
     {
-        [Inject]
-        public IJSRuntime JS { get; set; }
-
-        /// <summary>
-        /// Options to display in the mention
-        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public bool Disable { get; set; }
-        
-        /// <summary>
-        /// Number of options to display
-        /// </summary>
-        /// <default value="3"/>
-        [Parameter]
-        public int Rows { get; set; } = 3;
 
-        /// <summary>
-        /// TODO
-        /// </summary>
+        [Parameter]
+        public uint Rows { get; set; } = 3;
+
         [Parameter]
         public bool Focused { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public bool Readonly { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public bool Loading { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public Dictionary<string, object> Attributes { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
+        [Inject]
+        public IJSRuntime JS { get; set; }
+
         [Parameter]
         public string Placeholder { get; set; }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public string Value { get; set; } = string.Empty;
 
-        /// <summary>
-        /// TODO
-        /// </summary>
         [Parameter]
         public EventCallback<string> ValueChanged { get; set; }
 
-        internal List<MentionsOption> OriginalOptions { get; set; } = new List<MentionsOption>();
-        internal List<MentionsOption> ShowOptions { get; } = new List<MentionsOption>();
+        /// <summary>
+        /// Dynamically load mention options for display when the user types a value after the @ symbol
+        /// </summary>
+        [Parameter]
+        public Func<string, CancellationToken, Task<IEnumerable<MentionsDynamicOption>>> LoadOptions { get; set; }
+
+        [Parameter]
+        public RenderFragment<MentionsTextareaTemplateOptions> TextareaTemplate { get; set; }
+
+        [Parameter]
+        public string Prefix { get; set; } = "@";
+
+        private CancellationTokenSource _cancellationTokenSource;
+
+        internal List<MentionsDynamicOption> OriginalOptions { get; set; } = new List<MentionsDynamicOption>();
+
+        internal List<MentionsDynamicOption> ShowOptions { get; } = new List<MentionsDynamicOption>();
+
         private OverlayTrigger _overlayTrigger;
+
         internal string ActiveOptionValue { get; set; }
+
         internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x.Value == ActiveOptionValue);
 
         private void SetClassMap()
         {
             var prefixCls = "ant-mentions";
-            this.ClassMapper.Clear()
+            ClassMapper.Clear()
                 .Add(prefixCls)
-                .If($"{prefixCls}-disable", () => this.Disable)
-                .If($"{prefixCls}-focused", () => this.Focused)
+                .If($"{prefixCls}-disable", () => Disable)
+                .If($"{prefixCls}-focused", () => Focused)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
         }
@@ -115,12 +103,18 @@ namespace AntDesign
         internal void AddOption(MentionsOption option)
         {
             if (option == null) return;
+
             var opt = OriginalOptions.Find(x => x.Value == option.Value);
             if (opt == null)
             {
-                OriginalOptions.Add(option);
+                OriginalOptions.Add(new MentionsDynamicOption
+                {
+                    Value = option.Value,
+                    Display = option.ChildContent
+                });
             }
         }
+
         public List<string> GetMentionNames()
         {
             var r = new List<string>();
@@ -132,6 +126,7 @@ namespace AntDesign
             });
             return r;
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -150,7 +145,7 @@ namespace AntDesign
             ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
-        
+
         [JSInvokable]
         public void NextOption()
         {
@@ -158,7 +153,7 @@ namespace AntDesign
             ActiveOptionValue = ShowOptions[index].Value;
             StateHasChanged();
         }
-        
+
         [JSInvokable]
         public async Task EnterOption()
         {
@@ -171,14 +166,9 @@ namespace AntDesign
             await _overlayTrigger.Hide();
         }
 
-        async Task ShowOverlay(bool resetOptions, bool reCalcPosition)
+        async Task ShowOverlay(bool reCalcPosition)
         {
             await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, true);
-            if (resetOptions)
-            {
-                ShowOptions.Clear();
-                ShowOptions.AddRange(OriginalOptions);
-            }
             ActiveOptionValue = ShowOptions.First().Value;
             if (reCalcPosition)
             {
@@ -193,6 +183,7 @@ namespace AntDesign
             }
             await InvokeStateHasChangedAsync();
         }
+
         async void OnKeyDown(KeyboardEventArgs args)
         {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
             //开启浮窗的判断放在oninput里，不然会有问题
@@ -203,42 +194,69 @@ namespace AntDesign
         {
             Value = args.Value.ToString();
             await ValueChanged.InvokeAsync(Value);
-            if (Value.EndsWith("@"))
+
+            if (Value.EndsWith(Prefix))
             {
-                await ShowOverlay(true, true);
+                await LoadItems(string.Empty);
+                await ShowOrHideBasedOnAvailableShowOptions();
                 return;
             }
+
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             if (focusPosition == 0)
             {
                 await HideOverlay();
                 return;
             };
-            var showPop = false;
+
             var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
-            var lastIndex = v.LastIndexOf("@");
+            var lastIndex = v.LastIndexOf(Prefix);
             if (lastIndex >= 0)
             {
                 var lastOption = v.Substring(lastIndex + 1);
-                ShowOptions.Clear();
-                ShowOptions.AddRange(OriginalOptions.Where(x => x.Value.Contains(lastOption, StringComparison.OrdinalIgnoreCase)).ToList());
-                if (ShowOptions.Count > 0) showPop = true;
+                await LoadItems(lastOption);
             }
 
-            if (showPop)
+            await ShowOrHideBasedOnAvailableShowOptions();
+        }
+
+        private async Task LoadItems(string searchValue)
+        {
+            if (LoadOptions is null)
             {
-                await ShowOverlay(false, true);
+                var optionsToShow = OriginalOptions.Where(x => x.Value.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                SetOptionsToShow(optionsToShow);
             }
             else
             {
-                await HideOverlay();
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                var options = await LoadOptions.Invoke(searchValue, _cancellationTokenSource.Token).ConfigureAwait(false);
+
+                SetOptionsToShow(options);
             }
         }
+
+        private void SetOptionsToShow(IEnumerable<MentionsDynamicOption> optionsToShow)
+        {
+            ShowOptions.Clear();
+            ShowOptions.AddRange(optionsToShow);
+        }
+
+        private Task ShowOrHideBasedOnAvailableShowOptions()
+        {
+            return ShowOptions.Count > 0
+                ? ShowOverlay(true)
+                : HideOverlay();
+        }
+
         internal async Task ItemClick(string optionValue)
         {
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             var preText = Value.Substring(0, focusPosition);
-            preText = preText.LastIndexOf("@") >= 0 ? Value.Substring(0, preText.LastIndexOf("@")) : preText;
+            preText = preText.LastIndexOf(Prefix) >= 0 ? Value.Substring(0, preText.LastIndexOf(Prefix)) : preText;
             if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 1);
             var nextText = Value.Substring(focusPosition);
             if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);

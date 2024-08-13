@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -96,7 +96,6 @@ namespace AntDesign.Internal
             List<int> disabledHours = new List<int>();
             List<int> disabledMinutes = new List<int>();
             List<int> disabledSeconds = new List<int>();
-            DatePickerDisabledTime userDisabledTime = null;
 
             if (DisabledHours is not null)
             {
@@ -111,7 +110,7 @@ namespace AntDesign.Internal
                 disabledSeconds.AddRange(DisabledSeconds(Value ?? DateTime.Now));
             }
 
-            userDisabledTime = DisabledTime?.Invoke(Value ?? DateTime.Now);
+            var userDisabledTime = DisabledTime?.Invoke(Value ?? DateTime.Now);
 
             if (userDisabledTime != null)
             {
@@ -150,9 +149,9 @@ namespace AntDesign.Internal
             }
         }
 
-        private async Task ScrollToSelectedHourAsync(int? duration = null)
+        private async Task ScrollToSelectedHourAsync(DateTime currentValue, int? duration = null)
         {
-            _selectedHour = Value.Value.Hour;
+            _selectedHour = currentValue.Hour;
 
             var hoursKey = Use12Hours && _selectedHour == 0 ?
                             12 : Use12Hours && _selectedHour > 12 ?
@@ -164,9 +163,9 @@ namespace AntDesign.Internal
             }
         }
 
-        private async Task ScrollToSelectedMinuteAsync(int? duration = null)
+        private async Task ScrollToSelectedMinuteAsync(DateTime currentValue, int? duration = null)
         {
-            _selectedMinute = Value.Value.Minute;
+            _selectedMinute = currentValue.Minute;
 
             if (_minutes.ContainsKey(_selectedMinute.Value))
             {
@@ -174,9 +173,9 @@ namespace AntDesign.Internal
             }
         }
 
-        private async Task ScrollToSelectedSecondAsync(int? duration = null)
+        private async Task ScrollToSelectedSecondAsync(DateTime currentValue, int? duration = null)
         {
-            _selectedSecond = Value.Value.Second;
+            _selectedSecond = currentValue.Second;
 
             if (_seconds.ContainsKey(_selectedSecond.Value))
             {
@@ -195,26 +194,30 @@ namespace AntDesign.Internal
 
             if (currentValue.Hour != _selectedHour)
             {
-                await ScrollToSelectedHourAsync();
+                await ScrollToSelectedHourAsync(currentValue);
             }
             if (currentValue.Minute != _selectedMinute)
             {
-                await ScrollToSelectedMinuteAsync();
+                await ScrollToSelectedMinuteAsync(currentValue);
             }
             if (currentValue.Second != _selectedSecond)
             {
-                await ScrollToSelectedSecondAsync();
+                await ScrollToSelectedSecondAsync(currentValue);
             }
         }
 
         private void DatePicker_OverlayVisibleChanged(object sender, bool visible)
         {
-            if (visible)
+            if (!visible || Value is null)
             {
-                _ = ScrollToSelectedHourAsync(0);
-                _ = ScrollToSelectedMinuteAsync(0);
-                _ = ScrollToSelectedSecondAsync(0);
+                return;
             }
+
+            var currentValue = Value.Value;
+
+            _ = ScrollToSelectedHourAsync(currentValue, 0);
+            _ = ScrollToSelectedMinuteAsync(currentValue, 0);
+            _ = ScrollToSelectedSecondAsync(currentValue, 0);
         }
 
         private async Task InvokeSmoothScrollAsync(ElementReference element, ElementReference parent, int? duration)

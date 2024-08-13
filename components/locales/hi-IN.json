@@ -122,5 +122,58 @@
     "uploadError": "अपलोड में त्रुटि",
     "previewFile": "फ़ाइल पूर्वावलोकन",
     "downloadFile": "फ़ाइल डाउनलोड करें"
+  },
+  "Form": {
+    "optional": "(ऐच्छिक)",
+    "defaultValidateMessages": {
+      "default": "${label} के लिए फील्ड सत्यापन त्रुटि",
+      "required": "कृपया ${label} दर्ज करें",
+      "enum": "${label} [${enum}] में से एक होना चाहिए",
+      "whitespace": "${label} एक खाली अक्षर नहीं हो सकता",
+      "date": {
+        "format": "${label} तिथि प्रारूप अमान्य है",
+        "parse": "${label} को तारीख में नहीं बदला जा सकता",
+        "invalid": "${label} एक अमान्य तिथि है"
+      },
+      "types": {
+        "string": "${label} मान्य ${type} नहीं है",
+        "method": "${label} मान्य ${type} नहीं है",
+        "array": "${label} मान्य ${type} नहीं है",
+        "object": "${label} मान्य ${type} नहीं है",
+        "number": "${label} मान्य ${type} नहीं है",
+        "date": "${label} मान्य ${type} नहीं है",
+        "boolean": "${label} मान्य ${type} नहीं है",
+        "integer": "${label} मान्य ${type} नहीं है",
+        "float": "${label} मान्य ${type} नहीं है",
+        "regexp": "${label} मान्य ${type} नहीं है",
+        "email": "${label} मान्य ${type} नहीं है",
+        "url": "${label} मान्य ${type} नहीं है",
+        "hex": "${label} मान्य ${type} नहीं है"
+      },
+      "string": {
+        "len": "${label} ${len} अक्षर का होना चाहिए",
+        "min": "${label} कम से कम ${min} वर्णों का होना चाहिए",
+        "max": "${label} अधिकतम ${max} वर्णों का होना चाहिए",
+        "range": "${label} ${min}-${max} वर्णों के बीच होना चाहिए"
+      },
+      "number": {
+        "len": "${label} ${len} के बराबर होना चाहिए",
+        "min": "${label} कम से कम ${min} होना चाहिए",
+        "max": "${label} अधिकतम ${max} होना चाहिए",
+        "range": "${label} ${min}-${max} के बीच होना चाहिए"
+      },
+      "array": {
+        "len": "${len} ${label} होना चाहिए",
+        "min": "कम से कम ${min} ${label}",
+        "max": "ज्यादा से ज्यादा ${max} ${label}",
+        "range": "${label} की राशि ${min}-${max} के बीच होनी चाहिए"
+      },
+      "pattern": {
+        "mismatch": "${label} ${pattern} पैटर्न से मेल नहीं खाता"
+      }
+    }
+  },
+  "Image": {
+    "preview": "पूर्वावलोकन"
   }
 }

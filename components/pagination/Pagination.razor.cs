@@ -275,7 +275,7 @@ namespace AntDesign
 
         private ClassMapper _jumpNextClass = new();
 
-        private int _current = InitCurrent;
+        private int _current = 0;
 
         private int _pageSize = InitPageSize;
 
@@ -301,9 +301,9 @@ namespace AntDesign
             }
 
             var current = DefaultCurrent;
-            if (Current != 0)
+            if (_current != 0)
             {
-                current = Current;
+                current = _current;
             }
 
             var pageSize = DefaultPageSize;
@@ -314,7 +314,7 @@ namespace AntDesign
 
             current = Math.Min(current, CalculatePage(pageSize, PageSize, Total));
 
-            Current = current;
+            _current = current;
             _currentInputValue = current;
             PageSize = pageSize;
 
@@ -327,7 +327,7 @@ namespace AntDesign
                .Add(PrefixCls)
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
-               .If("mini", () => !Simple && Size == PaginationSize.Small)
+               .If($"{PrefixCls}-mini", () => !Simple && Size == PaginationSize.Small)
                .If($"{PrefixCls}-rtl", () => RTL);
 
             _prevClass
@@ -525,7 +525,7 @@ namespace AntDesign
         private RenderFragment RenderPrev(int prevPage)
         {
             var disabled = !this.HasPrev();
-            var prevButton = ItemRender.Invoke(new(prevPage, PaginationItemType.Prev, GetItemIcon(PrevIcon, "prev page"), disabled));
+            var prevButton = ItemRender.Invoke(new(prevPage, PaginationItemType.Prev, GetItemIcon(RTL ? NextIcon : PrevIcon, "prev page"), disabled));
 
             return prevButton;
         }
@@ -533,7 +533,7 @@ namespace AntDesign
         private RenderFragment RenderNext(int nextPage)
         {
             var disabled = !this.HasNext();
-            var nextButton = ItemRender.Invoke(new(nextPage, PaginationItemType.Next, GetItemIcon(NextIcon, "next page"), disabled));
+            var nextButton = ItemRender.Invoke(new(nextPage, PaginationItemType.Next, GetItemIcon(RTL ? PrevIcon : NextIcon, "next page"), disabled));
             return nextButton;
         }
     }

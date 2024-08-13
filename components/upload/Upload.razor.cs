@@ -118,6 +118,15 @@ namespace AntDesign
         /// List of files that have been uploaded (controlled)
         /// </summary>
         [Parameter]
+        public bool ShowDownloadIcon { get; set; } = true;
+
+        [Parameter]
+        public bool ShowPreviewIcon { get; set; } = true;
+
+        [Parameter]
+        public bool ShowRemoveIcon { get; set; } = true;
+
+        [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
         /// <summary>
@@ -222,6 +231,10 @@ namespace AntDesign
             base.OnInitialized();
 
             var prefixCls = "ant-upload";
+
+            ClassMapper
+                .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
+                .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);
 
             _listClassMapper
                 .Add($"{prefixCls}-list")

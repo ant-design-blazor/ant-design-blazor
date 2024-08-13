@@ -1,0 +1,153 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Render_basic_layout()
+    {
+        var cut = Render(
+    @<Layout>
+        <Header>Header</Header>
+        <Content>Content</Content>
+        <Footer>Footer</Footer>
+    </Layout>
+        );
+
+        cut.MarkupMatches(
+                @"<section class=""ant-layout"" id:ignore>
+              <header class=""ant-layout-header ant-header"" id:ignore>
+                Header
+              </header>
+              <main class=""ant-layout-content"" id:ignore>
+                Content
+              </main>
+              <footer class=""ant-layout-footer"" id:ignore>
+                Footer
+              </footer>
+            </section>");
+    }
+
+    [Fact]
+    public void Rener_basic_layout_with_sider()
+    {
+        var cut = Render(
+    @<Layout>
+        <Header>Header</Header>
+        <Layout>
+            <Sider>Sider</Sider>
+            <Content>Content</Content>
+        </Layout>
+        <Footer>Footer</Footer>
+    </Layout>
+    );
+
+        cut.MarkupMatches(
+            @"<section class=""ant-layout"" id:ignore>
+              <header class=""ant-layout-header ant-header"" id:ignore>
+                Header
+              </header>
+              <section class=""ant-layout ant-layout-has-sider"" id:ignore>
+                  <aside class=""ant-layout-sider ant-layout-sider-dark"" style=""flex: 0 0 200px;max-width: 200px;min-width: 200px;width: 200px; "">
+                    <div class=""ant-layout-sider-children"">
+                      Sider
+                    </div>
+                  </aside>
+                  <main class=""ant-layout-content"" id:ignore>
+                    Content
+                  </main>
+              </section>
+              <footer class=""ant-layout-footer"" id:ignore>
+                Footer
+              </footer>
+            </section>");
+
+    }
+
+    [Fact]
+    public void Render_layout_sider_collapsible()
+    {
+        var iscollapsed = false;
+
+        var cut = Render(
+    @<Layout>
+        <Sider Collapsible @bind-Collapsed="iscollapsed">
+            <Menu Theme="MenuTheme.Dark">
+            </Menu>
+        </Sider>
+        <Content>Content</Content>
+    </Layout>
+    );
+
+        cut.MarkupMatches(@"<section class=""ant-layout ant-layout-has-sider"" id:ignore>
+  <aside class=""ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger"" style=""flex: 0 0 200px;max-width: 200px;min-width: 200px;width: 200px; "">
+    <div class=""ant-layout-sider-children"">
+      <ul class=""ant-menu ant-menu-root ant-menu-dark ant-menu-vertical"" id:ignore direction=""ltr"" role=""menu"" >
+      </ul>
+    </div>
+    <div class=""ant-layout-sider-trigger"" style=""width: 200px"" >
+      <span class=""anticon anticon-left"" id:ignore role=""img"" >
+        <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor"" style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon"" viewBox=""0 0 1024 1024"">
+          <path d:ignore></path>
+        </svg>
+      </span>
+    </div>
+  </aside>
+  <main class=""ant-layout-content"" id:ignore >
+    Content
+  </main>
+</section>");
+
+
+        var trigger = cut.Find(".ant-layout-sider-trigger");
+
+        trigger.Click();
+
+        iscollapsed.Should().BeTrue();
+
+        cut.Find(".ant-layout-sider").ClassList.Should().Contain("ant-layout-sider-collapsed");
+        cut.Find(".ant-layout-sider").GetAttribute("style").Should().Be("flex: 0 0 80px;max-width: 80px;min-width: 80px;width: 80px;overflow:initial; ");
+        cut.Find(".ant-menu").ClassList.Should().Contain("ant-menu-inline-collapsed");
+    }
+
+
+    [Theory]
+    [InlineData(45,true,true, true)]
+    [InlineData(45, false, false, true)]
+    [InlineData(0, true, true, true)]
+    [InlineData(0, false, false, false)]
+    public void Render_layout_sider_no_trigger(int collapsedWidth, bool noTrigger, bool expectedNoTrigger, bool expectedNoZeroTriger)
+    {
+        JSInterop.Setup<Window>("AntDesign.interop.domInfoHelper.getWindow",_=>true)
+        .SetResult(new Window
+        {
+            InnerWidth=1000
+        });
+
+        var iscollapsed = false;
+
+        var cut = Context.Render<Layout>(
+            @<Layout>
+        <Sider Collapsible Breakpoint="BreakpointType.Lg" @bind-Collapsed="iscollapsed" CollapsedWidth="collapsedWidth" NoTrigger="noTrigger"></Sider>
+                <Content>Content</Content>
+            </Layout>
+    );
+
+        var isNoTrigger = cut.FindAll(".ant-layout-sider-trigger").Any() == false;
+        var isNoZeroTriger = cut.FindAll(".ant-layout-sider-zero-width-trigger").Any() == false;
+
+        isNoTrigger.Should().Be(expectedNoTrigger);
+        isNoZeroTriger.Should().BeTrue();
+
+        iscollapsed = true;
+
+        cut.FindComponent<Sider>().Instance.OnResize(new Window
+            {
+                InnerWidth = 30,
+                InnerHeight=40
+            });
+
+        var isNoZeroTrigerAfterCollapsed = cut.FindAll(".ant-layout-sider-zero-width-trigger").Any() == false;
+
+        isNoZeroTrigerAfterCollapsed.Should().Be(expectedNoZeroTriger);
+
+    }
+}

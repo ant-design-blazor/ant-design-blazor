@@ -37,7 +37,6 @@ namespace AntDesign
         private string _circleTrailStyle;
         private string _circlePathStyle;
         private string _circleSuccessStyle;
-        private bool _format = false;
 
         private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
 
@@ -151,33 +150,29 @@ namespace AntDesign
 
         #endregion Parameters
 
-        public async override Task SetParametersAsync(ParameterView parameters)
-        {
-            IReadOnlyDictionary<string, object> dict = parameters.ToDictionary();
-            SetDefaultValues(dict);
-            await base.SetParametersAsync(parameters);
-
-            SetClasses();
-            SetStyle();
-        }
-
         protected override void OnInitialized()
         {
+            SetClasses();
             base.OnInitialized();
         }
 
-        private void SetDefaultValues(IReadOnlyDictionary<string, object> dict)
+        protected override void OnParametersSet()
         {
-            if (!dict.ContainsKey(nameof(Type)) || (ProgressType)dict[nameof(Type)] == ProgressType.Line)
+            base.OnParametersSet();
+
+            if (StrokeWidth <= 0)
             {
-                StrokeWidth = 10;
-            }
-            else // Type is Circle or Dashboard
-            {
-                StrokeWidth = 6;
+                if (Type == ProgressType.Line)
+                {
+                    StrokeWidth = Size.Value;
+                }
+                else // Type is Circle or Dashboard
+                {
+                    StrokeWidth = 6;
+                }
             }
 
-            if (dict.TryGetValue(nameof(Percent), out var percentObject) && percentObject is double percent && percent == 100)
+            if (Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
@@ -186,12 +181,12 @@ namespace AntDesign
                 Status = ProgressStatus.Normal;
             }
 
-            _format = dict.ContainsKey(nameof(Format));
+            SetStyle();
         }
 
         private void SetClasses()
         {
-            ClassMapper.Clear()
+            ClassMapper
                 .Add(PrefixCls)
                 .Get(() => $"{PrefixCls}-{Size.Name}")
                 .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
@@ -218,11 +213,11 @@ namespace AntDesign
                 _circleTrailStyle = FormattableString.Invariant($"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;");
                 if (SuccessPercent == 0)
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
                 }
                 else
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: 0px;");
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {-CircleDash * SuccessPercent / 100}px;");
                 }
             }
@@ -242,6 +237,38 @@ namespace AntDesign
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;");
                 }
             }
+        }
+
+        private string GetCircleColor()
+        {
+            var baseColor = "";
+            if (StrokeColor.Value == null)
+            {
+                return baseColor;
+            }
+
+            var style = new StringBuilder(baseColor);
+
+            if (StrokeColor.IsT1)
+            {
+                try
+                {
+                    var gradientPoints = string.Join(", ", StrokeColor.AsT1.Select(pair => $"{ToRGB(pair.Value)} {pair.Key}"));
+                    style.Append($" stroke: linear-gradient(to right, {gradientPoints})");
+                }
+                catch
+                {
+                    throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be dictionary like \"0%\": \"#108ee9\", \"100%\": \"#87d068\"");
+                }
+            }
+            else if (StrokeColor.IsT0)
+            {
+                style.Append("stroke: ");
+                style.Append(ToRGB(StrokeColor.AsT0));
+                style.Append(';');
+            }
+
+            return style.ToString();
         }
 
         private string GetLineBGStyle()

@@ -3,17 +3,21 @@
 @using System.Net.Http.Headers
 @inject HttpClient Http
 
-<Table TItem="Data" DataSource="_data" Loading="_loading" Total="_total" OnChange="HandleTableChange" RemoteDataSource>
+<Table TItem="Data" DataSource="_data" Loading="_loading" Total="_total" OnChange="HandleTableChange" RemoteDataSource RowKey="x=>x.IID" @bind-SelectedRows="_items">
+    <Selection />
     <PropertyColumn Style="width:20%;" Property="c=>c.Name" Sortable DefaultSortOrder="SortDirection.Ascending">@context.Name.First @context.Name.Last</PropertyColumn>
     <PropertyColumn Style="width:20%;" Property="c=>c.Gender" Filters="_genderFilters" />
     <PropertyColumn Property="c=>c.Email" />
 </Table>
+
+@(_items?.Count()??0)
 
 @code{
     bool _loading = false;
 
     int _total;
     Data[] _data = Array.Empty<Data>();
+    IEnumerable<Data> _items;
     TableFilter<string>[] _genderFilters = new[]
     {
         new TableFilter<string> { Text = "Male", Value = "male" },
@@ -25,6 +29,11 @@
         _loading = true;
 
         ApiResponse data = await Http.GetFromJsonAsync<ApiResponse>("https://randomuser.me/api?" + GetRandomuserParams(queryModel));
+        int i = 0;
+        foreach (var item in data.Results)
+        {
+            item.IID = queryModel.StartIndex + i++;
+        }
 
         _loading = false;
         _data = data.Results;
@@ -58,6 +67,7 @@
 
     public class Data
     {
+        public int IID{ get; set; }
         [DisplayName("Name")]
         public Name Name { get; set; }
 

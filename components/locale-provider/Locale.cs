@@ -4,7 +4,7 @@ using AntDesign.Form.Locale;
 
 namespace AntDesign.Locales
 {
-    public class Locale
+    public record Locale
     {
         private CultureInfo _currentCulture;
 

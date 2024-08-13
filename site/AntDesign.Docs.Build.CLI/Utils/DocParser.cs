@@ -163,7 +163,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
             return meta;
         }
 
-        public static (int order, string title, string html) ParseDocs(string input)
+        public static (float order, string title, string html) ParseDocs(string input)
         {
             input = input.Trim(' ', '\r', '\n');
             var pipeline = new MarkdownPipelineBuilder()
@@ -178,13 +178,13 @@ namespace AntDesign.Docs.Build.CLI.Utils
             MarkdownDocument document = Markdown.Parse(input, pipeline);
             var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
             var title = string.Empty;
-            var order = 0;
+            var order = 0f;
             if (yamlBlock != null)
             {
                 var yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
                 var meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
                 title = meta["title"];
-                order = int.TryParse(meta["order"], out var o) ? o : 0;
+                order = float.TryParse(meta["order"], out var o) ? o : 0;
             }
 
             renderer.Render(document);
@@ -200,6 +200,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
         public decimal Order { get; set; }
 
         public int? Iframe { get; set; }
+
+        public string Link { get; set; }
 
         public Dictionary<string, string> Title { get; set; }
 

@@ -10,10 +10,10 @@ namespace AntDesign
     public partial class MenuItem : AntDomComponentBase
     {
         [CascadingParameter]
-        public Menu RootMenu { get; set; }
+        internal Menu RootMenu { get; set; }
 
         [CascadingParameter]
-        public SubMenu ParentMenu { get; set; }
+        internal SubMenu ParentMenu { get; set; }
 
         /// <summary>
         /// Display title
@@ -79,14 +79,18 @@ namespace AntDesign
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
-
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
-        private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
+        private int Padding => RootMenu?.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
+
+        private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
+
+        // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
+        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
 
         private void SetClass()
         {
-            string prefixCls = $"{RootMenu.PrefixCls}-item";
+            string prefixCls = $"{RootMenu?.PrefixCls}-item";
 
             ClassMapper
                 .Clear()
@@ -95,22 +99,15 @@ namespace AntDesign
                 .If($"{prefixCls}-disabled", () => Disabled);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            RootMenu?.MenuItems?.Remove(this);
-
-            base.Dispose(disposing);
-        }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             SetClass();
 
-            RootMenu.MenuItems.Add(this);
+            RootMenu?.AddMenuItem(this);
 
-            if (RootMenu.DefaultSelectedKeys.Contains(Key))
+            if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
         }
 
@@ -118,13 +115,20 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu.SelectedKeys.Contains(Key) && !IsSelected)
+            if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
                 Select();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveMenuItem(this);
+
+            base.Dispose(disposing);
         }
 
         internal void UpdateStelected()
         {
-            if (RootMenu.SelectedKeys.Contains(Key))
+            if (RootMenu?.SelectedKeys.Contains(Key) == true)
             {
                 if (!IsSelected) Select();
             }
@@ -149,7 +153,7 @@ namespace AntDesign
                 await RootMenu.OnMenuItemClicked.InvokeAsync(this);
             }
 
-            if (!RootMenu.Selectable)
+            if (RootMenu?.Selectable != true)
                 return;
 
             if (IsSelected && RootMenu?.Multiple == true)
@@ -158,13 +162,13 @@ namespace AntDesign
             }
             else
             {
-                RootMenu.SelectItem(this);
+                RootMenu?.SelectItem(this);
             }
 
             if (ParentMenu == null)
                 return;
 
-            if (RootMenu.Mode != MenuMode.Inline)
+            if (RootMenu?.Mode != MenuMode.Inline)
             {
                 await ParentMenu?.Collapse();
             }
@@ -176,6 +180,9 @@ namespace AntDesign
             FirstRun = false;
             if (!skipParentSelection)
                 ParentMenu?.Select(isInitializing);
+
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
 
         public void Deselect(bool sameParentAsSelected = false)
@@ -184,6 +191,9 @@ namespace AntDesign
             FirstRun = false;
             if (!sameParentAsSelected)
                 ParentMenu?.Deselect();
+
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
     }
 }

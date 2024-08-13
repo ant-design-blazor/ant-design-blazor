@@ -1,5 +1,5 @@
 ---
-order: 30
+order: 99.1
 title:
   en-US: Custom Pagination
   zh-CN: 自定义分页

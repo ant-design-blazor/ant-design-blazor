@@ -283,9 +283,9 @@ namespace AntDesign
                 {
                     _leftValue = candidate;
                     SetStyle();
-                    (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                    (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue);
                     if (value != typedValue.Item1)
-                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                        CurrentValue = DataConversionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
                 }
             }
         }
@@ -315,16 +315,16 @@ namespace AntDesign
                     if (Range)
                     {
                         //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                        (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                        (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue);
                         if (value != typedValue.Item2)
-                            CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
+                            CurrentValue = DataConversionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
                     }
                     else
                     {
-                        double typedValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
+                        double typedValue = DataConversionExtensions.Convert<TValue, double>(CurrentValue);
                         if (value != typedValue)
                             //CurrentValue = DoubleToGeneric(_rightValue);
-                            CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
+                            CurrentValue = DataConversionExtensions.Convert<double, TValue>(_rightValue);
                     }
                 }
             }
@@ -354,13 +354,13 @@ namespace AntDesign
         /// Callback executed when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnAfterChange { get; set; } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
+        public EventCallback<TValue> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback executed when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnChange { get; set; }
+        public EventCallback<TValue> OnChange { get; set; }
 
         /// <summary>
         /// Whether markers should have tooltips or not
@@ -449,26 +449,26 @@ namespace AntDesign
                     TValue defaultValue;
                     if (Range)
                     {
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(double, double), TValue>((0, 0)));
-                        LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
-                        RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
+                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConversionExtensions.Convert<(double, double), TValue>((0, 0)));
+                        LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
+                        RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
                     }
                     else
                     {
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<double, TValue>(0));
-                        RightValue = DataConvertionExtensions.Convert<TValue, double>(defaultValue);
+                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConversionExtensions.Convert<double, TValue>(0));
+                        RightValue = DataConversionExtensions.Convert<TValue, double>(defaultValue);
                     }
                 }
                 else
                 {
                     if (Range)
                     {
-                        LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item1;
-                        RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item2;
+                        LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item1;
+                        RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item2;
                     }
                     else
                     {
-                        RightValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
+                        RightValue = DataConversionExtensions.Convert<TValue, double>(CurrentValue);
                     }
                 }
                 if (!dict.ContainsKey(nameof(TooltipPlacement)))
@@ -595,7 +595,8 @@ namespace AntDesign
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
 
-                OnChange?.Invoke(CurrentValue);
+                if (OnChange.HasDelegate)
+                    await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
             }
         }
 
@@ -608,8 +609,9 @@ namespace AntDesign
                 if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-                    OnAfterChange?.Invoke(CurrentValue);
                 }
+                if (OnAfterChange.HasDelegate)
+                    await InvokeAsync(() => OnAfterChange.InvokeAsync(CurrentValue));
             }
             if (_toolTipRight != null)
             {
@@ -785,18 +787,18 @@ namespace AntDesign
                     _leftValue = double.MinValue;
                     _rightValue = double.MaxValue;
                 }
-                LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
-                RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item2;
+                LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(value).Item1;
+                RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(value).Item2;
             }
             else
             {
-                RightValue = DataConvertionExtensions.Convert<TValue, double>(value);
+                RightValue = DataConversionExtensions.Convert<TValue, double>(value);
             }
         }
 
         private bool IsLeftAndRightChanged(TValue value)
         {
-            (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+            (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(value);
             return (typedValue.Item1 != LeftValue) && (typedValue.Item2 != RightValue);
         }
 
@@ -830,10 +832,10 @@ namespace AntDesign
             if (Range)
             {
                 //sort if needed
-                (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+                (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(value);
                 if (typedValue.Item1 > typedValue.Item2)
                 {
-                    orderedValue = DataConvertionExtensions.Convert<(double, double), TValue>((typedValue.Item2, typedValue.Item1));
+                    orderedValue = DataConversionExtensions.Convert<(double, double), TValue>((typedValue.Item2, typedValue.Item1));
                 }
             }
             return orderedValue;

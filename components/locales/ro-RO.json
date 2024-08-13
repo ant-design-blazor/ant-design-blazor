@@ -144,5 +144,58 @@
   },
   "PageHeader": {
     "back": "înapoi"
+  },
+  "Form": {
+    "optional": "(opțional)",
+    "defaultValidateMessages": {
+      "default": "Eroare la validarea câmpului ${label}",
+      "required": "Vă rugăm introduceți ${label}",
+      "enum": "${label} trebuie să fie una din valorile [${enum}]",
+      "whitespace": "${label} nu poate fi gol",
+      "date": {
+        "format": "${label} - data nu este în formatul corect",
+        "parse": "${label} nu poate fi convertit la o dată",
+        "invalid": "${label} este o dată invalidă"
+      },
+      "types": {
+        "string": "${label} nu conține tipul corect (${type})",
+        "method": "${label} nu conține tipul corect (${type})",
+        "array": "${label} nu conține tipul corect (${type})",
+        "object": "${label} nu conține tipul corect (${type})",
+        "number": "${label} nu conține tipul corect (${type})",
+        "date": "${label} nu conține tipul corect (${type})",
+        "boolean": "${label} nu conține tipul corect (${type})",
+        "integer": "${label} nu conține tipul corect (${type})",
+        "float": "${label} nu conține tipul corect (${type})",
+        "regexp": "${label} nu conține tipul corect (${type})",
+        "email": "${label} nu conține tipul corect (${type})",
+        "url": "${label} nu conține tipul corect (${type})",
+        "hex": "${label} nu conține tipul corect (${type})"
+      },
+      "string": {
+        "len": "${label} trebuie să conțină ${len} caractere",
+        "min": "${label} trebuie să conțină cel puțin ${min} caractere",
+        "max": "${label} trebuie să conțină cel mult ${max} caractere",
+        "range": "${label} trebuie să conțină între ${min}-${max} caractere"
+      },
+      "number": {
+        "len": "${label} trebuie să conțină ${len} cifre",
+        "min": "${label} trebuie să fie minim ${min}",
+        "max": "${label} trebuie să fie maxim ${max}",
+        "range": "${label} trebuie să fie între ${min}-${max}"
+      },
+      "array": {
+        "len": "${label} trebuie să conțină ${len} elemente",
+        "min": "${label} trebuie să conțină cel puțin ${min} elemente",
+        "max": "${label} trebuie să conțină cel mult ${max} elemente",
+        "range": "${label} trebuie să conțină între ${min}-${max} elemente"
+      },
+      "pattern": {
+        "mismatch": "${label} nu respectă șablonul ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Preview"
   }
 }

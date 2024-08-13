@@ -1,0 +1,22 @@
+﻿
+<Button Type="primary" OnClick="()=>_visible=true">
+    Open Modal with customized header
+</Button>
+
+<Modal Title="@("Title")" @bind-Visible="@_visible" >
+    <Header>
+        <Icon Type="@IconType.Outline.Edit"></Icon> Edit
+    </Header>
+    <ChildContent>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+    </ChildContent>
+</Modal>
+
+
+@code {
+    bool _visible = false;
+}

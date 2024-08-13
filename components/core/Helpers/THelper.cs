@@ -3,11 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Reflection;
 
 namespace AntDesign
 {
-    public static class THelper
+    internal static class THelper
     {
         public static T ChangeType<T>(object value)
         {
@@ -34,7 +35,12 @@ namespace AntDesign
 
         public static bool IsTypeNullable<T>()
         {
-            return Nullable.GetUnderlyingType(typeof(T)) != null;
+            return IsTypeNullable(typeof(T));
+        }
+
+        public static bool IsTypeNullable(Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         public static Type GetNullableType<T>()
@@ -76,29 +82,39 @@ namespace AntDesign
             return targetType;
         }
 
-        public static bool IsNumericType<T>()
+        public static bool IsNumericType(this Type type)
         {
-            Type type = GetUnderlyingType<T>();
-            if (type == null)
-            {
-                return false;
-            }
-
-            return Type.GetTypeCode(type) switch
-            {
-                TypeCode.Byte
-                or TypeCode.Decimal
-                or TypeCode.Double
-                or TypeCode.Int16
-                or TypeCode.Int32
-                or TypeCode.Int64
-                or TypeCode.SByte
-                or TypeCode.Single
-                or TypeCode.UInt16
-                or TypeCode.UInt32
-                or TypeCode.UInt64 => true,
-                _ => false,
-            };
+            return type != null
+                && Type.GetTypeCode(type)
+                       is TypeCode.Byte
+                       or TypeCode.Decimal
+                       or TypeCode.Double
+                       or TypeCode.Int16
+                       or TypeCode.Int32
+                       or TypeCode.Int64
+                       or TypeCode.SByte
+                       or TypeCode.Single
+                       or TypeCode.UInt16
+                       or TypeCode.UInt32
+                       or TypeCode.UInt64;
         }
+
+        public static bool IsDateType(this Type type)
+        {
+            return type != null && (type == typeof(DateTime)
+                || type == typeof(DateTimeOffset)
+#if NET6_0_OR_GREATER
+                || type == typeof(TimeOnly)
+                || type == typeof(DateOnly)
+#endif
+                );
+        }
+
+        public static bool IsArrayOrList(this Type that) => that != null && (that.IsArray || typeof(IList).IsAssignableFrom(that));
+
+        public static bool IsEnumerable(this Type that) => that != null && (that.IsArray || typeof(IEnumerable).IsAssignableFrom(that));
+
+        public static bool IsUserDefinedClass(this Type thta) =>
+            thta.IsClass && thta.Namespace != null && !thta.Namespace.StartsWith("System");
     }
 }

@@ -5,7 +5,7 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <PercentStackedBar Data="data1" Config="config1"/>
+            <Bar Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -144,7 +144,7 @@
         }
     };
 
-    readonly PercentStackedBarConfig config1 = new PercentStackedBarConfig
+    readonly BarConfig config1 = new BarConfig
     {
         Title = new Title
         {
@@ -153,7 +153,7 @@
         },
         XField = "value",
         YField = "year",
-        StackField = "country",
+        SeriesField = "country",
         Color = new[] {"#2582a1", "#f88c24", "#c52125", "#87f4d0"},
         Label = new BarViewConfigLabel
         {
