@@ -122,7 +122,6 @@ namespace AntDesign.TableModels
         public TableDataItem(TItem data, Table<TItem> table)
         {
             this.Data = data;
-            Children = table.TreeChildren(data);
             Table = table;
         }
 
