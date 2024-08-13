@@ -112,14 +112,9 @@ namespace AntDesign.TableModels
         public Table<TItem> Table { get; set; }
 
         public IEnumerable<TItem> Children { get; set; }
-        public override bool HasChildren
-        {
-            get
-            {
-                if (Children == null) return false;
-                return Children.Any();
-            }
-        }
+
+        public override bool HasChildren => Children?.Any() ?? false;
+
         public TableDataItem()
         {
         }
@@ -128,7 +123,6 @@ namespace AntDesign.TableModels
         {
             this.Data = data;
             Children = table.TreeChildren(data);
-        
             Table = table;
         }
 
