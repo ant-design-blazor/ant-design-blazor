@@ -2,11 +2,13 @@
 @using System.Text.Json;
 @using System.ComponentModel
 @using System.Globalization
+@using AntDesign.Form.Locale
 
 <Form Model="@model"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
+      Locale="locale"
       WrapperColSpan="16">
     <FormItem>
         <Input @bind-Value="@context.Username" />
@@ -27,10 +29,15 @@
 
 @code
 {
+    FormLocale locale = LocaleProvider.CurrentLocale.Form;
+
+    protected override void OnInitialized()
+    {
+        locale.DefaultValidateMessages.Required = "❌ {0} is required.";
+    }
     public class Model
     {
         [Required]
-        [MaxLength(12)]
         [DisplayName("User Name")]
         public string Username { get; set; }
 
