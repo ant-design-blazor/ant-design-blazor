@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AntDesign.Core.Helpers;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -58,7 +59,7 @@ namespace AntDesign
             }
         }
 
-        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
+        private RowData<TItem> GetGroupRowData(GroupResult<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
 
@@ -75,9 +76,9 @@ namespace AntDesign
                 DataItem = new TableDataItem<TItem>
                 {
                     Table = this,
-                    Children = grouping
                 },
-                Children = grouping.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
+                Children = grouping.Children?.Count > 0 ? grouping.Children.Select((data, index) => data.Key==null? GetRowData()  GetGroupRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
+                : grouping.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
             };
 
             return groupRowData;
