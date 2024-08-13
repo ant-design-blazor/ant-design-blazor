@@ -112,7 +112,14 @@ namespace AntDesign.TableModels
         public Table<TItem> Table { get; set; }
 
         public IEnumerable<TItem> Children { get; set; }
-
+        public override bool HasChildren
+        {
+            get
+            {
+                if (Children == null) return false;
+                return Children.Any();
+            }
+        }
         public TableDataItem()
         {
         }
@@ -121,7 +128,7 @@ namespace AntDesign.TableModels
         {
             this.Data = data;
             Children = table.TreeChildren(data);
-            HasChildren = Children?.Any() == true;
+        
             Table = table;
         }
 
@@ -150,7 +157,7 @@ namespace AntDesign.TableModels
 
         public bool Disabled { get; set; }
 
-        public virtual bool HasChildren { get; set; }
+        public virtual bool HasChildren { get; }
 
         public event Action<TableDataItem, bool> SelectedChanged;
 

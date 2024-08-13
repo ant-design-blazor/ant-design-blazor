@@ -74,7 +74,6 @@ namespace AntDesign
                 RowIndex = rowIndex,
                 DataItem = new TableDataItem<TItem>
                 {
-                    HasChildren = true,
                     Table = this,
                     Children = grouping
                 },
