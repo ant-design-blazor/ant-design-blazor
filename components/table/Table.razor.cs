@@ -608,13 +608,8 @@ namespace AntDesign
                 return;
             }
 
-            var queryModel = BuildQueryModel();
-            var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
-
             var selectedKeys = _groupedColumns.Select(x => x.GetGroupByExpression<TItem>()).ToArray();
-            _groups = DynamicGroupByHelper.DynamicGroupBy(query, selectedKeys);
-
-            StateHasChanged();
+            _groups = DynamicGroupByHelper.DynamicGroupBy(_showItems, selectedKeys);
         }
 
         public void AddGroupColumn(IFieldColumn column)

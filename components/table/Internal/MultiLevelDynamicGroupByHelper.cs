@@ -19,14 +19,14 @@ internal static class DynamicGroupByHelper
     private static readonly ConcurrentDictionary<string, Delegate> _functionCache = new ConcurrentDictionary<string, Delegate>();
 
     public static List<GroupResult<TEntity>> DynamicGroupBy<TEntity>(
-        IQueryable<TEntity> source,
+        IEnumerable<TEntity> source,
         params Expression<Func<TEntity, object>>[] keySelectors)
     {
         return DynamicGroupByInternal(source, keySelectors, 0);
     }
 
     private static List<GroupResult<TEntity>> DynamicGroupByInternal<TEntity>(
-        IQueryable<TEntity> source,
+        IEnumerable<TEntity> source,
         Expression<Func<TEntity, object>>[] keySelectors,
         int level)
     {

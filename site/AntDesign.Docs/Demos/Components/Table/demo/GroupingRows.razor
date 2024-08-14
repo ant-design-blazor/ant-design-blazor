@@ -4,45 +4,28 @@
     <GroupTitleTemplate Context="rowData">
         <div style="display: flex; align-items: center;">
             <span style="min-width: 120px;">
-                @rowData.Key   Group @rowData.GroupResult.Level
+                @(rowData.GroupResult.Level == 1 ? "Subject" : "Grade") : @rowData.GroupResult.Key
             </span>
-            <span>
-                Value:  @rowData.GroupResult.GetHashCode()
-            </span>
-            <span>
-                Count: @rowData.GroupResult.Entities.Count
-            </span>
-            @if (@rowData.GroupResult.Level > 1)
+            @if (rowData.GroupResult.Level == 2)
             {
-                <span style="margin-left: -30px;">
-                    @if (rowData.GroupResult.Key == "A")
-                    {
-                        <Tag Color="red-inverse">Excellent</Tag>
-                    }
-                    else if (rowData.GroupResult.Key == "B")
-                    {
-                        <Tag Color="purple-inverse">Good</Tag>
-                    }
-                    else
-                    {
-                        <Tag Color="rgb(143, 201, 146)">Average</Tag>
-                    }
+                <span>
+                    Total: @rowData.GroupResult.Entities.Sum(x => x.Score)
                 </span>
             }
         </div>
     </GroupTitleTemplate>
     <ColumnDefinitions>
         <Selection />
-        <PropertyColumn Property="c=>c.Name" />
-        <PropertyColumn Property="c=>c.Age" Width="12%" Sortable  />
+        <PropertyColumn Property="c=>c.Name"  />
+        <PropertyColumn Property="c=>c.Age" Width="12%"   />
         <PropertyColumn Property="c=>c.Subject" Width="30%" Grouping />
-        <PropertyColumn Property="c=>c.Grade" Width="30%" Grouping GroupBy="GradeGroupBy" />
+        <PropertyColumn Property="c=>c.Score" Width="30%" Grouping GroupBy="GradeGroupBy" Sortable DefaultSortOrder="SortDirection.Descending"/>
     </ColumnDefinitions>
  </Table>
 
  @code {
-    string GradeGroupBy(int grade)
-       => grade switch
+    string GradeGroupBy(int score)
+       => score switch
        {
             >= 95 => "A",
             >= 90 => "B",
@@ -54,37 +37,37 @@
         new() {
             Name = "John Brown",
             Age = 10,
-            Grade = 90,
+            Score = 90,
             Subject= "Math"
         },
         new() {
             Name = "John Brown",
             Age = 10,
-            Grade = 95,
+            Score = 95,
             Subject= "Language"
         },
         new() {
             Name = "John Brown",
             Age = 10,
-            Grade = 85,
+            Score = 85,
             Subject="Science"
         },
         new() {
             Name = "Harry Potter",
             Age = 10,
-            Grade = 89,
+            Score = 89,
             Subject= "Math"
         },
         new() {
             Name = "Harry Potter",
             Age = 10,
-            Grade = 90,
+            Score = 90,
             Subject= "Language"
         },
         new() {
             Name = "Harry Potter",
             Age = 10,
-            Grade = 95,
+            Score = 95,
             Subject="Science"
         },
     };
@@ -95,7 +78,7 @@
 
         public int Age { get; set; }
 
-        public int Grade { get; set; }
+        public int Score { get; set; }
 
         public string Subject { get; set; }
     }
