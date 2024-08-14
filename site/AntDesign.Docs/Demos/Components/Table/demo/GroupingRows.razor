@@ -4,7 +4,13 @@
     <GroupTitleTemplate Context="rowData">
         <div style="display: flex; align-items: center;">
             <span style="min-width: 120px;">
-                Group @rowData.GroupResult.Level  Value:  @rowData.GroupResult.Key Count: @rowData.GroupResult.Entities.Count
+                @rowData.Key   Group @rowData.GroupResult.Level
+            </span>
+            <span>
+                Value:  @rowData.GroupResult.GetHashCode()
+            </span>
+            <span>
+                Count: @rowData.GroupResult.Entities.Count
             </span>
             @if (@rowData.GroupResult.Level > 1)
             {

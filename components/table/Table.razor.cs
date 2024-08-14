@@ -16,21 +16,7 @@ using AntDesign.core.Services;
 using AntDesign.Table.Internal;
 using AntDesign.Core.Reflection;
 using System.Diagnostics.CodeAnalysis;
-
-/* 项目“AntDesign (netstandard2.1)”的未合并的更改
-添加项:
-using AntDesign.table.Internal;
-*/
-using AntDesign.table.Internal;
-
-/* 项目“AntDesign (netstandard2.1)”的未合并的更改
-添加项:
-using AntDesign.table.TableModels;
-*/
-using AntDesign.table.TableModels;
-
-
-
+using AntDesign.Internal;
 
 
 #if NET5_0_OR_GREATER

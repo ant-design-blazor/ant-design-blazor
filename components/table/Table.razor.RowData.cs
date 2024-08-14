@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AntDesign.table.TableModels;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -68,19 +67,28 @@ namespace AntDesign
                 rowIndex += PageSize * (PageIndex - 1);
             }
 
-            var groupRowData = new RowData<TItem>()
+            var hashCode = grouping.GetHashCode();
+            rowCache ??= _rootRowDataCache;
+
+            if (!rowCache.TryGetValue(hashCode, out var groupRowData) || groupRowData == null)
             {
-                Key = grouping.Key?.ToString(),
-                IsGrouping = true,
-                RowIndex = rowIndex,
-                Level = level,
-                GroupResult = grouping,
-                DataItem = new TableDataItem<TItem>
+                groupRowData = new RowData<TItem>()
                 {
-                    Table = this,
-                },
-                Children = grouping.Children.SelectMany(x => x.Key == null ? x.Entities.Select((data, index) => GetRowData(data, index, level + 1, rowCache)) : [GetGroupRowData(x, index, level + 1, rowCache)]).ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.Key.GetHashCode(), x => x)
-            };
+                    Key = grouping.Key.ToString(),
+                    IsGrouping = true,
+                    RowIndex = rowIndex,
+                    Level = level,
+                    GroupResult = grouping,
+                    DataItem = new TableDataItem<TItem>
+                    {
+                        Table = this,
+                    },
+                    Children = grouping.Children.SelectMany(x => x.Key == null ? x.Entities.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache)) : [GetGroupRowData(x, index + rowIndex, level + 1, rowCache)])
+                    .ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.GroupResult.GetHashCode(), x => x)
+                };
+
+                rowCache.Add(hashCode, groupRowData);
+            }
 
             return groupRowData;
         }

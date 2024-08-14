@@ -264,7 +264,7 @@
     {
         return currentRowData =>
         {
-            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.RowIndex">
+            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.Key">
             @{
                 var currentDataItem = currentRowData.DataItem;
                 var rowAttributes = OnRow?.Invoke(currentRowData);

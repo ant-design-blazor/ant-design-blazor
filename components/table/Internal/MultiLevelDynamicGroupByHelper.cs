@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 using System.Collections.Concurrent;
-using AntDesign.table.TableModels;
+using AntDesign.TableModels;
 
-namespace AntDesign.table.Internal;
+namespace AntDesign.Internal;
 
 internal static class DynamicGroupByHelper
 {
@@ -60,7 +60,7 @@ internal static class DynamicGroupByHelper
                 Level = level + 1,
                 Key = groupKey,
                 Children = children,
-                Entities = source.ToList()
+                Entities = group.ToList()
             });
         }
 
