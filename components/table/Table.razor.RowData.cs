@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AntDesign.Core.Helpers;
+using AntDesign.table.TableModels;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -59,7 +59,7 @@ namespace AntDesign
             }
         }
 
-        private RowData<TItem> GetGroupRowData(GroupResult<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
+        private RowData<TItem> GetGroupRowData(GroupResult<TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
 
@@ -73,14 +73,13 @@ namespace AntDesign
                 Key = grouping.Key?.ToString(),
                 IsGrouping = true,
                 RowIndex = rowIndex,
+                Level = level,
+                GroupResult = grouping,
                 DataItem = new TableDataItem<TItem>
                 {
                     Table = this,
                 },
-                //Children = grouping.Children?.Count > 0 ? grouping.Children.Select((data, index) =>  GetGroupRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
-                //: grouping.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
-
-                Children = grouping.Children.SelectMany(x => x.Key == null ? x.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)) : [GetGroupRowData(x, index, level, rowCache)]).ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.Key.GetHashCode(), x => x)
+                Children = grouping.Children.SelectMany(x => x.Key == null ? x.Entities.Select((data, index) => GetRowData(data, index, level + 1, rowCache)) : [GetGroupRowData(x, index, level + 1, rowCache)]).ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.Key.GetHashCode(), x => x)
             };
 
             return groupRowData;

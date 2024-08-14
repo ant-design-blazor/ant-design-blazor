@@ -16,7 +16,20 @@ using AntDesign.core.Services;
 using AntDesign.Table.Internal;
 using AntDesign.Core.Reflection;
 using System.Diagnostics.CodeAnalysis;
-using AntDesign.Core.Helpers;
+
+/* 项目“AntDesign (netstandard2.1)”的未合并的更改
+添加项:
+using AntDesign.table.Internal;
+*/
+using AntDesign.table.Internal;
+
+/* 项目“AntDesign (netstandard2.1)”的未合并的更改
+添加项:
+using AntDesign.table.TableModels;
+*/
+using AntDesign.table.TableModels;
+
+
 
 
 
@@ -236,7 +249,7 @@ namespace AntDesign
 
         private QueryModel _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new();
-        private List<GroupResult<object, TItem>> _groups = [];
+        private List<GroupResult<TItem>> _groups = [];
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 

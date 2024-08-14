@@ -9,32 +9,34 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 using System.Collections.Concurrent;
+using AntDesign.table.TableModels;
 
-namespace AntDesign.Core.Helpers;
+namespace AntDesign.table.Internal;
 
 internal static class DynamicGroupByHelper
 {
     // Cache for storing compiled functions
     private static readonly ConcurrentDictionary<string, Delegate> _functionCache = new ConcurrentDictionary<string, Delegate>();
 
-    public static List<GroupResult<object, TEntity>> DynamicGroupBy<TEntity>(
+    public static List<GroupResult<TEntity>> DynamicGroupBy<TEntity>(
         IQueryable<TEntity> source,
         params Expression<Func<TEntity, object>>[] keySelectors)
     {
         return DynamicGroupByInternal(source, keySelectors, 0);
     }
 
-    private static List<GroupResult<object, TEntity>> DynamicGroupByInternal<TEntity>(
+    private static List<GroupResult<TEntity>> DynamicGroupByInternal<TEntity>(
         IQueryable<TEntity> source,
         Expression<Func<TEntity, object>>[] keySelectors,
         int level)
     {
         if (level >= keySelectors.Length)
         {
-            return new List<GroupResult<object, TEntity>>
+            return new List<GroupResult<TEntity>>
             {
-                new GroupResult<object, TEntity>
+                new GroupResult<TEntity>
                 {
+                    Level = level,
                     Key = null,
                     Entities = source.ToList()
                 }
@@ -46,17 +48,19 @@ internal static class DynamicGroupByHelper
 
         var groupedData = source.GroupBy(keySelectorFunc);
 
-        var result = new List<GroupResult<object, TEntity>>();
+        var result = new List<GroupResult<TEntity>>();
 
         foreach (var group in groupedData)
         {
             var groupKey = group.Key;
             var children = DynamicGroupByInternal(group.AsQueryable(), keySelectors, level + 1);
 
-            result.Add(new GroupResult<object, TEntity>
+            result.Add(new GroupResult<TEntity>
             {
+                Level = level + 1,
                 Key = groupKey,
-                Children = children
+                Children = children,
+                Entities = source.ToList()
             });
         }
 
@@ -74,11 +78,4 @@ internal static class DynamicGroupByHelper
         }
         return (Func<TEntity, object>)cachedFunc;
     }
-}
-
-internal class GroupResult<TKey, TEntity>
-{
-    public TKey Key { get; set; }
-    public List<GroupResult<TKey, TEntity>> Children { get; set; } = new List<GroupResult<TKey, TEntity>>();
-    public List<TEntity> Entities { get; set; } = new List<TEntity>();
 }

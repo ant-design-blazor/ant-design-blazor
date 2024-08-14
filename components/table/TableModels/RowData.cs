@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AntDesign.table.TableModels;
 
 namespace AntDesign.TableModels
 {
@@ -20,6 +21,8 @@ namespace AntDesign.TableModels
         /// hold the state of children rows
         /// </summary>
         public Dictionary<int, RowData<TItem>> Children { get; set; }
+
+        public GroupResult<TItem> GroupResult { get; set; }
 
         public RowData()
         { }

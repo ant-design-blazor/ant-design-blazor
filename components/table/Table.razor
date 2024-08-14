@@ -230,13 +230,18 @@
                      }
                  </td>
              </tr>
-    ;
-        }
-        else if (_groupedColumns.Count>0 && level==0)
-        {
-            return _groups.Select((data, index) => GetGroupRowData(data, index, level, parentRowData?.Children))
-                .ForeachLoop(bodyRow());
-        }
+       ;
+            }
+            else if (_groupedColumns.Count>0 && level==0)
+            {
+                return _groups.Select((data, index) => GetGroupRowData(data, index, level, parentRowData?.Children))
+                    .ForeachLoop(bodyRow());
+            }
+            else if (_groupedColumns.Count>0 && parentRowData?.IsGrouping == true)
+            {
+                 return parentRowData?.Children.Values
+                    .ForeachLoop(bodyRow());
+            }
 #if NET5_0_OR_GREATER
         else if (EnableVirtualization)
         {
@@ -288,9 +293,10 @@
                 </CascadingValue>
 
                 // When expand button was clicked, would trigger here to add one more child level
-                @if (currentDataItem.HasChildren && currentRowData.Expanded)
+                @if ((currentDataItem.HasChildren || currentRowData.IsGrouping) && currentRowData.Expanded)
                 {
                     currentRowData.Children??=new();
+                    currentDataItem.Children??=[];
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
                 }
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
