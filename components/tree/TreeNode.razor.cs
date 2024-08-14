@@ -565,16 +565,28 @@ namespace AntDesign
             return true;
         }
 
-        public void CheckAllChildren()
+        internal void DoCheckAllChildren()
         {
             SetChildChecked(this, true, true, true);
             StateHasChanged();
         }
 
-        public void UnCheckAllChildren()
+        public void CheckAllChildren()
+        {
+            DoCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
+        }
+
+        internal void DoUnCheckAllChildren()
         {
             SetChildChecked(this, false, true, true);
             StateHasChanged();
+        }
+
+        public void UnCheckAllChildren()
+        {
+            DoUnCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
         }
 
         /// <summary>
