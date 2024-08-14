@@ -74,7 +74,6 @@ namespace AntDesign
                 RowIndex = rowIndex,
                 DataItem = new TableDataItem<TItem>
                 {
-                    HasChildren = true,
                     Table = this,
                     Children = grouping
                 },
@@ -103,7 +102,7 @@ namespace AntDesign
             }
 
             currentDataItem.Data = data;
-
+            currentDataItem.Children = TreeChildren(data);
             // this row cache may be for children rows
             rowCache ??= _rootRowDataCache;
 
