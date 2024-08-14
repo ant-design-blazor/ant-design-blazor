@@ -79,11 +79,14 @@ namespace AntDesign
                 },
                 Children = grouping.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
             };
-
+            foreach (var childRowData in groupRowData.Children.Values)
+            {
+                childRowData.Parent = groupRowData;
+            }
             return groupRowData;
         }
 
-        private RowData<TItem> GetRowData(TItem data, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
+        private RowData<TItem> GetRowData(TItem data, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null, RowData<TItem> parentData = null)
         {
             int rowIndex = index + 1;
 
@@ -118,6 +121,7 @@ namespace AntDesign
             currentRowData.Level = level;
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
+            currentRowData.Parent = parentData;
 
             if (currentDataItem.HasChildren && (level < DefaultExpandMaxLevel || currentRowData.Expanded))
             {
@@ -127,7 +131,7 @@ namespace AntDesign
                     if (currentRowData.Children.ContainsKey(GetHashCode(item)))
                         continue;
 
-                    GetRowData(item, i, level + 1, currentRowData.Children);
+                    GetRowData(item, i, level + 1, currentRowData.Children, currentRowData);
                 }
             }
 

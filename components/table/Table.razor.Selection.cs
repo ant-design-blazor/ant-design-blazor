@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -27,9 +28,16 @@ namespace AntDesign
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
+        /// <summary>
+        /// How to select or deselect the current row by clicking on it
+        /// </summary>
+        [Parameter]
+        public TableRowClickSelect RowClickSelect { get; set; } = TableRowClickSelect.Disabled;
+
         private ISelectionColumn _selection;
         private readonly HashSet<TItem> _selectedRows;
         private bool _preventRowDataTriggerSelectedRowsChanged;
+        private RowData<TItem> _prevSelectedRow;
 
         internal void DataItemSelectedChanged(TableDataItem<TItem> dataItem, bool selected)
         {
@@ -92,7 +100,7 @@ namespace AntDesign
                 select.SetSelected(false, _selection.CheckStrictly);
             }
 
-             _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();
@@ -217,6 +225,171 @@ namespace AntDesign
                 _outerSelectedRows = _selectedRows;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }
+        }
+
+        private IEnumerable<TItem> SelectRow(RowData<TItem> row)
+        {
+            if (_prevSelectedRow == row)
+            {
+                _prevSelectedRow = null;
+                return [];
+            }
+            else
+            {
+                _prevSelectedRow = row;
+                return [row.Data];
+            }
+        }
+
+        private IEnumerable<TItem> CheckRow(RowData<TItem> row)
+        {
+            if (_selectedRows.Contains(row.Data, this))
+            {
+                _prevSelectedRow = null;
+                return _selectedRows.Except([row.Data], this);
+            }
+            else
+            {
+                _prevSelectedRow = row;
+                return _selectedRows.Concat([row.Data]);
+            }
+        }
+
+        private bool AddChildrenToSelectRows(RowData<TItem> currentRow, RowData<TItem> endRow, List<TItem> toSelectRows)
+        {
+            toSelectRows.Add(currentRow.Data);
+
+            if (currentRow == endRow) return true;
+
+            // Do not select invisible rows
+            if (!currentRow.Expanded) return false;
+
+            var children = currentRow.Children?.Values.ToList();
+            if (children == null || children.Count == 0)
+            {
+                return false;
+            }
+            if (endRow.Parent == currentRow)
+            {
+                children = children.Where(x => x.RowIndex <= endRow.RowIndex).ToList();
+            }
+            foreach (var child in children)
+            {
+                if (AddChildrenToSelectRows(child, endRow, toSelectRows))
+                    return true;
+            }
+            return false;
+        }
+
+        private bool AddSiblingsToSelectRows(RowData<TItem> currentRow, RowData<TItem> endRoot, RowData<TItem> endRow, List<TItem> toSelectRows)
+        {
+            List<RowData<TItem>> siblings;
+            if (currentRow.Parent == null)
+            {
+                siblings = [.. _rootRowDataCache.Values];
+            }
+            else
+            {
+                siblings = currentRow.Parent.Children?.Values.ToList();
+            }
+            siblings = siblings?.Where(x => x.RowIndex > currentRow.RowIndex).ToList();
+            if (endRoot.Parent == currentRow.Parent)
+                siblings = siblings?.Where(x => x.RowIndex <= endRoot.RowIndex).ToList();
+            if (siblings == null) return false;
+            foreach (var child in siblings)
+            {
+                if (AddChildrenToSelectRows(child, endRow, toSelectRows)) return true;
+            }
+            return false;
+        }
+
+        void AddToSelectedRows(RowData<TItem> startRow, RowData<TItem> startRoot, RowData<TItem> endRoot, RowData<TItem> endRow, List<TItem> toSelectRows)
+        {
+            if (AddChildrenToSelectRows(startRow, endRow, toSelectRows)) return;
+            RowData<TItem> currRow = startRow;
+            while (currRow != null)
+            {
+                if (AddSiblingsToSelectRows(currRow, endRoot, endRow, toSelectRows)) return;
+                if (currRow == startRoot) break;
+                currRow = currRow.Parent;
+            }
+        }
+
+        private IEnumerable<TItem> SelectRange(RowData<TItem> row)
+        {
+            List<TItem> toSelectRows = [];
+            if (_prevSelectedRow.PageIndex == row.PageIndex)
+            {
+                RowData<TItem> startRow, endRow, startRoot, endRoot;
+                var prevRoot = _prevSelectedRow;
+                var newRoot = row;
+                while (true)
+                {
+                    if (prevRoot.Parent == newRoot.Parent) break;
+                    if (prevRoot.Level < newRoot.Level)
+                    {
+                        while (true)
+                        {
+                            newRoot = newRoot.Parent;
+                            if (newRoot.Level == prevRoot.Level) break;
+                        }
+                    }
+                    else if (prevRoot.Level > newRoot.Level)
+                    {
+                        while (true)
+                        {
+                            prevRoot = prevRoot.Parent;
+                            if (newRoot.Level == prevRoot.Level) break;
+                        }
+                    }
+                    else
+                    {
+                        prevRoot = prevRoot.Parent;
+                        newRoot = newRoot.Parent;
+                    }
+                }
+                if ((prevRoot.RowIndex < newRoot.RowIndex)
+                    || ((prevRoot.RowIndex == newRoot.RowIndex) && (_prevSelectedRow == newRoot)))
+                {
+                    startRow = _prevSelectedRow;
+                    endRow = row;
+                    startRoot = prevRoot;
+                    endRoot = newRoot;
+                }
+                else
+                {
+                    startRow = row;
+                    endRow = _prevSelectedRow;
+                    startRoot = newRoot;
+                    endRoot = prevRoot;
+                }
+                AddToSelectedRows(startRow, startRoot, endRoot, endRow, toSelectRows);
+            }
+            return toSelectRows;
+        }
+
+        void DoRowSelect(MouseEventArgs e, RowData<TItem> row)
+        {
+            IEnumerable<TItem> toSelectRows;
+
+            if (RowClickSelect == TableRowClickSelect.Multiple && e.ShiftKey && _prevSelectedRow != null)
+            {
+                toSelectRows = SelectRange(row);
+            }
+            else if (RowClickSelect == TableRowClickSelect.Multiple && e.CtrlKey)
+            {
+                toSelectRows = CheckRow(row);
+            }
+            else if (RowClickSelect == TableRowClickSelect.Single || _selection?.Type == "radio")
+            {
+                toSelectRows = SelectRow(row);
+            }
+            else
+            {
+                toSelectRows = CheckRow(row);
+            }
+
+            SetSelection(toSelectRows);
         }
     }
 }

@@ -73,6 +73,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | OnRowClick | Row click event (deprecated in antd v3) | EventCallback<RowData<TItem>> | - |
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
 | Resizable | Enable resizable column | bool | false |
+| RowClickSelect | Specify how to select or deselect the current row by clicking on it | `TableRowClickSelect` | Disabled |
 | FieldFilterTypeResolver | Used to resolve filter types for columns | `IFilterTypeResolver` | Injected |
 
 ### Column

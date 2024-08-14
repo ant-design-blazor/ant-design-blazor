@@ -73,6 +73,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | OnRowClick | 行点击事件(于antd v3中已废弃) | EventCallback<RowData<TItem>> | - |
 | HidePagination| 隐藏分页器，PageSize 等于数据源的行数 | bool | false |
 | Resizable | 启用可伸缩列 | bool | false |
+| RowClickSelect | 指定如何通过点击行进行选择或取消选择当前行 | `TableRowClickSelect` | Disabled |
 | FieldFilterTypeResolver | 用于解析列的筛选器类型 | `IFilterTypeResolver` | 默认由全局注入 |
 | Filtered   | 标识数据是否经过过滤，筛选图标会高亮 | bool |  false |
 

@@ -881,6 +881,8 @@ namespace AntDesign
             return RowKey(x).Equals(RowKey(y));
         }
 
+        internal bool Equals(TItem x, TItem y) => Equals(x, y);
+
         int IEqualityComparer<TItem>.GetHashCode(TItem obj) => GetHashCode(obj);
 
         private int GetHashCode(TItem obj)
