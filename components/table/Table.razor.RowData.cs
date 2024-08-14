@@ -70,15 +70,17 @@ namespace AntDesign
 
             var groupRowData = new RowData<TItem>()
             {
-                Key = grouping.Key.ToString(),
+                Key = grouping.Key?.ToString(),
                 IsGrouping = true,
                 RowIndex = rowIndex,
                 DataItem = new TableDataItem<TItem>
                 {
                     Table = this,
                 },
-                Children = grouping.Children?.Count > 0 ? grouping.Children.Select((data, index) => data.Key==null? GetRowData()  GetGroupRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
-                : grouping.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
+                //Children = grouping.Children?.Count > 0 ? grouping.Children.Select((data, index) =>  GetGroupRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
+                //: grouping.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
+
+                Children = grouping.Children.SelectMany(x => x.Key == null ? x.Entities.Select((data, index) => GetRowData(data, index, level, rowCache)) : [GetGroupRowData(x, index, level, rowCache)]).ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.Key.GetHashCode(), x => x)
             };
 
             return groupRowData;
