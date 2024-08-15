@@ -53,7 +53,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | Loading | 表格是否加载中 | bool | false |
 | Title | 表格标题 | string | - |
 | TitleTemplate | 标题模板 | RenderFragment | - |
-| GroupTitleTemplate | 行分组标题模板 | RenderFragment | - |
+| GroupTitleTemplate | 分组标题模板，不设置默认标题为该层级分组 Key 的字符串转换 | RenderFragment<GroupResult<TItem>> | - |
+| GroupFooterTemplate | 分组脚部模板，常用于对分组的统计 | RenderFragment<GroupResult<TItem>> | - |
 | Footer | 表格尾部 | string | - |
 | FooterTemplate | 表格尾部模板 | RenderFragment | - |
 | Size | 表格尺寸大小 | [TableSize](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/table/TableSize.cs) | - |
@@ -99,7 +100,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | FilterDropdown | 自定义列筛选器模板 | RenderFragment | - |
 | FieldFilterType | 筛选器配置 ，可用于自定义额外的筛选器 | `IFieldFilterType` | 由 `FieldFilterTypeResolver` 根据类型解析内置筛选器 |
 | OnFilter | 筛选当前数据 | Expression<Func<TData, TData, bool>> | - |
-
+| Grouping | 指定该列用于分组 | bool | - |
+| GroupBy | 一个委托，用于转换分组的值 | Func<TData, object> | - |
 
 ### PropertyColumn
 

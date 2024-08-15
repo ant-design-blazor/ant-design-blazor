@@ -11,11 +11,11 @@ public class GroupResult<TEntity>
 {
     public int Level { get; set; }
     public object Key { get; set; }
-    public List<GroupResult<TEntity>> Children { get; set; } = [];
-    public List<TEntity> Entities { get; set; } = [];
+    internal List<GroupResult<TEntity>> Children { get; set; } = [];
+    public List<TEntity> Items { get; set; } = [];
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Entities);
+        return HashCode.Combine(Items);
     }
 }

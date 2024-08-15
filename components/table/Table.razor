@@ -295,9 +295,10 @@
                 // When expand button was clicked, would trigger here to add one more child level
                 @if ((currentDataItem.HasChildren || currentRowData.IsGrouping) && currentRowData.Expanded)
                 {
-                    currentRowData.Children??=new();
-                    currentDataItem.Children??=[];
+                    currentRowData.Children ??= new();
+                    currentDataItem.Children ??= [];
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
+                    @groupFooter(currentRowData);
                 }
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
                 {
@@ -330,6 +331,19 @@
                 </CascadingValue>;
         }
 
+        return builder => { };
+    }
+
+    RenderFragment groupFooter(RowData<TItem> currentRowData)
+    {
+         @if (GroupFooterTemplate !=null)
+        {
+            return@<tr class="ant-table-expanded-row ant-table-expanded-row-level-1 ant-table-grouping-footer" >
+                <td colspan="@(ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                    @GroupFooterTemplate(currentRowData.GroupResult)
+                </td>
+            </tr>;
+        }
         return builder => { };
     }
 }

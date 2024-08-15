@@ -68,7 +68,10 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<RowData<TItem>> GroupTitleTemplate { get; set; }
+        public RenderFragment<GroupResult<TItem>> GroupTitleTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<GroupResult<TItem>> GroupFooterTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
@@ -284,16 +287,17 @@ namespace AntDesign
 
         RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
         {
+            var groupResult = ((RowData<TItem>)rowData).GroupResult;
             if (GroupTitleTemplate == null)
             {
                 return builder =>
                 {
-                    builder.AddContent(0, rowData.Key);
+                    builder.AddContent(0, groupResult.Key);
                 };
             }
             return builder =>
             {
-                builder.AddContent(0, GroupTitleTemplate((RowData<TItem>)rowData));
+                builder.AddContent(0, GroupTitleTemplate(groupResult));
             };
         };
 

@@ -38,7 +38,7 @@ internal static class DynamicGroupByHelper
                 {
                     Level = level,
                     Key = null,
-                    Entities = source.ToList()
+                    Items = source.ToList()
                 }
             };
         }
@@ -60,7 +60,7 @@ internal static class DynamicGroupByHelper
                 Level = level + 1,
                 Key = groupKey,
                 Children = children,
-                Entities = group.ToList()
+                Items = group.ToList()
             });
         }
 
