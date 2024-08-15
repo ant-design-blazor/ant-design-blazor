@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 0.20.1
+
+`2024-08-15`
+
+- Table
+  - 🆕 Add support for multiple-level row grouping. [#4089](https://github.com/ant-design-blazor/ant-design-blazor/pull/4089) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the issue of not displaying child nodes when adding them to Children. [#4086](https://github.com/ant-design-blazor/ant-design-blazor/pull/4086) [@ysj265](https://github.com/ysj265)
+- Form
+  - 🆕 Add support for using FormItem label or property displayname as the label of error messages. [#4074](https://github.com/ant-design-blazor/ant-design-blazor/pull/4074) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed validation attributes transfer.  [#4080](https://github.com/ant-design-blazor/ant-design-blazor/pull/4080) [#4084](https://github.com/ant-design-blazor/ant-design-blazor/pull/4084) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Select support `@bind-Visible`. [#4079](https://github.com/ant-design-blazor/ant-design-blazor/pull/4079) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree that node's 'CheckAllChildren' does not trigger a change in 'CheckedKeys'. [#4088](https://github.com/ant-design-blazor/ant-design-blazor/pull/4088) [@pankey888](https://github.com/pankey888)
+- 🌐 i18n: Add more locales. [#4078](https://github.com/ant-design-blazor/ant-design-blazor/pull/4078) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: Update form locales. [#4076](https://github.com/ant-design-blazor/ant-design-blazor/pull/4076) [@ElderJames](https://github.com/ElderJames)
+- 📖 docs: Update i18n documentation. [#4085](https://github.com/ant-design-blazor/ant-design-blazor/pull/4085) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.20.0
 
 `2024-08-07`

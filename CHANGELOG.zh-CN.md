@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 0.20.1
+
+`2024-08-15`
+
+- Table
+  - 🆕 新增 多级行分组支持。[#4089](https://github.com/ant-design-blazor/ant-design-blazor/pull/4089) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 树形数据的 Children 无法更新。[#4086](https://github.com/ant-design-blazor/ant-design-blazor/pull/4086) [@ysj265](https://github.com/ysj265)
+
+- Form  
+  - 🆕 新增 利用 FormItem 的 Label 或者特性指定的名称作为错误信息的字段名。[#4074](https://github.com/ant-design-blazor/ant-design-blazor/pull/4074) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 验证异常。[#4080](https://github.com/ant-design-blazor/ant-design-blazor/pull/4080) [#4084](https://github.com/ant-design-blazor/ant-design-blazor/pull/4084) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 增加 Select 支持 @bind-Visible 控制打开关闭。[#4079](https://github.com/ant-design-blazor/ant-design-blazor/pull/4079) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 节点的 CheckAllChildren 方法未更新 CheckedKeys。[#4088](https://github.com/ant-design-blazor/ant-design-blazor/pull/4088) [@pankey888](https://github.com/pankey888)
+- 🌐 更新 Form 的语言包。[#4076](https://github.com/ant-design-blazor/ant-design-blazor/pull/4076) [@ElderJames](https://github.com/ElderJames)
+- 🌐 增加 更多国际化语言包。[#4078](https://github.com/ant-design-blazor/ant-design-blazor/pull/4078) [@ElderJames](https://github.com/ElderJames)
+- 📖 完善 国际化 文档。[#4085](https://github.com/ant-design-blazor/ant-design-blazor/pull/4085) [@ElderJames](https://github.com/ElderJames)
 
 ### 0.20.0
 
