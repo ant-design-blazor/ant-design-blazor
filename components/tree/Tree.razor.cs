@@ -441,7 +441,7 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.CheckAllChildren();
+                item.DoCheckAllChildren();
             }
             UpdateCheckedKeys();
         }
@@ -453,7 +453,7 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.UnCheckAllChildren();
+                item.DoUnCheckAllChildren();
             }
             UpdateCheckedKeys();
         }
