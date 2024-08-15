@@ -3,7 +3,7 @@
 <Table DataSource="data" Bordered>
     <GroupTitleTemplate Context="group">
         <span style="min-width: 120px;">
-            @(group.Level == 1 ? "Subject" : "Grade") : @group.Key
+            @(group.Level == 1 ? "Name" : "Grade") : @group.Key
         </span>
     </GroupTitleTemplate>
     <GroupFooterTemplate Context="group">
