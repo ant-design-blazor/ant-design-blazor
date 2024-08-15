@@ -21,6 +21,8 @@ namespace AntDesign.TableModels
         /// </summary>
         public Dictionary<int, RowData<TItem>> Children { get; set; }
 
+        public GroupResult<TItem> GroupResult { get; set; }
+
         public RowData()
         { }
 

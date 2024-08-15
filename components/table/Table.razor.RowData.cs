@@ -58,7 +58,7 @@ namespace AntDesign
             }
         }
 
-        private RowData<TItem> GetGroupRowData(IGrouping<object, TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
+        private RowData<TItem> GetGroupRowData(GroupResult<TItem> grouping, int index, int level, Dictionary<int, RowData<TItem>> rowCache = null)
         {
             int rowIndex = index + 1;
 
@@ -67,18 +67,28 @@ namespace AntDesign
                 rowIndex += PageSize * (PageIndex - 1);
             }
 
-            var groupRowData = new RowData<TItem>()
+            var hashCode = grouping.GetHashCode();
+            rowCache ??= _rootRowDataCache;
+
+            if (!rowCache.TryGetValue(hashCode, out var groupRowData) || groupRowData == null)
             {
-                Key = grouping.Key.ToString(),
-                IsGrouping = true,
-                RowIndex = rowIndex,
-                DataItem = new TableDataItem<TItem>
+                groupRowData = new RowData<TItem>()
                 {
-                    Table = this,
-                    Children = grouping
-                },
-                Children = grouping.Select((data, index) => GetRowData(data, index, level, rowCache)).ToDictionary(x => GetHashCode(x.Data), x => x)
-            };
+                    Key = grouping.Key.ToString(),
+                    IsGrouping = true,
+                    RowIndex = rowIndex,
+                    Level = level,
+                    GroupResult = grouping,
+                    DataItem = new TableDataItem<TItem>
+                    {
+                        Table = this,
+                    },
+                    Children = grouping.Children.SelectMany(x => x.Key == null ? x.Items.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache)) : [GetGroupRowData(x, index + rowIndex, level + 1, rowCache)])
+                    .ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.GroupResult.GetHashCode(), x => x)
+                };
+
+                rowCache.Add(hashCode, groupRowData);
+            }
 
             return groupRowData;
         }

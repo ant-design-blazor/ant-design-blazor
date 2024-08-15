@@ -16,6 +16,7 @@ using AntDesign.core.Services;
 using AntDesign.Table.Internal;
 using AntDesign.Core.Reflection;
 using System.Diagnostics.CodeAnalysis;
+using AntDesign.Internal;
 
 
 #if NET5_0_OR_GREATER
@@ -67,7 +68,10 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<RowData<TItem>> GroupTitleTemplate { get; set; }
+        public RenderFragment<GroupResult<TItem>> GroupTitleTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<GroupResult<TItem>> GroupFooterTemplate { get; set; }
 
         [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
@@ -234,7 +238,7 @@ namespace AntDesign
 
         private QueryModel _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new();
-        private List<IGrouping<object, TItem>> _groups = [];
+        private List<GroupResult<TItem>> _groups = [];
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
@@ -283,16 +287,17 @@ namespace AntDesign
 
         RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
         {
+            var groupResult = ((RowData<TItem>)rowData).GroupResult;
             if (GroupTitleTemplate == null)
             {
                 return builder =>
                 {
-                    builder.AddContent(0, rowData.Key);
+                    builder.AddContent(0, groupResult.Key);
                 };
             }
             return builder =>
             {
-                builder.AddContent(0, GroupTitleTemplate((RowData<TItem>)rowData));
+                builder.AddContent(0, GroupTitleTemplate(groupResult));
             };
         };
 
@@ -607,28 +612,18 @@ namespace AntDesign
                 return;
             }
 
-            var queryModel = BuildQueryModel();
-            var query = queryModel.ExecuteQuery(_dataSource.AsQueryable());
-
-            foreach (var column in _groupedColumns)
-            {
-                var grouping = column.Group(queryModel.CurrentPagedRecords(query));
-                _groups = [.. grouping];
-            }
-
-            StateHasChanged();
+            var selectedKeys = _groupedColumns.Select(x => x.GetGroupByExpression<TItem>()).ToArray();
+            _groups = DynamicGroupByHelper.DynamicGroupBy(_showItems, selectedKeys);
         }
 
         public void AddGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Add(column);
-            GroupItems();
         }
 
         public void RemoveGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Remove(column);
-            GroupItems();
         }
 
         private void SetClass()
