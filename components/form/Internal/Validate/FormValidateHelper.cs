@@ -54,7 +54,7 @@ namespace AntDesign.Internal.Form.Validate
             attribute.ErrorMessage = attribute switch
             {
                 // if user has set the ErrorMessage, we will use it directly
-                { ErrorMessage.Length: > 0 } => attribute.ErrorMessage,
+                { ErrorMessage.Length: > 0 } or { ErrorMessageResourceName: not null } => attribute.ErrorMessage,
                 RequiredAttribute => ReplaceLabel(templates.Required),
                 RangeAttribute => ReplaceLength(compareMessage.Range, max: 2),
                 MinLengthAttribute => ReplaceLength(compareMessage.Min),
