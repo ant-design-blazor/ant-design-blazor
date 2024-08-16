@@ -14,7 +14,7 @@ title:
 - `Username`：输入框后面有描述文案或其他组件，在 `FormItem` 内只有使用了@bind-Value的组件才会绑定到FormItem，其他组件可任意添加。
 - `Address`：有两个控件，在 `FormItem` 内使用两个 `<FormItem NoStyle />` 分别绑定对应控件（一个FormItem下只能出现一个使用了@bing-Value的控件），对FormItem使用NoStyle，则FormItem的Grid布局会被忽略，就算主动使用了LabelCol或WrapperCol也不会产生效果。
 
-  这个场景还展示了复杂类型的表单验证，Address是一个包含了两个属性的类结构，通过附加ValidateComplexType，表单可以对其所有属性进行验证。详情可参考Blazor文档：[嵌套模型、集合类型和复杂类型](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/forms-validation?WT.mc_id=DT-MVP-5003987)
+  这个场景还展示了复杂类型的表单验证，Address 属性是一个包含了两个属性的类型，当级联表单项绑定了它的属性时，会继承这个属性的所有 Attributes，但由于表单未绑定这个属性，外部表单无法获取 Required 和 Label。
 - `BirthDate`：有两个内联控件，错误信息展示各自控件下，使用两个 `<FormItem />` 分别绑定对应控件，并修改 `style` 使其内联布局。
 
 更复杂的封装复用方式可以参考下面的 `自定义表单控件` 。

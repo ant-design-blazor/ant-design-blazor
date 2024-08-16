@@ -4,7 +4,7 @@
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     <Row Class="ant-form-item-row">
-        @if (!string.IsNullOrEmpty(DisplayName) || LabelTemplate != null)
+        @if (!NoStyle && ( !string.IsNullOrEmpty(DisplayName) || LabelTemplate != null))
         {
             <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
                 @if (LabelTemplate != null)
@@ -35,20 +35,23 @@
                 </div>
             </div>
 
-            @foreach (var message in _validationMessages)
+            @if (!NoStyle)
             {
-                <div style="display: flex; flex-wrap: nowrap;">
-                    <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
-                        <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLower()}")>
-                            @message
+                @foreach (var message in _validationMessages)
+                {
+                    <div style="display: flex; flex-wrap: nowrap;">
+                        <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
+                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLower()}")>
+                                @message
+                            </div>
                         </div>
+                        <div style="width: 0px; height: 24px;"></div>
                     </div>
-                    <div style="width: 0px; height: 24px;"></div>
-                </div>
+                }
             }
         </AntDesign.Col>
     </Row>
-    @if (_validationMessages.Any())
+    @if (!NoStyle && _validationMessages.Any())
     {
         <div class="ant-form-item-margin-offset" style="margin-bottom: -24px;"></div>
     }

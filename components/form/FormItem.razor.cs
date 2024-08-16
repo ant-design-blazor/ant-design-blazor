@@ -112,9 +112,9 @@ namespace AntDesign
 
         private bool _isRequiredByValidationRuleOrAttribute;
 
-        private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required;
+        private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required || ParentFormItem?.IsRequired == true;
 
-        bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
+        bool IFormItem.IsRequired => IsRequired;
 
         IForm IFormItem.Form => Form;
 
@@ -184,7 +184,7 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
-        private string DisplayName => Label ?? _propertyReflector?.DisplayName;
+        private string DisplayName => Label ?? _propertyReflector?.DisplayName ?? _propertyReflector?.PropertyName;
 
         private string _name;
         private Action _nameChanged;
@@ -361,7 +361,7 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
-        private string GetLabelClass() => IsRequired && Form.RequiredMark == FormRequiredMark.Required
+        private string GetLabelClass() => IsRequired && Form?.RequiredMark == FormRequiredMark.Required
             ? $"{_prefixCls}-required"
             : _labelCls;
 
@@ -421,7 +421,7 @@ namespace AntDesign
             }
 
             _fieldIdentifier = control.FieldIdentifier;
-            this._control = control;
+            _control = control;
 
             if (Form?.ValidateOnChange == true)
             {
