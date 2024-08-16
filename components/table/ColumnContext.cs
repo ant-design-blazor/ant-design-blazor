@@ -22,6 +22,14 @@ namespace AntDesign
             _table = table;
         }
 
+        public void Clear()
+        {
+            CurrentColIndex = 0;
+            ColIndexOccupied = [];
+            HeaderColumns.Clear();
+            Columns.Clear();
+        }
+
         public void AddColumn(IColumn column)
         {
             if (column == null)

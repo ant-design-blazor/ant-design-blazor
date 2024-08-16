@@ -251,6 +251,7 @@ namespace AntDesign
 
         private bool _isVirtualizeEmpty;
         private bool _afterFirstRender;
+        private bool _isRebuilding;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -767,13 +768,21 @@ namespace AntDesign
                 this.FinishLoadPage();
             }
 
+            if (_isRebuilding)
+            {
+                _shouldRender = true;
+                StateHasChanged();
+
+                _isRebuilding = false;
+            }
+
             _shouldRender = false;
         }
 
         protected override bool ShouldRender()
         {
             // Do not render until initialisation is complete.
-            this._shouldRender = this._shouldRender && _hasInitialized;
+            this._shouldRender = this._shouldRender && (_hasInitialized || _isRebuilding);
 
             return this._shouldRender;
         }
@@ -884,6 +893,24 @@ namespace AntDesign
                 RowKey = data => data;
 
             return RowKey(obj).GetHashCode();
+        }
+
+        bool ITable.Rerender(bool add)
+        {
+            if (add && !_hasInitialized) return false;
+
+            // avoid call again
+            if (!add && ColumnContext.Columns.Count == 0) return false;
+
+            ChildContent = c => c => { };
+
+            ColumnContext = new ColumnContext(this);
+            _hasInitialized = false;
+            _isRebuilding = true;
+
+            StateHasChanged();
+
+            return true;
         }
     }
 }

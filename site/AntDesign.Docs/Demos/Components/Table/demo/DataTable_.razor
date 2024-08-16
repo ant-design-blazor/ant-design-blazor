@@ -2,14 +2,42 @@
 
 <h3>DataTable</h3>
 
+<CheckboxGroup TValue="string" OnChange="OnChange">
+    <Checkbox Label="Age"></Checkbox>
+    <Checkbox Label="Address"></Checkbox>
+</CheckboxGroup>
+
+
 <Table DataSource="data">
-    @foreach(DataColumn column in _dataTable.Columns)
+    @foreach (var column in show)
     {
-        <PropertyColumn Property="c=>c.Field<string>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Field<string>(column)" Title="@column" Sortable Filterable></PropertyColumn>
     }
 </Table>
 
+
+<style>
+    html::view-transition-group(*) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation-duration: 0.25s;
+        animation-fill-mode: both;
+    }
+
+    html::view-transition-group(.ant-table-tbody) {
+        animation-name: slide-in;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        animation-delay: 0.25s;
+
+        animation-duration: 0.25s;
+
+    }
+</style>
+
 @code {
+    bool loading;
+    string[] show = ["Name"];
     DataTable _dataTable = new DataTable();
 
     IEnumerable<DataRow> data => _dataTable?.AsEnumerable();
@@ -25,5 +53,14 @@
         _dataTable.Rows.Add(null, 32, "Sidney No. 1 Lake Park");
 
         base.OnInitialized();
+    }
+
+    async Task  OnChange(string[] values)
+    {
+        show = ["Name", .. values];
+        loading = true;
+        StateHasChanged();
+        await Task.Yield();
+        loading = false;
     }
 }
