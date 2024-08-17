@@ -1,16 +1,30 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
+Dynamic columns:
+<CheckboxGroup TValue="string" OnChange="OnColumnChange">
+    <Checkbox Label="Age"></Checkbox>
+    <Checkbox Label="Address"></Checkbox>
+</CheckboxGroup>
+
+<Table TItem="Data" DataSource="@data" OnRowClick="OnRowClick">
     <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
     </PropertyColumn>
-    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address">
-        <TitleTemplate>
-            <span> <Icon Type="environment" /> Address </span>
-        </TitleTemplate>
-    </PropertyColumn>
+
+    @if (columns.Contains("Age"))
+    {
+        <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+    }
+    @if (columns.Contains("Address"))
+    {
+        <PropertyColumn Property="c=>c.Address">
+            <TitleTemplate>
+                <span> <Icon Type="environment" /> Address </span>
+            </TitleTemplate>
+        </PropertyColumn>
+    }
+   
     <PropertyColumn Property="c=>c.Tags">
         @foreach (var tag in context.Tags)
         {
@@ -35,8 +49,20 @@
 </Table>
 
 @code {
-  IData[] data = new Data[]
-  {
+    string[] columns = ["Age", "Address"];
+ 
+    void OnColumnChange(string[] values)
+    {
+        columns = values;
+    }
+
+    void OnRowClick(RowData<Data> row)
+    {
+        Console.WriteLine($"row {row.Data.Key} was clicked.");
+    }
+
+    Data[] data = new Data[]
+    {
         new()
         {
             Key = "1",
@@ -61,41 +87,23 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-  };
+    };
 
-    public interface IData
+    public class Data
     {
+        [DisplayName("Key")]
         public string Key { get; set; }
 
+        [DisplayName("Name")]
         public string Name { get; set; }
 
+        [DisplayName("Age")]
         public int Age { get; set; }
 
+        [DisplayName("Address")]
         public string Address { get; set; }
 
+        [DisplayName("Tags")]
         public string[] Tags { get; set; }
     }
-
-    public class Data : IData
-  {
-    [DisplayName("Key")]
-    public string Key { get; set; }
-
-    [DisplayName("Name")]
-    public string Name { get; set; }
-
-    [DisplayName("Age")]
-    public int Age { get; set; }
-
-    [DisplayName("Address")]
-    public string Address { get; set; }
-
-    [DisplayName("Tags")]
-    public string[] Tags { get; set; }
-  }
-
-    void OnRowClick(RowData<IData> row)
-  {
-    Console.WriteLine($"row {row.Data.Key} was clicked.");
-  }
 }

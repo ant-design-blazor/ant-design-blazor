@@ -252,6 +252,7 @@ namespace AntDesign
         private bool _isVirtualizeEmpty;
         private bool _afterFirstRender;
         private bool _isRebuilding;
+        private RenderFragment<TItem> _childContent;
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
@@ -480,6 +481,7 @@ namespace AntDesign
 
             var queryModel = this.InternalReload();
             StateHasChanged();
+
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -698,9 +700,15 @@ namespace AntDesign
                 this._shouldRender = this._parametersHashCode != hashCode;
                 this._parametersHashCode = hashCode;
             }
+            else if (_isRebuilding)
+            {
+                // because the ChildContent was clear inside, it would be set again after parent component is re-rendered
+                // avoid re-render during rebuilding 
+                _shouldRender = false;
+            }
             else
             {
-                this._shouldRender = true;
+                _shouldRender = true;
             }
 
             if (!this._shouldRender)
@@ -770,10 +778,15 @@ namespace AntDesign
 
             if (_isRebuilding)
             {
+                // call from Rerender, ChildContent is empty at this time,
+                // so we need to rerender again for rebuild the columns
                 _shouldRender = true;
+                ChildContent = _childContent;
                 StateHasChanged();
 
+                // set the flag to false after calling StateHasChanged because we need to re-render when _hasInitialized is false
                 _isRebuilding = false;
+                return;
             }
 
             _shouldRender = false;
@@ -895,15 +908,29 @@ namespace AntDesign
             return RowKey(obj).GetHashCode();
         }
 
-        bool ITable.Rerender(bool add)
+        /// <summary>
+        /// For each column change, it needs to rerender four times
+        /// <br/> 1. re-render once for recognize there is any column changed after calling at <see cref="OnParametersSet"/>, trigger render the empty ChildContent.
+        /// <br/> 2. re-render once for empty ChildContent after calling at <see cref="ITable.RebuildColumns" />, then trigger rendering for rebuild the origin content. 
+        /// <br/> 3. re-render for rebuilding columns after calling at <see cref="OnAfterRenderAsync(bool)"/>, and then trigger rendering for load data after the columns are ready.
+        /// <br/> 4. re-render for reload data after calling at <see cref="OnColumnInitialized" />
+        /// </summary>
+        /// <param name="add">Whether a column is added/removed</param>
+        /// <remarks>
+        /// lifecycle process: columns was changed -> render#1(true) -> column add/dispose -> call rebuild(call render#2) -> render#2(true) -> OnAfterRenderAsync#2 (call render#3) -> render#3(true)
+        /// -> OnColumnInitialized call render#4 -> OnAfterRenderAsync#4 -> OnAfterRenderAsync#3 -> OnAfterRenderAsync#1 (the last 2 steps are duplicated and useless)
+        /// </remarks>
+        /// <returns>Whether to start rebuilding</returns>
+        bool ITable.RebuildColumns(bool add)
         {
+            // avoid rerender again before initialized (beacuse when we render the empty ChildContent, it will be called by Dispose)
             if (add && !_hasInitialized) return false;
-
-            // avoid call again
+            // avoid rerender again when the column are cleared
             if (!add && ColumnContext.Columns.Count == 0) return false;
 
-            ChildContent = c => c => { };
+            _childContent = ChildContent;
 
+            ChildContent = c => c => { };
             ColumnContext = new ColumnContext(this);
             _hasInitialized = false;
             _isRebuilding = true;

@@ -89,6 +89,6 @@ namespace AntDesign
 
         internal void RemoveGroupColumn(IFieldColumn column);
 
-        internal bool Rerender(bool add);
+        internal bool RebuildColumns(bool add);
     }
 }

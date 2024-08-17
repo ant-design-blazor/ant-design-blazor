@@ -121,7 +121,7 @@ namespace AntDesign
             // Render Pipeline: Initialize -> ColGroup -> Header ...
             if (IsInitialize)
             {
-                if (Table?.Rerender(true) ?? false)
+                if (Table?.RebuildColumns(true) ?? false)
                 {
                     return;
                 }
@@ -166,7 +166,10 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             //Context?.Columns.Remove(this);
-            Table?.Rerender(false);
+            if (IsInitialize)
+            {
+                Table?.RebuildColumns(false);
+            }
             base.Dispose(disposing);
         }
 
