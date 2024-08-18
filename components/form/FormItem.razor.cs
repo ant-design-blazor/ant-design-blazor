@@ -496,6 +496,7 @@ namespace AntDesign
                         DisplayName = DisplayName,
                         FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
+                        Model = Form.Model
                     };
 
                     var result = FormValidateHelper.GetValidationResult(validationContext);

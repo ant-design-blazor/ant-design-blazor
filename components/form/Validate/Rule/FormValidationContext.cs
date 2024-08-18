@@ -10,5 +10,7 @@ namespace AntDesign
         public string FieldName { get; set; }
         public string DisplayName { get; set; }
         public Type FieldType { get; set; }
+
+        public object Model { get; set; }
     }
 }
