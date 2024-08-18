@@ -206,14 +206,20 @@ namespace AntDesign
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
             else if (Fixed == "right")
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
 
