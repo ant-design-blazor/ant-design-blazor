@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace AntDesign.Core.Reflection
 {
-    internal struct PropertyReflector
+    internal class PropertyReflector
     {
         public RequiredAttribute RequiredAttribute { get; set; }
 
@@ -24,10 +24,21 @@ namespace AntDesign.Core.Reflection
 
         private string _displayName;
 
-        public PropertyReflector(MemberInfo propertyInfo)
+        private PropertyReflector ParentReflector { get; set; }
+
+        public PropertyReflector() { }
+
+        public PropertyReflector(MemberInfo propertyInfo, PropertyReflector parentReflector = null)
         {
-            RequiredAttribute = propertyInfo?.GetCustomAttribute<RequiredAttribute>(true);
+            ParentReflector = parentReflector;
+
             ValidationAttributes = propertyInfo?.GetCustomAttributes<ValidationAttribute>(true).ToArray();
+            if (parentReflector?.ValidationAttributes?.Length > 0)
+            {
+                ValidationAttributes = [.. parentReflector.ValidationAttributes, .. ValidationAttributes];
+            }
+
+            RequiredAttribute = ValidationAttributes.OfType<RequiredAttribute>().FirstOrDefault() ?? ParentReflector?.RequiredAttribute;
 
             if (propertyInfo?.GetCustomAttribute<DisplayNameAttribute>(true) is DisplayNameAttribute displayNameAttribute && !string.IsNullOrEmpty(displayNameAttribute.DisplayName))
             {
@@ -60,6 +71,8 @@ namespace AntDesign.Core.Reflection
 
         public static PropertyReflector Create(Expression accessorBody)
         {
+            PropertyReflector parentProperty = default;
+
             if (accessorBody is UnaryExpression unaryExpression
                && unaryExpression.NodeType == ExpressionType.Convert
                && unaryExpression.Type == typeof(object))
@@ -69,7 +82,12 @@ namespace AntDesign.Core.Reflection
 
             if (accessorBody is MemberExpression memberExpression)
             {
-                return new PropertyReflector(memberExpression.Member);
+                if (memberExpression.Expression is MemberExpression parentMemberExpression)
+                {
+                    parentProperty = Create(parentMemberExpression);
+                }
+
+                return new PropertyReflector(memberExpression.Member, parentProperty);
             }
 
             if (accessorBody.NodeType == ExpressionType.ArrayIndex)

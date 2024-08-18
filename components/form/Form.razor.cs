@@ -138,7 +138,7 @@ namespace AntDesign
 
         private static readonly RenderFragment _defaultValidator = builder =>
         {
-            builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
+            builder.OpenComponent<DataAnnotationsValidator>(0);
             builder.CloseComponent();
         };
 
