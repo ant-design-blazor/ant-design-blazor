@@ -6,26 +6,16 @@ Dynamic columns:
     <Checkbox Label="Age"></Checkbox>
     <Checkbox Label="Address"></Checkbox>
 </CheckboxGroup>
-
-<Table TItem="Data" DataSource="@data" ScrollX="1500">
+<br />
+<Table TItem="Data" DataSource="@data">
     <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
     </PropertyColumn>
-
-    @if (columns.Contains("Age"))
+    @foreach (var column in columns)
     {
-        <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+        <Column TData="object" DataIndex="@column"></Column>
     }
-    @if (columns.Contains("Address"))
-    {
-        <PropertyColumn Property="c=>c.Address">
-            <TitleTemplate>
-                <span> <Icon Type="environment" /> Address </span>
-            </TitleTemplate>
-        </PropertyColumn>
-    }
-   
-    <PropertyColumn Property="c=>c.Tags" Fixed="right">
+    <PropertyColumn Property="c=>c.Tags">
         @foreach (var tag in context.Tags)
         {
             var color = tag.Length > 5 ? "geekblue" : "green";
