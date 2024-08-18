@@ -2,12 +2,12 @@
 @using AntDesign.TableModels
 
 Dynamic columns:
-<CheckboxGroup TValue="string" OnChange="OnColumnChange">
+<CheckboxGroup @bind-Value="columns">
     <Checkbox Label="Age"></Checkbox>
     <Checkbox Label="Address"></Checkbox>
 </CheckboxGroup>
 
-<Table TItem="Data" DataSource="@data" OnRowClick="OnRowClick">
+<Table TItem="Data" DataSource="@data" ScrollX="1500">
     <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
     </PropertyColumn>
@@ -25,7 +25,7 @@ Dynamic columns:
         </PropertyColumn>
     }
    
-    <PropertyColumn Property="c=>c.Tags">
+    <PropertyColumn Property="c=>c.Tags" Fixed="right">
         @foreach (var tag in context.Tags)
         {
             var color = tag.Length > 5 ? "geekblue" : "green";
@@ -50,16 +50,6 @@ Dynamic columns:
 
 @code {
     string[] columns = ["Age", "Address"];
- 
-    void OnColumnChange(string[] values)
-    {
-        columns = values;
-    }
-
-    void OnRowClick(RowData<Data> row)
-    {
-        Console.WriteLine($"row {row.Data.Key} was clicked.");
-    }
 
     Data[] data = new Data[]
     {
