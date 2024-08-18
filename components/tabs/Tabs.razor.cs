@@ -432,20 +432,17 @@ namespace AntDesign
 
             if (_activeKey != _activePane.Key)
             {
+                _activeKey = _activePane.Key;
                 if (ActiveKeyChanged.HasDelegate)
                 {
-                    ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                    ActiveKeyChanged.InvokeAsync(_activeKey);
                 }
-
-                if (OnChange.HasDelegate)
-                {
-                    OnChange.InvokeAsync(_activePane.Key);
-                }
-
-                _activeKey = _activePane.Key;
-
-                TryRenderInk();
             }
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(_activePane.Key);
+            }
+            TryRenderInk();
 
             Card?.SetBody(_activePane.ChildContent);
         }
@@ -584,8 +581,10 @@ namespace AntDesign
             {
                 return;
             }
-            _activeTabElement = _itemRefs[_activeTab.TabId];
-
+            if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
+            {
+                return;
+            }
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
