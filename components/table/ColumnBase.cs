@@ -121,6 +121,11 @@ namespace AntDesign
             // Render Pipeline: Initialize -> ColGroup -> Header ...
             if (IsInitialize)
             {
+                if (Table?.RebuildColumns(true) ?? false)
+                {
+                    return;
+                }
+
                 Context?.AddColumn(this);
 
                 if (Fixed == "left")
@@ -160,7 +165,11 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            Context?.Columns.Remove(this);
+            //Context?.Columns.Remove(this);
+            if (IsInitialize)
+            {
+                Table?.RebuildColumns(false);
+            }
             base.Dispose(disposing);
         }
 

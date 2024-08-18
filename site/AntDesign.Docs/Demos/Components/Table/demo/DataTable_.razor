@@ -1,9 +1,7 @@
 ﻿@using System.Data;
 
-<h3>DataTable</h3>
-
 <Table DataSource="data">
-    @foreach(DataColumn column in _dataTable.Columns)
+    @foreach (DataColumn column in _dataTable.Columns)
     {
         <PropertyColumn Property="c=>c.Field<string>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable></PropertyColumn>
     }
