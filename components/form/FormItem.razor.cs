@@ -184,7 +184,7 @@ namespace AntDesign
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
-        private string DisplayName => Label ?? _propertyReflector?.DisplayName ?? _propertyReflector?.PropertyName;
+        private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
         private string _name;
         private Action _nameChanged;
