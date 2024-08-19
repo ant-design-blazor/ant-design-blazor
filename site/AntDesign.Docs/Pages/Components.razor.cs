@@ -54,6 +54,8 @@ namespace AntDesign.Docs.Pages
 
         private List<DemoItem> _demos = [];
 
+        private (string Name, string Title)[] _anchors = [];
+
         private string _currentPageName;
 
         protected override void OnInitialized()
@@ -102,6 +104,12 @@ namespace AntDesign.Docs.Pages
             {
                 return;
             }
+
+            if (_currentPageName == fullPageName)
+            {
+                return;
+            }
+
             _currentPageName = fullPageName;
 
             if (fullPageName.Split("/").Length != 2)
@@ -121,14 +129,21 @@ namespace AntDesign.Docs.Pages
                 _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
                 await LoadDemos(_currentPageName);
                 await MainLayout.ChangePrevNextNav(Name);
+
+                if (NavigationManager.Uri.Contains("#"))
+                {
+                    NavigationManager.NavigateTo(NavigationManager.Uri);
+                }
             }
         }
 
         private async Task LoadDemos(string pageName)
         {
+            var showDemos = _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
+            _anchors = showDemos.Select(x => (x.Name, x.Title)).ToArray();
             _demos = [];
             _filePaths = new() { _filePath };
-            foreach (var item in _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>())
+            foreach (var item in showDemos)
             {
                 // compoennt is changed
                 if (pageName != _currentPageName)

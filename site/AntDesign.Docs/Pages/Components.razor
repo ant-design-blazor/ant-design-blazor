@@ -20,12 +20,12 @@
             <PageTitle>@title</PageTitle>
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
 
-            if (_demos.Any())
+            if (_anchors.Any())
             {
                 <div class="toc-affix">
                     <Affix OffsetTop="16">
                         <Anchor Key="@_demoComponent.Title">
-                            @foreach (var demo in _demos)
+                            @foreach (var demo in _anchors)
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Title" />
                             }
@@ -103,13 +103,13 @@
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }
@@ -127,3 +127,9 @@
     </article>
     <ContributorsList FilePaths="_filePaths" />
 </section>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
