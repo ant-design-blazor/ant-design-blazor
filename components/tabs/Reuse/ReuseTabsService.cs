@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class ReuseTabsService
+    public partial class ReuseTabsService : IDisposable
     {
         private readonly NavigationManager _navmgr;
         private readonly MenuService _menusService;
@@ -44,6 +44,8 @@ namespace AntDesign
         {
             _navmgr = navmgr;
             _menusService = menusService;
+
+            _menusService.MenuItemLoaded += StateHasChanged;
         }
 
         /// <summary>
@@ -235,14 +237,18 @@ namespace AntDesign
 
             var attributes = pageType.GetCustomAttributes(true);
 
-            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr != null)
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr is { Title.Length: > 0 })
             {
                 pageItem.Title ??= titleAttr.Title?.ToRenderFragment();
             }
 
             if (attributes.FirstOrDefault(x => x is ReuseTabsPageAttribute) is ReuseTabsPageAttribute attr && attr != null)
             {
-                pageItem.Title ??= attr.Title?.ToRenderFragment();
+                if (!string.IsNullOrWhiteSpace(attr.Title))
+                {
+                    pageItem.Title ??= attr.Title?.ToRenderFragment();
+                }
+
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
@@ -250,7 +256,10 @@ namespace AntDesign
                 pageItem.Order = attr.Order;
             }
 
-            pageItem.Title ??= _menusService.GetMenuTitle(url) ?? url.ToRenderFragment();
+            pageItem.Title ??= b =>
+            {
+                b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+            };
         }
 
         /// <summary>
@@ -319,6 +328,11 @@ namespace AntDesign
                 .ThenByDescending(x => x.Pin ? 1 : 0)
                 .ThenBy(x => x.Order)
                 .ToList();
+        }
+
+        public void Dispose()
+        {
+            _menusService.MenuItemLoaded -= StateHasChanged;
         }
     }
 }
