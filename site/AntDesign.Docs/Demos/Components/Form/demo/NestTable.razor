@@ -1,24 +1,19 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 
 <Form Model="@model"
+      ValidateMode="FormValidateMode.Complex"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
       WrapperColSpan="16">
-    <FormItem Label="User Name">
-        <Input @bind-Value="@context.Username" />
+    <FormItem Label="Class Name">
+        <Input @bind-Value="@context.ClassName" />
     </FormItem>
-    <FormItem Label="Password">
-        <InputPassword @bind-Value="@context.Password" />
-    </FormItem>
-    <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
-        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
-    </FormItem>
-    <FormItem Label="Items">
-        <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px">
+    <FormItem Label="Students" Name="@nameof(context.Students)" Rules="[new(){ Min=1 }]">
+        <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px" Size="small">
             Add a row
         </Button>
-        <Table DataSource="context.Items" TItem="ItemData" Context="row">
+        <Table DataSource="context.Students" TItem="Student" Context="row" Size="TableSize.Small" HidePagination Bordered>
             <PropertyColumn Width="30%" Property="c=>c.Name">
                 <FormItem Required>
                     <Input @bind-Value="@row.Name" />
@@ -38,6 +33,12 @@
     </FormItem>
 </Form>
 
+<style>
+    .ant-form-item-has-error .ant-table {
+        border: 1px solid red;
+    }
+</style>
+
 @code
 {
     private Model model = new Model();
@@ -45,16 +46,12 @@
     public class Model
     {
         [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
+        public string ClassName { get; set; }
 
-        public List<ItemData> Items { get; set; } = [];
-
-        public bool RememberMe { get; set; } = true;
+        public List<Student> Students { get; set; } = [];
     }
 
-    public record ItemData()
+    public record Student()
     {
         public string Id { get; set; }
         public string Age { get; set; }
@@ -65,7 +62,7 @@
 
     void addRow()
     {
-        model.Items.Add(new());
+        model.Students.Add(new());
     }
 
     private void OnFinish(EditContext editContext)
