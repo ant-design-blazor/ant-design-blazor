@@ -19,7 +19,7 @@ timeline: true
 
 `2024-08-20`
 
-- 🔥 Add localized intellisense for zh-CN,ja-JP,ko-KR
+- 🔥 Add localized intellisense for zh-CN,ja-JP,ko-KR. [#4107](https://github.com/ant-design-blazor/ant-design-blazor/pull/4107) [@ElderJames](https://github.com/ElderJames)
 
 - Form
   - 🆕 Add support nest property validation. [#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) [@ElderJames](https://github.com/ElderJames)
