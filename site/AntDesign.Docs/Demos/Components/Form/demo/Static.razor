@@ -24,9 +24,11 @@
 
 @code
 {
+#if NET8_0_OR_GREATER
     [SupplyParameterFromForm(FormName = "form1")]
+#endif
     public Model model { get; set; } = new();
-
+    
     public class Model
     {
         [Required]
