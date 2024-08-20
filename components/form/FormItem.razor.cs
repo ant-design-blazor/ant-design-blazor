@@ -488,9 +488,9 @@ namespace AntDesign
                     _propertyReflector = new PropertyReflector(perpertyInfo);
                 }
             }
-            else if (exp.Body is MemberExpression lambda)
+            else if (exp.Body is MemberExpression member)
             {
-                var perpertyInfo = lambda.Member as PropertyInfo;
+                var perpertyInfo = member.Member as PropertyInfo;
                 _propertyReflector = new PropertyReflector(perpertyInfo);
             }
             else
@@ -506,7 +506,7 @@ namespace AntDesign
             }
             _fieldValueGetter = _propertyReflector?.GetValueDelegate;
             _valueUnderlyingType = THelper.GetUnderlyingType(_propertyReflector.PropertyInfo.PropertyType);
-            _fieldIdentifier = new FieldIdentifier(exp);
+            _fieldIdentifier = new FieldIdentifier(Form.Model, Name);
             SetRules();
         }
 
@@ -550,7 +550,7 @@ namespace AntDesign
                         Rule = rule,
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = DisplayName,
+                        DisplayName = DisplayName ?? _propertyReflector.PropertyName,
                         FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
                         Model = Form.Model
