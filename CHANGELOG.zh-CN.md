@@ -15,6 +15,25 @@ timeline: true
 
 ---
 
+### 0.20.2
+
+`2024-08-20`
+
+- Form
+  - 🆕 增加 支持无绑定属性验证。[#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 CompareAttribute 验证。[#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 删除复杂对象验证器。[#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 📖 文档 增加 Table 录入验证示例。[#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) [@ElderJames](https://github.com/ElderJames)
+  - 📖 文档 增加静态渲染表单验证示例。[#4105](https://github.com/ant-design-blazor/ant-design-blazor/pull/4105) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 在跳过两边的列设置固定列，或全部没设置Width的时候固定列时，样式错乱的问题。[#4097](https://github.com/ant-design-blazor/ant-design-blazor/pull/4097) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 动态修改列显示隐藏时样式错乱的问题。[#4093](https://github.com/ant-design-blazor/ant-design-blazor/pull/4093) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 修复 Upload 的拖拽上传区域“未选择文件”的提示。[#4096](https://github.com/ant-design-blazor/ant-design-blazor/pull/4096) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Tabs 的定位 ink 在 ActiveKey 变化时不更新。[#4094](https://github.com/ant-design-blazor/ant-design-blazor/pull/4094) [@pankey888](https://github.com/pankey888)
+- 📖 文档 修改图表 GroupedColumn 示例。[#3524](https://github.com/ant-design-blazor/ant-design-blazor/pull/3524) [@SuperQuestions](https://github.com/SuperQuestions)
+
 ### 0.20.1
 
 `2024-08-15`
