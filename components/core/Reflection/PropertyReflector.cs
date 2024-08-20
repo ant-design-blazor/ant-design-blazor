@@ -10,6 +10,7 @@ namespace AntDesign.Core.Reflection
 {
     internal class PropertyReflector
     {
+        public PropertyInfo PropertyInfo { get; set; }
         public RequiredAttribute RequiredAttribute { get; set; }
 
         public ValidationAttribute[] ValidationAttributes { get; set; }
@@ -31,7 +32,7 @@ namespace AntDesign.Core.Reflection
         public PropertyReflector(MemberInfo propertyInfo, PropertyReflector parentReflector = null)
         {
             ParentReflector = parentReflector;
-
+            PropertyInfo = propertyInfo as PropertyInfo;
             ValidationAttributes = propertyInfo?.GetCustomAttributes<ValidationAttribute>(true).ToArray();
             if (parentReflector?.ValidationAttributes?.Length > 0)
             {
