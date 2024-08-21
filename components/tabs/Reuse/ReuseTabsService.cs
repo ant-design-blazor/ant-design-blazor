@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// The service for reuse tabs
+    /// </summary>
     public partial class ReuseTabsService : IDisposable
     {
         private readonly NavigationManager _navmgr;
@@ -45,6 +48,8 @@ namespace AntDesign
             _navmgr = navmgr;
             _menusService = menusService;
 
+            // Because the menu would be loaded asynchronously sometimes,
+            // So need to refresh the title after menu loaded.
             _menusService.MenuItemLoaded += StateHasChanged;
         }
 
@@ -163,6 +168,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Update the state of the <see cref="ReuseTabs"/>
+        /// </summary>
         public void Update()
         {
             StateHasChanged();
@@ -263,7 +271,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 获取所有程序集
+        /// Get all assembly
         /// </summary>
         /// <returns></returns>
         private IEnumerable<Assembly> GetAllAssembly()
@@ -277,7 +285,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 扫描 ReuseTabsPageAttribute 特性
+        /// Scan ReuseTabsPageAttribute
         /// </summary>
         private void ScanReuseTabsPageAttribute()
         {
