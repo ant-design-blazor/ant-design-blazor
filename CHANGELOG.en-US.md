@@ -15,6 +15,28 @@ timeline: true
 
 ---
 
+### 0.20.2
+
+`2024-08-20`
+
+- 🔥 Add localized intellisense for zh-CN,ja-JP,ko-KR. [#4107](https://github.com/ant-design-blazor/ant-design-blazor/pull/4107) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🆕 Add support nest property validation. [#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed validation for CompareAttribute. [#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor: remove complex object validator. [#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 📖 docs: Add a demo fro table edit validation. [#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) 
+  - 📖 docs: Add a demo for static form validation. [#4105](https://github.com/ant-design-blazor/ant-design-blazor/pull/4105) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 Fixed style would be messy when columns skipped fixed or no width was set. [#4097](https://github.com/ant-design-blazor/ant-design-blazor/pull/4097) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed messy style when column changes. [#4093](https://github.com/ant-design-blazor/ant-design-blazor/pull/4093) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Tabs ink is not rendered when changing active page through ActiveKey. [#4094](https://github.com/ant-design-blazor/ant-design-blazor/pull/4094) [@pankey888](https://github.com/pankey888)
+- 💄 Fixed Upload to hide the 'no file chosen' tooltip. [#4096](https://github.com/ant-design-blazor/ant-design-blazor/pull/4096) [@pankey888](https://github.com/pankey888)
+- 📖 docs: Update GroupedColumn_.razor. [#3524](https://github.com/ant-design-blazor/ant-design-blazor/pull/3524) [@SuperQuestions](https://github.com/SuperQuestions)
+
+
 ### 0.20.1
 
 `2024-08-15`

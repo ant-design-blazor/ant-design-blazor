@@ -358,3 +358,5 @@ scripts/previewEditor/index.html
 /lib
 site/AntDesign.Docs/wwwroot/color.less
 .history
+/components/LocalizedIntellisenseFiles/AntDesign.xml
+components/LocalizedIntellisenseFiles/AntDesign.xml
