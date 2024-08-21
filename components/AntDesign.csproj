@@ -22,12 +22,12 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>./LocalizedIntellisenseFiles/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>
-    <TfmSpecificPackageFile Include="LocalizedIntellisenseFiles\**\*.xml" PackagePath="/lib/$(TargetFramework)" />
+    <TfmSpecificPackageFile Include="LocalizedIntellisenseFiles\**\*.xml" Exclude="LocalizedIntellisenseFiles/$(AssemblyName).xml" PackagePath="/lib/$(TargetFramework)" />
   </ItemGroup>
   
   <ItemGroup>
