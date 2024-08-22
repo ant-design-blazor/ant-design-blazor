@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -31,6 +34,6 @@ namespace AntDesign
 
         internal void SetSortModel(ITableSortModel sortModel);
 
-        internal IQueryable<IGrouping<object, TItem>> Group<TItem>(IQueryable<TItem> source);
+        internal Expression<Func<TItem, object>> GetGroupByExpression<TItem>();
     }
 }

@@ -39,8 +39,6 @@ namespace AntDesign.Internal.Form.Validate
                 return true;
             }
 
-            ValidationAttribute attribute = validationContext.Rule.ValidationAttribute;
-
             var templates = validationContext.ValidateMessages;
 
             var compareMessage = validationContext.FieldType switch
@@ -51,15 +49,18 @@ namespace AntDesign.Internal.Form.Validate
                 _ => templates.String
             };
 
+            var attribute = validationContext.Rule.ValidationAttribute;
+
             attribute.ErrorMessage = attribute switch
             {
                 // if user has set the ErrorMessage, we will use it directly
-                { ErrorMessage.Length: > 0 } => attribute.ErrorMessage,
+                { ErrorMessage.Length: > 0 } or { ErrorMessageResourceName: not null } => attribute.ErrorMessage,
                 RequiredAttribute => ReplaceLabel(templates.Required),
                 RangeAttribute => ReplaceLength(compareMessage.Range, max: 2),
                 MinLengthAttribute => ReplaceLength(compareMessage.Min),
                 MaxLengthAttribute => ReplaceLength(compareMessage.Max),
                 StringLengthAttribute => ReplaceLength(templates.String.Range, max: 2),
+                CompareAttribute => ReplaceLabel(templates.Default),
                 _ => attribute.ErrorMessage,
             };
 
@@ -477,23 +478,31 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
-            if (validationAttribute?.IsValid(validationContext.Value) == false)
-            {
-                if (validationContext.Rule.Message != null)
-                {
-                    validationAttribute.ErrorMessage = validationContext.Rule.Message;
-                }
-
-                string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
-
-                result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
-
-                return false;
-            }
-
             result = null;
 
-            return true;
+            if (validationAttribute is CompareAttribute compareAttribute)
+            {
+                result = validationAttribute.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
+                if (result == null)
+                {
+                    return true;
+                }
+            }
+            else if (validationAttribute?.IsValid(validationContext.Value) != false)
+            {
+                return true;
+            }
+
+            if (validationContext.Rule.Message != null)
+            {
+                validationAttribute.ErrorMessage = validationContext.Rule.Message;
+            }
+
+            string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
+
+            result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
+
+            return false;
         }
 
         #region message replacement

@@ -90,9 +90,13 @@ namespace AntDesign
             {
                 var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
                 var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
+                if (string.IsNullOrEmpty(totalWidth))
+                {
+                    totalWidth = "0px";
+                }
                 foreach (var col in Columns.Where(x => x.Width == null))
                 {
-                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
+                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) ) / {zeroWidthCols.Length})";
                 }
             }
 

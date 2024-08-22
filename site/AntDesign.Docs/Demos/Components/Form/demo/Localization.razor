@@ -29,7 +29,7 @@
 
 @code
 {
-    FormLocale locale = LocaleProvider.CurrentLocale.Form;
+    FormLocale locale = new FormLocale() { DefaultValidateMessages = new() };
 
     protected override void OnInitialized()
     {
@@ -43,7 +43,7 @@
 
         [Required(ErrorMessageResourceName = nameof(Resources.App.PasswordValidation), ErrorMessageResourceType = typeof(Resources.App))]
         [Display(Name = nameof(Resources.App.Password), ResourceType = typeof(Resources.App))]
-        [MaxLength(16)]
+        [MaxLength(16,ErrorMessage ="{0} is too long (16 characters max).")]
         public string Password { get; set; }
 
         public bool RememberMe { get; set; } = true;

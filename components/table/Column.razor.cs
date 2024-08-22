@@ -460,7 +460,7 @@ namespace AntDesign
             }
         }
 
-        IQueryable<IGrouping<object, TItem>> IFieldColumn.Group<TItem>(IQueryable<TItem> source)
+        Expression<Func<TItem, object>> IFieldColumn.GetGroupByExpression<TItem>()
         {
             var param = Expression.Parameter(typeof(TItem), "item");
 
@@ -475,7 +475,7 @@ namespace AntDesign
             var body = Expression.Convert(field, typeof(object));
             var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
 
-            return source.GroupBy(lambda);
+            return lambda;
         }
 
         private void SetSorter(SortDirection sortDirection)

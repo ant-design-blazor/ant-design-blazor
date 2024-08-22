@@ -733,7 +733,7 @@ namespace AntDesign
                 builder.AddAttribute(64, "autocomplete", "off");
             }
 
-            if (FormItem?.IsRequiredByValidation ?? false)
+            if (FormItem?.IsRequired ?? false)
             {
                 builder.AddAttribute(65, "aria-required", true);
             }

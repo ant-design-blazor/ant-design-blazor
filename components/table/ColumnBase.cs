@@ -164,6 +164,11 @@ namespace AntDesign
             // Render Pipeline: Initialize -> ColGroup -> Header ...
             if (IsInitialize)
             {
+                if (Table?.RebuildColumns(true) ?? false)
+                {
+                    return;
+                }
+
                 Context?.AddColumn(this);
 
                 if (Fixed == "left")
@@ -203,7 +208,11 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            Context?.Columns.Remove(this);
+            //Context?.Columns.Remove(this);
+            if (IsInitialize)
+            {
+                Table?.RebuildColumns(false);
+            }
             base.Dispose(disposing);
         }
 
@@ -240,14 +249,20 @@ namespace AntDesign
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
             else if (Fixed == "right")
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
 

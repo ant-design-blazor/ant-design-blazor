@@ -64,7 +64,7 @@ namespace AntDesign
                 return _titleCache[url];
             }
 
-            var matchedMenuItem = _menuItems.FirstOrDefault(x => MenuHelper.ShouldMatch(NavLinkMatch.All, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
+            var matchedMenuItem = _menuItems.FirstOrDefault(x => x.RouterLink != null && MenuHelper.ShouldMatch(NavLinkMatch.All, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
             if (matchedMenuItem == null)
             {
                 return null;

@@ -83,9 +83,6 @@
   "When true, will use 12 hour time. When false will use 24 hour time": {
     "Translated": "为真时，将使用 12 小时时间。当 false 时将使用 24 小时制"
   },
-  "Get pickerValue by picker index. Note that index refers to a picker panel and not to input text. For RangePicker 2 inputs generate 2 panels.": {
-    "Translated": "通过选择器索引获取 pickerValue。请注意，索引指的是选择器面板而不是输入文本。对于 RangePicker 2 输入生成 2 个面板。"
-  },
   "<p>Display multiple read-only fields in groups.</p><h2>When To Use</h2><p>Commonly displayed on the details page.</p>": {
     "Translated": "<p>分组显示多个只读字段。</p><h2>何时使用</h2><p>通常在详情页面显示。</p>"
   },
@@ -238,9 +235,6 @@
   },
   "Control the layout of the input element's wrapper. Commonly used to set widths for different screen sizes.": {
     "Translated": "控制输入​​元素包装器的布局。通常用于为不同的屏幕尺寸设置宽度。"
-  },
-  "Name of the form. Used as a prefix for the form's ID": {
-    "Translated": "表单的名称。用作表单 ID 的前缀"
   },
   "Validation will come from data attributes on the model provided to <code>AntDesign.Form`1.Model</code>": {
     "Translated": "验证将来自提供给 <code>AntDesign.Form`1.Model</code> 的模型上的数据属性"
@@ -463,9 +457,6 @@
   },
   "<p>A simple and compact confirmation dialog of an action.</p><h2>When To Use</h2><p>A simple and compact dialog used for asking for user confirmation.</p><p>The difference with the <code>confirm</code> modal dialog is that it's more lightweight than the static popped full-screen confirm modal.</p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Popconfirm</code>:</p><ol><li>Wraps child element (content of the <code>Popconfirm</code>) with a <code>div</code> tag (default approach).</li><li>Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Popconfirm</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol><p>Please ensure that the child node of <code>Popconfirm</code> accepts <code>onMouseEnter</code>, <code>onMouseLeave</code>, <code>onFocus</code>, <code>onClick</code> events.</p>": {
     "Translated": "<p>一个简单紧凑的操作确认对话框。</p><h2>何时使用</h2><p>一个简单紧凑的对话框，用于请求用户确认。</p><p>与<code>confirm</code>模态对话框的区别在于它比静态弹出的全屏确认模态更轻量级。</p><h2>两种类型</h2><p>有两种渲染方法<code>Popconfirm</code>：</p><ol><li>用 <code>div</code> 标签包裹子元素（<code>Popconfirm</code> 的内容）（默认方法） .</li><li>子元素没有被任何东西包裹。这种方法需要在 <code>Popconfirm</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code>属性设置为<code>@context</code>。</li></ul></li></ol><p>请确保<code>Popconfirm</的子节点code> 接受 <code>onMouseEnter</code>、<code>onMouseLeave</code>、<code>onFocus</code>、<code>onClick</code> 事件。</p>"
-  },
-  "Handle the trigger click.": {
-    "Translated": "处理触发点击。"
   },
   "<p>The floating card popped by clicking or hovering.</p><h2>When To Use</h2><p>A simple popup menu to provide extra information or operations.</p><p>Comparing with <code>Tooltip</code>, besides information <code>Popover</code> card can also provide action elements like links and buttons.</p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Popover</code>: </p><ol><li>Wraps child element (content of the <code>Popover</code>) with a <code>div</code> tag (default approach).</li><li>Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Popover</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol><p>Please ensure that the child node of <code>Popover</code> accepts <code>onMouseEnter</code>, <code>onMouseLeave</code>, <code>onFocus</code>, <code>onClick</code> events.</p>": {
     "Translated": "<p>浮动卡片通过点击或悬停弹出。</p><h2>何时使用</h2><p>提供额外信息或操作的简单弹出菜单。</p><p>与 < code>Tooltip</code>，除了信息<code>Popover</code>卡片还可以提供链接和按钮等动作元素。</p><h2>两种类型</h2><p>有2种渲染方式对于 <code>Popover</code>：</p><ol><li>用 <code>div</code> 标签包裹子元素（<code>Popover</code> 的内容）（默认方法).</li><li>子元素没有被任何东西包裹。这种方法需要在 <code>Popover</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code>属性设置为<code>@context</code>。</li></ul></li></ol><p>请确保<code>Popover</的子节点code> 接受 <code>onMouseEnter</code>、<code>onMouseLeave</code>、<code>onFocus</code>、<code>onClick</code> 事件。</p>"
@@ -1523,9 +1514,6 @@
   "Get index of picker which is currently focused": {
     "Translated": "获取当前聚焦的选择器的索引"
   },
-  "Changes what date(s) will be visible on the picker.": {
-    "Translated": "更改选择器上可见的日期。"
-  },
   "Callback executed when range selected changes": {
     "Translated": "范围选择改变时执行的回调"
   },
@@ -1754,17 +1742,11 @@
   "Which mode of validation the form should use": {
     "Translated": "表单应使用哪种验证模式"
   },
-  "Allows setting custom default validation messages for each of the built-in validation rules. Only applies when <code>AntDesign.Form`1.ValidateMode</code> is Rules.": {
-    "Translated": "允许为每个内置验证规则设置自定义默认验证消息。仅在 <code>AntDesign.Form`1.ValidateMode</code> 为 Rules 时适用。"
-  },
   "Reset all the values in the form": {
     "Translated": "重置表单中的所有值"
   },
   "Submit the form. Will trigger validation and either <code>AntDesign.Form`1.OnFinish</code> or <code>AntDesign.Form`1.OnFinishFailed</code>.": {
     "Translated": "提交表格。将触发验证和 <code>AntDesign.Form`1.OnFinish</code> 或 <code>AntDesign.Form`1.OnFinishFailed</code>。"
-  },
-  "Validate the form": {
-    "Translated": "验证表单"
   },
   "Reset validation": {
     "Translated": "重置验证"
@@ -1859,14 +1841,8 @@
   "Default validation message for the Required rule": {
     "Translated": "Required 规则的默认验证消息"
   },
-  "Default validation message for the OneOf rule": {
-    "Translated": "OneOf 规则的默认验证消息"
-  },
   "Messages for string type": {
     "Translated": "字符串类型的消息"
-  },
-  "Messages for number type": {
-    "Translated": "号码类型的消息"
   },
   "Messages for array type": {
     "Translated": "数组类型的消息"
@@ -2108,9 +2084,6 @@
   "Callback executed when the size changes": {
     "Translated": "尺寸改变时执行的回调"
   },
-  "Show character counting.": {
-    "Translated": "显示字符计数。"
-  },
   "Search box with loading": {
     "Translated": "正在加载的搜索框"
   },
@@ -2266,15 +2239,6 @@
   },
   "column of grid": {
     "Translated": "网格列"
-  },
-  "Options to display in the mention": {
-    "Translated": "在提及中显示的选项"
-  },
-  "TODO": {
-    "Translated": "全部"
-  },
-  "Number of options to display": {
-    "Translated": "要显示的选项数"
   },
   "Color theme of the menu": {
     "Translated": "菜单的颜色主题"
@@ -2996,9 +2960,6 @@
   "Icon to display next to the label of the segment. Only used when <code>AntDesign.SegmentedItem`1.ChildContent</code> is not provided.": {
     "Translated": "显示在段标签旁边的图标。仅在未提供 <code>AntDesign.SegmentedItem`1.ChildContent</code> 时使用。"
   },
-  "Whether to have a border or not": {
-    "Translated": "是否有边框"
-  },
   "The datasource for this component.": {
     "Translated": "该组件的数据源。"
   },
@@ -3010,9 +2971,6 @@
   },
   "The name of the property to be used as a disabled indicator.": {
     "Translated": "用作禁用指示器的属性的名称。"
-  },
-  "Customize dropdown content.": {
-    "Translated": "自定义下拉内容。"
   },
   "Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property.": {
     "Translated": "用于提高速度。如果您希望更改标签名称、组名称或禁用指示器，请禁用此属性。"
@@ -3053,9 +3011,6 @@
   "Callback function that is fired when input changed.": {
     "Translated": "输入更改时触发的回调函数。"
   },
-  "Max height of the dropdown list": {
-    "Translated": "下拉列表的最大高度"
-  },
   "Whether to show the drop-down arrow": {
     "Translated": "是否显示下拉箭头"
   },
@@ -3086,9 +3041,6 @@
   "Indicates whether the search function is active or not. Always true for mode tags.": {
     "Translated": "指示搜索功能是否处于活动状态。对于模式标签始终为真。"
   },
-  "Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time": {
-    "Translated": "延迟搜索输入事件的处理，直到用户停止输入一段预定的时间"
-  },
   "Controlled open state of dropdown.": {
     "Translated": "下拉菜单的受控打开状态。"
   },
@@ -3118,9 +3070,6 @@
   },
   "Called when the selected items changes.": {
     "Translated": "当所选项目更改时调用。"
-  },
-  "Status style of the select. Currently only implemented to allow setting \"warning\"": {
-    "Translated": "选择的状态样式。目前仅实现允许设置“警告”"
   },
   "Get or set the selected values.": {
     "Translated": "获取或设置选定的值。"
@@ -3401,9 +3350,6 @@
   "Content displayed inside switch when checked is false. Takes priority over <code>AntDesign.Switch.UnCheckedChildren</code>.": {
     "Translated": "勾选时switch内部显示的内容为false。优先于 <code>AntDesign.Switch.UnCheckedChildren</code>。"
   },
-  "Render mode of table. See <code>RenderMode</code> documentation for details.": {
-    "Translated": "表的渲染模式。有关详细信息，请参阅 <code>RenderMode</code> 文档。"
-  },
   "Data to display in table": {
     "Translated": "要在表格中显示的数据"
   },
@@ -3418,9 +3364,6 @@
   },
   "Function to determine if a specific row is expandable": {
     "Translated": "确定特定行是否可扩展的函数"
-  },
-  "Function to determine if a specific row is selectable": {
-    "Translated": "确定特定行是否可选的函数"
   },
   "Children tree items": {
     "Translated": "儿童树项目"
@@ -3512,9 +3455,6 @@
   "Number of records per page": {
     "Translated": "每页记录数"
   },
-  "Rows that are selected": {
-    "Translated": "选中的行"
-  },
   "Callback executed when the selected rows change": {
     "Translated": "选中行改变时执行的回调"
   },
@@ -3523,15 +3463,6 @@
   },
   "Get the query model for the table": {
     "Translated": "获取表的查询模型"
-  },
-  "Select all rows": {
-    "Translated": "选择所有行"
-  },
-  "Deselect all selected rows": {
-    "Translated": "取消选择所有选定的行"
-  },
-  "Set which rows are selected by their key": {
-    "Translated": "设置通过键选择哪些行"
   },
   "Expression to get the data for the field": {
     "Translated": "获取字段数据的表达式"
@@ -3577,9 +3508,6 @@
   },
   "Whether to allow multiple filters or not": {
     "Translated": "是否允许多个过滤器"
-  },
-  "Custom rendering of cell content": {
-    "Translated": "单元格内容的自定义呈现"
   },
   "Display name for the column": {
     "Translated": "列的显示名称"
@@ -3815,32 +3743,8 @@
   "Whether tree nodes are able to be selected or not, which would select all leafs under that node.": {
     "Translated": "是否能够选择树节点，这将选择该节点下的所有叶子。"
   },
-  "Container for displaying the popup": {
-    "Translated": "用于显示弹出窗口的容器"
-  },
-  "Callback executed when the mouse enters the component": {
-    "Translated": "鼠标进入组件时执行的回调"
-  },
-  "Callback executed when the mouse leaves the component": {
-    "Translated": "鼠标离开组件时执行的回调"
-  },
   "Callback executed when the component looses focus": {
     "Translated": "组件失去焦点时执行的回调"
-  },
-  "Content to display as label for the lead nodes": {
-    "Translated": "显示为前导节点标签的内容"
-  },
-  "Whether to show search icon or not": {
-    "Translated": "是否显示搜索图标"
-  },
-  "Whether to show arrow icons or not": {
-    "Translated": "是否显示箭头图标"
-  },
-  "Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <code>AntDesign.TreeSelect`1.ChildContent</code>": {
-    "Translated": "树的数据源。可以是任何自定义对象类型的列表，通过提供表达式来获取子项、叶子、标题等。使用这个或 <code>AntDesign.TreeSelect`1.ChildContent</code>"
-  },
-  "Nodes for the tree. Use either this or <code>AntDesign.TreeSelect`1.DataSource</code>": {
-    "Translated": "树的节点。使用这个或 <code>AntDesign.TreeSelect`1.DataSource</code>"
   },
   "Determine whether the dropdown menu and the select input are the same width. Default set min-width same as input. Will ignore when value less than select width. false will disable virtual scroll": {
     "Translated": "判断下拉菜单和select input是否等宽。默认设置最小宽度与输入相同。当值小于选择宽度时将忽略。 false 将禁用虚拟滚动"
@@ -3851,20 +3755,8 @@
   "Maximum height of the dropdown": {
     "Translated": "下拉列表的最大高度"
   },
-  "Style to apply to the dropdown": {
-    "Translated": "应用于下拉列表的样式"
-  },
   "Whether to show lines in the tree or not": {
     "Translated": "是否在树中显示线"
-  },
-  "Whether to show an icon on leaf nodes or not": {
-    "Translated": "是否在叶节点上显示图标"
-  },
-  "The selected value in the tree": {
-    "Translated": "树中的选定值"
-  },
-  "The selected values in the tree": {
-    "Translated": "树中的选定值"
   },
   "Shows an expansion icon before the node": {
     "Translated": "在节点前显示一个扩展图标"
@@ -3980,9 +3872,6 @@
   "Deselect all selections": {
     "Translated": "取消选择所有选择"
   },
-  "Checks all nodes": {
-    "Translated": "检查所有节点"
-  },
   "Unchecks all nodes": {
     "Translated": "取消选中所有节点"
   },
@@ -4010,12 +3899,6 @@
   "Whether it is a leaf node": {
     "Translated": "是否为叶节点"
   },
-  "Whether it has been expanded": {
-    "Translated": "是否扩容"
-  },
-  "According to check the": {
-    "Translated": "根据检查"
-  },
   "Disable checkbox": {
     "Translated": "禁用复选框"
   },
@@ -4039,9 +3922,6 @@
   },
   "Set the checkbox state": {
     "Translated": "设置复选框状态"
-  },
-  "Set the checkbox state when ini": {
-    "Translated": "ini时设置复选框状态"
   },
   "Add child node": {
     "Translated": "添加子节点"
@@ -4105,15 +3985,6 @@
   },
   "Content to wrap": {
     "Translated": "要包装的内容"
-  },
-  "Copy the contents, if enabled with <code>AntDesign.TypographyBase.Copyable</code>": {
-    "Translated": "复制内容，如果使用 <code>AntDesign.TypographyBase.Copyable</code> 启用"
-  },
-  "Style text as code or not": {
-    "Translated": "是否将文本样式设置为代码"
-  },
-  "Style text as a keyboard key": {
-    "Translated": "将文本样式设置为键盘键"
   },
   "The name of uploading file": {
     "Translated": "上传文件的名称"

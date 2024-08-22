@@ -3,10 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
 using AntDesign.Form.Locale;
 using AntDesign.Forms;
@@ -145,9 +148,9 @@ namespace AntDesign
 
         private bool _isRequiredByValidationRuleOrAttribute;
 
-        private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required;
+        private bool IsRequired => _isRequiredByValidationRuleOrAttribute || Required || ParentFormItem?.IsRequired == true;
 
-        bool IFormItem.IsRequiredByValidation => _isRequiredByValidationRuleOrAttribute;
+        bool IFormItem.IsRequired => IsRequired;
 
         IForm IFormItem.Form => Form;
 
@@ -248,7 +251,7 @@ namespace AntDesign
         private FormValidateStatus? _originalValidateStatus;
         private Action _vaildateStatusChanged;
 
-        private Action<string[]> _onValidated;
+        private Action<string[]> _onValidated = _ => { };
 
         private IEnumerable<FormValidationRule> _rules;
 
@@ -289,6 +292,8 @@ namespace AntDesign
             }
 
             SetInternalIsRequired();
+
+            SetEventHandlers();
         }
 
         private void SetClass()
@@ -325,6 +330,26 @@ namespace AntDesign
             if (Required && !_rules.Any(rule => rule.Required == true || rule.ValidationAttribute is RequiredAttribute))
             {
                 _rules = [.. _rules, new FormValidationRule { Required = true }];
+            }
+        }
+
+        private void SetEventHandlers()
+        {
+            if (Form?.ValidateOnChange == true)
+            {
+                _validationStateChangedHandler = (s, e) =>
+                {
+                    UpdateValidateMessage();
+                };
+                CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
+            }
+            else
+            {
+                _validationRequestedHandler = (s, e) =>
+                {
+                    UpdateValidateMessage();
+                };
+                CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
             }
         }
 
@@ -409,7 +434,7 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
-        private string GetLabelClass() => IsRequired && Form.RequiredMark == FormRequiredMark.Required
+        private string GetLabelClass() => IsRequired && Form?.RequiredMark == FormRequiredMark.Required
             ? $"{_prefixCls}-required"
             : _labelCls;
 
@@ -434,7 +459,7 @@ namespace AntDesign
 
         private void UpdateValidateMessage()
         {
-            if (_control == null)
+            if (_fieldIdentifier.Model == null)
             {
                 return;
             }
@@ -469,24 +494,7 @@ namespace AntDesign
             }
 
             _fieldIdentifier = control.FieldIdentifier;
-            this._control = control;
-
-            if (Form?.ValidateOnChange == true)
-            {
-                _validationStateChangedHandler = (s, e) =>
-                {
-                    UpdateValidateMessage();
-                };
-                CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
-            }
-            else
-            {
-                _validationRequestedHandler = (s, e) =>
-                {
-                    UpdateValidateMessage();
-                };
-                CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
-            }
+            _control = control;
 
             if (control.PopertyReflector is not null)
             {
@@ -509,8 +517,57 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void BuildPropertyWithName()
+        {
+            var type = Form.Model.GetType();
+            var dataIndex = Name;
+            if (typeof(IDictionary).IsAssignableFrom(type))
+            {
+                dataIndex = $"['{dataIndex}']";
+            }
+
+            LambdaExpression exp = PathHelper.GetLambda<object>(dataIndex, type);
+
+            if (exp.Body is UnaryExpression unary)
+            {
+                if (unary.Operand is MemberExpression member)
+                {
+                    var perpertyInfo = member.Member as PropertyInfo;
+                    _propertyReflector = new PropertyReflector(perpertyInfo);
+                }
+            }
+            else if (exp.Body is MemberExpression member)
+            {
+                var perpertyInfo = member.Member as PropertyInfo;
+                _propertyReflector = new PropertyReflector(perpertyInfo);
+            }
+            else
+            {
+                var getValueDelegate = PathHelper.GetDelegate<object>(dataIndex, type);
+                _propertyReflector = new PropertyReflector
+                {
+                    GetValueDelegate = getValueDelegate.Invoke,
+                    PropertyName = Name,
+                    DisplayName = Name,
+                    ValidationAttributes = []
+                };
+            }
+            _fieldValueGetter = _propertyReflector?.GetValueDelegate;
+            _valueUnderlyingType = THelper.GetUnderlyingType(_propertyReflector.PropertyInfo.PropertyType);
+            _fieldIdentifier = new FieldIdentifier(Form.Model, Name);
+            SetRules();
+        }
+
         ValidationResult[] IFormItem.ValidateFieldWithRules()
         {
+            if (_propertyReflector is null)
+            {
+                if (!string.IsNullOrWhiteSpace(Name))
+                {
+                    BuildPropertyWithName();
+                }
+            }
+
             if (_propertyReflector is null)
             {
                 return [];
@@ -541,9 +598,10 @@ namespace AntDesign
                         Rule = rule,
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = DisplayName,
+                        DisplayName = DisplayName ?? _propertyReflector.PropertyName,
                         FieldType = _valueUnderlyingType,
                         ValidateMessages = validateMessages,
+                        Model = Form.Model
                     };
 
                     var result = FormValidateHelper.GetValidationResult(validationContext);

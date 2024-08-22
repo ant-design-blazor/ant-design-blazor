@@ -78,7 +78,7 @@ namespace AntDesign.Docs.Build.CLI
         {
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("appsettings.private.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.private.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 

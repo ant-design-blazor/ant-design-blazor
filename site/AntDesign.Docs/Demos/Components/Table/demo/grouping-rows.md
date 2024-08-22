@@ -7,14 +7,15 @@ title:
 
 ## zh-CN
 
-设置 `Grouping` 指定根据某列字段分组，也可以设置 `GroupBy` 委托设置分组的值。当前只支持一个属性。
+设置 `Grouping` 指定列属性值进行分组，也可以设置 `GroupBy` 委托来指定分组的值。还可以设置 `GroupTitleTemplate` 自定义分组标题。
 
-还可以设置 `GroupTitleTemplate` 自定义分组标题。
+**注意：目前实现的是客户端分组，因此如果 `DataSource` 绑定的是 `IQueryable<T>`，请确保其已包含数据库分组的操作（分页、排序和筛选仍然生效）**
 
 ## en-US
 
-Setting `Grouping` Specifies that grouping is based on a column field.
-You can also set the `GroupBy` delegate to set the value for grouping.
-Currently only one attribute is supported. 
-
+Set `Grouping` to specify the column property values for grouping, 
+and you can also set `GroupBy` delegation to specify the grouping values. 
 You can also set `GroupTitleTemplate` to customize the group title.
+
+**Note: Currently implementation is client-side grouping , 
+so if `DataSource` is bound to `IQueryable<T>`, make sure it includes database grouping operations (paging, sorting, and filtering are still in effect)**
