@@ -1,13 +1,11 @@
 ﻿{
   "locale": "lt-LT",
   "Pagination": {
-    // Options
     "items_per_page": "/ psl.",
     "jump_to": "Pereiti į",
     "jump_to_confirm": "patvirtinti",
     "page": "psl.",
 
-    // Pagination
     "prev_page": "Atgal",
     "next_page": "Pirmyn",
     "prev_5": "Grįžti 5 psl.",
