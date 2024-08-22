@@ -1,13 +1,10 @@
 ﻿{
   "locale": "ku",
   "Pagination": {
-    // Options
     "items_per_page": "/ rûpel",
     "jump_to": "Biçe",
     "jump_to_confirm": "piştrast bike",
     "page": "",
-
-    // Pagination
     "prev_page": "Rûpelê Pêş",
     "next_page": "Rûpelê Paş",
     "prev_5": "5 Rûpelên Pêş",

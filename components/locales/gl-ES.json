@@ -1,13 +1,10 @@
 {
   "locale": "gl-ES",
   "Pagination": {
-    // Options
     "items_per_page": "/ páxina",
     "jump_to": "Ir a",
     "jump_to_confirm": "confirmar",
     "page": "",
-
-    // Pagination
     "prev_page": "Páxina anterior",
     "next_page": "Páxina seguinte",
     "prev_5": "5 páxinas previas",
