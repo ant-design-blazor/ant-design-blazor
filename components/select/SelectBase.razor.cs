@@ -536,7 +536,7 @@ namespace AntDesign
             if (OnSelectedItemsChanged.HasDelegate)
                 await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
 
-            if (_dropDown.IsOverlayShow())
+            if (_dropDown != null && _dropDown.IsOverlayShow())
             {
                 //A delay forces a refresh better than StateHasChanged().
                 //For example when a tag is added that is causing SelectContent to grow,
