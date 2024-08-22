@@ -1,13 +1,10 @@
 ﻿{
   "locale": "kk-KZ",
   "Pagination": {
-    // Options
     "items_per_page": "/ бет",
     "jump_to": "Секіру",
     "jump_to_confirm": "Растау",
     "page": "",
-
-    // Pagination
     "prev_page": "Артқа",
     "next_page": "Алға",
     "prev_5": "Алдыңғы 5",

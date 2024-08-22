@@ -1,12 +1,10 @@
 {
   "locale": "by-BY",
   "Pagination": {
-    // Options
     "items_per_page": "/старонка",
     "jump_to": "Перайсці",
     "jump_to_confirm": "Пацвердзіць",
     "page": "",
-    // Pagination
     "prev_page": "Назад",
     "next_page": "Наперад",
     "prev_5": "Папярэднія 5",

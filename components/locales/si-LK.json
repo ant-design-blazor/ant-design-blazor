@@ -1,13 +1,10 @@
 {
   "locale": "si-LK",
   "Pagination": {
-    // Options
     "items_per_page": "/ පිටුව",
     "jump_to": "වෙත යන්න",
     "jump_to_confirm": "තහවුරු",
     "page": "පිටුව",
-
-    // Pagination
     "prev_page": "කලින් පිටුව",
     "next_page": "ඊළඟ පිටුව",
     "prev_5": "කලින් පිටු 5",

@@ -1,13 +1,10 @@
 {
   "locale": "bn-BD",
   "Pagination": {
-    // Options
     "items_per_page": "/ পৃষ্ঠা",
     "jump_to": "যাও",
     "jump_to_confirm": "নিশ্চিত",
     "page": "পৃষ্ঠা",
-
-    // Pagination
     "prev_page": "আগের পৃষ্ঠা",
     "next_page": "পরের পৃষ্ঠা",
     "prev_5": "পূর্ববর্তী ৫ পৃষ্ঠা",
