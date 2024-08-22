@@ -51,15 +51,7 @@ namespace AntDesign
             {
                 if (!_isNullableEvaluated)
                 {
-                    Type type = typeof(TValue);
-                    if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-                    {
-                        _isNullable = true;
-                    }
-                    else
-                    {
-                        _isNullable = false;
-                    }
+                    _isNullable = InternalConvert.IsNullable<TValue>();
                     _isNullableEvaluated = true;
                 }
                 return _isNullable;
@@ -1129,16 +1121,16 @@ namespace AntDesign
             _picker = type;
 
             InvokeOnPanelChange(PickerValues[index]);
-        /// <param name="value">Value to change to</param>
-        /// <param name="index">Index of the picker panel to change</param>
-        /// <param name="closeDropdown">Close the panel when set or not</param>
+
+            StateHasChanged();
         }
 
         /// <summary>
         /// Change the value of the given picker panel
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
+        /// <param name="value">Value to change to</param>
+        /// <param name="index">Index of the picker panel to change</param>
+        /// <param name="closeDropdown">Close the panel when set or not</param>
         public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
         /// <summary>
