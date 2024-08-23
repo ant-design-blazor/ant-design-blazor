@@ -171,7 +171,7 @@ namespace AntDesign
         /// </para>
         /// </summary>
         [Parameter]
-        public int Width { get; set; } = 256;
+        public string Width { get; set; } = "256";
 
         /// <summary>
         /// <para>
@@ -182,7 +182,7 @@ namespace AntDesign
         /// </para>
         /// </summary>
         [Parameter]
-        public int Height { get; set; } = 256;
+        public string Height { get; set; } = "256";
 
         /// <summary>
         /// <para>
