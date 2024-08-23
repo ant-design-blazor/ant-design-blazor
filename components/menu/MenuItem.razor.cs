@@ -112,6 +112,22 @@ namespace AntDesign
         {
             if (Disabled)
                 return;
+            // Hide overlay before handling OnClick to make sure the overlay is not on top of modal created in OnClick delegate
+            if (RootMenu?.Selectable == true)
+            {
+                if (IsSelected && RootMenu?.Multiple == true)
+                {
+                    Deselect();
+                }
+                else
+                {
+                    RootMenu?.SelectItem(this);
+                }
+            }
+            else
+            {
+                RootMenu?.HideOverlay();
+            }
 
             if (OnClick.HasDelegate)
             {
@@ -121,18 +137,6 @@ namespace AntDesign
             if (RootMenu?.OnMenuItemClicked.HasDelegate == true)
             {
                 await RootMenu.OnMenuItemClicked.InvokeAsync(this);
-            }
-
-            if (RootMenu?.Selectable != true)
-                return;
-
-            if (IsSelected && RootMenu?.Multiple == true)
-            {
-                Deselect();
-            }
-            else
-            {
-                RootMenu?.SelectItem(this);
             }
 
             if (ParentMenu == null)
@@ -157,6 +161,7 @@ namespace AntDesign
 
         public void Deselect(bool sameParentAsSelected = false)
         {
+            RootMenu?.HideOverlay();
             IsSelected = false;
             FirstRun = false;
             if (!sameParentAsSelected)
