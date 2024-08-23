@@ -2,7 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using AntDesign.Internal;
 using AntDesign.Locales;
 using Microsoft.AspNetCore.Components;
@@ -146,6 +149,8 @@ namespace AntDesign
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object>? UnmatchedAttributes { get; set; }
 
+        [Inject]private NavigationManager NavigationManager { get; set; }
+
         private const string PrefixCls = "ant-pagination";
 
         private ClassMapper _prevClass = new();
@@ -182,6 +187,7 @@ namespace AntDesign
             }
 
             var current = DefaultCurrent;
+
             if (_current != 0)
             {
                 current = _current;
@@ -193,7 +199,16 @@ namespace AntDesign
                 pageSize = PageSize;
             }
 
-            current = Math.Min(current, CalculatePage(pageSize, PageSize, Total));
+            var query = HttpUtility.ParseQueryString(new Uri(NavigationManager.Uri).Query);
+            if (int.TryParse(query["page"], out var p))
+            {
+                current = p;
+                OnChange.InvokeAsync(new PaginationEventArgs(current, pageSize));
+            }
+            else
+            {
+                current = Math.Min(current, CalculatePage(pageSize, PageSize, Total));
+            }
 
             _current = current;
             _currentInputValue = current;
