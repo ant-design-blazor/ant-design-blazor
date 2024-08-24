@@ -61,40 +61,43 @@ namespace AntDesign
         /// <default value="false"/>
         [Parameter]
         public bool TreeCheckable { get; set; }
+
         /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
         /// </summary>
         [Parameter]
         public bool TreeCheckStrictly { get; set; }
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
+
         /// <summary>
         /// Specify how to show checked values when TreeCheckable is true and TreeCheckStrictly is false 
         /// </summary>
         [Parameter]
         public TreeCheckedStrategy ShowCheckedStrategy { get; set; } = TreeCheckedStrategy.ShowChild;
-        [Parameter] public Action OnMouseEnter { get; set; }
+
         [Parameter] public bool CheckOnClickNode { get; set; } = true;
-        [Parameter] public Action OnMouseLeave { get; set; }
 
         /// <summary>
         /// Callback executed when the component looses focus
         /// </summary>
         [Parameter]
         public Action OnBlur { get; set; }
+
         [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
+
         /// <summary>
         ///  Customize the icon templates
         /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
+
         [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
+
         /// <summary>
         /// Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <see cref="ChildContent"/>
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
+
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
