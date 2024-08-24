@@ -27,10 +27,10 @@ namespace AntDesign
         <para>And 4 other properties additionally.</para>
 
         <list type="bullet">
-            <item><c>danger</c>: used for actions of risk, like deletion or authorization.</item>
-            <item><c>ghost</c>: used in situations with complex background, home pages usually.</item>
-            <item><c>disabled</c>: when actions is not available.</item>
-            <item><c>loading</c>: add loading spinner in button, avoiding multiple submits too.</item>
+            <item><c>Danger</c>: used for actions of risk, like deletion or authorization.</item>
+            <item><c>Ghost</c>: used in situations with complex background, home pages usually.</item>
+            <item><c>Disabled</c>: when actions is not available.</item>
+            <item><c>Loading</c>: add loading spinner in button, avoiding multiple submits too.</item>
         </list>
     </summary>
     <seealso cref="DownloadButton" />
