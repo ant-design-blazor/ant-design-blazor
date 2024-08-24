@@ -60,7 +60,18 @@ namespace AntDesign
         /// </summary>
         /// <default value="false"/>
         [Parameter]
-        public bool TreeCheckable { get; set; }
+        public bool TreeCheckable
+        {
+            get => _treeCheckable;
+            set
+            {
+                _treeCheckable = value;
+                if (_treeCheckable)
+                {
+                    Mode = SelectMode.Multiple.ToString("G");
+                }
+            }
+        }
 
         /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
@@ -153,8 +164,12 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnTreeNodeSelect { get; set; }
 
-        /// Specifies a method that returns whether the expression is a leaf node.
-        /// </summary>) == args.Node.Key).FirstOrDefault();
+        /// <inheritdoc cref="Tree{TItem}.TitleExpression"/>
+        [Parameter]
+        public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
+
+        /// <summary>
+        /// 
         /// </summary>
         [Parameter]
         public string DropdownStyle { get; set; }
@@ -165,10 +180,6 @@ namespace AntDesign
         /// <default value="false"/>
         [Parameter]
         public bool ShowTreeLine { get; set; }
-
-        /// <inheritdoc cref="Tree{TItem}.TitleExpression"/>
-        [Parameter]
-        public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
         /// <inheritdoc cref="Tree{TItem}.KeyExpression"/>
         [Parameter]
@@ -222,7 +233,19 @@ namespace AntDesign
         private TItemValue _cachedValue;
 
         [Parameter]
-        public override TItemValue Value { get; set; }
+        public override TItemValue Value
+        {
+            get => base.Value;
+            set
+            {
+                if (_cachedValue.AllNullOrEquals(value))
+                    return;
+
+                _cachedValue = value;
+
+                UpdateValueAndSelection();
+            }
+        }
 
         private TItemValue[] _cachedValues;
         private List<TItemValue> _newValues = [];

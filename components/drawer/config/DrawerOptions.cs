@@ -71,13 +71,13 @@ namespace AntDesign
         /// Width of the Drawer dialog.
         /// </summary>
         /// <default value="256" />
-        public int Width { get; set; } = 256;
+        public string Width { get; set; } = "256";
 
         /// <summary>
         /// Height of the Drawer dialog, only when placement is 'top' or 'bottom'.
         /// </summary>
         /// <default value="256" />
-        public int Height { get; set; } = 256;
+        public string Height { get; set; } = "256";
 
         /// <summary>
         /// The z-index of the Drawer.

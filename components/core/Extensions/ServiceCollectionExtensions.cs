@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.core.Services;
 using AntDesign.Filters;
-using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -14,6 +14,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddAntDesign(this IServiceCollection services)
         {
+            // singleton services is only the app configuration, no need to distinguish between different users
+            services.TryAddSingleton<IComponentIdGenerator, GuidComponentIdGenerator>();
+            services.TryAddSingleton<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
+
+            // scoped services within IJSRuntime
             services.TryAddScoped<DomEventService>();
             services.TryAddTransient<IDomEventListener>((sp) =>
             {
@@ -24,24 +29,27 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
                         s => HtmlEncoder.Default.Encode(s)))
             );
-
-            services.TryAddSingleton<IComponentIdGenerator, GuidComponentIdGenerator>();
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
-            services.TryAddScoped<NotificationService>();
-            services.TryAddScoped<INotificationService>(provider => provider.GetRequiredService<NotificationService>());
-            services.TryAddScoped<MessageService>();
-            services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
-            services.TryAddScoped<ModalService>();
-            services.TryAddScoped<DrawerService>();
-            services.TryAddScoped<ConfirmService>();
-            services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
-            services.TryAddScoped<ImageService>();
-            services.TryAddScoped<ConfigService>();
-            services.TryAddScoped<ReuseTabsService>();
-            services.TryAddScoped<MenuService>();
-            services.TryAddScoped<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
             services.TryAddScoped<ClientDimensionService>();
+            services.TryAddScoped<ConfigService>();
+
+            // detect if it is webassembly
+            var serviceLifetime = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")) ? ServiceLifetime.Singleton : ServiceLifetime.Scoped;
+
+            // The services that are not shared between users, so need be scoped in server, but not in webassembly(it's single scoped).
+            services.TryAdd(new ServiceDescriptor(typeof(NotificationService), typeof(NotificationService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(MessageService), typeof(MessageService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(ConfirmService), typeof(ConfirmService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(ModalService), typeof(ModalService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(DrawerService), typeof(DrawerService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(ImageService), typeof(ImageService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(ReuseTabsService), typeof(ReuseTabsService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(MenuService), typeof(MenuService), serviceLifetime));
+
+            services.TryAddScoped<INotificationService>(provider => provider.GetRequiredService<NotificationService>());
+            services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
+            services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

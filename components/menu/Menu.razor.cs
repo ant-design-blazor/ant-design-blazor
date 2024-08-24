@@ -239,12 +239,17 @@ namespace AntDesign
             return base.SetParametersAsync(parameters);
         }
 
-        public void SelectItem(MenuItem item)
+        internal void HideOverlay()
         {
             if (Overlay != null && AutoCloseDropdown)
             {
-                Overlay.Hide(true);
+                _ = Overlay.Hide(true);
             }
+        }
+
+        public void SelectItem(MenuItem item)
+        {
+            HideOverlay();
 
             if (item == null || item.IsSelected)
             {

@@ -143,14 +143,14 @@ namespace AntDesign
         /// </summary>
         /// <default value="256" />
         [Parameter]
-        public int Width { get; set; } = 256;
+        public string Width { get; set; } = "256";
 
         /// <summary>
         /// Height of the Drawer dialog, only when placement is 'top' or 'bottom'.
         /// </summary>
         /// <default value="256" />
         [Parameter]
-        public int Height { get; set; } = 256;
+        public string Height { get; set; } = "256";
 
         /// <summary>
         /// The z-index of the Drawer.
@@ -384,6 +384,7 @@ namespace AntDesign
                     }
                 case ComponentStatus.Closing:
                     {
+                        await Task.Delay(3000);
                         _status = ComponentStatus.Closed;
                         StateHasChanged();
                         if (!_hasInvokeClosed)
