@@ -442,6 +442,7 @@ namespace AntDesign
                     }
                 case ComponentStatus.Closing:
                     {
+                        await Task.Delay(3000);
                         _status = ComponentStatus.Closed;
                         StateHasChanged();
                         if (!_hasInvokeClosed)
