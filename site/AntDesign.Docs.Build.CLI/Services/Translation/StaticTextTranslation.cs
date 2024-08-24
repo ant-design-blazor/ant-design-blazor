@@ -40,12 +40,12 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
                     { ReturnTypeHeader, "返回类型" },
                     { Description, "描述" },
                     { ObsoleteWillBeRemoved, "将在未来的版本中删除。" },
-                    { Property, "财产" },
+                    { Property, "属性" },
                     { Type, "类型" },
                     { DefaultValue, "默认值" },
                     { Name, "名称" },
-                    { Parameter, "范围" },
-                    { UnderlyingType, "底层证券类型" },
+                    { Parameter, "属性" },
+                    { UnderlyingType, "基础类型" },
                     { Faq, "常问问题" }
                 }
             }
