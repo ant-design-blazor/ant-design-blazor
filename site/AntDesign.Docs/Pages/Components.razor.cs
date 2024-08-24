@@ -57,6 +57,7 @@ namespace AntDesign.Docs.Pages
         private (string Name, string Title)[] _anchors = [];
 
         private string _currentPageName;
+        private string _currentLocale;
 
         protected override void OnInitialized()
         {
@@ -105,12 +106,13 @@ namespace AntDesign.Docs.Pages
                 return;
             }
 
-            if (_currentPageName == fullPageName)
+            if (_currentPageName == fullPageName && _currentLocale == Locale)
             {
                 return;
             }
 
             _currentPageName = fullPageName;
+            _currentLocale = Locale;
 
             if (fullPageName.Split("/").Length != 2)
             {
