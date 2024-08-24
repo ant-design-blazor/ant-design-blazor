@@ -4093,5 +4093,263 @@
   },
   "<p>Tabs make it easy to switch between different views.</p><h2>When To Use</h2><p>Ant Design has 3 types of Tabs for different situations.</p><ul><li>Card Tabs: for managing too many closeable views.</li><li>Normal Tabs: for functional aspects of a page.</li><li><code>RadioGroup</code>: for secondary tabs.</li></ul>": {
     "Translated": "<p>Tabs 可以很容易地在不同的视图之间切换。</p><h2>何时使用</h2><p>Ant Design 有 3 种类型的 Tabs 用于不同的情况。</p><ul><li >卡片标签：用于管理太多可关闭的视图。</li><li>普通标签：用于页面的功能方面。</li><li><code>RadioGroup</code>：用于辅助标签。</li>李></ul>"
+  },
+  "Use OnChange instead": {
+    "Translated": "请改用 OnChange"
+  },
+  "Use ChildContent instead": {
+    "Translated": "请改用 ChildContent"
+  },
+  "Whether enable the expand/collapse animation": {
+    "Translated": "是否启用展开/折叠动画"
+  },
+  "Saving the input value after blur": {
+    "Translated": "模糊后保存输入值"
+  },
+  "The position where the selection box pops up": {
+    "Translated": "弹出选择框的位置"
+  },
+  "EventCallback trigger on Visible was changed.": {
+    "Translated": "更改了 Visible 上的 EventCallback 触发器。"
+  },
+  "Use VisibleChanged instead": {
+    "Translated": "请改用 VisibleChanged"
+  },
+  "<p>A flex layout container for alignment.</p><h2>When To Use</h2><ul><li>Good for setting spacing between elements.</li><li>Suitable for setting various horizontal and vertical alignments.</li></ul><h3>Difference with Space component</h3><ul><li>Space is used to set the spacing between inline elements. It will add a wrapper element for each child element for inline alignment. Suitable for equidistant arrangement of multiple child elements in rows and columns.</li><li>Flex is used to set the layout of block-level elements. It does not add a wrapper element. Suitable for layout of child elements in vertical or horizontal direction, and provides more flexibility and control.</li></ul>": {
+    "Translated": "<p>用于对齐的 flex 布局容器。</p><h2>何时使用</h2><ul><li>Good 用于设置元素之间的间距。</li><li>适用于设置各种水平和垂直对齐方式。</li></ul><h3>与“空间”组件的差异</h3><ul><li>“空间”用于设置内联元素之间的间距。它将为每个子元素添加一个包装器元素，以便进行内联对齐。适用于行和列中多个子元素的等距排列。</li><li>Flex 用于设置块级元素的布局。它不会添加包装元素。适用于子元素在垂直或水平方向的布局，并提供更多的灵活性和控制。</li></ul>"
+  },
+  "Is direction of the flex vertical, use flex-direction: column": {
+    "Translated": "是 flex 垂直方向，使用 flex-direction： column"
+  },
+  "Set whether the element is displayed in a single line or in multiple lines reference flex-wrap:https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap": {
+    "Translated": "设置元素是单行显示还是多行显示，参考 flex-wrap：https：//developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap"
+  },
+  "Sets the alignment of elements in the direction of the main axis reference justify-content https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content": {
+    "Translated": "设置元素在主轴方向上的对齐方式 justify-content https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content"
+  },
+  "Sets the alignment of elements in the direction of the cross axis reference align-items https://developer.mozilla.org/en-US/docs/Web/CSS/align-items": {
+    "Translated": "设置元素在交叉轴 reference align-items https://developer.mozilla.org/en-US/docs/Web/CSS/align-items 方向上的对齐方式"
+  },
+  "flex CSS shorthand properties reference flex https://developer.mozilla.org/en-US/docs/Web/CSS/flex": {
+    "Translated": "flex CSS 简写属性 参考 flex https://developer.mozilla.org/en-US/docs/Web/CSS/flex"
+  },
+  "Sets the gap between grids small | middle | large | string | number": {
+    "Translated": "将栅格之间的间隙设置为较小 |中 |大 |字符串 |数"
+  },
+  "Custom element type": {
+    "Translated": "自定义元素类型"
+  },
+  "Set the child element": {
+    "Translated": "设置子元素"
+  },
+  "Gets or sets the form handler name. This is required for posting it to a server-side endpoint. Or using for get the form instance from <code>FormProviderFinishEventArgs</code>.": {
+    "Translated": "获取或设置表单处理程序名称。这是将其发布到服务器端终端节点所必需的。或者使用 for 从 <code>FormProviderFinishEventArgs</code> 获取表单实例。"
+  },
+  "Http method used to submit form": {
+    "Translated": "用于提交表单的 Http 方法"
+  },
+  "If enabled, form submission is performed without fully reloading the page. This is equivalent to adding data-enhance to the form.": {
+    "Translated": "如果启用，则无需完全重新加载页面即可执行表单提交。这相当于将 data-enhance 添加到表单中。"
+  },
+  "Whether input elements can by default have their values automatically completed by the browser": {
+    "Translated": "默认情况下，input 元素是否可以由浏览器自动完成其值"
+  },
+  "Callback when the content is cleared by clicking the \"ClearIcon\"": {
+    "Translated": "单击“ClearIcon”清空内容时的回调"
+  },
+  "Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time. Default is 250 ms.": {
+    "Translated": "延迟 KeyUp 事件的处理，直到用户停止键入预定的时间。默认值为 250 毫秒。"
+  },
+  "Use CollapsedChanged instead": {
+    "Translated": "请改用 CollapsedChanged"
+  },
+  "Dynamically load mention options for display when the user types a value after the @ symbol": {
+    "Translated": "动态加载提及选项，以便在用户在 @ 符号后键入值时显示"
+  },
+  "Header content": {
+    "Translated": "标题内容"
+  },
+  "Specify a function invoke when the modal dialog is visible or not": {
+    "Translated": "指定模式对话框可见或不可见时的函数调用"
+  },
+  "Resizable (Horizontal direction only)": {
+    "Translated": "可调整大小（仅限水平方向）"
+  },
+  "Whether to force to render the Modal dom before opening.": {
+    "Translated": "是否强制在打开之前渲染模态 dom。"
+  },
+  "Create and open a Modal with template component": {
+    "Translated": "创建并打开 Modal with template 组件"
+  },
+  "Use TitleTemplate instead": {
+    "Translated": "请改用 TitleTemplate"
+  },
+  "Use SubtitleTemplate instead": {
+    "Translated": "请改用 SubtitleTemplate"
+  },
+  "Use CheckedChanged instead": {
+    "Translated": "请改用 CheckedChanged"
+  },
+  "Toggle the border style.": {
+    "Translated": "切换边框样式。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Use ItemLabel instead": {
+    "Translated": "请改用 ItemLabel"
+  },
+  "Specifies the label property in the option object. If use this property, should not use <see cref=\"!:LabelName\" />": {
+    "Translated": "指定 option 对象中的 label 属性。如果使用此属性，则不应使用 <see cref=“！：LabelName” />"
+  },
+  "Use ItemValue instead": {
+    "Translated": "请改用 ItemValue"
+  },
+  "Specifies the value property in the option object. If use this property, should not use <see cref=\"!:ValueName\" />": {
+    "Translated": "指定 option 对象中的 value 属性。如果使用此属性，则不应使用 <see cref=“！：ValueName” />"
+  },
+  "Specifies predicate for disabled options": {
+    "Translated": "为禁用的选项指定谓词"
+  },
+  "Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time. Default to 250ms.": {
+    "Translated": "延迟搜索输入事件的处理，直到用户停止键入预定的时间。默认为 250 毫秒。"
+  },
+  "The accesskey global attribute.": {
+    "Translated": "accesskey 全局属性。"
+  },
+  "Specifies the label property in the option object. If use this property, should not use <code>AntDesign.SelectBase`2.LabelName</code>": {
+    "Translated": "指定 option 对象中的 label 属性。如果使用此属性，则不应使用 <code>AntDesign.SelectBase'2.LabelName</code>"
+  },
+  "Specifies the value property in the option object. If use this property, should not use <code>AntDesign.SelectBase`2.ValueName</code>": {
+    "Translated": "指定 option 对象中的 value 属性。如果使用此属性，则不应使用 <code>AntDesign.SelectBase'2.ValueName</code>"
+  },
+  "Customize dropdown content. The context is the original content.": {
+    "Translated": "自定义下拉内容。上下文是原始内容。"
+  },
+  "Render mode of table. See <see cref=\"!:AntDesign.RenderMode\" /> documentation for details.": {
+    "Translated": "表的渲染模式。有关详细信息，请参见<参见 cref=“！：AntDesign.RenderMode” /> 文档。"
+  },
+  "Enable resizable column": {
+    "Translated": "启用可调整大小的列"
+  },
+  "Rows that are selected across pages": {
+    "Translated": "跨页面选择的行"
+  },
+  "Select all rows of current page": {
+    "Translated": "选择当前页面的所有行"
+  },
+  "Unselect all rows of current page": {
+    "Translated": "取消选择当前页面的所有行"
+  },
+  "Please use <see cref=\"M:AntDesign.Table`1.SetSelection(System.Collections.Generic.IEnumerable{`0})\" /> instead if possible, as this method won't correctly select items from invisible rows when virtualization is enabled.": {
+    "Translated": "如果可能，请改用 <see cref=“M：AntDesign.Table'1.SetSelection（System.Collections.Generic.IEnumerable{'0}）” />，因为在启用虚拟化时，此方法无法正确地从不可见的行中选择项目。"
+  },
+  "Set all selected items": {
+    "Translated": "设置所有选定项"
+  },
+  "Select one item": {
+    "Translated": "选择一项"
+  },
+  "Whether the dataSource is filtered. Filter icon will be actived when it is true.": {
+    "Translated": "dataSource 是否被过滤。当为 true 时，过滤器图标将被激活。"
+  },
+  "'fill' | 'outline' | 'twotone';": {
+    "Translated": "'填充' |'大纲' |'双音';"
+  },
+  "A custom CSS style used for rendering the transfer columns": {
+    "Translated": "用于呈现传输列的自定义 CSS 样式"
+  },
+  "Specify how to show checked values when TreeCheckable is true and TreeCheckStrictly is false": {
+    "Translated": "指定当 TreeCheckable 为 true 且 TreeCheckStrictly 为 false 时如何显示选中的值"
+  },
+  "Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <code>AntDesign.TreeSelect`2.ChildContent</code>": {
+    "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
+  },
+  "Specifies a method to return a checkable node": {
+    "Translated": "指定返回可检查节点的方法"
+  },
+  "树控件本身": {
+    "Translated": "树控件本身"
+  },
+  "Check or uncheck the node by click TreeNodeTitle if checkable": {
+    "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
+  },
+  "Expand or collapse the node by click TreeNodeTitle": {
+    "Translated": "通过单击 TreeNodeTitle 展开或折叠节点"
+  },
+  "Get TreeNode from Key": {
+    "Translated": "从 Key 获取 TreeNode"
+  },
+  "Expand the node or not": {
+    "Translated": "是否扩展节点"
+  },
+  "Check the TreeNode or not": {
+    "Translated": "检查 TreeNode"
+  },
+  "<p> Add specific text or patterns to the page. </p><h2>When To Use</h2><ul><li>Use when the page needs to be watermarked to identify the copyright.</li><li>Suitable for preventing information theft.</li></ul>": {
+    "Translated": "<p> 向页面添加特定文本或模式。 </p><h2>何时使用</h2><ul><li>当页面需要添加水印以识别版权时使用。</li><li>适用于防止信息窃取。</li></ul>"
+  },
+  "The width of the watermark, the default value of <code>content</code> is its own width": {
+    "Translated": "水印的宽度，<code>content</code> 的默认值是它自己的宽度"
+  },
+  "The height of the watermark, the default value of <code>content</code> is its own height": {
+    "Translated": "水印的高度，<code>content</code> 的默认值是它自己的高度"
+  },
+  "When the watermark is drawn, the rotation Angle, unit <code>°</code>": {
+    "Translated": "绘制水印时，旋转角度，单位 <code>°</code>"
+  },
+  "transparency, value range [0-1]": {
+    "Translated": "透明度，值范围 [0-1]"
+  },
+  "font size": {
+    "Translated": "字体大小"
+  },
+  "font color": {
+    "Translated": "字体颜色"
+  },
+  "font family": {
+    "Translated": "字体系列"
+  },
+  "font weight. The value can be <code>normal</code>, <code>light</code>, <code>weight</code> and number.": {
+    "Translated": "字体粗细。该值可以是 <code>normal</code>、<code>light</code>、<code>weight</code> 和 number。"
+  },
+  "font style. The value can be <code>none</code>, <code>normal</code>, <code>italic</code> and <code>oblique</code>.": {
+    "Translated": "字形。该值可以是 <code>none</code>、<code>normal</code>、<code>italic</code> 和 <code>oblique</code>。"
+  },
+  "Watermark text content": {
+    "Translated": "水印文本内容"
+  },
+  "Multiple-line watermark text contents": {
+    "Translated": "多行水印文本内容"
+  },
+  "The z-index of the appended watermark element.": {
+    "Translated": "附加的 watermark 元素的 z-index。"
+  },
+  "The spacing between watermarks. <p>X: the x-axis spacing between watermarks</p><p>Y: the y-axis spacing between watermarks</p>": {
+    "Translated": "水印之间的间距。<p>X：水印之间的 x 轴间距</p><p>Y：水印之间的 y 轴间距</p>"
+  },
+  "Image source, it is recommended to export 2x or 3x image, high priority (support base64 format)": {
+    "Translated": "图片来源，建议导出 2x 或 3x 图像，高优先级（支持 base64 格式）"
+  },
+  "The offset of the watermark from the upper left corner of the container. The default is <code>gap/2</code>.": {
+    "Translated": "水印与容器左上角的偏移量。默认值为 <code>gap/2</code>。"
+  },
+  "The line spacing, only applies when there are multiple lines (content is configured as an array)": {
+    "Translated": "行距仅在有多行时适用（内容配置为数组）"
+  },
+  "Enable infinite scrolling text effect": {
+    "Translated": "启用无限滚动文本效果"
+  },
+  "The interval of motion displacement, in milliseconds.": {
+    "Translated": "运动位移的间隔，以毫秒为单位。"
+  },
+  "set or get whether to repeat the watermark": {
+    "Translated": "设置或获取是否重复水印"
+  },
+  "Whether the picture needs gray scale display (color to gray)": {
+    "Translated": "图片是否需要灰度显示（颜色到灰度）"
+  },
+  "The child Content": {
+    "Translated": "子内容"
   }
 }
