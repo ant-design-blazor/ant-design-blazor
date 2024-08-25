@@ -53,6 +53,8 @@ dotnet_style_qualification_for_event = false:refactoring
 # Use language keywords instead of framework type names for type references
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_predefined_type_for_member_access = true:suggestion
+# Always add accessibility modifiers
+dotnet_style_require_accessibility_modifiers=always:warning
 
 # Suggest more modern language features when available
 dotnet_style_object_initializer = true:suggestion
@@ -256,7 +258,7 @@ dotnet_diagnostic.CA1040.severity = none
 # CA1852: sealed internal types, https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1852
 dotnet_diagnostic.CA1852.severity = warning
 
-# IDE0040: add accessibility modifiers
+# IDE0040: add accessibility modifiers, https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0040
 dotnet_diagnostic.IDE0040.severity = warning
 
 # IDE005: remove unnecessary usings, https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0005?pivots=lang-csharp-vb
