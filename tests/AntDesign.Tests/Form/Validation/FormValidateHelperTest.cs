@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
-using AntDesign;
-using AntDesign.Internal;
 using AntDesign.Internal.Form.Validate;
 using Xunit;
 
@@ -482,7 +484,7 @@ namespace AntDesign.Tests.Form.Validation
     }
 }
 
-class CustomValidationAttribute : ValidationAttribute
+sealed class CustomValidationAttribute : ValidationAttribute
 {
     public int Max { get; set; }
     public CustomValidationAttribute(int max) : base("The field {0} should not max than {1}.")
@@ -511,7 +513,7 @@ class CustomValidationAttribute : ValidationAttribute
     }
 }
 
-class FieldsTestObj
+sealed class FieldsTestObj
 {
     public string _fieldName = "one";
     public int _fieldAge = 10;

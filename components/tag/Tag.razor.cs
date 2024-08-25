@@ -1,9 +1,27 @@
-﻿using System.Text.RegularExpressions;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+/* Unmerged change from project 'AntDesign(net5.0)'
+Before:
+using System.Text.RegularExpressions;
+After:
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Text.RegularExpressions;
+*/
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System;
-using System.Text;
 
 namespace AntDesign
 {
@@ -51,8 +69,8 @@ namespace AntDesign
             {
                 if (_color != value)
                 {
-                    _color = string.IsNullOrWhiteSpace(value) 
-                        ? "default" 
+                    _color = string.IsNullOrWhiteSpace(value)
+                        ? "default"
                         : value.ToLowerInvariant();
                     _isPresetColor = IsPresetColor(_color);
                     _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
@@ -146,7 +164,7 @@ namespace AntDesign
         }
 
         private string _prefix = "ant-tag";
-        
+
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)

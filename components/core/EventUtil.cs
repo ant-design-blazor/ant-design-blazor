@@ -73,7 +73,7 @@ namespace AntDesign
             public Task Invoke() => callback();
         }
 
-        class AsyncReceiver<T>: ReceiverBase
+        class AsyncReceiver<T> : ReceiverBase
         {
             private Func<T, Task> callback;
 

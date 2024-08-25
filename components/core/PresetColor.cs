@@ -1,5 +1,11 @@
-namespace AntDesign {
-    public enum PresetColor {
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+namespace AntDesign
+{
+    public enum PresetColor
+    {
         Pink,
         Red,
         Yellow,
@@ -12,6 +18,17 @@ namespace AntDesign {
         Magenta,
         Volcano,
         Gold,
-        Lime    
+
+        /* Unmerged change from project 'AntDesign(net5.0)'
+        Before:
+                Lime    
+            }
+        } 
+        After:
+                Lime
+            }
+        }
+        */
+        Lime
     }
-} 
+}

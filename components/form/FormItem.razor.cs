@@ -11,7 +11,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Core.Reflection;
-using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using AntDesign.Internal.Form.Validate;
