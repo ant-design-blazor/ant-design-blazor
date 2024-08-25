@@ -19,9 +19,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Demos\Components\List\**" />
+    <Content Remove="Demos\Components\List\**" />
+    <EmbeddedResource Remove="Demos\Components\List\**" />
+    <None Remove="Demos\Components\List\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Demos\Components\Modal\faq.en-US.md" />
+    <None Remove="Demos\Components\Modal\faq.zh-CN.md" />
+    <None Remove="Demos\Components\Upload\faq.en-US.md" />
+    <None Remove="Demos\Components\Upload\faq.zh-CN.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
     <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Demos\Components\Modal\faq.zh-CN.md" />
+    <Content Include="Demos\Components\Modal\faq.en-US.md" />
+    <Content Include="Demos\Components\Upload\faq.zh-CN.md" />
+    <Content Include="Demos\Components\Upload\faq.en-US.md" />
   </ItemGroup>
 
   <ItemGroup>

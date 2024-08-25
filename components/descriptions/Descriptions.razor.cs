@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -10,27 +11,56 @@ using OneOf;
 
 namespace AntDesign
 {
-    using ColumnType = OneOf<int, Dictionary<string, int>>;
+    /**
+    <summary>
+    <para>Display multiple read-only fields in groups.</para>
 
+    <h2>When To Use</h2>
+
+    <para>Commonly displayed on the details page.</para>
+    </summary>
+    <seealso cref="DescriptionsItem"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg", Columns = 1)]
     public partial class Descriptions : AntDomComponentBase
     {
         #region Parameters
 
+        /// <summary>
+        /// Whether to display the border
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Bordered { get; set; } = false;
 
+        /// <summary>
+        /// Layout - Horizontal or Vertical
+        /// </summary>
+        /// <default value="DescriptionsLayout.Horizontal"/>
         [Parameter]
         public string Layout { get; set; } = DescriptionsLayout.Horizontal;
 
+        /// <summary>
+        /// The number of <see cref="DescriptionsItem"/> elements in a row. Could be a number or a object like { xs: 8, sm: 16, md: 24}
+        /// </summary>
         [Parameter]
-        public ColumnType Column { get; set; }
+        public OneOf<int, Dictionary<string, int>> Column { get; set; }
 
+        /// <summary>
+        /// Size of the list
+        /// </summary>
         [Parameter]
         public string Size { get; set; }
 
+        /// <summary>
+        /// Title shown at the top of the element
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Title content shown at the top of the element. Takes priority over <see cref="Title"/>
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
@@ -39,10 +69,13 @@ namespace AntDesign
 
         #endregion Parameters
 
+        /// <summary>
+        /// Content for the element. Typically contains <see cref="DescriptionsItem"/> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
+        internal IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
         private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
 

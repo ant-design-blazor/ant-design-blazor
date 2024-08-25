@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,6 +14,16 @@ using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Mention component.</para>
+
+    <h2>When To Use</h2>
+
+    <para>When need to mention someone or something.</para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg")]
     public partial class Mentions
     {
         [Parameter]

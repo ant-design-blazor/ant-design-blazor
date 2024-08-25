@@ -1,0 +1,4355 @@
+﻿{
+  "ID for the component's HTML": {
+    "Translated": "组件 HTML 的 ID"
+  },
+  "<p>Hyperlinks to scroll on one page.</p><h2>When To Use</h2><p>For displaying anchor hyperlinks on page and jumping between them.</p>": {
+    "Translated": "<p>在一页上滚动的超链接。</p><h2>何时使用</h2><p>用于在页面上显示锚超链接并在它们之间跳转。</p>"
+  },
+  "<p>Autocomplete function of input field.</p><h2>When To Use</h2> When there is a need for autocomplete functionality.": {
+    "Translated": "<p>输入字段的自动完成功能。</p><h2>何时使用</h2> 当需要自动完成功能时。"
+  },
+  "<p>Makes it easy to go back to the top of the page.</p><h2>When To Use</h2><ul><li>When the page content is very long.</li><li>When you need to go back to the top very frequently in order to view the contents.</li></ul>": {
+    "Translated": "<p>使返回页面顶部变得容易。</p><h2>何时使用</h2><ul><li>当页面内容很长时。</li><li >当您需要非常频繁地返回顶部以查看内容时。</li></ul>"
+  },
+  "Callback executed when BackTop gets clicked. Won't override default functionality.": {
+    "Translated": "单击 BackTop 时执行的回调。不会覆盖默认功能。"
+  },
+  "<p>Small numerical value or status descriptor for UI elements.</p><h2>When To Use</h2><p>Badge normally appears in proximity to notifications or user avatars with eye-catching appeal, typically displaying unread messages count.</p>": {
+    "Translated": "<p>UI 元素的小数值或状态描述符。</p><h2>何时使用</h2><p>徽章通常出现在通知或用户头像附近，具有引人注目的吸引力，通常显示未读消息数数。</p>"
+  },
+  "<p>A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy.</p> When To Use <ul><li>When the system has more than two layers in a hierarchy.</li><li>When you need to inform the user of where they are.</li><li>When the user may need to navigate back to a higher level.</li></ul>": {
+    "Translated": "<p>面包屑显示层次结构中的当前位置。它允许返回到层次结构中更高的状态。</p> 何时使用 <ul><li>当系统在层次结构中有两层以上时。</li><li>当您需要通知用户所在位置。</li><li>当用户可能需要导航回更高级别时。</li></ul>"
+  },
+  "<p>To trigger an operation.</p><h2>When To Use</h2><p>A button means an operation (or a series of operations). Clicking a button will trigger corresponding business logic.</p><p>In Ant Design we provide 4 types of button.</p><ul><li>Primary button: indicate the main action, one primary button at most in one section.</li><li>Default button: indicate a series of actions without priority.</li><li>Dashed button: used for adding action commonly.</li><li>Link button: used for external links.</li></ul><p>And 4 other properties additionally.</p><ul><li><code>Danger</code>: used for actions of risk, like deletion or authorization.</li><li><code>Ghost</code>: used in situations with complex background, home pages usually.</li><li><code>Disabled</code>: when actions is not available.</li><li><code>Loading</code>: add loading spinner in button, avoiding multiple submits too.</li></ul>": {
+    "Translated": "<p>触发操作。</p><h2>何时使用</h2><p>按钮表示一个操作（或一系列操作）。点击一个按钮会触发相应的业务逻辑。</p><p>在Ant Design中我们提供了4种类型的按钮。</p><ul><li>主按钮：表示主要的动作，最多一个主按钮</li><li>默认按钮：表示一系列没有优先级的动作。</li><li>虚线按钮：用于添加常用动作。</li><li>链接按钮：用于外部链接。</li></ul><p>另外还有 4 个其他属性。</p><ul><li><code>Danger</code>：用于有风险的操作，例如删除或授权。</li><li><code>Ghost</code>：用于背景复杂的情况，一般用于首页。</li><li><code>Disabled</code>：操作不可用时。</li><li><code>Loading</code>：在按钮中添加loading spinner，避免多次提交。</li></ul>"
+  },
+  "Can set button shape: `circle` | `round` or `null` (default, which is rectangle).": {
+    "Translated": "可以设置按钮形状：`circle` | `round` 或 `null`（默认为矩形）。"
+  },
+  "Do not wrap with &lt;span&gt;": {
+    "Translated": "不要用 <span> 包裹"
+  },
+  "<p>Container for displaying data in calendar form.</p><h2>When To Use</h2><p>When data is in the form of dates, such as schedules, timetables, prices calendar, lunar calendar. This component also supports Year/Month switch.</p>": {
+    "Translated": "<p>以日历形式显示数据的容器。</p><h2>何时使用</h2><p>当数据以日期形式显示时，例如日程表、时间表、价格日历、农历。该组件还支持年/月切换。</p>"
+  },
+  "<p>Simple rectangular container.</p><h2>When To Use</h2><ul><li>A card can be used to display content related to a single subject. The content can consist of multiple elements of varying types and sizes.</li></ul>": {
+    "Translated": "<p>简单的矩形容器。</p><h2>何时使用</h2><ul><li>卡片可用于显示与单个主题相关的内容。内容可以包含不同类型和大小的多个元素。</li></ul>"
+  },
+  "Content for the card's body. Shown below <code>AntDesign.Card.Body</code>": {
+    "Translated": "卡片正文的内容。如下图<code>AntDesign.Card.Body</code>"
+  },
+  "Content for the card's body. Shown above <code>AntDesign.Card.ChildContent</code>": {
+    "Translated": "卡片正文的内容。如上所示<code>AntDesign.Card.ChildContent</code>"
+  },
+  "Avatar string. Will be passed to <a href=\"/en-US/components/avatar\"><code>Avatar</code></a> component's <code>AntDesign.Avatar.Src</code>": {
+    "Translated": "头像字符串。将被传递给<a href=\"/en-US/components/avatar\"><code>Avatar</code></a>组件的<code>AntDesign.Avatar.Src</code>"
+  },
+  "<p>A carousel component. Scales with its container.</p><h2>When To Use</h2><ul><li>When there is a group of content on the same level.</li><li>When there is insufficient content space, it can be used to save space in the form of a revolving door.</li><li>Commonly used for a group of pictures/cards.</li></ul>": {
+    "Translated": "<p>轮播组件。随其容器缩放。</p><h2>何时使用</h2><ul><li>当同一层上有一组内容时。</li><li>当内容空间不足时, 可以用旋转门的形式来节省空间。</li><li>常用于一组图片/卡片。</li></ul>"
+  },
+  "<p>Cascade selection box.</p><h2>When To Use</h2><ul><li>When you need to select from a set of associated data set. Such as province/city/district, company level, things classification.</li><li>When selecting from a large data set, with multi-stage classification separated for easy selection.</li><li>Chooses cascade items in one float layer for better user experience.</li></ul>": {
+    "Translated": "<p>级联选择框。</p><h2>何时使用</h2><ul><li>当您需要从一组关联的数据集中进行选择时。如省/市/区、公司级别、事物分类。</li><li>从大数据集中选择时，多阶段分类分离，便于选择。</li><li>选择级联项目一个浮动层以获得更好的用户体验。</li></ul>"
+  },
+  "Instead use SelectedNodesChanged.": {
+    "Translated": "Instead use SelectedNodesChanged."
+  },
+  "<p>Checkbox component.</p><h2>When To Use</h2><ul><li>Used for selecting multiple values from several options.</li><li>If you use only one checkbox, it is the same as using Switch to toggle between two states. </li></ul><p>The difference is that Switch will trigger the state change directly, but Checkbox just marks the state as changed and this needs to be submitted.</p>": {
+    "Translated": "<p>复选框组件。</p><h2>何时使用</h2><ul><li>用于从多个选项中选择多个值。</li><li>如果您只使用一个复选框，它与使用 Switch 在两种状态之间切换相同。 </li></ul><p>不同的是，Switch会直接触发状态改变，而Checkbox只是标记状态改变，需要提交。</p>"
+  },
+  "Instead use @bind-Checked or EventCallback<bool> CheckedChanged .": {
+    "Translated": "Instead use @bind-Checked or EventCallback<bool> CheckedChanged ."
+  },
+  "Currently not implemented": {
+    "Translated": "Currently not implemented"
+  },
+  "<p>A content area which can be collapsed and expanded.</p><h2>When To Use</h2><ul><li>Can be used to group or hide complex regions to keep the page clean.</li><li><code>Accordion</code> is a special kind of <code>Collapse</code>, which allows only one panel to be expanded at a time.</li></ul>": {
+    "Translated": "<p>可以折叠和展开的内容区域。</p><h2>何时使用</h2><ul><li>可用于分组或隐藏复杂区域以保持页面整洁。</p> li><li><code>Accordion</code> 是一种特殊的<code>Collapse</code>，一次只允许展开一个面板。</li></ul>"
+  },
+  "Default <code>Panel</code> element's <code>AntDesign.Panel.Key</code>": {
+    "Translated": "默认 <code>Panel</code> 元素的 <code>AntDesign.Panel.Key</code>"
+  },
+  "Callback executed when this panel's active status changes": {
+    "Translated": "当该面板的活动状态改变时执行的回调"
+  },
+  "<p>A comment displays user feedback and discussion to website content.</p><h2>When To Use</h2><p>Comments can be used to enable discussions on an entity such as a page, blog post, issue or other.</p>": {
+    "Translated": "<p>评论显示用户对网站内容的反馈和讨论。</p><h2>何时使用</h2><p>评论可用于启用对页面、博客文章、问题等实体的讨论或其他。</p>"
+  },
+  "<p>To select or input a date.</p><h2>When To Use</h2><p>By clicking the input box, you can select a date from a popup calendar.</p>": {
+    "Translated": "<p>选择或输入日期。</p><h2>何时使用</h2><p>通过单击输入框，您可以从弹出的日历中选择日期。</p>"
+  },
+  "Use OnClear instead": {
+    "Translated": "Use OnClear instead"
+  },
+  "When true, will use 12 hour time. When false will use 24 hour time": {
+    "Translated": "为真时，将使用 12 小时时间。当 false 时将使用 24 小时制"
+  },
+  "<p>Display multiple read-only fields in groups.</p><h2>When To Use</h2><p>Commonly displayed on the details page.</p>": {
+    "Translated": "<p>分组显示多个只读字段。</p><h2>何时使用</h2><p>通常在详情页面显示。</p>"
+  },
+  "The number of <code>DescriptionsItem</code> elements in a row. Could be a number or a object like { xs: 8, sm: 16, md: 24}": {
+    "Translated": "一行中 <code>DescriptionsItem</code> 元素的数量。可以是数字或对象，如 { xs: 8, sm: 16, md: 24}"
+  },
+  "<p>A divider line separates different content.</p><h2>When To Use</h2><ul><li>Divide sections of article.</li><li>Divide inline text and links such as the operation column of table.</li></ul>": {
+    "Translated": "<p>分隔线分隔不同的内容。</p><h2>何时使用</h2><ul><li>分隔文章的各个部分。</li><li>分隔行内文本和链接，例如表的操作列。</li></ul>"
+  },
+  "Type of divider - 'horizontal' | 'vertical'": {
+    "Translated": "分隔线类型 - '水平' | '垂直的'"
+  },
+  "Content/Text orientation - 'left' | 'right' | 'center'. Ignored when not using `Text` or `ChildContent`": {
+    "Translated": "内容/文本方向 - '左' | '正确' | '中央'。不使用 Text 或 ChildContent 时忽略"
+  },
+  "<p>A panel which slides in from the edge of the screen.</p><h2>When To Use</h2><p> A Drawer is a panel that is typically overlaid on top of a page and slides in from the side. It contains a set of information or actions. Since the user can interact with the Drawer without leaving the current page, tasks can be achieved more efficiently within the same context. </p><ul><li>Use a Form to create or edit a set of information.</li><li>Processing subtasks. When subtasks are too heavy for a Popover and we still want to keep the subtasks in the context of the main task, Drawer comes very handy.</li><li>When the same Form is needed in multiple places.</li></ul>": {
+    "Translated": "<p>从屏幕边缘滑入的面板。</p><h2>何时使用</h2><p>抽屉是通常覆盖在页面顶部并从屏幕边缘滑入的面板旁边。它包含一组信息或操作。由于用户可以在不离开当前页面的情况下与 Drawer 进行交互，因此可以在相同的上下文中更有效地完成任务。 </p><ul><li>使用表单创建或编辑一组信息。</li><li>处理子任务。当子任务对于 Popover 而言过于繁重，而我们仍希望将子任务保留在主任务的上下文中时，Drawer 会非常方便。</li><li>当多个地方需要同一个 Form 时。</li> </ul>"
+  },
+  "Style for Drawer's mask element.": {
+    "Translated": "抽屉遮罩元素的样式。"
+  },
+  "Width of the Drawer dialog, only when placement is 'left' or 'right'.": {
+    "Translated": "抽屉对话框的宽度，仅当放置为“左”或“右”时。"
+  },
+  "Height of the Drawer dialog, only when placement is 'top' or 'bottom'.": {
+    "Translated": "抽屉对话框的高度，仅当放置为“顶部”或“底部”时。"
+  },
+  "The the X coordinate offset(px), only when placement is 'left' or 'right'.": {
+    "Translated": "X 坐标偏移量(px)，仅当placement 为'left' 或'right' 时。"
+  },
+  "The the Y coordinate offset(px), only when placement is 'top' or 'bottom'.": {
+    "Translated": "Y坐标偏移量(px)，仅当placement为'top'或'bottom'时。"
+  },
+  "Whether a close (x) button is visible on top right of the Drawer dialog or not.": {
+    "Translated": "关闭 (x) 按钮是否在抽屉对话框的右上角可见。"
+  },
+  "Clicking on the mask (area outside the Drawer) to close the Drawer or not.": {
+    "Translated": "单击遮罩（抽屉外的区域）以关闭或不关闭抽屉。"
+  },
+  "Whether to support keyboard esc off": {
+    "Translated": "是否支持键盘esc关闭"
+  },
+  "Please replace it with Config": {
+    "Translated": "Please replace it with Config"
+  },
+  "<p>A dropdown list.</p><h2>When To Use</h2><p> When there are more than a few options to choose from, you can wrap them in a <code>Dropdown</code>. By hovering or clicking on the trigger, a dropdown menu will appear, which allows you to choose an option and execute the relevant action. </p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Dropdown</code>:</p><ol><li>Wraps child element (content of the <code>Dropdown</code>) with a <code>div</code> (default approach).</li><li> Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Dropdown</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol>": {
+    "Translated": "<p>下拉列表。</p><h2>何时使用</h2><p> 当有多个选项可供选择时，您可以将它们包装在 <code>Dropdown</code> 中.通过悬停或单击触发器，将出现一个下拉菜单，允许您选择一个选项并执行相关操作。 </p><h2>两种类型</h2><p><code>Dropdown</code>有两种渲染方式：</p><ol><li>包裹子元素（<code>的内容>Dropdown</code>) 和 <code>div</code>（默认方法）。</li><li> 子元素未用任何东西包裹。这种方法需要在 <code>Dropdown</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code> 属性设置为 <code>@context</code>。</li></ul></li></ol>"
+  },
+  "Overlay adjustment strategy (when for example browser resize is happening). Check enum for details.": {
+    "Translated": "覆盖调整策略（例如，当浏览器调整大小时发生）。检查枚举以获取详细信息。"
+  },
+  "Trigger (link, button, etc)": {
+    "Translated": "触发器（链接、按钮等）"
+  },
+  "自动关闭功能和Visible参数同时生效 Both auto-off and Visible control close": {
+    "Translated": "自动关闭功能和Visible参数同时生效 Both auto-off and Visible control close"
+  },
+  "Whether the trigger is disabled.": {
+    "Translated": "触发器是否被禁用。"
+  },
+  "Property forwarded to Overlay component. Consult the Overlay property for more detailed explanation.": {
+    "Translated": "属性转发到 Overlay 组件。查阅 Overlay 属性以获得更详细的解释。"
+  },
+  "(not used in Unbound) Sets wrapping div style to `display: inline-flex;`.": {
+    "Translated": "（未在 Unbound 中使用）将包装 div 样式设置为 `display: inline-flex;`。"
+  },
+  "Behave like a button: when clicked invoke OnClick (unless OnClickDiv is overriden and does not call base).": {
+    "Translated": "表现得像一个按钮：单击时调用 OnClick（除非 OnClickDiv 被覆盖并且不调用 base）。"
+  },
+  "Callback when triggger is clicked": {
+    "Translated": "单击触发器时的回调"
+  },
+  "Callback - equivalent of OnMouseUp event on the trigger trigger.": {
+    "Translated": "回调 - 相当于触发触发器上的 OnMouseUp 事件。"
+  },
+  "Callback when mouse enters trigger boundaries.": {
+    "Translated": "鼠标进入触发边界时回调。"
+  },
+  "Callback when mouse leaves trigger boundaries.": {
+    "Translated": "鼠标离开触发边界时回调。"
+  },
+  "Callback when overlay is hiding.": {
+    "Translated": "overlay 隐藏时的回调。"
+  },
+  "Callback when overlay visibility is changing.": {
+    "Translated": "叠加层可见性发生变化时的回调。"
+  },
+  "Overlay content (what will be rendered after trigger is activated)": {
+    "Translated": "覆盖内容（激活触发器后将呈现的内容）"
+  },
+  "Overlay container custom css class.": {
+    "Translated": "覆盖容器自定义 css 类。"
+  },
+  "Css class added to overlay when overlay is shown.": {
+    "Translated": "显示覆盖时添加到覆盖的 Css 类。"
+  },
+  "Css class added to overlay when overlay is hidden.": {
+    "Translated": "覆盖层隐藏时添加到覆盖层的 Css 类。"
+  },
+  "Css class added to overlay when overlay is hiding.": {
+    "Translated": "覆盖隐藏时添加到覆盖的 Css 类。"
+  },
+  "Css style that will be added to overlay div.": {
+    "Translated": "将添加到覆盖 div 的 Css 样式。"
+  },
+  "The position of the Dropdown overlay relative to the target. Can be: Top, Left, Right, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, LeftTop, LeftBottom, RightTop, RightBottom": {
+    "Translated": "下拉叠加层相对于目标的位置。可以是：上、左、右、下、左上、右上、左下、右下、左上、左下、右上、右下"
+  },
+  "Override default placement class which is based on `Placement` parameter.": {
+    "Translated": "覆盖基于“Placement”参数的默认放置类。"
+  },
+  "Define what is going to be the container of the overlay. Example use case: when overlay has to be contained in a scrollable area.": {
+    "Translated": "定义什么将成为叠加层的容器。示例用例：当覆盖必须包含在可滚动区域中时。"
+  },
+  "Trigger mode. Could be multiple by passing an array.": {
+    "Translated": "触发模式。通过传递数组可以是多个。"
+  },
+  "Manually set reference to triggering element.": {
+    "Translated": "手动设置对触发元素的引用。"
+  },
+  "ChildElement with ElementReference set to avoid wrapping div.": {
+    "Translated": "设置了 ElementReference 的 ChildElement 以避免包装 div。"
+  },
+  "Toggles overlay viability.": {
+    "Translated": "切换覆盖可行性。"
+  },
+  "Will hide the overlay.": {
+    "Translated": "将隐藏叠加层。"
+  },
+  "Checks if overlay is currently in visible state.": {
+    "Translated": "检查叠加层当前是否处于可见状态。"
+  },
+  "Toggle overlay visibility.": {
+    "Translated": "切换叠加可见性。"
+  },
+  "Allows to set each button's css class either to the same string or separately.": {
+    "Translated": "允许将每个按钮的 css 类设置为相同的字符串或单独设置。"
+  },
+  "Allows to set each button's style either to the same string or separately.": {
+    "Translated": "允许将每个按钮的样式设置为相同的字符串或单独设置。"
+  },
+  "Allows to set each button's type either to the same string or separately. Use AntDesign.ButtonType helper class.": {
+    "Translated": "允许将每个按钮的类型设置为相同的字符串或单独设置。使用 AntDesign.ButtonType 辅助类。"
+  },
+  "<p>Empty state placeholder.</p><h2>When To Use</h2><ul><li>When there is no data provided, display for friendly tips.</li><li>User tutorial to create something in fresh new situation.</li></ul>": {
+    "Translated": "<p>空状态占位符。</p><h2>何时使用</h2><ul><li>当没有提供数据时，显示友好提示。</li><li>用户教程创建一些全新的情况。</li></ul>"
+  },
+  "<p>High performance Form component with data scope management. Including data collection, verification, and styles.</p><h2>When To Use</h2><ul><li>When you need to create an instance or collect information.</li><li>When you need to validate fields in certain rules.</li></ul>": {
+    "Translated": "<p>具有数据范围管理的高性能表单组件。包括数据采集、验证、样式。</p><h2>何时使用</h2><ul><li>当你需要创建实例或收集信息时。</li><li>当你需要时验证某些规则中的字段。</li></ul>"
+  },
+  "Control the layout of the input element's wrapper. Commonly used to set widths for different screen sizes.": {
+    "Translated": "控制输入​​元素包装器的布局。通常用于为不同的屏幕尺寸设置宽度。"
+  },
+  "Validation will come from data attributes on the model provided to <code>AntDesign.Form`1.Model</code>": {
+    "Translated": "验证将来自提供给 <code>AntDesign.Form`1.Model</code> 的模型上的数据属性"
+  },
+  "Currently unused": {
+    "Translated": "Currently unused"
+  },
+  "Messages for when a field's type does not match the expected type": {
+    "Translated": "字段类型与预期类型不匹配时的消息"
+  },
+  "<p>24 Grids System.</p><h2>Design concept</h2><p>In most business situations, Ant Design needs to solve a lot of information storage problems within the design area, so based on 12 Grids System, we divided the design area into 24 sections.</p><p> We name the divided area 'box'. We suggest four boxes for horizontal arrangement at most, one at least. Boxes are proportional to the entire screen as shown in the picture above. To ensure a high level of visual comfort, we customize the typography inside of the box based on the box unit. </p><h2>Outline</h2><p>In the grid system, we define the frame outside the information area based on row and column, to ensure that every area can have stable arrangement.</p><p>Following is a brief look at how it works:</p><ul><li>Establish a set of column in the horizontal space defined by row (abbreviated col)</li><li>Your content elements should be placed directly in the col, and only col should be placed directly in row</li><li>The column grid system is a value of 1-24 to represent its range spans. For example, three columns of equal width can be created by using a span of 8 on the columns.</li><li>If the sum of col spans in a row are more than 24, then the overflowing col as a whole will start a new line arrangement.</li></ul><p> Our grid systems base on Flex layout to allow the elements within the parent to be aligned horizontally - left, center, right, wide arrangement, and decentralized arrangement. The Grid system also supports vertical alignment - top aligned, vertically centered, bottom-aligned. You can also define the order of elements by using order. </p><p>Layout uses a 24 grid layout to define the width of each \"box\", but does not rigidly adhere to the grid layout.</p><p>The breakpoints of responsive grid follow BootStrap 4 media queries rules(not including occasionally part).</p>": {
+    "Translated": "<p>24 Grids System.</p><h2>设计理念</h2><p>Ant Design在大多数业务场景中需要解决设计区域内大量的信息存储问题，因此基于12 Grids System ，我们将设计区域划分为 24 个部分。</p><p> 我们将划分的区域命名为“盒子”。横排建议最多四个盒子，最少一个。如上图所示，方框与整个屏幕成比例。为了确保高水平的视觉舒适度，我们根据盒子单元定制了盒子内部的排版。 </p><h2>概述</h2><p>在网格系统中，我们在信息区域外按行和列定义边框，保证每个区域都能稳定排列。</p><p >下面简单介绍一下它是如何工作的：</p><ul><li>在row定义的水平空间中建立一组列（缩写为col）</li><li>你的内容元素应该放在直接放在col中，只有col直接放在row中</li><li>列网格系统是1-24的值来表示它的范围跨度。例如，在列上使用 8 的 span 可以创建三列等宽。</li><li>如果一行中的 col span 之和大于 24，则溢出的 col 将作为一个整体开始新的行排列。</li></ul><p> 我们的网格系统基于 Flex 布局，允许父级内的元素水平对齐 - 左对齐、居中对齐、右对齐、宽排列和分散排列。网格系统还支持垂直对齐——顶部对齐、垂直居中、底部对齐。您还可以使用 order 定义元素的顺序。 </p><p>Layout使用24个网格布局来定义每个“盒子”的宽度，但并不拘泥于网格布局。</p><p>响应式网格的断点遵循BootStrap 4媒体查询规则（不包括偶尔部分）。</p>"
+  },
+  "Vertical alignment for the flex layout: 'top' | 'middle' | 'bottom'": {
+    "Translated": "flex 布局的垂直对齐方式：'top' | '中间' | '底部'"
+  },
+  "Hotizontal alignment for the flex layout: 'start' | 'end' | 'center' | 'space-around' | 'space-between'": {
+    "Translated": "flex 布局的水平对齐：'start' | '结束' | '中心' | '空间周围' | “间隔”"
+  },
+  "Allow the row's content to wrap or not": {
+    "Translated": "是否允许行的内容换行"
+  },
+  "Spacing between grids, could be a number or a dictionary like <code>{ xs: 8, sm: 16, md: 24 }</code>, an array to make horizontal and vertical spacing work at the same time <code>[horizontal, vertical]</code>": {
+    "Translated": "网格之间的间距，可以是数字或字典，如 <code>{ xs: 8, sm: 16, md: 24 }</code>，一个数组，使水平和垂直间距同时起作用 <code>[水平，垂直]</code>"
+  },
+  "&lt;576px column of grid": {
+    "Translated": "<576px 网格列"
+  },
+  "≥576px column of grid": {
+    "Translated": "≥576px 网格列"
+  },
+  "≥768px column of grid": {
+    "Translated": "≥768px 网格列"
+  },
+  "≥992px column of grid": {
+    "Translated": "≥992px 网格列"
+  },
+  "≥1200px column of grid": {
+    "Translated": "≥1200px 列的网格"
+  },
+  "≥1600px column of grid": {
+    "Translated": "≥1600px 列的网格"
+  },
+  "Semantic vector graphics. Before use icons。": {
+    "Translated": "语义矢量图形。使用图标前。"
+  },
+  "Rotate by n degrees - does not work in IE9": {
+    "Translated": "旋转 n 度 - 在 IE9 中不起作用"
+  },
+  "Which theme of icon - 'fill' | 'outline' | 'twotone';": {
+    "Translated": "图标的哪个主题 - 'fill' | '大纲' | '双色';"
+  },
+  "Fill value for the icon's SVG": {
+    "Translated": "图标 SVG 的填充值"
+  },
+  "<p>Previewable image.</p><h2>When To Use</h2><ul><li>When you need to display pictures.</li><li>Display when loading a large image or fault tolerant handling when loading fail.</li></ul>": {
+    "Translated": "<p>可预览图片。</p><h2>何时使用</h2><ul><li>当需要显示图片时。</li><li>加载大图或容错处理时显示加载失败时。</li></ul>"
+  },
+  "Whether to open the preview image. Two-way binding.": {
+    "Translated": "是否打开预览图片。双向绑定。"
+  },
+  "<p>Enter a number within certain range with the mouse or keyboard.</p><h2>When To Use</h2><ul><li>When a numeric value needs to be provided.</li></ul><h3>Types Supported</h3><p><code>sbyte</code>, <code>byte</code>, <code>short</code>, <code>ushort</code>, <code>int</code>, <code>uint</code>, <code>long</code>, <code>ulong</code>, <code>float</code>, <code>double</code>, <code>decimal</code></p><p>Nullable types of the above types are also supported. For example, <code>ushort?</code>, <code>int?</code>, etc.</p>": {
+    "Translated": "<p>用鼠标或键盘输入一定范围内的数字。</p><h2>何时使用</h2><ul><li>需要提供数值时。</li></ ul><h3>支持的类型</h3><p><code>sbyte</code>, <code>byte</code>, <code>short</code>, <code>ushort</code>, <code>int</code>, <code>uint</code>, <code>long</code>, <code>ulong</code>, <code>float</code>, <code>double< /code>, <code>decimal</code></p><p>也支持上述类型的可空类型。例如<code>ushort?</code>、<code>int?</code>等</p>"
+  },
+  "<p>A basic widget for getting the user input is a text field. Keyboard and mouse can be used for providing or changing data.</p><h2>When To Use</h2><ul><li>A user input in a form field is needed.</li><li>A search input is required.</li></ul>": {
+    "Translated": "<p>用于获取用户输入的基本小部件是文本字段。键盘和鼠标可用于提供或更改数据。</p><h2>何时使用</h2><ul><li>需要用户在表单字段中输入。</li><li>A搜索输入是必需的。</li></ul>"
+  },
+  "Search input is rendered with suffix search icon, not as a button. Will be ignored when <code>AntDesign.Search.EnterButton</code> != false": {
+    "Translated": "搜索输入以后缀搜索图标呈现，而不是按钮。当 <code>AntDesign.Search.EnterButton</code> != false 时将被忽略"
+  },
+  "Whether to show an enter button after input. This property conflicts with the <code>AntDesign.Input`1.AddOnAfter</code>": {
+    "Translated": "输入后是否显示回车按钮。此属性与 <code>AntDesign.Input`1.AddOnAfter</code> 冲突"
+  },
+  "<p>Handling the overall layout of a page.</p><h2>Specification</h2><h3>Size</h3><p>The first level navigation is left aligned near a logo, and the secondary menu is right aligned.</p><ul><li>Top Navigation: the height of the first level navigation <code>64px</code>, the second level navigation <code>48px</code>.</li><li>Top Navigation (for landing pages): the height of the first level navigation <code>80px</code>, the second level navigation <code>56px</code>.</li><li>Calculation formula of a top navigation: <code>48+8n</code>.</li><li>Calculation formula of an aside navigation: <code>200+8n</code>.</li></ul><h3>Interaction rules</h3><ul><li>The first level navigation and the last level navigation should be distinguishable by visualization;</li><li>The current item should have the highest priority of visualization;</li><li>When the current navigation item is collapsed, the style of the current navigation item is applied to its parent level;</li><li>The left side navigation bar has support for both the accordion and expanding styles; you can choose the one that fits your case the best.</li></ul><h2>Visualization rules</h2><p>Style of a navigation should conform to its level.</p><ul><li><p><strong>Emphasis by colorblock</strong></p><p>When background color is a deep color, you can use this pattern for the parent level navigation item of the current page.</p></li><li><p><strong>The highlight match stick</strong></p><p>When background color is a light color, you can use this pattern for the current page navigation item; we recommend using it for the last item of the navigation path.</p></li><li><p><strong>Highlighted font</strong></p><p>From the visualization aspect, a highlighted font is stronger than colorblock; this pattern is often used for the parent level of the current item.</p></li><li><p><strong>Enlarge the size of the font</strong></p><p><code>12px</code>, <code>14px</code> is a standard font size of navigations, <code>14px</code> is used for the first and the second level of the navigation. You can choose an appropriate font size regarding the level of your navigation.</p></li></ul><h2>Component Overview</h2><ul><li><code>Layout</code>: The layout wrapper, in which <code>Header</code><code>Sider</code><code>Content</code><code>Footer</code> or <code>Layout</code> itself can be nested, and can be placed in any parent container.</li><li><code>Header</code>: The top layout with the default style, in which any element can be nested, and must be placed in <code>Layout</code>.</li><li><code>Sider</code>: The sidebar with default style and basic functions, in which any element can be nested, and must be placed in <code>Layout</code>.</li><li><code>Content</code>: The content layout with the default style, in which any element can be nested, and must be placed in <code>Layout</code>.</li><li><code>Footer</code>: The bottom layout with the default style, in which any element can be nested, and must be placed in <code>Layout</code>.</li></ul><blockquote><p>Based on <code>flex layout</code>, please pay attention to the <a href=\"http://caniuse.com/#search=flex\">compatibility</a>.</p></blockquote>": {
+    "Translated": "<p>处理页面的整体布局。</p><h2>规范</h2><h3>大小</h3><p>一级导航在徽标附近左对齐，二级菜单是</p><ul><li>顶部导航：一级导航高度<code>64px</code>，二级导航<code>48px</code>。</li>< li>顶部导航（落地页）：一级导航高度<code>80px</code>，二级导航<code>56px</code>。</li><li>a的计算公式顶部导航：<code>48+8n</code>。</li><li>侧边导航计算公式：<code>200+8n</code>。</li></ul><h3>交互规则</h3><ul><li>一级导航和末级导航可视化区分；</li><li>当前项可视化优先级最高；</li>< li>当前导航项收起时，当前导航项的样式应用于其父级；</li><li>左侧导航栏有支持适合手风琴和扩展风格；您可以选择最适合您的情况。</li></ul><h2>可视化规则</h2><p>导航的样式应符合其级别。</p><ul>< li><p><strong>colorblock强调</strong></p><p>当背景色为深色时，可以在当前页面的父级导航项中使用该模式。</p> </li><li><p><strong>高亮匹配棒</strong></p><p>当背景色为浅色时，当前页面导航项可以使用该模式；我们建议将它用于导航路径的最后一项。</p></li><li><p><strong>突出显示的字体</strong></p><p>从可视化方面，突出显示字体比色块强；此模式常用于当前项目的父级别。</p></li><li><p><strong>放大字体大小</strong></p><p><code >12px</code>, <code>14px</code> 是标准的导航字号，<code>14px</code> 用于一级和二级导航。您可以根据导航级别选择合适的字体大小。</p></li></ul><h2>组件概述</h2><ul><li><code>布局</code>：布局包装器，其中 <code>Header</code><code>Sider</code><code>Content</code><code>Footer</code> 或 <code>Layout</code> 本身可以是嵌套，可以放在任意父容器中。</li><li><code>Header</code>：默认样式的顶部布局，可以嵌套任意元素，必须放在<code>中>Layout</code>.</li><li><code>Sider</code>：默认样式和基本功能的侧边栏，可以嵌套任意元素，必须放在<code>Layout< /code>.</li><li><code>Content</code>：默认样式的内容布局，其中可以嵌套任何元素，必须放在<code>Layout</code>中。 </li><li><code>Footer</code>：底部布局，默认样式，可嵌套任意元素，必须放在<code>Layout</code>中。</li> </ul><blockquote><p>基于<code>flex layou t</code>，请注意<a href=\"http://caniuse.com/#search=flex\">兼容性</a>。</p></blockquote>"
+  },
+  "<p>Simple List.</p><h2>When To Use</h2><p>A list can be used to display content related to a single subject. The content can consist of multiple elements of varying type and size.</p>": {
+    "Translated": "<p>简单列表。</p><h2>何时使用</h2><p>列表可用于显示与单个主题相关的内容。内容可以包含多个不同类型和大小的元素。</p>"
+  },
+  "Quick jumper confirm button, this is for react version <code>ShowQuickJumper: { goButton: ReactNode }</code>": {
+    "Translated": "快速跳转确认按钮，这是用于 React 版本 <code>ShowQuickJumper: { goButton: ReactNode }</code>"
+  },
+  "<p>Mention component.</p><h2>When To Use</h2><p>When need to mention someone or something.</p>": {
+    "Translated": "<p>提及组件。</p><h2>何时使用</h2><p>当需要提及某人或某物时。</p>"
+  },
+  "<p>A versatile menu for navigation.</p><h2>When To Use</h2><p> Navigation is an important part of any website, as a good navigation setup allows users to move around the site quickly and efficiently. Ant Design offers top and side navigation options. Top navigation provides all the categories and functions of the website. Side navigation provides the multi-level structure of the website. </p><p>See Layouts for more layouts with navigation.</p>": {
+    "Translated": "<p>用于导航的多功能菜单。</p><h2>何时使用</h2><p> 导航是任何网站的重要组成部分，因为良好的导航设置可以让用户快速高效地在网站中移动. Ant Design 提供顶部和侧面导航选项。顶部导航提供了网站的所有分类和功能。侧面导航提供了网站的多层次结构。 </p><p>有关带导航的更多布局，请参阅布局。</p>"
+  },
+  "Allows selection of multiple items": {
+    "Translated": "允许选择多个项目"
+  },
+  "Specifies the collapsed status when menu is inline mode": {
+    "Translated": "指定菜单为内联模式时的折叠状态"
+  },
+  "Indent (in pixels) of inline menu items on each level": {
+    "Translated": "每个级别的内联菜单项的缩进（以像素为单位）"
+  },
+  "Array with the keys of default selected menu items": {
+    "Translated": "带有默认选定菜单项键的数组"
+  },
+  "Array with the keys of default opened sub menus": {
+    "Translated": "默认打开的子菜单的键数组"
+  },
+  "Which action can trigger submenu open/close": {
+    "Translated": "哪个动作可以触发子菜单打开/关闭"
+  },
+  "<p>Display global messages as feedback in response to user operations.</p><h2>When To Use</h2><ul><li>To provide feedback such as success, warning, error etc.</li><li>A message is displayed at top and center and will be dismissed automatically, as a non-interrupting light-weighted prompt.</li></ul>": {
+    "Translated": "<p>显示全局消息作为响应用户操作的反馈。</p><h2>何时使用</h2><ul><li>提供成功、警告、错误等反馈。</li> <li>一条消息显示在顶部和中间，并将自动关闭，作为一个不打扰的轻量级提示。</li></ul>"
+  },
+  "<p>Modal dialogs.</p><h2>When To Use</h2><p> When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, you can use <code>Modal</code> to create a new floating layer over the current page to get user feedback or display information. Additionally, if you need show a simple confirmation dialog, you can use <code>ModalService.Confirm()</code>, and so on. </p>": {
+    "Translated": "<p>模态对话框。</p><h2>何时使用</h2><p> 当需要用户与应用程序交互，但又不会跳转到新页面和中断用户的工作流程时，您可以使用 <code >Modal</code> 在当前页面上创建一个新的浮动层，以获取用户反馈或显示信息。此外，如果您需要显示一个简单的确认对话框，您可以使用 <code>ModalService.Confirm()</code> 等。 </p>"
+  },
+  "Footer content, set as Footer=null when you don't need default buttons": {
+    "Translated": "页脚内容，不需要默认按钮时设置为Footer=null"
+  },
+  "Style for modal's mask element": {
+    "Translated": "模态遮罩元素的样式"
+  },
+  "The modal dialog's title": {
+    "Translated": "模态对话框的标题"
+  },
+  "The modal dialog's title. Takes priority over Title.": {
+    "Translated": "模态对话框的标题。优先于标题。"
+  },
+  "Width of the modal dialog, the default value is 520": {
+    "Translated": "模态对话框的宽度，默认值为520"
+  },
+  ".ant-modal element's style": {
+    "Translated": ".ant-modal 元素的样式"
+  },
+  "for OK-Cancel Confirm dialog, cancel button clicked callback. It's only trigger in Confirm created by ModalService mode": {
+    "Translated": "对于 OK-Cancel 确认对话框，取消按钮点击回调。仅在ModalService方式创建的Confirm中触发"
+  },
+  "for OK-Cancel Confirm dialog, OK button clicked callback. It's only trigger in Confirm created by ModalService mode": {
+    "Translated": "对于 OK-Cancel Confirm 对话框，OK 按钮点击回调。仅在ModalService方式创建的Confirm中触发"
+  },
+  "OK-Cancel Confirm dialog's OK button props. It is equivalent to Button1Props.": {
+    "Translated": "OK-Cancel Confirm 对话框的 OK 按钮属性。它相当于 Button1Props。"
+  },
+  "OK-Cancel Confirm dialog's cancel button props. It is equivalent to Button2Props.": {
+    "Translated": "OK-Cancel 确认对话框的取消按钮道具。它相当于 Button2Props。"
+  },
+  "Whether support press esc to close": {
+    "Translated": "是否支持按esc关闭"
+  },
+  "Style for dialog's mask element": {
+    "Translated": "对话框的掩码元素的样式"
+  },
+  "The modal dialog's title of String": {
+    "Translated": "模态对话框的字符串标题"
+  },
+  "The modal dialog's title of RenderFragment": {
+    "Translated": "RenderFragment 模态对话框的标题"
+  },
+  "<p>Display a notification message globally.</p><h2>When To Use</h2><p>To display a notification message at any of the four corners of the viewport. Typically it can be used in the following cases:</p><ul><li>A notification with complex content.</li><li>A notification providing a feedback based on the user interaction. Or it may show some details about upcoming steps the user may have to follow.</li><li>A notification that is pushed by the application.</li></ul><p>Note: Please confirm that the <code><AntContainer /></code> component has been added to <code>App.Razor</code>. If notifications are not displaying this is a common problem.</p>": {
+    "Translated": "<p>全局显示通知消息。</p><h2>何时使用</h2><p>在视口的四个角中的任意一个显示通知消息。通常它可用于以下情况：</p><ul><li>具有复杂内容的通知。</li><li>根据用户交互提供反馈的通知。或者它可能会显示有关用户可能必须遵循的后续步骤的一些详细信息。</li><li>由应用程序推送的通知。</li></ul><p>注意：请确认 < code><AntContainer /></code> 组件已添加到 <code>App.Razor</code>。如果未显示通知，这是一个常见问题。</p>"
+  },
+  "自定义关闭按钮": {
+    "Translated": "自定义关闭按钮"
+  },
+  "自定义 CSS class": {
+    "Translated": "自定义 CSS class"
+  },
+  "自定义关闭图标": {
+    "Translated": "自定义关闭图标"
+  },
+  "通知提醒标题，必选，string 或者 RenderFragment": {
+    "Translated": "通知提醒标题，必选，string 或者 RenderFragment"
+  },
+  "通知提醒内容，必选，string 或者 RenderFragment": {
+    "Translated": "通知提醒内容，必选，string 或者 RenderFragment"
+  },
+  "自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭": {
+    "Translated": "自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭"
+  },
+  "自定义图标": {
+    "Translated": "自定义图标"
+  },
+  "当前通知唯一标志": {
+    "Translated": "当前通知唯一标志"
+  },
+  "自定义内联样式": {
+    "Translated": "自定义内联样式"
+  },
+  "弹出位置": {
+    "Translated": "弹出位置"
+  },
+  "通知提醒框左侧的图标类型": {
+    "Translated": "通知提醒框左侧的图标类型"
+  },
+  "当通知关闭时触发": {
+    "Translated": "当通知关闭时触发"
+  },
+  "点击通知时触发的回调函数": {
+    "Translated": "点击通知时触发的回调函数"
+  },
+  "the notification box's config": {
+    "Translated": "通知框的配置"
+  },
+  "update the notification box's description": {
+    "Translated": "更新通知框的描述"
+  },
+  "update the notification box's description and message": {
+    "Translated": "更新通知框的描述和消息"
+  },
+  "<p>A header with common actions and design elements built in.</p><h2>When To Use</h2><p>PageHeader can be used to highlight the page topic, display important information about the page, and carry the action items related to the current page (including page-level operations, inter-page navigation, etc.) It can also be used as inter-page navigation.</p>": {
+    "Translated": "<p>内置常用操作和设计元素的页眉。</p><h2>何时使用</h2><p>PageHeader 可用于突出显示页面主题，显示有关页面的重要信息，并携带与当前页面相关的动作项（包括页面级操作、页面间导航等），也可以作为页面间导航。</p>"
+  },
+  "<p>A long list can be divided into several pages using `Pagination`, and only one page will be loaded at a time.</p><h2>When To Use</h2><ul><li>When it will take a long time to load/render all items.</li><li>If you want to browse the data by navigating through pages.</li></ul>": {
+    "Translated": "<p>使用 `Pagination` 可以将一个长列表分成几页，一次只加载一页。</p><h2>何时使用</h2><ul><li>何时使用将花费很长时间来加载/呈现所有项目。</li><li>如果您想通过浏览页面来浏览数据。</li></ul>"
+  },
+  "Total number of data items": {
+    "Translated": "数据项总数"
+  },
+  "Default initial page number": {
+    "Translated": "默认初始页码"
+  },
+  "Show page item's title": {
+    "Translated": "显示页面项目的标题"
+  },
+  "<p>A simple and compact confirmation dialog of an action.</p><h2>When To Use</h2><p>A simple and compact dialog used for asking for user confirmation.</p><p>The difference with the <code>confirm</code> modal dialog is that it's more lightweight than the static popped full-screen confirm modal.</p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Popconfirm</code>:</p><ol><li>Wraps child element (content of the <code>Popconfirm</code>) with a <code>div</code> tag (default approach).</li><li>Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Popconfirm</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol><p>Please ensure that the child node of <code>Popconfirm</code> accepts <code>onMouseEnter</code>, <code>onMouseLeave</code>, <code>onFocus</code>, <code>onClick</code> events.</p>": {
+    "Translated": "<p>一个简单紧凑的操作确认对话框。</p><h2>何时使用</h2><p>一个简单紧凑的对话框，用于请求用户确认。</p><p>与<code>confirm</code>模态对话框的区别在于它比静态弹出的全屏确认模态更轻量级。</p><h2>两种类型</h2><p>有两种渲染方法<code>Popconfirm</code>：</p><ol><li>用 <code>div</code> 标签包裹子元素（<code>Popconfirm</code> 的内容）（默认方法） .</li><li>子元素没有被任何东西包裹。这种方法需要在 <code>Popconfirm</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code>属性设置为<code>@context</code>。</li></ul></li></ol><p>请确保<code>Popconfirm</的子节点code> 接受 <code>onMouseEnter</code>、<code>onMouseLeave</code>、<code>onFocus</code>、<code>onClick</code> 事件。</p>"
+  },
+  "<p>The floating card popped by clicking or hovering.</p><h2>When To Use</h2><p>A simple popup menu to provide extra information or operations.</p><p>Comparing with <code>Tooltip</code>, besides information <code>Popover</code> card can also provide action elements like links and buttons.</p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Popover</code>: </p><ol><li>Wraps child element (content of the <code>Popover</code>) with a <code>div</code> tag (default approach).</li><li>Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Popover</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol><p>Please ensure that the child node of <code>Popover</code> accepts <code>onMouseEnter</code>, <code>onMouseLeave</code>, <code>onFocus</code>, <code>onClick</code> events.</p>": {
+    "Translated": "<p>浮动卡片通过点击或悬停弹出。</p><h2>何时使用</h2><p>提供额外信息或操作的简单弹出菜单。</p><p>与 < code>Tooltip</code>，除了信息<code>Popover</code>卡片还可以提供链接和按钮等动作元素。</p><h2>两种类型</h2><p>有2种渲染方式对于 <code>Popover</code>：</p><ol><li>用 <code>div</code> 标签包裹子元素（<code>Popover</code> 的内容）（默认方法).</li><li>子元素没有被任何东西包裹。这种方法需要在 <code>Popover</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code>属性设置为<code>@context</code>。</li></ul></li></ol><p>请确保<code>Popover</的子节点code> 接受 <code>onMouseEnter</code>、<code>onMouseLeave</code>、<code>onFocus</code>、<code>onClick</code> 事件。</p>"
+  },
+  "<p>Display the current progress of an operation flow.</p><h2>When To Use</h2><p>If it will take a long time to complete an operation, you can use `Progress` to show the current progress and status.</p><ul><li>When an operation will interrupt the current interface, or it needs to run in the background for more than 2 seconds.</li><li>When you need to display the completion percentage of an operation.</li></ul>": {
+    "Translated": "<p>显示操作流程的当前进度。</p><h2>何时使用</h2><p>如果需要很长时间才能完成某个操作，可以使用 `Progress` 来显示当前进度和状态。</p><ul><li>当某个操作会打断当前界面，或者需要在后台运行2秒以上。</li><li>当您需要显示操作的完成百分比。</li></ul>"
+  },
+  "the gap degree of half circle, 0 ~ 295": {
+    "Translated": "半圆的间隙度，0 ~ 295"
+  },
+  "<h2>When To Use</h2><ul><li>Used to select a single state from multiple options.</li><li>The difference from Select is that Radio is visible to the user and can facilitate the comparison of choice, which means there shouldn't be too many of them.</li></ul>": {
+    "Translated": "<h2>When To Use</h2><ul><li>用于从多个选项中选择一个状态。</li><li>与Select的区别是Radio对用户可见，可以方便比较选择，这意味着它们不应该太多。</li></ul>"
+  },
+  "<p>Rate component.</p><h2>When To Use</h2><ul><li>Show evaluation.</li><li>A quick rating operation on something.</li></ul>": {
+    "Translated": "<p>评分组件。</p><h2>何时使用</h2><ul><li>显示评估。</li><li>对某事的快速评分操作。</li></ul >"
+  },
+  "Tooltip to show for each increment of rating, in order of index of rating 0-n": {
+    "Translated": "显示每个评级增量的工具提示，按评级索引 0-n 的顺序"
+  },
+  "<p>Used to feed back the results of a series of operational tasks.</p><h2>When To Use</h2><p>Use when important operations need to inform the user to process the results and the feedback is more complicated.</p>": {
+    "Translated": "<p>用于反馈一系列操作任务的结果。</p><h2>何时使用</h2><p>当重要操作需要通知用户处理结果并且反馈是更复杂。</p>"
+  },
+  "Type of result. Influences styles and default image/icon. Possible values: success, error, info, warning, 404, 403, 500": {
+    "Translated": "结果类型。影响样式和默认图像/图标。可能的值：成功、错误、信息、警告、404、403、500"
+  },
+  "Custom icon. Format: \"{type}-{theme}\"": {
+    "Translated": "自定义图标。格式：“{type}-{theme}”"
+  },
+  "<p>Segmented Controls. This component is available since `v0.12.0`.</p><h2>When To Use</h2><ul><li>When displaying multiple options and user can select a single option</li><li>When switching the selected option, the content of the associated area changes.</li></ul>": {
+    "Translated": "<p>分段控制。此组件从 `v0.12.0` 开始可用。</p><h2>何时使用</h2><ul><li>当显示多个选项并且用户可以选择单个选项时</li><li>何时切换选中的选项，关联区域的内容发生变化。</li></ul>"
+  },
+  "<p>Select component to select value from options.</p><h2>When To Use</h2><ul><li>A dropdown menu for displaying choices - an elegant alternative to the native HTML <code>select</code> element.</li><li>Utilizing <a href=\"/en-US/components/radio\"><code>Radio</code></a> is recommended when there are fewer total options (less than 5).</li></ul>": {
+    "Translated": "<p>选择组件以从选项中选择值。</p><h2>何时使用</h2><ul><li>用于显示选项的下拉菜单 - 原生 HTML <code>select< 的优雅替代品/code> 元素。</li><li>当总选项较少（较少超过 5).</li></ul>"
+  },
+  "Will match dropdown width. If <code>true</code>, matches width of the widest item in the dropdown. If <code>string</code>, matches width of the string's value (ex: 250px)": {
+    "Translated": "将匹配下拉宽度。如果 <code>true</code>，则匹配下拉列表中最宽项的宽度。如果是 <code>string</code>，匹配字符串值的宽度（例如：250px）"
+  },
+  "Will not allow dropdown width to grow above stated in here value (eg. \"768px\")": {
+    "Translated": "不允许下拉宽度超过此处规定的值（例如“768px”）"
+  },
+  "The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional <code>AntDesign.SelectBase`2.SortByGroup</code> and <code>AntDesign.SelectBase`2.SortByLabel</code>.": {
+    "Translated": "用作组指示符的属性的名称。如果设置了该值，条目将按组显示。使用额外的 <code>AntDesign.SelectBase`2.SortByGroup</code> 和 <code>AntDesign.SelectBase`2.SortByLabel</code>。"
+  },
+  "Use this to fix overlay problems e.g. #area": {
+    "Translated": "使用它来修复覆盖问题，例如＃区域"
+  },
+  "Show clear button. Has no effect if <code>AntDesign.AntInputComponentBase`1.Value</code> type default is also in the list of <code>SelectOption</code>, unless used with <code>AntDesign.SelectBase`2.ValueOnClear</code>.": {
+    "Translated": "显示清除按钮。如果 <code>AntDesign.AntInputComponentBase`1.Value</code> 类型默认值也在 <code>SelectOption</code> 列表中，则无效，除非与 <code>AntDesign.SelectBase`2.ValueOnClear</ 一起使用代码>。"
+  },
+  "Set mode of Select - default | multiple | tags": {
+    "Translated": "设置选择模式 - 默认 |多个 |标签"
+  },
+  "Sort items by label value. None | Ascending | Descending": {
+    "Translated": "按标签值对项目进行排序。无 |升序 |降序"
+  },
+  "Used when Mode = multiple | tags - The values are used during initialization and when pressing the Reset button within Forms.": {
+    "Translated": "Mode = multiple | 时使用tags - 这些值在初始化期间和在 Forms 中按下 Reset 按钮时使用。"
+  },
+  "Whether to embed label in value, turn the format of value from TItemValue to string (JSON) e.g. { \"value\": TItemValue, \"label\": \"Label value\" }": {
+    "Translated": "是否在值中嵌入标签，将值的格式从 TItemValue 转换为字符串（JSON），例如{ \"value\": TItemValue, \"label\": \"标签值\" }"
+  },
+  "<p>Provide a placeholder while you wait for content to load, or to visualise content that doesn't exist yet.</p><h2>When To Use</h2><ul><li>When resource need long time loading, like low network speed.</li><li>The component contains much information, such as List or Card.</li><li>Only works when loading data for the first time.</li><li>Could be replaced by Spin in any situation, but can provide a better user experience.</li></ul>": {
+    "Translated": "<p>在您等待内容加载或可视化尚不存在的内容时提供占位符。</p><h2>何时使用</h2><ul><li>当资源需要很长时间时loading，比如网速慢。</li><li>该组件包含很多信息，比如List或Card。</li><li>只有在第一次加载数据时才有效。</li><li>在任何情况下都可以被 Spin 取代，但可以提供更好的用户体验。</li></ul>"
+  },
+  "<p>A Slider component for displaying current value and intervals in range.</p><h2>When To Use</h2><p>To input a value in a range.</p>": {
+    "Translated": "<p>用于显示当前值和范围内间隔的滑块组件。</p><h2>何时使用</h2><p>输入范围内的值。</p>"
+  },
+  "The granularity the slider can step through values. Must greater than 0, and be divided by (<code>AntDesign.Slider`1.Max</code> - <code>AntDesign.Slider`1.Min</code>). When <code>AntDesign.Slider`1.Marks</code> is not null, <code>AntDesign.Slider`1.Step</code> can be null.": {
+    "Translated": "滑块可以遍历值的粒度。必须大于 0，并除以 (<code>AntDesign.Slider`1.Max</code> - <code>AntDesign.Slider`1.Min</code>)。当<code>AntDesign.Slider`1.Marks</code>不为null时，<code>AntDesign.Slider`1.Step</code>可以为null。"
+  },
+  "Callback executed when the user changes the slider's value.": {
+    "Translated": "当用户更改滑块的值时执行的回调。"
+  },
+  "<p>Set components spacing.</p><h2>When To Use</h2><p>Avoid components clinging together and set a unified space.</p>": {
+    "Translated": "<p>设置组件间距。</p><h2>何时使用</h2><p>避免组件粘在一起并设置统一空间。</p>"
+  },
+  "Alignment of items - start | end | center | baseline": {
+    "Translated": "项目对齐 - 开始 |结束 |中心 |基线"
+  },
+  "<p>A spinner for displaying loading state of a page or a section.</p><h2>When To Use</h2><p>When part of the page is waiting for asynchronous data or during a rendering process, an appropriate loading animation can effectively alleviate users' inquietude.</p>": {
+    "Translated": "<p>用于显示页面或部分加载状态的微调器。</p><h2>何时使用</h2><p>当页面的一部分正在等待异步数据或在呈现过程中时，一个适当的加载动画可以有效缓解用户的不安情绪。</p>"
+  },
+  "<p>Display statistic number.</p><h2>When To Use</h2><ul><li>When want to highlight some data.</li><li>When want to display statistic data with description.</li></ul>": {
+    "Translated": "<p>显示统计数字。</p><h2>何时使用</h2><ul><li>当要突出显示某些数据时。</li><li>当要显示带有描述的统计数据时。 </li></ul>"
+  },
+  "<p>Navigation bar that guides users through the steps of a task.</p><h2>When To Use</h2><ul><li>When a given task is complicated or has a certain sequence in the series of subtasks, we can decompose it into several steps to make things easier.</li></ul>": {
+    "Translated": "<p>引导用户完成任务步骤的导航栏。</p><h2>何时使用</h2><ul><li>当给定任务很复杂或在一系列任务中具有特定顺序时子任务，我们可以将其分解为几个步骤，使事情变得更容易。</li></ul>"
+  },
+  "<p>Switching Selector.</p><h2>When To Use</h2><ul><li>If you need to represent the switching between two states or on-off state.</li><li>The difference between `Switch` and `Checkbox` is that Switch will trigger a state change directly when you toggle it, while Checkbox is generally used for state marking, which should work in conjunction with submit operation.</li></ul>": {
+    "Translated": "<p>切换选择器。</p><h2>何时使用</h2><ul><li>如果需要表示两种状态或开关状态之间的切换。</li><li> `Switch` 和 `Checkbox` 的区别在于，Switch 在切换时会直接触发状态变化，而 Checkbox 一般用于状态标记，需要配合提交操作使用。</li></ul>"
+  },
+  "<p>Displays rows of data.</p><h2>When To Use</h2><ul><li>To display a collection of structured data.</li><li>To sort, search, paginate, filter data.</li></ul>": {
+    "Translated": "<p>显示数据行。</p><h2>何时使用</h2><ul><li>显示结构化数据的集合。</li><li>排序、搜索、分页、过滤数据。</li></ul>"
+  },
+  "Content of the table. Typically will contain <code>PropertyColumn</code> and <code>ActionColumn</code> elements.": {
+    "Translated": "表的内容。通常将包含 <code>PropertyColumn</code> 和 <code>ActionColumn</code> 元素。"
+  },
+  "The max expand level when use DefaultExpandAllRows. This attribute is used to avoid endless loop when the tree records have circular reference. The default value is 4.": {
+    "Translated": "使用 DefaultExpandAllRows 时的最大扩展级别。当树记录有循环引用时，该属性用于避免死循环。默认值为 4。"
+  },
+  "Callback executed when paging, sorting, and filtering changes": {
+    "Translated": "分页、排序、过滤变化时执行的回调"
+  },
+  "When set to true and the screen width is less than 960px, the table would switch to small-screen mode. In small-screen mode, only certain features are currently supported, and mis-styling will occur in tables with some features such as group, expanded columns, tree data, summary cell, etc.": {
+    "Translated": "当设置为 true 并且屏幕宽度小于 960px 时，表格将切换到小屏幕模式。在小屏模式下，目前只支持部分特性，在具有分组、展开列、树状数据、汇总单元格等特性的表格中会出现样式错误。"
+  },
+  "Callback executed when currently visible page changes": {
+    "Translated": "当前可见页面改变时执行的回调"
+  },
+  "Callback executed when page size changes": {
+    "Translated": "页面大小改变时执行的回调"
+  },
+  "Reload the data for the table, go to page 1": {
+    "Translated": "重新加载表的数据，转到第 1 页"
+  },
+  "Reload the table's data from the provided query model": {
+    "Translated": "从提供的查询模型中重新加载表的数据"
+  },
+  "Reset the table to its default view. Goes to page 1, default page size and clears sorts and filters.": {
+    "Translated": "将表重置为其默认视图。转到第 1 页，默认页面大小并清除排序和过滤器。"
+  },
+  "Defines the value to be displayed in this column's cells.": {
+    "Translated": "定义要在此列的单元格中显示的值。"
+  },
+  "Function that determines if the row is displayed when filtered <p> Parameter 1: The value of the filter item </p><p> Parameter 2: The value of the column </p>": {
+    "Translated": "判断过滤时是否显示行的函数 <p> 参数1：过滤项的值</p><p> 参数2：列的值</p>"
+  },
+  "Current <code>TabPane</code>'s <code>AntDesign.TabPane.Key</code>": {
+    "Translated": "当前<code>TabPane</code>的<code>AntDesign.TabPane.Key</code>"
+  },
+  "Initial active <code>TabPane</code>'s <code>AntDesign.TabPane.Key</code>, if <code>AntDesign.Tabs.ActiveKey</code> is not set": {
+    "Translated": "如果未设置 <code>AntDesign.Tabs.ActiveKey</code>，则初始激活 <code>TabPane</code> 的 <code>AntDesign.TabPane.Key</code>"
+  },
+  "TabPane's key": {
+    "Translated": "TabPane 的键"
+  },
+  "Show text in <code>TabPane</code>'s head": {
+    "Translated": "在 <code>TabPane</code> 的头部显示文本"
+  },
+  "Template of TabPane's head": {
+    "Translated": "TabPane的头像模板"
+  },
+  "<p>Tag for categorizing or markup.</p><h2>When To Use</h2><ul><li>It can be used to tag by dimension or property.</li><li>When categorizing.</li></ul>": {
+    "Translated": "<p>用于分类或标记的标记。</p><h2>何时使用</h2><ul><li>可用于按维度或属性标记。</li><li>在分类时。 </li></ul>"
+  },
+  "Use Color instead by passing the string of the enum value": {
+    "Translated": "Use Color instead by passing the string of the enum value"
+  },
+  "Parameter is not used and does not affect functionality": {
+    "Translated": "Parameter is not used and does not affect functionality"
+  },
+  "Set the tag's icon": {
+    "Translated": "设置标签的图标"
+  },
+  "<p>To select/input a time.</p><h2>When To Use</h2><p>By clicking the input box, you can select a time from a popup panel.</p>": {
+    "Translated": "<p>选择/输入时间。</p><h2>何时使用</h2><p>通过单击输入框，您可以从弹出面板中选择时间。</p>"
+  },
+  "<p>Vertical display timeline.</p><h2>When To Use</h2><ul><li>When a series of information needs to be ordered by time (ascending or descending).</li><li>When you need a timeline to make a visual connection.</li></ul>": {
+    "Translated": "<p>垂直显示时间轴。</p><h2>何时使用</h2><ul><li>当一系列信息需要按时间排序（升序或降序）时。</li><li >当您需要时间线来建立视觉联系时。</li></ul>"
+  },
+  "Set the last ghost node's existence or its content": {
+    "Translated": "设置最后一个幽灵节点的存在或其内容"
+  },
+  "Set the dot of the last ghost node when pending is true": {
+    "Translated": "pending为真时设置最后一个ghost节点的dot"
+  },
+  "<p>A simple text popup tip.</p><h2>When To Use</h2><ul><li>The tip is shown on mouse enter, and is hidden on mouse leave. The <code>Tooltip</code> doesn't support complex text or operations.</li><li>To provide an explanation of a button/text/operation. It's often used instead of the html <code>title</code> attribute.</li></ul><h2>Two types</h2><p>There are 2 rendering approaches for <code>Tooltip</code>:</p><ol><li>Wraps child element (content of the <code>Tooltip</code>) with a <code>div</code> (default approach).</li><li> Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Tooltip</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol><p>Please ensure that the child node of <code>Tooltip</code> accepts <code>onMouseEnter</code>, <code>onMouseLeave</code>, <code>onFocus</code>, <code>onClick</code> events.</p>": {
+    "Translated": "<p>一个简单的文本弹出提示。</p><h2>何时使用</h2><ul><li>提示在鼠标进入时显示，在鼠标离开时隐藏。 <code>工具提示</code> 不支持复杂的文本或操作。</li><li>提供按钮/文本/操作的解释。常用来代替html的<code>title</code>属性。</li></ul><h2>两种类型</h2><p><code>Tooltip</code有2种渲染方式>：</p><ol><li>用 <code>div</code>（默认方法）包裹子元素（<code>Tooltip</code> 的内容）。</li><li>子元素没有包裹任何东西。此方法需要在 <code>Tooltip</code> 内使用 <code>Unbound</code> 标签，并取决于子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code>属性设置为<code>@context</code>。</li></ul></li></ol><p>请确保<code>Tooltip</的子节点code> 接受 <code>onMouseEnter</code>、<code>onMouseLeave</code>、<code>onFocus</code>、<code>onClick</code> 事件。</p>"
+  },
+  "<p>Double column transfer choice box.</p><h2>When To Use</h2><ul><li>It is a select control essentially which can be use for selecting multiple items.</li><li>Transfer can display more information for items and take up more space.</li></ul><p>Transfer the elements between two columns in an intuitive and efficient way.</p><p> One or more elements can be selected from either column, one click on the proper `direction` button, and the transfer is done. The left column is considered the `source` and the right column is considered the `target`. As you can see in the API description, these names are reflected in. </p>": {
+    "Translated": "<p>双列转移选择框。</p><h2>何时使用</h2><ul><li>本质上是一个选择控件，可用于选择多个项目。</li><li >Transfer可以显示更多的item信息，占用更多的空间。</li></ul><p>以直观高效的方式在两列之间转移元素。</p><p>一个或多个元素可以从任一列中选择，单击正确的“方向”按钮，即可完成传输。左列被认为是“源”，右列被认为是“目标”。正如您在 API 描述中看到的那样，这些名称都反映在。</p>"
+  },
+  "Titles for the columns left to right. Must be an array with 2 elements.": {
+    "Translated": "从左到右的列标题。必须是包含 2 个元素的数组。"
+  },
+  "Labels to display next to the icons for the operations, from top to bottom. Must be an array with 2 elements.": {
+    "Translated": "从上到下显示在操作图标旁边的标签。必须是包含 2 个元素的数组。"
+  },
+  "<p>Tree selection control.</p><h2>When To Use</h2><p><code>TreeSelect</code> is similar to <code>Select</code>, but the values are provided in a tree like structure. Any data whose entries are defined in a hierarchical manner is fit to use this control. Examples of such case may include a corporate hierarchy, a directory structure, and so on. </p>": {
+    "Translated": "<p>树选择控件。</p><h2>何时使用</h2><p><code>TreeSelect</code> 类似于<code>Select</code>，但值在树状结构。任何以分层方式定义其条目的数据都适合使用此控件。这种情况的示例可以包括公司层次结构、目录结构等。 </p>"
+  },
+  "Customize the header template": {
+    "Translated": "自定义标题模板"
+  },
+  "Whether to default to all nodes expanded or not": {
+    "Translated": "是否默认展开所有节点"
+  },
+  "Function used to indicate if a node matches the search": {
+    "Translated": "用于指示节点是否与搜索匹配的函数"
+  },
+  "Style for the piece of a node that matches search": {
+    "Translated": "匹配搜索的节点部分的样式"
+  },
+  "Class name for the piece of a node that matches search": {
+    "Translated": "匹配搜索的节点部分的类名"
+  },
+  "Specifies a method that returns the text of the node.": {
+    "Translated": "指定返回节点文本的方法。"
+  },
+  "Specifies a method that returns the key of the node.": {
+    "Translated": "指定返回节点键的方法。"
+  },
+  "Specifies a method to return the node icon.": {
+    "Translated": "指定返回节点图标的方法。"
+  },
+  "Specifies a method that returns whether the expression is a leaf node.": {
+    "Translated": "指定返回表达式是否为叶节点的方法。"
+  },
+  "Specifies a method to return the children of a node": {
+    "Translated": "指定返回节点子节点的方法"
+  },
+  "Specifies a method to return a disabled node": {
+    "Translated": "指定返回禁用节点的方法"
+  },
+  "<p>A hierarchical list structure component.</p><h2>When To Use</h2><p> Almost anything can be represented in a tree structure. Examples include directories, organization hierarchies, biological classifications, countries, etc. The `Tree` component is a way of representing the hierarchical relationship between these things. You can also expand, collapse, and select a treeNode within a `Tree`. </p>": {
+    "Translated": "<p>分层列表结构组件。</p><h2>何时使用</h2><p> 几乎任何东西都可以用树结构表示。示例包括目录、组织层次结构、生物分类、国家等。“树”组件是表示这些事物之间层次关系的一种方式。您还可以展开、折叠和选择“树”中的树节点。 </p>"
+  },
+  "@bind-SelectedKey": {
+    "Translated": "@bind-SelectedKey"
+  },
+  "@bind-SelectedNode": {
+    "Translated": "@bind-SelectedNode"
+  },
+  "@bing-SelectedData": {
+    "Translated": "@bing-SelectedData"
+  },
+  "Check treeNode precisely; parent treeNode and children treeNodes are not associated": {
+    "Translated": "精确检查 treeNode；父树节点和子树节点没有关联"
+  },
+  "@bind-CheckedKeys": {
+    "Translated": "@bind-CheckedKeys"
+  },
+  "Specifies the unique identifier name of the current node。": {
+    "Translated": "指定当前节点的唯一标识符名称。"
+  },
+  "title是否包含SearchValue(搜索使用)": {
+    "Translated": "title是否包含SearchValue(搜索使用)"
+  },
+  "获得上级数据集合": {
+    "Translated": "获得上级数据集合"
+  },
+  "<p>Basic text writing, including headings, body text, lists, and more.</p><h2>When To Use</h2><ul><li>When need to display a title or paragraph contents in Articles/Blogs/Notes.</li><li>When you need copyable/editable/ellipsis texts.</li></ul>": {
+    "Translated": "<p>基本文本书写，包括标题、正文、列表等。</p><h2>何时使用</h2><ul><li>当需要在文章中显示标题或段落内容时/博客/笔记。</li><li>当您需要可复制/可编辑/省略号文本时。</li></ul>"
+  },
+  "Level of heading (ex: h1 would be 1). Must be between 1 and 4, inclusive. If outside that range it will default back to 1.": {
+    "Translated": "标题级别（例如：h1 为 1）。必须介于 1 和 4 之间（含）。如果超出该范围，它将默认返回到 1。"
+  },
+  "<p>Upload file by selecting or dragging.</p><h2>When To Use</h2><p>Uploading is the process of publishing information (web pages, text, pictures, video, etc.) to a remote server via a web page or upload tool.</p><ul><li>When you need to upload one or more files.</li><li>When you need to show the process of uploading.</li><li>When you need to upload files by dragging and dropping.</li></ul>": {
+    "Translated": "<p>通过选择或拖动上传文件。</p><h2>何时使用</h2><p>上传是将信息（网页、文本、图片、视频等）发布到远程的过程</p><ul><li>当您需要上传一个或多个文件时。</li><li>当您需要显示上传过程时。</li> <li>当您需要通过拖放方式上传文件时。</li></ul>"
+  },
+  "Function which will be executed before uploading each file. Uploading will be stopped if false is returned. Warning：This function is not supported in IE9.": {
+    "Translated": "在上传每个文件之前将执行的功能。如果返回 false，将停止上传。警告：IE9不支持该功能。"
+  },
+  "Hook function which will be executed before starting the overall upload. Uploading will be stopped if false is returned. Warning：This function is not supported in IE9.": {
+    "Translated": "在开始整体上传之前执行的挂钩函数。如果返回 false，将停止上传。警告：IE9不支持该功能。"
+  },
+  "Whether to support selected multiple file. IE10+ supported. When set to true, will allow selecting multiple files with holding down Ctrl key": {
+    "Translated": "是否支持选择多个文件。支持 IE10+。设置为 true 时，将允许按住 Ctrl 键选择多个文件"
+  },
+  "File types that can be accepted. See <see href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept\">input's accept attribute</see>": {
+    "Translated": "可以接受的文件类型。请参阅<see href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept\">输入的接受属性</see>"
+  },
+  "Set request headers, valid above IE10.": {
+    "Translated": "设置请求头，IE10以上有效。"
+  },
+  "<p>Wrap Affix around another component to make it stick the viewport.</p><h2>When To Use</h2><ul><li>On longer web pages, its helpful for some content to stick to the viewport. This is common for menus and actions.</li><li>Please note that Affix should not cover other content on the page, especially when the size of the viewport is small.</li></ul><p><strong>Important</strong>: Children of <code>Affix</code> must not have the property <code>position: absolute</code>, but you can set <code>position: absolute</code> on <code>Affix</code> itself</p>": {
+    "Translated": "<p>将 Affix 包裹在另一个组件周围，使其粘附在视口上。</p><h2>何时使用</h2><ul><li>在较长的网页上，它有助于某些内容粘附在视口上.这对于菜单和操作很常见。</li><li>请注意，Affix 不应覆盖页面上的其他内容，尤其是当视口尺寸较小时。</li></ul><p> strong>重要</strong>：<code>Affix</code> 的子级不能具有属性<code>position: absolute</code>，但您可以在 <code>position: absolute</code> 上设置 <code>position: absolute</code> code>Affix</code> 本身</p>"
+  },
+  "Offset from the bottom of the viewport (in pixels)": {
+    "Translated": "从视口底部偏移（以像素为单位）"
+  },
+  "Offset from the top of the viewport (in pixels)": {
+    "Translated": "从视口顶部偏移（以像素为单位）"
+  },
+  "The CSS selector that specifies the scrollable area DOM node": {
+    "Translated": "指定可滚动区域 DOM 节点的 CSS 选择器"
+  },
+  "Additional Content": {
+    "Translated": "附加内容"
+  },
+  "Callback for when Affix state is changed. A boolean indicating if the Affix is currently affixed is passed.": {
+    "Translated": "Affix 状态改变时的回调。传递一个布尔值，指示词缀当前是否已附加。"
+  },
+  "Returned ElementRef reference for DOM element.": {
+    "Translated": "返回 DOM 元素的 ElementRef 引用。"
+  },
+  "Specifies one or more class names for an DOM element.": {
+    "Translated": "为 DOM 元素指定一个或多个类名。"
+  },
+  "Specifies an inline style for a DOM element.": {
+    "Translated": "指定 DOM 元素的内联样式。"
+  },
+  "<p>Alert component for feedback.</p><h2>When To Use</h2><ul><li>When you need to show alert messages to users.</li><li>When you need a persistent static container which is closable by user actions.</li></ul>": {
+    "Translated": "<p>用于反馈的警报组件。</p><h2>何时使用</h2><ul><li>当您需要向用户显示警报消息时。</li><li>当您需要持久性时可由用户操作关闭的静态容器。</li></ul>"
+  },
+  "Called when close animation is finished": {
+    "Translated": "关闭动画完成时调用"
+  },
+  "Whether to show as banner": {
+    "Translated": "是否显示为banner"
+  },
+  "Whether Alert can be closed": {
+    "Translated": "是否可以关闭Alert"
+  },
+  "Close text to show": {
+    "Translated": "关闭要显示的文本"
+  },
+  "Additional content of Alert": {
+    "Translated": "警报的附加内容"
+  },
+  "Custom icon, effective when showIcon is true": {
+    "Translated": "自定义图标，showIcon为true时有效"
+  },
+  "Content of Alert": {
+    "Translated": "警示内容"
+  },
+  "Whether to show icon.": {
+    "Translated": "是否显示图标。"
+  },
+  "Type of Alert styles, options: success, info, warning, error": {
+    "Translated": "警报样式类型，选项：成功、信息、警告、错误"
+  },
+  "Callback when Alert is closed.": {
+    "Translated": "Alert 关闭时的回调。"
+  },
+  "used to refresh links list when the key changed.": {
+    "Translated": "用于在密钥更改时刷新链接列表。"
+  },
+  "Fixed mode of Anchor": {
+    "Translated": "Anchor固定模式"
+  },
+  "Bounding distance of anchor area": {
+    "Translated": "锚点区域的边界距离"
+  },
+  "Scrolling container": {
+    "Translated": "滚动容器"
+  },
+  "Pixels to offset from bottom when calculating position of scroll": {
+    "Translated": "计算滚动位置时从底部偏移的像素"
+  },
+  "Pixels to offset from top when calculating position of scroll": {
+    "Translated": "计算滚动位置时从顶部偏移的像素"
+  },
+  "Whether show ink-balls in Fixed mode": {
+    "Translated": "Fixed模式下是否显示墨球"
+  },
+  "set the handler to handle click event": {
+    "Translated": "设置处理程序来处理点击事件"
+  },
+  "Customize the anchor highlight": {
+    "Translated": "自定义锚高亮"
+  },
+  "Anchor scroll offset, default as <code>AntDesign.Anchor.OffsetTop</code>": {
+    "Translated": "锚点滚动偏移，默认为 <code>AntDesign.Anchor.OffsetTop</code>"
+  },
+  "Callback executed when the anchor changes, either by click or scrolling": {
+    "Translated": "当锚点改变时执行的回调，无论是通过点击还是滚动"
+  },
+  "Additional content. Does not override Title.": {
+    "Translated": "附加内容。不覆盖标题。"
+  },
+  "Target of hyperlink": {
+    "Translated": "超链接的目标"
+  },
+  "Content of hyperlink": {
+    "Translated": "超链接内容"
+  },
+  "Specifies where to display the linked URL": {
+    "Translated": "指定显示链接 URL 的位置"
+  },
+  "Input element placeholder": {
+    "Translated": "输入元素占位符"
+  },
+  "Disable": {
+    "Translated": "停用"
+  },
+  "Make first option active by default or not": {
+    "Translated": "默认情况下是否启用第一个选项"
+  },
+  "Backfill selected item into the input when using keyboard to select items": {
+    "Translated": "使用键盘选择项目时将所选项目回填到输入中"
+  },
+  "Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time": {
+    "Translated": "延迟 KeyUp 事件的处理，直到用户停止键入一段预定的时间"
+  },
+  "Options to display in dropdown": {
+    "Translated": "在下拉列表中显示的选项"
+  },
+  "Bind the data source of the list data item format": {
+    "Translated": "绑定列表数据项格式的数据源"
+  },
+  "Callback executed when selection changes": {
+    "Translated": "选择更改时执行的回调"
+  },
+  "Callback executed when active item changes": {
+    "Translated": "活动项更改时执行的回调"
+  },
+  "Callback executed when input changes": {
+    "Translated": "输入改变时执行的回调"
+  },
+  "Callback executed when panel visibility changes": {
+    "Translated": "面板可见性改变时执行的回调"
+  },
+  "Content for dropdown": {
+    "Translated": "下拉内容"
+  },
+  "Option template": {
+    "Translated": "选项模板"
+  },
+  "Formatting options, you can customize the display format": {
+    "Translated": "格式选项，可以自定义显示格式"
+  },
+  "All option templates": {
+    "Translated": "所有选项模板"
+  },
+  "Contrast, used to compare whether two objects are the same": {
+    "Translated": "对比，用来比较两个对象是否相同"
+  },
+  "Filter expression": {
+    "Translated": "过滤表达式"
+  },
+  "Allow filtering": {
+    "Translated": "允许过滤"
+  },
+  "Width of input, pixels when an int is given, full value given to CSS width property when a string is given": {
+    "Translated": "输入的宽度，给定 int 时的像素，给定字符串时赋予 CSS width 属性的完整值"
+  },
+  "Class name passed to overlay": {
+    "Translated": "传递给覆盖的类名"
+  },
+  "Style passed to overlay": {
+    "Translated": "传递给叠加层的样式"
+  },
+  "Container selector for the popup": {
+    "Translated": "弹出窗口的容器选择器"
+  },
+  "Selected item from dropdown": {
+    "Translated": "从下拉列表中选择的项目"
+  },
+  "Active item": {
+    "Translated": "活动项目"
+  },
+  "Overlay adjustment strategy (when for example browser resize is happening). Check": {
+    "Translated": "叠加调整策略（例如，当浏览器调整大小时发生）。查看"
+  },
+  "Display options dropdown": {
+    "Translated": "显示选项下拉列表"
+  },
+  "Validation messages for the FormItem": {
+    "Translated": "FormItem 的验证消息"
+  },
+  "Gets or sets a collection of additional attributes that will be applied to the created element.": {
+    "Translated": "获取或设置将应用于所创建元素的附加属性的集合。"
+  },
+  "Gets or sets the value of the input. This should be used with two-way binding.": {
+    "Translated": "获取或设置输入的值。这应该与双向绑定一起使用。"
+  },
+  "Callback that updates the bound value.": {
+    "Translated": "更新绑定值的回调。"
+  },
+  "An expression that identifies the bound value.": {
+    "Translated": "标识绑定值的表达式。"
+  },
+  "An expression that identifies the enumerable of bound values.": {
+    "Translated": "标识可枚举绑定值的表达式。"
+  },
+  "The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`": {
+    "Translated": "输入框的大小。注意：在表单的上下文中，使用“大”尺寸。可用：`大``默认``小`"
+  },
+  "What Culture will be used when converting string to value and value to string Useful for InputNumber component.": {
+    "Translated": "将字符串转换为值和将值转换为字符串时将使用什么文化对 InputNumber 组件有用。"
+  },
+  "Open panel": {
+    "Translated": "打开面板"
+  },
+  "Close panel": {
+    "Translated": "关闭面板"
+  },
+  "Label for the option. Takes priority over Label": {
+    "Translated": "选项的标签。优先于标签"
+  },
+  "Value for the option": {
+    "Translated": "期权的价值"
+  },
+  "Label for the option": {
+    "Translated": "选项标签"
+  },
+  "If option is disabled or not": {
+    "Translated": "选项是否被禁用"
+  },
+  "Do not auto adjust": {
+    "Translated": "不要自动调整"
+  },
+  "The default, the viewport boundaries are the boundaries that are used for calculation if overlay is fully visible. Attempt to fit the overlay so it is always fully visible in the viewport. So if the overlay is outside of the viewport (\"overflows\"), then reposition calculation is going to be attempted.": {
+    "Translated": "默认情况下，视口边界是在覆盖完全可见时用于计算的边界。尝试调整叠加层，使其始终在视口中完全可见。因此，如果叠加层位于视口之外（“溢出”），则会尝试重新定位计算。"
+  },
+  "The document boundaries are the boundaries used for calculation if overlay needs to be reposition. So even if the overlay is outside of the viewport, the overlay may still be shown as long as it does not \"overflow\" the document boundaries.": {
+    "Translated": "如果覆盖需要重新定位，则文档边界是用于计算的边界。因此，即使覆盖在视口之外，只要不“溢出”文档边界，覆盖仍可能显示。"
+  },
+  "<p>Avatars can be used to represent people or objects. It supports images, icons, or letters.</p>": {
+    "Translated": "<p>头像可以用来代表人或物体。它支持图像、图标或字母。</p>"
+  },
+  "Content to display inside avatar shape. Takes priority over <code>AntDesign.Avatar.Text</code>": {
+    "Translated": "在头像形状内显示的内容。优先于 <code>AntDesign.Avatar.Text</code>"
+  },
+  "Shape of the avatar": {
+    "Translated": "头像的形状"
+  },
+  "Size of the avatar. See <code>AntSizeLDSType</code> for possible values.": {
+    "Translated": "头像的大小。有关可能的值，请参阅 <code>AntSizeLDSType</code>。"
+  },
+  "Text string to display in the avatar. Typical use is for displaying initials.": {
+    "Translated": "要在头像中显示的文本字符串。典型用途是显示首字母。"
+  },
+  "Image src for the avatar. If this fails to load, <code>AntDesign.Avatar.Icon</code> and <code>AntDesign.Avatar.ChildContent</code>/<code>AntDesign.Avatar.Text</code> will continue to show.": {
+    "Translated": "头像的图像 src。如果加载失败，<code>AntDesign.Avatar.Icon</code> 和 <code>AntDesign.Avatar.ChildContent</code>/<code>AntDesign.Avatar.Text</code> 将继续显示。"
+  },
+  "A list of sources to use for different screen resolutions. Passed straight to the <code>img</code> tag.": {
+    "Translated": "用于不同屏幕分辨率的源列表。直接传递给 <code>img</code> 标签。"
+  },
+  "Alternate text for the image": {
+    "Translated": "图像的替代文本"
+  },
+  "Icon to display": {
+    "Translated": "要显示的图标"
+  },
+  "Callback executed when image passed to <code>AntDesign.Avatar.Src</code> fails to load": {
+    "Translated": "当传递给 <code>AntDesign.Avatar.Src</code> 的图像加载失败时执行的回调"
+  },
+  "Icon for the button": {
+    "Translated": "按钮的图标"
+  },
+  "Content for the button. Takes priority over icon.": {
+    "Translated": "按钮的内容。优先于图标。"
+  },
+  "Scroll offset at which the button becomes visible, in px": {
+    "Translated": "按钮变为可见的滚动偏移量，以 px 为单位"
+  },
+  "The scrollable area the button is for": {
+    "Translated": "按钮所在的可滚动区域"
+  },
+  "Customize Badge status dot color. Usage of this parameter will make the badge a status dot.": {
+    "Translated": "自定义徽章状态点颜色。使用此参数将使徽章成为状态点。"
+  },
+  "Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.": {
+    "Translated": "将徽章状态点设置为预设颜色。使用此参数将使徽章成为状态点。"
+  },
+  "Number to show in badge": {
+    "Translated": "徽章中显示的号码"
+  },
+  "Template to show in place of Count": {
+    "Translated": "代替计数显示的模板"
+  },
+  "Whether to display a dot instead of count": {
+    "Translated": "是否显示点而不是计数"
+  },
+  "Set offset of the badge dot, like (left, top)": {
+    "Translated": "设置徽章点的偏移量，如（左，上）"
+  },
+  "Max count to show": {
+    "Translated": "显示的最大数量"
+  },
+  "Whether to show badge when count is zero": {
+    "Translated": "计数为零时是否显示徽章"
+  },
+  "Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.": {
+    "Translated": "将徽章点设置为状态颜色。使用此参数将使徽章成为状态点。"
+  },
+  "The display text next to the status dot": {
+    "Translated": "状态点旁边的显示文本"
+  },
+  "Text to show when hovering over the badge. Defaults to the value of Count": {
+    "Translated": "将鼠标悬停在徽章上时显示的文本。默认为 Count 的值"
+  },
+  "Size of the badge": {
+    "Translated": "徽章尺寸"
+  },
+  "Wrapping this item.": {
+    "Translated": "包装这个项目。"
+  },
+  "Customize ribbon color": {
+    "Translated": "自定义色带颜色"
+  },
+  "Text string of ribbon.": {
+    "Translated": "功能区的文本字符串。"
+  },
+  "Text content of the ribbon. Takes priority over <code>AntDesign.BadgeRibbon.Text</code>": {
+    "Translated": "功能区的文本内容。优先于 <code>AntDesign.BadgeRibbon.Text</code>"
+  },
+  "Set placement of ribbon.": {
+    "Translated": "设置功能区的位置。"
+  },
+  "Content of the Breadcrumb. Should contain BreadcrumbItem elements": {
+    "Translated": "面包屑的内容。应包含 BreadcrumbItem 元素"
+  },
+  "Not currently used. Planned for future development.": {
+    "Translated": "当前未使用。计划未来发展。"
+  },
+  "Separator between items": {
+    "Translated": "项目之间的分隔符"
+  },
+  "Inner content of item": {
+    "Translated": "项目的内部内容"
+  },
+  "Overlay for a dropdown menu": {
+    "Translated": "覆盖下拉菜单"
+  },
+  "Link for the item. Providing this wraps the ChildContent in an anchor tag for this link.": {
+    "Translated": "项目的链接。提供这个将 ChildContent 包装在该链接的锚标记中。"
+  },
+  "Click callback": {
+    "Translated": "点击回调"
+  },
+  "Sets the value of the aria-label attribute": {
+    "Translated": "设置 aria-label 属性的值"
+  },
+  "Set the color of the button.": {
+    "Translated": "设置按钮的颜色。"
+  },
+  "Option to fit button width to its parent width": {
+    "Translated": "使按钮宽度适合其父宽度的选项"
+  },
+  "Content of the button.": {
+    "Translated": "按钮的内容。"
+  },
+  "Set the danger status of button.": {
+    "Translated": "设置按钮的危险状态。"
+  },
+  "Whether the `Button` is disabled.": {
+    "Translated": "`Button` 是否被禁用。"
+  },
+  "Make background transparent and invert text and border colors": {
+    "Translated": "使背景透明并反转文本和边框颜色"
+  },
+  "Set the original html type of the button element.": {
+    "Translated": "设置按钮元素的原始 html 类型。"
+  },
+  "Set the icon component of button.": {
+    "Translated": "设置按钮的图标组件。"
+  },
+  "Show loading indicator. You have to write the loading logic on your own.": {
+    "Translated": "显示加载指示器。您必须自己编写加载逻辑。"
+  },
+  "Callback when `Button` is clicked": {
+    "Translated": "单击“按钮”时的回调"
+  },
+  "Do not propagate events when button is clicked.": {
+    "Translated": "单击按钮时不传播事件。"
+  },
+  "Set the size of button.": {
+    "Translated": "设置按钮的大小。"
+  },
+  "Type of the button.": {
+    "Translated": "按钮的类型。"
+  },
+  "The download url of a file": {
+    "Translated": "文件的下载地址"
+  },
+  "Name of the file": {
+    "Translated": "文件名"
+  },
+  "Selected value for calendar": {
+    "Translated": "日历的选定值"
+  },
+  "Default value for selected date. When set, will set <code>AntDesign.Calendar.Value</code>": {
+    "Translated": "所选日期的默认值。设置时，将设置 <code>AntDesign.Calendar.Value</code>"
+  },
+  "Validate range of dates or selection": {
+    "Translated": "验证日期范围或选择"
+  },
+  "Display mode. See <code>DatePickerType</code> for valid options": {
+    "Translated": "显示模式。请参阅 <code>DatePickerType</code> 以获取有效选项"
+  },
+  "Whether the calendar should take up all available space or not": {
+    "Translated": "日历是否应占用所有可用空间"
+  },
+  "Callback executed when a date is selected": {
+    "Translated": "选择日期时执行的回调"
+  },
+  "Function to render a custom header": {
+    "Translated": "呈现自定义标头的函数"
+  },
+  "Customize the display of the date cell, the returned content will be appended to the cell": {
+    "Translated": "自定义日期单元格的显示，返回的内容会追加到单元格中"
+  },
+  "Customize the display of the date cell, the returned content will override the cell": {
+    "Translated": "自定义日期单元格的显示，返回的内容会覆盖单元格"
+  },
+  "Customize the display of the month cell, the returned content will be appended to the cell": {
+    "Translated": "自定义月份单元格的显示，返回的内容会追加到单元格中"
+  },
+  "Customize the display of the month cell, the returned content will override the cell": {
+    "Translated": "自定义月份单元格的显示，返回内容会覆盖单元格"
+  },
+  "Callback executed when the type of calendar being viewed changes": {
+    "Translated": "当正在查看的日历类型发生变化时执行的回调"
+  },
+  "Function to determine if a specific date is disabled": {
+    "Translated": "确定特定日期是否被禁用的函数"
+  },
+  "Locale information for UI and date formatting": {
+    "Translated": "UI 和日期格式的语言环境信息"
+  },
+  "Culture information used for formatting": {
+    "Translated": "用于格式化的文化信息"
+  },
+  "Content to put in the actions section of the card. Takes priority over <code>AntDesign.Card.Actions</code>": {
+    "Translated": "要放入卡片操作部分的内容。优先于 <code>AntDesign.Card.Actions</code>"
+  },
+  "Toggles rendering of the border around the card": {
+    "Translated": "切换卡周围边框的渲染"
+  },
+  "Make card hoverable": {
+    "Translated": "使卡片可悬停"
+  },
+  "Shows a loading indicator while the contents of the card are being fetched": {
+    "Translated": "在获取卡片内容时显示加载指示器"
+  },
+  "Style string for body section": {
+    "Translated": "正文部分的样式字符串"
+  },
+  "Cover content for card. Displayed below header and above body": {
+    "Translated": "卡片的封面内容。显示在标题下方和正文上方"
+  },
+  "Actions for the card": {
+    "Translated": "卡片操作"
+  },
+  "Card style type, can be set to inner or not set": {
+    "Translated": "卡片样式类型，可设置为内部或不设置"
+  },
+  "Size of the card": {
+    "Translated": "卡片尺寸"
+  },
+  "Title string for header": {
+    "Translated": "标头的标题字符串"
+  },
+  "Title content for header. Takes priority over <code>AntDesign.Card.Title</code>": {
+    "Translated": "标题的标题内容。优先于 <code>AntDesign.Card.Title</code>"
+  },
+  "Content to render in the top-right corner of the card": {
+    "Translated": "要在卡片右上角呈现的内容"
+  },
+  "Tab content rendered below title": {
+    "Translated": "标题下方呈现的选项卡内容"
+  },
+  "Content for that section of the grid": {
+    "Translated": "网格该部分的内容"
+  },
+  "If the section should be hoverable. Adds dropshadow and lifts up when hovered if true.": {
+    "Translated": "如果该部分应该悬停。如果为 true，则在悬停时添加阴影并抬起。"
+  },
+  "Title string": {
+    "Translated": "标题字符串"
+  },
+  "Title content. Takes priority over <code>AntDesign.CardMeta.Title</code>": {
+    "Translated": "标题内容。优先于 <code>AntDesign.CardMeta.Title</code>"
+  },
+  "Description string": {
+    "Translated": "描述字符串"
+  },
+  "Description content. Takes priority over <code>AntDesign.CardMeta.Description</code>": {
+    "Translated": "说明内容。优先于 <code>AntDesign.CardMeta.Description</code>"
+  },
+  "Avatar content. Takes priority over <code>AntDesign.CardMeta.Avatar</code>": {
+    "Translated": "头像内容。优先于 <code>AntDesign.CardMeta.Avatar</code>"
+  },
+  "Content of the carousel. Typically <code>CarouselSlick</code> elements": {
+    "Translated": "轮播的内容。通常是 <code>CarouselSlick</code> 元素"
+  },
+  "The position of the dots, which can be one of Top, Bottom, Left or Right, <code>CarouselDotPosition</code>": {
+    "Translated": "圆点的位置，可以是 Top、Bottom、Left 或 Right 之一，<code>CarouselDotPosition</code>"
+  },
+  "Whether to scroll automatically": {
+    "Translated": "是否自动滚动"
+  },
+  "Transition effect, <code>CarouselEffect</code>": {
+    "Translated": "过渡效果，<code>CarouselEffect</code>"
+  },
+  "Content to display when on this part of the carousel": {
+    "Translated": "在轮播的这一部分显示的内容"
+  },
+  "Overlay adjustment strategy (when for example browser resize is happening)": {
+    "Translated": "叠加调整策略（例如浏览器调整大小时）"
+  },
+  "Change value on each selection if set to true, only chage on final selection if false.": {
+    "Translated": "如果设置为 true，则更改每个选择的值，如果设置为 false，则仅更改最终选择。"
+  },
+  "Initially selected value": {
+    "Translated": "初始选择值"
+  },
+  "When to expand the current item - click or hover": {
+    "Translated": "何时展开当前项目 - 单击或悬停"
+  },
+  "Empty description for when not found": {
+    "Translated": "找不到时的空描述"
+  },
+  "Placeholder for input": {
+    "Translated": "输入占位符"
+  },
+  "Element to show popup container in": {
+    "Translated": "显示弹出容器的元素"
+  },
+  "Allow searching or not": {
+    "Translated": "是否允许搜索"
+  },
+  "Disable input or not": {
+    "Translated": "是否禁用输入"
+  },
+  "Callback executed when the selected value changes": {
+    "Translated": "选中值改变时执行的回调"
+  },
+  "Options for the overlay": {
+    "Translated": "覆盖选项"
+  },
+  "Label displayed for value": {
+    "Translated": "显示价值的标签"
+  },
+  "Value for when option is selected": {
+    "Translated": "选择选项时的值"
+  },
+  "Disable the option or not": {
+    "Translated": "是否禁用该选项"
+  },
+  "Options under this one": {
+    "Translated": "这一项下的选项"
+  },
+  "Content to display next to checkbox": {
+    "Translated": "复选框旁边显示的内容"
+  },
+  "Callback executed when checked state changes": {
+    "Translated": "检查状态改变时执行的回调"
+  },
+  "Indeterminate checked state of checkbox": {
+    "Translated": "复选框的不确定选中状态"
+  },
+  "Label for checkbox": {
+    "Translated": "复选框标签"
+  },
+  "Whether to autofocus on the input or not": {
+    "Translated": "是否自动对焦输入"
+  },
+  "If the input is checked or not": {
+    "Translated": "输入是否被选中"
+  },
+  "Callback executed when the input changes": {
+    "Translated": "输入改变时执行的回调"
+  },
+  "Gets or sets a callback that updates the bound checked value.": {
+    "Translated": "获取或设置更新绑定检查值的回调。"
+  },
+  "Disable the input": {
+    "Translated": "禁用输入"
+  },
+  "Enable/disable accordion mode. When true, only one panel can be open at once. When opening another the rest collapse.": {
+    "Translated": "启用/禁用手风琴模式。为真时，一次只能打开一个面板。打开另一个时，其余部分崩溃。"
+  },
+  "Enable/disable border": {
+    "Translated": "启用/禁用边框"
+  },
+  "Expand icon position": {
+    "Translated": "展开图标位置"
+  },
+  "Callback executed when open panels change": {
+    "Translated": "打开的面板发生变化时执行的回调"
+  },
+  "Icon to display in <code>AntDesign.Collapse.ExpandIconPosition</code>": {
+    "Translated": "在 <code>AntDesign.Collapse.ExpandIconPosition</code> 中显示的图标"
+  },
+  "Expand icon content to display in <code>AntDesign.Collapse.ExpandIconPosition</code>. Takes priority over <code>AntDesign.Collapse.ExpandIcon</code>": {
+    "Translated": "展开图标内容以显示在 <code>AntDesign.Collapse.ExpandIconPosition</code> 中。优先于 <code>AntDesign.Collapse.ExpandIcon</code>"
+  },
+  "Content of the collapse. Typically contains <code>Panel</code> elements": {
+    "Translated": "崩溃的内容。通常包含 <code>Panel</code> 元素"
+  },
+  "If the panel is active or not": {
+    "Translated": "面板是否处于活动状态"
+  },
+  "Unique identifier for the panel": {
+    "Translated": "面板的唯一标识符"
+  },
+  "If true, the panel cannot be opened or closed.": {
+    "Translated": "如果为 true，则无法打开或关闭面板。"
+  },
+  "Display an arrow or not for the panel": {
+    "Translated": "面板是否显示箭头"
+  },
+  "Extra string for the corner of the panel": {
+    "Translated": "面板角的额外绳子"
+  },
+  "Extra content for the corner of the panel. Takes priority over <code>AntDesign.Panel.Extra</code>": {
+    "Translated": "面板角的额外内容。优先于 <code>AntDesign.Panel.Extra</code>"
+  },
+  "Header string for the panel": {
+    "Translated": "面板的标题字符串"
+  },
+  "Header content for the panel. Takes priority over <code>AntDesign.Panel.Header</code>": {
+    "Translated": "面板的标题内容。优先于 <code>AntDesign.Panel.Header</code>"
+  },
+  "Content for the panel.": {
+    "Translated": "面板的内容。"
+  },
+  "Author string": {
+    "Translated": "作者字符串"
+  },
+  "Author content. Takes priority over <code>AntDesign.Comment.Author</code>": {
+    "Translated": "作者内容。优先于 <code>AntDesign.Comment.Author</code>"
+  },
+  "Avatar string. Gets passed as the <code>AntDesign.Avatar.Src</code> to the <a href=\"/en-US/components/avatar\"><code>Avatar</code></a> component.": {
+    "Translated": "头像字符串。作为 <code>AntDesign.Avatar.Src</code> 传递给 <a href=\"/en-US/components/avatar\"><code>Avatar</code></a> 组件。"
+  },
+  "Avatar content. Takes priority over <code>AntDesign.Comment.Avatar</code>": {
+    "Translated": "头像内容。优先于 <code>AntDesign.Comment.Avatar</code>"
+  },
+  "Content string for the comment": {
+    "Translated": "评论的内容字符串"
+  },
+  "Content for the comment. Takes priority over <code>AntDesign.Comment.Content</code>": {
+    "Translated": "评论的内容。优先于 <code>AntDesign.Comment.Content</code>"
+  },
+  "Used primarily for nesting comments for functionality such as replies": {
+    "Translated": "主要用于嵌套注释等功能的评论"
+  },
+  "Date string for the comment": {
+    "Translated": "评论的日期字符串"
+  },
+  "Date content for the comment. Takes priority over <code>AntDesign.Comment.Datetime</code>": {
+    "Translated": "评论的日期内容。优先于 <code>AntDesign.Comment.Datetime</code>"
+  },
+  "List of actions to show at the bottm of the comment": {
+    "Translated": "在评论底部显示的操作列表"
+  },
+  "Set picker type": {
+    "Translated": "设置选择器类型"
+  },
+  "Selector for placing the container of the popup in": {
+    "Translated": "用于放置弹出窗口容器的选择器"
+  },
+  "Disable the date picker. When given a single boolean, it will disable all of it. When given an array of booleans, it represents disabling the start/end of a range: [start, end]": {
+    "Translated": "禁用日期选择器。当给定一个布尔值时，它将禁用所有布尔值。当给定一个布尔数组时，它表示禁用范围的开始/结束：[start, end]"
+  },
+  "Show a border or not": {
+    "Translated": "是否显示边框"
+  },
+  "Autofocus on the input or not": {
+    "Translated": "是否自动对焦输入"
+  },
+  "If the picker is open or not": {
+    "Translated": "选择器是否打开"
+  },
+  "If the picker is read-only or not": {
+    "Translated": "选择器是否只读"
+  },
+  "Whether to show the Today button which selects Today from any date": {
+    "Translated": "是否显示从任何日期选择今天的今天按钮"
+  },
+  "Locale for localizing UI strings": {
+    "Translated": "用于本地化 UI 字符串的语言环境"
+  },
+  "CultureInfo to use for localization": {
+    "Translated": "用于本地化的 CultureInfo"
+  },
+  "If time should be shown or not. Contains the boolean decision made from setting <code>AntDesign.DatePickerBase`1.ShowTime</code>": {
+    "Translated": "是否应该显示时间。包含通过设置 <code>AntDesign.DatePickerBase`1.ShowTime</code> 做出的布尔决定"
+  },
+  "Time format when showing time. Contains the string format from setting <code>AntDesign.DatePickerBase`1.ShowTime</code> with a string": {
+    "Translated": "显示时间时的时间格式。包含使用字符串设置 <code>AntDesign.DatePickerBase`1.ShowTime</code> 的字符串格式"
+  },
+  "Show time or not. <p>When boolean, it sets ShowTime to the boolean.</p><p>When string, it sets ShowTime to true and uses the string value as the time format.</p>": {
+    "Translated": "是否显示时间。 <p>当为布尔值时，它将 ShowTime 设置为布尔值。</p><p>当为字符串时，它将 ShowTime 设置为 true 并使用字符串值作为时间格式。</p>"
+  },
+  "Allow clearing the selected value or not": {
+    "Translated": "是否允许清除所选值"
+  },
+  "Style applied to popup": {
+    "Translated": "应用于弹出窗口的样式"
+  },
+  "Picker class name": {
+    "Translated": "选择器类名"
+  },
+  "Class name for popover dropdown": {
+    "Translated": "弹出框下拉列表的类名"
+  },
+  "Format for the DateTime display": {
+    "Translated": "日期时间显示格式"
+  },
+  "Default value": {
+    "Translated": "默认值"
+  },
+  "Default value of the picker": {
+    "Translated": "选择器的默认值"
+  },
+  "Custom suffix icon": {
+    "Translated": "自定义后缀图标"
+  },
+  "Range selection presets to allow the user to select a range with one button click": {
+    "Translated": "范围选择预设允许用户通过单击按钮选择范围"
+  },
+  "Extra content to display in picker footer": {
+    "Translated": "在选择器页脚中显示的额外内容"
+  },
+  "Callback executed when clear is clicked": {
+    "Translated": "单击清除时执行的回调"
+  },
+  "Called when clear button clicked.": {
+    "Translated": "单击清除按钮时调用。"
+  },
+  "Callback executed when ok is clicked": {
+    "Translated": "单击确定时执行的回调"
+  },
+  "Callback executed when popover calendar is opened or closed": {
+    "Translated": "打开或关闭弹出式日历时执行的回调"
+  },
+  "Callback executed when the type of panel displayed changes": {
+    "Translated": "当显示的面板类型改变时执行的回调"
+  },
+  "Function to determine if a provided date should be disabled": {
+    "Translated": "确定是否应禁用提供的日期的功能"
+  },
+  "Function to determine if a hours in a date should be disabled": {
+    "Translated": "确定是否应禁用日期中的某个小时的函数"
+  },
+  "Function to determine if a minutes in a date should be disabled": {
+    "Translated": "确定是否应禁用日期中的分钟的函数"
+  },
+  "Function to determine if a seconds in a date should be disabled": {
+    "Translated": "确定是否应禁用日期中的秒数的函数"
+  },
+  "Function to determine what pieces of time should be disabled in a date": {
+    "Translated": "确定日期中应禁用哪些时间的函数"
+  },
+  "Custom rendering for date cells": {
+    "Translated": "日期单元格的自定义呈现"
+  },
+  "Custom rendering for month cells": {
+    "Translated": "月份单元格的自定义渲染"
+  },
+  "Date used for \"Today\"": {
+    "Translated": "用于“今天”的日期"
+  },
+  "If picker is a range picker or not": {
+    "Translated": "选择器是否是范围选择器"
+  },
+  "Get value of the picker": {
+    "Translated": "获取选择器的值"
+  },
+  "Close the popover": {
+    "Translated": "关闭弹出框"
+  },
+  "Add focus to picker": {
+    "Translated": "将焦点添加到选择器"
+  },
+  "Remove focus from picker": {
+    "Translated": "从选择器中移除焦点"
+  },
+  "Get index of picker which is currently focused": {
+    "Translated": "获取当前聚焦的选择器的索引"
+  },
+  "Callback executed when range selected changes": {
+    "Translated": "范围选择改变时执行的回调"
+  },
+  "Get value by picker index": {
+    "Translated": "通过选择器索引获取值"
+  },
+  "Whether to display the border": {
+    "Translated": "是否显示边框"
+  },
+  "Layout - Horizontal or Vertical": {
+    "Translated": "布局 - 水平或垂直"
+  },
+  "Size of the list": {
+    "Translated": "列表的大小"
+  },
+  "Title shown at the top of the element": {
+    "Translated": "标题显示在元素的顶部"
+  },
+  "Title content shown at the top of the element. Takes priority over <code>AntDesign.Descriptions.Title</code>": {
+    "Translated": "元素顶部显示的标题内容。优先于 <code>AntDesign.Descriptions.Title</code>"
+  },
+  "Content for the element. Typically contains <code>DescriptionsItem</code> elements": {
+    "Translated": "元素的内容。通常包含 <code>DescriptionsItem</code> 元素"
+  },
+  "Title for the item": {
+    "Translated": "项目的标题"
+  },
+  "Title content for the item. Takes priority over <code>AntDesign.DescriptionsItem.Title</code>": {
+    "Translated": "项目的标题内容。优先于 <code>AntDesign.DescriptionsItem.Title</code>"
+  },
+  "Span of the item": {
+    "Translated": "项目的跨度"
+  },
+  "Content for the item": {
+    "Translated": "项目的内容"
+  },
+  "Content to show inside the divider": {
+    "Translated": "分隔线内显示的内容"
+  },
+  "Text to show inside the divider": {
+    "Translated": "要在分隔线内显示的文本"
+  },
+  "When false, the text will not be a header style. When true it will be header style.": {
+    "Translated": "如果为 false，文本将不是标题样式。当为真时，它将是标题样式。"
+  },
+  "Whether to style the line as dashed or not.": {
+    "Translated": "是否将线条样式设置为虚线。"
+  },
+  "Whether to show mask or not.": {
+    "Translated": "是否显示遮罩。"
+  },
+  "The title for Drawer.": {
+    "Translated": "抽屉的标题。"
+  },
+  "The placement of the Drawer, option could be left, top, right, bottom": {
+    "Translated": "Drawer的位置，选项可以是left, top, right, bottom"
+  },
+  "Body style for modal body element. Such as height, padding etc.": {
+    "Translated": "模态主体元素的主体样式。比如高度，填充等。"
+  },
+  "Header style for modal header element. Such as height, padding etc.": {
+    "Translated": "模式标题元素的标题样式。比如高度，填充等。"
+  },
+  "The class name of the container of the Drawer dialog.": {
+    "Translated": "抽屉对话框容器的类名。"
+  },
+  "The z-index of the Drawer.": {
+    "Translated": "抽屉的 z-index。"
+  },
+  "Whether the Drawer dialog is visible or not.": {
+    "Translated": "抽屉对话框是否可见。"
+  },
+  "Specify a callback that will be called before drawer displayed": {
+    "Translated": "指定将在抽屉显示之前调用的回调"
+  },
+  "Specify a callback that will be called when a user clicks mask, close button or Cancel button.": {
+    "Translated": "指定当用户单击遮罩、关闭按钮或取消按钮时将调用的回调。"
+  },
+  "Create and open a simple drawer without result": {
+    "Translated": "创建并打开一个没有结果的简单抽屉"
+  },
+  "Create and open a drawer with the template": {
+    "Translated": "使用模板创建并打开抽屉"
+  },
+  "Update a drawer": {
+    "Translated": "更新抽屉"
+  },
+  "Create and open a drawer": {
+    "Translated": "创建并打开抽屉"
+  },
+  "The drawer body content.": {
+    "Translated": "抽屉正文内容。"
+  },
+  "The placement of the Drawer - Possible values: \"left\", \"right\", \"top\", \"bottom\"": {
+    "Translated": "抽屉的位置 - 可能的值：“left”、“right”、“top”、“bottom”"
+  },
+  "Body style for Drawer body element. Such as height, padding etc.": {
+    "Translated": "抽屉主体元素的主体样式。比如高度，填充等。"
+  },
+  "Header style for Drawer header element. Such as height, padding etc.": {
+    "Translated": "抽屉标题元素的标题样式。比如高度，填充等。"
+  },
+  "Width of the Drawer dialog.": {
+    "Translated": "抽屉对话框的宽度。"
+  },
+  "If the drawer is visible or not": {
+    "Translated": "抽屉是否可见"
+  },
+  "close drawer": {
+    "Translated": "关闭抽屉"
+  },
+  "Open drawer": {
+    "Translated": "打开抽屉"
+  },
+  "update drawer config which Visible=true": {
+    "Translated": "更新 Visible=true 的抽屉配置"
+  },
+  "update drawer config with a new options": {
+    "Translated": "使用新选项更新抽屉配置"
+  },
+  "Whether the dropdown arrow should be visible.": {
+    "Translated": "下拉箭头是否可见。"
+  },
+  "Whether the dropdown arrow should point at center": {
+    "Translated": "下拉箭头是否应指向中心"
+  },
+  "Fully customizable button.": {
+    "Translated": "完全可定制的按钮。"
+  },
+  "Set the danger status of button": {
+    "Translated": "设置按钮的危险状态"
+  },
+  "Used in situations with complex background, home pages usually.": {
+    "Translated": "用于背景复杂的场合，一般用于首页。"
+  },
+  "Icon that will be rendered in the right button.": {
+    "Translated": "将在右侧按钮中呈现的图标。"
+  },
+  "Indicates if loading icon is going to be included. If set to true, then dropdown will not be active.": {
+    "Translated": "指示是否要包含加载图标。如果设置为 true，则下拉列表将不会处于活动状态。"
+  },
+  "Button size.": {
+    "Translated": "按钮大小。"
+  },
+  "Style for the wrapper of the image. Always used regardless of image type.": {
+    "Translated": "图像包装的样式。无论图像类型如何，始终使用。"
+  },
+  "Use small variant of Empty": {
+    "Translated": "使用 Empty 的小变体"
+  },
+  "Use simple variant of Empty. Changes image as well.": {
+    "Translated": "使用 Empty 的简单变体。也改变图像。"
+  },
+  "Content displayed after the empty view": {
+    "Translated": "空视图后显示的内容"
+  },
+  "Description for the view": {
+    "Translated": "视图说明"
+  },
+  "Description content for the view. Takes priority over <code>AntDesign.Empty.Description</code>": {
+    "Translated": "视图的描述内容。优先于 <code>AntDesign.Empty.Description</code>"
+  },
+  "Image URL for view. Takes priority over <code>AntDesign.Empty.Simple</code>": {
+    "Translated": "用于查看的图像 URL。优先于 <code>AntDesign.Empty.Simple</code>"
+  },
+  "Image content for empty view. Takes priority over <code>AntDesign.Empty.Image</code> and <code>AntDesign.Empty.Simple</code>": {
+    "Translated": "空视图的图像内容。优先于 <code>AntDesign.Empty.Image</code> 和 <code>AntDesign.Empty.Simple</code>"
+  },
+  "Change how required/optional field labels are displayed on the form. <ul><li>Required - Will mark required fields</li><li>Optional - Will mark optional fields</li><li>None - Will mark no fields, regardless of required/optional</li></ul>": {
+    "Translated": "更改必填/可选字段标签在表单上的显示方式。 <ul><li>Required - 将标记必填字段</li><li>Optional - 将标记可选字段</li><li>None - 将不标记任何字段，无论是必填还是可选</li></ UL>"
+  },
+  "Layout of form items in the form": {
+    "Translated": "表单中表单项的布局"
+  },
+  "Content of the form. Typically contains different form inputs and layout elements.": {
+    "Translated": "表格的内容。通常包含不同的表单输入和布局元素。"
+  },
+  "Control the layout of the label. Commonly used to set widths for different screen sizes.": {
+    "Translated": "控制标签的布局。通常用于为不同的屏幕尺寸设置宽度。"
+  },
+  "Align the label to the left or right": {
+    "Translated": "将标签向左或向右对齐"
+  },
+  "Gets/sets the <code>Span</code> property on <code>AntDesign.Form`1.LabelCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.Form`1.LabelCol</code> 的 <code>Span</code> 属性。"
+  },
+  "Gets/sets the <code>Offset</code> property on <code>AntDesign.Form`1.LabelCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.Form`1.LabelCol</code> 的 <code>Offset</code> 属性。"
+  },
+  "Gets/sets the <code>Span</code> property on <code>AntDesign.Form`1.WrapperCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.Form`1.WrapperCol</code> 的 <code>Span</code> 属性。"
+  },
+  "Gets/sets the <code>Offset</code> property on <code>AntDesign.Form`1.WrapperColOffset</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.Form`1.WrapperColOffset</code> 的 <code>Offset</code> 属性。"
+  },
+  "The size of the ant components inside the form": {
+    "Translated": "表单内ant组件的大小"
+  },
+  "The model to bind the form inputs to": {
+    "Translated": "将表单输入绑定到的模型"
+  },
+  "If the form is loading or not": {
+    "Translated": "表单是否正在加载"
+  },
+  "Callback executed when the form is submitted and PASSES validation.": {
+    "Translated": "提交表单并通过验证时执行的回调。"
+  },
+  "Callback executed when the form is submitted and FAILS validation.": {
+    "Translated": "提交表单且验证失败时执行的回调。"
+  },
+  "Callback executed when a field inside the form changes": {
+    "Translated": "当表单中的字段更改时执行的回调"
+  },
+  "Callback executed when validation is requested": {
+    "Translated": "请求验证时执行的回调"
+  },
+  "Callback executed when the validation changes": {
+    "Translated": "验证更改时执行的回调"
+  },
+  "Validator to use in the form. Used when <code>AntDesign.Form`1.ValidateMode</code> is <code>FormValidateMode.Default</code> or <code>FormValidateMode.Complex</code>": {
+    "Translated": "在表单中使用的验证器。当 <code>AntDesign.Form`1.ValidateMode</code> 为 <code>FormValidateMode.Default</code> 或 <code>FormValidateMode.Complex</code> 时使用"
+  },
+  "Enable validation when component values change": {
+    "Translated": "组件值更改时启用验证"
+  },
+  "Which mode of validation the form should use": {
+    "Translated": "表单应使用哪种验证模式"
+  },
+  "Reset all the values in the form": {
+    "Translated": "重置表单中的所有值"
+  },
+  "Submit the form. Will trigger validation and either <code>AntDesign.Form`1.OnFinish</code> or <code>AntDesign.Form`1.OnFinishFailed</code>.": {
+    "Translated": "提交表格。将触发验证和 <code>AntDesign.Form`1.OnFinish</code> 或 <code>AntDesign.Form`1.OnFinishFailed</code>。"
+  },
+  "Reset validation": {
+    "Translated": "重置验证"
+  },
+  "Validation will come from rules on FormItems in the form": {
+    "Translated": "验证将来自表单中 FormItems 的规则"
+  },
+  "Use both Default mode and Rules mode": {
+    "Translated": "同时使用默认模式和规则模式"
+  },
+  "Content for the form item. Typically will contain one of the input elements": {
+    "Translated": "表单项的内容。通常将包含输入元素之一"
+  },
+  "Custom label for the item. If neither <code>AntDesign.FormItem.Label</code> or <code>AntDesign.FormItem.LabelTemplate</code> are provided, the DisplayName attribute value or field name will be used (in that order).": {
+    "Translated": "项目的自定义标签。如果未提供 <code>AntDesign.FormItem.Label</code> 或 <code>AntDesign.FormItem.LabelTemplate</code>，则将使用 DisplayName 属性值或字段名称（按此顺序）。"
+  },
+  "Custom label content for the item. Takes priority over <code>AntDesign.FormItem.Label</code>. If neither <code>AntDesign.FormItem.Label</code> or <code>AntDesign.FormItem.LabelTemplate</code> are provided, the DisplayName attribute value or field name will be used (in that order).": {
+    "Translated": "项目的自定义标签内容。优先于 <code>AntDesign.FormItem.Label</code>。如果未提供 <code>AntDesign.FormItem.Label</code> 或 <code>AntDesign.FormItem.LabelTemplate</code>，则将使用 DisplayName 属性值或字段名称（按此顺序）。"
+  },
+  "Gets/sets the <code>Span</code> property on <code>AntDesign.FormItem.LabelCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.FormItem.LabelCol</code> 的 <code>Span</code> 属性。"
+  },
+  "Gets/sets the <code>Offset</code> property on <code>AntDesign.FormItem.LabelCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.FormItem.LabelCol</code> 的 <code>Offset</code> 属性。"
+  },
+  "Gets/sets the <code>Span</code> property on <code>AntDesign.FormItem.WrapperCol</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.FormItem.WrapperCol</code> 的 <code>Span</code> 属性。"
+  },
+  "Gets/sets the <code>Offset</code> property on <code>AntDesign.FormItem.WrapperColOffset</code>.": {
+    "Translated": "获取/设置 <code>AntDesign.FormItem.WrapperColOffset</code> 上的 <code>Offset</code> 属性。"
+  },
+  "No style when true, it is used as a pure field control": {
+    "Translated": "true时无样式，用作纯字段控件"
+  },
+  "Mark this item as required for validation purposes": {
+    "Translated": "将此项目标记为验证所需"
+  },
+  "Style that will only be applied to label element. Will not be applied if LabelTemplate is set.": {
+    "Translated": "仅应用于标签元素的样式。如果设置了 LabelTemplate，则不会应用。"
+  },
+  "Validation rules to apply to this item": {
+    "Translated": "应用于此项目的验证规则"
+  },
+  "Used in conjunction with <code>AntDesign.FormItem.ValidateStatus</code> to display the verification status icon. It is recommended to use it only with the Input component": {
+    "Translated": "与<code>AntDesign.FormItem.ValidateStatus</code> 配合使用，显示验证状态图标。建议仅与 Input 组件一起使用"
+  },
+  "Validation status, if not set, it will be automatically generated according to validation rules": {
+    "Translated": "验证状态，不设置则根据验证规则自动生成"
+  },
+  "Prompt information": {
+    "Translated": "提示信息"
+  },
+  "Validate the length. Valid <code>AntDesign.FormValidationRule.Type</code>s: String, Number, or Array.": {
+    "Translated": "验证长度。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。"
+  },
+  "Validate length is greater than or equal to this number. Valid <code>AntDesign.FormValidationRule.Type</code>s: String, Number or Array.": {
+    "Translated": "验证长度是否大于或等于此数字。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。"
+  },
+  "Validate length is less than or equal to this number. Valid <code>AntDesign.FormValidationRule.Type</code>s: String, Number, or Array.": {
+    "Translated": "验证长度是否小于或等于此数字。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。"
+  },
+  "Make a field required": {
+    "Translated": "填写必填字段"
+  },
+  "Validate the value passes a regular expression pattern": {
+    "Translated": "验证值是否传递正则表达式模式"
+  },
+  "Custom error message. Will be auto generated if not provided.": {
+    "Translated": "自定义错误信息。如果没有提供，将自动生成。"
+  },
+  "Validate rule for all array elements. Valid <code>AntDesign.FormValidationRule.Type</code>s: Array. (<code>FormItem</code> not supported now)": {
+    "Translated": "验证所有数组元素的规则。有效的 <code>AntDesign.FormValidationRule.Type</code>：数组。 （现在不支持 <code>FormItem</code>）"
+  },
+  "Whether the value is in specified values": {
+    "Translated": "该值是否在指定值内"
+  },
+  "Validate rule for child elements. Valid <code>AntDesign.FormValidationRule.Type</code>s: Array, Object (<code>FormItem</code> not supported now)": {
+    "Translated": "验证子元素的规则。有效的 <code>AntDesign.FormValidationRule.Type</code>：数组、对象（现在不支持 <code>FormItem</code>）"
+  },
+  "Custom validation function": {
+    "Translated": "自定义验证函数"
+  },
+  "Transformation function called before validation executes. The return value will have the validation ran against it.": {
+    "Translated": "在执行验证之前调用的转换函数。返回值将对其运行验证。"
+  },
+  "Type of form field. See <code>FormFieldType</code> for all possible values.": {
+    "Translated": "表单域的类型。有关所有可能的值，请参阅 <code>FormFieldType</code>。"
+  },
+  "Default generic validation error message": {
+    "Translated": "默认通用验证错误消息"
+  },
+  "Default validation message for the Required rule": {
+    "Translated": "Required 规则的默认验证消息"
+  },
+  "Messages for string type": {
+    "Translated": "字符串类型的消息"
+  },
+  "Messages for array type": {
+    "Translated": "数组类型的消息"
+  },
+  "Messages for the Pattern validation rule": {
+    "Translated": "模式验证规则的消息"
+  },
+  "Content of the row, generally contains <code>Col</code> elements.": {
+    "Translated": "行的内容，一般包含<code>Col</code>元素。"
+  },
+  "Callback executed when a screen size breakpoint is triggered": {
+    "Translated": "触发屏幕尺寸断点时执行的回调"
+  },
+  "Default screen size breakpoint. Used to set gutter during pre-rendering": {
+    "Translated": "默认屏幕尺寸断点。用于在预渲染期间设置装订线"
+  },
+  "Content of column": {
+    "Translated": "专栏内容"
+  },
+  "Use flex mode or not. Will not use flex mode if null.": {
+    "Translated": "是否使用弹性模式。如果为 null，则不会使用 flex 模式。"
+  },
+  "Width of Col": {
+    "Translated": "柱宽"
+  },
+  "Order of Col, used in flex mode": {
+    "Translated": "Col的顺序，用于flex模式"
+  },
+  "The number of Cols to offset Col from the left": {
+    "Translated": "从左侧偏移 Col 的 Cols 数"
+  },
+  "The number of Cols to push the Col to the right": {
+    "Translated": "将 Col 向右推的 Cols 数量"
+  },
+  "The number of Cols to pull the Col to the left": {
+    "Translated": "将 Col 向左拉的 Cols 数量"
+  },
+  "Alternative text for the icon": {
+    "Translated": "图标的替代文本"
+  },
+  "Rotate icon with animation": {
+    "Translated": "旋转带有动画的图标"
+  },
+  "Icon name to show": {
+    "Translated": "要显示的图标名称"
+  },
+  "Specify the primary color when using the TwoTone theme. Other themes ignore this parameter.": {
+    "Translated": "使用 TwoTone 主题时指定主色。其他主题忽略此参数。"
+  },
+  "Width of the icon": {
+    "Translated": "图标的宽度"
+  },
+  "Height of the icon": {
+    "Translated": "图标的高度"
+  },
+  "Tabindex for the wrapping span": {
+    "Translated": "包装范围的 Tabindex"
+  },
+  "Stop propagation of the click event on the icon": {
+    "Translated": "停止传播图标上的点击事件"
+  },
+  "OnClick event for the icon": {
+    "Translated": "图标的 OnClick 事件"
+  },
+  "The component to render as a custom icon": {
+    "Translated": "呈现为自定义图标的组件"
+  },
+  "Alternative text for image": {
+    "Translated": "图片的替代文字"
+  },
+  "Fallback if image fails to load": {
+    "Translated": "如果图像无法加载则回退"
+  },
+  "Height of image": {
+    "Translated": "图片高度"
+  },
+  "Width of image": {
+    "Translated": "图片宽度"
+  },
+  "Loading placeholder": {
+    "Translated": "加载占位符"
+  },
+  "Enable or disable preview functionality": {
+    "Translated": "启用或禁用预览功能"
+  },
+  "If the preview is visible or not": {
+    "Translated": "预览是否可见"
+  },
+  "Image source": {
+    "Translated": "图片来源"
+  },
+  "Preview image source": {
+    "Translated": "预览图像源"
+  },
+  "Callback executed when <code>AntDesign.Image.PreviewVisible</code> changes": {
+    "Translated": "<code>AntDesign.Image.PreviewVisible</code> 变化时执行的回调"
+  },
+  "Callback executed on image click": {
+    "Translated": "图片点击回调"
+  },
+  "Locale data for component": {
+    "Translated": "组件的语言环境数据"
+  },
+  "Content for group. Typically contains <a href=\"/en-US/components/image\"><code>Image</code></a> elements.": {
+    "Translated": "组的内容。通常包含 <a href=\"/en-US/components/image\"><code>Image</code></a> 元素。"
+  },
+  "Callback executed when <code>AntDesign.ImagePreviewGroup.PreviewVisible</code> changes": {
+    "Translated": "<code>AntDesign.ImagePreviewGroup.PreviewVisible</code> 变化时执行的回调"
+  },
+  "Number of decimal places to use for number and display": {
+    "Translated": "用于数字和显示的小数位数"
+  },
+  "Formatter from number to string for displaying": {
+    "Translated": "用于显示的从数字到字符串的格式化程序"
+  },
+  "Parser to extract number from the formatter": {
+    "Translated": "解析器从格式化程序中提取数字"
+  },
+  "The number to which the current value is increased or decreased with the input arrows. It can be an integer or decimal.": {
+    "Translated": "使用输入箭头将当前值增加或减少到的数字。它可以是整数或小数。"
+  },
+  "Initial value": {
+    "Translated": "初始值"
+  },
+  "Max alloable number": {
+    "Translated": "最大允许数量"
+  },
+  "Min allowable number": {
+    "Translated": "最小允许数量"
+  },
+  "Disable the input or not": {
+    "Translated": "是否禁用输入"
+  },
+  "Callback executed when the input value changes": {
+    "Translated": "输入值改变时执行的回调"
+  },
+  "Callback executed when the input gains focus": {
+    "Translated": "输入获得焦点时执行的回调"
+  },
+  "Placeholder value": {
+    "Translated": "占位符值"
+  },
+  "The label text displayed before (on the left side of) the input field.": {
+    "Translated": "在输入字段之前（左侧）显示的标签文本。"
+  },
+  "The label text displayed after (on the right side of) the input field.": {
+    "Translated": "输入字段后（右侧）显示的标签文本。"
+  },
+  "Allow to remove input content with clear icon": {
+    "Translated": "允许删除带有清晰图标的输入内容"
+  },
+  "Controls the autocomplete attribute of the input HTML element. Default = true": {
+    "Translated": "控制输入​​ HTML 元素的自动完成属性。默认值 = 真"
+  },
+  "Whether has border style": {
+    "Translated": "是否有边框样式"
+  },
+  "Whether to change value on input": {
+    "Translated": "是否改变输入值"
+  },
+  "The initial input content": {
+    "Translated": "初始输入内容"
+  },
+  "Whether the input is disabled.": {
+    "Translated": "输入是否被禁用。"
+  },
+  "Css class that will be added to input element class as the last class entry.": {
+    "Translated": "将作为最后一个类条目添加到输入元素类的 Css 类。"
+  },
+  "Max length": {
+    "Translated": "最长长度"
+  },
+  "Callback when input looses focus": {
+    "Translated": "输入失去焦点时回调"
+  },
+  "Callback when the content changes": {
+    "Translated": "内容改变时回调"
+  },
+  "Callback when input receives focus": {
+    "Translated": "输入获得焦点时回调"
+  },
+  "Callback when value is inputed": {
+    "Translated": "输入值时回调"
+  },
+  "Callback when a key is pressed": {
+    "Translated": "按键按下时回调"
+  },
+  "Callback when a key is released": {
+    "Translated": "松开按键时的回调"
+  },
+  "Callback when a mouse button is released": {
+    "Translated": "释放鼠标按钮时的回调"
+  },
+  "The callback function that is triggered when Enter key is pressed": {
+    "Translated": "按下回车键时触发的回调函数"
+  },
+  "Provide prompt information that describes the expected value of the input field": {
+    "Translated": "提供描述输入字段预期值的提示信息"
+  },
+  "The prefix icon for the Input.": {
+    "Translated": "输入的前缀图标。"
+  },
+  "When present, it specifies that an input field is read-only.": {
+    "Translated": "如果存在，它指定输入字段是只读的。"
+  },
+  "Controls onclick and blur event propagation.": {
+    "Translated": "控制 onclick 和 blur 事件传播。"
+  },
+  "The suffix icon for the Input.": {
+    "Translated": "输入的后缀图标。"
+  },
+  "The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)": {
+    "Translated": "输入的类型，参见：MDN（使用`Input.TextArea`代替type=`textarea`）"
+  },
+  "Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix or has paramter set <code>AntDesign.Input`1.AllowClear</code> or for components: <code>InputPassword</code> and <code>Search</code>. In these cases, html span elements is used to wrap the html input element. <code>AntDesign.Input`1.WrapperStyle</code> is used on the span element.": {
+    "Translated": "设置包装器的 CSS 样式。当组件具有可见时使用：Prefix/Suffix 或具有参数设置 <code>AntDesign.Input`1.AllowClear</code> 或用于组件：<code>InputPassword</code> 和 <code>Search</code>。在这些情况下，html span 元素用于包装 html input 元素。 <code>AntDesign.Input`1.WrapperStyle</code> 用在 span 元素上。"
+  },
+  "Focus behavior for input component with optional behaviors.": {
+    "Translated": "具有可选行为的输入组件的焦点行为。"
+  },
+  "Removes focus from input element.": {
+    "Translated": "从输入元素中移除焦点。"
+  },
+  "Will adjust (grow or shrink) the <code>TextArea</code> according to content. Can work in connection with <code>AntDesign.TextArea.MaxRows</code> and <code>AntDesign.TextArea.MinRows</code>. Sets resize attribute of the textarea HTML element to: none.": {
+    "Translated": "将根据内容调整（增大或缩小）<code>TextArea</code>。可以与 <code>AntDesign.TextArea.MaxRows</code> 和 <code>AntDesign.TextArea.MinRows</code> 结合使用。将 textarea HTML 元素的调整大小属性设置为：无。"
+  },
+  "When true, value will be set to empty string. When false, value will be set to <code>null</code> when content is empty or whitespace.": {
+    "Translated": "当为真时，值将被设置为空字符串。如果为 false，当内容为空或空白时，值将设置为 <code>null</code>。"
+  },
+  "Allow growing, but stop when visible rows = MaxRows (will not grow further).": {
+    "Translated": "允许增长，但当可见行数 = MaxRows 时停止（不会进一步增长）。"
+  },
+  "Allow shrinking, but stop when visible rows = MinRows (will not shrink further).": {
+    "Translated": "允许收缩，但当可见行数 = MinRows 时停止（不会进一步收缩）。"
+  },
+  "Sets the height of the TextArea expressed in number of rows.": {
+    "Translated": "设置以行数表示的 TextArea 的高度。"
+  },
+  "Callback executed when the size changes": {
+    "Translated": "尺寸改变时执行的回调"
+  },
+  "Search box with loading": {
+    "Translated": "正在加载的搜索框"
+  },
+  "Callback executed when you click on the search-icon, the clear-icon or press the Enter key": {
+    "Translated": "单击搜索图标、清除图标或按回车键时执行的回调"
+  },
+  "Content wrapped by InputGroup.": {
+    "Translated": "由 InputGroup 包装的内容。"
+  },
+  "Whether to use compact style or not": {
+    "Translated": "是否使用紧凑样式"
+  },
+  "The size of InputGroup specifies the size of the included Input fields. Available: large default small": {
+    "Translated": "InputGroup 的大小指定了包含的输入字段的大小。可用：大默认小"
+  },
+  "Custom icon render": {
+    "Translated": "自定义图标渲染"
+  },
+  "Whether to show password or not": {
+    "Translated": "是否显示密码"
+  },
+  "Whether to show password visibility toggle button or not": {
+    "Translated": "是否显示密码可见性切换按钮"
+  },
+  "Focus behavior for InputPassword component with optional behaviors. Special behavior required for wasm.": {
+    "Translated": "具有可选行为的 InputPassword 组件的焦点行为。 wasm 所需的特殊行为。"
+  },
+  "If sider is collapsible or not": {
+    "Translated": "sider 是否可折叠"
+  },
+  "Content of the sider": {
+    "Translated": "旁白的内容"
+  },
+  "Collapse/expand UI element to allow manually changing.": {
+    "Translated": "折叠/展开 UI 元素以允许手动更改。"
+  },
+  "Remove UI trigger for collapse/expanding manually": {
+    "Translated": "删除用于手动折叠/展开的 UI 触发器"
+  },
+  "Breakpoint at which sider will collapse by default": {
+    "Translated": "默认情况下 side 将折叠的断点"
+  },
+  "Color theme": {
+    "Translated": "颜色主题"
+  },
+  "Width of sider when expanded, in pixels": {
+    "Translated": "展开时的侧边宽度，以像素为单位"
+  },
+  "Width of sider when collapsed, in pixels": {
+    "Translated": "折叠时侧边的宽度，以像素为单位"
+  },
+  "If sider is collapsed or not": {
+    "Translated": "sider 是否折叠"
+  },
+  "Callback executed when sider is changes from open to collapsed, regardless of what caused it": {
+    "Translated": "当 sider 从打开变为折叠时执行的回调，无论是什么原因造成的"
+  },
+  "Callback executed when window size changes the breakpoint": {
+    "Translated": "窗口大小改变断点时执行的回调"
+  },
+  "List of items to show in list": {
+    "Translated": "要在列表中显示的项目列表"
+  },
+  "Put a border on the list": {
+    "Translated": "在列表上添加边框"
+  },
+  "Header content for the list": {
+    "Translated": "列表的标题内容"
+  },
+  "Footer content for the list": {
+    "Translated": "列表的页脚内容"
+  },
+  "Content for the end of list items for diplaying a load more": {
+    "Translated": "用于显示负载的列表项末尾的内容"
+  },
+  "The layout of list, default is horizontal, If a vertical list is desired, set the itemLayout property to vertical": {
+    "Translated": "列表的布局，默认是水平的，如果需要垂直的列表，设置itemLayout属性为vertical"
+  },
+  "Show loading on the list": {
+    "Translated": "在列表中显示加载"
+  },
+  "Toggles rendering of the split under the list item": {
+    "Translated": "切换列表项下拆分的呈现"
+  },
+  "The grid type of list": {
+    "Translated": "列表的网格类型"
+  },
+  "Options for paginating the list": {
+    "Translated": "列表分页选项"
+  },
+  "Content for the list": {
+    "Translated": "列表内容"
+  },
+  "The extra content of list item. If itemLayout is vertical, shows the content on right, otherwise shows content on the far right.": {
+    "Translated": "列表项的额外内容。如果 itemLayout 是垂直的，则显示右侧的内容，否则显示最右侧的内容。"
+  },
+  "The actions content of list item. If itemLayout is vertical, shows the content on bottom, otherwise shows content on the far right.": {
+    "Translated": "列表项的动作内容。如果 itemLayout 是垂直的，则在底部显示内容，否则在最右侧显示内容。"
+  },
+  "Main content for the item": {
+    "Translated": "项目的主要内容"
+  },
+  "Callback executed when the item is clicked": {
+    "Translated": "单击项目时执行的回调"
+  },
+  "Whether to use flex for item or not. When true, will not use flex.": {
+    "Translated": "是否对 item 使用 flex。当为真时，将不会使用 flex。"
+  },
+  "Title for the list item": {
+    "Translated": "列表项的标题"
+  },
+  "Title content of the list item. Takes priority over <code>AntDesign.ListItemMeta.Title</code>": {
+    "Translated": "列表项的标题内容。优先于 <code>AntDesign.ListItemMeta.Title</code>"
+  },
+  "The avatar of list item": {
+    "Translated": "列表项头像"
+  },
+  "Avatar content of the list item. Takes priority over <code>AntDesign.ListItemMeta.Avatar</code>": {
+    "Translated": "列表项的头像内容。优先于 <code>AntDesign.ListItemMeta.Avatar</code>"
+  },
+  "The description of list item": {
+    "Translated": "列表项说明"
+  },
+  "The description content of list item. Takes priority over <code>AntDesign.ListItemMeta.Description</code>": {
+    "Translated": "列表项的描述内容。优先于 <code>AntDesign.ListItemMeta.Description</code>"
+  },
+  "If pagination is small or not": {
+    "Translated": "分页是否小"
+  },
+  "Whether the pagination is disabled or not": {
+    "Translated": "是否禁用分页"
+  },
+  "Callback executed when the page size changes": {
+    "Translated": "页面大小改变时执行的回调"
+  },
+  "Current page": {
+    "Translated": "当前页面"
+  },
+  "Current pag size": {
+    "Translated": "当前页面大小"
+  },
+  "Options for page size selection": {
+    "Translated": "页面尺寸选择选项"
+  },
+  "Callback executed when jumping to a specific page": {
+    "Translated": "跳转到特定页面时执行的回调"
+  },
+  "Locale used for localization of the component": {
+    "Translated": "用于组件本地化的语言环境"
+  },
+  "spacing between grid": {
+    "Translated": "网格间距"
+  },
+  "column of grid": {
+    "Translated": "网格列"
+  },
+  "Color theme of the menu": {
+    "Translated": "菜单的颜色主题"
+  },
+  "Type of menu": {
+    "Translated": "菜单类型"
+  },
+  "Content of menu. Should contain MenuItem elements.": {
+    "Translated": "菜单内容。应包含 MenuItem 元素。"
+  },
+  "Callback when submenu is clicked": {
+    "Translated": "单击子菜单时的回调"
+  },
+  "Callback when a main menu item is clicked": {
+    "Translated": "单击主菜单项时的回调"
+  },
+  "Accordion mode. When true only one submenu can be open at a time.": {
+    "Translated": "手风琴模式。当为 true 时，一次只能打开一个子菜单。"
+  },
+  "Allows selecting menu items. When it is false the menu item is not selected after OnClick.": {
+    "Translated": "允许选择菜单项。当它为 false 时，在 OnClick 之后不选择菜单项。"
+  },
+  "Close dropdown when clicking an item": {
+    "Translated": "单击项目时关闭下拉菜单"
+  },
+  "Array with the keys of currently opened sub-menus": {
+    "Translated": "包含当前打开的子菜单的键的数组"
+  },
+  "Callback when the open sub menus change. Passed the array of open keys.": {
+    "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
+  },
+  "Array with the keys of currently selected menu items": {
+    "Translated": "包含当前选定菜单项的键的数组"
+  },
+  "Callback when the selected items change. Passed array of open keys.": {
+    "Translated": "所选项目更改时回调。传递的打开键数组。"
+  },
+  "Display title": {
+    "Translated": "显示标题"
+  },
+  "Unique ID of the menu item": {
+    "Translated": "菜单项的唯一 ID"
+  },
+  "Whether menu item is disabled": {
+    "Translated": "菜单项是否被禁用"
+  },
+  "Callback for when item is clicked": {
+    "Translated": "单击项目时的回调"
+  },
+  "Href route": {
+    "Translated": "参考路线"
+  },
+  "Modifies the URL matching behavior for a NavLink": {
+    "Translated": "修改 NavLink 的 URL 匹配行为"
+  },
+  "Title of the menu item": {
+    "Translated": "菜单项的标题"
+  },
+  "Icon of the menu item": {
+    "Translated": "菜单项的图标"
+  },
+  "Custom icon template, when Icon and IconTemplate are set at the same time, IconTemplate is preferred": {
+    "Translated": "自定义图标模板，当同时设置Icon和IconTemplate时，优先使用IconTemplate"
+  },
+  "Menu placement": {
+    "Translated": "菜单放置"
+  },
+  "Title": {
+    "Translated": "标题"
+  },
+  "SubMenus or SubMenu items": {
+    "Translated": "子菜单或子菜单项"
+  },
+  "Unique ID of the SubMenu": {
+    "Translated": "子菜单的唯一 ID"
+  },
+  "Whether SubMenu is disabled": {
+    "Translated": "子菜单是否禁用"
+  },
+  "Open state of the SubMenu": {
+    "Translated": "子菜单的打开状态"
+  },
+  "Callback executed when the SubMenu title is clicked": {
+    "Translated": "单击 SubMenu 标题时执行的回调"
+  },
+  "Title of the group": {
+    "Translated": "小组名称"
+  },
+  "SubMenus or MenuItems": {
+    "Translated": "子菜单或菜单项"
+  },
+  "Unique ID": {
+    "Translated": "唯一身份"
+  },
+  "Configure global message options": {
+    "Translated": "配置全局消息选项"
+  },
+  "Show error message": {
+    "Translated": "显示错误信息"
+  },
+  "Show info message": {
+    "Translated": "显示信息消息"
+  },
+  "Show loading message": {
+    "Translated": "显示加载消息"
+  },
+  "Open message with provided configuration": {
+    "Translated": "使用提供的配置打开消息"
+  },
+  "Show success message": {
+    "Translated": "显示成功信息"
+  },
+  "Show warning message": {
+    "Translated": "显示警告信息"
+  },
+  "Content for message": {
+    "Translated": "留言内容"
+  },
+  "Time before auto-dismiss, in seconds": {
+    "Translated": "自动关闭前的时间，以秒为单位"
+  },
+  "Icon for message": {
+    "Translated": "消息图标"
+  },
+  "Unique identifier for component": {
+    "Translated": "组件的唯一标识符"
+  },
+  "Style of message": {
+    "Translated": "留言风格"
+  },
+  "Callback executed on close of message": {
+    "Translated": "在消息关闭时执行的回调"
+  },
+  "Specify a function that will be called when modal is closed": {
+    "Translated": "指定一个将在模式关闭时调用的函数"
+  },
+  "Body style for modal body element. Such as height, padding etc": {
+    "Translated": "模态主体元素的主体样式。比如高度，填充等"
+  },
+  "Text or RenderFragment of the Cancel button, it will override the ModalLocale": {
+    "Translated": "Cancel 按钮的 Text 或 RenderFragment，它将覆盖 ModalLocale"
+  },
+  "centered": {
+    "Translated": "居中"
+  },
+  "Whether a close (x) button is visible on top right of the modal dialog or not": {
+    "Translated": "关闭 (x) 按钮是否在模态对话框的右上角可见"
+  },
+  "Whether the modal dialog box be dragged": {
+    "Translated": "模态对话框是否被拖动"
+  },
+  "Drag and drop only within the Viewport": {
+    "Translated": "仅在视口内拖放"
+  },
+  "closer icon RenderFragment, the default is a \"X\"": {
+    "Translated": "关闭图标RenderFragment，默认是一个“X”"
+  },
+  "Whether to apply loading visual effect for OK button or not": {
+    "Translated": "是否为确定按钮应用加载视觉效果"
+  },
+  "Whether to unmount child components on onClose": {
+    "Translated": "onClose 时是否卸载子组件"
+  },
+  "get or set the modal parent DOM, default is null: which is specifying document.body": {
+    "Translated": "获取或设置模态父 DOM，默认为 null：指定 document.body"
+  },
+  "Whether show mask or not": {
+    "Translated": "是否显示掩码"
+  },
+  "Whether to close the modal dialog when the mask (area outside the modal) is clicked": {
+    "Translated": "单击遮罩（模态之外的区域）时是否关闭模态对话框"
+  },
+  "Text of RenderFragment of the OK button, it will override the ModalLocale": {
+    "Translated": "确定按钮的 RenderFragment 文本，它将覆盖 ModalLocale"
+  },
+  "Button type of the OK button": {
+    "Translated": "确定按钮的按钮类型"
+  },
+  "Whether the modal dialog is visible or not": {
+    "Translated": "模态对话框是否可见"
+  },
+  "The class name of the container of the modal dialog": {
+    "Translated": "模态对话框容器的类名"
+  },
+  "The z-index of the Modal": {
+    "Translated": "模态的 z-index"
+  },
+  "Specify a function that will be called when a user clicks mask, close button on top right or Cancel button": {
+    "Translated": "指定当用户单击蒙版、右上角的关闭按钮或取消按钮时将调用的函数"
+  },
+  "Specify a function that will be called when a user clicks the OK button": {
+    "Translated": "指定当用户单击“确定”按钮时将调用的函数"
+  },
+  "The OK button props": {
+    "Translated": "确定按钮道具"
+  },
+  "The Cancel button props": {
+    "Translated": "取消按钮道具"
+  },
+  "Is RTL": {
+    "Translated": "是RTL"
+  },
+  "Modal Locale": {
+    "Translated": "模态语言环境"
+  },
+  "max modal content body height": {
+    "Translated": "最大模态内容主体高度"
+  },
+  "show modal maximize button": {
+    "Translated": "显示模态最大化按钮"
+  },
+  "The icon of the maximize button when the modal is in normal state": {
+    "Translated": "模态框正常状态下最大化按钮的图标"
+  },
+  "The icon of the maximize button when the modal is maximized": {
+    "Translated": "模态最大化时最大化按钮的图标"
+  },
+  "Maximize the Modal during component initialization, and it will ignore the Maximizable value.": {
+    "Translated": "在组件初始化时最大化 Modal，它会忽略 Maximizable 值。"
+  },
+  "create and open a OK-Cancel Confirm dialog": {
+    "Translated": "创建并打开一个 OK-Cancel Confirm 对话框"
+  },
+  "create and open a OK-Cancel Confirm dialog with info icon": {
+    "Translated": "创建并打开带有信息图标的 OK-Cancel Confirm 对话框"
+  },
+  "create and open a OK-Cancel Confirm dialog with success icon": {
+    "Translated": "创建并打开带有成功图标的 OK-Cancel Confirm 对话框"
+  },
+  "create and open a OK-Cancel Confirm dialog with error icon": {
+    "Translated": "创建并打开带有错误图标的 OK-Cancel Confirm 对话框"
+  },
+  "create and open a OK-Cancel Confirm dialog with Warning icon": {
+    "Translated": "创建并打开带有警告图标的 OK-Cancel Confirm 对话框"
+  },
+  "create and open a OK-Cancel Confirm dialog, and return a bool value which indicates whether the OK button has been clicked": {
+    "Translated": "创建并打开一个 OK-Cancel Confirm 对话框，并返回一个 bool 值，指示是否单击了 OK 按钮"
+  },
+  "create and open a OK-Cancel Confirm dialog with info icon, and return a bool value which indicates whether the OK button has been clicked": {
+    "Translated": "创建并打开带有信息图标的 OK-Cancel Confirm 对话框，并返回一个 bool 值，指示是否单击了 OK 按钮"
+  },
+  "create and open a OK-Cancel Confirm dialog with success icon, and return a bool value which indicates whether the OK button has been clicked": {
+    "Translated": "创建并打开带有成功图标的 OK-Cancel Confirm 对话框，并返回一个 bool 值，指示是否单击了 OK 按钮"
+  },
+  "create and open a OK-Cancel Confirm dialog with error icon, and return a bool value which indicates whether the OK button has been clicked": {
+    "Translated": "创建并打开带有错误图标的 OK-Cancel Confirm 对话框，并返回一个 bool 值，指示是否单击了 OK 按钮"
+  },
+  "create and open a OK-Cancel Confirm dialog with warning icon, and return a bool value which indicates whether the OK button has been clicked": {
+    "Translated": "创建并打开带有警告图标的 OK-Cancel Confirm 对话框，并返回一个 bool 值，指示是否单击了 OK 按钮"
+  },
+  "update Confirm which Visible=true": {
+    "Translated": "更新确认哪个 Visible=true"
+  },
+  "close a Confirm dialog": {
+    "Translated": "关闭确认对话框"
+  },
+  "close the Confirm dialog": {
+    "Translated": "关闭确认对话框"
+  },
+  "close all Confirm dialog": {
+    "Translated": "关闭所有确认对话框"
+  },
+  "Create and open a OK-Cancel Confirm asynchronous": {
+    "Translated": "创建并开启一个OK-Cancel Confirm异步"
+  },
+  "Create and open template Confirm dialog": {
+    "Translated": "创建并打开模板确认对话框"
+  },
+  "Create and open a Modal": {
+    "Translated": "创建并打开模态"
+  },
+  "Create and open a Modal with template": {
+    "Translated": "使用模板创建并打开模态"
+  },
+  "show a confirm dialog like MessageBox of Windows": {
+    "Translated": "显示确认对话框，如 Windows 的 MessageBox"
+  },
+  "Confirm Locale": {
+    "Translated": "确认语言环境"
+  },
+  "the class name of the element of \".ant-modal\"": {
+    "Translated": "“.ant-modal”元素的类名"
+  },
+  "ChildContent": {
+    "Translated": "儿童内容"
+  },
+  "Confirm left top icon": {
+    "Translated": "确认左上角图标"
+  },
+  "set OK button type for the leftmost button: OK or Yes button": {
+    "Translated": "为最左边的按钮设置 OK 按钮类型：OK 或 Yes 按钮"
+  },
+  "set OK button content for the leftmost button: OK or Yes button, it will override the ConfirmLocale": {
+    "Translated": "为最左边的按钮设置 OK 按钮内容：OK 或 Yes 按钮，它将覆盖 ConfirmLocale"
+  },
+  "set Cancel button content for the second on the left button: Cancel or NO button, it will override the ConfirmLocale": {
+    "Translated": "为左侧第二个按钮设置取消按钮内容：取消或否按钮，它将覆盖 ConfirmLocale"
+  },
+  "the leftmost button in LTR layout": {
+    "Translated": "LTR 布局中最左边的按钮"
+  },
+  "The second button on the left is in the LTR layout": {
+    "Translated": "左边第二个按钮是LTR布局"
+  },
+  "the rightmost button in LTR layout": {
+    "Translated": "LTR 布局中最右边的按钮"
+  },
+  "show Cancel button for OK-Cancel Confirm dialog": {
+    "Translated": "显示 OK-Cancel Confirm 对话框的取消按钮"
+  },
+  "class name prefix": {
+    "Translated": "类名前缀"
+  },
+  "modal default footer cancel text": {
+    "Translated": "模态默认页脚取消文本"
+  },
+  "whether center display": {
+    "Translated": "是否中置显示"
+  },
+  "get or set the modal parent DOM": {
+    "Translated": "获取或设置模态父 DOM"
+  },
+  "Text of the OK button": {
+    "Translated": "确定按钮的文本"
+  },
+  "Width of the modal dialog": {
+    "Translated": "模态对话框的宽度"
+  },
+  "Provide default configuration for all notifications": {
+    "Translated": "为所有通知提供默认配置"
+  },
+  "just create a NotificationRef without open it": {
+    "Translated": "只需创建一个 NotificationRef 而不打开它"
+  },
+  "update a existed notification box": {
+    "Translated": "更新现有的通知框"
+  },
+  "Open a notification box": {
+    "Translated": "打开通知框"
+  },
+  "open a notification box with NotificationType.Success style": {
+    "Translated": "打开带有 NotificationType.Success 样式的通知框"
+  },
+  "open a notification box with NotificationType.Error style": {
+    "Translated": "打开一个带有 NotificationType.Error 样式的通知框"
+  },
+  "open a notification box with NotificationType.Info style": {
+    "Translated": "打开一个 NotificationType.Info 样式的通知框"
+  },
+  "open a notification box with NotificationType.Warning style": {
+    "Translated": "打开一个 NotificationType.Warning 样式的通知框"
+  },
+  "Equivalent to Warning method": {
+    "Translated": "相当于警告方法"
+  },
+  "close notification by key": {
+    "Translated": "按键关闭通知"
+  },
+  "destroy all Notification box": {
+    "Translated": "销毁所有通知框"
+  },
+  "open the notification box": {
+    "Translated": "打开通知框"
+  },
+  "After modifying the Config property, update the notification box": {
+    "Translated": "修改Config属性后，更新通知框"
+  },
+  "close the notification box": {
+    "Translated": "关闭通知框"
+  },
+  "Make background transparent": {
+    "Translated": "使背景透明"
+  },
+  "Icon for back button": {
+    "Translated": "后退按钮的图标"
+  },
+  "Back button RenderFragment": {
+    "Translated": "返回按钮 RenderFragment"
+  },
+  "Sub Title": {
+    "Translated": "副标题"
+  },
+  "Callback when clicking back": {
+    "Translated": "点击返回时的回调"
+  },
+  "Content section": {
+    "Translated": "内容部分"
+  },
+  "Footer section": {
+    "Translated": "页脚部分"
+  },
+  "Breadcrumb section": {
+    "Translated": "面包屑部分"
+  },
+  "Avatar section": {
+    "Translated": "头像部分"
+  },
+  "Title section": {
+    "Translated": "标题部分"
+  },
+  "Sub title section": {
+    "Translated": "副标题部分"
+  },
+  "Tags section after title": {
+    "Translated": "标题后的标签部分"
+  },
+  "Operating area, at the end of the line of the title line": {
+    "Translated": "操作区，在标题行的行尾"
+  },
+  "Disable pagination": {
+    "Translated": "禁用分页"
+  },
+  "Current page number": {
+    "Translated": "当前页码"
+  },
+  "Default number of data items per page": {
+    "Translated": "每页的默认数据项数"
+  },
+  "Number of data items per page": {
+    "Translated": "每页数据项数"
+  },
+  "Called when the page number is changed, and it takes the resulting page number and pageSize as its arguments": {
+    "Translated": "当页码改变时调用，它以结果页码和 pageSize 作为参数"
+  },
+  "Whether to hide pager on single page": {
+    "Translated": "单页是否隐藏寻呼机"
+  },
+  "Determine whether to show PageSize select": {
+    "Translated": "判断是否显示 PageSize select"
+  },
+  "Specify the sizeChanger options": {
+    "Translated": "指定 sizeChanger 选项"
+  },
+  "Called when PageSize is changed": {
+    "Translated": "PageSize 改变时调用"
+  },
+  "Determine whether you can jump to pages directly": {
+    "Translated": "判断是否可以直接跳转页面"
+  },
+  "Quick jumper confirm button render fragment": {
+    "Translated": "快速跳线确认按钮渲染片段"
+  },
+  "To display the total number and range": {
+    "Translated": "显示总数和范围"
+  },
+  "Specify the size of Pagination, can be set to small.": {
+    "Translated": "指定Pagination的大小，可以设置为small。"
+  },
+  "(Not implemented) If Size is not specified, Pagination would resize according to the width of the window": {
+    "Translated": "（未实现）如果未指定 Size，Pagination 将根据窗口的宽度调整大小"
+  },
+  "Whether to use simple mode": {
+    "Translated": "是否使用简单模式"
+  },
+  "Localization options": {
+    "Translated": "本地化选项"
+  },
+  "Custom rendering for page item": {
+    "Translated": "页面项目的自定义呈现"
+  },
+  "Show less page items": {
+    "Translated": "显示较少的页面项目"
+  },
+  "Show or hide the next/previous buttons": {
+    "Translated": "显示或隐藏下一个/上一个按钮"
+  },
+  "Language direction": {
+    "Translated": "语言方向"
+  },
+  "Previous button": {
+    "Translated": "上一个按钮"
+  },
+  "Next button": {
+    "Translated": "下一步按钮"
+  },
+  "Jump previous button": {
+    "Translated": "跳转到上一个按钮"
+  },
+  "Jump next icon": {
+    "Translated": "跳到下一个图标"
+  },
+  "Used to determine if the size changer should show using the default logic. Ignored if ShowSizeChanger provided.": {
+    "Translated": "用于确定尺寸变换器是否应使用默认逻辑显示。如果提供了 ShowSizeChanger，则忽略。"
+  },
+  "Any other parameters passed in get splatted onto the container element": {
+    "Translated": "传入的任何其他参数都会被涂抹到容器元素上"
+  },
+  "Title. Takes priority over Title.": {
+    "Translated": "标题。优先于标题。"
+  },
+  "Cancel button text": {
+    "Translated": "取消按钮文字"
+  },
+  "Okay button text": {
+    "Translated": "好的按钮文本"
+  },
+  "Okay button type": {
+    "Translated": "确定按钮类型"
+  },
+  "Properties to pass through to the okay button": {
+    "Translated": "传递给确定按钮的属性"
+  },
+  "Properties to pass through to the cancel button": {
+    "Translated": "传递给取消按钮的属性"
+  },
+  "Icon displayed by text": {
+    "Translated": "文字显示的图标"
+  },
+  "Icon displayed by text. Takes priority over Icon.": {
+    "Translated": "文字显示的图标。优先于图标。"
+  },
+  "Callback executed when clicking cancel button": {
+    "Translated": "单击取消按钮时执行的回调"
+  },
+  "Callback executed when clicking okay button": {
+    "Translated": "单击确定按钮时执行的回调"
+  },
+  "Point the tooltip arrow at the center": {
+    "Translated": "将工具提示箭头指向中心"
+  },
+  "Delay (in seconds) before showing popconfirm when trigger is Hover and mouse enters": {
+    "Translated": "当触发器悬停且鼠标进入时显示 popconfirm 之前的延迟（以秒为单位）"
+  },
+  "Delay (in seconds) before hiding popconfirm when trigger is Hover and mouse leaves": {
+    "Translated": "当触发器悬停且鼠标离开时隐藏 popconfirm 之前的延迟（以秒为单位）"
+  },
+  "Title string of the card": {
+    "Translated": "卡片的标题字符串"
+  },
+  "Title content of the card. Takes priority over <code>AntDesign.Popover.Title</code>": {
+    "Translated": "卡片的标题内容。优先于 <code>AntDesign.Popover.Title</code>"
+  },
+  "Content string of the card": {
+    "Translated": "卡片内容字符串"
+  },
+  "Content of the card. Takes priority over <code>AntDesign.Popover.Content</code>": {
+    "Translated": "名片内容。优先于 <code>AntDesign.Popover.Content</code>"
+  },
+  "Point the arrow at the center of the wrapped element or not": {
+    "Translated": "是否将箭头指向被包裹元素的中心"
+  },
+  "Delay in seconds, before tooltip is shown on mouse enter": {
+    "Translated": "以秒为单位的延迟，在鼠标输入时显示工具提示之前"
+  },
+  "Delay in seconds, before tooltip is hidden on mouse leave": {
+    "Translated": "以秒为单位的延迟，在鼠标离开时隐藏工具提示之前"
+  },
+  "progress size": {
+    "Translated": "进度大小"
+  },
+  "to set the type, options: line circle dashboard": {
+    "Translated": "设置类型，选项：line circle dashboard"
+  },
+  "template function of the content": {
+    "Translated": "内容的模板功能"
+  },
+  "to set the completion percentage": {
+    "Translated": "设置完成百分比"
+  },
+  "whether to display the progress value and the status icon": {
+    "Translated": "是否显示进度值和状态图标"
+  },
+  "to set the status of the Progress, options: success exception normal active(line only)": {
+    "Translated": "设置进度的状态，选项：成功异常正常活动（仅限行）"
+  },
+  "to set the style of the progress linecap": {
+    "Translated": "设置进度线帽的样式"
+  },
+  "segmented success percent": {
+    "Translated": "分段成功百分比"
+  },
+  "color of unfilled part": {
+    "Translated": "未填充部分的颜色"
+  },
+  "to set the width of the progress bar, unit: px to set the width of the circular progress, unit: percentage of the canvas width to set the width of the dashboard progress, unit: percentage of the canvas width": {
+    "Translated": "设置进度条的宽度，单位：px 设置圆形进度的宽度，单位：画布宽度的百分比 设置仪表盘进度的宽度，单位：画布宽度的百分比"
+  },
+  "color of progress bar, render linear-gradient when passing an object color of circular progress, render linear-gradient when passing an object": {
+    "Translated": "进度条的颜色，传递一个对象时渲染线性渐变 循环进度的颜色，传递一个对象时渲染线性渐变"
+  },
+  "the total step count": {
+    "Translated": "总步数"
+  },
+  "to set the canvas width of the circular progress, unit: px to set the canvas width of the dashboard progress, unit: px": {
+    "Translated": "设置圆形进度的画布宽度，单位：px 设置仪表盘进度的画布宽度，单位：px"
+  },
+  "the gap position, options: top bottom left right": {
+    "Translated": "间隙位置，选项：top bottom left right"
+  },
+  "Display label content for the radio": {
+    "Translated": "显示收音机的标签内容"
+  },
+  "Selected value": {
+    "Translated": "选定值"
+  },
+  "Autofocus or not": {
+    "Translated": "是否自动对焦"
+  },
+  "Set to <code>true</code> to style the radio as button group.": {
+    "Translated": "设置为 <code>true</code> 将单选按钮设置为按钮组。"
+  },
+  "Specifies whether the radio is selected": {
+    "Translated": "指定无线电是否被选中"
+  },
+  "Specify if the radio button is checked initially or not": {
+    "Translated": "指定是否最初选中单选按钮"
+  },
+  "Callback executed when the checked state changes": {
+    "Translated": "checked 状态改变时执行的回调"
+  },
+  "Disable the radio buton": {
+    "Translated": "禁用单选按钮"
+  },
+  "Radio elements for the group. Use either this or <code>AntDesign.RadioGroup`1.Options</code>": {
+    "Translated": "该组的单选元素。使用这个或 <code>AntDesign.RadioGroup`1.Options</code>"
+  },
+  "If the group is disabled or not": {
+    "Translated": "该组是否被禁用"
+  },
+  "Button style for the group.": {
+    "Translated": "组的按钮样式。"
+  },
+  "Input name for all the radios in the group": {
+    "Translated": "输入组中所有无线电的名称"
+  },
+  "The default selected value for the group": {
+    "Translated": "组的默认选择值"
+  },
+  "Options to display a radio for in the group. Use either this or <code>AntDesign.RadioGroup`1.ChildContent</code>": {
+    "Translated": "在组中显示无线电的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
+  },
+  "Whether to allow clear or not when clicking again": {
+    "Translated": "再次点击时是否允许清除"
+  },
+  "Whether to allow selection of halves": {
+    "Translated": "是否允许选择对半"
+  },
+  "Whether to disable the selection or not": {
+    "Translated": "是否禁用选择"
+  },
+  "Whether to focus on render or not": {
+    "Translated": "是否专注于渲染"
+  },
+  "Custom character for each rate": {
+    "Translated": "每个费率的自定义字符"
+  },
+  "Number of icons to display for rating": {
+    "Translated": "评级显示的图标数"
+  },
+  "Current value for rating": {
+    "Translated": "评级的当前值"
+  },
+  "Callback executed when the rating changes": {
+    "Translated": "评分变化时执行的回调"
+  },
+  "Default value for when rating is rendered": {
+    "Translated": "呈现评级时的默认值"
+  },
+  "Callback executed when the rate looses focus": {
+    "Translated": "汇率失去焦点时执行的回调"
+  },
+  "Callback executed when the rate gains focus": {
+    "Translated": "当利率获得焦点时执行的回调"
+  },
+  "Sub Title. Takes priority over SubTitle.": {
+    "Translated": "子标题。优先于字幕。"
+  },
+  "Extra content displayed under all other content": {
+    "Translated": "额外内容显示在所有其他内容下方"
+  },
+  "Show icon or not": {
+    "Translated": "是否显示图标"
+  },
+  "Child content. Displayed between title/subtitle and extra.": {
+    "Translated": "儿童内容。显示在标题/副标题和额外内容之间。"
+  },
+  "Default selected value": {
+    "Translated": "默认选择值"
+  },
+  "Disable all segments": {
+    "Translated": "禁用所有段"
+  },
+  "The callback function that is triggered when the state changes": {
+    "Translated": "状态改变时触发的回调函数"
+  },
+  "Options for the segments. Takes priority over <code>AntDesign.Segmented`1.Labels</code>": {
+    "Translated": "段的选项。优先于 <code>AntDesign.Segmented`1.Labels</code>"
+  },
+  "Labels for the segments": {
+    "Translated": "段的标签"
+  },
+  "Size of the UI element": {
+    "Translated": "UI 元素的大小"
+  },
+  "Currently selected value": {
+    "Translated": "当前选择的值"
+  },
+  "Callback executed when the selected segment changes": {
+    "Translated": "选中段发生变化时执行的回调"
+  },
+  "Segments. Takes priority over <code>AntDesign.Segmented`1.Labels</code> and <code>AntDesign.Segmented`1.Options</code>": {
+    "Translated": "段。优先于 <code>AntDesign.Segmented`1.Labels</code> 和 <code>AntDesign.Segmented`1.Options</code>"
+  },
+  "Make the component the width of the parent": {
+    "Translated": "使组件成为父组件的宽度"
+  },
+  "Value of the segment item": {
+    "Translated": "段项目的价值"
+  },
+  "Label for the UI of the segment item": {
+    "Translated": "段项 UI 的标签"
+  },
+  "If the segment is disabled": {
+    "Translated": "如果段被禁用"
+  },
+  "UI content to display in the segment. Takes priority over <code>AntDesign.SegmentedItem`1.Label</code> and <code>AntDesign.SegmentedItem`1.Icon</code>": {
+    "Translated": "要在段中显示的 UI 内容。优先于 <code>AntDesign.SegmentedItem`1.Label</code> 和 <code>AntDesign.SegmentedItem`1.Icon</code>"
+  },
+  "Icon to display next to the label of the segment. Only used when <code>AntDesign.SegmentedItem`1.ChildContent</code> is not provided.": {
+    "Translated": "显示在段标签旁边的图标。仅在未提供 <code>AntDesign.SegmentedItem`1.ChildContent</code> 时使用。"
+  },
+  "The datasource for this component.": {
+    "Translated": "该组件的数据源。"
+  },
+  "EqualityComparer that will be used during DataSource change detection. If no comparer set, default .Net is going to be used.": {
+    "Translated": "将在 DataSource 更改检测期间使用的 EqualityComparer。如果没有设置比较器，将使用默认的 .Net。"
+  },
+  "Activates the first item that is not deactivated.": {
+    "Translated": "激活第一个未停用的项目。"
+  },
+  "The name of the property to be used as a disabled indicator.": {
+    "Translated": "用作禁用指示器的属性的名称。"
+  },
+  "Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property.": {
+    "Translated": "用于提高速度。如果您希望更改标签名称、组名称或禁用指示器，请禁用此属性。"
+  },
+  "Is used to customize the item style.": {
+    "Translated": "用于自定义项目样式。"
+  },
+  "The name of the property to be used for the label.": {
+    "Translated": "用于标签的属性的名称。"
+  },
+  "Is used to customize the label style.": {
+    "Translated": "用于自定义标签样式。"
+  },
+  "Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.": {
+    "Translated": "隐藏标签的占位符。如果与 ResponsiveTag.Responsive 一起使用，请实现您自己的处理逻辑。"
+  },
+  "Specify content to show when no result matches.": {
+    "Translated": "指定在没有结果匹配时显示的内容。"
+  },
+  "Called when blur.": {
+    "Translated": "模糊时调用。"
+  },
+  "Called when custom tag is created.": {
+    "Translated": "创建自定义标记时调用。"
+  },
+  "Called when the datasource object/reference changes. It does not trigger if a value inside the datasource changes.": {
+    "Translated": "当数据源对象/引用更改时调用。如果数据源中的值发生更改，它不会触发。"
+  },
+  "Called when the dropdown visibility changes.": {
+    "Translated": "当下拉列表可见性发生变化时调用。"
+  },
+  "Called when mouse enter.": {
+    "Translated": "鼠标进入时调用。"
+  },
+  "Called when mouse leave.": {
+    "Translated": "鼠标离开时调用。"
+  },
+  "Callback function that is fired when input changed.": {
+    "Translated": "输入更改时触发的回调函数。"
+  },
+  "Whether to show the drop-down arrow": {
+    "Translated": "是否显示下拉箭头"
+  },
+  "Whether show search input in single mode.": {
+    "Translated": "是否在单一模式下显示搜索输入。"
+  },
+  "Define what characters will be treated as token separators for newly created tags. Useful when creating new tags using only keyboard.": {
+    "Translated": "定义哪些字符将被视为新创建标签的标记分隔符。仅使用键盘创建新标签时很有用。"
+  },
+  "Used for the two-way binding.": {
+    "Translated": "用于双向绑定。"
+  },
+  "The name of the property to be used for the value.": {
+    "Translated": "要用于该值的属性的名称。"
+  },
+  "Get or set the selected value.": {
+    "Translated": "获取或设置选定的值。"
+  },
+  "Used when Mode = default - The value is used during initialization and when pressing the Reset button within Forms.": {
+    "Translated": "当 Mode = default 时使用 - 该值在初始化期间和在 Forms 中按下 Reset 按钮时使用。"
+  },
+  "Whether the current search will be cleared on selecting an item.": {
+    "Translated": "选择项目时是否清除当前搜索。"
+  },
+  "Whether the Select component is disabled.": {
+    "Translated": "选择组件是否被禁用。"
+  },
+  "Indicates whether the search function is active or not. Always true for mode tags.": {
+    "Translated": "指示搜索功能是否处于活动状态。对于模式标签始终为真。"
+  },
+  "Controlled open state of dropdown.": {
+    "Translated": "下拉菜单的受控打开状态。"
+  },
+  "Placeholder of select.": {
+    "Translated": "选择的占位符。"
+  },
+  "Called when focus.": {
+    "Translated": "焦点时调用。"
+  },
+  "The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional SortByGroup and SortByLabel.": {
+    "Translated": "用作组指示符的属性的名称。如果设置了该值，条目将按组显示。使用额外的 SortByGroup 和 SortByLabel。"
+  },
+  "Hides the selected items when they are selected.": {
+    "Translated": "选中时隐藏选中的项目。"
+  },
+  "The custom suffix icon.": {
+    "Translated": "自定义后缀图标。"
+  },
+  "The custom prefix icon.": {
+    "Translated": "自定义前缀图标。"
+  },
+  "Called when the user clears the selection.": {
+    "Translated": "当用户清除选择时调用。"
+  },
+  "Called when the selected item changes.": {
+    "Translated": "当所选项目更改时调用。"
+  },
+  "Called when the selected items changes.": {
+    "Translated": "当所选项目更改时调用。"
+  },
+  "Get or set the selected values.": {
+    "Translated": "获取或设置选定的值。"
+  },
+  "Converts custom tag (a string) to TItemValue type.": {
+    "Translated": "将自定义标签（字符串）转换为 TItemValue 类型。"
+  },
+  "Used for rendering select options manually.": {
+    "Translated": "用于手动呈现选择选项。"
+  },
+  "How long (number of characters) a tag will be. Only for Mode = \"multiple\" or Mode = \"tags\"": {
+    "Translated": "标签的长度（字符数）。仅适用于 Mode = \"multiple\" 或 Mode = \"tags\""
+  },
+  "Max tag count to show. responsive will cost render performance.": {
+    "Translated": "要显示的最大标签数。响应式会降低渲染性能。"
+  },
+  "When Clear button is pressed, Value will be set to whatever is set in ValueOnClear": {
+    "Translated": "当按下清除按钮时，值将设置为 ValueOnClear 中设置的值"
+  },
+  "Display active animation or not": {
+    "Translated": "是否显示活动动画"
+  },
+  "Display skeleton when true": {
+    "Translated": "为真时显示骨架"
+  },
+  "Show title placeholder": {
+    "Translated": "显示标题占位符"
+  },
+  "Width of the title placeholder": {
+    "Translated": "标题占位符的宽度"
+  },
+  "Show avatar in placeholder": {
+    "Translated": "在占位符中显示头像"
+  },
+  "Avatar size": {
+    "Translated": "头像大小"
+  },
+  "Avatar shape": {
+    "Translated": "头像造型"
+  },
+  "Show paragraph skeleton": {
+    "Translated": "显示段落骨架"
+  },
+  "Number of rows for paragraph skeleton": {
+    "Translated": "段落骨架的行数"
+  },
+  "Width of paragraph skeleton": {
+    "Translated": "段落骨架的宽度"
+  },
+  "Content to display when skeleton is not active": {
+    "Translated": "骨架未激活时显示的内容"
+  },
+  "If the skeleton is active": {
+    "Translated": "如果骨架处于活动状态"
+  },
+  "Type of the element. Possible values: input, avatar, button": {
+    "Translated": "元素的类型。可能的值：输入、头像、按钮"
+  },
+  "Size of element. Possible values: large, small, default. If type is avatar then an integer can be provided as well.": {
+    "Translated": "元素的大小。可能的值：大、小、默认。如果类型是头像，那么也可以提供一个整数。"
+  },
+  "Shape of the avatar. Not used for input type.": {
+    "Translated": "头像的形状。不用于输入类型。"
+  },
+  "The default value of slider. When <code>AntDesign.Slider`1.Range</code> is false, use number, otherwise, use [number, number]": {
+    "Translated": "滑块的默认值。当<code>AntDesign.Slider`1.Range</code>为false时，使用number，否则使用[number, number]"
+  },
+  "If true, the slider will not be interactable": {
+    "Translated": "如果为真，滑块将不可交互"
+  },
+  "Currently not implemented. Whether the thumb can drag over ticks only": {
+    "Translated": "目前没有实施。拇指是否只能拖过刻度"
+  },
+  "Make effect when <code>AntDesign.Slider`1.Marks</code> not null, true means containment and false means coordinative": {
+    "Translated": "当<code>AntDesign.Slider`1.Marks</code>不为null时生效，true表示包容，false表示协调"
+  },
+  "Tick mark of Slider": {
+    "Translated": "Slider 的刻度线"
+  },
+  "The maximum value the slider can slide to": {
+    "Translated": "滑块可以滑动到的最大值"
+  },
+  "The minimum value the slider can slide to": {
+    "Translated": "滑块可以滑动到的最小值"
+  },
+  "If the slider is a range slider or not. Determined by type of <code>TValue</code>": {
+    "Translated": "滑块是否为范围滑块。由 <code>TValue</code> 类型决定"
+  },
+  "Order and direction of numbers and min/max. <p>When true, Max is on the left and Min is on the right</p><p>When false, Min is on the left and Max is on the right</p>": {
+    "Translated": "数字的顺序和方向以及最小值/最大值。 <p>为true时，Max在左，Min在右</p><p>当为false时，Min在左，Max在右</p>"
+  },
+  "If true, the slider will be vertical. If false, it will be horizontal.": {
+    "Translated": "如果为真，滑块将是垂直的。如果为假，它将是水平的。"
+  },
+  "Callback executed when onmouseup is fired.": {
+    "Translated": "触发 onmouseup 时执行的回调。"
+  },
+  "Whether markers should have tooltips or not": {
+    "Translated": "标记是否应该有工具提示"
+  },
+  "Method to get display value for tooltip. Will pass slider value and get string for display back": {
+    "Translated": "获取工具提示显示值的方法。将传递滑块值并获取用于显示的字符串"
+  },
+  "Set Tooltip display position. See <a href=\"/en-US/components/tooltip\"><code>Tooltip</code></a> for more information": {
+    "Translated": "设置工具提示显示位置。有关详细信息，请参阅<a href=\"/en-US/components/tooltip\"><code>Tooltip</code></a>"
+  },
+  "If true Tooltip will always show": {
+    "Translated": "如果 true 工具提示将始终显示"
+  },
+  "Not currently implemented. The DOM container of the Tooltip": {
+    "Translated": "目前未实施。 Tooltip 的 DOM 容器"
+  },
+  "Number for mark to be on. Must be in the range of the Min and Max of the containing Slider": {
+    "Translated": "要打开的标记的编号。必须在包含 Slider 的 Min 和 Max 范围内"
+  },
+  "Display content for the mark": {
+    "Translated": "标记的显示内容"
+  },
+  "Style for the mark": {
+    "Translated": "标记样式"
+  },
+  "Item flow direction": {
+    "Translated": "物品流向"
+  },
+  "Size of space between items": {
+    "Translated": "项目之间的空间大小"
+  },
+  "Wrap items to multiple lines or not. Ignored when Direction is vertical.": {
+    "Translated": "是否将项目换行到多行。 Direction 为垂直时忽略。"
+  },
+  "Content displayed in the space between items": {
+    "Translated": "在项目之间的空间中显示的内容"
+  },
+  "Content of space - should contain SpaceItem elements": {
+    "Translated": "空间内容 - 应包含 SpaceItem 元素"
+  },
+  "Size of the spinner. Possible values: small, default, large": {
+    "Translated": "微调器的大小。可能的值：小、默认、大"
+  },
+  "Customize description content when Spin has children": {
+    "Translated": "自定义Spin有孩子时的描述内容"
+  },
+  "Specifies a delay in milliseconds for loading state (prevent flush)": {
+    "Translated": "指定加载状态的延迟（以毫秒为单位）（防止刷新）"
+  },
+  "Whether spin is active": {
+    "Translated": "自旋是否激活"
+  },
+  "Class name for the wrapper": {
+    "Translated": "包装器的类名"
+  },
+  "Custom display for the spinning indicator": {
+    "Translated": "旋转指示器的自定义显示"
+  },
+  "Content the spin will indicate loading for": {
+    "Translated": "旋转将指示加载的内容"
+  },
+  "Decimal separator for number formatting": {
+    "Translated": "数字格式的小数分隔符"
+  },
+  "Group separator for number formatting": {
+    "Translated": "数字格式的组分隔符"
+  },
+  "Number of decimal places for rounding": {
+    "Translated": "四舍五入的小数位数"
+  },
+  "Prefix text for before the displayed value": {
+    "Translated": "显示值前的前缀文本"
+  },
+  "Prefix content for before the displayed value": {
+    "Translated": "显示值前的前缀内容"
+  },
+  "Suffix string for after the displayed value": {
+    "Translated": "显示值后的后缀字符串"
+  },
+  "Suffix content for after the displayed value": {
+    "Translated": "显示值后的后缀内容"
+  },
+  "Title string for the value": {
+    "Translated": "值的标题字符串"
+  },
+  "Title content for the value": {
+    "Translated": "值的标题内容"
+  },
+  "Value for displaying": {
+    "Translated": "展示价值"
+  },
+  "Style for the value display": {
+    "Translated": "值显示的样式"
+  },
+  "Format of the time": {
+    "Translated": "时间格式"
+  },
+  "The value of the countdown": {
+    "Translated": "倒计时的价值"
+  },
+  "Callback executed when the countdown runs out": {
+    "Translated": "倒计时结束时执行的回调"
+  },
+  "Interval, in milliseconds, to update the UI on": {
+    "Translated": "更新 UI 的时间间隔（以毫秒为单位）"
+  },
+  "Current step index, zero based": {
+    "Translated": "当前步骤索引，从零开始"
+  },
+  "Percent display for current step": {
+    "Translated": "当前步骤的百分比显示"
+  },
+  "Custom rendering for progress dot. Will also set ShowProgressDot to true if set.": {
+    "Translated": "进度点的自定义渲染。如果设置，还会将 ShowProgressDot 设置为 true。"
+  },
+  "Show progress dot as opposed to the title, description, icon, etc": {
+    "Translated": "显示进度点而不是标题、描述、图标等"
+  },
+  "Direction of the step bar": {
+    "Translated": "步长条的方向"
+  },
+  "Place title and description horizontal or vertical": {
+    "Translated": "水平或垂直放置标题和说明"
+  },
+  "Type of steps. Possible Values: default, navigation": {
+    "Translated": "步骤类型。可能的值：默认、导航"
+  },
+  "Size of steps. Possible Values: default, small": {
+    "Translated": "步骤的大小。可能的值：默认、小"
+  },
+  "Starting step index": {
+    "Translated": "起始步骤索引"
+  },
+  "Status of the current step. Possible Values: wait, process, finish, error": {
+    "Translated": "当前步骤的状态。可能的值：等待、处理、完成、错误"
+  },
+  "Child content should contain Step elements": {
+    "Translated": "子内容应包含 Step 元素"
+  },
+  "Callback executed when step changes. Received the index of the step changing to": {
+    "Translated": "步骤更改时执行的回调。收到更改为的步骤的索引"
+  },
+  "Icon of the step": {
+    "Translated": "步骤的图标"
+  },
+  "To specify the status. It will be automatically set by current of Steps if not configured. Possible Values: wait, process, finish, error": {
+    "Translated": "指定状态。如果未配置，它将由步骤的电流自动设置。可能的值：等待、处理、完成、错误"
+  },
+  "Title of the step": {
+    "Translated": "步骤的标题"
+  },
+  "Subtitle of the step": {
+    "Translated": "步骤的副标题"
+  },
+  "Description of the step": {
+    "Translated": "步骤说明"
+  },
+  "Callback executed when clicking step": {
+    "Translated": "单击步骤时执行的回调"
+  },
+  "Disable click": {
+    "Translated": "禁用点击"
+  },
+  "Whether switch is loading or not. Will display spinner on handle when true.": {
+    "Translated": "开关是否正在加载。为真时将在手柄上显示微调器。"
+  },
+  "String displayed inside switch when checked is true": {
+    "Translated": "选中时开关内显示的字符串为真"
+  },
+  "Content displayed inside switch when checked is true. Takes priority over <code>AntDesign.Switch.CheckedChildren</code>.": {
+    "Translated": "勾选为真时开关内显示的内容。优先于 <code>AntDesign.Switch.CheckedChildren</code>。"
+  },
+  "When true, the status of Switch no longer automatically changes the data based on the click event.": {
+    "Translated": "为true时，Switch的状态不再根据点击事件自动改变数据。"
+  },
+  "Callback executed when the switch is clicked. When used in combination with <code>AntDesign.Switch.Control</code> it allows manually controlling the Switch.": {
+    "Translated": "单击开关时执行的回调。当与 <code>AntDesign.Switch.Control</code> 结合使用时，它允许手动控制 Switch。"
+  },
+  "String displayed inside switch when checked is false.": {
+    "Translated": "选中时在开关内显示的字符串为 false。"
+  },
+  "Content displayed inside switch when checked is false. Takes priority over <code>AntDesign.Switch.UnCheckedChildren</code>.": {
+    "Translated": "勾选时switch内部显示的内容为false。优先于 <code>AntDesign.Switch.UnCheckedChildren</code>。"
+  },
+  "Data to display in table": {
+    "Translated": "要在表格中显示的数据"
+  },
+  "Template for a row": {
+    "Translated": "一行模板"
+  },
+  "Template use for what to display when a row is expanded": {
+    "Translated": "用于展开行时显示内容的模板"
+  },
+  "Initially, whether to expand all rows": {
+    "Translated": "初始，是否展开所有行"
+  },
+  "Function to determine if a specific row is expandable": {
+    "Translated": "确定特定行是否可扩展的函数"
+  },
+  "Children tree items": {
+    "Translated": "儿童树项目"
+  },
+  "Set row attributes": {
+    "Translated": "设置行属性"
+  },
+  "Set header row attributes": {
+    "Translated": "设置标题行属性"
+  },
+  "Is the table loading": {
+    "Translated": "表格是否正在加载"
+  },
+  "Table title text": {
+    "Translated": "表格标题文字"
+  },
+  "Table title content": {
+    "Translated": "表格标题内容"
+  },
+  "Footer text": {
+    "Translated": "页脚文字"
+  },
+  "Footer content": {
+    "Translated": "页脚内容"
+  },
+  "Table size": {
+    "Translated": "桌子尺寸"
+  },
+  "Default copywriting settings, currently including sorting, filtering, and empty data copywriting": {
+    "Translated": "默认文案设置，目前包括排序、过滤、空数据文案"
+  },
+  "Bordered table or not": {
+    "Translated": "有无边框表格"
+  },
+  "Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage": {
+    "Translated": "设置水平滚动，也可以用来指定滚动区域的宽度，可以设置为像素值，百分比"
+  },
+  "Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value": {
+    "Translated": "设置垂直滚动，也可以用来指定滚动区域的高度，可以设置为像素值"
+  },
+  "Scroll bar width": {
+    "Translated": "滚动条宽度"
+  },
+  "When displaying tree data, the width of each level of indentation, in px": {
+    "Translated": "显示树数据时，每一层缩进的宽度，单位px"
+  },
+  "Index of the column where the custom expand icon is located": {
+    "Translated": "自定义展开图标所在列的索引"
+  },
+  "Function to determine the class name of a specific row": {
+    "Translated": "确定特定行的类名的函数"
+  },
+  "Function to determine the class name of a specific row when expanded": {
+    "Translated": "展开时确定特定行的类名的函数"
+  },
+  "Callback executed when row expands": {
+    "Translated": "行扩展时执行的回调"
+  },
+  "Supported sorting methods, covering sortDirections in Table": {
+    "Translated": "支持的排序方式，涵盖Table中的sortDirections"
+  },
+  "The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column": {
+    "Translated": "table元素的table-layout属性，设置为fixed表示内容不会影响列的布局"
+  },
+  "Callback executed when a row is clicked": {
+    "Translated": "单击一行时执行的回调"
+  },
+  "If the datasource is remote or not for more complex use cases": {
+    "Translated": "对于更复杂的用例，数据源是否是远程的"
+  },
+  "Whether to hide pagination or not": {
+    "Translated": "是否隐藏分页"
+  },
+  "Position of the pagination. Valid values: topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight": {
+    "Translated": "分页的位置。有效值：topLeft、topCenter、topRight、bottomLeft、bottomCenter、bottomRight"
+  },
+  "Custom rendering for pagination": {
+    "Translated": "分页的自定义渲染"
+  },
+  "Total records": {
+    "Translated": "总记录"
+  },
+  "Callback executed when total records changes": {
+    "Translated": "记录总数变化时执行的回调"
+  },
+  "Currently visible page": {
+    "Translated": "当前可见页面"
+  },
+  "Number of records per page": {
+    "Translated": "每页记录数"
+  },
+  "Callback executed when the selected rows change": {
+    "Translated": "选中行改变时执行的回调"
+  },
+  "Reload the data for the table and go to specific page at page size": {
+    "Translated": "重新加载表的数据并以页面大小转到特定页面"
+  },
+  "Get the query model for the table": {
+    "Translated": "获取表的查询模型"
+  },
+  "Expression to get the data for the field": {
+    "Translated": "获取字段数据的表达式"
+  },
+  "Field this column represents": {
+    "Translated": "此列代表的字段"
+  },
+  "Title of the column. Uses the following order of priority: <code>AntDesign.ColumnBase.Title</code>, <code>AntDesign.Column`1.DisplayName</code>, then <code>AntDesign.Column`1.FieldName</code>": {
+    "Translated": "列的标题。使用以下优先级顺序：<code>AntDesign.ColumnBase.Title</code>，<code>AntDesign.Column`1.DisplayName</code>，然后是 <code>AntDesign.Column`1.FieldName</code>"
+  },
+  "The corresponding path of the column data in the data item, support for querying the nested path through the array": {
+    "Translated": "数据项中列数据的对应路径，支持通过数组查询嵌套路径"
+  },
+  "Column data serialization rules, such as DateTime.ToString(\"XXX\")": {
+    "Translated": "列数据序列化规则，如 DateTime.ToString(\"XXX\")"
+  },
+  "Whether to allow sorting or not": {
+    "Translated": "是否允许排序"
+  },
+  "Comparison function for custom sort": {
+    "Translated": "自定义排序的比较函数"
+  },
+  "Number of similtaneous sorts allowed": {
+    "Translated": "允许的同时排序数"
+  },
+  "Whether to show tooltip when hovering over sort button or not": {
+    "Translated": "悬停在排序按钮上时是否显示工具提示"
+  },
+  "Allowable sort directions": {
+    "Translated": "允许的排序方向"
+  },
+  "Default sort direction": {
+    "Translated": "默认排序方向"
+  },
+  "Set cell attributes": {
+    "Translated": "设置单元格属性"
+  },
+  "Set header cell attributes": {
+    "Translated": "设置标题单元格属性"
+  },
+  "Whether the column is filterable or not": {
+    "Translated": "该列是否可过滤"
+  },
+  "Whether to allow multiple filters or not": {
+    "Translated": "是否允许多个过滤器"
+  },
+  "Display name for the column": {
+    "Translated": "列的显示名称"
+  },
+  "Field name for the column": {
+    "Translated": "列的字段名称"
+  },
+  "Sort model of the column": {
+    "Translated": "列的排序模型"
+  },
+  "Filter model of the column": {
+    "Translated": "柱的过滤模型"
+  },
+  "Title content for column header": {
+    "Translated": "列标题的标题内容"
+  },
+  "Width for column": {
+    "Translated": "列宽"
+  },
+  "Style for the header cell": {
+    "Translated": "标题单元格的样式"
+  },
+  "Row span": {
+    "Translated": "行跨度"
+  },
+  "Column span": {
+    "Translated": "列跨度"
+  },
+  "Header column span": {
+    "Translated": "标题栏跨度"
+  },
+  "Fix a column": {
+    "Translated": "修复一个列"
+  },
+  "Content of the column": {
+    "Translated": "专栏内容"
+  },
+  "Cut off header title with ellipsis when set to true": {
+    "Translated": "设置为 true 时用省略号切断标题标题"
+  },
+  "If the column is hidden or not": {
+    "Translated": "列是否隐藏"
+  },
+  "Alignment for column contents": {
+    "Translated": "列内容对齐"
+  },
+  "Index of this column in the table": {
+    "Translated": "该列在表中的索引"
+  },
+  "Column content for a row. Takes priority over <code>AntDesign.ColumnBase.ChildContent</code>": {
+    "Translated": "一行的列内容。优先于 <code>AntDesign.ColumnBase.ChildContent</code>"
+  },
+  "Title for column header": {
+    "Translated": "列标题的标题"
+  },
+  "Content for tabs. Should include <code>TabPane</code> elements": {
+    "Translated": "选项卡的内容。应包含 <code>TabPane</code> 元素"
+  },
+  "Callback executed when the active tab changes": {
+    "Translated": "活动选项卡更改时执行的回调"
+  },
+  "Whether to change tabs with animation. Only works while <code>AntDesign.Tabs.TabPosition</code> = <code>AntDesign.TabPosition.Top</code> or <code>AntDesign.TabPosition.Bottom</code>": {
+    "Translated": "是否使用动画更改选项卡。仅在 <code>AntDesign.Tabs.TabPosition</code> = <code>AntDesign.TabPosition.Top</code> 或 <code>AntDesign.TabPosition.Bottom</code> 时有效"
+  },
+  "Replace the TabBar": {
+    "Translated": "替换标签栏"
+  },
+  "Hide plus icon or not. Only works while <code>AntDesign.Tabs.Type</code> = <code>AntDesign.TabType.EditableCard</code>": {
+    "Translated": "是否隐藏加号图标。仅在 <code>AntDesign.Tabs.Type</code> = <code>AntDesign.TabType.EditableCard</code> 时有效"
+  },
+  "Preset tab bar size": {
+    "Translated": "预设标签栏大小"
+  },
+  "Extra content in tab bar": {
+    "Translated": "标签栏中的额外内容"
+  },
+  "Extra content to the left of the tab bar": {
+    "Translated": "标签栏左侧的额外内容"
+  },
+  "Extra content to the right of the tab bar": {
+    "Translated": "标签栏右侧的额外内容"
+  },
+  "The gap between tabs": {
+    "Translated": "选项卡之间的差距"
+  },
+  "Tab bar style object": {
+    "Translated": "标签栏样式对象"
+  },
+  "Tab bar css class": {
+    "Translated": "标签栏 css 类"
+  },
+  "Position of tabs": {
+    "Translated": "选项卡的位置"
+  },
+  "Basic style of tabs": {
+    "Translated": "选项卡的基本样式"
+  },
+  "Callback executed when active tab is changed": {
+    "Translated": "更改活动选项卡时执行的回调"
+  },
+  "Callback executed when tab is added or removed. Only works while <code>AntDesign.Tabs.Type</code> = <code>AntDesign.TabType.EditableCard</code>": {
+    "Translated": "添加或删除选项卡时执行的回调。仅在 <code>AntDesign.Tabs.Type</code> = <code>AntDesign.TabType.EditableCard</code> 时有效"
+  },
+  "Callback when tab is closed": {
+    "Translated": "标签页关闭时的回调"
+  },
+  "Callback executed when add button clicked": {
+    "Translated": "单击添加按钮时执行的回调"
+  },
+  "Callback executed after a tab is created": {
+    "Translated": "创建选项卡后执行的回调"
+  },
+  "Callback executed when tab is clicked": {
+    "Translated": "单击选项卡时执行的回调"
+  },
+  "Make tabs draggable": {
+    "Translated": "使选项卡可拖动"
+  },
+  "If tabs are centered or not": {
+    "Translated": "选项卡是否居中"
+  },
+  "Forced render of content in tabs, not lazy render after clicking on tabs": {
+    "Translated": "在选项卡中强制呈现内容，而不是在单击选项卡后延迟呈现"
+  },
+  "Template for customer context menu": {
+    "Translated": "客户上下文菜单模板"
+  },
+  "If the tab is disabled": {
+    "Translated": "如果选项卡被禁用"
+  },
+  "If the tab is closable": {
+    "Translated": "如果选项卡是可关闭的"
+  },
+  "Tag content": {
+    "Translated": "标签内容"
+  },
+  "Whether the Tag can be closed": {
+    "Translated": "标签是否可以关闭"
+  },
+  "Whether the Tag can be checked": {
+    "Translated": "Tag是否可以查询"
+  },
+  "Checked status of Tag": {
+    "Translated": "检查标签的状态"
+  },
+  "Callback executed when Tag is checked/unchecked": {
+    "Translated": "选中/取消选中 Tag 时执行的回调"
+  },
+  "Tag color. Can either be a predefined color (string) or hex color.": {
+    "Translated": "标记颜色。可以是预定义颜色（字符串）或十六进制颜色。"
+  },
+  "Tag color from the PresetColor list": {
+    "Translated": "PresetColor 列表中的标记颜色"
+  },
+  "Callback executed when tag is closed": {
+    "Translated": "标签关闭时执行的回调"
+  },
+  "Triggered before true closing, can prevent the closing": {
+    "Translated": "在真正关闭之前触发，可以防止关闭"
+  },
+  "Callback executed when tag is clicked (it is not called when closing icon is clicked).": {
+    "Translated": "单击标签时执行的回调（单击关闭图标时不调用）。"
+  },
+  "Whether the Tag is closed or not": {
+    "Translated": "Tag是否关闭"
+  },
+  "Where the line will be in relation to the items - left, right or alternate": {
+    "Translated": "该行与项目相关的位置 - 左、右或交替"
+  },
+  "Reverse nodes or not": {
+    "Translated": "是否反转节点"
+  },
+  "Content of timeline. Should contain <code>TimelineItem</code> elements": {
+    "Translated": "时间轴的内容。应包含 <code>TimelineItem</code> 元素"
+  },
+  "The text shown in the tooltip": {
+    "Translated": "工具提示中显示的文本"
+  },
+  "Content shown in the tooltip": {
+    "Translated": "工具提示中显示的内容"
+  },
+  "Whether the arrow is pointed at the center of target": {
+    "Translated": "箭头是否指向目标中心"
+  },
+  "Tab index of the tooltip": {
+    "Translated": "工具提示的标签索引"
+  },
+  "Used for setting the source data. The elements that are part of this array will be present jn the left column, except for the elements whose keys are included in <code>AntDesign.Transfer.TargetKeys</code>.": {
+    "Translated": "用于设置源数据。作为此数组一部分的元素将出现在左列中，但其键包含在 <code>AntDesign.Transfer.TargetKeys</code> 中的元素除外。"
+  },
+  "Whether the component is disabled or not": {
+    "Translated": "组件是否禁用"
+  },
+  "Whether to show search bars in the columns or not": {
+    "Translated": "是否在列中显示搜索栏"
+  },
+  "Whether to show select all buttons in the columns or not": {
+    "Translated": "是否显示选择列中的所有按钮"
+  },
+  "Keys of elements that are listed in the right column": {
+    "Translated": "右列中列出的元素的键"
+  },
+  "Currently selected items": {
+    "Translated": "当前选择的项目"
+  },
+  "Callback executed when an item moves columns": {
+    "Translated": "项目移动列时执行的回调"
+  },
+  "Callback executed when a column is scrolled": {
+    "Translated": "滚动列时执行的回调"
+  },
+  "Callback executed when a column is searched": {
+    "Translated": "搜索列时执行的回调"
+  },
+  "Callbac executed when the selected items change in either column": {
+    "Translated": "当任一列中的所选项目发生变化时执行的回调"
+  },
+  "Custom render for the items in the columns": {
+    "Translated": "列中项目的自定义呈现"
+  },
+  "Locacle used for localization of text": {
+    "Translated": "用于文本本地化的 Locacle"
+  },
+  "Footer string displayed in the footer of each column": {
+    "Translated": "在每列的页脚中显示的页脚字符串"
+  },
+  "Footer content displayed in the footer of each column": {
+    "Translated": "每列页脚显示的页脚内容"
+  },
+  "Whether to allow multiple selections or not": {
+    "Translated": "是否允许多选"
+  },
+  "Whether tree nodes are able to be selected or not, which would select all leafs under that node.": {
+    "Translated": "是否能够选择树节点，这将选择该节点下的所有叶子。"
+  },
+  "Callback executed when the component looses focus": {
+    "Translated": "组件失去焦点时执行的回调"
+  },
+  "Determine whether the dropdown menu and the select input are the same width. Default set min-width same as input. Will ignore when value less than select width. false will disable virtual scroll": {
+    "Translated": "判断下拉菜单和select input是否等宽。默认设置最小宽度与输入相同。当值小于选择宽度时将忽略。 false 将禁用虚拟滚动"
+  },
+  "Maximum width of the dropdown": {
+    "Translated": "下拉列表的最大宽度"
+  },
+  "Maximum height of the dropdown": {
+    "Translated": "下拉列表的最大高度"
+  },
+  "Whether to show lines in the tree or not": {
+    "Translated": "是否在树中显示线"
+  },
+  "Shows an expansion icon before the node": {
+    "Translated": "在节点前显示一个扩展图标"
+  },
+  "Shows a connecting line": {
+    "Translated": "显示连接线"
+  },
+  "show treeNode icon icon": {
+    "Translated": "显示树节点图标图标"
+  },
+  "Whether treeNode fill remaining horizontal space": {
+    "Translated": "treeNode是否填充剩余水平空间"
+  },
+  "Whether the node allows drag and drop": {
+    "Translated": "节点是否允许拖放"
+  },
+  "The tree is disabled": {
+    "Translated": "树被禁用"
+  },
+  "Displays the cotyledon icon": {
+    "Translated": "显示子叶图标"
+  },
+  "Specific the Icon type of switcher": {
+    "Translated": "指定切换器的图标类型"
+  },
+  "Nodes for the tree. Use either this, <code>AntDesign.Tree`1.DataSource</code>, or <code>AntDesign.Tree`1.ChildContent</code>": {
+    "Translated": "树的节点。使用 <code>AntDesign.Tree`1.DataSource</code> 或 <code>AntDesign.Tree`1.ChildContent</code>"
+  },
+  "Nodes for the tree. Use either this, <code>AntDesign.Tree`1.DataSource</code>, or <code>AntDesign.Tree`1.Nodes</code>": {
+    "Translated": "树的节点。使用 <code>AntDesign.Tree`1.DataSource</code> 或 <code>AntDesign.Tree`1.Nodes</code>"
+  },
+  "Whether can be selected": {
+    "Translated": "是否可以选择"
+  },
+  "Allows selecting multiple treeNodes": {
+    "Translated": "允许选择多个树节点"
+  },
+  "The collection of selected nodes": {
+    "Translated": "所选节点的集合"
+  },
+  "The selected data set": {
+    "Translated": "所选数据集"
+  },
+  "Add a Checkbox before the node": {
+    "Translated": "在节点前添加一个 Checkbox"
+  },
+  "Checked keys": {
+    "Translated": "检查键"
+  },
+  "Specifies the keys of the default checked treeNodes": {
+    "Translated": "指定默认选中的 treeNodes 的键"
+  },
+  "Disable node Checkbox": {
+    "Translated": "禁用节点复选框"
+  },
+  "search value": {
+    "Translated": "搜索值"
+  },
+  "Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <code>AntDesign.Tree`1.ChildContent</code> Use either this, <code>AntDesign.Tree`1.Nodes</code>, or <code>AntDesign.Tree`1.ChildContent</code>": {
+    "Translated": "树的数据源。可以是任何自定义对象类型的列表，通过提供表达式来获取子项、叶子、标题等。使用这个或 <code>AntDesign.Tree`1.ChildContent</code> 使用这个，<code>AntDesign。 Tree`1.Nodes</code>，或者<code>AntDesign.Tree`1.ChildContent</code>"
+  },
+  "Lazy load callbacks": {
+    "Translated": "延迟加载回调"
+  },
+  "Click the tree node callback": {
+    "Translated": "点击树节点回调"
+  },
+  "Double-click the node callback": {
+    "Translated": "双击节点回调"
+  },
+  "Right-click tree node callback": {
+    "Translated": "右键树节点回调"
+  },
+  "checked the tree node callback": {
+    "Translated": "检查树节点回调"
+  },
+  "Click the expansion tree node icon to call back": {
+    "Translated": "点击展开树节点图标回调"
+  },
+  "The indentation template": {
+    "Translated": "缩进模板"
+  },
+  "Customize the icon templates": {
+    "Translated": "自定义图标模板"
+  },
+  "Customize toggle icon templates": {
+    "Translated": "自定义切换图标模板"
+  },
+  "Called when the drag and drop begins": {
+    "Translated": "拖放开始时调用"
+  },
+  "Called when drag and drop into a releasable target": {
+    "Translated": "拖放到可释放目标时调用"
+  },
+  "Called when drag and drop away from a releasable target": {
+    "Translated": "当拖放远离可释放目标时调用"
+  },
+  "Triggered when drag-and-drop drops succeed": {
+    "Translated": "拖放成功时触发"
+  },
+  "Drag-and-drop end callback": {
+    "Translated": "拖放结束回调"
+  },
+  "The parent node is expanded by default": {
+    "Translated": "父节点默认展开"
+  },
+  "Expand the specified tree node by default": {
+    "Translated": "默认展开指定的树节点"
+  },
+  "(Controlled) expands the specified tree node": {
+    "Translated": "(controlled) 展开指定的树节点"
+  },
+  "Deselect all selections": {
+    "Translated": "取消选择所有选择"
+  },
+  "Unchecks all nodes": {
+    "Translated": "取消选中所有节点"
+  },
+  "Find Node": {
+    "Translated": "查找节点"
+  },
+  "Expand all nodes": {
+    "Translated": "展开所有节点"
+  },
+  "Collapse all nodes": {
+    "Translated": "折叠所有节点"
+  },
+  "Current Node Level": {
+    "Translated": "当前节点级别"
+  },
+  "The disabled state is subject to the parent node": {
+    "Translated": "禁用状态以父节点为准"
+  },
+  "Selected or not": {
+    "Translated": "是否入选"
+  },
+  "Whether the load state is asynchronous (affects the display of the expansion icon)": {
+    "Translated": "加载状态是否异步（影响展开图标的显示）"
+  },
+  "Whether it is a leaf node": {
+    "Translated": "是否为叶节点"
+  },
+  "Disable checkbox": {
+    "Translated": "禁用复选框"
+  },
+  "The icon in front of the node": {
+    "Translated": "节点前的图标"
+  },
+  "Obtain the parent data set": {
+    "Translated": "获取父数据集"
+  },
+  "Setting Selection State": {
+    "Translated": "设置选择状态"
+  },
+  "Sets the node to release the target location": {
+    "Translated": "设置节点释放目标位置"
+  },
+  "Remove the current node": {
+    "Translated": "删除当前节点"
+  },
+  "Expand the node": {
+    "Translated": "展开节点"
+  },
+  "Set the checkbox state": {
+    "Translated": "设置复选框状态"
+  },
+  "Add child node": {
+    "Translated": "添加子节点"
+  },
+  "Add a node next the node": {
+    "Translated": "在节点旁边添加一个节点"
+  },
+  "Add a node before the node": {
+    "Translated": "在节点前添加一个节点"
+  },
+  "remove": {
+    "Translated": "消除"
+  },
+  "Move up the nodes": {
+    "Translated": "上移节点"
+  },
+  "Move down the node": {
+    "Translated": "下移节点"
+  },
+  "Upgrade nodes": {
+    "Translated": "升级节点"
+  },
+  "If the text can be copied or not. Will add a copy icon to end of text if true.": {
+    "Translated": "文本是否可以复制。如果为真，将在文本末尾添加一个复制图标。"
+  },
+  "Configure what happens when copying": {
+    "Translated": "配置复制时发生的情况"
+  },
+  "Strikethrough style": {
+    "Translated": "删除线样式"
+  },
+  "Disabled style": {
+    "Translated": "残疾人风格"
+  },
+  "Control if editable or not": {
+    "Translated": "控制是否可编辑"
+  },
+  "Configure editing": {
+    "Translated": "配置编辑"
+  },
+  "Display ellipsis when text overflows. Should set width when ellipsis needed": {
+    "Translated": "文本溢出时显示省略号。需要省略号时应设置宽度"
+  },
+  "Configure ellipsis": {
+    "Translated": "配置省略号"
+  },
+  "Highlight the text": {
+    "Translated": "突出显示文本"
+  },
+  "Underline the text": {
+    "Translated": "在文本下划线"
+  },
+  "Bold the text": {
+    "Translated": "加粗文本"
+  },
+  "Callback executed when the user edits the content": {
+    "Translated": "用户编辑内容时执行的回调"
+  },
+  "Content type - styles text. Possible values: secondary, warning, danger": {
+    "Translated": "内容类型 - 样式文本。可能的值：次要、警告、危险"
+  },
+  "Content to wrap": {
+    "Translated": "要包装的内容"
+  },
+  "The name of uploading file": {
+    "Translated": "上传文件的名称"
+  },
+  "Uploading URL": {
+    "Translated": "上传网址"
+  },
+  "Disable upload button": {
+    "Translated": "禁用上传按钮"
+  },
+  "Additional data to be uploaded with the files": {
+    "Translated": "与文件一起上传的附加数据"
+  },
+  "Built-in stylesheets, support for three types: <code>text</code>, <code>picture</code> or <code>picture-card</code>": {
+    "Translated": "内置样式表，支持三种类型：<code>text</code>、<code>picture</code>或<code>picture-card</code>"
+  },
+  "Support upload whole directory. See <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> for browser support": {
+    "Translated": "支持上传整个目录。请参阅 <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> 了解浏览器支持"
+  },
+  "Show the list of files uploading or not": {
+    "Translated": "显示是否上传文件列表"
+  },
+  "List of files that have been uploaded (controlled)": {
+    "Translated": "已上传（受控）的文件列表"
+  },
+  "Locale for UI text": {
+    "Translated": "UI 文本的语言环境"
+  },
+  "Event callback executed when the files list changes": {
+    "Translated": "文件列表改变时执行的事件回调"
+  },
+  "Default list of files that have been uploaded.": {
+    "Translated": "已上传文件的默认列表。"
+  },
+  "A callback function, will be executed when a single file upload has succeeded or failed": {
+    "Translated": "回调函数，在单个文件上传成功或失败时执行"
+  },
+  "A callback function, will be executed when all uploads have succeeded or failed": {
+    "Translated": "一个回调函数，将在所有上传成功或失败时执行"
+  },
+  "A callback function, can be executed when uploading state has changed for any reason. The function will be called when uploading is in progress, completed or failed.": {
+    "Translated": "回调函数，可以在上传状态因任何原因发生变化时执行。该函数将在上传进行中、完成或失败时被调用。"
+  },
+  "A callback function executed when the remove file button is clicked. When true is returned, file will be removed and <code>AntDesign.Upload.FileListChanged</code> will be executed. When false is returned, the removal will be cancelled.": {
+    "Translated": "单击删除文件按钮时执行的回调函数。当返回 true 时，文件将被删除并执行 <code>AntDesign.Upload.FileListChanged</code> 。当返回 false 时，删除将被取消。"
+  },
+  "A callback function, will be executed when file link or preview icon is clicked": {
+    "Translated": "回调函数，当文件链接或预览图标被点击时执行"
+  },
+  "Callback executed when file name link is clicked in upload list.": {
+    "Translated": "在上传列表中单击文件名链接时执行的回调。"
+  },
+  "Content of the upload button": {
+    "Translated": "上传按钮的内容"
+  },
+  "Whether to show the upload button or not.": {
+    "Translated": "是否显示上传按钮。"
+  },
+  "Whether to allow drag and drop of files or not.": {
+    "Translated": "是否允许拖放文件。"
+  },
+  "HTTP method of upload request": {
+    "Translated": "上传请求的HTTP方法"
+  },
+  "The file for the current operation": {
+    "Translated": "当前操作的文件"
+  },
+  "The current list of files": {
+    "Translated": "当前文件列表"
+  },
+  "GUID to identify the file": {
+    "Translated": "用于识别文件的 GUID"
+  },
+  "The file name": {
+    "Translated": "文件名"
+  },
+  "Percentage uploaded": {
+    "Translated": "上传百分比"
+  },
+  "Object URL for the file": {
+    "Translated": "文件的对象 URL"
+  },
+  "URL for the actual file": {
+    "Translated": "实际文件的 URL"
+  },
+  "Response from the server": {
+    "Translated": "来自服务器的响应"
+  },
+  "State of the upload": {
+    "Translated": "上传状态"
+  },
+  "Size of the file": {
+    "Translated": "文件大小"
+  },
+  "Extension for the file": {
+    "Translated": "文件的扩展名"
+  },
+  "Type of file": {
+    "Translated": "文件类型"
+  },
+  "File extensions that are considered images": {
+    "Translated": "被视为图像的文件扩展名"
+  },
+  "Check if the file is a picture. See <code>AntDesign.UploadFileItem.ImageExtensions</code> for the extensions which will cause this to return true.": {
+    "Translated": "检查文件是否为图片。请参阅 <code>AntDesign.UploadFileItem.ImageExtensions</code> 以了解将导致其返回 true 的扩展。"
+  },
+  "<p>Tabs make it easy to switch between different views.</p><h2>When To Use</h2><p>Ant Design has 3 types of Tabs for different situations.</p><ul><li>Card Tabs: for managing too many closeable views.</li><li>Normal Tabs: for functional aspects of a page.</li><li><code>RadioGroup</code>: for secondary tabs.</li></ul>": {
+    "Translated": "<p>Tabs 可以很容易地在不同的视图之间切换。</p><h2>何时使用</h2><p>Ant Design 有 3 种类型的 Tabs 用于不同的情况。</p><ul><li >卡片标签：用于管理太多可关闭的视图。</li><li>普通标签：用于页面的功能方面。</li><li><code>RadioGroup</code>：用于辅助标签。</li>李></ul>"
+  },
+  "Use OnChange instead": {
+    "Translated": "请改用 OnChange"
+  },
+  "Use ChildContent instead": {
+    "Translated": "请改用 ChildContent"
+  },
+  "Whether enable the expand/collapse animation": {
+    "Translated": "是否启用展开/折叠动画"
+  },
+  "Saving the input value after blur": {
+    "Translated": "模糊后保存输入值"
+  },
+  "The position where the selection box pops up": {
+    "Translated": "弹出选择框的位置"
+  },
+  "EventCallback trigger on Visible was changed.": {
+    "Translated": "更改了 Visible 上的 EventCallback 触发器。"
+  },
+  "Use VisibleChanged instead": {
+    "Translated": "请改用 VisibleChanged"
+  },
+  "<p>A flex layout container for alignment.</p><h2>When To Use</h2><ul><li>Good for setting spacing between elements.</li><li>Suitable for setting various horizontal and vertical alignments.</li></ul><h3>Difference with Space component</h3><ul><li>Space is used to set the spacing between inline elements. It will add a wrapper element for each child element for inline alignment. Suitable for equidistant arrangement of multiple child elements in rows and columns.</li><li>Flex is used to set the layout of block-level elements. It does not add a wrapper element. Suitable for layout of child elements in vertical or horizontal direction, and provides more flexibility and control.</li></ul>": {
+    "Translated": "<p>用于对齐的 flex 布局容器。</p><h2>何时使用</h2><ul><li>Good 用于设置元素之间的间距。</li><li>适用于设置各种水平和垂直对齐方式。</li></ul><h3>与“空间”组件的差异</h3><ul><li>“空间”用于设置内联元素之间的间距。它将为每个子元素添加一个包装器元素，以便进行内联对齐。适用于行和列中多个子元素的等距排列。</li><li>Flex 用于设置块级元素的布局。它不会添加包装元素。适用于子元素在垂直或水平方向的布局，并提供更多的灵活性和控制。</li></ul>"
+  },
+  "Is direction of the flex vertical, use flex-direction: column": {
+    "Translated": "是 flex 垂直方向，使用 flex-direction： column"
+  },
+  "Set whether the element is displayed in a single line or in multiple lines reference flex-wrap:https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap": {
+    "Translated": "设置元素是单行显示还是多行显示，参考 flex-wrap：https：//developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap"
+  },
+  "Sets the alignment of elements in the direction of the main axis reference justify-content https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content": {
+    "Translated": "设置元素在主轴方向上的对齐方式 justify-content https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content"
+  },
+  "Sets the alignment of elements in the direction of the cross axis reference align-items https://developer.mozilla.org/en-US/docs/Web/CSS/align-items": {
+    "Translated": "设置元素在交叉轴 reference align-items https://developer.mozilla.org/en-US/docs/Web/CSS/align-items 方向上的对齐方式"
+  },
+  "flex CSS shorthand properties reference flex https://developer.mozilla.org/en-US/docs/Web/CSS/flex": {
+    "Translated": "flex CSS 简写属性 参考 flex https://developer.mozilla.org/en-US/docs/Web/CSS/flex"
+  },
+  "Sets the gap between grids small | middle | large | string | number": {
+    "Translated": "将栅格之间的间隙设置为较小 |中 |大 |字符串 |数"
+  },
+  "Custom element type": {
+    "Translated": "自定义元素类型"
+  },
+  "Set the child element": {
+    "Translated": "设置子元素"
+  },
+  "Gets or sets the form handler name. This is required for posting it to a server-side endpoint. Or using for get the form instance from <code>FormProviderFinishEventArgs</code>.": {
+    "Translated": "获取或设置表单处理程序名称。这是将其发布到服务器端终端节点所必需的。或者使用 for 从 <code>FormProviderFinishEventArgs</code> 获取表单实例。"
+  },
+  "Http method used to submit form": {
+    "Translated": "用于提交表单的 Http 方法"
+  },
+  "If enabled, form submission is performed without fully reloading the page. This is equivalent to adding data-enhance to the form.": {
+    "Translated": "如果启用，则无需完全重新加载页面即可执行表单提交。这相当于将 data-enhance 添加到表单中。"
+  },
+  "Whether input elements can by default have their values automatically completed by the browser": {
+    "Translated": "默认情况下，input 元素是否可以由浏览器自动完成其值"
+  },
+  "Callback when the content is cleared by clicking the \"ClearIcon\"": {
+    "Translated": "单击“ClearIcon”清空内容时的回调"
+  },
+  "Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time. Default is 250 ms.": {
+    "Translated": "延迟 KeyUp 事件的处理，直到用户停止键入预定的时间。默认值为 250 毫秒。"
+  },
+  "Use CollapsedChanged instead": {
+    "Translated": "请改用 CollapsedChanged"
+  },
+  "Dynamically load mention options for display when the user types a value after the @ symbol": {
+    "Translated": "动态加载提及选项，以便在用户在 @ 符号后键入值时显示"
+  },
+  "Header content": {
+    "Translated": "标题内容"
+  },
+  "Specify a function invoke when the modal dialog is visible or not": {
+    "Translated": "指定模式对话框可见或不可见时的函数调用"
+  },
+  "Resizable (Horizontal direction only)": {
+    "Translated": "可调整大小（仅限水平方向）"
+  },
+  "Whether to force to render the Modal dom before opening.": {
+    "Translated": "是否强制在打开之前渲染模态 dom。"
+  },
+  "Create and open a Modal with template component": {
+    "Translated": "创建并打开 Modal with template 组件"
+  },
+  "Use TitleTemplate instead": {
+    "Translated": "请改用 TitleTemplate"
+  },
+  "Use SubtitleTemplate instead": {
+    "Translated": "请改用 SubtitleTemplate"
+  },
+  "Use CheckedChanged instead": {
+    "Translated": "请改用 CheckedChanged"
+  },
+  "Toggle the border style.": {
+    "Translated": "切换边框样式。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Use ItemLabel instead": {
+    "Translated": "请改用 ItemLabel"
+  },
+  "Specifies the label property in the option object. If use this property, should not use <see cref=\"!:LabelName\" />": {
+    "Translated": "指定 option 对象中的 label 属性。如果使用此属性，则不应使用 <see cref=“！：LabelName” />"
+  },
+  "Use ItemValue instead": {
+    "Translated": "请改用 ItemValue"
+  },
+  "Specifies the value property in the option object. If use this property, should not use <see cref=\"!:ValueName\" />": {
+    "Translated": "指定 option 对象中的 value 属性。如果使用此属性，则不应使用 <see cref=“！：ValueName” />"
+  },
+  "Specifies predicate for disabled options": {
+    "Translated": "为禁用的选项指定谓词"
+  },
+  "Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time. Default to 250ms.": {
+    "Translated": "延迟搜索输入事件的处理，直到用户停止键入预定的时间。默认为 250 毫秒。"
+  },
+  "The accesskey global attribute.": {
+    "Translated": "accesskey 全局属性。"
+  },
+  "Specifies the label property in the option object. If use this property, should not use <code>AntDesign.SelectBase`2.LabelName</code>": {
+    "Translated": "指定 option 对象中的 label 属性。如果使用此属性，则不应使用 <code>AntDesign.SelectBase'2.LabelName</code>"
+  },
+  "Specifies the value property in the option object. If use this property, should not use <code>AntDesign.SelectBase`2.ValueName</code>": {
+    "Translated": "指定 option 对象中的 value 属性。如果使用此属性，则不应使用 <code>AntDesign.SelectBase'2.ValueName</code>"
+  },
+  "Customize dropdown content. The context is the original content.": {
+    "Translated": "自定义下拉内容。上下文是原始内容。"
+  },
+  "Render mode of table. See <see cref=\"!:AntDesign.RenderMode\" /> documentation for details.": {
+    "Translated": "表的渲染模式。有关详细信息，请参见<参见 cref=“！：AntDesign.RenderMode” /> 文档。"
+  },
+  "Enable resizable column": {
+    "Translated": "启用可调整大小的列"
+  },
+  "Rows that are selected across pages": {
+    "Translated": "跨页面选择的行"
+  },
+  "Select all rows of current page": {
+    "Translated": "选择当前页面的所有行"
+  },
+  "Unselect all rows of current page": {
+    "Translated": "取消选择当前页面的所有行"
+  },
+  "Please use <see cref=\"M:AntDesign.Table`1.SetSelection(System.Collections.Generic.IEnumerable{`0})\" /> instead if possible, as this method won't correctly select items from invisible rows when virtualization is enabled.": {
+    "Translated": "如果可能，请改用 <see cref=“M：AntDesign.Table'1.SetSelection（System.Collections.Generic.IEnumerable{'0}）” />，因为在启用虚拟化时，此方法无法正确地从不可见的行中选择项目。"
+  },
+  "Set all selected items": {
+    "Translated": "设置所有选定项"
+  },
+  "Select one item": {
+    "Translated": "选择一项"
+  },
+  "Whether the dataSource is filtered. Filter icon will be actived when it is true.": {
+    "Translated": "dataSource 是否被过滤。当为 true 时，过滤器图标将被激活。"
+  },
+  "'fill' | 'outline' | 'twotone';": {
+    "Translated": "'填充' |'大纲' |'双音';"
+  },
+  "A custom CSS style used for rendering the transfer columns": {
+    "Translated": "用于呈现传输列的自定义 CSS 样式"
+  },
+  "Specify how to show checked values when TreeCheckable is true and TreeCheckStrictly is false": {
+    "Translated": "指定当 TreeCheckable 为 true 且 TreeCheckStrictly 为 false 时如何显示选中的值"
+  },
+  "Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <code>AntDesign.TreeSelect`2.ChildContent</code>": {
+    "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
+  },
+  "Specifies a method to return a checkable node": {
+    "Translated": "指定返回可检查节点的方法"
+  },
+  "树控件本身": {
+    "Translated": "树控件本身"
+  },
+  "Check or uncheck the node by click TreeNodeTitle if checkable": {
+    "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
+  },
+  "Expand or collapse the node by click TreeNodeTitle": {
+    "Translated": "通过单击 TreeNodeTitle 展开或折叠节点"
+  },
+  "Get TreeNode from Key": {
+    "Translated": "从 Key 获取 TreeNode"
+  },
+  "Expand the node or not": {
+    "Translated": "是否扩展节点"
+  },
+  "Check the TreeNode or not": {
+    "Translated": "检查 TreeNode"
+  },
+  "<p> Add specific text or patterns to the page. </p><h2>When To Use</h2><ul><li>Use when the page needs to be watermarked to identify the copyright.</li><li>Suitable for preventing information theft.</li></ul>": {
+    "Translated": "<p> 向页面添加特定文本或模式。 </p><h2>何时使用</h2><ul><li>当页面需要添加水印以识别版权时使用。</li><li>适用于防止信息窃取。</li></ul>"
+  },
+  "The width of the watermark, the default value of <code>content</code> is its own width": {
+    "Translated": "水印的宽度，<code>content</code> 的默认值是它自己的宽度"
+  },
+  "The height of the watermark, the default value of <code>content</code> is its own height": {
+    "Translated": "水印的高度，<code>content</code> 的默认值是它自己的高度"
+  },
+  "When the watermark is drawn, the rotation Angle, unit <code>°</code>": {
+    "Translated": "绘制水印时，旋转角度，单位 <code>°</code>"
+  },
+  "transparency, value range [0-1]": {
+    "Translated": "透明度，值范围 [0-1]"
+  },
+  "font size": {
+    "Translated": "字体大小"
+  },
+  "font color": {
+    "Translated": "字体颜色"
+  },
+  "font family": {
+    "Translated": "字体系列"
+  },
+  "font weight. The value can be <code>normal</code>, <code>light</code>, <code>weight</code> and number.": {
+    "Translated": "字体粗细。该值可以是 <code>normal</code>、<code>light</code>、<code>weight</code> 和 number。"
+  },
+  "font style. The value can be <code>none</code>, <code>normal</code>, <code>italic</code> and <code>oblique</code>.": {
+    "Translated": "字形。该值可以是 <code>none</code>、<code>normal</code>、<code>italic</code> 和 <code>oblique</code>。"
+  },
+  "Watermark text content": {
+    "Translated": "水印文本内容"
+  },
+  "Multiple-line watermark text contents": {
+    "Translated": "多行水印文本内容"
+  },
+  "The z-index of the appended watermark element.": {
+    "Translated": "附加的 watermark 元素的 z-index。"
+  },
+  "The spacing between watermarks. <p>X: the x-axis spacing between watermarks</p><p>Y: the y-axis spacing between watermarks</p>": {
+    "Translated": "水印之间的间距。<p>X：水印之间的 x 轴间距</p><p>Y：水印之间的 y 轴间距</p>"
+  },
+  "Image source, it is recommended to export 2x or 3x image, high priority (support base64 format)": {
+    "Translated": "图片来源，建议导出 2x 或 3x 图像，高优先级（支持 base64 格式）"
+  },
+  "The offset of the watermark from the upper left corner of the container. The default is <code>gap/2</code>.": {
+    "Translated": "水印与容器左上角的偏移量。默认值为 <code>gap/2</code>。"
+  },
+  "The line spacing, only applies when there are multiple lines (content is configured as an array)": {
+    "Translated": "行距仅在有多行时适用（内容配置为数组）"
+  },
+  "Enable infinite scrolling text effect": {
+    "Translated": "启用无限滚动文本效果"
+  },
+  "The interval of motion displacement, in milliseconds.": {
+    "Translated": "运动位移的间隔，以毫秒为单位。"
+  },
+  "set or get whether to repeat the watermark": {
+    "Translated": "设置或获取是否重复水印"
+  },
+  "Whether the picture needs gray scale display (color to gray)": {
+    "Translated": "图片是否需要灰度显示（颜色到灰度）"
+  },
+  "The child Content": {
+    "Translated": "子内容"
+  }
+}

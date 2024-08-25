@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
-using OneOf;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -15,17 +18,21 @@ namespace AntDesign
         public string Color { get; set; }
 
         /// <summary>
-        /// Set text contents of ribbon.
+        /// Text string of ribbon.
         /// </summary>
         [Parameter]
         public string Text { get; set; }
 
+        /// <summary>
+        /// Text content of the ribbon. Takes priority over <see cref="Text"/>
+        /// </summary>
         [Parameter]
         public RenderFragment TextTemplate { get; set; }
 
         /// <summary>
         /// Set placement of ribbon.
         /// </summary>
+        /// <default value="end"/>
         [Parameter]
         public string Placement { get; set; } = "end";
 

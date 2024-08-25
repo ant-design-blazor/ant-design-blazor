@@ -12,7 +12,7 @@
             {
                 <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+            <Button Danger Size="small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
         }
     </h5>
 

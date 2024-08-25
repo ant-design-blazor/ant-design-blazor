@@ -8,6 +8,9 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
 
+        /// <summary>
+        /// Column content for a row. Takes priority over <see cref="ColumnBase.ChildContent"/>
+        /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -11,15 +7,29 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// If the skeleton is active
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Active { get; set; } = false;
 
+        /// <summary>
+        /// Type of the element. Possible values: input, avatar, button
+        /// </summary>
         [Parameter]
         public string Type { get; set; }
 
+        /// <summary>
+        /// Size of element. Possible values: large, small, default. If type is avatar then an integer can be provided as well.
+        /// </summary>
         [Parameter]
         public OneOf<int?, string> Size { get; set; } = "default";
 
+        /// <summary>
+        /// Shape of the avatar. Not used for input type.
+        /// </summary>
+        /// <default value="SkeletonButtonShape.Default" />
         [Parameter]
         public string Shape { get; set; } = SkeletonButtonShape.Default;
 

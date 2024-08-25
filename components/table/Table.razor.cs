@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -27,6 +31,21 @@ using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Displays rows of data.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>To display a collection of structured data.</item>
+        <item>To sort, search, paginate, filter data.</item>
+    </list>
+    </summary>
+    <seealso cref="PropertyColumn{TItem, TProp}"/>
+    <seealso cref="ActionColumn"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1)]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
@@ -48,9 +67,15 @@ namespace AntDesign
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
+        /// <summary>
+        /// Render mode of table. See <see cref="AntDesign.RenderMode"/> documentation for details.
+        /// </summary>
         [Parameter]
         public RerenderStrategy RerenderStrategy { get; set; } = RerenderStrategy.Always;
 
+        /// <summary>
+        /// Data to display in table
+        /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -64,9 +89,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Content of the table. Typically will contain <see cref="PropertyColumn{TItem, TProp}"/> and <see cref="ActionColumn"/> elements.
+        /// </summary>
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
 
+        /// <summary>
+        /// Template for a row
+        /// </summary>
         [Parameter]
         public RenderFragment<GroupResult<TItem>> GroupTitleTemplate { get; set; }
 
@@ -82,9 +113,15 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TItem> HeaderTemplate { get; set; }
 
+        /// <summary>
+        /// Template use for what to display when a row is expanded
+        /// </summary>
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
 
+        /// <summary>
+        /// Initially, whether to expand all rows
+        /// </summary>
         [Parameter]
         public bool DefaultExpandAllRows { get; set; }
 
@@ -96,81 +133,164 @@ namespace AntDesign
         [Parameter]
         public int DefaultExpandMaxLevel { get; set; } = 4;
 
+        /// <summary>
+        /// Function to determine if a specific row is expandable
+        /// </summary>
+        /// <default value="true for any rows" />
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
+        /// <summary>
+        /// Children tree items
+        /// </summary>
+        /// <default value="Enumerable.Empty&lt;TItem&gt;()" />
         [Parameter]
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
+        /// <summary>
+        /// Callback executed when paging, sorting, and filtering changes	
+        /// </summary>
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
+        /// <summary>
+        /// Set row attributes
+        /// </summary>
         [Parameter]
         public Func<RowData<TItem>, Dictionary<string, object>> OnRow { get; set; }
 
+        /// <summary>
+        /// Set header row attributes
+        /// </summary>
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderRow { get; set; }
 
+        /// <summary>
+        /// Is the table loading
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Loading { get; set; }
 
+        /// <summary>
+        /// Table title text
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Table title content
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// Footer text
+        /// </summary>
         [Parameter]
         public string Footer { get; set; }
 
+        /// <summary>
+        /// Footer content
+        /// </summary>
         [Parameter]
         public RenderFragment FooterTemplate { get; set; }
 
+        /// <summary>
+        /// Table size
+        /// </summary>
         [Parameter]
         public TableSize Size { get; set; } = TableSize.Default;
 
+        /// <summary>
+        /// Default copywriting settings, currently including sorting, filtering, and empty data copywriting
+        /// </summary>
         [Parameter]
         public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
 
+        /// <summary>
+        /// Bordered table or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Bordered { get; set; } = false;
 
+        /// <summary>
+        /// Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage
+        /// </summary>
         [Parameter]
         public string ScrollX { get; set; }
 
+        /// <summary>
+        /// Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value
+        /// </summary>
         [Parameter]
         public string ScrollY { get; set; }
 
+        /// <summary>
+        /// Scroll bar width
+        /// </summary>
+        /// <default value="17px" />
         [Parameter]
         public string ScrollBarWidth { get; set; }
 
+        /// <summary>
+        /// When displaying tree data, the width of each level of indentation, in px
+        /// </summary>
+        /// <default value="15" />
         [Parameter]
         public int IndentSize { get; set; } = 15;
 
+        /// <summary>
+        /// Index of the column where the custom expand icon is located
+        /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
 
+        /// <summary>
+        /// Function to determine the class name of a specific row
+        /// </summary>
         [Parameter]
         public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
 
+        /// <summary>
+        /// Function to determine the class name of a specific row when expanded
+        /// </summary>
         [Parameter]
         public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
+        /// <summary>
+        /// Callback executed when row expands
+        /// </summary>
         [Parameter]
         public EventCallback<RowData<TItem>> OnExpand { get; set; }
 
+        /// <summary>
+        /// Supported sorting methods, covering sortDirections in Table
+        /// </summary>
         [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
+        /// <summary>
+        /// The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column
+        /// </summary>
         [Parameter]
         public string TableLayout { get; set; }
 
+        /// <summary>
+        /// Callback executed when a row is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
         private bool _remoteDataSource;
         private bool _hasRemoteDataSourceAttribute;
 
+        /// <summary>
+        /// If the datasource is remote or not for more complex use cases
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool RemoteDataSource
         {
@@ -182,6 +302,11 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// When set to true and the screen width is less than 960px, the table would switch to small-screen mode.
+        /// In small-screen mode, only certain features are currently supported, and mis-styling will occur in tables with some features such as group, expanded columns, tree data, summary cell, etc.
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Responsive { get; set; }
 
@@ -346,6 +471,9 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
+        /// <summary>
+        /// Reload the data for the table, go to page 1
+        /// </summary>
         public void ReloadData()
         {
             ResetData();
@@ -355,6 +483,11 @@ namespace AntDesign
             this.ReloadAndInvokeChange();
         }
 
+        /// <summary>
+        /// Reload the data for the table and go to specific page at page size
+        /// </summary>
+        /// <param name="pageIndex">Page to load after reload. Defaults to 1.</param>
+        /// <param name="pageSize">Page size to use after reload. Defaults to the current value of <see cref="PageSize"/></param>
         public void ReloadData(int? pageIndex, int? pageSize = null)
         {
             ResetData();
@@ -365,6 +498,10 @@ namespace AntDesign
             this.ReloadAndInvokeChange();
         }
 
+        /// <summary>
+        /// Reload the table's data from the provided query model
+        /// </summary>
+        /// <param name="queryModel"></param>
         public void ReloadData(QueryModel queryModel)
         {
             ResetData();
@@ -390,6 +527,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Reset the table to its default view. Goes to page 1, default page size and clears sorts and filters.
+        /// </summary>
         public void ResetData()
         {
             ChangePageIndex(1);
@@ -412,6 +552,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Get the query model for the table
+        /// </summary>
+        /// <returns></returns>
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
 
         private QueryModel<TItem> BuildQueryModel()

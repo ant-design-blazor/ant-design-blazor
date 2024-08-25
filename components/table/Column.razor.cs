@@ -25,12 +25,15 @@ namespace AntDesign
         [CascadingParameter(Name = "ItemType")]
         public Type ItemType { get; set; }
 
-        [Parameter]
-        public EventCallback<TData> FieldChanged { get; set; }
-
+        /// <summary>
+        /// Expression to get the data for the field
+        /// </summary>
         [Parameter]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
+        /// <summary>
+        /// Field this column represents
+        /// </summary>
         [Parameter]
         public RenderFragment FilterDropdown { get; set; }
 
@@ -52,35 +55,74 @@ namespace AntDesign
 
         private TData _field;
 
-        public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
+        /// <summary>
+        /// Title of the column. Uses the following order of priority: <see cref="ColumnBase.Title"/>, <see cref="DisplayName"/>, then <see cref="FieldName"/>
+        /// </summary>
+        public override string Title
+        {
+            get => base.Title ?? DisplayName ?? FieldName;
+            set => base.Title = value;
+        }
 
+        /// <summary>
+        /// The corresponding path of the column data in the data item, support for querying the nested path through the array
+        /// </summary>
         [Parameter]
         public string DataIndex { get; set; }
 
+        /// <summary>
+        /// Column data serialization rules, such as DateTime.ToString("XXX")
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Whether to allow sorting or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Sortable { get; set; }
 
+        /// <summary>
+        /// Comparison function for custom sort
+        /// </summary>
         [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
+        /// <summary>
+        /// Number of similtaneous sorts allowed
+        /// </summary>
         [Parameter]
         public int SorterMultiple { get; set; }
 
+        /// <summary>
+        /// Whether to show tooltip when hovering over sort button or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
+        /// <summary>
+        /// Allowable sort directions
+        /// </summary>
         [Parameter]
         public SortDirection[] SortDirections { get; set; }
 
+        /// <summary>
+        /// Default sort direction
+        /// </summary>
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
 
+        /// <summary>
+        /// Set cell attributes
+        /// </summary>
         [Parameter]
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
 
+        /// <summary>
+        /// Set header cell attributes
+        /// </summary>
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
@@ -88,6 +130,10 @@ namespace AntDesign
 
         private bool _hasFilterableAttribute;
 
+        /// <summary>
+        /// Whether the column is filterable or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Filterable
         {
@@ -120,6 +166,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether to allow multiple filters or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public IEnumerable<TableFilter> DefaultFilters { get; set; }
 
@@ -155,12 +205,24 @@ namespace AntDesign
 
         private Type _columnDataType;
 
+        /// <summary>
+        /// Display name for the column
+        /// </summary>
         public string DisplayName { get; private set; }
 
+        /// <summary>
+        /// Field name for the column
+        /// </summary>
         public string FieldName { get; private set; }
 
+        /// <summary>
+        /// Sort model of the column
+        /// </summary>
         public ITableSortModel SortModel { get; private set; }
 
+        /// <summary>
+        /// Filter model of the column
+        /// </summary>
         public ITableFilterModel FilterModel { get; private set; }
 
         private SortDirection _sortDirection;

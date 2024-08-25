@@ -52,6 +52,9 @@ namespace AntDesign
 
         protected IForm Form => FormItem?.Form;
 
+        /// <summary>
+        /// Validation messages for the FormItem
+        /// </summary>
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
         private string _formSize;
@@ -100,17 +103,20 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Gets or sets a callback that updates the bound value.
+        /// Callback that updates the bound value.
         /// </summary>
         [Parameter]
         public virtual EventCallback<TValue> ValueChanged { get; set; }
 
         /// <summary>
-        /// Gets or sets an expression that identifies the bound value.
+        /// An expression that identifies the bound value.
         /// </summary>
         [Parameter]
         public Expression<Func<TValue>> ValueExpression { get; set; }
 
+        /// <summary>
+        /// An expression that identifies the enumerable of bound values.
+        /// </summary>
         [Parameter]
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
@@ -118,6 +124,7 @@ namespace AntDesign
         /// The size of the input box. Note: in the context of a form,
         /// the `large` size is used. Available: `large` `default` `small`
         /// </summary>
+        /// <default value="AntSizeLDSType.Default"/>
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
@@ -125,6 +132,7 @@ namespace AntDesign
         /// What Culture will be used when converting string to value and value to string
         /// Useful for InputNumber component.
         /// </summary>
+        /// <default value="CultureInfo.CurrentCulture"/>
         [Parameter]
         public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 

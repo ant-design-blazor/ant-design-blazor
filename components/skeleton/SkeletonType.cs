@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OneOf;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public static class SkeletonElementSize
     {

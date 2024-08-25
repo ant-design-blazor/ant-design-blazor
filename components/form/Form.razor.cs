@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,6 +17,23 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>High performance Form component with data scope management. Including data collection, verification, and styles.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When you need to create an instance or collect information.</item>
+        <item>When you need to validate fields in certain rules.</item>
+    </list>
+    </summary>
+    <seealso cref="FormValidateMode"/>
+    <seealso cref="FormItem" />
+    <seealso cref="FormValidationRule"/>
+    <seealso cref="FormValidateErrorMessages"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg", Columns = 1)]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TModel))]
 #endif
@@ -31,18 +52,34 @@ namespace AntDesign
         [Parameter]
         public FormRequiredMark RequiredMark { get; set; } = FormRequiredMark.Required;
 
+        /// <summary>
+        /// Layout of form items in the form
+        /// </summary>
+        /// <default value="FormLayout.Horizontal"/>
         [Parameter]
         public string Layout { get; set; } = FormLayout.Horizontal;
 
+        /// <summary>
+        /// Content of the form. Typically contains different form inputs and layout elements.
+        /// </summary>
         [Parameter]
         public RenderFragment<TModel> ChildContent { get; set; }
 
+        /// <summary>
+        /// Control the layout of the label. Commonly used to set widths for different screen sizes.
+        /// </summary>
         [Parameter]
         public ColLayoutParam LabelCol { get; set; } = new ColLayoutParam();
 
+        /// <summary>
+        /// Align the label to the left or right
+        /// </summary>
         [Parameter]
         public AntLabelAlignType? LabelAlign { get; set; }
 
+        /// <summary>
+        /// Gets/sets the <c>Span</c> property on <see cref="LabelCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> LabelColSpan
         {
@@ -50,6 +87,9 @@ namespace AntDesign
             set { LabelCol.Span = value; }
         }
 
+        /// <summary>
+        /// Gets/sets the <c>Offset</c> property on <see cref="LabelCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> LabelColOffset
         {
@@ -57,9 +97,15 @@ namespace AntDesign
             set { LabelCol.Offset = value; }
         }
 
+        /// <summary>
+        /// Control the layout of the input element's wrapper. Commonly used to set widths for different screen sizes.
+        /// </summary>
         [Parameter]
         public ColLayoutParam WrapperCol { get; set; } = new ColLayoutParam();
 
+        /// <summary>
+        /// Gets/sets the <c>Span</c> property on <see cref="WrapperCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> WrapperColSpan
         {
@@ -67,6 +113,9 @@ namespace AntDesign
             set { WrapperCol.Span = value; }
         }
 
+        /// <summary>
+        /// Gets/sets the <c>Offset</c> property on <see cref="WrapperColOffset"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> WrapperColOffset
         {
@@ -74,6 +123,9 @@ namespace AntDesign
             set { WrapperCol.Offset = value; }
         }
 
+        /// <summary>
+        /// The size of the ant components inside the form
+        /// </summary>
         [Parameter]
         public string Size { get; set; }
 
@@ -90,6 +142,9 @@ namespace AntDesign
         [Parameter]
         public string Method { get; set; } = "get";
 
+        /// <summary>
+        /// The model to bind the form inputs to
+        /// </summary>
         [Parameter]
         public TModel Model
         {
@@ -106,24 +161,46 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// If the form is loading or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Loading { get; set; }
 
+        /// <summary>
+        /// Callback executed when the form is submitted and PASSES validation.
+        /// </summary>
         [Parameter]
         public EventCallback<EditContext> OnFinish { get; set; }
 
+        /// <summary>
+        /// Callback executed when the form is submitted and FAILS validation.
+        /// </summary>
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
+        /// <summary>
+        /// Callback executed when a field inside the form changes
+        /// </summary>
         [Parameter]
         public EventCallback<FieldChangedEventArgs> OnFieldChanged { get; set; }
 
+        /// <summary>
+        /// Callback executed when validation is requested
+        /// </summary>
         [Parameter]
         public EventCallback<ValidationRequestedEventArgs> OnValidationRequested { get; set; }
 
+        /// <summary>
+        /// Callback executed when the validation changes
+        /// </summary>
         [Parameter]
         public EventCallback<ValidationStateChangedEventArgs> OnValidationStateChanged { get; set; }
 
+        /// <summary>
+        /// Validator to use in the form. Used when <see cref="ValidateMode"/> is <c>FormValidateMode.Default</c> or <c>FormValidateMode.Complex</c>
+        /// </summary>
         [Parameter]
         public RenderFragment Validator { get; set; } = _defaultValidator;
 
@@ -133,6 +210,10 @@ namespace AntDesign
         [Parameter]
         public bool ValidateOnChange { get; set; }
 
+        /// <summary>
+        /// Which mode of validation the form should use
+        /// </summary>
+        /// <default value="FormValidateMode.Default"/>
         [Parameter]
         public FormValidateMode ValidateMode { get; set; } = FormValidateMode.Default;
 
@@ -324,6 +405,9 @@ namespace AntDesign
             _rulesValidator.DisplayErrors(errors);
         }
 
+        /// <summary>
+        /// Reset all the values in the form
+        /// </summary>
         public void Reset()
         {
             _controls.ForEach(item => item.Reset());
@@ -353,6 +437,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Submit the form. Will trigger validation and either <see cref="OnFinish"/> or <see cref="OnFinishFailed"/>.
+        /// </summary>
         public void Submit()
         {
             var isValid = Validate();
@@ -380,6 +467,9 @@ namespace AntDesign
         }
 
 
+        /// <summary>
+        /// Reset validation
+        /// </summary>
         public void ValidationReset() => BuildEditContext();
 
         public EditContext EditContext => _editContext;

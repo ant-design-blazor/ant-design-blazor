@@ -101,5 +101,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="AntDesign.Tests" />
+    <InternalsVisibleTo Include="AntDesign.Docs" />
+    <InternalsVisibleTo Include="AntDesign.Docs.Build.CLI" />
   </ItemGroup>
 </Project>

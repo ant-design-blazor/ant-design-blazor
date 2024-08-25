@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public class Text : TypographyBase
     {
         protected override string HtmlType => "span";
