@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Link in an Anchor list. Designed to be a child of Anchor
+    /// </summary>
     [DebuggerDisplay("Href: {Href}")]
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
@@ -22,7 +25,7 @@ namespace AntDesign
         private bool _hrefDomExist;
         private ClassMapper _titleClass = new ClassMapper();
         private List<AnchorLink> _links = new List<AnchorLink>();
-        public DomRect LinkDom { get; private set; }
+        internal DomRect LinkDom { get; private set; }
 
         #region Parameters
 
@@ -43,17 +46,20 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Additional content. Does not override Title.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// target of hyperlink
+        /// Target of hyperlink
         /// </summary>
         [Parameter]
         public string Href { get; set; }
 
         /// <summary>
-        /// content of hyperlink
+        /// Content of hyperlink
         /// </summary>
         [Parameter]
         public string Title { get; set; }

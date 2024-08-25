@@ -13,27 +13,63 @@ namespace AntDesign
     {
         private static readonly string _prefixCls = "ant-layout-sider";
 
-        [Parameter] public bool Collapsible { get; set; }
-
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        /// <summary>
+        /// If sider is collapsible or not
+        /// </summary>
+        [Parameter]
+        public bool Collapsible { get; set; }
 
         /// <summary>
-        /// When Trigger is null, `OnCollapse` won't be invoked after `Collapsed` was changed.
+        /// Content of the sider
         /// </summary>
-        [Parameter] public RenderFragment Trigger { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public bool NoTrigger { get; set; }
+        /// <summary>
+        /// Collapse/expand UI element to allow manually changing.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Trigger { get; set; }
 
-        [CascadingParameter] public Layout Parent { get; set; }
+        /// <summary>
+        /// Remove UI trigger for collapse/expanding manually
+        /// </summary>
+        [Parameter]
+        public bool NoTrigger { get; set; }
 
-        [Parameter] public BreakpointType? Breakpoint { get; set; }
+        [CascadingParameter] 
+        public Layout Parent { get; set; }
 
-        [Parameter] public SiderTheme Theme { get; set; } = SiderTheme.Dark;
+        /// <summary>
+        /// Breakpoint at which sider will collapse by default
+        /// </summary>
+        [Parameter]
+        public BreakpointType? Breakpoint { get; set; }
 
-        [Parameter] public int Width { get; set; } = 200;
+        /// <summary>
+        /// Color theme
+        /// </summary>
+        /// <default value="SiderTheme.Dark"/>
+        [Parameter]
+        public SiderTheme Theme { get; set; } = SiderTheme.Dark;
 
-        [Parameter] public int CollapsedWidth { get; set; } = 80;
+        /// <summary>
+        /// Width of sider when expanded, in pixels
+        /// </summary>
+        /// <default value="200" />
+        [Parameter]
+        public int Width { get; set; } = 200;
 
+        /// <summary>
+        /// Width of sider when collapsed, in pixels
+        /// </summary>
+        /// <default value="80" />
+        [Parameter]
+        public int CollapsedWidth { get; set; } = 80;
+
+        /// <summary>
+        /// If sider is collapsed or not
+        /// </summary>
         [Parameter]
         public bool Collapsed
         {
@@ -48,13 +84,22 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when sider is changes from open to collapsed, regardless of what caused it
+        /// </summary>
         [Parameter]
         public EventCallback<bool> CollapsedChanged { get; set; }
 
+        /// <summary>
+        /// Callback executed when sider is changes from open to collapsed, regardless of what caused it
+        /// </summary>
         [Obsolete("Use CollapsedChanged instead")]
         [Parameter]
         public EventCallback<bool> OnCollapse { get; set; }
 
+        /// <summary>
+        /// Callback executed when window size changes the breakpoint
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
 

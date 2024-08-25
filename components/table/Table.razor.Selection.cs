@@ -15,7 +15,7 @@ namespace AntDesign
         private IEnumerable<TItem> _outerSelectedRows;
 
         /// <summary>
-        /// Selected rows across pages
+        /// Rows that are selected across pages
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> SelectedRows
@@ -27,6 +27,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the selected rows change
+        /// </summary>
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 

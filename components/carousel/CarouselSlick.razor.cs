@@ -25,11 +25,15 @@ namespace AntDesign
                 }
             }
         }
+
         #region Parameters
 
         [CascadingParameter]
         internal Carousel Parent { get; set; }
 
+        /// <summary>
+        /// Content to display when on this part of the carousel
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

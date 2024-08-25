@@ -9,9 +9,19 @@ namespace AntDesign
 {
     public abstract class AntInputBoolComponentBase : AntInputComponentBase<bool>
     {
-        [Parameter] public bool AutoFocus { get; set; }
+        /// <summary>
+        /// Whether to autofocus on the input or not
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool AutoFocus { get; set; }
 
         private bool _checked;
+
+        /// <summary>
+        /// If the input is checked or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Checked
         {
@@ -26,6 +36,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the input changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnChange { get; set; }
 
@@ -35,6 +48,10 @@ namespace AntDesign
         [Parameter]
         public virtual EventCallback<bool> CheckedChanged { get; set; }
 
+        /// <summary>
+        /// Disable the input
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; }
 

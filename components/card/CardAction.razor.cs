@@ -8,9 +8,11 @@ namespace AntDesign
 {
     public partial class CardAction : AntDomComponentBase
     {
-        [CascadingParameter] private Card Card { get; set; }
+        [CascadingParameter]
+        private Card Card { get; set; }
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         protected override void OnInitialized()
         {

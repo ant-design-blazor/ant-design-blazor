@@ -2,20 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-/* Unmerged change from project 'AntDesign(net5.0)'
-Before:
-using Microsoft.AspNetCore.Components;
-After:
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using Microsoft.AspNetCore.Components;
-*/
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -27,13 +13,13 @@ namespace AntDesign
     {
         /// <summary>
         /// Search input is rendered with suffix search icon, not as a button.
-        /// Will be ignored when EnterButton != false
+        /// Will be ignored when <see cref="EnterButton"/> != false
         /// </summary>
         [Parameter]
         public bool ClassicSearchIcon { get; set; }
 
         /// <summary>
-        /// Whether to show an enter button after input. This property conflicts with the AddonAfter property
+        /// Whether to show an enter button after input. This property conflicts with the <see cref="Input{TValue}.AddOnAfter"/>
         /// </summary>
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; } = false;
@@ -45,7 +31,7 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         /// <summary>
-        /// The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key
+        /// Callback executed when you click on the search-icon, the clear-icon or press the Enter key
         /// </summary>
         [Parameter]
         public EventCallback<string> OnSearch { get; set; }

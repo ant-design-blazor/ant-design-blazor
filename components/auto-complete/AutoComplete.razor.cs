@@ -16,43 +16,72 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Autocomplete function of input field.</para>
+     
+    <h2>When To Use</h2>
+    When there is a need for autocomplete functionality.
+    </summary>
+    <inheritdoc />
+    <seealso cref="AutoCompleteOption" />
+    <seealso cref="TriggerBoundaryAdjustMode"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg")]
     public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef
     {
-        #region Parameters
-
+        /// <summary>
+        /// Input element placeholder
+        /// </summary>
         [Parameter]
         public string Placeholder { get; set; }
 
+        /// <summary>
+        /// Disable
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Make first option active by default or not
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool DefaultActiveFirstOption { get; set; } = true;
 
+        /// <summary>
+        /// Backfill selected item into the input when using keyboard to select items
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Backfill { get; set; } = false;
 
+        /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped
+        /// typing for a predetermined amount of time
+        /// </summary>
+        /// <default value="250"/>
         [Parameter]
         public int DebounceMilliseconds { get; set; } = 250;
 
         /// <summary>
-        /// 列表对象集合
         /// List object collection
         /// </summary>
         private List<AutoCompleteOption> AutoCompleteOptions { get; set; } = new List<AutoCompleteOption>();
 
         /// <summary>
-        /// 列表数据集合
         /// List data collection
         /// </summary>
         private List<AutoCompleteDataItem<TOption>> _optionDataItems = new List<AutoCompleteDataItem<TOption>>();
 
         /// <summary>
-        /// 列表绑定数据源集合
         /// List bound data source collection
         /// </summary>
         private IEnumerable<TOption> _options;
 
+        /// <summary>
+        /// Options to display in dropdown
+        /// </summary>
         [Parameter]
         public IEnumerable<TOption> Options
         {
@@ -68,7 +97,6 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 绑定列表数据项格式的数据源
         /// Bind the data source of the list data item format
         /// </summary>
         [Parameter]
@@ -84,100 +112,124 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when selection changes
+        /// </summary>
         [Parameter]
         public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when active item changes
+        /// </summary>
         [Parameter]
         public EventCallback<AutoCompleteOption> OnActiveChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when input changes
+        /// </summary>
         [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
+        /// <summary>
+        /// Callback executed when panel visibility changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnPanelVisibleChange { get; set; }
 
+        /// <summary>
+        /// Content for dropdown
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// 选项模板
         /// Option template
         /// </summary>
         [Parameter]
         public RenderFragment<AutoCompleteDataItem<TOption>> OptionTemplate { get; set; }
 
         /// <summary>
-        /// 格式化选项，可以自定义显示格式
         /// Formatting options, you can customize the display format
         /// </summary>
         [Parameter]
         public Func<AutoCompleteDataItem<TOption>, string> OptionFormat { get; set; }
 
         /// <summary>
-        /// 所有选项模板
         /// All option templates
         /// </summary>
         [Parameter]
         public RenderFragment OverlayTemplate { get; set; }
 
         /// <summary>
-        /// 对比，用于两个对象比较是否相同
         /// Contrast, used to compare whether two objects are the same
         /// </summary>
         [Parameter]
         public Func<object, object, bool> CompareWith { get; set; } = (o1, o2) => o1?.ToString() == o2?.ToString();
 
         /// <summary>
-        /// 过滤表达式
         /// Filter expression
         /// </summary>
         [Parameter]
         public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? false : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
-        /// 允许过滤
         /// Allow filtering
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool AllowFilter { get; set; } = true;
 
+        /// <summary>
+        /// Width of input, pixels when an int is given, full value given to CSS width property when a string is given
+        /// </summary>
         [Parameter]
         public OneOf<int?, string> Width { get; set; }
 
+        /// <summary>
+        /// Class name passed to overlay
+        /// </summary>
         [Parameter]
         public string OverlayClassName { get; set; }
 
+        /// <summary>
+        /// Style passed to overlay
+        /// </summary>
         [Parameter]
         public string OverlayStyle { get; set; }
 
+        /// <summary>
+        /// Container selector for the popup
+        /// </summary>
+        /// <default value="body" />
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
-        #endregion Parameters
-
-        //private ElementReference _divRef;
         private OverlayTrigger _overlayTrigger;
 
         public object SelectedValue { get; set; }
 
         /// <summary>
-        /// 选择的项
+        /// Selected item from dropdown
         /// </summary>
         [Parameter]
         public AutoCompleteOption SelectedItem { get; set; }
 
         /// <summary>
-        /// 高亮的项目
+        /// Active item
         /// </summary>
         public object ActiveValue { get; set; }
 
         /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening). Check
-        /// enum for details.
+        /// Overlay adjustment strategy (when for example browser resize is happening). Check 
         /// </summary>
+        /// <default value="TriggerBoundaryAdjustMode.InView"/>
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
+        /// <summary>
+        /// Display options dropdown
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowPanel { get; set; } = false;
 
@@ -293,7 +345,6 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 打开面板
         /// Open panel
         /// </summary>
         public void OpenPanel()
@@ -310,7 +361,6 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 关闭面板
         /// Close panel
         /// </summary>
         public void ClosePanel()

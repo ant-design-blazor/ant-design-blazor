@@ -13,6 +13,14 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <para>Hyperlinks to scroll on one page.</para>
+    /// 
+    /// <h2>When To Use</h2>
+    /// <para>For displaying anchor hyperlinks on page and jumping between them.</para>
+    /// </summary>
+    /// <seealso cref="AnchorLink" />
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg")]
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
         private string _ballClass = "ant-anchor-ink-ball";
@@ -58,18 +66,21 @@ namespace AntDesign
         /// <summary>
         /// Fixed mode of Anchor
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Affix { get; set; } = true;
 
         /// <summary>
         /// Bounding distance of anchor area
         /// </summary>
+        /// <default value="5" />
         [Parameter]
         public int Bounds { get; set; } = 5;
 
         /// <summary>
         /// Scrolling container
         /// </summary>
+        /// <default value="window" />
         [Parameter]
         public Func<string> GetContainer { get; set; } = () => "window";
 
@@ -82,12 +93,14 @@ namespace AntDesign
         /// <summary>
         /// Pixels to offset from top when calculating position of scroll
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int? OffsetTop { get; set; } = 0;
 
         /// <summary>
         /// Whether show ink-balls in Fixed mode
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowInkInFixed { get; set; } = false;
 
@@ -109,6 +122,9 @@ namespace AntDesign
         [Parameter]
         public int? TargetOffset { get; set; }
 
+        /// <summary>
+        /// Callback executed when the anchor changes, either by click or scrolling
+        /// </summary>
         [Parameter]
         public EventCallback<string> OnChange { get; set; }
 

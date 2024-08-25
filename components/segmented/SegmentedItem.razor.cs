@@ -8,18 +8,34 @@ namespace AntDesign
 {
     public partial class SegmentedItem<TValue> : AntDomComponentBase
     {
+        /// <summary>
+        /// Value of the segment item
+        /// </summary>
         [Parameter]
         public TValue Value { get; set; }
 
+        /// <summary>
+        /// Label for the UI of the segment item
+        /// </summary>
         [Parameter]
         public string Label { get; set; }
 
+        /// <summary>
+        /// If the segment is disabled
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// UI content to display in the segment. Takes priority over <see cref="Label"/> and <see cref="Icon"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Icon to display next to the label of the segment. Only used when <see cref="ChildContent"/> is not provided.
+        /// </summary>
         [Parameter]
         public string Icon { get; set; }
 

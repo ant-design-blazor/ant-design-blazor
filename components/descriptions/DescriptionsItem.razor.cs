@@ -8,15 +8,28 @@ namespace AntDesign
 {
     public partial class DescriptionsItem : AntDomComponentBase, IDescriptionsItem
     {
+        /// <summary>
+        /// Title for the item
+        /// </summary>
         [Parameter]
-        public string Title { get; set; } = "";
+        public string Title { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Title content for the item. Takes priority over <see cref="Title"/>
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// Span of the item
+        /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public int Span { get; set; } = 1;
 
+        /// <summary>
+        /// Content for the item
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

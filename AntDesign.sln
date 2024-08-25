@@ -36,6 +36,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests.Js", "tests\AntDesign.Tests.Js\AntDesign.Tests.Js.csproj", "{3C4ADCD5-6879-4478-9BA5-28C894AD52F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.Build", "site\AntDesign.Docs.Build\AntDesign.Docs.Build.csproj", "{67E9D6C5-106F-412C-B43C-F096145FD8A9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5A765767-0766-433D-B78D-97D8F29CA6A6} = {5A765767-0766-433D-B78D-97D8F29CA6A6}
+		{E2E6E4E8-2156-4B55-8164-40349D86330B} = {E2E6E4E8-2156-4B55-8164-40349D86330B}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntDesign.TestApp", "AntDesign.TestApp", "{606789E3-AFE9-4489-9963-2B06A701D6B6}"
 EndProject

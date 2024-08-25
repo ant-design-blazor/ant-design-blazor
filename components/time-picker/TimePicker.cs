@@ -4,6 +4,18 @@
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>To select/input a time.</para>
+
+    <h2>When To Use</h2>
+
+    <para>By clicking the input box, you can select a time from a popup panel.</para>
+    </summary>
+    <inheritdoc />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg")]
+
     public class TimePicker<TValue> : DatePicker<TValue>
     {
         public TimePicker()

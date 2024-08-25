@@ -12,57 +12,130 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Double column transfer choice box.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>It is a select control essentially which can be use for selecting multiple items.</item>
+        <item>Transfer can display more information for items and take up more space.</item>
+    </list>
+
+    <para>Transfer the elements between two columns in an intuitive and efficient way.</para>
+
+    <para>
+        One or more elements can be selected from either column, one click on the proper `direction` button, and the transfer is done. 
+        The left column is considered the `source` and the right column is considered the `target`. 
+        As you can see in the API description, these names are reflected in.
+    </para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg", Columns = 1)]
     public partial class Transfer : AntDomComponentBase
     {
         private const string PrefixName = "ant-transfer";
         private const string DisabledClass = "ant-transfer-list-content-item-disabled";
         private const string FooterClass = "ant-transfer-list-with-footer";
 
+        /// <summary>
+        /// Used for setting the source data. 
+        /// The elements that are part of this array will be present jn the left column, except for the elements whose keys are included in <see cref="TargetKeys"/>.
+        /// </summary>
         [Parameter]
         public IEnumerable<TransferItem> DataSource { get; set; }
 
+        /// <summary>
+        /// Titles for the columns left to right. Must be an array with 2 elements.
+        /// </summary>
         [Parameter]
         public string[] Titles { get; set; } = new string[2];
 
+        /// <summary>
+        /// Labels to display next to the icons for the operations, from top to bottom. Must be an array with 2 elements.
+        /// </summary>
         [Parameter]
         public string[] Operations { get; set; } = new string[2];
 
+        /// <summary>
+        /// Whether the component is disabled or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; } = false;
 
+        /// <summary>
+        /// Whether to show search bars in the columns or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool ShowSearch { get; set; } = false;
 
+        /// <summary>
+        /// Whether to show select all buttons in the columns or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool ShowSelectAll { get; set; } = true;
 
+        /// <summary>
+        /// Keys of elements that are listed in the right column
+        /// </summary>
         [Parameter]
         public IEnumerable<string> TargetKeys { get; set; }
 
+        /// <summary>
+        /// Currently selected items
+        /// </summary>
         [Parameter]
         public IEnumerable<string> SelectedKeys { get; set; }
 
+        /// <summary>
+        /// Callback executed when an item moves columns
+        /// </summary>
         [Parameter]
         public EventCallback<TransferChangeArgs> OnChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when a column is scrolled
+        /// </summary>
         [Parameter]
         public EventCallback<TransferScrollArgs> OnScroll { get; set; }
 
+        /// <summary>
+        /// Callback executed when a column is searched
+        /// </summary>
         [Parameter]
         public EventCallback<TransferSearchArgs> OnSearch { get; set; }
 
+        /// <summary>
+        /// Callbac executed when the selected items change in either column
+        /// </summary>
         [Parameter]
         public EventCallback<TransferSelectChangeArgs> OnSelectChange { get; set; }
 
+        /// <summary>
+        /// Custom render for the items in the columns
+        /// </summary>
         [Parameter]
         public Func<TransferItem, OneOf<string, RenderFragment>> Render { get; set; }
 
+        /// <summary>
+        /// Locacle used for localization of text
+        /// </summary>
         [Parameter]
         public TransferLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Transfer;
 
+        /// <summary>
+        /// Footer string displayed in the footer of each column
+        /// </summary>
         [Parameter]
         public string Footer { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Footer content displayed in the footer of each column
+        /// </summary>
         [Parameter]
         public RenderFragment FooterTemplate { get; set; }
 

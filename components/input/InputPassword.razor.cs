@@ -21,8 +21,9 @@ namespace AntDesign
         public RenderFragment IconRender { get; set; }
 
         /// <summary>
-        ///  Whether to show password
+        /// Whether to show password or not
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowPassword
         {
@@ -38,8 +39,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Whether show toggle button
+        /// Whether to show password visibility toggle button or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
 

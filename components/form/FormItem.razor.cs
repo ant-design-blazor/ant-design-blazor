@@ -47,21 +47,39 @@ namespace AntDesign
         [CascadingParameter]
         private EditContext CurrentEditContext { get; set; }
 
+        /// <summary>
+        /// Content for the form item. Typically will contain one of the input elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Custom label for the item. If neither <see cref="Label"/> or <see cref="LabelTemplate"/> are provided, the DisplayName attribute value or field name will be used (in that order).
+        /// </summary>
         [Parameter]
         public string Label { get; set; }
 
+        /// <summary>
+        /// Custom label content for the item. Takes priority over <see cref="Label"/>. If neither <see cref="Label"/> or <see cref="LabelTemplate"/> are provided, the DisplayName attribute value or field name will be used (in that order).
+        /// </summary>
         [Parameter]
         public RenderFragment LabelTemplate { get; set; }
 
+        /// <summary>
+        /// Control the layout of the label. Commonly used to set widths for different screen sizes.
+        /// </summary>
         [Parameter]
         public ColLayoutParam LabelCol { get; set; }
 
+        /// <summary>
+        /// Align the label to the left or right
+        /// </summary>
         [Parameter]
         public AntLabelAlignType? LabelAlign { get; set; }
 
+        /// <summary>
+        /// Gets/sets the <c>Span</c> property on <see cref="LabelCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> LabelColSpan
         {
@@ -73,6 +91,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Gets/sets the <c>Offset</c> property on <see cref="LabelCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> LabelColOffset
         {
@@ -84,9 +105,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Control the layout of the input element's wrapper. Commonly used to set widths for different screen sizes.
+        /// </summary>
         [Parameter]
         public ColLayoutParam WrapperCol { get; set; }
 
+        /// <summary>
+        /// Gets/sets the <c>Span</c> property on <see cref="WrapperCol"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> WrapperColSpan
         {
@@ -98,6 +125,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Gets/sets the <c>Offset</c> property on <see cref="WrapperColOffset"/>.
+        /// </summary>
         [Parameter]
         public OneOf<string, int> WrapperColOffset
         {
@@ -109,6 +139,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// No style when true, it is used as a pure field control
+        /// </summary>
         [Parameter]
         public bool NoStyle { get; set; } = false;
 
@@ -120,25 +153,37 @@ namespace AntDesign
 
         IForm IFormItem.Form => Form;
 
+        /// <summary>
+        /// Mark this item as required for validation purposes
+        /// </summary>
         [Parameter]
         public bool Required { get; set; } = false;
 
         /// <summary>
-        /// Style that will only be applied to <label></label> element.
+        /// Style that will only be applied to label element.
         /// Will not be applied if LabelTemplate is set.
         /// </summary>
         [Parameter]
         public string LabelStyle { get; set; }
 
+        /// <summary>
+        /// Validation rules to apply to this item
+        /// </summary>
         [Parameter]
         public FormValidationRule[] Rules { get; set; }
 
+        /// <summary>
+        /// Used in conjunction with <see cref="ValidateStatus"/> to display the verification status icon. It is recommended to use it only with the Input component
+        /// </summary>
         [Parameter]
         public bool HasFeedback { get; set; }
 
         [Parameter]
         public bool ShowFeedbackOnError { get; set; }
 
+        /// <summary>
+        /// Validation status, if not set, it will be automatically generated according to validation rules
+        /// </summary>
         [Parameter]
         public FormValidateStatus ValidateStatus
         {
@@ -155,6 +200,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Prompt information
+        /// </summary>
         [Parameter]
         public string Help { get; set; }
 

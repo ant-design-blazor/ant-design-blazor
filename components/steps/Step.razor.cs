@@ -47,9 +47,15 @@ namespace AntDesign
         [CascadingParameter]
         public Steps Parent { get; set; }
 
+        /// <summary>
+        /// Icon of the step
+        /// </summary>
         [Parameter]
         public string Icon { get; set; }
 
+        /// <summary>
+        /// To specify the status. It will be automatically set by current of Steps if not configured. Possible Values: wait, process, finish, error
+        /// </summary>
         [Parameter]
         public string Status
         {
@@ -65,21 +71,54 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public string Title { get; set; } = string.Empty;
+        /// <summary>
+        /// Title of the step
+        /// </summary>
+        [Parameter]
+        public string Title { get; set; } = string.Empty;
 
-        [Parameter] public RenderFragment TitleTemplate { get; set; }
+        /// <summary>
+        /// Title of the step
+        /// </summary>
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
-        [Parameter] public string Subtitle { get; set; } = string.Empty;
+        /// <summary>
+        /// Subtitle of the step
+        /// </summary>
+        [Parameter]
+        public string Subtitle { get; set; } = string.Empty;
 
-        [Parameter] public RenderFragment SubtitleTemplate { get; set; }
+        /// <summary>
+        /// Subtitle of the step
+        /// </summary>
+        [Parameter]
+        public RenderFragment SubtitleTemplate { get; set; }
 
-        [Parameter] public string Description { get; set; } = string.Empty;
+        /// <summary>
+        /// Description of the step
+        /// </summary>
+        /// <default value="string.Empty" />
+        [Parameter]
+        public string Description { get; set; } = string.Empty;
 
-        [Parameter] public RenderFragment DescriptionTemplate { get; set; }
+        /// <summary>
+        /// Description of the step
+        /// </summary>
+        [Parameter]
+        public RenderFragment DescriptionTemplate { get; set; }
 
-        [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+        /// <summary>
+        /// Callback executed when clicking step
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Parameter] public bool Disabled { get; set; }
+        /// <summary>
+        /// Disable click
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
 
         protected override void OnInitialized()
         {

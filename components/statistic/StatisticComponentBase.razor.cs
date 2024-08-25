@@ -9,37 +9,55 @@ namespace AntDesign
     public abstract class StatisticComponentBase<T> : AntDomComponentBase
     {
         /// <summary>
-        /// 设置数值的前缀
+        /// Prefix text for before the displayed value
         /// </summary>
-        [Parameter] public string Prefix { get; set; }
-
-        [Parameter] public RenderFragment PrefixTemplate { get; set; }
+        [Parameter]
+        public string Prefix { get; set; }
 
         /// <summary>
-        /// 设置数值的后缀
+        /// Prefix content for before the displayed value
         /// </summary>
-        [Parameter] public string Suffix { get; set; }
-
-        [Parameter] public RenderFragment SuffixTemplate { get; set; }
+        [Parameter]
+        public RenderFragment PrefixTemplate { get; set; }
 
         /// <summary>
-        /// 数值的标题
+        /// Suffix string for after the displayed value
         /// </summary>
-        [Parameter] public string Title { get; set; }
-
-        [Parameter] public RenderFragment TitleTemplate { get; set; }
+        [Parameter]
+        public string Suffix { get; set; }
 
         /// <summary>
-        /// 数值内容
+        /// Suffix content for after the displayed value
         /// </summary>
-        [Parameter] public virtual T Value { get; set; }
+        [Parameter]
+        public RenderFragment SuffixTemplate { get; set; }
 
         /// <summary>
-        /// 设置数值的样式
+        /// Title string for the value
         /// </summary>
-        [Parameter] public string ValueStyle { get; set; }
+        [Parameter]
+        public string Title { get; set; }
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        /// <summary>
+        /// Title content for the value
+        /// </summary>
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
+
+        /// <summary>
+        /// Value for displaying
+        /// </summary>
+        [Parameter]
+        public virtual T Value { get; set; }
+
+        /// <summary>
+        /// Style for the value display
+        /// </summary>
+        [Parameter]
+        public string ValueStyle { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         private void SetClassMap()
         {

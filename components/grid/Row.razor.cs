@@ -20,32 +20,45 @@ namespace AntDesign
      * (int, Dictionary<string, int>)                       - horizontal gutter, vertical gutter for different screen sizes
      * (Dictionary<string, int>, Dictionary<string, int>)   - horizontal gutters for different screen sizes, vertical gutter for different screen sizes
      */
-
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int), (Dictionary<string, int>, int), (int, Dictionary<string, int>), (Dictionary<string, int>, Dictionary<string, int>)>;
 
     public partial class Row : AntDomComponentBase
     {
+        /// <summary>
+        /// Content of the row, generally contains <see cref="Col"/> elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Currently unused
+        /// </summary>
         [Parameter]
         public string Type { get; set; }
 
         /// <summary>
-        /// 'top' | 'middle' | 'bottom'
+        /// Vertical alignment for the flex layout: 'top' | 'middle' | 'bottom'
         /// </summary>
         [Parameter]
         public string Align { get; set; }
 
         /// <summary>
-        /// 'start' | 'end' | 'center' | 'space-around' | 'space-between'
+        /// Hotizontal alignment for the flex layout: 'start' | 'end' | 'center' | 'space-around' | 'space-between'
         /// </summary>
         [Parameter]
         public string Justify { get; set; }
 
+        /// <summary>
+        /// Allow the row's content to wrap or not
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Wrap { get; set; } = true;
 
+        /// <summary>
+        /// Spacing between grids, could be a number or a dictionary like 
+        /// <c>{ xs: 8, sm: 16, md: 24 }</c>, an array to make horizontal and vertical spacing work at the same time <c>[horizontal, vertical]</c>
+        /// </summary>
         [Parameter]
         public GutterType Gutter
         {
@@ -68,11 +81,14 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when a screen size breakpoint is triggered
+        /// </summary>
         [Parameter]
         public EventCallback<BreakpointType> OnBreakpoint { get; set; }
 
         /// <summary>
-        /// Used to set gutter during pre-rendering
+        /// Default screen size breakpoint. Used to set gutter during pre-rendering
         /// </summary>
         [Parameter]
         public BreakpointType? DefaultBreakpoint { get; set; } = BreakpointType.Xxl;

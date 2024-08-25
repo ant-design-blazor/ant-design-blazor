@@ -10,11 +10,47 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A dropdown list.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+        When there are more than a few options to choose from, you can wrap them in a <c>Dropdown</c>. 
+        By hovering or clicking on the trigger, a dropdown menu will appear, which allows you to choose an option and execute the relevant action.
+    </para>
+
+    <h2>Two types</h2>
+
+    <para>There are 2 rendering approaches for <c>Dropdown</c>:</para>
+    <list type="number">
+        <item>Wraps child element (content of the <c>Dropdown</c>) with a <c>div</c> (default approach).</item>
+        <item>
+            Child element is not wrapped with anything. This approach requires usage of <c>Unbound</c> tag inside <c>Dropdown</c> and depending on the child element type (please refer to the first example):
+            <list type="bullet">
+                <item>html tag: has to have its <c>@ref</c> set to <c>@context.Current</c> </item>
+                <item><c>Ant Design Blazor</c> component: has to have its <c>RefBack</c> attribute set to <c>@context</c>.</item>
+            </list>
+        </item>
+    </list>
+    </summary>
+    <seealso cref="DropdownButton"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg")]
     public partial class Dropdown : OverlayTrigger
     {
+        /// <summary>
+        /// Whether the dropdown arrow should be visible.
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Arrow { get; set; }
 
+        /// <summary>
+        /// Whether the dropdown arrow should point at center
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ArrowPointAtCenter { get; set; }
 

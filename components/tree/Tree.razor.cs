@@ -13,6 +13,22 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A hierarchical list structure component.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+        Almost anything can be represented in a tree structure. 
+        Examples include directories, organization hierarchies, biological classifications, countries, etc. 
+        The `Tree` component is a way of representing the hierarchical relationship between these things. 
+        You can also expand, collapse, and select a treeNode within a `Tree`.
+    </para>
+    </summary>
+    <seealso cref="TreeNode{TItem}" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
@@ -127,9 +143,15 @@ namespace AntDesign
 
         #region Node
 
+        /// <summary>
+        /// Nodes for the tree. Use either this, <see cref="DataSource"/>, or <see cref="ChildContent"/>
+        /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        /// <summary>
+        /// Nodes for the tree. Use either this, <see cref="DataSource"/>, or <see cref="Nodes"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -492,15 +514,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Function used to indicate if a node matches the search
+        /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         /// <summary>
-        /// Search for matching text styles
+        /// Style for the piece of a node that matches search
         /// </summary>
         [Parameter]
         public string MatchedStyle { get; set; } = "";
 
+        /// <summary>
+        /// Class name for the piece of a node that matches search
+        /// </summary>
         [Parameter]
         public string MatchedClass { get; set; }
 
@@ -564,7 +592,8 @@ namespace AntDesign
         #region DataBind
 
         /// <summary>
-        ///
+        /// Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <see cref="ChildContent"/>
+        /// Use either this, <see cref="Nodes"/>, or <see cref="ChildContent"/>
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
@@ -594,7 +623,7 @@ namespace AntDesign
         public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
         /// <summary>
-        /// Specifies a method  to return a child node
+        /// Specifies a method to return the children of a node
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
@@ -915,8 +944,9 @@ namespace AntDesign
         public bool ExpandOnClickNode { get; set; } = false;
 
         /// <summary>
-        /// All tree nodes are expanded by default
+        /// Whether to default to all nodes expanded or not
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool DefaultExpandAll { get; set; }
 

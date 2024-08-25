@@ -10,23 +10,37 @@ namespace AntDesign
 {
     public partial class ListItem : AntDomComponentBase
     {
-        public string PrefixName { get; set; } = "ant-list-item";
+        internal string PrefixName { get; set; } = "ant-list-item";
 
-        [Parameter] public string Content { get; set; }
+        /// <summary>
+        /// The extra content of list item. If itemLayout is vertical, shows the content on right, otherwise shows content on the far right.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Extra { get; set; }
 
-        [Parameter] public RenderFragment Extra { get; set; }
+        /// <summary>
+        /// The actions content of list item. If itemLayout is vertical, shows the content on bottom, otherwise shows content on the far right.
+        /// </summary>
+        [Parameter]
+        public RenderFragment[] Actions { get; set; }
 
-        [Parameter] public RenderFragment[] Actions { get; set; }
+        /// <summary>
+        /// Main content for the item
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        /// <summary>
+        /// Callback executed when the item is clicked
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClick { get; set; }
 
-        [Parameter] public string ColStyle { get; set; }
-
-        [Parameter] public int ItemCount { get; set; }
-
-        [Parameter] public EventCallback OnClick { get; set; }
-
-        [Parameter] public bool NoFlex { get; set; }
+        /// <summary>
+        /// Whether to use flex for item or not. When true, will not use flex.
+        /// </summary>
+        [Parameter]
+        public bool NoFlex { get; set; }
 
         [CascadingParameter]
         private IAntList AntList { get; set; }
@@ -34,7 +48,8 @@ namespace AntDesign
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
-        public bool IsVerticalAndExtra => AntList?.ItemLayout == ListItemLayout.Vertical && this.Extra != null;
+        internal bool IsVerticalAndExtra => AntList?.ItemLayout == ListItemLayout.Vertical && this.Extra != null;
+
         private ListGridType Grid => AntList.Grid;
 
         protected override async Task OnInitializedAsync()

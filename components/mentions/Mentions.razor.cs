@@ -14,6 +14,16 @@ using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Mention component.</para>
+
+    <h2>When To Use</h2>
+
+    <para>When need to mention someone or something.</para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg")]
     public partial class Mentions
     {
         [Parameter]

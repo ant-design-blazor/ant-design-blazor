@@ -10,9 +10,16 @@ namespace AntDesign
 {
     public partial class ImagePreviewGroup : IDisposable
     {
+        /// <summary>
+        /// Content for group. Typically contains <see cref="Image"/> elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Whether to open the preview image. Two-way binding.	
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool PreviewVisible
         {
@@ -27,6 +34,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when <see cref="PreviewVisible"/> changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> PreviewVisibleChanged { get; set; }
 

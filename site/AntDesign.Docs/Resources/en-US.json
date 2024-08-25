@@ -148,5 +148,6 @@
   "app.docs.components.icon.pic-searcher.result-tip": "Matched the following icons for you:",
   "app.docs.components.icon.pic-searcher.th-icon": "Icon",
   "app.docs.components.icon.pic-searcher.th-score": "Probability",
-  "app.components.overview.search": "Search in components"
+  "app.components.overview.search": "Search in components",
+  "app.components.overview.description": "<code>Ant Design Blazor</code> provides plenty of UI components to enrich your web applications, and we will improve components experience consistently. We also recommend some great Third-Party Libraries additionally."
 }

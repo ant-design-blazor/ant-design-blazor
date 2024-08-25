@@ -11,6 +11,27 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A versatile menu for navigation.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+    Navigation is an important part of any website, as a good navigation setup allows users to move around the site quickly and efficiently. 
+    Ant Design offers top and side navigation options. 
+    Top navigation provides all the categories and functions of the website. 
+    Side navigation provides the multi-level structure of the website.
+    </para>
+
+    <para>See Layouts for more layouts with navigation.</para>
+    </summary>
+    <seealso cref="MenuItem" />
+    <seealso cref="SubMenu" />
+    <seealso cref="MenuItemGroup" />
+    <seealso cref="MenuDivider" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg", Columns = 1)]
     public partial class Menu : AntDomComponentBase
     {
         [CascadingParameter(Name = "PrefixCls")]
@@ -22,11 +43,19 @@ namespace AntDesign
         [CascadingParameter(Name = "Overlay")]
         private Overlay Overlay { get; set; }
 
+        /// <summary>
+        /// Color theme of the menu
+        /// </summary>
+        /// <default value="MenuTheme.Light" />
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         internal MenuMode? InitialMode { get; private set; }
 
+        /// <summary>
+        /// Type of menu
+        /// </summary>
+        /// <default value="MenuMode.Vertical" />
         [Parameter]
         public MenuMode Mode
         {
@@ -41,24 +70,49 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Content of menu. Should contain MenuItem elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Callback when submenu is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<SubMenu> OnSubmenuClicked { get; set; }
 
+        /// <summary>
+        /// Callback when a main menu item is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MenuItem> OnMenuItemClicked { get; set; }
 
+        /// <summary>
+        /// Accordion mode. When true only one submenu can be open at a time.
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Accordion { get; set; }
 
+        /// <summary>
+        /// Allows selecting menu items. When it is false the menu item is not selected after OnClick.
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Selectable { get; set; } = true;
 
+        /// <summary>
+        /// Allows selection of multiple items	
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Multiple { get; set; }
 
+        /// <summary>
+        /// Specifies the collapsed status when menu is inline mode	
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool InlineCollapsed
         {
@@ -73,20 +127,37 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Indent (in pixels) of inline menu items on each level	
+        /// </summary>
+        /// <default value="24" />
         [Parameter]
         public int InlineIndent { get; set; } = 24;
 
+        /// <summary>
+        /// Close dropdown when clicking an item
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
 
+        /// <summary>
+        /// Array with the keys of default selected menu items	
+        /// </summary>
         [Parameter]
         public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Array with the keys of default opened sub menus	
+        /// </summary>
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
         private string[] _openKeysCopy = Array.Empty<string>();
 
+        /// <summary>
+        /// Array with the keys of currently opened sub-menus
+        /// </summary>
         [Parameter]
         public string[] OpenKeys
         {
@@ -102,12 +173,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback when the open sub menus change. Passed the array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> OpenKeysChanged { get; set; }
 
+        /// <summary>
+        /// Callback when the open sub menus change. Passed the array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> OnOpenChange { get; set; }
 
+        /// <summary>
+        /// Array with the keys of currently selected menu items
+        /// </summary>
         [Parameter]
         public string[] SelectedKeys
         {
@@ -118,9 +198,16 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback when the selected items change. Passed array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
+        /// <summary>
+        /// Which action can trigger submenu open/close	
+        /// </summary>
+        /// <default value="Trigger.Hover" />
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 

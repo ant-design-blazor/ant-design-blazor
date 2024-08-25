@@ -11,8 +11,27 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>To select or input a date.</para>
+
+    <h2>When To Use</h2>
+
+    <para>By clicking the input box, you can select a date from a popup calendar.</para>
+    </summary>
+    <seealso cref="MonthPicker{TValue}"/>
+    <seealso cref="RangePicker{TValue}"/>
+    <seealso cref="WeekPicker{TValue}"/>
+    <seealso cref="YearPicker{TValue}"/>
+    <seealso cref="QuarterPicker{TValue}"/>
+    <seealso cref="TriggerBoundaryAdjustMode"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
+        /// <summary>
+        /// Callback executed when the selected value changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
 

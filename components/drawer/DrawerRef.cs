@@ -29,7 +29,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// close Confirm dialog
+        /// close drawer
         /// </summary>
         /// <returns></returns>
         public override async Task CloseAsync()
@@ -46,7 +46,7 @@ namespace AntDesign
 
 
         /// <summary>
-        /// Open Confirm dialog
+        /// Open drawer
         /// </summary>
         /// <returns></returns>
         public override async Task OpenAsync()
@@ -55,7 +55,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// update Confirm dialog config which Visible=true
+        /// update drawer config which Visible=true
         /// </summary>
         /// <returns></returns>
         public override async Task UpdateConfigAsync()
@@ -64,7 +64,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// update Confirm dialog config with a new ConfirmOptions
+        /// update drawer config with a new options
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>

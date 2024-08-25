@@ -38,6 +38,7 @@ namespace AntDesign.Internal
         /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
+        /// <default value="TriggerBoundaryAdjustMode.InView" />
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
@@ -51,12 +52,14 @@ namespace AntDesign.Internal
         /// 自动关闭功能和Visible参数同时生效
         /// Both auto-off and Visible control close
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ComplexAutoCloseAndVisible { get; set; } = false;
 
         /// <summary>
         /// Whether the trigger is disabled.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
@@ -64,12 +67,14 @@ namespace AntDesign.Internal
         /// Property forwarded to Overlay component. Consult the Overlay
         /// property for more detailed explanation.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
         /// <summary>
         /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool InlineFlexMode { get; set; } = false;
 
@@ -77,6 +82,7 @@ namespace AntDesign.Internal
         /// Behave like a button: when clicked invoke OnClick
         /// (unless OnClickDiv is overriden and does not call base).
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsButton { get; set; } = false;
 
@@ -165,6 +171,11 @@ namespace AntDesign.Internal
          */
         private PlacementType _paramPlacement = PlacementType.BottomLeft;
 
+        /// <summary>
+        /// The position of the Dropdown overlay relative to the target. 
+        /// Can be: Top, Left, Right, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, LeftTop, LeftBottom, RightTop, RightBottom
+        /// </summary>
+        /// <default value="PlacementType.BottomLeft" />
         [Parameter]
         public Placement Placement
         {
@@ -192,12 +203,14 @@ namespace AntDesign.Internal
         /// Example use case: when overlay has to be contained in a
         /// scrollable area.
         /// </summary>
+        /// <default value="body" />
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
         /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
+        /// <default value="TriggerType.Hover" />
         [Parameter]
         public Trigger[] Trigger //TODO: this should probably be a flag not an array
         {
@@ -208,6 +221,9 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public string TriggerCls { get; set; }
 
@@ -232,6 +248,7 @@ namespace AntDesign.Internal
         /// <summary>
         /// Toggles overlay viability.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Visible { get; set; } = false;
 

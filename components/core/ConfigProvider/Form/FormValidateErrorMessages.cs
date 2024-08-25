@@ -6,9 +6,16 @@ namespace AntDesign
 {
     public class FormValidateErrorMessages
     {
-        private static string _typeTemplate = "'{0}' is not a valid {1}";
+        private static readonly string _typeTemplate = "'{0}' is not a valid {1}";
 
+        /// <summary>
+        /// Default generic validation error message
+        /// </summary>
         public string Default { get; set; } = "Validation error on field '{0}'";
+
+        /// <summary>
+        /// Default validation message for the Required rule
+        /// </summary>
         public string Required { get; set; } = "'{0}' is required";
         public string Enum { get; set; } = "'{0}' must be one of [{1}]";
         public string Whitespace { get; set; } = "'{0}' cannot be empty";
@@ -20,6 +27,9 @@ namespace AntDesign
             Invalid = "'{0}' is an invalid date",
         };
 
+        /// <summary>
+        /// Messages for when a field's type does not match the expected type
+        /// </summary>
         public TypesMessage Types { get; set; } = new()
         {
             String = _typeTemplate,
@@ -35,6 +45,9 @@ namespace AntDesign
             Url = _typeTemplate,
         };
 
+        /// <summary>
+        /// Messages for string type
+        /// </summary>
         public CompareMessage String { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} characters",
@@ -43,6 +56,9 @@ namespace AntDesign
             Range = "'{0}' must be between {1} and {2} characters",
         };
 
+        /// <summary>
+        /// Messages for string type
+        /// </summary>
         public CompareMessage Number { get; set; } = new()
         {
             Len = "'{0}' must equal {1}",
@@ -51,6 +67,9 @@ namespace AntDesign
             Range = "'{0}' must be between {1} and {2}",
         };
 
+        /// <summary>
+        /// Messages for array type
+        /// </summary>
         public CompareMessage Array { get; set; } = new()
         {
             Len = "'{0}' must be exactly {1} in length",
@@ -59,6 +78,9 @@ namespace AntDesign
             Range = "'{0}' must be between {1} and {2} in length",
         };
 
+        /// <summary>
+        /// Messages for the Pattern validation rule
+        /// </summary>
         public PatternMessage Pattern { get; set; } = new()
         {
             Mismatch = "'{0}' does not match pattern {1}",

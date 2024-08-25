@@ -18,17 +18,21 @@ namespace AntDesign
         public string Color { get; set; }
 
         /// <summary>
-        /// Set text contents of ribbon.
+        /// Text string of ribbon.
         /// </summary>
         [Parameter]
         public string Text { get; set; }
 
+        /// <summary>
+        /// Text content of the ribbon. Takes priority over <see cref="Text"/>
+        /// </summary>
         [Parameter]
         public RenderFragment TextTemplate { get; set; }
 
         /// <summary>
         /// Set placement of ribbon.
         /// </summary>
+        /// <default value="end"/>
         [Parameter]
         public string Placement { get; set; } = "end";
 

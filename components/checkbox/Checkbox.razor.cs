@@ -12,20 +12,54 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Checkbox component.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>Used for selecting multiple values from several options.</item>
+        <item>If you use only one checkbox, it is the same as using Switch to toggle between two states. </item>
+    </list>
+
+    <para>The difference is that Switch will trigger the state change directly, but Checkbox just marks the state as changed and this needs to be submitted.</para>
+    </summary>
+    <seealso cref="CheckboxGroup"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg")]
     public partial class Checkbox : AntInputBoolComponentBase
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        /// <summary>
+        /// Content to display next to checkbox
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        //[Obsolete] attribute does not work with [Parameter] for now. Tracking issue: https://github.com/dotnet/aspnetcore/issues/30967
-        [Obsolete("Instead use @bing-Checked or EventCallback<bool> CheckedChanged .")]
+        /// <summary>
+        /// Callback executed when checked state changes
+        /// </summary>
+        //[Obsolete] attribute does not work with [Parameter] for now. Tracking issue: https://github.com/dotnet/razor/issues/7657
+        [Obsolete("Instead use @bind-Checked or EventCallback<bool> CheckedChanged .")]
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
-        [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
+        [Obsolete("Currently not implemented")]
+        [Parameter]
+        public Expression<Func<bool>> CheckedExpression { get; set; }
 
-        [Parameter] public bool Indeterminate { get; set; }
+        /// <summary>
+        /// Indeterminate checked state of checkbox
+        /// </summary>
+        [Parameter]
+        public bool Indeterminate { get; set; }
 
-        [Parameter] public string Label { get; set; }
+
+        /// <summary>
+        /// Label for checkbox
+        /// </summary>
+        [Parameter] 
+        public string Label { get; set; }
 
         [CascadingParameter] private ICheckboxGroup CheckboxGroup { get; set; }
 

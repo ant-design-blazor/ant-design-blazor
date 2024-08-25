@@ -20,6 +20,9 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu Parent { get; set; }
 
+        /// <summary>
+        /// Menu placement
+        /// </summary>
         [Parameter]
         public Placement? Placement
         {
@@ -37,18 +40,31 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
 
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// SubMenus or SubMenu items
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Unique ID of the SubMenu
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Key
         {
@@ -56,12 +72,23 @@ namespace AntDesign
             set => _key = value;
         }
 
+        /// <summary>
+        /// Whether SubMenu is disabled
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Open state of the SubMenu
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsOpen { get; set; }
 
+        /// <summary>
+        /// Callback executed when the SubMenu title is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClick { get; set; }
 

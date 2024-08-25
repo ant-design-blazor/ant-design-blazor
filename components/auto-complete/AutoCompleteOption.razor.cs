@@ -11,12 +11,24 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// Label for the option. Takes priority over Label
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// Value for the option
+        /// </summary>
         [Parameter]
         public object Value { get; set; }
 
         private string _label;
+        
+        /// <summary>
+        /// Label for the option
+        /// </summary>
+        /// <default value="Value.ToString()" />
         [Parameter]
         public string Label
         {
@@ -24,10 +36,12 @@ namespace AntDesign
             set { _label = value; }
         }
 
+        /// <summary>
+        /// If option is disabled or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; } = false;
-
-        [Parameter]
 
         [CascadingParameter]
         public IAutoCompleteRef AutoComplete { get; set; }

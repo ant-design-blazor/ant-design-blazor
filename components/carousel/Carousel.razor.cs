@@ -12,6 +12,21 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>A carousel component. Scales with its container.</para>
+
+        <h2>When To Use</h2>
+
+        <list type="bullet">
+            <item>When there is a group of content on the same level.</item>
+            <item>When there is insufficient content space, it can be used to save space in the form of a revolving door.</item>
+            <item>Commonly used for a group of pictures/cards.</item>
+        </list>
+    </summary>
+    <seealso cref="CarouselSlick"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg")]
     public partial class Carousel : AntDomComponentBase
     {
         private const string PrefixCls = "ant-carousel";
@@ -55,6 +70,9 @@ namespace AntDesign
 
         #region Parameters
 
+        /// <summary>
+        /// Content of the carousel. Typically <see cref="CarouselSlick"/> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -84,7 +102,8 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] public IDomEventListener DomEventListener { get; set; }
+        [Inject] 
+        public IDomEventListener DomEventListener { get; set; }
 
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 

@@ -86,27 +86,32 @@ namespace AntDesign
         /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
         /// unless used with <see cref="ValueOnClear"/>.
         /// </summary>
-        [Parameter] public bool AllowClear { get; set; }
+        [Parameter]
+        public bool AllowClear { get; set; }
 
         /// <summary>
         /// Whether the current search will be cleared on selecting an item.
         /// </summary>
-        [Parameter] public bool AutoClearSearchValue { get; set; } = true;
+        [Parameter]
+        public bool AutoClearSearchValue { get; set; } = true;
 
         /// <summary>
         /// Whether the Select component is disabled.
         /// </summary>
-        [Parameter] public bool Disabled { get; set; }
+        [Parameter]
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// Set mode of Select - default | multiple | tags
         /// </summary>
-        [Parameter] public string Mode { get; set; } = "default";
+        [Parameter]
+        public string Mode { get; set; } = "default";
 
         /// <summary>
         /// Indicates whether the search function is active or not. Always true for mode tags.
         /// </summary>
-        [Parameter] public bool EnableSearch { get; set; }
+        [Parameter]
+        public bool EnableSearch { get; set; }
 
         /// <summary>
         /// Delays the processing of the search input event until the user has stopped
@@ -118,24 +123,28 @@ namespace AntDesign
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
-        [Parameter] public bool Loading { get; set; }
+        [Parameter]
+        public bool Loading { get; set; }
 
         /// <summary>
         /// Controlled open state of dropdown.
         /// </summary>
-        [Parameter] public bool Open { get; set; }
+        [Parameter]
+        public bool Open { get; set; }
 
         [Parameter] public EventCallback<bool> OpenChanged { get; set; }
 
         /// <summary>
         /// Placeholder of select.
         /// </summary>
-        [Parameter] public string Placeholder { get; set; }
+        [Parameter]
+        public string Placeholder { get; set; }
 
         /// <summary>
         /// Called when focus.
         /// </summary>
-        [Parameter] public EventCallback OnFocus { get; set; }
+        [Parameter]
+        public EventCallback OnFocus { get; set; }
 
         [Parameter] public bool AutoFocus { get; set; }
 
@@ -144,37 +153,44 @@ namespace AntDesign
         /// If the value is set, the entries are displayed in groups.
         /// Use additional SortByGroup and SortByLabel.
         /// </summary>
-        [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
+        [Parameter]
+        public SortDirection SortByGroup { get; set; } = SortDirection.None;
 
         /// <summary>
         /// Sort items by label value. None | Ascending | Descending
         /// </summary>
-        [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
+        [Parameter]
+        public SortDirection SortByLabel { get; set; } = SortDirection.None;
 
         /// <summary>
         /// Hides the selected items when they are selected.
         /// </summary>
-        [Parameter] public bool HideSelected { get; set; }
+        [Parameter]
+        public bool HideSelected { get; set; }
 
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+        [Parameter]
+        public override EventCallback<TItemValue> ValueChanged { get; set; }
 
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
+        [Parameter]
+        public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         /// <summary>
         /// The custom suffix icon.
         /// </summary>
-        [Parameter] public RenderFragment SuffixIcon { get; set; }
+        [Parameter]
+        public RenderFragment SuffixIcon { get; set; }
 
         /// <summary>
         /// The custom prefix icon.
         /// </summary>
-        [Parameter] public RenderFragment PrefixIcon { get; set; }
+        [Parameter]
+        public RenderFragment PrefixIcon { get; set; }
 
         /// <summary>
         /// The accesskey global attribute.
@@ -219,7 +235,8 @@ namespace AntDesign
         /// <summary>
         /// Called when the user clears the selection.
         /// </summary>
-        [Parameter] public EventCallback OnClearSelected { get; set; }
+        [Parameter]
+        public EventCallback OnClearSelected { get; set; }
 
         internal bool IsResponsive { get; set; }
 
@@ -229,12 +246,14 @@ namespace AntDesign
         /// <summary>
         /// Called when the selected item changes.
         /// </summary>
-        [Parameter] public EventCallback<TItem> OnSelectedItemChanged { get; set; }
+        [Parameter]
+        public EventCallback<TItem> OnSelectedItemChanged { get; set; }
 
         /// <summary>
         /// Called when the selected items changes.
         /// </summary>
-        [Parameter] public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
+        [Parameter]
+        public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
@@ -390,7 +409,8 @@ namespace AntDesign
         /// <summary>
         /// Used for rendering select options manually.
         /// </summary>
-        [Parameter] public RenderFragment SelectOptions { get; set; }
+        [Parameter]
+        public RenderFragment SelectOptions { get; set; }
 
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new();
 
@@ -406,7 +426,8 @@ namespace AntDesign
         /// <value>
         /// The maximum length of the tag text.
         /// </value>
-        [Parameter] public int MaxTagTextLength { get; set; }
+        [Parameter]
+        public int MaxTagTextLength { get; set; }
 
         /// <summary>
         /// Whether to embed label in value, turn the format of value from TItemValue to string (JSON)

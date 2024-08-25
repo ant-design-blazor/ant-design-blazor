@@ -8,20 +8,49 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>Used to select a single state from multiple options.</item>
+        <item>The difference from Select is that Radio is visible to the user and can facilitate the comparison of choice, which means there shouldn't be too many of them.</item>
+    </list>
+    </summary>
+    <seealso cref="RadioGroup{TValue}"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg")]
     public partial class Radio<TValue> : AntDomComponentBase
     {
+        /// <summary>
+        /// Display label content for the radio
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Selected value
+        /// </summary>
         [Parameter]
         public TValue Value { get; set; }
 
+        /// <summary>
+        /// Autofocus or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool AutoFocus { get; set; } = false;
 
+        /// <summary>
+        /// Set to <c>true</c> to style the radio as button group.
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool RadioButton { get; set; }
 
+        /// <summary>
+        /// Specifies whether the radio is selected
+        /// </summary>
         [Parameter]
         public bool Checked
         {
@@ -29,6 +58,10 @@ namespace AntDesign
             set => _checked = value;
         }
 
+        /// <summary>
+        /// Specify if the radio button is checked initially or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool DefaultChecked
         {
@@ -40,12 +73,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the checked state changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> CheckedChanged { get; set; }
 
+        /// <summary>
+        /// Disable the radio buton
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Callback executed when the checked state changes
+        /// </summary>
         [Obsolete("Use CheckedChanged instead")]
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
@@ -160,7 +202,7 @@ namespace AntDesign
             }
         }
 
-        public async Task OnClick()
+        internal async Task OnClick()
         {
             if (Disabled)
             {

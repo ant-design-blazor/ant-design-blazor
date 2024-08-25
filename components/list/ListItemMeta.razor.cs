@@ -8,21 +8,46 @@ namespace AntDesign
 {
     public partial class ListItemMeta : AntDomComponentBase
     {
-        public string PrefixName { get; set; } = "ant-list-item-meta";
+        internal string PrefixName { get; set; } = "ant-list-item-meta";
 
-        [Parameter] public string Title { get; set; }
+        /// <summary>
+        /// Title for the list item
+        /// </summary>
+        [Parameter]
+        public string Title { get; set; }
 
-        [Parameter] public RenderFragment TitleTemplate { get; set; }
+        /// <summary>
+        /// Title content of the list item. Takes priority over <see cref="Title"/>
+        /// </summary>
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
-        [Parameter] public string Avatar { get; set; }
+        /// <summary>
+        /// The avatar of list item
+        /// </summary>
+        [Parameter]
+        public string Avatar { get; set; }
 
-        [Parameter] public RenderFragment AvatarTemplate { get; set; }
+        /// <summary>
+        /// Avatar content of the list item. Takes priority over <see cref="Avatar"/>
+        /// </summary>
+        [Parameter]
+        public RenderFragment AvatarTemplate { get; set; }
 
-        [Parameter] public string Description { get; set; }
+        /// <summary>
+        /// The description of list item
+        /// </summary>
+        [Parameter]
+        public string Description { get; set; }
 
-        [Parameter] public RenderFragment DescriptionTemplate { get; set; }
+        /// <summary>
+        /// The description content of list item. Takes priority over <see cref="Description"/>
+        /// </summary>
+        [Parameter]
+        public RenderFragment DescriptionTemplate { get; set; }
 
-        [CascadingParameter] public ListItem ListItem { get; set; }
+        [CascadingParameter]
+        public ListItem ListItem { get; set; }
 
         protected override void OnInitialized()
         {

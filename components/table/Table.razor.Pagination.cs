@@ -11,12 +11,16 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
+        /// <summary>
+        /// Whether to hide pagination or not
+        /// </summary>
         [Parameter]
         public bool HidePagination { get; set; }
 
         /// <summary>
-        /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
+        /// Position of the pagination. Valid values: topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight
         /// </summary>
+        /// <default value="bottomRight"/>
         [Parameter]
         public string PaginationPosition
         {
@@ -28,15 +32,28 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Custom rendering for pagination
+        /// </summary>
         [Parameter]
         public RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)> PaginationTemplate { get; set; }
 
+        /// <summary>
+        /// Total records
+        /// </summary>
         [Parameter]
         public int Total { get; set; }
 
+        /// <summary>
+        /// Callback executed when total records changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> TotalChanged { get; set; }
 
+        /// <summary>
+        /// Currently visible page
+        /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public int PageIndex
         {
@@ -51,9 +68,16 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when currently visible page changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
+        /// <summary>
+        /// Number of records per page
+        /// </summary>
+        /// <default value="10"/>
         [Parameter]
         public int PageSize
         {
@@ -68,12 +92,17 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when page size changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
+        /// <inheritdoc cref="PageIndexChanged"/>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
 
+        /// <inheritdoc cref="PageSizeChanged"/>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 

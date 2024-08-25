@@ -12,55 +12,109 @@ namespace AntDesign
 
     public class EmbeddedProperty
     {
+        /// <summary>
+        /// Width of Col
+        /// </summary>
         public StringNumber Span { get; set; }
 
+        /// <summary>
+        /// The number of Cols to pull the Col to the left
+        /// </summary>
         public StringNumber Pull { get; set; }
 
+        /// <summary>
+        /// The number of Cols to push the Col to the right
+        /// </summary>
         public StringNumber Push { get; set; }
 
+        /// <summary>
+        /// The number of Cols to offset Col from the left
+        /// </summary>
         public StringNumber Offset { get; set; }
 
+        /// <summary>
+        /// Order of Col, used in flex mode
+        /// </summary>
         public StringNumber Order { get; set; }
     }
 
     public partial class Col : AntDomComponentBase
     {
+        /// <summary>
+        /// Content of column
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Use flex mode or not. Will not use flex mode if null.
+        /// </summary>
         [Parameter]
         public StringNumber Flex { get; set; }
 
+        /// <summary>
+        /// Width of Col
+        /// </summary>
         [Parameter]
         public StringNumber Span { get; set; }
 
+        /// <summary>
+        /// Order of Col, used in flex mode
+        /// </summary>
         [Parameter]
         public StringNumber Order { get; set; }
 
+        /// <summary>
+        /// The number of Cols to offset Col from the left
+        /// </summary>
         [Parameter]
         public StringNumber Offset { get; set; }
 
+        /// <summary>
+        /// The number of Cols to push the Col to the right
+        /// </summary>
         [Parameter]
         public StringNumber Push { get; set; }
 
+        /// <summary>
+        /// The number of Cols to pull the Col to the left
+        /// </summary>
         [Parameter]
         public StringNumber Pull { get; set; }
 
+        /// <summary>
+        /// &lt;576px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Xs { get; set; }
 
+        /// <summary>
+        /// ≥576px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Sm { get; set; }
 
+        /// <summary>
+        /// ≥768px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Md { get; set; }
 
+        /// <summary>
+        /// ≥992px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Lg { get; set; }
 
+        /// <summary>
+        /// ≥1200px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Xl { get; set; }
 
+        /// <summary>
+        /// ≥1600px column of grid
+        /// </summary>
         [Parameter]
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 

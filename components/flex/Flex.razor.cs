@@ -7,6 +7,26 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A flex layout container for alignment.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>Good for setting spacing between elements.</item>
+        <item>Suitable for setting various horizontal and vertical alignments.</item>
+    </list>
+    
+    <h3>Difference with Space component</h3>
+    <list type="bullet">
+        <item>Space is used to set the spacing between inline elements. It will add a wrapper element for each child element for inline alignment. Suitable for equidistant arrangement of multiple child elements in rows and columns.</item>
+        <item>Flex is used to set the layout of block-level elements. It does not add a wrapper element. Suitable for layout of child elements in vertical or horizontal direction, and provides more flexibility and control.</item>
+    </list>
+
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*SMzgSJZE_AwAAAAAAAAAAAAADrJ8AQ/original", Columns = 1)]
     public partial class Flex : AntDomComponentBase
     {
         /// <summary>
@@ -49,6 +69,9 @@ namespace AntDesign
         /// </summary>
         [Parameter] public string Component { get; set; } = "div";
 
+        /// <summary>
+        /// Set the child element
+        /// </summary>
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         private string FlexStyle => new CssStyleBuilder()

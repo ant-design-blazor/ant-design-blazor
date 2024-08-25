@@ -2,20 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-/* Unmerged change from project 'AntDesign(net5.0)'
-Before:
-using System.Text.RegularExpressions;
-After:
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Text.RegularExpressions;
-*/
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,6 +11,19 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Tag for categorizing or markup.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>It can be used to tag by dimension or property.</item>
+        <item>When categorizing.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg")]
     public partial class Tag : AntDomComponentBase
     {
         /// <summary>
@@ -36,18 +35,21 @@ namespace AntDesign
         /// <summary>
         /// Whether the Tag can be closed
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Closable { get; set; }
 
         /// <summary>
         /// Whether the Tag can be checked
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Checkable { get; set; }
 
         /// <summary>
         /// Checked status of Tag
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Checked { get; set; }
 
@@ -61,6 +63,7 @@ namespace AntDesign
         /// Tag color. Can either be a predefined color (string)
         /// or hex color.
         /// </summary>
+        /// <default value="default" />
         [Parameter]
         public string Color
         {
@@ -78,6 +81,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Tag color from the PresetColor list
+        /// </summary>
         [Parameter]
         [Obsolete($"Use {nameof(Color)} instead by passing the string of the enum value")]
         public PresetColor? PresetColor
@@ -137,6 +143,7 @@ namespace AntDesign
         /// <summary>
         /// Whether the Tag is closed or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Visible { get; set; } = true;
 

@@ -11,11 +11,14 @@ namespace AntDesign.Internal
 {
     public class Element : AntDomComponentBase
     {
-        [Parameter] public string HtmlTag { get; set; }
+        [Parameter]
+        public string HtmlTag { get; set; }
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public EventCallback<ElementReference> RefChanged { get; set; }
+        [Parameter]
+        public EventCallback<ElementReference> RefChanged { get; set; }
 
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();

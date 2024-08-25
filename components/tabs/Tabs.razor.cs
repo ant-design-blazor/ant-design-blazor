@@ -13,6 +13,23 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Tabs make it easy to switch between different views.</para>
+
+    <h2>When To Use</h2>
+
+    <para>Ant Design has 3 types of Tabs for different situations.</para>
+
+    <list type="bullet">
+        <item>Card Tabs: for managing too many closeable views.</item>
+        <item>Normal Tabs: for functional aspects of a page.</item>
+        <item><see cref="RadioGroup{TValue}"/>: for secondary tabs.</item>
+    </list>
+    </summary>
+    <seealso cref="TabPane" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg", Columns = 1)]
     public partial class Tabs : AntDomComponentBase
     {
         [Inject]
@@ -20,6 +37,9 @@ namespace AntDesign
 
         #region Parameters
 
+        /// <summary>
+        /// Content for tabs. Should include <c>TabPane</c> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -40,6 +60,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the active tab changes
+        /// </summary>
         [Parameter]
         public EventCallback<string> ActiveKeyChanged { get; set; }
 
@@ -49,6 +72,10 @@ namespace AntDesign
         [Parameter]
         public bool Animated { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool InkBarAnimated { get; set; } = true;
 
@@ -67,12 +94,14 @@ namespace AntDesign
         /// <summary>
         /// Hide plus icon or not. Only works while <see cref="Type"/> = <see cref="TabType.EditableCard"/>
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool HideAdd { get; set; } = false;
 
         /// <summary>
         /// Preset tab bar size
         /// </summary>
+        /// <default value="TabSize.Default" />
         [Parameter]
         public TabSize Size { get; set; } = TabSize.Default;
 
@@ -82,15 +111,22 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TabBarExtraContent { get; set; }
 
+        /// <summary>
+        /// Extra content to the left of the tab bar
+        /// </summary>
         [Parameter]
         public RenderFragment TabBarExtraContentLeft { get; set; }
 
+        /// <summary>
+        /// Extra content to the right of the tab bar
+        /// </summary>
         [Parameter]
         public RenderFragment TabBarExtraContentRight { get; set; }
 
         /// <summary>
         /// The gap between tabs
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int TabBarGutter { get; set; }
 
@@ -109,12 +145,14 @@ namespace AntDesign
         /// <summary>
         /// Position of tabs
         /// </summary>
+        /// <default value="TabPosition.Top" />
         [Parameter]
         public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
         /// <summary>
         /// Basic style of tabs
         /// </summary>
+        /// <default value="TabType.Line" />
         [Parameter]
         public TabType Type { get; set; } = TabType.Line;
 
@@ -136,9 +174,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnClose { get; set; }
 
+        /// <summary>
+        /// Callback executed when add button clicked
+        /// </summary>
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
+        /// <summary>
+        /// Callback executed after a tab is created
+        /// </summary>
         [Parameter]
         public EventCallback<string> AfterTabCreated { get; set; }
 
@@ -148,9 +192,16 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnTabClick { get; set; }
 
+        /// <summary>
+        /// Make tabs draggable
+        /// </summary>
         [Parameter]
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// If tabs are centered or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Centered { get; set; }
 

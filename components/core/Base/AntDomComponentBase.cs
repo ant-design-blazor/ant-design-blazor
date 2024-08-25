@@ -11,6 +11,10 @@ namespace AntDesign
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
+        /// <summary>
+        /// ID for the component's HTML
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Id { get; set; }
 
@@ -18,9 +22,6 @@ namespace AntDesign
         public ConfigProvider ConfigProvider { get; set; }
 
         protected bool RTL => ConfigProvider?.Direction == "RTL";
-
-        //[Parameter(CaptureUnmatchedValues = true)]
-        //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
         private ElementReference _ref;
 
@@ -77,7 +78,6 @@ namespace AntDesign
                 {
                     _style += ";";
                 }
-                //this.StateHasChanged();
             }
         }
 

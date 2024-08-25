@@ -8,9 +8,16 @@ namespace AntDesign
 {
     public partial class CardGrid : AntDomComponentBase
     {
+        /// <summary>
+        /// Content for that section of the grid
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// If the section should be hoverable. Adds dropshadow and lifts up when hovered if true.
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Hoverable { get; set; }
 

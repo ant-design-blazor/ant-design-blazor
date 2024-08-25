@@ -10,11 +10,26 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Vertical display timeline.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When a series of information needs to be ordered by time (ascending or descending).</item>
+        <item>When you need a timeline to make a visual connection.</item>
+    </list>
+    </summary>
+    <seealso cref="TimelineItem" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg")]
     public partial class Timeline : AntDomComponentBase
     {
         /// <summary>
-        /// 'left' | 'alternate' | 'right'
+        /// Where the line will be in relation to the items - left, right or alternate
         /// </summary>
+        /// <default value="left" />
         [Parameter]
         public TimelineMode? Mode
         {
@@ -29,6 +44,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Reverse nodes or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Reverse
         {
@@ -43,6 +62,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Set the last ghost node's existence or its content
+        /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment> Pending
         {
@@ -91,9 +113,15 @@ namespace AntDesign
 
         private TimelineItem _pendingItem;
 
+        /// <summary>
+        /// Set the dot of the last ghost node when pending is true	
+        /// </summary>
         [Parameter]
         public RenderFragment PendingDot { get; set; }
 
+        /// <summary>
+        /// Content of timeline. Should contain <c>TimelineItem</c> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

@@ -19,8 +19,9 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Whether use compact style
+        /// Whether to use compact style or not
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Compact
         {
@@ -28,11 +29,7 @@ namespace AntDesign
             set
             {
                 _compact = value;
-                if (_compact)
-                    _compactStyleOverride = "display: flex;";
-                else
-                    _compactStyleOverride = "";
-
+                _compactStyleOverride = _compact ? "display: flex;" : string.Empty;
             }
         }
 

@@ -148,5 +148,6 @@
   "app.docs.components.icon.pic-searcher.result-tip": "为您匹配到以下图标：",
   "app.docs.components.icon.pic-searcher.th-icon": "图标",
   "app.docs.components.icon.pic-searcher.th-score": "匹配度",
-  "app.components.overview.search": "搜索组件"
+  "app.components.overview.search": "搜索组件",
+  "app.components.overview.description": "<code>Ant Design Blazor</code> 提供了丰富的 UI 组件来丰富您的 Web 应用，我们将持续改进组件体验。 我们还额外推荐了一些很棒的第三方库。"
 }

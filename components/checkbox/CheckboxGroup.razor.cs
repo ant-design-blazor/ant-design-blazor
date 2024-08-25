@@ -11,15 +11,24 @@ using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Display a group of related checkboxes
+    /// </summary>
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TValue))]
 #endif
 
     public partial class CheckboxGroup<TValue> : AntInputComponentBase<TValue[]>, ICheckboxGroup
     {
+        /// <summary>
+        /// Display content in the group. Use <see cref="MixedMode"/> to specify where this should render if using with <see cref="Options"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Options for checkboxes
+        /// </summary>
         [Parameter]
         public OneOf<CheckboxOption<TValue>[], TValue[]> Options
         {
@@ -35,6 +44,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// When both <see cref="ChildContent"/> and <see cref="Options"/> are used this specifies which should render first.
+        /// </summary>
+        /// <default value="CheckboxGroupMixedMode.ChildContentFirst"/>
         [Parameter]
         public CheckboxGroupMixedMode MixedMode
         {
@@ -52,9 +65,16 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the checked options change
+        /// </summary>
         [Parameter]
         public EventCallback<TValue[]> OnChange { get; set; }
 
+        /// <summary>
+        /// Disable all checkboxes in the group
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 

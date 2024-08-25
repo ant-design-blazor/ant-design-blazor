@@ -14,7 +14,8 @@ namespace AntDesign
         /// <summary>
         /// Defines the value to be displayed in this column's cells.
         /// </summary>
-        [Parameter] public Expression<Func<TItem, TProp>> Property { get; set; } = default!;
+        [Parameter] 
+        public Expression<Func<TItem, TProp>> Property { get; set; } = default!;
 
         protected override void OnInitialized()
         {

@@ -10,8 +10,14 @@ using Microsoft.AspNetCore.Components.Web;
 namespace AntDesign
 {
     /// <summary>
-    /// Alert component for feedback.
+    /// <para>Alert component for feedback.</para>
+    /// <h2>When To Use</h2>
+    /// <list type="bullet">
+    /// <item>When you need to show alert messages to users.</item>
+    /// <item>When you need a persistent static container which is closable by user actions.</item>
+    /// </list>
     /// </summary>
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg")]
     public partial class Alert : AntDomComponentBase
     {
         /// <summary>
@@ -23,12 +29,14 @@ namespace AntDesign
         /// <summary>
         /// Whether to show as banner
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Banner { get; set; } = false;
 
         /// <summary>
         /// Whether Alert can be closed
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Closable { get; set; } = false;
 

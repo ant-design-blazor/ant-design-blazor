@@ -12,6 +12,20 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Display global messages as feedback in response to user operations.</para>
+
+    <h2>When To Use</h2>
+    <list type="bullet">
+        <item>To provide feedback such as success, warning, error etc.</item>
+        <item>A message is displayed at top and center and will be dismissed automatically, as a non-interrupting light-weighted prompt.</item>
+    </list>
+    </summary>
+    <seealso cref="IMessageService" />
+    <seealso cref="MessageConfig" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg")]
     public partial class Message : AntDomComponentBase
     {
         [Inject]
