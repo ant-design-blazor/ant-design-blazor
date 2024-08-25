@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
-    internal class SimpleEmbeddedJsonLocalizerFactory : IStringLocalizerFactory
+    internal sealed class SimpleEmbeddedJsonLocalizerFactory : IStringLocalizerFactory
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
@@ -48,18 +48,18 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
             return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);
         }
 
-        protected virtual RootNamespaceAttribute? GetRootNamespaceAttribute(Assembly assembly)
+        private RootNamespaceAttribute? GetRootNamespaceAttribute(Assembly assembly)
         {
             return assembly.GetCustomAttribute<RootNamespaceAttribute>();
         }
 
 
-        protected virtual string GetResourcePrefix(TypeInfo typeInfo)
+        private string GetResourcePrefix(TypeInfo typeInfo)
         {
             return GetResourcePrefix(typeInfo, GetRootNamespace(typeInfo.Assembly), GetResourcePath(typeInfo.Assembly));
         }
 
-        protected virtual string GetResourcePrefix(TypeInfo typeInfo, string? baseNamespace, string? resourcesRelativePath)
+        private string GetResourcePrefix(TypeInfo typeInfo, string? baseNamespace, string? resourcesRelativePath)
         {
             if (string.IsNullOrEmpty(resourcesRelativePath))
             {
