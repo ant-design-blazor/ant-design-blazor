@@ -41,6 +41,7 @@ namespace AntDesign
 
         [CascadingParameter]
         public Descriptions Descriptions { get; set; }
+        ElementReference IDescriptionsItem.Ref { get => base.Ref; set => base.Ref = value; }
 
         protected override void Dispose(bool disposing)
         {

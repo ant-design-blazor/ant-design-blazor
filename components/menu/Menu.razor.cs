@@ -211,9 +211,15 @@ namespace AntDesign
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
 
+        /// <summary>
+        /// Show tooltip on collapsed menu
+        /// </summary>
         [Parameter]
         public bool ShowCollapsedTooltip { get; set; } = true;
 
+        /// <summary>
+        /// Enable or disable animation
+        /// </summary>
         [Parameter]
         public bool Animation { get; set; }
 
@@ -247,7 +253,7 @@ namespace AntDesign
             }
         }
 
-        public void SelectItem(MenuItem item)
+        internal void SelectItem(MenuItem item)
         {
             HideOverlay();
 
@@ -289,7 +295,7 @@ namespace AntDesign
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
         }
 
-        public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
+        internal void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
         {
             if (menu == null)
             {
@@ -380,7 +386,7 @@ namespace AntDesign
             _menuItems.Remove(item);
         }
 
-        public void CollapseUpdated(bool collapsed)
+        internal void CollapseUpdated(bool collapsed)
         {
             _inlineCollapsed = collapsed;
 

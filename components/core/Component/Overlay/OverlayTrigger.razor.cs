@@ -49,8 +49,7 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// 自动关闭功能和Visible参数同时生效
-        /// Both auto-off and Visible control close
+        /// Whether need both auto-off and Visible control closing.
         /// </summary>
         /// <default value="false" />
         [Parameter]
@@ -222,8 +221,9 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
-        /// 
+        /// The trigger element CSS class.
         /// </summary>
+        /// <default value="ant-dropdown-trigger" />
         [Parameter]
         public string TriggerCls { get; set; }
 
@@ -252,6 +252,9 @@ namespace AntDesign.Internal
         [Parameter]
         public bool Visible { get; set; } = false;
 
+        /// <summary>
+        /// Callback when visibility is changed.
+        /// </summary>
         [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
 

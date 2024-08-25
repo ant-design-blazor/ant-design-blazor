@@ -37,16 +37,19 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Title
+        /// class name of the popup
         /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
 
+        /// <summary>
+        /// Title 
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
         /// <summary>
-        /// Title
+        /// Title template
         /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
@@ -173,7 +176,7 @@ namespace AntDesign
                 await OnTitleClick.InvokeAsync(args);
         }
 
-        public async Task Collapse()
+        internal async Task Collapse()
         {
             if (RootMenu?.InternalMode == MenuMode.Inline)
             {
@@ -234,7 +237,7 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        public void Close()
+        internal void Close()
         {
             IsOpen = false;
 
@@ -244,7 +247,7 @@ namespace AntDesign
             }
         }
 
-        public void Open()
+        internal void Open()
         {
             if (Disabled)
             {
@@ -261,11 +264,6 @@ namespace AntDesign
             Parent?.Open();
         }
 
-        public OverlayTrigger GetOverlayTrigger()
-        {
-            return _overlayTrigger;
-        }
-
         private void OnOverlayVisibleChange(bool visible)
         {
             _overlayVisible = visible;
@@ -275,7 +273,7 @@ namespace AntDesign
         {
         }
 
-        public void Select(bool isInitializing = false)
+        internal void Select(bool isInitializing = false)
         {
             Parent?.Select();
             _isSelected = true;
@@ -285,7 +283,7 @@ namespace AntDesign
             }
         }
 
-        public void Deselect()
+        internal void Deselect()
         {
             Parent?.Deselect();
             _isSelected = false;
