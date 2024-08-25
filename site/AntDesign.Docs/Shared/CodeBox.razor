@@ -86,7 +86,7 @@
     private bool _copied;
     private bool _rendered;
 
-    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name.ToLower()}";
 
     private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
 

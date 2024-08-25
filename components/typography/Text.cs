@@ -16,6 +16,10 @@ namespace AntDesign
 
         protected override bool IsKeyboard => Keyboard;
 
+        /// <summary>
+        /// Keyboard style
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Keyboard { get; set; }
     }
