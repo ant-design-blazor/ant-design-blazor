@@ -256,5 +256,8 @@ dotnet_diagnostic.CA1040.severity = none
 # CA1852: sealed internal types, https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1852
 dotnet_diagnostic.CA1852.severity = warning
 
+# IDE0040: add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = warning
+
 # IDE005: remove unnecessary usings, https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0005?pivots=lang-csharp-vb
 dotnet_diagnostic.IDE0005.severity = error
