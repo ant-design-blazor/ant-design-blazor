@@ -8,7 +8,7 @@ namespace AntDesign.Core.HashCodes
     /// Provides a hash comparison of two parameter values
     /// </summary>
     /// <typeparam name="TParameter"></typeparam>
-    static class HashCode<TParameter>
+    internal static class HashCode<TParameter>
     {
         private static readonly HashCodeProvider _provider = HashCodeProvider.Create(typeof(TParameter));
 

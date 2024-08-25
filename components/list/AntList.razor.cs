@@ -68,9 +68,9 @@ namespace AntDesign
         ListItemLayout IAntList.ItemLayout => ItemLayout;
         double IAntList.ColumnWidth => _columnWidth;
 
-        double _columnWidth;
-        int _columns = 0;
-        bool _isInitialized = false;
+        private double _columnWidth;
+        private int _columns = 0;
+        private bool _isInitialized = false;
 
         protected override void OnInitialized()
         {

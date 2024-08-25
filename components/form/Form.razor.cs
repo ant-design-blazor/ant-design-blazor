@@ -388,11 +388,11 @@ namespace AntDesign
 
         public EditContext EditContext => _editContext;
 
-        bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
+        private bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
 
         bool IForm.UseLocaleValidateMessage => UseLocaleValidateMessage;
 
-        bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
+        private bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
 
         private void BuildEditContext()
         {

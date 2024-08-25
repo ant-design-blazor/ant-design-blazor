@@ -484,7 +484,7 @@ namespace AntDesign.Tests.Form.Validation
     }
 }
 
-sealed class CustomValidationAttribute : ValidationAttribute
+internal sealed class CustomValidationAttribute : ValidationAttribute
 {
     public int Max { get; set; }
     public CustomValidationAttribute(int max) : base("The field {0} should not max than {1}.")
@@ -513,7 +513,7 @@ sealed class CustomValidationAttribute : ValidationAttribute
     }
 }
 
-sealed class FieldsTestObj
+internal sealed class FieldsTestObj
 {
     public string _fieldName = "one";
     public int _fieldAge = 10;
@@ -521,7 +521,7 @@ sealed class FieldsTestObj
     public int PropertyAge { get; set; } = 10;
 }
 
-enum FormValidateHelperEnum
+internal enum FormValidateHelperEnum
 {
     None,
 }

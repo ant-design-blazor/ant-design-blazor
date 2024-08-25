@@ -39,8 +39,7 @@ namespace AntDesign
 
         private string _okBtnId = "ant-blazor-" + Guid.NewGuid();
         private string _cancelBtnId = "ant-blazor-" + Guid.NewGuid();
-
-        DialogOptions _dialogOptions;
+        private DialogOptions _dialogOptions;
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
             DialogOptions config = new DialogOptions()

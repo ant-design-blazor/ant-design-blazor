@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
-    internal sealed class SimpleEmbeddedJsonLocalizerFactory : IStringLocalizerFactory
+    internal class SimpleEmbeddedJsonLocalizerFactory : IStringLocalizerFactory
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests
 {
-    sealed class TestDomEventListerner : IDomEventListener
+    internal sealed class TestDomEventListerner : IDomEventListener
     {
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
