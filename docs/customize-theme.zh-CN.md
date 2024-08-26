@@ -43,15 +43,10 @@ Ant Design Blazor 的样式沿用 antd 使用了 [Less](http://lesscss.org/) 作
 一种方式是建立一个单独的 `less` 变量文件，引入这个文件覆盖 `antd.less` 里的变量。
 
 ```css
-@import '~antd/es/style/themes/default.less';
-@import '~antd/dist/antd.less'; // 引入官方提供的 less 样式入口文件
+@import '~publish/wwwroot/_content/AntDesign/less/style/themes/default.less';
+@import '~publish/wwwroot/_content/AntDesign/less/ant-design-blazor.less'; // 引入官方提供的 less 样式入口文件
 @import 'your-theme-file.less'; // 用于覆盖上面定义的变量
 ```
-
-### 动态主题色
-
-在运行时调整主题色请[参考此处](/docs/react/customize-theme-variable)。
-
 
 ## 官方主题 🌈
 
@@ -64,3 +59,13 @@ Ant Design Blazor 的样式沿用 antd 使用了 [Less](http://lesscss.org/) 作
 ### 使用暗黑主题和紧凑主题
 
 ![](https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*mYU9R4YFxscAAAAAAAAAAABkARQnAQ)
+
+想使用官方主题，只需替换对应的 css 文件即可。
+
+默认主题：`_content/AntDesign/css/ant-design-blazor.css`
+暗黑主题：`_content/AntDesign/css/ant-design-blazor.dark.css`
+紧凑主题：`_content/AntDesign/css/ant-design-blazor.compact.css`
+阿里云主题：`_content/AntDesign/css/ant-design-blazor.aliyun.css`
+
+### 动态主题色
+
