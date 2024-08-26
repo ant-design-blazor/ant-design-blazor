@@ -44,7 +44,7 @@ namespace AntDesign
         public bool Disabled { get; set; } = false;
 
         [CascadingParameter]
-        public IAutoCompleteRef AutoComplete { get; set; }
+        internal IAutoCompleteRef AutoComplete { get; set; }
 
         #endregion Parameters
 
@@ -70,12 +70,12 @@ namespace AntDesign
                 .If("ant-select-item-option-disabled", () => this.Disabled);
         }
 
-        public void OnMouseEnter()
+        private void OnMouseEnter()
         {
             AutoComplete.SetActiveItem(this);
         }
 
-        public async Task OnClick()
+        private async Task OnClick()
         {
             if (Disabled) return;
             await AutoComplete.SetSelectedItem(this);

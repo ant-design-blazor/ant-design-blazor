@@ -139,6 +139,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Placement of the overlay
+        /// </summary>
         [Parameter]
         public Placement Placement { get; set; }
 

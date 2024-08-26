@@ -137,9 +137,6 @@
   "Trigger (link, button, etc)": {
     "Translated": "触发器（链接、按钮等）"
   },
-  "自动关闭功能和Visible参数同时生效 Both auto-off and Visible control close": {
-    "Translated": "自动关闭功能和Visible参数同时生效 Both auto-off and Visible control close"
-  },
   "Whether the trigger is disabled.": {
     "Translated": "触发器是否被禁用。"
   },
@@ -740,9 +737,6 @@
   "Callback for when Affix state is changed. A boolean indicating if the Affix is currently affixed is passed.": {
     "Translated": "Affix 状态改变时的回调。传递一个布尔值，指示词缀当前是否已附加。"
   },
-  "Returned ElementRef reference for DOM element.": {
-    "Translated": "返回 DOM 元素的 ElementRef 引用。"
-  },
   "Specifies one or more class names for an DOM element.": {
     "Translated": "为 DOM 元素指定一个或多个类名。"
   },
@@ -896,9 +890,6 @@
   "Selected item from dropdown": {
     "Translated": "从下拉列表中选择的项目"
   },
-  "Active item": {
-    "Translated": "活动项目"
-  },
   "Overlay adjustment strategy (when for example browser resize is happening). Check": {
     "Translated": "叠加调整策略（例如，当浏览器调整大小时发生）。查看"
   },
@@ -928,12 +919,6 @@
   },
   "What Culture will be used when converting string to value and value to string Useful for InputNumber component.": {
     "Translated": "将字符串转换为值和将值转换为字符串时将使用什么文化对 InputNumber 组件有用。"
-  },
-  "Open panel": {
-    "Translated": "打开面板"
-  },
-  "Close panel": {
-    "Translated": "关闭面板"
   },
   "Label for the option. Takes priority over Label": {
     "Translated": "选项的标签。优先于标签"

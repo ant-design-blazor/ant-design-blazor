@@ -14,7 +14,7 @@ namespace AntDesign
         }
 
         [CascadingParameter]
-        public IAutoCompleteRef Component { get; set; }
+        private IAutoCompleteRef Component { get; set; }
 
         [CascadingParameter(Name = "OverlayTriggerContext")]
         public ForwardRef OverlayTriggerContext
@@ -22,6 +22,8 @@ namespace AntDesign
             get => RefBack;
             set { RefBack = value; }
         }
+
+        IAutoCompleteRef IAutoCompleteInput.Component { get => Component; set => Component = value; }
 
         protected override void OnInitialized()
         {
@@ -60,7 +62,7 @@ namespace AntDesign
 
         #region IAutoCompleteInput
 
-        public void SetValue(object value)
+        void IAutoCompleteInput.SetValue(object value)
         {
             this.CurrentValue = (TValue)value;
         }

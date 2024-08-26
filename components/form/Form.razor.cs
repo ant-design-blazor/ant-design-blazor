@@ -235,12 +235,18 @@ namespace AntDesign
         [Parameter]
         public string Autocomplete { get; set; } = "off";
 
+        /// <summary>
+        /// The localization options
+        /// </summary>
         [Parameter]
         public FormLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Form;
 
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
+        /// <summary>
+        /// A flag indicating if the form has been modified
+        /// </summary>
         public bool IsModified => _editContext.IsModified();
 
         private EditContext _editContext;
@@ -459,6 +465,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Execute validation   
+        /// </summary>
+        /// <returns> return <c>true</c> if all fields are valid </returns>
         public bool Validate()
         {
             var result = _editContext.Validate();
@@ -472,6 +482,9 @@ namespace AntDesign
         /// </summary>
         public void ValidationReset() => BuildEditContext();
 
+        /// <summary>
+        /// Get the <see cref="EditContext"/> instance inner the form
+        /// </summary>
         public EditContext EditContext => _editContext;
 
         bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
@@ -538,6 +551,11 @@ namespace AntDesign
             return _eventInfos;
         }
 
+        /// <summary>
+        /// Set validation messages to a specific field.
+        /// </summary>
+        /// <param name="field">The field name</param>
+        /// <param name="errorMessages">The error messages</param>
         public void SetValidationMessages(string field, string[] errorMessages)
         {
             var fieldIdentifier = _editContext.Field(field);

@@ -2,10 +2,9 @@
 
 namespace AntDesign
 {
-    public interface IAutoCompleteInput
+    internal interface IAutoCompleteInput
     {
-        [CascadingParameter]
-        public IAutoCompleteRef Component { get; set; }
-        public void SetValue(object value);
+        IAutoCompleteRef Component { get; set; }
+        void SetValue(object value);
     }
 }
