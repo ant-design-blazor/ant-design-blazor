@@ -1,0 +1,23 @@
+﻿<Project>
+  <PropertyGroup>
+    <AntDesignNugetLibRoot>$(MSBuildThisFileDirectory)..\lib</AntDesignNugetLibRoot>
+  </PropertyGroup>
+
+  <!--only copy at debug mode-->
+  <Target Name="_CopyAntDesignLocalizedIntellisenseFiles"
+          BeforeTargets="BeforeBuild"
+          Condition="'$(Configuration)' == 'Debug'"
+          Inputs="$(MSBuildThisFileDirectory)..\content\LocalizedIntellisenseFiles\**\*.xml"
+          Outputs="$(AntDesignNugetLibRoot)\netstandard2.1\**\*.xml;$(AntDesignNugetLibRoot)\net5.0\**\*.xml;$(AntDesignNugetLibRoot)\net6.0\**\*.xml;$(AntDesignNugetLibRoot)\net7.0\**\*.xml;$(AntDesignNugetLibRoot)\net8.0\**\*.xml">
+    <ItemGroup>
+      <LocalizedIntellisenseFilesSourceFiles Include="$(MSBuildThisFileDirectory)..\content\LocalizedIntellisenseFiles\**\*.xml" />
+    </ItemGroup>
+
+    <!--add tfms-->
+    <Copy SourceFiles="@(LocalizedIntellisenseFilesSourceFiles)" DestinationFolder="$(AntDesignNugetLibRoot)\netstandard2.1\%(RecursiveDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(LocalizedIntellisenseFilesSourceFiles)" DestinationFolder="$(AntDesignNugetLibRoot)\net5.0\%(RecursiveDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(LocalizedIntellisenseFilesSourceFiles)" DestinationFolder="$(AntDesignNugetLibRoot)\net6.0\%(RecursiveDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(LocalizedIntellisenseFilesSourceFiles)" DestinationFolder="$(AntDesignNugetLibRoot)\net7.0\%(RecursiveDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(LocalizedIntellisenseFilesSourceFiles)" DestinationFolder="$(AntDesignNugetLibRoot)\net8.0\%(RecursiveDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+</Project>
