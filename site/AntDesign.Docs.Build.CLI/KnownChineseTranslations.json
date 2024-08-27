@@ -4193,6 +4193,9 @@
   "Toggle the border style.": {
     "Translated": "切换边框样式。"
   },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
   "Use ItemLabel instead": {
     "Translated": "请改用 ItemLabel"
   },
