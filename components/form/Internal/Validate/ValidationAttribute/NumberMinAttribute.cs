@@ -24,6 +24,10 @@ namespace AntDesign.Internal.Form.Validate
 
         public override bool IsValid(object value)
         {
+            if (value == null)
+            {
+                return true;
+            }
             var type = value.GetType();
             var typeMaxValue = GetMaxValueString(type);
 
