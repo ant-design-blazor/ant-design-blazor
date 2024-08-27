@@ -1079,8 +1079,8 @@ namespace AntDesign
 
             ChildContent = c => c => { };
             ColumnContext = new ColumnContext(this);
-            _isRebuilding = _hasInitialized;
             _hasInitialized = false;
+            _isRebuilding = true;
 
             StateHasChanged();
 
