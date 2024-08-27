@@ -18,17 +18,6 @@ namespace AntDesign
         Magenta,
         Volcano,
         Gold,
-
-        /* Unmerged change from project 'AntDesign(net5.0)'
-        Before:
-                Lime    
-            }
-        } 
-        After:
-                Lime
-            }
-        }
-        */
         Lime
     }
 }
