@@ -160,13 +160,13 @@ namespace AntDesign
             await ItemClick(ActiveOptionValue);
         }
 
-        async Task HideOverlay()
+        private async Task HideOverlay()
         {
             await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, false);
             await _overlayTrigger.Hide();
         }
 
-        async Task ShowOverlay(bool reCalcPosition)
+        private async Task ShowOverlay(bool reCalcPosition)
         {
             await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, true);
             ActiveOptionValue = ShowOptions.First().Value;
@@ -184,13 +184,13 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
-        async void OnKeyDown(KeyboardEventArgs args)
+        private async void OnKeyDown(KeyboardEventArgs args)
         {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
             //开启浮窗的判断放在oninput里，不然会有问题
             if (args.Key == "Escape") await HideOverlay();
         }
 
-        async Task OnInput(ChangeEventArgs args)
+        private async Task OnInput(ChangeEventArgs args)
         {
             Value = args.Value.ToString();
             await ValueChanged.InvokeAsync(Value);

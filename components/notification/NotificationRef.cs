@@ -20,7 +20,7 @@ namespace AntDesign
 
         private readonly NotificationService _service;
 
-        internal NotificationRef(NotificationService service,NotificationConfig config)
+        internal NotificationRef(NotificationService service, NotificationConfig config)
         {
             _service = service;
             Config = config;

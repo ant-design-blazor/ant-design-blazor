@@ -5,7 +5,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
@@ -308,7 +307,7 @@ namespace AntDesign
         [Parameter]
         public bool ForceRender { get; set; }
 
-      #endregion Parameter
+        #endregion Parameter
 
 #pragma warning disable 649
         private DialogWrapper _dialogWrapper;

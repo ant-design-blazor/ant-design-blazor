@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -322,7 +321,7 @@ namespace AntDesign
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
 
-        
+
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
@@ -1052,7 +1051,7 @@ namespace AntDesign
         }
 
         #region Events
-        
+
         protected override async Task OnValueChangeAsync(TItemValue value)
         {
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
