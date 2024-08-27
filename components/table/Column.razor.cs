@@ -1,18 +1,22 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
+using AntDesign.Filters;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using System.Text.Json;
-using AntDesign.Core.Helpers;
-using AntDesign.Filters;
-using System.Threading.Tasks;
-using AntDesign.Core.Extensions;
 using Microsoft.JSInterop;
 
 namespace AntDesign

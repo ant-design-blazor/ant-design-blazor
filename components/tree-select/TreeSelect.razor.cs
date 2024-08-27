@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
-using AntDesign.Core.Extensions;
 using OneOf;
 
 namespace AntDesign

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -18,11 +21,11 @@ namespace AntDesign.Select.Internal
         public bool ShowSearchIcon { get; set; }
 
         [Parameter]
-        public bool ShowArrowIcon { get; set; } 
+        public bool ShowArrowIcon { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClearClick { get; set; } 
-        
+        public EventCallback<MouseEventArgs> OnClearClick { get; set; }
+
         [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
