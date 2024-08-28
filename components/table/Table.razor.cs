@@ -1072,6 +1072,9 @@ namespace AntDesign
             // avoid rerender again when the column are cleared
             if (!add && ColumnContext.Columns.Count == 0) return false;
 
+            if (!_afterFirstRender) return false;
+            if (IsDisposed || _isReloading) return false;
+
             _childContent = ChildContent;
 
             ChildContent = c => c => { };
