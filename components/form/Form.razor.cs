@@ -319,17 +319,20 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (OnFieldChanged.HasDelegate)
-                _editContext.OnFieldChanged -= OnFieldChangedHandler;
-            if (OnValidationRequested.HasDelegate)
-                _editContext.OnValidationRequested -= OnValidationRequestedHandler;
-            if (OnValidationStateChanged.HasDelegate)
-                _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
-
-            if (UseRulesValidator)
+            if (_editContext != null)
             {
-                _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
-                _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+                if (OnFieldChanged.HasDelegate)
+                    _editContext.OnFieldChanged -= OnFieldChangedHandler;
+                if (OnValidationRequested.HasDelegate)
+                    _editContext.OnValidationRequested -= OnValidationRequestedHandler;
+                if (OnValidationStateChanged.HasDelegate)
+                    _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
+
+                if (UseRulesValidator)
+                {
+                    _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
+                    _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+                }
             }
 
             base.Dispose(disposing);
