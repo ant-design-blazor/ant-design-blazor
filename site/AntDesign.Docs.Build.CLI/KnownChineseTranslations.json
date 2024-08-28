@@ -4336,5 +4336,20 @@
   },
   "The child Content": {
     "Translated": "子内容"
+  },
+  "Callback executed when the SelectAll button is clicked. <br /> This is useful for selecting all rows when the table is virtualized or not only shown on current page. <p> The argument is true when selecting all rows, false when unselecting all rows. </p>": {
+    "Translated": "单击“SelectAll”按钮时执行的回调。<br /> 这对于在表虚拟化或不仅在当前页面上显示时选择所有行非常有用。<p> 选择所有行时参数为 true，取消选择所有行时为 false。 </p>"
+  },
+  "Use @bind-Field to bind to a property of TItem, we recommend using <code>PropertyColumn</code> instead": {
+    "Translated": "使用 @bind-Field 绑定到 TItem 的属性，建议使用 <code>PropertyColumn</code> 代替"
+  },
+  "Only used for @bind-Field and get the expression, no other purpose": {
+    "Translated": "仅用于 @bind-Field 并获取表达式，无其他用途"
+  },
+  "Please use StartIndex": {
+    "Translated": "请使用 StartIndex"
+  },
+  "Get current filters' expression for ORMs like Entity Framework. And you can get the filtered data by executing the expression with the data source.": {
+    "Translated": "获取 Entity Framework 等 ORM 的当前过滤器表达式。您可以通过对数据源执行表达式来获取筛选后的数据。"
   }
 }

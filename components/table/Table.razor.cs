@@ -44,6 +44,8 @@ namespace AntDesign
     </summary>
     <seealso cref="PropertyColumn{TItem, TProp}"/>
     <seealso cref="ActionColumn"/>
+    <seealso cref="Selection"/>
+    <seealso cref="QueryModel{TItem}" />
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1)]
 #if NET6_0_OR_GREATER
