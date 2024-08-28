@@ -30,6 +30,16 @@ namespace AntDesign
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
+        /// <summary>
+        /// Callback executed when the SelectAll button is clicked. <br/>
+        /// This is useful for selecting all rows when the table is virtualized or not only shown on current page.
+        /// <para>
+        /// The parameter is true when selecting all rows, false when unselecting all rows.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnSelectAll { get; set; }
+
         private ISelectionColumn _selection;
         private readonly HashSet<TItem> _selectedRows;
         private bool _preventRowDataTriggerSelectedRowsChanged;
@@ -66,6 +76,11 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
+            if (OnSelectAll.HasDelegate)
+            {
+                OnSelectAll.InvokeAsync(true);
+            }
+
             foreach (var select in _rootRowDataCache.Values)
             {
                 if (select.DataItem.Disabled)
@@ -86,6 +101,11 @@ namespace AntDesign
         public void UnselectAll()
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
+
+            if (OnSelectAll.HasDelegate)
+            {
+                OnSelectAll.InvokeAsync(false);
+            }
 
             foreach (var select in _rootRowDataCache.Values)
             {
