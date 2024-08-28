@@ -34,7 +34,7 @@ namespace AntDesign
         /// Callback executed when the SelectAll button is clicked. <br/>
         /// This is useful for selecting all rows when the table is virtualized or not only shown on current page.
         /// <para>
-        /// The parameter is true when selecting all rows, false when unselecting all rows.
+        /// The argument is true when selecting all rows, false when unselecting all rows.
         /// </para>
         /// </summary>
         [Parameter]
