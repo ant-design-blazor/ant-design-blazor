@@ -7,19 +7,6 @@
 
 @if (IsHeaderTemplate)
 {
-    Context?.AddHeaderColumn(this);
-}
-else if (IsRowTemplate)
-{
-    Context?.AddRowColumn(this);
-}
-else
-{
-    Context?.AddColumn(this);
-}
-
-@if (IsHeaderTemplate)
-{
     @if (HeaderColSpan == 0)
         return;
     @RenderHeader()

@@ -8,18 +8,6 @@
 @using System.Linq.Expressions;
 @typeparam TData
 
-@if (IsHeaderTemplate)
-{
-    Context?.AddHeaderColumn(this);
-}
-else if (IsRowTemplate)
-{
-    Context?.AddRowColumn(this);
-}
-else
-{
-    Context?.AddColumn(this);
-}
 
 @if (IsHeaderTemplate)
 {
@@ -167,11 +155,11 @@ else if (IsRowTemplate)
             var fieldValue = GetValue != null ? GetValue(rowData) : default;
             var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue?.ToString();
             var title = Context.Columns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-            var cellData = new CellData<TData>(RowData, fieldValue, Format);
+            var cellData = new CellData<TData>(rowData, fieldValue, Format);
 
             @if (!rowData.IsGrouping)
             {
-                cellData = new CellData<TData>(RowData, fieldValue, Format);
+                cellData = new CellData<TData>(rowData, fieldValue, Format);
                 cellAttributes = OnCell?.Invoke(cellData);
                 fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue is string text ? text : string.Empty;
             }

@@ -64,6 +64,20 @@ namespace AntDesign
             }
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (Table == null)
+            {
+                return;
+            }
+
+            Table.Selection = this;
+
+            Table.Selection.RowSelections.Add(this);
+        }
+
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
         private void HandleSelected(TableDataItem dataItem)

@@ -164,6 +164,19 @@ namespace AntDesign
                 return;
             }
 
+            if (IsHeaderTemplate)
+            {
+                Context?.AddHeaderColumn(this);
+            }
+            else if (IsRowTemplate)
+            {
+                Context?.AddRowColumn(this);
+            }
+            else
+            {
+                Context?.AddColumn(this);
+            }
+
             if (Fixed == "left")
             {
                 Table?.HasFixLeft();
@@ -189,7 +202,7 @@ namespace AntDesign
         {
             if (!IsHeaderTemplate && !IsRowTemplate)
             {
-                Context?.RemoveColumn(this);
+                //Context?.RemoveColumn(this);
             }
             //Context?.Columns.Remove(this);
             Table?.RebuildColumns(false);
