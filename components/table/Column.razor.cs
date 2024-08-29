@@ -21,6 +21,15 @@ using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// The column definition, can be used to define a column for a <see cref="Table{TItem}"/>.
+    /// <para>
+    /// We recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TData">
+    /// The type of a property of the TItem objec. 
+    /// </typeparam>
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
@@ -33,6 +42,7 @@ namespace AntDesign
         /// Expression to get the data for the field
         /// </summary>
         [Parameter]
+        [Obsolete]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         /// <summary>
@@ -41,7 +51,11 @@ namespace AntDesign
         [Parameter]
         public RenderFragment FilterDropdown { get; set; }
 
+        /// <summary>
+        /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
+        /// </summary>
         [Parameter]
+        [Obsolete]
         public TData Field
         {
             get
@@ -56,6 +70,13 @@ namespace AntDesign
                 }
             }
         }
+
+        /// <summary>
+        /// Only used for @bind-Field and get the expression, no other purpose
+        /// </summary>
+        [Parameter]
+        [Obsolete]
+        public EventCallback<TData> FieldChanged { get; set; }
 
         private TData _field;
 
