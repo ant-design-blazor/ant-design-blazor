@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -16,6 +20,9 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu Parent { get; set; }
 
+        /// <summary>
+        /// Menu placement
+        /// </summary>
         [Parameter]
         public Placement? Placement
         {
@@ -33,18 +40,31 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
 
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// SubMenus or SubMenu items
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Unique ID of the SubMenu
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Key
         {
@@ -52,12 +72,23 @@ namespace AntDesign
             set => _key = value;
         }
 
+        /// <summary>
+        /// Whether SubMenu is disabled
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Open state of the SubMenu
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsOpen { get; set; }
 
+        /// <summary>
+        /// Callback executed when the SubMenu title is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClick { get; set; }
 
@@ -165,7 +196,7 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
 
-            RootMenu?.Submenus.Add(this);
+            RootMenu?.AddSubmenu(this);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
@@ -188,6 +219,12 @@ namespace AntDesign
                     IsOpen = true;
                 }
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveSubmenu(this);
+            base.Dispose(disposing);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

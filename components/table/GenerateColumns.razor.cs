@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -21,7 +20,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Range? Range { get; set; }
-        
+
         /// <summary>
         /// Hide the columns by the property name.
         /// </summary>
@@ -35,7 +34,7 @@ namespace AntDesign
         /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
         [Parameter]
         public Action<string, object> Definitions { get; set; }
-        
+
 
         [Parameter]
         public RenderFragment LeftColumns { get; set; }
@@ -63,7 +62,7 @@ namespace AntDesign
             {
                 if (HideColumnsByName.Contains(property.Name)) continue;
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
-                var instance = Activator.CreateInstance(columnType);
+                var instance = Activator.CreateInstance(columnType) as IFieldColumn;
 
                 Definitions?.Invoke(property.Name, instance);
 

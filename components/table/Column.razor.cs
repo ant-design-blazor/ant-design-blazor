@@ -1,66 +1,129 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
+using AntDesign.Filters;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using System.Text.Json;
-using AntDesign.Core.Helpers;
-using AntDesign.Filters;
-using System.Threading.Tasks;
-using AntDesign.Core.Extensions;
 using Microsoft.JSInterop;
 using AntDesign.Table;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// The column definition, can be used to define a column for a <see cref="Table{TItem}"/>.
+    /// <para>
+    /// We recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TData">
+    /// The type of a property of the TItem objec. 
+    /// </typeparam>
     public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
         [Parameter]
-        public EventCallback<TData> FieldChanged { get; set; }
-
-        [Parameter]
+#if NET6_0_OR_GREATER
+        [Obsolete]
+#endif
         public Expression<Func<TData>> FieldExpression { get; set; }
 
+        /// <summary>
+        /// Field this column represents
+        /// </summary>
         [Parameter]
         public RenderFragment FilterDropdown { get; set; }
 
+        /// <summary>
+        /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
+        /// </summary>
         [Parameter]
+#if NET6_0_OR_GREATER
+        [Obsolete]
+#endif
         public TData Field { get; set; }
+
+        /// <summary>
+        /// Use @bind-Field to bind to a property of TItem
+        /// </summary>
+        [Parameter]
+#if NET6_0_OR_GREATER
+        [Obsolete]
+#endif
+        public EventCallback<TData> FieldChanged { get; set; }
 
         public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
 
+        /// <summary>
+        /// The corresponding path of the column data in the data item, support for querying the nested path through the array
+        /// </summary>
         [Parameter]
         public string DataIndex { get; set; }
 
+        /// <summary>
+        /// Column data serialization rules, such as DateTime.ToString("XXX")
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Whether to allow sorting or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Sortable { get; set; }
 
+        /// <summary>
+        /// Comparison function for custom sort
+        /// </summary>
         [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
+        /// <summary>
+        /// Number of similtaneous sorts allowed
+        /// </summary>
         [Parameter]
         public int SorterMultiple { get; set; }
 
+        /// <summary>
+        /// Whether to show tooltip when hovering over sort button or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
+        /// <summary>
+        /// Allowable sort directions
+        /// </summary>
         [Parameter]
         public SortDirection[] SortDirections { get; set; }
 
+        /// <summary>
+        /// Default sort direction
+        /// </summary>
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
 
+        /// <summary>
+        /// Set cell attributes
+        /// </summary>
         [Parameter]
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
 
+        /// <summary>
+        /// Set header cell attributes
+        /// </summary>
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
@@ -68,6 +131,10 @@ namespace AntDesign
 
         private bool _hasFilterableAttribute;
 
+        /// <summary>
+        /// Whether the column is filterable or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Filterable
         {
@@ -100,6 +167,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether to allow multiple filters or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public IEnumerable<TableFilter> DefaultFilters { get; set; }
 
@@ -135,12 +206,24 @@ namespace AntDesign
 
         private Type _columnDataType;
 
+        /// <summary>
+        /// Display name for the column
+        /// </summary>
         public string DisplayName { get; private set; }
 
+        /// <summary>
+        /// Field name for the column
+        /// </summary>
         public string FieldName { get; private set; }
 
+        /// <summary>
+        /// Sort model of the column
+        /// </summary>
         public ITableSortModel SortModel { get; private set; }
 
+        /// <summary>
+        /// Filter model of the column
+        /// </summary>
         public ITableFilterModel FilterModel { get; private set; }
 
         private SortDirection _sortDirection;
@@ -384,7 +467,7 @@ namespace AntDesign
             }
         }
 
-        IQueryable<IGrouping<object, TItem>> IFieldColumn.Group<TItem>(IQueryable<TItem> source)
+        Expression<Func<TItem, object>> IFieldColumn.GetGroupByExpression<TItem>()
         {
             var param = Expression.Parameter(typeof(TItem), "item");
 
@@ -399,7 +482,7 @@ namespace AntDesign
             var body = Expression.Convert(field, typeof(object));
             var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
 
-            return source.GroupBy(lambda);
+            return lambda;
         }
 
         private void SetSorter(SortDirection sortDirection)

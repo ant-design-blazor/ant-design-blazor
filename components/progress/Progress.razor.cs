@@ -1,14 +1,32 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Display the current progress of an operation flow.</para>
+
+    <h2>When To Use</h2>
+
+    <para>If it will take a long time to complete an operation, you can use `Progress` to show the current progress and status.</para>
+
+    <list type="bullet">
+        <item>When an operation will interrupt the current interface, or it needs to run in the background for more than 2 seconds.</item>
+        <item>When you need to display the completion percentage of an operation.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg")]
     public partial class Progress : AntDomComponentBase
     {
         private const string PrefixCls = "ant-progress";
@@ -26,18 +44,21 @@ namespace AntDesign
         /// <summary>
         /// progress size
         /// </summary>
+        /// <default value="ProgressSize.Default" />
         [Parameter]
         public ProgressSize Size { get; set; } = ProgressSize.Default;
 
         /// <summary>
         /// to set the type, options: line circle dashboard
         /// </summary>
+        /// <default value="ProgressType.Line" />
         [Parameter]
         public ProgressType Type { get; set; } = ProgressType.Line;
 
         /// <summary>
         /// template function of the content
         /// </summary>
+        /// <default value="i%" />
         [Parameter]
         public Func<double, string> Format { get; set; } = (i) => i + "%";
 
@@ -50,24 +71,28 @@ namespace AntDesign
         /// <summary>
         /// whether to display the progress value and the status icon
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool ShowInfo { get; set; } = true;
 
         /// <summary>
         /// to set the status of the Progress, options: success exception normal active(line only)
         /// </summary>
+        /// <default value="ProgressStatus.Normal" />
         [Parameter]
         public ProgressStatus Status { get; set; } = ProgressStatus.Normal;
 
         /// <summary>
         /// to set the style of the progress linecap
         /// </summary>
+        /// <default value="ProgressStrokeLinecap.Round" />
         [Parameter]
         public ProgressStrokeLinecap StrokeLinecap { get; set; } = ProgressStrokeLinecap.Round;
 
         /// <summary>
         /// segmented success percent
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public double SuccessPercent { get; set; }
 
@@ -82,6 +107,7 @@ namespace AntDesign
         /// to set the width of the circular progress, unit: percentage of the canvas width
         /// to set the width of the dashboard progress, unit: percentage of the canvas width
         /// </summary>
+        /// <default value="Type = line: 10, Type = circle or dashboard: 6" />
         [Parameter]
         public int StrokeWidth { get; set; }
 
@@ -95,6 +121,7 @@ namespace AntDesign
         /// <summary>
         /// the total step count
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int Steps { get; set; }
 
@@ -102,18 +129,21 @@ namespace AntDesign
         /// to set the canvas width of the circular progress, unit: px
         /// to set the canvas width of the dashboard progress, unit: px
         /// </summary>
+        /// <default value="120" />
         [Parameter]
         public int Width { get; set; } = 120;
 
         /// <summary>
         /// the gap degree of half circle, 0 ~ 295
         /// </summary>
+        /// <default value="75" />
         [Parameter]
         public int GapDegree { get; set; } = 75;
 
         /// <summary>
         /// the gap position, options: top bottom left right
         /// </summary>
+        /// <default value="ProgressGapPosition.Bottom" />
         [Parameter]
         public ProgressGapPosition GapPosition { get; set; } = ProgressGapPosition.Bottom;
 

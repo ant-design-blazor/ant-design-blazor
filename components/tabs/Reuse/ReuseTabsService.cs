@@ -10,9 +10,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class ReuseTabsService
+    /// <summary>
+    /// The service for reuse tabs
+    /// </summary>
+    public partial class ReuseTabsService : IDisposable
     {
         private readonly NavigationManager _navmgr;
+        private readonly MenuService _menusService;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
         private IReadOnlyCollection<ReuseTabsPageItem> _pages;
 
@@ -39,9 +43,14 @@ namespace AntDesign
         /// </summary>
         public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
 
-        public ReuseTabsService(NavigationManager navmgr)
+        public ReuseTabsService(NavigationManager navmgr, MenuService menusService)
         {
-            this._navmgr = navmgr;
+            _navmgr = navmgr;
+            _menusService = menusService;
+
+            // Because the menu would be loaded asynchronously sometimes,
+            // So need to refresh the title after menu loaded.
+            _menusService.MenuItemLoaded += StateHasChanged;
         }
 
         /// <summary>
@@ -159,6 +168,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Update the state of the <see cref="ReuseTabs"/>
+        /// </summary>
         public void Update()
         {
             StateHasChanged();
@@ -205,7 +217,7 @@ namespace AntDesign
             OnStateHasChanged?.Invoke();
         }
 
-        private static RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
         {
             return builder =>
             {
@@ -224,7 +236,7 @@ namespace AntDesign
             };
         }
 
-        private static void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
+        private void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
         {
             if (page is IReuseTabsPage resuse)
             {
@@ -233,14 +245,18 @@ namespace AntDesign
 
             var attributes = pageType.GetCustomAttributes(true);
 
-            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr != null)
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr is { Title.Length: > 0 })
             {
                 pageItem.Title ??= titleAttr.Title?.ToRenderFragment();
             }
 
             if (attributes.FirstOrDefault(x => x is ReuseTabsPageAttribute) is ReuseTabsPageAttribute attr && attr != null)
             {
-                pageItem.Title ??= attr.Title?.ToRenderFragment();
+                if (!string.IsNullOrWhiteSpace(attr.Title))
+                {
+                    pageItem.Title ??= attr.Title?.ToRenderFragment();
+                }
+
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
@@ -248,11 +264,14 @@ namespace AntDesign
                 pageItem.Order = attr.Order;
             }
 
-            pageItem.Title ??= url.ToRenderFragment();
+            pageItem.Title ??= b =>
+            {
+                b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+            };
         }
 
         /// <summary>
-        /// 获取所有程序集
+        /// Get all assembly
         /// </summary>
         /// <returns></returns>
         private IEnumerable<Assembly> GetAllAssembly()
@@ -266,7 +285,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 扫描 ReuseTabsPageAttribute 特性
+        /// Scan ReuseTabsPageAttribute
         /// </summary>
         private void ScanReuseTabsPageAttribute()
         {
@@ -317,6 +336,11 @@ namespace AntDesign
                 .ThenByDescending(x => x.Pin ? 1 : 0)
                 .ThenBy(x => x.Order)
                 .ToList();
+        }
+
+        public void Dispose()
+        {
+            _menusService.MenuItemLoaded -= StateHasChanged;
         }
     }
 }

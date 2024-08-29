@@ -34,8 +34,11 @@
                         @if (_fieldModel is not null)
                         {
                             @ChildContent(_fieldModel)
+
+                            ColumnContext.HeaderColumnInitialed();
                         }
                     </CascadingValue>
+
                     <div class="@ClassMapper.Class" @ref="_wrapperRef">
                         @if (TitleTemplate != null || Title != null)
                         {
@@ -57,12 +60,10 @@
                                         @colGroup(this, false)
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @if (_fieldModel is not null)
-                                                    {
-                                                        @ChildContent(_fieldModel)
-                                                    }
-                                                </CascadingValue>
+                                                @foreach (var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                                {
+                                                    @column.RenderMeasure()
+                                                }
                                             </tr>
                                             @body(_showItems)
                                         </tbody>
@@ -78,12 +79,10 @@
                                         @header()
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @if (_fieldModel is not null)
-                                                    {
-                                                        @ChildContent(_fieldModel)
-                                                    }
-                                                </CascadingValue>
+                                                @foreach (var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                                {
+                                                    @column.RenderMeasure()
+                                                }
                                             </tr>
                                             @body(_showItems)
                                         </tbody>
@@ -144,18 +143,34 @@
              <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
                  <CascadingValue Value="_hasFixRight" Name="AntDesign.TableRow.HasFixRight">
                      <CascadingValue Value="ScrollY" Name="AntDesign.TableRow.ScrollY">
-                         @if (_fieldModel is not null)
+                            @if (HeaderTemplate != null || !Quick)
                             {
-                                @if (HeaderTemplate != null)
-                                {
-                                    @HeaderTemplate(_fieldModel)
-                                }
-                                else
-                                {
-                                    <TableRow>
-                                        @ChildContent(_fieldModel)
-                                    </TableRow>
-                                }
+                                <CascadingValue Name="IsHeaderTemplate" Value="true" IsFixed>
+                                    <CascadingValue Name="Table" Value="this" IsFixed>
+                                        @if (HeaderTemplate == null)
+                                        {  
+                                            <TableRow>
+                                                @ChildContent(_fieldModel)
+                                            </TableRow>
+                                        }
+                                        else
+                                        {
+                                            @HeaderTemplate(_fieldModel)
+                                        }
+                                    </CascadingValue>
+                                </CascadingValue>
+                            }
+                            else
+                            {
+                                <TableRow>
+                                     @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                     {
+                                         if (column is IColumn col && col.HeaderColSpan == 0)
+                                            continue;
+
+                                         @column.RenderHeader()
+                                     }
+                                </TableRow>
                             }
                         </CascadingValue>
                     </CascadingValue>
@@ -166,13 +181,13 @@
 
     static RenderFragment colGroup(Table<TItem> table, bool header)
     {
-        var realSize = (CssSizeLength)((table as ITable).RealScrollBarSize);
+        var realSize = (CssSizeLength)((table as ITable).ScrollBarWidth);
         return @<colgroup>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
-                @if (_fieldModel is not null)
-                {
-                    @table.ChildContent(_fieldModel)
-                }
+                    @foreach(var column in table.ColumnContext.Columns.Cast<IRenderColumn>())
+                    {
+                        @column.RenderColGroup()
+                    }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
                 {
@@ -199,7 +214,7 @@
                     ItemContent="bodyRow()">
                         <Placeholder>
                             <tr class="ant-table-row ant-table-row-level-0">
-                                @foreach (var item in ColumnContext.HeaderColumns)
+                               @foreach (var item in ColumnContext.Columns)
                                 {
                                     <td class="ant-table-cell" colspan="@item.ColSpan">
                                        <Skeleton Active="true" ParagraphRows="1" Paragraph="false" ParagraphWidth="@item.Width"></Skeleton>
@@ -232,13 +247,18 @@
                      }
                  </td>
              </tr>
-    ;
-        }
-        else if (_groupedColumns.Count>0 && level==0)
-        {
-            return _groups.Select((data, index) => GetGroupRowData(data, index, level, parentRowData?.Children))
-                .ForeachLoop(bodyRow());
-        }
+       ;
+            }
+            else if (_groupedColumns.Count>0 && level==0)
+            {
+                return _groups.Select((data, index) => GetGroupRowData(data, index, level, parentRowData?.Children))
+                    .ForeachLoop(bodyRow());
+            }
+            else if (_groupedColumns.Count>0 && parentRowData?.IsGrouping == true)
+            {
+                 return parentRowData?.Children.Values
+                    .ForeachLoop(bodyRow());
+            }
 #if NET5_0_OR_GREATER
         else if (EnableVirtualization)
         {
@@ -261,7 +281,7 @@
     {
         return currentRowData =>
         {
-            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.RowIndex">
+            return @<TableRowWrapper RowData="currentRowData" @key="currentRowData.Key">
             @{
                 var currentDataItem = currentRowData.DataItem;
                 var rowAttributes = OnRow?.Invoke(currentRowData);
@@ -275,14 +295,33 @@
                 <CascadingValue Value="true" Name="IsBody" IsFixed>
                     <CascadingValue Value="rowAttributes" Name="AntDesign.TableRow.RowAttributes">
                         <CascadingValue Value="rowClassName" Name="AntDesign.TableRow.RowClassName">
-                            @if (RowTemplate != null)
+                           @if (RowTemplate != null || !Quick)
                             {
-                                @RowTemplate(currentRowData)
+                                <CascadingValue Name="IsRowTemplate" Value="true" IsFixed>
+                                    <CascadingValue Name="Table" Value="this" IsFixed>
+                                            @if (RowTemplate == null)
+                                            {
+                                                 <TableRow @key="currentRowData.Data">
+                                                      @ChildContent(currentRowData.Data)
+                                                 </TableRow>
+                                            }
+                                            else
+                                            {
+                                                 @RowTemplate(currentRowData)
+                                            }
+                                    </CascadingValue>
+                                </CascadingValue>
                             }
                             else
                             {
-                                <TableRow>
-                                    @ChildContent(currentDataItem.Data)
+                                <TableRow @key="currentRowData.Data">
+                                    @foreach(var column in ColumnContext.Columns.Cast<IRenderColumn>())
+                                    {
+                                        if (column is IColumn col && (col.ColSpan == 0 || col.RowSpan == 0))
+                                            continue;
+
+                                        @column.RenderBody(currentRowData)
+                                    }
                                 </TableRow>
                             }
                         </CascadingValue>
@@ -290,10 +329,12 @@
                 </CascadingValue>
 
                 // When expand button was clicked, would trigger here to add one more child level
-                @if (currentDataItem.HasChildren && currentRowData.Expanded)
+                @if ((currentDataItem.HasChildren || currentRowData.IsGrouping) && currentRowData.Expanded)
                 {
-                    currentRowData.Children??=new();
+                    currentRowData.Children ??= new();
+                    currentDataItem.Children ??= [];
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
+                    @groupFooter(currentRowData);
                 }
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
                 {
@@ -326,6 +367,19 @@
                 </CascadingValue>;
         }
 
+        return builder => { };
+    }
+
+    RenderFragment groupFooter(RowData<TItem> currentRowData)
+    {
+         @if (GroupFooterTemplate !=null)
+        {
+            return@<tr class="ant-table-expanded-row ant-table-expanded-row-level-1 ant-table-grouping-footer" >
+                <td colspan="@(ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                    @GroupFooterTemplate(currentRowData.GroupResult)
+                </td>
+            </tr>;
+        }
         return builder => { };
     }
 }

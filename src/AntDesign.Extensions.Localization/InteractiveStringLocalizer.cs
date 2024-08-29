@@ -2,18 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization
 {
-    internal class InteractiveStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILocalizationService localizationService) : InteractiveStringLocalizer(factory, localizationService),
+    internal sealed class InteractiveStringLocalizer<TResourceSource>(IStringLocalizerFactory factory, ILocalizationService localizationService) : InteractiveStringLocalizer(factory, localizationService),
         IStringLocalizer<TResourceSource>,
         IStringLocalizer
     {

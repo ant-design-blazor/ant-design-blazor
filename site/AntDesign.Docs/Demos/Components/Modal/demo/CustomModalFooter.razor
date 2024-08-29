@@ -40,7 +40,7 @@
         _visible = false;
     }
 
-    private async Task OpenModal()
+    private void OpenModal()
     {
         var options = new ModalOptions()
         {
@@ -56,7 +56,7 @@
         };
 
 
-        await modalService.CreateModalAsync(options);
+        modalService.CreateModal(options);
     }
 
 }

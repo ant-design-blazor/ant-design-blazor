@@ -1,8 +1,11 @@
-﻿using System.Diagnostics;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -21,8 +24,8 @@ namespace AntDesign
         private DotNetObjectReference<TextArea> _reference;
 
         /// <summary>
-        /// Will adjust (grow or shrink) the `TextArea` according to content.
-        /// Can work in connection with `MaxRows` and `MinRows`.
+        /// Will adjust (grow or shrink) the <c>TextArea</c> according to content.
+        /// Can work in connection with <see cref="MaxRows"/> and <see cref="MinRows"/>.
         /// Sets resize attribute of the textarea HTML element to: none.
         /// </summary>
         [Parameter]
@@ -44,17 +47,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When `false`, value will be set to `null` when content is empty
-        /// or whitespace. When `true`, value will be set to empty string.
+        /// When true, value will be set to empty string.
+        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool DefaultToEmptyString { get; set; }
 
         /// <summary>
-        /// `TextArea` will allow growing, but it will stop when visible
-        /// rows = MaxRows (will not grow further).
-        /// Default value = uint.MaxValue
+        /// Allow growing, but stop when visible rows = MaxRows (will not grow further).
         /// </summary>
+        /// <default value="uint.MaxValue"/>
         [Parameter]
         public uint MaxRows
         {
@@ -80,10 +83,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// `TextArea` will allow shrinking, but it will stop when visible
-        /// rows = MinRows (will not shrink further).
-        /// Default value = DEFAULT_MIN_ROWS = 1
+        /// Allow shrinking, but stop when visible rows = MinRows (will not shrink further).
         /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public uint MinRows
         {
@@ -111,13 +113,13 @@ namespace AntDesign
 
         /// <summary>
         /// Sets the height of the TextArea expressed in number of rows.
-        /// Default value is 2.
         /// </summary>
+        /// <default value="3"/>
         [Parameter]
         public uint Rows { get; set; } = 2;
 
         /// <summary>
-        /// Callback when the size changes
+        /// Callback executed when the size changes
         /// </summary>
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
@@ -171,6 +173,7 @@ namespace AntDesign
 
             _textareaClassMapper
                 .Add("ant-input")
+                .If("ant-input-borderless", () => !Bordered)
                 .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 ;
         }

@@ -546,9 +546,12 @@ namespace AntDesign
 
         internal bool DoCheck(bool check, bool strict, bool isManual)
         {
-            if (!Checkable) return false;
-            else if (TreeComponent.CheckStrictly || strict)
+            if (TreeComponent.CheckStrictly || strict)
             {
+                if (!Checkable)
+                {
+                    return false;
+                }
                 _actualChecked = (!Disabled || !DisableCheckbox || !isManual) ? check : _actualChecked;
                 Indeterminate = false;
                 NotifyCheckedChanged();
@@ -562,35 +565,77 @@ namespace AntDesign
             return true;
         }
 
+        internal void DoCheckAllChildren()
+        {
+            SetChildChecked(this, true, true, true);
+            StateHasChanged();
+        }
+
+        public void CheckAllChildren()
+        {
+            DoCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
+        }
+
+        internal void DoUnCheckAllChildren()
+        {
+            SetChildChecked(this, false, true, true);
+            StateHasChanged();
+        }
+
+        public void UnCheckAllChildren()
+        {
+            DoUnCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
+        }
+
         /// <summary>
         /// Sets the checkbox status of child nodes
         /// </summary>
         /// <param name="subnode"></param>
         /// <param name="check"></param>
         /// <param name="isManual"></param>
-        private bool SetChildChecked(TreeNode<TItem> subnode, bool check, bool isManual)
+        /// <param name="forceRecursive"></param>
+        private void SetChildChecked(TreeNode<TItem> subnode, bool check, bool isManual, bool forceRecursive = false)
         {
-            _actualChecked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _actualChecked;
+            if (!Checkable && !forceRecursive)
+            {
+                return;
+            }
+            var isChecked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _actualChecked;
             var hasChecked = false;
             var hasUnChecked = false;
+            var childIndeterminate = false;
             if (subnode.HasChildNodes)
             {
                 foreach (var child in subnode.ChildNodes)
                 {
-                    if (!child.Checkable) continue;
-                    if (child.SetChildChecked(child, check, isManual))
+                    child.SetChildChecked(child, check, isManual, forceRecursive);
+                    if (!child.Checkable)
+                        continue;
+                    if (child.Checked)
                         hasChecked = true;
                     else
                         hasUnChecked = true;
+                    if (child.Indeterminate)
+                        childIndeterminate = true;
                 }
                 if (hasChecked || hasUnChecked)
-                    _actualChecked = !hasUnChecked;
+                    isChecked = !hasUnChecked;
             }
-            Indeterminate = hasChecked && hasUnChecked;
-            if (Indeterminate)
-                _actualChecked = false;
+            if (Checkable)
+            {
+                Indeterminate = childIndeterminate || (hasChecked && hasUnChecked);
+                if (Indeterminate)
+                    isChecked = false;
+            }
+            else
+            {
+                Indeterminate = false;
+                isChecked = false;
+            }
+            _actualChecked = isChecked;
             NotifyCheckedChanged();
-            return _actualChecked;
         }
 
         /// <summary>
@@ -980,13 +1025,18 @@ namespace AntDesign
             if (Checkable)
             {
                 var isChecked = false;
+                var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
+                var ancestorKeys = GetAncestorKeys();
                 if (_checked)
+                {
+                    isChecked = true;
+                }
+                else if (!TreeComponent.CheckStrictly && (checkedKeys != null) && ancestorKeys.Any(k => checkedKeys.Contains(k)))
                 {
                     isChecked = true;
                 }
                 else
                 {
-                    var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
                     if (checkedKeys != null)
                         isChecked = checkedKeys.Any(k => k == Key);
                 }
@@ -1009,6 +1059,19 @@ namespace AntDesign
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
             base.OnInitialized();
+        }
+
+        private IEnumerable<string> GetAncestorKeys()
+        {
+            var ancestorKeys = new List<string>();
+            var parentNode = ParentNode;
+            while (parentNode != null)
+            {
+                ancestorKeys.Add(parentNode.Key);
+                parentNode = parentNode.ParentNode;
+            }
+
+            return ancestorKeys;
         }
     }
 }

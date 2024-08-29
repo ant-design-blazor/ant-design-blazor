@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 
 namespace AntDesign
@@ -12,7 +14,6 @@ namespace AntDesign
     {
         #region internal
 
-        internal bool IsCreateByService { get; set; }
         internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
 
         internal ConfirmRef(ConfirmOptions config)
@@ -24,7 +25,6 @@ namespace AntDesign
         {
             Config = config;
             Service = service;
-            IsCreateByService = service != null;
         }
 
         #endregion

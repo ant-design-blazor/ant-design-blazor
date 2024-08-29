@@ -15,11 +15,11 @@
               EditContext="_editContext"
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
-        @if(ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+        @if (UseRulesValidator)
         {
             <FormRulesValidator @ref="_rulesValidator" />
         }
-        @if (ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex))
+        else
         {
             @Validator
         }
@@ -34,7 +34,6 @@
             {
                 @ChildContent(Model)
             }
-
         </CascadingValue>
     </EditForm>
 </Spin>

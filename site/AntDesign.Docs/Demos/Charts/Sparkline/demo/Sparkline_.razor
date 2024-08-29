@@ -49,22 +49,31 @@
         Height = 50,
         XField = "index",
         YField = "value",
-        GuideLine = new object[]
+        Annotation = new []
         {
-            new
+            new LineAnnotation()
             {
-                Type = "median",
-                Text = new
+                Type = Annotation.TypeLine,
+                Start = new object[] { "min", "median" },
+                End = new object[] { "max", "median" },
+                Text = new AnnotationTextCfg
                 {
-                    Position = "start",
                     Content = "中位数",
-                    Style = new
+                    OffsetY = -2,
+                    Style = new TextStyle()
                     {
-                        Stroke = "white",
-                        LineWidth = 2
+                        TextAlign = TextStyle.TextAlignLeft,
+                        FontSize = 10,
+                        Fill = "rgba(44, 53, 66, 0.45)",
+                        TextBaseline = TextStyle.TextBaselineBottom
                     }
+                },
+                Style = new GraphicStyle()
+                {
+                    Stroke = "rgba(0, 0, 0, 0.25)",
+                    LineWidth = 2
                 }
-            }
+            },
         }
     };
 
@@ -74,22 +83,31 @@
         Height = 50,
         XField = "index",
         YField = "value",
-        GuideLine = new object[]
+        Annotation = new []
         {
-            new
+            new LineAnnotation()
             {
-                Type = "mean",
-                Text = new
+                Type = Annotation.TypeLine,
+                Start = new object[] { "min", "mean" },
+                End = new object[] { "max", "mean" },
+                Text = new AnnotationTextCfg()
                 {
-                    Position = "start",
                     Content = "平均值",
-                    Style = new
+                    OffsetY = -2,
+                    Style = new TextStyle()
                     {
-                        Stroke = "white",
-                        LineWidth = 2
+                        TextAlign = TextStyle.TextAlignLeft,
+                        FontSize = 10,
+                        Fill = "rgba(44, 53, 66, 0.45)",
+                        TextBaseline = TextStyle.TextBaselineBottom
                     }
+                },
+                Style = new GraphicStyle()
+                {
+                    Stroke = "rgba(0, 0, 0, 0.25)",
+                    LineWidth = 2
                 }
-            }
+            },
         }
     };
 

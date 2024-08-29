@@ -1,13 +1,18 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public interface ITable
     {
-        Type ItemType { get; }
+        internal Type ItemType { get; }
         void ReloadData();
 
         void ReloadData(int? pageIndex, int? pageSize = null);
@@ -32,6 +37,8 @@ namespace AntDesign
 
         internal ISelectionColumn Selection { get; set; }
 
+        internal RenderFragment<RowData> GroupTitleTemplate { get; }
+
         internal bool TreeMode { get; }
 
         internal int IndentSize { get; }
@@ -41,8 +48,6 @@ namespace AntDesign
         internal string ScrollY { get; }
 
         internal string ScrollBarWidth { get; }
-
-        internal string RealScrollBarSize { get; }
 
         internal int ExpandIconColumnIndex { get; }
 
@@ -62,7 +67,7 @@ namespace AntDesign
 
         internal bool HasRowTemplate { get; }
 
-        //internal void SelectionChanged();
+        internal bool Quick { get; }
 
         internal void OnExpandChange(RowData rowData);
 
@@ -89,5 +94,7 @@ namespace AntDesign
         internal void AddGroupColumn(IFieldColumn column);
 
         internal void RemoveGroupColumn(IFieldColumn column);
+
+        internal bool RebuildColumns(bool add);
     }
 }

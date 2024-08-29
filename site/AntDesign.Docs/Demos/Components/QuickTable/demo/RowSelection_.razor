@@ -12,12 +12,12 @@
             {
                 <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+            <Button Danger Size="small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
         }
     </h5>
 
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowSelectable="@(x => x.Name!="Disabled User")" Quick>
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <Selection Key="@context.Name" Type="@selectionType" />
         <PropertyColumn Property="c=>c.Name">
             <CellRender Context="cell">
                 <a>@cell.FieldValue</a>

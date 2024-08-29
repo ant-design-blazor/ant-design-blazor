@@ -1,44 +1,48 @@
 ﻿@using System.ComponentModel
 
-CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
-<br/>
+CheckStrictly:
+<Switch @bind-Checked="_checkStrictly" />
+<br />
+<RadioGroup @bind-Value="selectionType">
+    <Radio Value="@("checkbox")">Checkbox</Radio>
+    <Radio Value="@("radio")">radio</Radio>
+</RadioGroup>
 
 <Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
-    <Selection CheckStrictly="_checkStrictly" />
+    <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
     <PropertyColumn Property="c=>c.Address" Width="30%" />
+    <ActionColumn>
+        <Button OnClick="@(()=>AddChildren(context))">Add Children</Button>
+    </ActionColumn>
 </Table>
 
-@string.Join(",", _selectedRows.Select(x=>x.Name))
+@string.Join(",", _selectedRows.Select(x => x.Name))
 
 @code {
     bool _checkStrictly;
-
+    string selectionType = "checkbox";
     Data[] _data;
 
     IEnumerable<Data> _selectedRows = [];
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         await Task.Delay(500);
-
         _data = data;
-        await InvokeAsync(StateHasChanged);
+    }
 
-        await Task.Delay(500);
-
-        _data[1].Children = new Data[]
-        {
-            new() {
-                Key = "21",
-                Name = "Jim Green",
-                Age = 42,
-                Address = "London No. 1 Lake Park",
-            },
-        };
+    async Task AddChildren(Data row)
+    {
+        await Task.Delay(100);
+        var index = row.Children?.Count() ?? 0;
+        row.Children = [new() {
+            Key = Guid.NewGuid().ToString(),
+            Name = "Jim Green No. "+index,
+            Age = 42 +index ,
+            Address = "London No. 1 Lake Park",
+        }, ..row.Children??[]];
     }
 
     Data[] data =

@@ -10,11 +10,18 @@ using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, null)]
     public partial class DownloadButton : Button
     {
+        /// <summary>
+        /// The download url of a file
+        /// </summary>
         [Parameter]
         public string Url { get; set; }
 
+        /// <summary>
+        /// Name of the file
+        /// </summary>
         [Parameter]
         public string FileName { get; set; }
 

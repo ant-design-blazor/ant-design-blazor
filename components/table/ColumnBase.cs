@@ -1,5 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -20,50 +23,83 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         public bool Blocked { get; set; }
 
-        [CascadingParameter]
+        [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
 
-        protected TableDataItem DataItem => RowData.TableDataItem;
-
-        [CascadingParameter(Name = "IsMeasure")]
-        public bool IsMeasure { get; set; }
-
-        [CascadingParameter(Name = "IsSummary")]
-        public bool IsSummary { get; set; }
-
+        /// <summary>
+        /// Title for column header
+        /// </summary>
         [Parameter]
         public virtual string Title { get; set; }
 
+        /// <summary>
+        /// Title content for column header
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// Width for column
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 
+        /// <summary>
+        /// Style for the header cell
+        /// </summary>
         [Parameter]
         public string HeaderStyle { get; set; }
 
+        /// <summary>
+        /// Row span
+        /// </summary>
+        /// <default value="1" />
         [Parameter]
         public int RowSpan { get; set; } = 1;
 
+        /// <summary>
+        /// Column span
+        /// </summary>
+        /// <default value="1" />
         [Parameter]
         public int ColSpan { get; set; } = 1;
 
+        /// <summary>
+        /// Header column span
+        /// </summary>
+        /// <default value="1" />
         [Parameter]
         public int HeaderColSpan { get; set; } = 1;
 
+        /// <summary>
+        /// Fix a column
+        /// </summary>
         [Parameter]
         public string Fixed { get; set; }
 
+        /// <summary>
+        /// Content of the column
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Cut off header title with ellipsis when set to true
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Ellipsis { get; set; }
 
+        /// <summary>
+        /// If the column is hidden or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Hidden { get; set; }
 
+        /// <summary>
+        /// Alignment for column contents
+        /// </summary>
         [Parameter]
         public ColumnAlign Align
         {
@@ -77,6 +113,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Index of this column in the table
+        /// </summary>
         public int ColIndex { get; set; }
         public ITable Table => Context?.Table;
 
@@ -92,6 +131,9 @@ namespace AntDesign
         private int HeaderColEndIndex => ColIndex + HeaderColSpan;
 
         protected readonly ClassMapper HeaderMapper = new();
+
+        private string _fixedStyle;
+        protected string FixedStyle => _fixedStyle;
 
         protected void SetClass()
         {
@@ -117,6 +159,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (Table?.RebuildColumns(true) ?? false)
+            {
+                return;
+            }
+
             if (Fixed == "left")
             {
                 Table?.HasFixLeft();
@@ -131,6 +178,8 @@ namespace AntDesign
                 Table?.TableLayoutIsFixed();
             }
 
+            _fixedStyle = CalcFixedStyle();
+
             SetClass();
 
             base.OnInitialized();
@@ -142,6 +191,9 @@ namespace AntDesign
             {
                 Context?.RemoveColumn(this);
             }
+            //Context?.Columns.Remove(this);
+            Table?.RebuildColumns(false);
+
             base.Dispose(disposing);
         }
 
@@ -175,20 +227,26 @@ namespace AntDesign
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
             else if (Fixed == "right")
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
-                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    if (Context?.Columns[i].Fixed != null)
+                    {
+                        fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                    }
                 }
             }
 
             if (IsHeaderTemplate && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
             {
-                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.RealScrollBarSize}");
+                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
             var fixedWidth = fixedWidths.Length switch
@@ -215,6 +273,12 @@ namespace AntDesign
         public void Load()
         {
             //StateHasChanged();
+        }
+
+        void IColumn.UpdateFixedStyle()
+        {
+            _fixedStyle = CalcFixedStyle();
+            StateHasChanged();
         }
     }
 }

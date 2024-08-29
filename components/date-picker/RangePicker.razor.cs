@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using AntDesign.core.Extensions;
 
 namespace AntDesign
 {
@@ -63,6 +65,9 @@ namespace AntDesign
 
         private readonly DateTime[] _pickerValuesAfterInit = new DateTime[2];
 
+        /// <summary>
+        /// Callback executed when range selected changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs<TValue>> OnChange { get; set; }
 
@@ -457,7 +462,7 @@ namespace AntDesign
             var currentValueArray = Value as Array;
             var currentIndexValue = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index));
 
-            var newValue = new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), defaultValue?.Offset ?? currentIndexValue?.Offset ?? DateTimeOffset.Now.Offset);
+            var newValue = new DateTimeOffset(DateTime.SpecifyKind(FormatDateTime(value), DateTimeKind.Unspecified), defaultValue?.Offset ?? currentIndexValue?.Offset ?? DateTimeOffset.Now.Offset);
 
             var isValueChanged = InternalConvert.ToDateTimeOffset(currentValueArray?.GetValue(index)) != newValue;
 
@@ -595,7 +600,7 @@ namespace AntDesign
             }
         }
 
-        private void InvokeOnChange()
+        protected override void InvokeOnChange()
         {
             OnChange.InvokeAsync(new DateRangeChangedEventArgs<TValue>
             {

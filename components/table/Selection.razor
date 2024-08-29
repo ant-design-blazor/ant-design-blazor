@@ -3,6 +3,7 @@
 @using AntDesign.Table
 
 @inherits ColumnBase
+@implements IRenderColumn
 
 @if (IsHeaderTemplate)
 {
@@ -88,15 +89,15 @@ else if (IsRowTemplate)
 		}
 		else
 		{
-            HandleSelected();
+            HandleSelected(rowData.TableDataItem);
 
 			@if (Type == "checkbox")
 			{
-				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" />
+				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" />
 			}
 			else if (Type == "radio")
 			{
-                <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
+                <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" TValue="bool" />
 			}
 		}
 	    </td>;

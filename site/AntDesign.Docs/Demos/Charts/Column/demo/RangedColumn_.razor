@@ -5,14 +5,14 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <RangeColumn Data="data1" Config="config1" />
+            <AntDesign.Charts.Column Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <RangeColumn Data="data2" Config="config2" OtherConfig="config2_1" />
+            <AntDesign.Charts.Column Data="data2" Config="config2" OtherConfig="config2_1" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -33,7 +33,7 @@
         new {type = "分类八", values = new[] {18, 34}}
     };
 
-    readonly RangeColumnConfig config1 = new RangeColumnConfig
+    readonly ColumnConfig config1 = new ColumnConfig
     {
         Title = new Title
         {
@@ -60,7 +60,7 @@
                 new {type = "分类八", values = new[] {18, 34}}
             };
 
-    readonly RangeColumnConfig config2 = new RangeColumnConfig
+    readonly ColumnConfig config2 = new ColumnConfig
     {
         Title = new Title
         {

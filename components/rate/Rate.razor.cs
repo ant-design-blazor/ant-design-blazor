@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
@@ -6,42 +10,64 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Rate component.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>Show evaluation.</item>
+        <item>A quick rating operation on something.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg")]
     public partial class Rate : AntDomComponentBase
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
-
         /// <summary>
-        /// 是否允许再次点击后清除
+        /// Whether to allow clear or not when clicking again
         /// </summary>
-        [Parameter] public bool AllowClear { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool AllowClear { get; set; } = true;
 
         /// <summary>
-        /// 是否允许半选
+        /// Whether to allow selection of halves
         /// </summary>
-        [Parameter] public bool AllowHalf { get; set; } = false;
+        /// <default value="false"/>
+        [Parameter]
+        public bool AllowHalf { get; set; } = false;
 
         /// <summary>
-        /// 是否禁止用户交互
+        /// Whether to disable the selection or not
         /// </summary>
-        [Parameter] public bool Disabled { get; set; } = false;
+        /// <default value="false"/>
+        [Parameter]
+        public bool Disabled { get; set; } = false;
 
         /// <summary>
-        /// 是否可获得输入焦点
+        /// Whether to focus on render or not
         /// </summary>
-        [Parameter] public bool AutoFocus { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool AutoFocus { get; set; } = true;
 
         /// <summary>
-        /// 自定义字符,星星可以被自定义字符替代
+        /// Custom character for each rate
         /// </summary>
-        [Parameter] public RenderFragment<RateItemRenderContext> Character { get; set; }
+        [Parameter]
+        public RenderFragment<RateItemRenderContext> Character { get; set; }
 
         /// <summary>
-        /// 组件要呈现的星星数目
+        /// Number of icons to display for rating
         /// </summary>
-        [Parameter] public int Count { get; set; } = 5;
+        /// <default value="5"/>
+        [Parameter]
+        public int Count { get; set; } = 5;
 
         /// <summary>
-        /// 当前值--被选中的星星数量
+        /// Current value for rating
         /// </summary>
         [Parameter]
         public decimal Value
@@ -60,22 +86,35 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the rating changes
+        /// </summary>
         [Parameter]
         public EventCallback<decimal> ValueChanged { get; set; }
 
         /// <summary>
-        /// 默认当前被选中的星星数量,如果被设置为小数位不为0的，则组件默认含有半星并且允许半星
+        /// Default value for when rating is rendered
         /// </summary>
-        [Parameter] public decimal DefaultValue { get; set; }
+        [Parameter]
+        public decimal DefaultValue { get; set; }
 
         /// <summary>
-        /// 自定义每项的提示信息（存储每个子元素的提醒框内容文本）
+        /// Tooltip to show for each increment of rating, in order of index of rating 0-n
         /// </summary>
-        [Parameter] public string[] Tooltips { get; set; }
+        [Parameter]
+        public string[] Tooltips { get; set; }
 
-        [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
+        /// <summary>
+        /// Callback executed when the rate looses focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
-        [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
+        /// <summary>
+        /// Callback executed when the rate gains focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
         private IEnumerable<RateMetaData> RateMetaDatas { get; set; }
 

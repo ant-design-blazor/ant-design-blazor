@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -9,6 +13,23 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Tabs make it easy to switch between different views.</para>
+
+    <h2>When To Use</h2>
+
+    <para>Ant Design has 3 types of Tabs for different situations.</para>
+
+    <list type="bullet">
+        <item>Card Tabs: for managing too many closeable views.</item>
+        <item>Normal Tabs: for functional aspects of a page.</item>
+        <item><see cref="RadioGroup{TValue}"/>: for secondary tabs.</item>
+    </list>
+    </summary>
+    <seealso cref="TabPane" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg", Columns = 1)]
     public partial class Tabs : AntDomComponentBase
     {
         [Inject]
@@ -16,6 +37,9 @@ namespace AntDesign
 
         #region Parameters
 
+        /// <summary>
+        /// Content for tabs. Should include <c>TabPane</c> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -36,6 +60,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when the active tab changes
+        /// </summary>
         [Parameter]
         public EventCallback<string> ActiveKeyChanged { get; set; }
 
@@ -45,6 +72,10 @@ namespace AntDesign
         [Parameter]
         public bool Animated { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool InkBarAnimated { get; set; } = true;
 
@@ -63,12 +94,14 @@ namespace AntDesign
         /// <summary>
         /// Hide plus icon or not. Only works while <see cref="Type"/> = <see cref="TabType.EditableCard"/>
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool HideAdd { get; set; } = false;
 
         /// <summary>
         /// Preset tab bar size
         /// </summary>
+        /// <default value="TabSize.Default" />
         [Parameter]
         public TabSize Size { get; set; } = TabSize.Default;
 
@@ -78,15 +111,22 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TabBarExtraContent { get; set; }
 
+        /// <summary>
+        /// Extra content to the left of the tab bar
+        /// </summary>
         [Parameter]
         public RenderFragment TabBarExtraContentLeft { get; set; }
 
+        /// <summary>
+        /// Extra content to the right of the tab bar
+        /// </summary>
         [Parameter]
         public RenderFragment TabBarExtraContentRight { get; set; }
 
         /// <summary>
         /// The gap between tabs
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int TabBarGutter { get; set; }
 
@@ -105,12 +145,14 @@ namespace AntDesign
         /// <summary>
         /// Position of tabs
         /// </summary>
+        /// <default value="TabPosition.Top" />
         [Parameter]
         public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
         /// <summary>
         /// Basic style of tabs
         /// </summary>
+        /// <default value="TabType.Line" />
         [Parameter]
         public TabType Type { get; set; } = TabType.Line;
 
@@ -132,9 +174,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnClose { get; set; }
 
+        /// <summary>
+        /// Callback executed when add button clicked
+        /// </summary>
         [Parameter]
         public EventCallback OnAddClick { get; set; }
 
+        /// <summary>
+        /// Callback executed after a tab is created
+        /// </summary>
         [Parameter]
         public EventCallback<string> AfterTabCreated { get; set; }
 
@@ -144,9 +192,16 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string> OnTabClick { get; set; }
 
+        /// <summary>
+        /// Make tabs draggable
+        /// </summary>
         [Parameter]
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// If tabs are centered or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Centered { get; set; }
 
@@ -161,6 +216,7 @@ namespace AntDesign
         private TabPane _activePane;
         private TabPane _activeTab;
         private HtmlElement _activeTabElement;
+        private Dictionary<string, HtmlElement> _itemRefs;
 
         private string _activeKey;
         private TabPane _renderedActivePane;
@@ -191,6 +247,7 @@ namespace AntDesign
         private readonly List<TabPane> _panes = new List<TabPane>();
         private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
+
 
         private bool NavWrapPingLeft => _scrollOffset > 0;
         private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
@@ -430,25 +487,19 @@ namespace AntDesign
 
             if (_activeKey != _activePane.Key)
             {
+                _activeKey = _activePane.Key;
                 if (ActiveKeyChanged.HasDelegate)
                 {
-                    ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                    ActiveKeyChanged.InvokeAsync(_activeKey);
                 }
-
-                if (OnChange.HasDelegate)
-                {
-                    OnChange.InvokeAsync(_activePane.Key);
-                }
-
-                _activeKey = _activePane.Key;
             }
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(_activePane.Key);
+            }
+            TryRenderInk();
 
             Card?.SetBody(_activePane.ChildContent);
-
-            _needUpdateScrollListPosition = true;
-
-            _shouldRender = true;
-            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -478,15 +529,18 @@ namespace AntDesign
 
         private async Task ResetSizes()
         {
-            var navList = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navListRef);
-            var navWarp = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _navWarpRef);
-
-            _activeTabElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activeTab.TabRef);
+            ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
+            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
+            var navList = _itemRefs[Id + "-nav-list"];
+            var navWarp = _itemRefs[Id + "-nav-warpper"];
 
             _scrollListWidth = navList.ClientWidth;
             _scrollListHeight = navList.ClientHeight;
             _wrapperWidth = navWarp.ClientWidth;
             _wrapperHeight = navWarp.ClientHeight;
+
+            _itemRefs.Remove(Id + "-nav-list");
+            _itemRefs.Remove(Id + "-nav-warpper");
         }
 
         private void UpdateScrollListPosition()
@@ -571,6 +625,21 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
+            if (!_afterFirstRender)
+            {
+                _needUpdateScrollListPosition = true;
+                StateHasChanged();
+                return;
+            }
+
+            if (_itemRefs is not { Count: > 0 })
+            {
+                return;
+            }
+            if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
+            {
+                return;
+            }
             if (IsHorizontal)
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
@@ -608,6 +677,7 @@ namespace AntDesign
                 }
             }
 
+            _shouldRender = true;
             StateHasChanged();
             _renderedActivePane = _activePane;
         }
@@ -615,6 +685,12 @@ namespace AntDesign
         protected override bool ShouldRender()
         {
             return _shouldRender || _renderedActivePane != _activePane;
+        }
+
+        internal void UpdateTabsPosition()
+        {
+            _needUpdateScrollListPosition = true;
+            _shouldRender = true;
         }
 
         private void OnVisibleChange(bool visible)
@@ -626,24 +702,37 @@ namespace AntDesign
             }
 
             int invisibleHeadCount;
-            decimal tabSize, visibleCount;
+            int visibleCount;
 
             if (IsHorizontal)
             {
-                tabSize = _scrollListWidth / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperWidth / tabSize);
+                var tabWidths = _itemRefs.Values.Select(x => x.OffsetWidth + x.MarginLeft + x.MarginRight).ToArray();
+                invisibleHeadCount = GetOverflowCount(_scrollOffset, tabWidths);
+                visibleCount = GetOverflowCount(_scrollOffset + _wrapperWidth, tabWidths, true) - invisibleHeadCount;
             }
             else
             {
-                tabSize = _scrollListHeight / _tabs.Count;
-                visibleCount = Math.Ceiling(_wrapperHeight / tabSize);
+                var tabHeights = _itemRefs.Values.Select(x => x.ClientHeight + x.MarginTop + x.MarginBottom).ToArray();
+                invisibleHeadCount = GetOverflowCount(_scrollOffset, tabHeights);
+                visibleCount = GetOverflowCount(_scrollOffset + _wrapperHeight, tabHeights, true) - invisibleHeadCount;
             }
 
-            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / tabSize);
-            visibleCount = Math.Min(visibleCount, _tabs.Count - invisibleHeadCount);
-
             _invisibleTabs = _tabs.ToList();
-            _invisibleTabs.RemoveRange(invisibleHeadCount, (int)visibleCount);
+            _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+        }
+
+        private static int GetOverflowCount(decimal maxLength, decimal[] lengths, bool isRight = false)
+        {
+            var sum = 0m;
+            for (var i = 0; i < lengths.Length; i++)
+            {
+                sum += lengths[i];
+                if (sum - maxLength >= lengths[i] * (isRight ? 0.2m : 0.6m))
+                {
+                    return i;
+                }
+            }
+            return lengths.Length;
         }
 
         #region DRAG & DROP

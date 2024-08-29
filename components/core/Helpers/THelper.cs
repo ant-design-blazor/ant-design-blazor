@@ -3,11 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Reflection;
 
 namespace AntDesign
 {
-    public static class THelper
+    internal static class THelper
     {
         public static T ChangeType<T>(object value)
         {
@@ -97,5 +98,23 @@ namespace AntDesign
                        or TypeCode.UInt32
                        or TypeCode.UInt64;
         }
+
+        public static bool IsDateType(this Type type)
+        {
+            return type != null && (type == typeof(DateTime)
+                || type == typeof(DateTimeOffset)
+#if NET6_0_OR_GREATER
+                || type == typeof(TimeOnly)
+                || type == typeof(DateOnly)
+#endif
+                );
+        }
+
+        public static bool IsArrayOrList(this Type that) => that != null && (that.IsArray || typeof(IList).IsAssignableFrom(that));
+
+        public static bool IsEnumerable(this Type that) => that != null && (that.IsArray || typeof(IEnumerable).IsAssignableFrom(that));
+
+        public static bool IsUserDefinedClass(this Type thta) =>
+            thta.IsClass && thta.Namespace != null && !thta.Namespace.StartsWith("System");
     }
 }

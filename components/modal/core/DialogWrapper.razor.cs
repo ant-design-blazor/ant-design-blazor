@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -25,12 +26,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Parameter]
-        public bool DestroyOnClose { get; set; }
 
         /// <summary>
         /// 
@@ -79,7 +74,7 @@ namespace AntDesign
         /// <returns></returns>
         protected override async Task OnParametersSetAsync()
         {
-            if (Visible && !_hasAdd)
+            if ((Visible || Config.ForceRender) && !_hasAdd)
             {
                 _hasAdd = true;
             }
@@ -126,7 +121,7 @@ namespace AntDesign
                         await OnAfterHide.InvokeAsync(null);
                     }
 
-                    if (DestroyOnClose && !_hasDestroy)
+                    if (Config.DestroyOnClose && !_hasDestroy)
                     {
                         _hasDestroy = true;
                         await DestroyAsync();
@@ -154,7 +149,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            _ = _dialog?.TryResetModalStyle();
             base.Dispose(disposing);
         }
     }
