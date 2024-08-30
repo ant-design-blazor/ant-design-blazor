@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using AntDesign.Docs.Build.CLI.Services.Translation;
 
-namespace AntDesign.Docs.Build.CLI.Command
+namespace AntDesign.Docs.Build.CLI.Documentations
 {
     public class GenerateApiDocumentation
     {

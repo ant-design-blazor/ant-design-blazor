@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using AntDesign.Docs.Build.CLI.Documentations;
 using AntDesign.Docs.Build.CLI.Extensions;
 using AntDesign.Docs.Build.CLI.Services.Translation;
 using AntDesign.Docs.Build.CLI.Utils;
