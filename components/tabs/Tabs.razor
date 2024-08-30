@@ -2,6 +2,13 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
+    
+    @ChildContent
+
+    <Template>
+        @{
+            this.Complete();
+        }
 	<div class="@ClassMapper.Class" style="@Style" id="@Id">
 		<!--Tab bar-->
 		<div role="tablist" class="@_tabBarClassMapper.Class" style="@TabBarStyle">
@@ -15,9 +22,10 @@
 
 			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
 				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
-					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
-						@ChildContent
-					</CascadingValue>
+                    @foreach (var tab in _tabs.OrderBy(x=>x.TabIndex))
+                    {
+                        @tab.RenderTab
+                    }
 					@if (HasAddButton)
 					{
 						<button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
@@ -68,11 +76,14 @@
 		{
 			<div class="ant-tabs-content-holder ">
 				<div class="@_contentClassMapper.Class">
-					<CascadingValue Value="true" Name="IsPane" IsFixed="true">
-						@ChildContent
-					</CascadingValue>
+                    @foreach (var pane in _tabs)
+                    {
+                        @pane.RenderPane
+                    }
 				</div>
 			</div>
 		}
 	</div>
+
+    </Template>
 </CascadingValue>
