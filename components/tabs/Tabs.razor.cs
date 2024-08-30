@@ -459,6 +459,15 @@ namespace AntDesign
             Card?.SetBody(b => _activeTab.RenderPane(b));
         }
 
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
+            {
+                _needUpdateScrollListPosition = true;
+            }
+            return base.SetParametersAsync(parameters);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
