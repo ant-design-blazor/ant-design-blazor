@@ -297,15 +297,11 @@ namespace AntDesign
             _tabBarClassMapper
                 .Add($"{PrefixCls}-nav")
                 .If(TabBarClass, () => !string.IsNullOrWhiteSpace(TabBarClass));
-        }
 
-        protected override Task OnFirstAfterRenderAsync()
-        {
             if (Card is not null)
             {
-                this.Complete();
+                Card.SetTabs(RenderTabs);
             }
-            return base.OnFirstAfterRenderAsync();
         }
 
         /// <summary>
@@ -456,7 +452,7 @@ namespace AntDesign
             }
             TryRenderInk();
 
-            Card?.SetBody(b => _activeTab.RenderPane(b));
+            Card?.SetBody(_activeTab.RenderPane);
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
