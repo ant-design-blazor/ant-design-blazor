@@ -143,6 +143,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        internal void InvokeStateHasChagned()
+        {
+            StateHasChanged();
+        }
+
         internal void SetTabs(RenderFragment tabs)
         {
             this.CardTabs = tabs;

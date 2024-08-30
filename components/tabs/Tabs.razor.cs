@@ -318,12 +318,6 @@ namespace AntDesign
 
         internal void Complete()
         {
-            if (_complted)
-            {
-                return;
-            }
-
-            _complted = true;
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -604,6 +598,13 @@ namespace AntDesign
             }
             if (IsHorizontal)
             {
+                if (_activeTabElement.ClientWidth <= 0)
+                {
+                    _needUpdateScrollListPosition = true;
+                    StateHasChanged();
+                    return;
+                }
+
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
                 var additionalWidth = HasAddButton ? _addBtnWidth : 0;
@@ -628,6 +629,13 @@ namespace AntDesign
             }
             else
             {
+                if (_activeTabElement.ClientHeight <= 0)
+                {
+                    _needUpdateScrollListPosition = true;
+                    StateHasChanged();
+                    return;
+                }
+
                 _inkStyle = $"top: {_activeTabElement.OffsetTop}px; height: {_activeTabElement.ClientHeight}px;";
 
                 if (_activeTabElement.OffsetTop > _scrollOffset + _activeTabElement.ClientHeight
@@ -639,9 +647,16 @@ namespace AntDesign
                 }
             }
 
-            _shouldRender = true;
-            StateHasChanged();
-            _renderedActivePane = _activeTab;
+            if (Card is not null)
+            {
+                Card.InvokeStateHasChagned();
+            }
+            else
+            {
+                _shouldRender = true;
+                StateHasChanged();
+                _renderedActivePane = _activeTab;
+            }
         }
 
         protected override bool ShouldRender()
