@@ -446,7 +446,7 @@ namespace AntDesign
             }
             TryRenderInk();
 
-            Card?.SetBody(_activeTab.RenderPane);
+            Card?.SetBody(_activeTab.ChildContent);
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
