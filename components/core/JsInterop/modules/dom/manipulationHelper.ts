@@ -7,16 +7,19 @@ let cachedScrollBarSize: number | undefined = undefined;
 const scrollIds = new Map<HTMLElement, number>();
 
 export class manipulationHelper {
-  static addElementToBody(element) {
+   static addElementToBody(selector) {
+    const element = domInfoHelper.get(selector);
     document.body.appendChild(element);
   }
 
-  static delElementFromBody(element) {
+   static delElementFromBody(selector) {
+    const element = domInfoHelper.get(selector);
     document.body.removeChild(element);
   }
 
-  static addElementTo(addElement, elementSelector, prepend = false): boolean {
-    const parent = domInfoHelper.get(elementSelector);
+  static addElementTo(selector, targetSelector, prepend = false): boolean {
+    const parent = domInfoHelper.get(targetSelector);
+    const addElement = domInfoHelper.get(selector);
     if (parent && addElement) {
       if (parent instanceof Node && addElement instanceof Node) {
         if (prepend) parent.insertBefore(addElement, parent.firstChild);

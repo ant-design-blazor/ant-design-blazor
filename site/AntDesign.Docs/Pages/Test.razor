@@ -1,0 +1,17 @@
+﻿@page "/test"
+
+<div id="abc" style="width: 100%; height: 100%; background-color: red;" @onclick="ShowOverlay">
+</div>
+
+<AntDesign.Internal.Overlay @ref="overlay">
+    <h1>打开</h1>
+</AntDesign.Internal.Overlay>
+
+@code {
+    AntDesign.Internal.Overlay overlay;
+
+    async Task ShowOverlay(MouseEventArgs e)
+    {
+        await overlay.Show(new() { TriggerSelector = "#abc" }, (int)e.ClientX, (int)e.ClientY);
+    }
+}

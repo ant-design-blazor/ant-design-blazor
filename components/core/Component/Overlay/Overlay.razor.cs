@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.JsInterop.Modules.Components;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -98,8 +99,8 @@ namespace AntDesign.Internal
         private bool _isOverlayHiding = false;
         private bool _lastDisabledState = false;
 
-        private int? _overlayLeft = null;
-        private int? _overlayTop = null;
+        private double? _overlayLeft = null;
+        private double? _overlayTop = null;
 
         //if this style needs to be changed, also change
         //the removal of that style in js interop overlay.ts class (in constructor)
@@ -120,22 +121,23 @@ namespace AntDesign.Internal
 
         protected override void OnInitialized()
         {
-            _overlayCls = Trigger.GetOverlayHiddenClass();
+            _overlayCls = Trigger?.GetOverlayHiddenClass() ?? "ant-dropdown-hidden";
             base.OnInitialized();
         }
 
         protected override async Task OnParametersSetAsync()
         {
-            if (!_isOverlayShow && Trigger.Visible && !_preVisible)
+            if (!_isOverlayShow && Trigger?.Visible == true && !_preVisible)
             {
-                await Show(_overlayLeft, _overlayTop);
+                await Show(Trigger, _overlayLeft, _overlayTop);
             }
             else if (_isOverlayShow && !Trigger.Visible && _preVisible)
             {
                 await Hide(true);
             }
 
-            _preVisible = Trigger.Visible;
+            _preVisible = Trigger?.Visible ?? _isOverlayShow;
+
             await base.OnParametersSetAsync();
         }
 
@@ -147,11 +149,11 @@ namespace AntDesign.Internal
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
-            if (_lastDisabledState != Trigger.Disabled)
+            if (_lastDisabledState != Trigger?.Disabled)
             {
                 if (Ref.Id != null)
                 {
-                    if (Trigger.Disabled)
+                    if (Trigger?.Disabled == true)
                     {
                         await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
                     }
@@ -160,7 +162,7 @@ namespace AntDesign.Internal
                         await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
                     }
                 }
-                _lastDisabledState = Trigger.Disabled;
+                _lastDisabledState = Trigger?.Disabled?? false;
             }
 
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
@@ -189,9 +191,11 @@ namespace AntDesign.Internal
             base.Dispose(disposing);
         }
 
-        internal async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        internal async Task Show(OverlayTrigger trigger, double? overlayLeft = null, double? overlayTop = null)
         {
-            if (_isOverlayShow || Trigger.Disabled)
+            Trigger = trigger;
+
+            if (_isOverlayShow || trigger.Disabled)
             {
                 return;
             }
@@ -199,7 +203,7 @@ namespace AntDesign.Internal
 
             if (_isOverlayFirstRender)
             {
-                Trigger.SetShouldRender(false);
+                trigger.SetShouldRender(false);
                 await Task.Yield();
             }
 
@@ -215,17 +219,17 @@ namespace AntDesign.Internal
 
             await UpdateParentOverlayState(true);
 
-            await AddOverlayToBody(overlayLeft, overlayTop);
+            await AddOverlayToBody(trigger, overlayLeft, overlayTop);
             _isOverlayShow = true;
             _isOverlayDuringShowing = false;
             _isOverlayHiding = false;
 
-            _overlayCls = Trigger.GetOverlayEnterClass();
-            await Trigger.OnVisibleChange.InvokeAsync(true);
+            _overlayCls = trigger.GetOverlayEnterClass();
+            await trigger.OnVisibleChange.InvokeAsync(true);
 
-            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            if (trigger != null && trigger.VisibleChanged.HasDelegate)
             {
-                await Trigger.VisibleChanged.InvokeAsync(true);
+                await trigger.VisibleChanged.InvokeAsync(true);
             }
 
             await InvokeAsync(StateHasChanged);
@@ -348,7 +352,7 @@ namespace AntDesign.Internal
 
         private int _recurenceGuard = 0;
 
-        private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
+        private async Task AddOverlayToBody(OverlayTrigger trigger, double? overlayLeft = null, double? overlayTop = null)
         {
             if (!_afterFirstRender)
             {
@@ -357,11 +361,11 @@ namespace AntDesign.Internal
 
             if (!_hasAddOverlayToBody)
             {
-                bool triggerIsWrappedInDiv = Trigger.Unbound is null;
+                bool triggerIsWrappedInDiv = trigger.Unbound is null;
                 _recurenceGuard++;
 
                 //In ServerSide it may happen that trigger element reference has not yet been retrieved.
-                if (!(await WaitFor(() => Trigger.Ref.Id is not null)))
+                if (string.IsNullOrEmpty(trigger.TriggerSelector) && !(await WaitFor(() => trigger.Ref.Id is not null)))
                 {
                     //Place where Error Boundary could be utilized
                     throw new ArgumentNullException("Trigger.Ref.Id cannot be null when attaching overlay to it.");
@@ -373,22 +377,22 @@ namespace AntDesign.Internal
                 }
 
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
-                    Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
-                    Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
+                    Ref.Id, Ref, trigger.TriggerSelector, trigger.Placement, trigger.PopupContainerSelector,
+                        trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
                     //Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
                     await Task.Delay(10);
-                    await AddOverlayToBody(overlayLeft, overlayTop);
+                    await AddOverlayToBody(trigger, overlayLeft, overlayTop);
                 }
                 else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
                     _overlayStyle = _position.PositionCss + GetTransformOrigin();
-                    if (_position.Placement != Trigger.Placement)
+                    if (_position.Placement != trigger.Placement)
                     {
-                        Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
+                        trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                     }
                 }
             }
@@ -493,12 +497,12 @@ namespace AntDesign.Internal
             return "display: inline-flex; visibility: hidden;";
         }
 
-        internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
+        internal async Task UpdatePosition(double? overlayLeft = null, double? overlayTop = null)
         {
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
 
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
-                Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                Ref.GetSelector(), Ref.GetSelector(), Trigger.Ref.GetSelector(), Trigger.Placement, Trigger.PopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                 VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
             if (_position is not null)

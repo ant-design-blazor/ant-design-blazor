@@ -239,7 +239,7 @@ namespace AntDesign
         {
             if (!Loading)
             {
-                await _overlay.Show(overlayLeft, overlayTop);
+                await _overlay.Show(this, overlayLeft, overlayTop);
             }
         }
     }

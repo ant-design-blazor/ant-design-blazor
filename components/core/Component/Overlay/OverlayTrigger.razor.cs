@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -253,6 +254,9 @@ namespace AntDesign.Internal
         public bool Visible { get; set; } = false;
 
         [Parameter]
+        public string TriggerSelector { get; set; }
+
+        [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
 
         [Inject]
@@ -290,29 +294,33 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                var isUnbound = Unbound != null || (ChildContent == null && Ref.Id != null);
+                var isSeletor = !string.IsNullOrWhiteSpace(TriggerSelector);
 
+                var isUnbound = Unbound != null || (ChildContent == null && Ref.Id != null);
                 if (isUnbound)
                 {
                     Ref = RefBack.Current;
-
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
+                    TriggerSelector = Ref.GetSelector();
+                }
+                if (isUnbound || isSeletor)
+                {
+                    DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "click", OnUnboundClick);
+                    DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "mouseover", OnUnboundMouseEnter);
+                    DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "mouseout", OnUnboundMouseLeave);
+                    DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "focusin", OnUnboundFocusIn);
+                    DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "focusout", OnUnboundFocusOut);
 
                     if (IsContainTrigger(TriggerType.ContextMenu))
                     {
-                        DomEventListener.AddExclusive<JsonElement>(Ref, "contextmenu", OnContextMenu, true);
+                        DomEventListener.AddExclusive<JsonElement>(TriggerSelector, "contextmenu", OnContextMenu, true);
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(TriggerCls))
                 {
-                    if (isUnbound)
+                    if (isUnbound || isSeletor)
                     {
-                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, Ref, TriggerCls);
+                        await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddCls, TriggerSelector, TriggerCls);
                     }
                     else if (ChildContent != null)
                     {
@@ -604,7 +612,7 @@ namespace AntDesign.Internal
             {
                 return;
             }
-            await _overlay.Show(overlayLeft, overlayTop);
+            await _overlay.Show(this, overlayLeft, overlayTop);
         }
 
         internal virtual async Task Hide(bool force = false)
