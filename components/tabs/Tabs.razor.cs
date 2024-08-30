@@ -730,6 +730,7 @@ namespace AntDesign
                 _draggingTab = null;
                 _shouldRender = true;
                 _renderedActivePane = null;
+                _needUpdateScrollListPosition = true;
 
                 ActivatePane(_activeKey);
             }
