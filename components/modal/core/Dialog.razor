@@ -1,66 +1,34 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div @ref="@_element">
+<div @ref="@_element" id="@Id">
     <div class=@($"{Config.PrefixCls}-root")>
         @if (Config.Mask)
         {
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
-        <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
+        <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
              @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
-             @onkeydown="@OnKeyDown"
+             @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
-            <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
+            <div @ref="@_modal" role="document" 
+                 class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onclick:stopPropagation
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()"
                  >
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class=@($"{Config.PrefixCls}-content") id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
-                    @if (Config.Closable)
+                <div class=@($"{Config.PrefixCls}-content") style="@(_resizing ? "resize:both; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
+                    @if (Config.Header != null)
                     {
-                        <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@OnCloserClick">
-                            <span class=@($"{Config.PrefixCls}-close-x")>
-                                <span role="img" aria-label="close" class=@($"anticon anticon-close {Config.PrefixCls}-close-icon")>
-                                    @Config.CloseIcon
-                                </span>
-                            </span>
-                        </button>
-                    }
-                    @if (Config.Maximizable)
-                    {
-                        <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@OnMaxBtnClick">
-                            <span class=@($"{Config.PrefixCls}-max-btn-x")>
-                                <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
-                                    @if(_modalStatus == ModalStatus.Default)
-                                    {
-                                        @(Config.MaximizeBtnIcon)
-                                    }
-                                    else
-                                    {
-                                        @(Config.RestoreBtnIcon)
-                                    }
-                                </span>
-                            </span>
-                        </button>
-                    }
-                    @if (Config.TitleTemplate != null)
-                    {
-                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title")>
-                                @Config.TitleTemplate
-                            </div>
-                        </div>
-                    }
-                    else if (!string.IsNullOrWhiteSpace(Config.Title))
-                    {
-                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title")>
-                                @Config.Title
-                            </div>
-                        </div>
+                        <CascadingValue Value="@Config">
+                            <CascadingValue Name="Parent" Value="@this">
+                                <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                                    @Config.Header
+                                </div>
+                            </CascadingValue>
+                        </CascadingValue>
                     }
                     <div class=@($"{Config.PrefixCls}-body") style="@GetBodyStyle()">
                         @ChildContent
@@ -70,19 +38,23 @@
                         <div class=@($"{Config.PrefixCls}-footer")>
                             <CascadingValue Value="@Config">
                                 @if (Config.Footer.Value.IsT0)
-                            {
-                                @(Config.Footer.Value.AsT0)
-                            }
-                            else
-                            {
-                                @(Config.Footer.Value.AsT1)
-                            }
-                        </CascadingValue>
-                    </div>
+                                {
+                                    @(Config.Footer.Value.AsT0)
+                                }
+                                else
+                                {
+                                    @(Config.Footer.Value.AsT1)
+                                }
+                            </CascadingValue>
+                        </div>
                     }
                 </div>
                 <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
             </div>
         </div>
     </div>
+    @if (AdditionalContent != null)
+    {
+        @AdditionalContent
+    }
 </div>

@@ -8,18 +8,17 @@
       WrapperColSpan="16">
     <FormItem Label="Username">
         <Input @bind-Value="context.Username" Style="width: 160px" Placeholder="Please input" />
-        <Tooltip Title=@("Useful information")>
+        <Tooltip Title="Useful information">
             <a href="#API" Style="margin: 0 8px" }>
                 Need Help?
             </a>
         </Tooltip>
     </FormItem>
-    <FormItem label="Address">
+    <FormItem label="Address" Required>
         <InputGroup Compact>
             <FormItem NoStyle>
                 <Input @bind-Value="context.Address.Province" Placeholder="Select is not yet" />
             </FormItem>
-
             <FormItem NoStyle>
                 <Input @bind-Value="context.Address.Street" Style="width: 50%" Placeholder="Input street" />
             </FormItem>
@@ -44,9 +43,9 @@
 {
     public class Address
     {
-        [Required]
+        [Display(Name = "Pr.")]
         public string Province { get; set; }
-        [Required]
+        [Display(Name = "St.")]
         public string Street { get; set; }
     }
 
@@ -54,7 +53,8 @@
     {
         [Required]
         public string Username { get; set; }
-        [ValidateComplexType]
+
+        [Required]
         public Address Address { get; set; } = new Address();
         [Required]
         public string Year { get; set; }

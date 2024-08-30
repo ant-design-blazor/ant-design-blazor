@@ -3,60 +3,41 @@
 @using System.Net.Http.Headers
 @inject HttpClient Http
 
-<Table TItem="Data" DataSource="_data" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" Total="_total"
-       Loading="_loading" OnChange="HandleTableChange" RemoteDataSource>
+<Table TItem="Data" DataSource="_data" Loading="_loading" Total="_total" OnChange="HandleTableChange" RemoteDataSource RowKey="x=>x.IID" @bind-SelectedRows="_items">
+    <Selection />
     <PropertyColumn Style="width:20%;" Property="c=>c.Name" Sortable DefaultSortOrder="SortDirection.Ascending">@context.Name.First @context.Name.Last</PropertyColumn>
     <PropertyColumn Style="width:20%;" Property="c=>c.Gender" Filters="_genderFilters" />
     <PropertyColumn Property="c=>c.Email" />
 </Table>
 
+@(_items?.Count()??0)
+
 @code{
     bool _loading = false;
-    int _pageIndex = 1;
-    int _pageSize = 5;
+
     int _total;
     Data[] _data = Array.Empty<Data>();
+    IEnumerable<Data> _items;
     TableFilter<string>[] _genderFilters = new[]
     {
         new TableFilter<string> { Text = "Male", Value = "male" },
         new TableFilter<string> { Text = "Female", Value = "female" },
     };
 
-    public class Data
-    {
-        [DisplayName("Name")]
-        public Name Name { get; set; }
-
-        [DisplayName("Gender")]
-        public string Gender { get; set; }
-
-        [DisplayName("Email")]
-        public string Email { get; set; }
-    }
-
-    public struct Name
-    {
-        public string First { get; set; }
-
-        public string Last { get; set; }
-    }
-
-    public class ApiResponse
-    {
-        public Data[] Results { get; set; }
-
-        //public int TotalCount { get; set; }
-    }
-
     async Task HandleTableChange(QueryModel<Data> queryModel)
     {
         _loading = true;
 
         ApiResponse data = await Http.GetFromJsonAsync<ApiResponse>("https://randomuser.me/api?" + GetRandomuserParams(queryModel));
+        int i = 0;
+        foreach (var item in data.Results)
+        {
+            item.IID = queryModel.StartIndex + i++;
+        }
 
         _loading = false;
         _data = data.Results;
-        _total = 200;  // 200 is mock data, you should read it from server,e.g. _total = data.TotalCount;
+        _total = data.TotalCount;
     }
 
     string GetRandomuserParams(QueryModel<Data> queryModel)
@@ -82,5 +63,32 @@
         });
 
         return string.Join('&', query);
+    }
+
+    public class Data
+    {
+        public int IID{ get; set; }
+        [DisplayName("Name")]
+        public Name Name { get; set; }
+
+        [DisplayName("Gender")]
+        public string Gender { get; set; }
+
+        [DisplayName("Email")]
+        public string Email { get; set; }
+    }
+
+    public struct Name
+    {
+        public string First { get; set; }
+
+        public string Last { get; set; }
+    }
+
+    public class ApiResponse
+    {
+        public Data[] Results { get; set; }
+
+        public int TotalCount { get; set; } = 200; // 200 is mock data, you should read it from server
     }
 }

@@ -5,8 +5,9 @@ import { resize } from '../../ObservableApi/observableApi';
 export class inputHelper {
 
   static getTextAreaInfo(element) {
-    var result = {};
-    var dom = domInfoHelper.get(element);
+    if (!element) return null;
+    const result = {};
+    const dom = domInfoHelper.get(element);
     if (!dom) return null;
     result["scrollHeight"] = dom.scrollHeight || 0;
 
@@ -58,19 +59,21 @@ export class inputHelper {
   }
 
   static resizeTextArea(element: HTMLTextAreaElement, minRows: number, maxRows: number) {
-    let dims = this.getTextAreaInfo(element);
-    let rowHeight = dims["lineHeight"];
-    let offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
-    let oldHeight = parseFloat(element.style.height);
+    const dims = this.getTextAreaInfo(element);
+    if (!dims) return;
+
+    const rowHeight = dims["lineHeight"];
+    const offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
+    const oldHeight = parseFloat(element.style.height);
     //use rows attribute to evaluate real scroll height
-    let oldRows = element.rows;
+    const oldRows = element.rows;
     element.rows = minRows;
     element.style.height = 'auto';    
     
-    var rows = Math.trunc(element.scrollHeight / rowHeight);
+    let rows = Math.trunc(element.scrollHeight / rowHeight);
     element.rows = oldRows;
     rows = Math.max(minRows, rows);
-    var newHeight = 0;
+    let newHeight = 0;
     if (rows > maxRows) {
       rows = maxRows;
 
@@ -84,14 +87,14 @@ export class inputHelper {
       element.style.overflowY = "hidden";
     }
     if (oldHeight !== newHeight) {
-      let textAreaObj = state.objReferenceDict[element.id];
+      const textAreaObj = state.objReferenceDict[element.id];
       textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", element.scrollWidth, newHeight);
     }
   }
 
   static setSelectionStart(element, position: number) {
     if (position >= 0) {
-      let dom: HTMLInputElement = domInfoHelper.get(element);
+      const dom: HTMLInputElement = domInfoHelper.get(element);
       if (dom) {
         if (position <= dom.value.length) {
           dom.selectionStart = position;

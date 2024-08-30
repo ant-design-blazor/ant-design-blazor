@@ -25,9 +25,9 @@
                  Size="@(IsSmall ? "small" : "default")"
                  Class="@($"{prefixCls}-size-changer")"
                  DefaultValue="@(PageSize > 0 ? PageSize : pageSizeOptions[0])"
-                 @bind-Value="@PageSize"
+                 Value="@PageSize"
                  BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InView"
-                 OnSelectedItemChanged="@(i => {if (ChangeSize.HasDelegate)ChangeSize.InvokeAsync(i);})">
+                 OnSelectedItemChanged="@ChangePaginationSize">
                 <SelectOptions>
                     @foreach(var opt in pageSizeOptions)
                     {

@@ -1,8 +1,8 @@
 ﻿@using System.ComponentModel
-@using TableModels
+@using AntDesign.TableModels
 
-<Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
-	<RowTemplate>
+<Table @ref="table" DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
+	<ColumnDefinitions>
 		<PropertyColumn Property="c=>c.Name" />
 		<PropertyColumn Property="c=>c.Age" />
 		<PropertyColumn Property="c=>c.Address" />
@@ -14,47 +14,68 @@
 				<a>Delete</a>
 			</CellRender>
 		</ActionColumn>
-	</RowTemplate>
+	</ColumnDefinitions>
 	<ExpandTemplate>
-		@context.Data.Description
+        @if (context.Data is Student student)
+        {
+            <p>Student</p>
+            <p>Grade: @student.Grade</p>
+        }
+        else if (context.Data is Teacher teacher)
+        {
+            <p>Teacher</p>
+            <p>Subject: @teacher.Subject</p>
+        }
+        <p>Description: @context.Data.Description</p>
 	</ExpandTemplate>
 </Table>
 
-@code {
+<br />
 
-    Data[] data =
+<Button OnClick="()=> table.ExpandAll()">Expand All</Button>
+<Button OnClick="()=> table.CollapseAll()">Collapse All</Button>
+
+
+@code {
+    ITable table;
+
+    Contact[] data =
     {
-        new() {
+        new Student() {
             Key = "1",
             Name = "John Brown",
             Age = 32,
             Address = "New York No. 1 Lake Park",
+            Grade = "1",
             Description = "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park."
         },
-        new() {
+        new Student() {
             Key = "2",
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
+            Grade = "2",
             Description = "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park."
         },
-        new() {
+        new Teacher() {
             Key = "3",
             Name = "Not Expandable",
             Age = 29,
             Address = "Jiangsu No. 1 Lake Park",
-            Description = "This not expandable"
+            Description = "This not expandable",
+            Subject = "Chemistry"
         },
-        new() {
+        new Teacher() {
             Key = "4",
             Name = "Joe Black",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
-            Description = "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park."
+            Description = "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.",
+            Subject = "Math"
         }
     };
 
-    public class Data
+    public abstract class Contact
     {
         [DisplayName("Key")]
         public string Key { get; set; }
@@ -70,5 +91,17 @@
 
         [DisplayName("Description")]
         public string Description { get; set; }
+    }
+
+    public class Student : Contact
+    {
+        [DisplayName("Grade")]
+        public string Grade { get; set; }
+    }
+
+    public class Teacher : Contact
+    {
+        [DisplayName("Subject")]
+        public string Subject { get; set; }
     }
 }

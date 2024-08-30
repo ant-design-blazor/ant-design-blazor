@@ -2,7 +2,7 @@
 order: 2
 title:
   zh-CN: 抽屉表单
-  en-US: Submit form in drawe
+  en-US: Submit Form in Drawer
 ---
 
 ## zh-CN

@@ -3,7 +3,7 @@
     {
         @foreach (var item in _avatarList)
         {
-            <Tooltip Title="@($"{LanguageService.Resources["app.content.contributors"]}:{item.Username}")">
+            <Tooltip Title="@($"{Localizer["app.content.contributors"]}:{item.Username}")">
                 <Unbound>
                     <a @ref="context.Current" target="_blank" href="@item.ProfileUrl">
                         <Avatar Text="@item.Username" Src="@item.Url" />
@@ -17,7 +17,7 @@
         for (var i = 0; i < 3; i++)
         {
             <SkeletonElement Style="margin-right: 8px;margin-bottom: 8px;" Type="avatar" 
-                             Active Size="SkeletonElementSize.Default" Shape="@SkeletonAvatarShape.Circle" />
+                             Active Size="SkeletonElementSize.Default" Shape="@AvatarShape.Circle" />
         }
     }
 </ul>

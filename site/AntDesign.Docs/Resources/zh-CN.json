@@ -47,6 +47,9 @@
   "app.home.global-style": "全局样式",
   "app.home.design-patterns": "设计模式",
   "app.home.more": "更多内容",
+  "app.home.sponsors": "赞助商",
+  "app.home.sponsor-us": "成为赞助商",
+  "app.home.sponsor-us-href": "https://jamesyeung.cn/qrcode/wepay.jpg",
   "app.home.play-video": "播放视频",
   "app.home.qr": "4.0 正式版发布",
   "app.home.qr.desc": "扫描上方二维码查看",
@@ -55,6 +58,7 @@
   "app.home.design-language": "设计语言",
   "app.home.products": "相关生态产品",
   "app.home.product-antv-slogan": "全新一代数据可视化解决方案",
+  "app.home.product-antdesign-blazor-toolbox": "您的 Ant Design Blazor 开发伙伴",
   "app.home.product-vditor-slogan": "下一代的 Markdown 编辑器，为未来而构建",
   "app.home.product-ueditor-slogan": "老牌富文本编辑器，Blazor 全新体验",
   "app.home.product-pro-slogan": "开箱即用的中台前端/设计解决方案",
@@ -63,6 +67,8 @@
   "app.home.product-hitu-slogan": "全新一代图形化解决方案",
   "app.home.product-kitchen-slogan": "一款为设计者提升工作效率的 Sketch 工具集",
   "app.home.product-icons-slogan": "一整套优质的图标集",
+  "app.home.product-antsk-slogan": "基于Ant Design Blazor + Semantic Kernel 打造的AI知识库/智能体",
+  "app.home.product-certsvc": "一个免费证书托管签发平台，自动维护签发通配符泛域名证书，部署一次免去定期维护证书的工作",
   "app.home.product-caviar-blazor": "一套开箱即用、包含权限和代码生成的管理后台模板",
   "app.home.view-more": "查看全部",
   "app.footer.repo": "GitHub 仓库",
@@ -142,5 +148,6 @@
   "app.docs.components.icon.pic-searcher.result-tip": "为您匹配到以下图标：",
   "app.docs.components.icon.pic-searcher.th-icon": "图标",
   "app.docs.components.icon.pic-searcher.th-score": "匹配度",
-  "app.components.overview.search": "搜索组件"
+  "app.components.overview.search": "搜索组件",
+  "app.components.overview.description": "<code>Ant Design Blazor</code> 提供了丰富的 UI 组件来丰富您的 Web 应用，我们将持续改进组件体验。 我们还额外推荐了一些很棒的第三方库。"
 }

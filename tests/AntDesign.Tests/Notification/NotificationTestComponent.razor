@@ -1,0 +1,17 @@
+﻿@inject INotificationService _notificationServce;
+
+<button id="testNotificationBtn" @onclick="OnTestNotificationClick">Click me to show a notification!</button>
+
+@code {
+    protected async Task OnTestNotificationClick(MouseEventArgs e)
+    {
+        var notificationConfig = new NotificationConfig
+        {
+            Message = "Test Notification",
+            Description = "Hello, I'm a test.",
+            Key = "TestKey"
+        };
+
+        await _notificationServce.Info(notificationConfig);
+    }
+}

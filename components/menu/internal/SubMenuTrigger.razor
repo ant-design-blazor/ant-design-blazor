@@ -11,10 +11,8 @@
     @ref="@Ref"
     @onclick="OnClickDiv"
     @onmouseenter="OnTriggerMouseEnter"
-    @onmouseleave="OnTriggerMouseLeave"
-    @oncontextmenu="OnTriggerContextmenu"
-    @oncontextmenu:preventDefault>
-    @ChildContent
+    @onmouseleave="OnTriggerMouseLeave">
+        @ChildContent
 </li>
 
 <CascadingValue Value="this" Name="Trigger">

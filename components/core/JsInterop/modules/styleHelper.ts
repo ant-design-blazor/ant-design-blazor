@@ -2,7 +2,7 @@
 
 export class styleHelper {
   static addCls(selector: Element | string, className: string | Array<string>) {
-    let element = domInfoHelper.get(selector);
+    const element = domInfoHelper.get(selector);
     if (element) {
       if (typeof className === "string") {
         element.classList.add(className);
@@ -13,7 +13,7 @@ export class styleHelper {
   }
 
   static removeCls(selector: Element | string, clsName: string | Array<string>) {
-    let element = domInfoHelper.get(selector);
+    const element = domInfoHelper.get(selector);
     if (element) {
       if (typeof clsName === "string") {
         element.classList.remove(clsName);
@@ -24,14 +24,14 @@ export class styleHelper {
   }
 
   static addClsToFirstChild(element: Element | string, className: string): void {
-    var domElement = domInfoHelper.get(element);
+    const domElement = domInfoHelper.get(element);
     if (domElement && domElement.firstElementChild) {
       domElement.firstElementChild.classList.add(className);
     }
   }
 
   static removeClsFromFirstChild(element: Element | string, className): void {
-    var domElement = domInfoHelper.get(element);
+    const domElement = domInfoHelper.get(element);
     if (domElement && domElement.firstElementChild) {
       domElement.firstElementChild.classList.remove(className);
     }
@@ -52,20 +52,20 @@ export class styleHelper {
   static css(element: HTMLElement, name: string | object, value: string | null = null) {
     if (typeof name === 'string') {
       if (value === null) {
-        let style = name;
-        let cssAttributes = style.split(";");
+        const style = name;
+        const cssAttributes = style.split(";");
         for (let i = 0; i < cssAttributes.length; i++) {
-          let cssAttribute = cssAttributes[i];
+          const cssAttribute = cssAttributes[i];
           if (!cssAttribute) continue;
-          let attribute = cssAttribute.split(":");
+          const attribute = cssAttribute.split(":");
           element.style.setProperty(attribute[0], attribute[1]);
         }
         return;
       }
       element.style.setProperty(name, value);
     } else {
-      for (let key in name) {
-        if (name.hasOwnProperty(key)) {
+      for (const key in name) {
+        if (Object.prototype.hasOwnProperty.call(name, key)) {
           element.style.setProperty(key, name[key]);
         }
       }

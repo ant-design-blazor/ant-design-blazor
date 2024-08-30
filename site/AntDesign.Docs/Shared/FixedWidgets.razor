@@ -14,10 +14,10 @@
         </Unbound>
         <Overlay>
             <Menu Selectable>
-                <MenuItem OnClick="@(()=>ChangeTheme("default"))">@Language.Resources["app.theme.switch.default"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("dark"))">@Language.Resources["app.theme.switch.dark"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("compact"))">@Language.Resources["app.theme.switch.compact"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("aliyun"))">@Language.Resources["app.theme.switch.aliyun"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeTheme("default"))">@Localizer["app.theme.switch.default"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeTheme("dark"))">@Localizer["app.theme.switch.dark"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeTheme("compact"))">@Localizer["app.theme.switch.compact"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeTheme("aliyun"))">@Localizer["app.theme.switch.aliyun"]</MenuItem>
             </Menu>
         </Overlay>
     </Dropdown>

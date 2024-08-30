@@ -352,4 +352,94 @@
         selectedItem.TextContent.Trim().Should().Be("Lucy");
         value.Should().Be("Lucy");
     }
+
+    // Issues: #3750 & #3021 
+    // PR: #3806
+    [Fact]
+    public void Object_DataSource_change_replace_all_with_right_order()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+        .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 2;
+        List<Person> newPersons = new List<Person>
+        {
+        new Person(10, "Maria"),
+        new Person(11, "Lucas"),
+        new Person(12, "Erick"),
+        };
+        Action<int> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<int, Person>>(
+    @<AntDesign.Select DataSource="@_persons"
+                                   LabelName="@nameof(Person.Name)"
+                                   ValueName="@nameof(Person.Id)"
+                                   Value="@value"
+                                   ValueChanged="@ValueChanged"
+                                   IgnoreItemChanges="false"
+                                   AllowClear>
+    </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters =>
+            parameters
+                .Add(p => p.DataSource, newPersons)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        //Should not have any selected
+        cut.FindAll(".ant-select-selection-item").Should().BeEmpty();
+        options.Should().HaveCount(3);
+        //Check if it's in right order
+        for (int i = 0; i < options.Count; i++)
+        {
+            options[i].TextContent.Trim().Should().Be(newPersons[i].Name);
+        }
+    }
+
+    // Issues: #3750 & #3021
+    // PR: #3806
+    [Fact]
+    public void Object_DataSource_change_replace_some_with_right_order()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+    .SetResult(new AntDesign.JsInterop.DomRect());
+        int value = 2;
+        List<Person> newPersons = new List<Person>
+            {
+        new Person(2, "Lucy"),
+        new Person(4, "Emily"),
+        new Person(10, "Maria"),
+        new Person(11, "Lucas"),
+        new Person(12, "Erick"),
+            };
+        Action<int> ValueChanged = (v) => value = v;
+        var cut = Render<AntDesign.Select<int, Person>>(
+    @<AntDesign.Select DataSource="@_persons"
+                           LabelName="@nameof(Person.Name)"
+                           ValueName="@nameof(Person.Id)"
+                           Value="@value"
+                           ValueChanged="@ValueChanged"
+                           IgnoreItemChanges="false"
+                           AllowClear>
+    </AntDesign.Select>
+        );
+        //Act
+        cut.SetParametersAndRender(parameters =>
+            parameters
+                .Add(p => p.DataSource, newPersons)
+        );
+        //Assert
+        var options = cut.FindAll(".ant-select-item-option-content");
+        var selectedItem = cut.Find(".ant-select-selection-item");
+        options.Should().HaveCount(5);
+        //Check if it's in right order
+        for (int i = 0; i < options.Count; i++)
+        {
+            options[i].TextContent.Trim().Should().Be(newPersons[i].Name);
+        }
+        //Should maintain Lucy selected
+        selectedItem.TextContent.Trim().Should().Be("Lucy");
+        value.Should().Be(2);
+    }
 }

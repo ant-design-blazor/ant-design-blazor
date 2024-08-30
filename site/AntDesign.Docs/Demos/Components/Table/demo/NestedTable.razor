@@ -1,5 +1,5 @@
 ﻿<Table DataSource="@data" TItem="Data" OnExpand="OnRowExpand">
-  <RowTemplate>
+  <ColumnDefinitions>
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Platform" />
     <PropertyColumn Property="c=>c.Version" />
@@ -7,7 +7,7 @@
     <PropertyColumn Property="c=>c.Creator" />
     <PropertyColumn Property="c=>c.CreatedAt" />
     <ActionColumn Title="Action"> <a>Publish</a> </ActionColumn>
-  </RowTemplate>
+  </ColumnDefinitions>
   <ExpandTemplate Context="rowData">
     <Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination>
       <PropertyColumn Property="c=>c.Date" />

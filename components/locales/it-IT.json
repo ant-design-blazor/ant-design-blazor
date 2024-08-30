@@ -124,5 +124,58 @@
     "copy": "copia",
     "copied": "copia effettuata",
     "expand": "espandi"
+  },
+  "Form": {
+    "optional": "(opzionale)",
+    "defaultValidateMessages": {
+      "default": "Errore di convalida del campo ${label}",
+      "required": "Si prega di inserire ${label}",
+      "enum": "${label} deve essere uno di [${enum}]",
+      "whitespace": "${label} non può essere un carattere vuoto",
+      "date": {
+        "format": "Il formato della data ${label} non è valido",
+        "parse": "${label} non può essere convertito in una data",
+        "invalid": "${label} non è una data valida"
+      },
+      "types": {
+        "string": " ${label} non è un ${type} valido",
+        "method": " ${label} non è un ${type} valido",
+        "array": " ${label} non è un ${type} valido",
+        "object": " ${label} non è un ${type} valido",
+        "number": " ${label} non è un ${type} valido",
+        "date": " ${label} non è un ${type} valido",
+        "boolean": " ${label} non è un ${type} valido",
+        "integer": " ${label} non è un ${type} valido",
+        "float": " ${label} non è un ${type} valido",
+        "regexp": " ${label} non è un ${type} valido",
+        "email": " ${label} non è un ${type} valido",
+        "url": " ${label} non è un ${type} valido",
+        "hex": " ${label} non è un ${type} valido"
+      },
+      "string": {
+        "len": "${label} deve avere ${len} caratteri",
+        "min": "${label} deve contenere almeno ${min} caratteri",
+        "max": "${label} deve contenere fino a ${max} caratteri",
+        "range": "${label} deve contenere tra ${min}-${max} caratteri"
+      },
+      "number": {
+        "len": "${label} deve essere uguale a ${len}",
+        "min": "${label} valore minimo è ${min}",
+        "max": "${label} valor e massimo è ${max}",
+        "range": "${label} deve essere compreso tra ${min}-${max}"
+      },
+      "array": {
+        "len": "Deve essere ${len} ${label}",
+        "min": "Almeno ${min} ${label}",
+        "max": "Massimo ${max} ${label}",
+        "range": "Il totale di ${label} deve essere compreso tra ${min}-${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} non corrisponde al modello ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Anteprima"
   }
 }

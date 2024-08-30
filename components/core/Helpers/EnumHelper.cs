@@ -13,36 +13,49 @@ namespace AntDesign
 {
     public static class EnumHelper<T>
     {
-        private static readonly Func<T, T, T> _aggregateFunction;
+        private static readonly MethodInfo _enumHasFlag = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
 
-        private static IEnumerable<T> _valueList;
-        private static IEnumerable<(T Value, string Label)> _valueLabelList;
-        private static Type _enumType;
+        private static readonly Func<T, T, T> _aggregateFunction;
+        private static readonly Func<T, T, bool> _hasFlagFunction;
+
+        private static readonly IEnumerable<T> _valueList;
+        private static readonly IEnumerable<(T Value, string Label)> _valueLabelList;
+        private static readonly Type _enumType;
+        private static readonly bool _isFlags;
+
+        public static bool IsFlags => _isFlags;
 
         static EnumHelper()
         {
             _enumType = THelper.GetUnderlyingType<T>();
             _aggregateFunction = BuildAggregateFunction();
             _valueList = Enum.GetValues(_enumType).Cast<T>();
-            _valueLabelList = _valueList.Select(value => (value, GetDisplayName(value)));
+            _valueLabelList = _valueList.Select(value => (value, EnumHelper.GetDisplayName(_enumType, value)));
+            _isFlags = _enumType.GetCustomAttribute<FlagsAttribute>() != null;
+            _hasFlagFunction = BuildHasFlagFunction();
         }
 
-        // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
+        // There is no constraint or type check for type parameter T, be sure that T is an enumeration type
         public static object Combine(IEnumerable<T> enumValues)
         {
-            if (enumValues?.Count() > 0)
+            if (enumValues?.Any() == true)
             {
                 return enumValues.Aggregate(_aggregateFunction);
             }
-            else
-            {
-                return null;
-            }
+            return default(T);
         }
 
         public static IEnumerable<T> Split(object enumValue)
         {
-            return enumValue?.ToString().Split(',').Select(x => (T)Enum.Parse(_enumType, x)) ?? Array.Empty<T>();
+            if (enumValue == null)
+            {
+                return Array.Empty<T>();
+            }
+            if (enumValue is string enumString)
+            {
+                return _valueList.Where(value => enumString.Split(",").Contains(Enum.GetName(_enumType, value)));
+            }
+            return _valueList.Where(value => _hasFlagFunction((T)enumValue, value));
         }
 
         public static IEnumerable<T> GetValueList()
@@ -55,11 +68,9 @@ namespace AntDesign
             return _valueLabelList;
         }
 
-        public static string GetDisplayName(T enumValue)
+        public static string GetDisplayName<TEnum>(TEnum item)
         {
-            var enumName = Enum.GetName(_enumType, enumValue);
-            var fieldInfo = _enumType.GetField(enumName);
-            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.Name ?? enumName;
+            return EnumHelper.GetDisplayName(_enumType, item);
         }
 
         private static Func<T, T, T> BuildAggregateFunction()
@@ -74,6 +85,38 @@ namespace AntDesign
                     Expression.Convert(param2, underlyingType)),
                 type);
             return Expression.Lambda<Func<T, T, T>>(body, param1, param2).Compile();
+        }
+
+        private static Func<T, T, bool> BuildHasFlagFunction()
+        {
+            var type = typeof(T);
+            var param1 = Expression.Parameter(type);
+            var param2 = Expression.Parameter(type);
+
+            if (THelper.IsTypeNullable(type))
+            {
+                Expression notNull = Expression.NotEqual(param1, Expression.Constant(null));
+                var param1Value = Expression.MakeMemberAccess(param1, param1.Type.GetMember(nameof(Nullable<int>.Value))[0]);
+                var param1ValueHasFlags = Expression.Call(param1Value, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
+                var notNullAndParam1ValueHasFlags = Expression.AndAlso(notNull, param1ValueHasFlags);
+
+                return Expression.Lambda<Func<T, T, bool>>(notNullAndParam1ValueHasFlags, param1, param2).Compile();
+            }
+            else
+            {
+                var body = Expression.Call(param1, _enumHasFlag, Expression.Convert(param2, typeof(Enum)));
+                return Expression.Lambda<Func<T, T, bool>>(body, param1, param2).Compile();
+            }
+        }
+    }
+
+    internal static class EnumHelper
+    {
+        public static string GetDisplayName(Type enumType, object enumValue)
+        {
+            var enumName = Enum.GetName(enumType, enumValue);
+            var fieldInfo = enumType.GetField(enumName);
+            return fieldInfo.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? enumName;
         }
     }
 }

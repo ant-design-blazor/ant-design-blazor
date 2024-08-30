@@ -7,24 +7,24 @@
     @if (IsButton)
     {
         <div class="@ClassMapper.Class"
-             style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
-             id="@Id"
-			 @ref="Ref">
+     style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
+     id="@Id"
+     @ref="Ref">
             @buttons((this, ChildContent))
         </div>
     }
     else
     {
         <div class="@ClassMapper.Class"
-             style="display: inline-block; width: fit-content; @Style"
-             id="@Id"
-             @ref="@Ref"
-             @onclick="OnClickDiv"
-             @onmouseenter="OnTriggerMouseEnter"
-             @onmouseleave="OnTriggerMouseLeave"
-             @oncontextmenu="OnTriggerContextmenu"
-             @oncontextmenu:preventDefault>
-                @ChildContent
+     style="display: inline-block; width: fit-content; @Style"
+     id="@Id"
+     @ref="@Ref"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @oncontextmenu:preventDefault>
+            @ChildContent
         </div>
     }
 }
@@ -42,11 +42,19 @@
 }
 
 <CascadingValue Value="this" Name="Trigger" IsFixed="@true">
-    <Overlay @ref="_overlay"
-             OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
-             OnOverlayMouseEnter="OnOverlayMouseEnter"
-             OnOverlayMouseLeave="OnOverlayMouseLeave"
-             OnOverlayMouseUp="OnOverlayMouseUp" />
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <Overlay @ref="_overlay"
+                 OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave"
+                 OnOverlayMouseUp="OnOverlayMouseUp">
+            @if (Arrow || ArrowPointAtCenter)
+            {
+                <div class="ant-dropdown-arrow" />
+            }
+            @Overlay
+        </Overlay>
+    </CascadingValue>
 </CascadingValue>
 
 
@@ -55,13 +63,13 @@
         <DropdownGroupButton>
             <LeftButton>
                 <Button @key="1"
-                        Size="@data.dropdown.ButtonSize"
-                        Class="@data.dropdown.ButtonClassLeft"
-                        Type="@data.dropdown.ButtonTypeLeft"
-                        Disabled="@data.dropdown.Disabled"
-                        Danger="@data.dropdown.ButtonDanger"
-                        Ghost="@data.dropdown.ButtonGhost"
-                        Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
+                    Size="@data.dropdown.ButtonSize"
+                    Class="@data.dropdown.ButtonClassLeft"
+                    Type="@data.dropdown.ButtonTypeLeft"
+                    Disabled="@data.dropdown.Disabled"
+                    Danger="@data.dropdown.ButtonDanger"
+                    Ghost="@data.dropdown.ButtonGhost"
+                    Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
                         @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnClick) })">
                     @data.childContent
                 </Button>
@@ -69,15 +77,15 @@
             <RightButton>
                 <span @ref="@data.dropdown.Ref">
                     <Button @key="2"
-                            Size="@data.dropdown.ButtonSize"
-                            Type="@data.dropdown.ButtonTypeRight"
-                            Disabled="@data.dropdown.Disabled"
-                            Class="@("ant-dropdown-trigger " + @data.dropdown.ButtonClassRight)"
-                            Icon="@data.dropdown.RightButtonIcon"
-                            Danger="@data.dropdown.ButtonDanger"
-                            Loading="@data.dropdown.IsLoading"
-                            Ghost="@data.dropdown.ButtonGhost"
-                            Style="@(data.dropdown.Block ? "flex: 0 0 auto;" + data.dropdown.ButtonStyleRight : data.dropdown.ButtonStyleRight)"
+                        Size="@data.dropdown.ButtonSize"
+                        Type="@data.dropdown.ButtonTypeRight"
+                        Disabled="@data.dropdown.Disabled"
+                        Class="@("ant-dropdown-trigger " + @data.dropdown.ButtonClassRight)"
+                        Icon="@data.dropdown.RightButtonIcon"
+                        Danger="@data.dropdown.ButtonDanger"
+                        Loading="@data.dropdown.IsLoading"
+                        Ghost="@data.dropdown.ButtonGhost"
+                        Style="@(data.dropdown.Block ? "flex: 0 0 auto;" + data.dropdown.ButtonStyleRight : data.dropdown.ButtonStyleRight)"
                             @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnTriggerClick) })" />
                 </span>
             </RightButton>

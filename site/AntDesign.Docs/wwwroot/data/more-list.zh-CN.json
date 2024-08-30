@@ -8,6 +8,14 @@
     "href": "https://github.com/ant-design-blazor/ant-design-blazor/discussions/1693"
   },
   {
+    "title": "Ant Design Blazor 路由复用多标签页介绍",
+    "description": "Blazor 社区中对多标签页的呼声有一年多了，这几天终于结合 Blazor 内置路由组件实现了基于 Tabs 组件的 ReuseTabs 组件，国内外的社区都一片欢腾，也是颇有成就感的。",
+    "img": "/docs/assets/news/reuse-tabs-demo.png",
+    "date": "2021-07-08",
+    "source": "weixin",
+    "href": "https://mp.weixin.qq.com/s/J1vQv_YHUDx6ignlvVVDXA"
+  },
+  {
     "title": ".NET Blazor Development - Drag & Drop",
     "description": "拖拽（Drag & Drop）操作几乎可以说是每一个UI平台的必备功能，今天就来了解一下在 Blazor 框架下要如何实现这一功能呢？",
     "img": "https://picb.zhimg.com/v2-4d0f72a18e2883ab30a4357b855e8bd3_b.webp",
@@ -16,11 +24,11 @@
     "href": "https://zhuanlan.zhihu.com/p/136802873"
   },
   {
-    "title": "在 ASP.NET Core 中使用 Ant Design Blazor 组件 - 创建一个音乐播放器",
-    "description": "那么今天就来聊一聊如何利用 Ant Design Blazor  在ASP.NET Core MVC项目中使用这些Blazor组件吧！",
-    "img": "https://pic4.zhimg.com/v2-4a7f675223017e1ed7685a7782fc1977_1440w.jpg",
-    "date": "2020-07-14",
-    "source": "zhihu",
-    "href": "https://zhuanlan.zhihu.com/p/157582707"
+    "title": "【入门系列教程】进击吧！Blazor",
+    "description": "从 2020 年 9 月份开始，Ant Design Blazor 团队携手微软 MVP 张善友，在 Reactor 上海举办了一系列的 Blazor 入门教程，一共 7 期，带领大家掌握 Blazor！。主讲人是张善友和 Ant Design Blazor 贡献者陈超超，主持人是董斌。",
+    "img": "/docs/assets/news/attack-blazor.jpg",
+    "date": "2020-09-01",
+    "source": "bilibili",
+    "href": "https://space.bilibili.com/483888821/channel/detail?cid=151273"
   }
 ]

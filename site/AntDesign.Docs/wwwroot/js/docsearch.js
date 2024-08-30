@@ -1,4 +1,4 @@
-﻿window.AntDesign.DocSearch = {
+﻿window.DocSearch = {
   init: function (locale) {
     if (!docsearch) {
       return;

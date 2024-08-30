@@ -4,40 +4,44 @@
 
 @if (IsInitialize)
 {
-	return;
+    return;
+}
+else if (Hidden)
+{
+    return;
 }
 else if (IsPlaceholder)
 {
-	<td style="padding: 0px; border: 0px; height: 0px;"></td>
+    <td style="padding: 0px; border: 0px; height: 0px;"></td>
 }
 else if (IsMeasure)
 {
-	<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
+    <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
 }
 else if (IsColGroup)
 {
-	@if (AppendExpandColumn)
-	{
-		<col class="ant-table-expand-icon-col">
-	}
+    @if (AppendExpandColumn)
+    {
+        <col class="ant-table-expand-icon-col">
+    }
 
-	if (Width != null)
-	{
-		<col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
-	}
-	else
-	{
-		<col />
-	}
+    if (Width != null)
+    {
+        <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+    }
+    else
+    {
+        <col />
+    }
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-	@if (AppendExpandColumn)
-	{
-		<th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
-	}
+    @if (AppendExpandColumn)
+    {
+        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+    }
 
-	<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan">
+	<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
 		@if (TitleTemplate != null)
 		{
 			@TitleTemplate
@@ -53,20 +57,21 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 	@if (AppendExpandColumn)
 	{
 		<td class="ant-table-cell ant-table-row-expand-icon-cell">
-			@if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
+			@if (Table.RowExpandable(RowData) && (!Table.TreeMode || !DataItem.HasChildren))
 			{
 				<button type="button" @onclick="ToggleTreeNode"
 			class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
 			aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
 			}
-		</td>
-	}
+        </td>
+    }
 
-	<td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@Context.HeaderColumns[ColIndex].Title">
+    var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
 		@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 		{
 			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
-			@if (RowData.HasChildren)
+			@if (DataItem.HasChildren)
 			{
 				<button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
 			}
@@ -76,14 +81,14 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 			}
 		}
 
-		@if (CellRender != null)
-		{
-			var cellData = new CellData(RowData);
-			@CellRender(cellData)
-		}
-		else
-		{
-			@ChildContent
-		}
-	</td>
+        @if (CellRender != null)
+        {
+            var cellData = new CellData(RowData);
+            @CellRender(cellData)
+        }
+        else
+        {
+            @ChildContent
+        }
+    </td>
 }

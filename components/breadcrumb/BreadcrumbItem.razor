@@ -1,56 +1,75 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span @ref="Ref">
+<li @ref="Ref">
+    @if (Overlay != null)
+    {
+        <Dropdown Placement="@Placement.Bottom">
+            <Unbound>
+                <span @ref="context.Current" class="ant-breadcrumb-overlay-link">
+                    <span class="ant-breadcrumb-link" @onclick="@OnClick">
+                        @FormattedChildContent
+                    </span>
+                    <Icon Type="down"></Icon>
+                </span>
+            </Unbound>
+            <Overlay>
+                @Overlay
+            </Overlay>
+        </Dropdown>
+    }
+    else
+    {
+        <span class="ant-breadcrumb-link" @onclick="@OnClick">
+            @FormattedChildContent
+        </span>
+    }
 
-	@if (Overlay != null)
-	{
-		<Dropdown Placement="@Placement.Bottom">
-			<Unbound>
-				<span @ref="context.Current" class="ant-breadcrumb-overlay-link">
-					<span class="ant-breadcrumb-link">
-						@FormattedChildContent
-					</span>
-					<Icon Type="down"></Icon>
-				</span>
-			</Unbound>
-			<Overlay>
-				@Overlay
-			</Overlay>
-		</Dropdown>
-	}
-	else
-	{
-		<span class="ant-breadcrumb-link">
-			@FormattedChildContent
-		</span>
-	}
-
-	@if (BreadCrumb?.Separator != null)
-	{
-		<span class="ant-breadcrumb-separator">
-			@BreadCrumb.Separator
-		</span>
-	}
-
-</span>
+    @if (BreadCrumb?.Separator != null)
+    {
+        <span class="ant-breadcrumb-separator">
+            @BreadCrumb.Separator
+        </span>
+    }
+</li>
 
 @code {
+    /// <summary>
+    /// Inner content of item
+    /// </summary>
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 
-	[Parameter]
-	public RenderFragment ChildContent { get; set; }
+    /// <summary>
+    /// Overlay for a dropdown menu
+    /// </summary>
+    [Parameter]
+    public RenderFragment Overlay { get; set; }
 
-	[Parameter]
-	public RenderFragment Overlay { get; set; }
+    /// <summary>
+    /// Link for the item. Providing this wraps the ChildContent in an anchor tag for this link.
+    /// </summary>
+    [Parameter]
+    public string Href { get; set; }
 
-	[Parameter]
-	public string Href { get; set; }
+    /// <summary>
+    /// Click callback
+    /// </summary>
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-	[CascadingParameter]
-	public Breadcrumb BreadCrumb { get; set; }
+    [CascadingParameter]
+    public Breadcrumb BreadCrumb { get; set; }
 
+    private RenderFragment FormattedChildContent => Href is null ? ChildContent :@<a href="@Href">@ChildContent</a>;
 
-	private RenderFragment FormattedChildContent => Href is null ?
-		ChildContent :@<a href="@Href">@ChildContent</a>
-	;
+    protected override void OnInitialized()
+    {
+        BreadCrumb?.AddOption(new BreadcrumbOption
+        {
+            RouterLink = Href,
+            TitleTemplate = ChildContent
+        });
+        base.OnInitialized();
+    }
 }

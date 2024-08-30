@@ -31,9 +31,9 @@ export class uploadHelper {
 
   static getFileInfo(element: HTMLInputElement) {
     if (element.files && element.files.length > 0) {
-      let fileInfo = Array<fileInfo>();
-      for (var i = 0; i < element.files.length; i++) {
-        let file = element.files[i];
+      const fileInfo = Array<fileInfo>();
+      for (let i = 0; i < element.files.length; i++) {
+        const file = element.files[i];
         const objectUrl = this.getObjectURL(file);
         fileInfo.push({
           fileName: file.name,
@@ -48,7 +48,7 @@ export class uploadHelper {
   }
 
   private static getObjectURL(file: File): string {
-    var url = null;
+    let url = null;
     if (window.URL != undefined) {
       url = window.URL.createObjectURL(file);
     } else if (window.webkitURL != undefined) {
@@ -58,12 +58,12 @@ export class uploadHelper {
   }
 
   static uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod, method: string) {
-    let formData = new FormData();
-    var file = element.files[index];
-    var size = file.size;
+    const formData = new FormData();
+    const file = element.files[index];
+    const size = file.size;
     formData.append(name, file);
     if (data != null) {
-      for (var key in data) {
+      for (const key in data) {
         formData.append(key, data[key]);
       }
     }
@@ -72,22 +72,24 @@ export class uploadHelper {
       if (req.readyState === 4) {
         // #1655 Any 2xx response code is okay
         if (req.status < 200 || req.status > 299) {
-          instance.invokeMethodAsync(errorMethod, fileId, `{"status": ${req.status}}`);
+          // #2857 should get error raw response
+          instance.invokeMethodAsync(errorMethod, fileId, req.responseText);
           return;
         }
         instance.invokeMethodAsync(successMethod, fileId, req.responseText);
       }
     }
     req.upload.onprogress = function (event) {
-      var percent = Math.floor(event.loaded / size * 100);
+      const percent = Math.floor(event.loaded / size * 100);
       instance.invokeMethodAsync(percentMethod, fileId, percent);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     req.onerror = function (e) {
       instance.invokeMethodAsync(errorMethod, fileId, "error");
     }
     req.open(method, url, true)
     if (headers != null) {
-      for (var header in headers) {
+      for (const header in headers) {
         req.setRequestHeader(header, headers[header]);
       }
     }

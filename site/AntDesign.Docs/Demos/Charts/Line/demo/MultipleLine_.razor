@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
+<Tabs ActiveKeyChanged="OnTabChanged">
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
@@ -61,16 +61,22 @@
     IChartComponent chart7;
     EmissionsItem[] data7;
 
-    protected override async Task OnInitializedAsync()
+    private async void OnTabChanged(string activeKey)
     {
-        data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
-        await chart2.ChangeData(data2);
-
-        data3 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
-
-        data7 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
-
-        await base.OnInitializedAsync();
+        if (activeKey == "2")
+        {
+            var data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
+            await chart2.ChangeData(data2);
+        }
+        else if(activeKey == "3")
+        {
+            data3 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+            await chart3.ChangeData(data3);
+        }else if(activeKey == "7")
+        {
+            data7 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+            await chart7.ChangeData(data7);
+        }
     }
 
     #region 示例1

@@ -1,0 +1,93 @@
+﻿@using System.ComponentModel
+
+<Table DataSource="@data" Bordered Size="TableSize.Small" ScrollX="1350" ScrollY="240">
+    <ColumnDefinitions>
+        <PropertyColumn Property="c=>c.Name" Width="100" Fixed="left" />
+        <PropertyColumn Property="c=>c.Age" Width="150" />
+        <PropertyColumn Property="c=>c.Street" Width="150" />
+        <PropertyColumn Property="c=>c.Building" Width="100" />
+        <PropertyColumn Property="c=>c.Number" Width="100" />
+        <PropertyColumn Property="c=>c.CompanyAddress" Width="200" />
+        <PropertyColumn Property="c=>c.CompanyName" />
+        <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="right" />
+    </ColumnDefinitions>
+    <HeaderTemplate>
+        <TableRow>
+            <TableHeader @bind-Field="context.Name" RowSpan="4" Filters="filters" OnFilter="(v1, v2) => v2.Contains(v1)" />
+            <SimpleTableHeader ColSpan="4">Other</SimpleTableHeader>
+            <SimpleTableHeader ColSpan="2">Company</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="4">Gender</SimpleTableHeader>
+        </TableRow>
+        <TableRow>
+            <TableHeader @bind-Field="context.Age" RowSpan="3" Sortable />
+            <SimpleTableHeader ColSpan="3">Address</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="3">Company Address</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="3">Company Name</SimpleTableHeader>
+        </TableRow>
+        <TableRow>
+            <SimpleTableHeader RowSpan="2">Street</SimpleTableHeader>
+            <SimpleTableHeader ColSpan="2">Block</SimpleTableHeader>
+        </TableRow>
+        <TableRow>
+            <SimpleTableHeader>Building</SimpleTableHeader>
+            <SimpleTableHeader>Door No.</SimpleTableHeader>
+        </TableRow>
+    </HeaderTemplate>
+</Table>
+
+@code{
+    Data[] data;
+
+    TableFilter<string>[] filters;
+
+    public class Data
+    {
+        public int Key { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Street { get; set; }
+
+        public string Building { get; set; }
+
+        public int Number { get; set; }
+
+        public string CompanyAddress { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public string Gender { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        data = Enumerable.Range(0, 100).Select(x => new Data
+        {
+            Key = x,
+            Name = "John Brown",
+            Age = x + 1,
+            Street = "Lake Park",
+            Building = "C",
+            Number = 2035,
+            CompanyAddress = "Lake Street 42",
+            CompanyName = "SoftLake Co",
+            Gender = "M",
+        }).ToArray();
+
+        filters = new TableFilter<string>[]
+        {
+            new TableFilter<string>
+            {
+                Text = "Joe", 
+                Value = "Joe"
+            },
+            new TableFilter<string>
+            {
+                Text = "John", 
+                Value = "John"
+            },
+        };
+    }
+}

@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace AntDesign
 {
@@ -12,7 +14,7 @@ namespace AntDesign
 
         public string FilterReset { get; set; } = "Reset";
 
-        public string FilterEmptyText { get; set; }
+        public string FilterEmptyText { get; set; } = "";
 
         public string SelectAll { get; set; } = "Select current page";
 
@@ -32,10 +34,10 @@ namespace AntDesign
 
         public string CancelSort { get; set; } = "Click to cancel sort";
 
-        public FilterOptions FilterOptions { get; set; } = new();
+        public FilterOptionsLocale FilterOptions { get; set; } = new();
     }
 
-    public class FilterOptions
+    public class FilterOptionsLocale
     {
         public string True { get; set; } = "True";
 
@@ -70,5 +72,27 @@ namespace AntDesign
         public string IsNotNull { get; set; } = "Is Not Null";
 
         public string TheSameDateWith { get; set; } = "The Same Date With";
+
+        public string Between { get; set; } = "Between";
+
+        public string Operator(TableFilterCompareOperator compareOperator)
+            => compareOperator switch
+            {
+                TableFilterCompareOperator.Equals => Equals,
+                TableFilterCompareOperator.Contains => Contains,
+                TableFilterCompareOperator.StartsWith => StartsWith,
+                TableFilterCompareOperator.EndsWith => EndsWith,
+                TableFilterCompareOperator.GreaterThan => GreaterThan,
+                TableFilterCompareOperator.LessThan => LessThan,
+                TableFilterCompareOperator.GreaterThanOrEquals => GreaterThanOrEquals,
+                TableFilterCompareOperator.LessThanOrEquals => LessThanOrEquals,
+                TableFilterCompareOperator.NotEquals => NotEquals,
+                TableFilterCompareOperator.IsNull => IsNull,
+                TableFilterCompareOperator.IsNotNull => IsNotNull,
+                TableFilterCompareOperator.NotContains => NotContains,
+                TableFilterCompareOperator.TheSameDateWith => TheSameDateWith,
+                TableFilterCompareOperator.Between => Between,
+                _ => throw new ArgumentOutOfRangeException(nameof(compareOperator), compareOperator, null)
+            };
     }
 }

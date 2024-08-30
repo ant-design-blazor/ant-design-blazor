@@ -1,0 +1,20 @@
+﻿<ErrorBoundary>
+    <ChildContent>
+        <Button Danger OnClick=@OnClick>
+            Click me to throw a error
+        </Button>
+    </ChildContent>
+    <ErrorContent Context="ex">
+        <Alert Type="@AlertType.Error"
+               Message="@ex.Message"
+               Description="@ex.StackTrace">
+        </Alert>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    void OnClick()
+    {
+        throw new Exception("An Uncaught Error");
+    }
+}

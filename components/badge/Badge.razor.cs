@@ -1,21 +1,36 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Small numerical value or status descriptor for UI elements.
-    /// </summary>
+    /**
+    <summary>
+        <para>Small numerical value or status descriptor for UI elements.</para>
+
+        <h2>When To Use</h2>
+
+        <para>Badge normally appears in proximity to notifications or user avatars with eye-catching appeal, typically displaying unread messages count.</para>
+    </summary>
+    <seealso cref="AntDesign.BadgeRibbon" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg")]
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>
-        /// Customize Badge dot color
+        /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
         public string Color { get; set; }
 
+        /// <summary>
+        /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
+        /// </summary>
         [Parameter]
         public PresetColor? PresetColor { get; set; }
 
@@ -37,17 +52,21 @@ namespace AntDesign
 
                 if (_count > 0)
                 {
-                    this._countArray = DigitsFromInteger(_count.Value);
+                    _countArray = DigitsFromInteger(_count.Value);
                 }
             }
         }
 
+        /// <summary>
+        /// Template to show in place of Count
+        /// </summary>
         [Parameter]
         public RenderFragment CountTemplate { get; set; }
 
         /// <summary>
-        /// Whether to display a red dot instead of count
+        /// Whether to display a dot instead of count
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Dot { get; set; }
 
@@ -60,6 +79,7 @@ namespace AntDesign
         /// <summary>
         /// Max count to show
         /// </summary>
+        /// <default value="99"/>
         [Parameter]
         public int OverflowCount
         {
@@ -83,27 +103,31 @@ namespace AntDesign
         /// <summary>
         /// Whether to show badge when count is zero
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool ShowZero { get; set; } = false;
 
         /// <summary>
-        /// Set Badge as a status dot
+        /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
         public string Status { get; set; }
 
         /// <summary>
-        /// If status is set, text sets the display text of the status dot
+        /// The display text next to the status dot
         /// </summary>
         [Parameter]
         public string Text { get; set; }
 
         /// <summary>
-        /// Text to show when hovering over the badge
+        /// Text to show when hovering over the badge. Defaults to the value of Count
         /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Size of the badge
+        /// </summary>
         [Parameter]
         public string Size { get; set; }
 
@@ -115,13 +139,19 @@ namespace AntDesign
 
         private ClassMapper CountClassMapper { get; set; } = new ClassMapper();
 
+        private ClassMapper DotClassMapper { get; set; } = new ClassMapper();
+
         private int[] _countArray = Array.Empty<int>();
 
         private readonly int[] _countSingleArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
-        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes) ? Status : (PresetColor.HasValue ? Enum.GetName(typeof(PresetColor), PresetColor) : "");
+        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes)
+            ? Status
+            : (PresetColor.HasValue
+                ? Enum.GetName(typeof(PresetColor), PresetColor)
+                : "");
 
         private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
 
@@ -129,18 +159,30 @@ namespace AntDesign
 
         private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
 
-        private bool RealShowSup => (this.Dot && (!this.Count.HasValue || (this.Count > 0 || this.Count == 0 && this.ShowZero)))
-                                || this.Count > 0
-                                || (this.Count == 0 && this.ShowZero);
+        private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
+                                || Count > 0
+                                || (Count == 0 && ShowZero);
 
         private bool _dotEnter;
 
         private bool _dotLeave;
 
         private bool _finalShowSup;
+
         private int? _count;
+
         private int _overflowCount = 99;
+
         private bool _showOverflowCount = false;
+
+        private static readonly string[] _badgeStatusTypes =
+        {
+            "success",
+            "processing",
+            "default",
+            "error",
+            "warning"
+        };
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -165,6 +207,11 @@ namespace AntDesign
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
                 .If($"{prefixName}-zoom-leave {prefixName}-zoom-leave-active", () => _dotLeave)
                 .If($"{prefixName}-count-overflow", () => _showOverflowCount)
+                ;
+
+            DotClassMapper.Clear()
+                .Add("ant-badge-status-dot")
+                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor.ToLowerInvariant()}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
                 ;
         }
 
@@ -202,7 +249,9 @@ namespace AntDesign
             }
 
             if (showSupBefore == RealShowSup)
+            {
                 return;
+            }
 
             if (RealShowSup)
             {
@@ -243,7 +292,7 @@ namespace AntDesign
 
         private void GenerateMaxNumberArray()
         {
-            this._maxNumberArray = _overflowCount.ToString(CultureInfo.InvariantCulture).ToCharArray();
+            _maxNumberArray = _overflowCount.ToString(CultureInfo.InvariantCulture).ToCharArray();
         }
 
         private static int[] DigitsFromInteger(int number)
@@ -258,18 +307,11 @@ namespace AntDesign
             }
 
             if (n < 0)
+            {
                 digits[0] *= -1;
+            }
 
             return digits;
         }
-
-        private static readonly string[] _badgeStatusTypes =
-        {
-            "success",
-            "processing",
-            "default",
-            "error",
-            "warning"
-        };
     }
 }

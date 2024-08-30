@@ -10,6 +10,7 @@
                     Disabled="IsDisabled()"
                     PopupContainerSelector="@PopupContainerSelector"
                     BoundaryAdjustMode="@BoundaryAdjustMode"
+                    Placement="Placement"
                     OnVisibleChange="OverlayVisibleChange"
                     OverlayClassName="ant-picker-dropdown-range"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
@@ -19,7 +20,7 @@
             <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />
             <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panels">
-                    <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == 1 ? "display: none;": "")">
+                    <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == (RTL ? 0 : 1) ? "display: none;": "")">
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                     <div class="@_panelClassMapper.Class">
@@ -28,26 +29,26 @@
                 </div>
                 @if (ShowFooter)
                 {
-                  <div class="@(PrefixCls)-footer">
-                    @if (RenderExtraFooter != null)
-                    {
-                      <div class="@(PrefixCls)-footer-extra">
-                        @RenderExtraFooter
-                      </div>
-                    }
-
-                    @if (ShowRanges)
-                    {
-                      <ul class="@(PrefixCls)-ranges">
-                        @foreach (var range in Ranges)
+                    <div class="@(PrefixCls)-footer">
+                        @if (RenderExtraFooter != null)
                         {
-                          <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
-                            <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
-                          </li>
+                            <div class="@(PrefixCls)-footer-extra">
+                                @RenderExtraFooter
+                            </div>
                         }
-                      </ul>
-                    }
-                  </div>
+
+                        @if (ShowRanges)
+                        {
+                            <ul class="@(PrefixCls)-ranges">
+                                @foreach (var range in Ranges)
+                                {
+                                    <li class="ant-picker-preset" @onmouseout="()=>OnRangeItemOut(range.Value)" @onmouseover="()=>OnRangeItemOver(range.Value)">
+                                        <span class="ant-tag ant-tag-blue" @onclick="()=>OnRangeItemClicked(range.Value)">@range.Key</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
                 }
             </div>
         </Overlay>
@@ -71,9 +72,11 @@
                                  OnBlur="e => OnBlur(0)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  ShowSuffixIcon="false"
+                                 Mask="@Mask"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
                                  HtmlInputSize="@HtmlInputSize"
+                                 FeedbackIcon="@FormItem?.FeedbackIcon"
                                  OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-range-separator">
@@ -98,10 +101,42 @@
                                  OnBlur="e => OnBlur(1)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  IsRange="@IsRange"
+                                 Mask="@Mask"
                                  AllowClear="@AllowClear"
                                  HtmlInputSize="@HtmlInputSize"
+                                 SuffixIcon="@SuffixIcon"
+                                 FeedbackIcon="@FormItem?.FeedbackIcon"
                                  OnClickClear="e => ClearValue(-1)" />
+
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
+
+                <span class="@(PrefixCls)-suffix" @onclick="@(_=> OnSuffixIconClick())">
+                    @if (SuffixIcon != null)
+                    {
+                        @SuffixIcon
+                    }
+                    else if (Picker == DatePickerType.Time)
+                    {
+                        <Icon Type="clock-circle" />
+                    }
+                    else
+                    {
+                        <Icon Type="calendar" />
+                    }
+
+                    @if (FormItem?.FeedbackIcon != null)
+                    {
+                        @FormItem.FeedbackIcon
+                    }
+
+                </span>
+
+                @if (ShowClear())
+                {
+                    <span class="@(PrefixCls)-clear" @onclick="@(e => ClearValue(-1))">
+                        <Icon Type="close-circle" Theme="fill" />
+                    </span>
+                }
             </div>
         </Unbound>
     </OverlayTrigger>

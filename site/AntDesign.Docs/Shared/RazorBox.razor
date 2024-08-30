@@ -1,22 +1,37 @@
 ﻿@using AntDesign.Docs.Services
+@using System.Reflection;
 @inherits ComponentBase
 
-@Component
-
+@if (_demoType != null)
+{
+    <DynamicComponent Type="_demoType" />
+}
 
 @inject DemoService demoService;
-
 @code {
 
     [Parameter]
     public DemoItem Demo { get; set; }
 
-    RenderFragment Component;
+    private Type _demoType;
 
-    protected override async Task OnInitializedAsync()
+    private bool _render;
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        await base.OnInitializedAsync();
-        Component = demoService.GetShowCase(Demo.Type);
-    }
+        if (firstRender)
+        {
+            _render = true;
+            StateHasChanged();
+            return;
+        }
+        if (_render && _demoType == null)
+        {
+            _demoType = demoService.GetShowCase(Demo.Type);
+            StateHasChanged();
+        }
 
+        base.OnAfterRender(firstRender);
+
+    }
 }

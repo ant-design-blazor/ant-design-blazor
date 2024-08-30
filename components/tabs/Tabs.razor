@@ -4,7 +4,7 @@
 <CascadingValue Value="this" IsFixed="@true">
 	<div class="@ClassMapper.Class" style="@Style" id="@Id">
 		<!--Tab bar-->
-		<div role="tablist" class="ant-tabs-nav">
+		<div role="tablist" class="@_tabBarClassMapper.Class" style="@TabBarStyle">
 
 			@if (TabBarExtraContentLeft != null)
 			{
@@ -13,8 +13,8 @@
 				</div>
 			}
 
-			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef">
-				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef">
+			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
+				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
 					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
 						@ChildContent
 					</CascadingValue>
@@ -67,7 +67,7 @@
 		@if (Card == null)
 		{
 			<div class="ant-tabs-content-holder ">
-				<div class="@_contentClassMapper.Class" style="@_contentAnimatedStyle">
+				<div class="@_contentClassMapper.Class">
 					<CascadingValue Value="true" Name="IsPane" IsFixed="true">
 						@ChildContent
 					</CascadingValue>

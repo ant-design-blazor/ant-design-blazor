@@ -1,0 +1,68 @@
+@using System.Globalization
+
+<Select TItem="Person"
+	TItemValue="string"
+	DataSource="@_persons"
+		@bind-Value="@_selectedValue"
+		LabelName="@nameof(Person.Name)"
+		ValueName="@nameof(Person.Value)"
+		Placeholder="Select a person"
+		DefaultActiveFirstOption="false"
+		EnableSearch
+		OnBlur="OnBlur"
+		OnFocus="OnFocus"
+		OnSelectedItemChanged="OnSelectedItemChangedHandler"
+		OnSearch="OnSearch"
+		FilterExpression="(item, searchValue) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0">
+</Select>
+<br /><br />
+<p>
+	Selected Value: @_selectedValue <br />
+	Selected Item Name: @_selectedItem?.Name
+</p>
+
+@code
+{
+	class Person
+	{
+		public string Value { get; set; }
+		public string Name { get; set; }
+	}
+
+	List<Person> _persons;
+	string _selectedValue;
+	Person _selectedItem;
+
+	protected override void OnInitialized()
+	{
+		_persons = new List<Person>
+		{
+			new Person { Value = "jack", Name = "Jack" },
+			new Person { Value = "lucy", Name = "Lucy" },
+			new Person { Value = "tom" , Name = "Tom" },
+			new Person { Value = "hernan" , Name = "Hernan" },
+			new Person { Value = "marino" , Name = "Marino" },
+		};
+	}
+
+	private void OnSelectedItemChangedHandler(Person value)
+	{
+		_selectedItem = value;
+		Console.WriteLine($"selected: ${value?.Name}");
+	}
+
+	private void OnBlur()
+	{
+		Console.WriteLine("blur");
+	}
+
+	private void OnFocus()
+	{
+		Console.WriteLine("focus");
+	}
+
+	private void OnSearch(string value)
+	{
+		Console.WriteLine($"search: {value}");
+	}
+}

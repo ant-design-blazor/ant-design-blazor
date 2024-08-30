@@ -1,14 +1,18 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace AntDesign.JsInterop
 {
-    public class DomEventSubscriptionStore : ConcurrentDictionary<string, List<DomEventSubscription>>
+    public class DomEventSubscriptionStore : ConcurrentDictionary<DomEventKey, List<DomEventSubscription>>
     {
-        public (string key, DomEventSubscription subscription) FindDomEventSubscription(string id)
+        public (DomEventKey key, DomEventSubscription subscription) FindDomEventSubscription(string id)
         {
-            string key = string.Empty;
+            DomEventKey key = null;
             DomEventSubscription subscription = null;
 
             foreach (var (k, subscriptionList) in this)
@@ -42,6 +46,14 @@ namespace AntDesign.JsInterop
             Delegate = @delegate;
             Type = type;
             Id = id;
+        }
+    }
+
+    public record DomEventKey(string Selector, string EventName, string ListenerId)
+    {
+        public override string ToString()
+        {
+            return $"{Selector}-{EventName}-{ListenerId}";
         }
     }
 }

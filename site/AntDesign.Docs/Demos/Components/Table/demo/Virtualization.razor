@@ -1,10 +1,34 @@
-﻿<Space>
+﻿<Divider Orientation="left">Load all data</Divider>
+
+<Space>
     <SpaceItem>
         <Button OnClick="LoadData">Load data</Button>
     </SpaceItem>
 </Space>
 
-<Table DataSource="data" ScrollY="500px" @bind-PageSize="pageSize" EnableVirtualization>
+<Table TItem="Data"
+       DataSource="data1"
+       ScrollY="300px"
+       EnableVirtualization
+       HidePagination
+       Bordered>
+    <Selection />
+    <PropertyColumn Property="c=>c.Name" Width="400" />
+    <PropertyColumn Property="c=>c.Age" Width="150" />
+    <PropertyColumn Property="c=>c.Address" />
+</Table>
+
+<Divider Orientation="left">Load on demand</Divider>
+
+<Table TItem="Data"
+       DataSource="data2"
+       ScrollY="300px"
+       EnableVirtualization
+       OnChange="OnChange"
+       Total="total"
+       RemoteDataSource
+       Bordered
+       RowKey="x=>x.Name">
     <Selection />
     <PropertyColumn Property="c=>c.Name" Width="400" />
     <PropertyColumn Property="c=>c.Age" Width="150" />
@@ -21,17 +45,32 @@
         public string Address { get; set; }
     }
 
-    Data[] data = Array.Empty<Data>();
+    Data[] data1 = Array.Empty<Data>();
+    Data[] data2 = Array.Empty<Data>();
 
-    int pageSize = 10000;
+    int total = 0;
 
     void LoadData()
     {
-        data = Enumerable.Range(0, 10000).Select(i => new Data()
+        data1 = Enumerable.Range(0, 10000).Select(i => new Data()
         {
             Name = $"Edward King {i}",
             Age = 32,
             Address = $"Edward King {i}'s address"
         }).ToArray();
+    }
+
+
+    async Task OnChange(TableModels.QueryModel queryModel)
+    {
+        await Task.Delay(1000);
+        data2 = Enumerable.Range(queryModel.StartIndex, queryModel.PageSize).Select(i => new Data
+            {
+                Name = $"Edward King {i}",
+                Age = 32,
+                Address = $"Edward King {i}'s address"
+            }).ToArray();
+
+        total = 10000;
     }
 }

@@ -1,30 +1,30 @@
 ﻿@layout BlankLayout;
 @page "/mock"
+@page "/zh-CN/mock"
+@page "/en-US/mock"
+
 @using System.Reflection
 @using AntDesign.Docs.Services
 
 <div id="@DemoId">
-    @ShowCaseContent
+    <DynamicComponent Type="_demoType"></DynamicComponent>
 </div>
 
 @inject DemoService demoService
 
 @code
 {
-    [Parameter]
+    [SupplyParameterFromQuery]
     public string DemoId { get; set; }
 
-    [Parameter]
+    [SupplyParameterFromQuery]
     public string Type { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IDictionary<string,object> Attributes { get; set; }
+    private Type _demoType;
 
-    RenderFragment ShowCaseContent => (builder) =>
+    protected override void OnInitialized()
     {
-        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        var showCase = System.Type.GetType($"{assemblyName}.{Type}");
-        builder.OpenComponent(0, showCase);
-        builder.CloseComponent();
-    };
+        _demoType = demoService.GetShowCase(Type);
+        base.OnInitialized();
+    }
 }

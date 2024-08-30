@@ -1,0 +1,46 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+
+<RadioGroup @bind-Value=@ChosenRequiredMark>
+    <Radio RadioButton Value=@FormRequiredMark.Required>Required</Radio>
+    <Radio RadioButton Value=@FormRequiredMark.Optional>Optional</Radio>
+    <Radio RadioButton Value=@FormRequiredMark.None>None</Radio>
+</RadioGroup>
+
+<Form 
+    Model="@model"
+      Layout="vertical"
+    ValidateMode=@FormValidateMode.Complex
+    RequiredMark=@ChosenRequiredMark>
+    <FormItem Label="Required By Parameter" Required >
+        <Input @bind-Value="@context.RequiredByParameter" />
+    </FormItem>
+    <FormItem Label="Required By Rule Field" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+        <Input @bind-Value="@context.RequiredByRule" />
+    </FormItem>
+    <FormItem Label="Required By Data Attribute">
+        <Input @bind-Value="@context.RequiredByDataAttribute" />
+    </FormItem>
+    <FormItem Label="Optional" >
+        <Input @bind-Value="@context.Optional" />
+    </FormItem>
+</Form>
+
+@code
+{
+    public FormRequiredMark ChosenRequiredMark { get; set; } = FormRequiredMark.Required;
+
+    public class Model
+    {
+        public string Optional { get; set; }
+
+        public string RequiredByParameter { get; set; }
+
+        public string RequiredByRule { get; set; }
+
+        [Required]
+        public string RequiredByDataAttribute{ get; set; }
+    }
+
+    private Model model = new Model();
+}

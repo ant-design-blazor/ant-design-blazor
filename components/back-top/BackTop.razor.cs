@@ -1,40 +1,73 @@
-﻿using System.Text.Json;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /** 
+    <summary>
+    <para>Makes it easy to go back to the top of the page.</para>
+    
+    <h2>When To Use</h2>
+    <list type="bullet">
+        <item>When the page content is very long.</item>
+        <item>When you need to go back to the top very frequently in order to view the contents.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg")]
     public partial class BackTop : AntDomComponentBase
     {
-        private bool _visible = false;
-
-        [Inject]
-        private IDomEventListener DomEventListener { get; set; }
-
+        /// <summary>
+        /// Icon for the button
+        /// </summary>
+        /// <default value="vertical-align-top" />
         [Parameter]
         public string Icon { get; set; } = "vertical-align-top";
 
+        /// <summary>
+        /// Content for the button. Takes priority over icon.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Scroll offset at which the button becomes visible, in px
+        /// </summary>
+        /// <default value="400" />
         [Parameter]
         public double VisibilityHeight { get; set; } = 400;
 
         /// <summary>
-        /// 回到顶部的目标控件
+        /// The scrollable area the button is for
+        /// </summary>
+        /// <default value="window" />
+        [Parameter]
+        public string TargetSelector { get; set; } = "window";
+
+        /// <summary>
+        /// Callback executed when BackTop gets clicked. Won't override default functionality.
         /// </summary>
         [Parameter]
-        public string TargetSelector { get; set; }
+        public EventCallback OnClick { get; set; }
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
         protected ClassMapper BackTopContentClassMapper { get; set; } = new ClassMapper();
 
         protected ClassMapper BackTopIconClassMapper { get; set; } = new ClassMapper();
 
-        [Parameter]
-        public EventCallback OnClick { get; set; }
+        private bool _visible = false;
+        private bool _hidden = false;
 
-        protected async Task OnClickHandle()
+        protected async Task OnClickHandler(MouseEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
@@ -42,7 +75,7 @@ namespace AntDesign
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
 
             if (OnClick.HasDelegate)
-                await OnClick.InvokeAsync(null);
+                await OnClick.InvokeAsync(e);
         }
 
         protected override void OnInitialized()
@@ -51,7 +84,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
             {
@@ -82,7 +115,25 @@ namespace AntDesign
         {
             JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
             double offset = scrollInfo.GetProperty("y").GetDouble();
-            _visible = offset > VisibilityHeight;
+            var visible = offset > VisibilityHeight;
+
+            if (visible == _visible)
+                return;
+
+            _visible = visible;
+
+            StateHasChanged();
+
+            if (_visible)
+            {
+                _hidden = false;
+            }
+            else
+            {
+                await Task.Delay(300);
+                _hidden = true;
+            }
+
             StateHasChanged();
         }
 

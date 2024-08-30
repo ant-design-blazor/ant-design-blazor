@@ -1,9 +1,13 @@
-﻿namespace AntDesign
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+namespace AntDesign
 {
     public sealed class ProgressSize : EnumValue<ProgressSize>
     {
-        public static readonly ProgressSize Small = new ProgressSize(nameof(Small), 1);
-        public static readonly ProgressSize Default = new ProgressSize(nameof(Default), 2);
+        public static readonly ProgressSize Small = new ProgressSize(nameof(Small), 6);
+        public static readonly ProgressSize Default = new ProgressSize(nameof(Default), 8);
 
         private ProgressSize(string name, int value) : base(name.ToLowerInvariant(), value)
         {

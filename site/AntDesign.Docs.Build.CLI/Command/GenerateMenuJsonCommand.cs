@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +15,6 @@ using Microsoft.Extensions.CommandLineUtils;
 namespace AntDesign.Docs.Build.CLI.Command
 {
     public class GenerateMenuJsonCommand : IAppCommand
-
     {
         public string Name => "menu2json";
 
@@ -38,15 +41,15 @@ namespace AntDesign.Docs.Build.CLI.Command
             ["其他"] = 7,
             ["Charts"] = 8,
             ["图表"] = 8,
-            //["Experimental"] = 9,
-            //["实验性功能"] = 9,
+            ["Experimental"] = 9,
+            ["高阶功能"] = 9,
         };
 
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
             ["Components"] = "组件",
             ["Charts"] = "图表",
-            //["Experimental"] = "实验性功能"
+            ["Experimental"] = "高阶功能"
         };
 
         public void Execute(CommandLineApplication command)
@@ -258,7 +261,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         [language] = new DemoMenuItem()
                         {
-                            Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                            Order = float.TryParse(docData["order"], out var order) ? order : 0,
                             Title = docData["title"],
                             Url = $"docs/{segments[0]}",
                             Type = "menuItem"

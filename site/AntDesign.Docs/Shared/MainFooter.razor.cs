@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
@@ -13,8 +18,8 @@ namespace AntDesign.Docs.Shared
         [Inject] private IJSRuntime JS { get; set; }
         [Inject] private IMessageService Message { get; set; }
 
-        [Inject] private ILanguageService Language { get; set; }
-
+        [Inject] private ILocalizationService Language { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -28,7 +33,7 @@ namespace AntDesign.Docs.Shared
         {
             _colorHex = args.Value.ToString();
 
-            await Message.Loading(Language.Resources["app.footer.primary-color-changing"]);
+            await Message.Loading(Localizer["app.footer.primary-color-changing"].Value);
 
             await JS.InvokeVoidAsync("changeColor", _colorHex, DotNetObjectReference.Create(this));
         }
@@ -36,7 +41,7 @@ namespace AntDesign.Docs.Shared
         [JSInvokable]
         public void OnColorChanged()
         {
-            Message.Success(Language.Resources["app.footer.primary-color-changed"]);
+            Message.Success(Localizer["app.footer.primary-color-changed"].Value);
         }
     }
 }

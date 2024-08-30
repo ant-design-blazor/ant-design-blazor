@@ -1,23 +1,25 @@
-﻿<Segmented Labels=@_options />
+﻿<Segmented Labels=@_options @bind-Value="_value" />
 
 <Button Type="primary" Disabled=@_moreLoaded OnClick=@handleLoadOptions>
-  Load more options
+    Load more options
 </Button>
 
 @code {
-  string[] _defaultOptions = { "Daily", "Weekly", "Monthly" };
-  string[] _options = { };
+    string[] _defaultOptions = { "Daily", "Weekly", "Monthly" };
+    string[] _options = { };
+    string _value = "Weekly";
 
-  bool _moreLoaded;
+    bool _moreLoaded;
 
-  protected override void OnInitialized()
-  {
-    _options = _defaultOptions;
-  }
+    protected override void OnInitialized()
+    {
+        _options = _defaultOptions;
+    }
 
-  private void handleLoadOptions()
-  {
-    _options = _defaultOptions.Concat(new[] { "Quarterly", "Yearly" }).ToArray();
-    _moreLoaded = true;
-  }
+    private void handleLoadOptions()
+    {
+        _options = _defaultOptions.Concat(new[] { "Quarterly", "Yearly" }).ToArray();
+        _value = "Quarterly";
+        _moreLoaded = true;
+    }
 }

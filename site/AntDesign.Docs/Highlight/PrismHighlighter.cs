@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -15,14 +19,14 @@ namespace AntDesign.Docs.Highlight
 
         public async ValueTask<MarkupString> HighlightAsync(string code, string language)
         {
-            string highlighted = await jsRuntime.InvokeAsync<string>("AntDesign.Prism.highlight", code, language);
+            string highlighted = await jsRuntime.InvokeAsync<string>("XPrism.highlight", code, language);
 
             return new MarkupString(highlighted);
         }
 
         public async Task HighlightAllAsync()
         {
-            await jsRuntime.InvokeVoidAsync("AntDesign.Prism.highlightAll");
+            await jsRuntime.InvokeVoidAsync("XPrism.highlightAll");
         }
     }
 }

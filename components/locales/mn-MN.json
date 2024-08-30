@@ -125,5 +125,8 @@
   },
   "Empty": {
     "description": "Мэдээлэл байхгүй байна"
+  },
+  "Form": {
+    "optional": "(optional)"
   }
 }

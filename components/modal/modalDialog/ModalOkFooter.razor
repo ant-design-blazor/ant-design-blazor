@@ -1,0 +1,32 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@{
+    var okProps = ModalProps.OkButtonProps ?? new ButtonProps();
+    okProps.Type = ModalProps.OkType;
+    okProps.Loading = ModalProps.ConfirmLoading;
+}
+
+<div>
+    <Button OnClick="@HandleOk"
+            Loading="@okProps.Loading"
+            Type="@okProps.Type"
+            Block="@okProps.Block"
+            Ghost="@okProps.Ghost"
+            Shape="@okProps.Shape"
+            Size="@okProps.Size"
+            Icon="@okProps.Icon"
+            Disabled="@okProps.Disabled"
+            Danger="@okProps.IsDanger">
+        @{
+            if (ModalProps.OkText.IsT0)
+            {
+                @(ModalProps.OkText.AsT0)
+            }
+            else
+            {
+                @(ModalProps.OkText.AsT1)
+            }
+        }
+    </Button>
+</div>

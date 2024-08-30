@@ -1,28 +1,18 @@
 ﻿<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
     Open Modal
 </Button>
-<Modal Title="@title"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel"
-       Maximizable="@true">
+<Modal Title="BasicModal"
+       @bind-Visible="@_visible"
+       Maximizable="@true"
+       Centered="@true"
+       DefaultMaximized="@true">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
 </Modal>
+
 @code{
-    string title = "BasicModal";
+
     bool _visible = false;
 
-    private void HandleOk(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
 }

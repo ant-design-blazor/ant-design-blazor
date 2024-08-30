@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -63,13 +64,22 @@ namespace AntDesign
         /// <returns></returns>
         private async Task OnClick(MouseEventArgs args)
         {
-            SelfNode.SetSelected(!SelfNode.Selected);
+            if (SelfNode.Disabled)
+                return;
+            if (TreeComponent.ExpandOnClickNode && !SelfNode.IsLeaf)
+            {
+                await SelfNode.Expand(!SelfNode.Expanded);
+            }
+            if (TreeComponent.CheckOnClickNode && TreeComponent.Checkable)
+            {
+                SelfNode.SetChecked(!SelfNode.Checked);
+            }
+            else
+            {
+                SelfNode.SetSelected(!SelfNode.Selected);
+            }
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-            else if (TreeComponent.OnContextMenu.HasDelegate && args.Button == 2)
-                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
-
-            TreeComponent.UpdateBindData();
         }
 
         /// <summary>
@@ -86,11 +96,22 @@ namespace AntDesign
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private async Task OnContextMenu(MouseEventArgs args)
+        {
+            if (TreeComponent.OnContextMenu.HasDelegate)
+                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="e"></param>
         private void OnDragStart(DragEventArgs e)
         {
             TreeComponent.DragItem = SelfNode;
-            SelfNode.Expand(false);
+            _ = SelfNode.Expand(false);
             if (TreeComponent.OnDragStart.HasDelegate)
                 TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -134,7 +155,7 @@ namespace AntDesign
             {
                 SelfNode.SetTargetBottom();
                 SelfNode.SetParentTargetContainer();
-                SelfNode.Expand(true);
+                _ = SelfNode.Expand(true);
             }
             else
             {
@@ -158,7 +179,7 @@ namespace AntDesign
                 TreeComponent.DragItem.DragMoveInto(SelfNode);
 
             if (TreeComponent.OnDrop.HasDelegate)
-                TreeComponent.OnDrop.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
+                TreeComponent.OnDrop.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem, e, SelfNode.DragTargetBottom) { TargetNode = SelfNode });
         }
 
         /// <summary>

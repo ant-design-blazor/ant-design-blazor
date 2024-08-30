@@ -2,78 +2,120 @@
 @using System.Text.Json;
 @using System.ComponentModel
 
-    <Form Model="@model"
-          LabelColSpan="8"
-          WrapperColSpan="16">
-        <FormItem Label="Fail" ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers &amp; alphabets">
-            <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
+<Form Model="@model"
+    LabelCol="_labelCol"
+    WrapperCol="_wrapperCol">
+
+    <FormItem Label="Fail" ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers & alphabets">
+        <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
+    </FormItem>
+
+    <FormItem Label="Warning" ValidateStatus=FormValidateStatus.Warning>
+        <Input @bind-Value="@context.Username" Placeholder="Warning">
+        <Prefix>
+            <Icon Type="smile" Theme="outline" />
+        </Prefix>
+        </Input>
+    </FormItem>
+
+    <FormItem Label="Validating" HasFeedback ValidateStatus=FormValidateStatus.Validating Help="The information is being validated...">
+        <Input @bind-Value="@context.Username" Placeholder="I'm the content is being validated" />
+    </FormItem>
+
+    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+        <Input @bind-Value="@context.Username" Placeholder="I'm the content" />
+    </FormItem>
+
+    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+        <Input @bind-Value="@context.Username" Placeholder="Warning" />
+    </FormItem>
+
+    <FormItem Label="Fail" HasFeedback ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers & alphabets">
+        <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
+    </FormItem>
+
+    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+        <DatePicker @bind-Value="@context.DatePicker" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+    </FormItem>
+
+    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+        <TimePicker @bind-Value="@context.TimePicker" Style="width: 100%;" />
+    </FormItem>
+
+    <FormItem Label="Error" HasFeedback ValidateStatus="FormValidateStatus.Error">
+        <RangePicker @bind-Value="@context.RangePicker" Style="width: 100%;" />
+    </FormItem>
+
+    <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
+        <Select DataSource="@_options"
+                @bind-Value="@context.SelectedOption"
+                Placeholder="I'm Select"
+                AllowClear>
+        </Select>
+    </FormItem>
+
+    <FormItem Label="Validating"
+              HasFeedback
+              ValidateStatus="FormValidateStatus.Error"
+              Help="Something breaks the rule.">
+        <Cascader Placeholder="I'm Cascader" AllowClear Options="@cascaderOptions" />
+    </FormItem>
+
+    <FormItem Label="Warning" HasFeedback ValidateStatus="FormValidateStatus.Warning" Help="Need to be checked">
+        <TreeSelect TItem="string" TItemValue="string"
+                    Placeholder="I'm TreeSelect"
+                    Nodes="nodes"
+                    AllowClear />
+    </FormItem>
+
+    <FormItem Label="inline" Style="margin-bottom: 0; font-size: 0;">
+        <FormItem ValidateStatus=FormValidateStatus.Error Help="Please select right date" Style="display: inline-block; width: calc(50% - 12px);">
+            <DatePicker @bind-Value="@context.DatePicker2" />
         </FormItem>
-        <FormItem Label="Warning" ValidateStatus=FormValidateStatus.Warning>
-            <Input @bind-Value="@context.Username" Placeholder="Warning">
-                <Prefix>
-                    <Icon Type="smile" Theme="outline"/>
-                </Prefix>
-            </Input>
+        <span style="display: inline-block; width: 24px; line-height: 32px; text-align: center;font-size: 12px;">-</span>
+        <FormItem Style="display: inline-block; width: calc(50% - 12px);">
+            <DatePicker @bind-Value="@context.DatePicker3" />
         </FormItem>
-        <FormItem Label="Validating" HasFeedback ValidateStatus=FormValidateStatus.Validating Help="The information is being validated...">
-            <Input @bind-Value="@context.Username" Placeholder="I'm the content being validated" />
-        </FormItem>
-        <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
-            <Input @bind-Value="@context.Username" Placeholder="I'm the content" />
-        </FormItem>
-        <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
-            <Input @bind-Value="@context.Username" Placeholder="Warning" />
-        </FormItem>
-        <FormItem Label="Fail" HasFeedback ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers &amp; alphabets">
-            <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
-        </FormItem>
-        <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
-            <DatePicker @bind-Value="@context.DatePicker" Picker="@DatePickerType.Date" Style="width: 100%;" />
-        </FormItem>
-        <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
-            <TimePicker @bind-Value="@context.TimePicker" Style="width: 100%;" />
-        </FormItem>
-        <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
-            <Select DataSource="@_options" 
-                    @bind-Value="@context.SelectedOption"
-                    AllowClear>
-            </Select>
-        </FormItem>
-        <FormItem Label="Validating" HasFeedback ValidateStatus=FormValidateStatus.Validating Help="The information is being validated...">
-            <Select DataSource="@_options2" 
-                    @bind-Value="@context.SelectedOption2"
-                    AllowClear
-                    Placeholder="Please select">
-            </Select>
-        </FormItem>
-        <FormItem Label="inline" Style="margin-bottom: 0;">
-            <ChildContent>
-                <div style="display:grid;grid-template-columns:45% 1fr 45%;">
-                    <FormItem ValidateStatus=FormValidateStatus.Error Help="Please select the correct date">
-                        <DatePicker @bind-Value="@context.DatePicker2" Style="width:100%;"/>
-                    </FormItem>
-                    <span style="text-align:center;">-</span>
-                    <FormItem>
-                        <DatePicker @bind-Value="@context.DatePicker3" Style="width:100%;" />
-                    </FormItem>
-                </div>
-            </ChildContent>
-        </FormItem>
-        <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
-            <AntDesign.InputNumber @bind-Value="@context.InputNumber" Style="width:100%;"></AntDesign.InputNumber>
-        </FormItem>
-        <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
-            <AntDesign.Input @bind-Value="@context.Input" AllowClear Placeholder="with allowClear"></AntDesign.Input>
-        </FormItem>
-        <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
-            <AntDesign.InputPassword @bind-Value="@context.Password" Placeholder="with input password"></AntDesign.InputPassword>
-        </FormItem>
-        <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
-            <AntDesign.InputPassword @bind-Value="@context.Password" AllowClear Placeholder="with input password and allowClear"></AntDesign.InputPassword>
-        </FormItem>
-    </Form>
+    </FormItem>
+
+    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+        <AntDesign.InputNumber Prefix="@("RMB")" @bind-Value="@context.InputNumber" Style="width:100%;" />
+    </FormItem>
+
+    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+        <AntDesign.Input @bind-Value="@context.Input" AllowClear Placeholder="with allowClear"></AntDesign.Input>
+    </FormItem>
+
+    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+        <AntDesign.InputPassword @bind-Value="@context.Password" Placeholder="with input password"></AntDesign.InputPassword>
+    </FormItem>
+
+    <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
+        <AntDesign.InputPassword @bind-Value="@context.Password" AllowClear Placeholder="with input password and allowClear"></AntDesign.InputPassword>
+    </FormItem>
+
+    <FormItem Label="Fail" HasFeedback ValidateStatus="FormValidateStatus.Error">
+        <Mentions />
+    </FormItem>
+
+    <FormItem Label="Fail" HasFeedback ValidateStatus="FormValidateStatus.Error" Help="Should have something">
+        <TextArea AllowClear ShowCount />
+    </FormItem>
+</Form>
 @code
 {
+    ColLayoutParam _labelCol = new ColLayoutParam 
+    { 
+        Xs = new EmbeddedProperty { Span = 24 },
+        Sm = new EmbeddedProperty { Span = 6 },
+    };
+
+    ColLayoutParam _wrapperCol = new ColLayoutParam
+    {
+        Xs = new EmbeddedProperty { Span = 24 },
+        Sm = new EmbeddedProperty { Span = 14 },
+    };
+
     public class Model
     {
         public string Username { get; set; }
@@ -81,8 +123,10 @@
         public DateTime? TimePicker { get; set; }
         public string SelectedOption { get; set; }
         public string SelectedOption2 { get; set; }
+        public DateTime?[] RangePicker { get; set; }
         public DateTime? DatePicker2 { get; set; }
         public DateTime? DatePicker3 { get; set; }
+        public string TreeSelect { get; set; }
         public int? InputNumber { get; set; }
         public string Input { get; set; }
         public string Password { get; set; }
@@ -92,14 +136,16 @@
 
     private List<string> _options;
     private List<string> _options2;
+    IEnumerable<CascaderNode> cascaderOptions = new[] { new CascaderNode { Label = "xx", Value = "xx" } };
+    TreeNode<string>[] nodes = new TreeNode<string>[] { new() { Title = "xx", Key = "xx" } };
 
     protected override void OnInitialized()
     {
-        _options = new List<string> 
+        _options = new List<string>
         {
             "Option 1", "Option 2", "Option 3"
         };
-        _options2 = new List<string> 
+        _options2 = new List<string>
         {
             "Option 1", "Option 2", "Option 3"
         };

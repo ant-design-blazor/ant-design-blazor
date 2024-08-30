@@ -1,104 +1,129 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Reuse of multiple page components within an application
+    /// </summary>
     public partial class ReuseTabs : AntDomComponentBase
     {
-        [Inject]
-        public NavigationManager Navmgr { get; set; }
-
+        /// <summary>
+        /// Class name of the inner tab pane.
+        /// </summary>
         [Parameter]
         public string TabPaneClass { get; set; }
 
+        /// <summary>
+        /// Whether Tab can be dragged and dropped.
+        /// </summary>
         [Parameter]
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// The size of tabs.
+        /// </summary>
         [Parameter]
         public TabSize Size { get; set; }
 
+        /// <summary>
+        /// Templates for customizing page content.
+        /// </summary>
         [Parameter]
         public RenderFragment<ReuseTabsPageItem> Body { get; set; } = context => context.Body;
 
+        /// <summary>
+        /// Localization Settings.
+        /// </summary>
         [Parameter]
         public ReuseTabsLocale Locale { get; set; } = LocaleProvider.CurrentLocale.ReuseTabs;
 
-        [CascadingParameter(Name = "RouteView")]
-        public ReuseTabsRouteView RouteView { get; set; }
+        /// <summary>
+        /// Whether to hide the page display and keep only the title tab. Then you can use <see cref="ReusePages" /> to show the page conent.
+        /// </summary>
+        [Parameter]
+        public bool HidePages { get; set; }
 
-        private ReuseTabsPageItem[] Pages => RouteView?.Pages;
+        /// <summary>
+        /// The routing information for the current page, which is a serializable version of <see cref="Microsoft.AspNetCore.Components.RouteData"/>.
+        /// </summary>
+        [Parameter]
+        public ReuseTabsRouteData ReuseTabsRouteData { get; set; }
 
-        private string CurrentUrl
-        {
-            get => RouteView?.CurrentUrl;
-            set => RouteView?.Navmgr.NavigateTo(value);
-        }
+        [CascadingParameter]
+        private RouteData RouteData { get; set; }
+
+        [Inject]
+        private NavigationManager Navmgr { get; set; }
 
         [Inject]
         private ReuseTabsService ReuseTabsService { get; set; }
 
+        [CascadingParameter(Name = "AntDesign.InReusePageContent")]
+        private bool InReusePageContent { get; set; }
+
         protected override void OnInitialized()
         {
-            ReuseTabsService.GetNewKeyByUrl += GetNewKeyByUrl;
-
-            ReuseTabsService.OnClosePage += RemovePage;
-            ReuseTabsService.OnCloseOther += RemoveOther;
-            ReuseTabsService.OnCloseAll += RemoveAll;
-            ReuseTabsService.OnCloseCurrent += RemoveCurrent;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            ReuseTabsService.GetNewKeyByUrl -= GetNewKeyByUrl;
-
-            ReuseTabsService.OnClosePage -= RemovePage;
-            ReuseTabsService.OnCloseOther -= RemoveOther;
-            ReuseTabsService.OnCloseAll -= RemoveAll;
-            ReuseTabsService.OnCloseCurrent -= RemoveCurrent;
-
-            base.Dispose(disposing);
-        }
-
-        private void RemovePage(string key)
-        {
-            var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-            if (reuseTabsPageItem?.Pin == true)
+            if (InReusePageContent)
             {
                 return;
             }
+            base.OnInitialized();
 
-            this.RouteView?.RemovePage(key);
-            StateHasChanged();
+            Navmgr.LocationChanged += OnLocationChanged;
         }
 
-        private void RemoveOther(string key)
+        protected override Task OnFirstAfterRenderAsync()
         {
-            foreach (var item in Pages.Where(x => x.Closable && x.Url != key && !x.Pin))
+            ReuseTabsService.Init(true);
+            ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
+
+            if (RouteData != null)
             {
-                this.RouteView?.RemovePage(item.Url);
+                ReuseTabsService.TrySetRouteData(RouteData, true);
             }
-            StateHasChanged();
-        }
-
-        private void RemoveAll()
-        {
-            foreach (var item in Pages.Where(x => x.Closable && !x.Pin))
+            else if (ReuseTabsRouteData != null)
             {
-                this.RouteView?.RemovePage(item.Url);
+                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
-            StateHasChanged();
+
+            return base.OnFirstAfterRenderAsync();
         }
 
-        private void RemoveCurrent()
+        protected override bool ShouldRender() => !InReusePageContent;
+
+        protected override void Dispose(bool disposing)
         {
-            RemovePage(this.CurrentUrl);
+            ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
+            Navmgr.LocationChanged -= OnLocationChanged;
+            base.Dispose(disposing);
         }
 
-        private string GetNewKeyByUrl(string url)
+        private async Task<bool> OnTabEdit(string key, string action)
         {
-            return RouteView?.GetNewKeyByUrl(url);
+            if (action != "remove")
+                return false;
+
+            return ReuseTabsService.ClosePage(key);
+        }
+
+        private void OnLocationChanged(object o, LocationChangedEventArgs _)
+        {
+            if (RouteData != null)
+            {
+                ReuseTabsService.TrySetRouteData(RouteData, true);
+            }
+            else if (ReuseTabsRouteData != null)
+            {
+                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
+            }
+
+            InvokeStateHasChanged();
         }
     }
 }

@@ -5,17 +5,21 @@
     <div class="ant-collapse-header" @onclick="OnHeaderClick" role="button" aria-expanded="@(Active?"true":"false")">
         @if (ShowArrow)
         {
-            @if (Collapse.ExpandIconTemplate != null)
-            {
-                @Collapse.ExpandIconTemplate(Active)
-            }
-            else
-            {
-                <Icon Type="@Collapse.ExpandIcon" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
-            }
+            <div class="ant-collapse-expand-icon">
+                @if (Collapse.ExpandIconTemplate != null)
+                {
+                    @Collapse.ExpandIconTemplate(Active)
+                }
+                else
+                {
+                    <Icon Type="@Collapse.ExpandIcon" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
+                }
+            </div>
         }
 
-        @if (HeaderTemplate != null)@HeaderTemplate else @Header
+        <div class="ant-collapse-header-text">
+            @if (HeaderTemplate != null)@HeaderTemplate else @Header
+        </div>
 
         @if (Extra != null || ExtraTemplate != null)
         {
@@ -24,7 +28,7 @@
             </div>
         }
     </div>
-    <div class="ant-collapse-content @(Active?"ant-collapse-content-active":"ant-collapse-content-inactive ant-collapse-content-hidden")">
+    <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@_warpperStyle">
         <div class="ant-collapse-content-box">
             @ChildContent
         </div>

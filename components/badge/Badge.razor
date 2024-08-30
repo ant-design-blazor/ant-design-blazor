@@ -9,9 +9,9 @@
 
     @if (HasStatusOrColor && ChildContent == null)
     {
-        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor.ToLowerInvariant()}":"")}")" style="@DotColorStyle @Style"></span>
+        <span class="@DotClassMapper.Class" style="@DotColorStyle @Style"></span>
 
-        @if (!string.IsNullOrEmpty(Text))
+        if (!string.IsNullOrEmpty(Text))
         {
             <span class="ant-badge-status-text">@Text</span>
         }
@@ -27,9 +27,9 @@
             <span class="ant-badge-status-text">@Text</span>
         }
 
-        if (_finalShowSup)
+        @if (_finalShowSup)
         {
-            <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@Count">
+            <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@(string.IsNullOrWhiteSpace(Title) ? Count.ToString() : Title)">
                 @if (!Dot && !HasStatusOrColor)
                 {
                     @if (_showOverflowCount)

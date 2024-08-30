@@ -1,8 +1,11 @@
 ﻿export { backtopHelper } from './backtopHelper';
 export { overlayHelper } from './overlayHelper';
 export { uploadHelper } from './uploadHelper';
+export { downloadHelper } from './downloadHelper';
 export { mentionsHelper } from './mentionsHelper';
 export { modalHelper } from './modalHelper';
 export { inputHelper } from './inputHelper';
 export { tableHelper } from './tableHelper';
 export { iconHelper } from './iconHelper';
+export { imageHelper } from './imageHelper';
+export { watermarkHelper } from './watermarkHelper';

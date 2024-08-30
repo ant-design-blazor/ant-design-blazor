@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "volver" },
   "Form": {
+    "optional": "(opcional)",
     "defaultValidateMessages": {
       "default": "Error al validar campo ${label}",
       "required": "Por favor ingrese ${label}",
@@ -238,6 +239,6 @@
     }
   },
   "Image": {
-    "preview": "Vista previa"
+    "preview": "Previsualización"
   }
 }

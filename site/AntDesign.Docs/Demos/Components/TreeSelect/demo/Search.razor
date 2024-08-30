@@ -1,0 +1,28 @@
+<TreeSelect TItem="string" TItemValue="string"
+			Style="width:100%;"
+			@bind-Values="values"
+			DropdownStyle="max-height:400px;overflow:auto;"
+			Placeholder="Please select"
+			AllowClear
+			Multiple
+			TreeDefaultExpandAll
+			EnableSearch
+			MatchedStyle="font-weight: bold">
+	<TreeNode TItem="string" Key="parent 1" Title="parent 1">
+		<TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0">
+			<TreeNode TItem="string" Key="leaf1" Title="my leaf" />
+			<TreeNode TItem="string" Key="leaf2" Title="your leaf" />
+		</TreeNode>
+		<TreeNode TItem="string" Key="parent 1-1" Title="parent 1-1">
+			<TreeNode TItem="string" Key="leaf3" Title="Leaf3"/>
+		</TreeNode>
+	</TreeNode>
+</TreeSelect>
+
+@JsonSerializer.Serialize(values);
+
+@code {
+
+	private IEnumerable<string> values=new[]{"leaf1","leaf2"};
+  
+}

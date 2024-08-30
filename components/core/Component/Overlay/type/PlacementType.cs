@@ -9,8 +9,10 @@ namespace AntDesign
     public enum Placement
     {
         TopLeft,
+
         [Obsolete("Please use 'Placement.Top' instead.")]
         TopCenter,
+
         Top = 2,
         TopRight,
         Left,
@@ -20,8 +22,10 @@ namespace AntDesign
         RightTop,
         RightBottom,
         BottomLeft,
+
         [Obsolete("Please use 'Placement.Bottom' instead.")]
         BottomCenter,
+
         Bottom = 12,
         BottomRight
     }
@@ -37,7 +41,7 @@ namespace AntDesign
         public static readonly PlacementType LeftBottom = new PlacementType("leftBottom", "up", "100% 66%", 5, Placement.LeftBottom);
 
         public static readonly PlacementType Right = new PlacementType("right", "up", "0 50%", 6, Placement.Right);
-        public static readonly PlacementType RightTop = new PlacementType("rightTop", "down", "0 33%", 7, Placement.RightTop);
+        public static readonly PlacementType RightTop = new PlacementType("rightTop", "up", "0 33%", 7, Placement.RightTop);
         public static readonly PlacementType RightBottom = new PlacementType("rightBottom", "up", "0 66%", 8, Placement.RightBottom);
 
         public static readonly PlacementType BottomLeft = new PlacementType("bottomLeft", "up", "33% 0", 9, Placement.BottomLeft);

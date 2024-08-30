@@ -1,0 +1,24 @@
+﻿@layout AntDesign.Docs.Demos.Experimental.ReuseTabs.demo.Layout_
+
+@page "/reuse/dynamic-title"
+@implements IReuseTabsPage
+
+<PageTitle>@title</PageTitle>
+
+<Input @bind-Value="title" TValue="string" OnChange="UpdateTab"></Input>
+
+@inject ReuseTabsService ReuseTabsService
+@code {
+
+    public string title = "dynamic title";
+
+    void UpdateTab()
+    {
+        ReuseTabsService.Update();
+    }
+
+    public RenderFragment GetPageTitle()
+    {
+        return @<span>@title</span>;
+    }
+}

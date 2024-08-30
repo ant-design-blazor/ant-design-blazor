@@ -1,14 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-    <li  class="@ClassMapper.Class" @ref="@Ref"
-         @onmouseenter="OnMouseEnter"
-         @onmouseleave="OnMouseLeave"         
-         @onclick="OnClick"  
-         id="@Id"        
-        role="menuitem"
-        style="pointer-events:auto">
-         @ChildContent
-    </li>
-
+<li class="@ClassMapper.Class"
+    @onmouseover="OnMouseOver"
+    @onclick="OnClick">
+    @ChildContent
+</li>
 

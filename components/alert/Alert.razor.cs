@@ -1,14 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Collections.Generic;
 
 namespace AntDesign
 {
     /// <summary>
-    /// Alert component for feedback.
+    /// <para>Alert component for feedback.</para>
+    /// <h2>When To Use</h2>
+    /// <list type="bullet">
+    /// <item>When you need to show alert messages to users.</item>
+    /// <item>When you need a persistent static container which is closable by user actions.</item>
+    /// </list>
     /// </summary>
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg")]
     public partial class Alert : AntDomComponentBase
     {
         /// <summary>
@@ -20,12 +29,14 @@ namespace AntDesign
         /// <summary>
         /// Whether to show as banner
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Banner { get; set; } = false;
 
         /// <summary>
         /// Whether Alert can be closed
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Closable { get; set; } = false;
 
@@ -104,7 +115,7 @@ namespace AntDesign
 
         private int _motionStage;
 
-        private int _height;
+        private decimal _height;
 
         private string _innerStyle = string.Empty;
 

@@ -3,127 +3,166 @@
 @inherits AntDesignTestBase
 
 @code {
-	[Fact]
-	public void DefaultValue_applied_to_value()
-		{//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.Data), MemberType = typeof(DatePickerTestData))]
+    public void DefaultValue_applied_to_value<T>(T defaultValue)
+    {//Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
 
-		DateTime expectedValue = DateTime.Now;
-		//Act
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker TValue="DateTime" DefaultValue="@expectedValue" />);
-		//Assert
-		cut.Instance.Value.Should().Be(expectedValue);
-	}
-
-	[Fact]
-	public async void Picker_is_focused_on_value()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-			.SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 } );
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
-
-		DateTime value = new DateTime(2021,4,5);		
-		string expectedAsString = value.ToString("yyyy-MM-dd");
-		var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value"/>);
-		string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
-		//Act
-		var input = cut.Find("input");
-		input.Click();
-		//Task.Delay will force to wait for overlay to render the picker panel
-		await Task.Delay(1);
-		//Assert
-		cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
-		cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(value.Year.ToString());
-		var selectedCell = cut.Find("td.ant-picker-cell-selected");
-		selectedCell.GetAttribute("title").Should().Be(expectedAsString);
-		selectedCell.Children[0].TextContent.Trim().Should().Be(value.Day.ToString());
-	}
-
-	[Theory]
-	[InlineData("yyyy-MM-dd", "2020-04-05")]
-	[InlineData("dd/MM/yyyy", "05/04/2020")]
-	[InlineData("MM/dd/yyyy", "04/05/2020")]
-	public void Format_is_applied(string format, string expected)
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		DateTime value = new DateTime(2020, 4, 5);		
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" Format="@format" />
-		);
-		//Act
-		var input = cut.Find("input");						
-		//Assert
-		input.GetAttribute("value").Should().Be(expected);
-	}
-
-	[Theory]
-	[InlineData("en-US", "2020-04-05")]	
-	[InlineData("en-GB", "5/4/2020")]
-    [InlineData("th-TH", "5/4/2563")]
-	public void Culture_is_applied(string culture, string expected)
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		DateTime value = new DateTime(2020, 4, 5);
-		CultureInfo cultureInfo = CultureInfo.GetCultureInfo(culture);
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" />);
-		//Act
-		var input = cut.Find("input");						
-		//Assert
-		input.GetAttribute("value").Should().Be(expected);
-	}
-
-	[Fact]
-	public void Format_is_prioritized_over_Culture()
-	{
-		//Arrange
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
-		DateTime value = new DateTime(2020, 4, 5);
-		CultureInfo cultureInfo = CultureInfo.GetCultureInfo("en-US");
-		string format = "yyyy/MM/dd";
-		
-		var cut = Render<AntDesign.DatePicker<DateTime>>(
-			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" Format="@format"/>
-		);
-		//Act
-		var input = cut.Find("input");						
-		//Assert
-		input.GetAttribute("value").Should().Be("2020/04/05");
-	}
+        //Act
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker TValue="T" DefaultValue="@defaultValue" />);
+        //Assert
+        cut.Instance.Value.Should().Be(defaultValue);
+    }
 
     [Fact]
-    public void Renders_custom_placeholder()
+    public async void Picker_is_focused_on_value()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+        DateTime value = new DateTime(2021, 4, 5);
+        string expectedAsString = value.ToString("yyyy-MM-dd");
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" />);
+        string expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
+        //Act
+        var input = cut.Find("input");
+        input.Click();
+        //Task.Delay will force to wait for overlay to render the picker panel
+        await Task.Delay(1);
+        //Assert
+        cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
+        cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(value.Year.ToString());
+        var selectedCell = cut.Find("td.ant-picker-cell-selected");
+        selectedCell.GetAttribute("title").Should().Be(expectedAsString);
+        selectedCell.Children[0].TextContent.Trim().Should().Be(value.Day.ToString());
+    }
+
+    [Fact]
+    public async void Picker_Should_Picked_First_Day_In_Next_Month()
+    {
+        const string dateTimeFormat = "yyyy-MM-dd";
+
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+        var value = new DateTime(2023, 1, 31);
+        var expectedAsString = value.ToString("yyyy-MM-dd");
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker @bind-Value="@value" />);
+        var expectedMonth = cut.Instance.CultureInfo.DateTimeFormat.GetAbbreviatedMonthName(value.Month);
+
+        //Act
+        var input = cut.Find("input");
+        input.Click();
+
+        //Task.Delay will force to wait for overlay to render the picker panel
+        await Task.Delay(1);
+
+        //Assert
+        cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
+        cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(value.Year.ToString());
+        var selectedCell = cut.Find("td.ant-picker-cell-selected");
+        selectedCell.GetAttribute("title").Should().Be(value.ToString(LocaleProvider.GetCurrentLocale().DatePicker.DateLocale.DateFormat));
+        selectedCell.Children[0].TextContent.Trim().Should().Be(value.Day.ToString());
+
+        var dateCells = cut.FindAll("td.ant-picker-cell");
+
+        var dateToSelect = new DateTime(2023, 2, 1).ToString(dateTimeFormat, Culture);
+
+        var firstCellInNextMonth = dateCells.First(x => x.GetAttribute("title") == dateToSelect);
+        firstCellInNextMonth.Click();
+
+        input.GetAttribute("value").Should().Be(dateToSelect);
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.FormatData), MemberType = typeof(DatePickerTestData))]
+    public void Format_is_applied<T>(T value, string format, string expected)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" Format="@format" />
+        );
+        //Act
+        var input = cut.Find("input");
+        //Assert
+        input.GetAttribute("value").Should().Be(expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.CultureData), MemberType = typeof(DatePickerTestData))]
+    public void Culture_is_applied<T>(T value, string culture, string expected)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        
+        CultureInfo cultureInfo = CultureInfo.GetCultureInfo(culture);
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" />);
+        //Act
+        var input = cut.Find("input");
+        //Assert
+        input.GetAttribute("value").Should().Be(expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.FormatCultureData), MemberType = typeof(DatePickerTestData))]
+    public void Format_is_prioritized_over_Culture<T>(T value, string format, string culture, string expected)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        
+        CultureInfo cultureInfo = CultureInfo.GetCultureInfo(culture);
+             
+        var cut = Render<AntDesign.DatePicker<T>>(
+			@<DatePicker @bind-Value="@value" CultureInfo="@cultureInfo" Format="@format" />
+        );
+        //Act
+        var input = cut.Find("input");
+        //Assert
+        input.GetAttribute("value").Should().Be(expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.NullData), MemberType = typeof(DatePickerTestData))]
+    public void Renders_custom_placeholder<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         string placeholder = "This is awesome";
 
         //Act
-        var cut = Render<AntDesign.DatePicker<DateTime?>>
-        (@<DatePicker TValue="DateTime?" Placeholder="@(placeholder)" />);
+        var cut = Render<AntDesign.DatePicker<T>>
+        (@<DatePicker TValue="T" Value="@value" Placeholder="@(placeholder)" />);
 
         //Assert
         var input = cut.Find("input");
         input.GetAttribute("placeholder").Should().Be(placeholder);
     }
 
-    [Fact]
-    public void Preserves_placeholder_after_clear()
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.NullableData), MemberType = typeof(DatePickerTestData))]
+    public void Preserves_placeholder_after_clear<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         string placeholder = "This is awesome";
-        DateTime? value = new DateTime(2022, 7, 8);
-
+        
         //Act
-        var cut = Render<AntDesign.DatePicker<DateTime?>>
+        var cut = Render<AntDesign.DatePicker<T>>
         (@<DatePicker @bind-Value="@value" Placeholder="@(placeholder)" />);
         cut.Instance.ClearValue();
 

@@ -121,5 +121,58 @@
     "copied": "წარმატებით დაკოპირდა",
     "expand": "გახსნა"
   },
-  "PageHeader": { "back": "უკან" }
+  "PageHeader": { "back": "უკან" },
+  "Form": {
+    "optional": "(არასავალდებულო)",
+    "defaultValidateMessages": {
+      "default": "ველის შემოწმების შეცდომა ${label}-ისთვის",
+      "required": "გთხოვთ შეიყვანეთ ${label}",
+      "enum": "${label} უნდა იყოს ერთ-ერთი [${enum}]-დან",
+      "whitespace": "${label} არ შეიძლება იყოს ცარიელი სიმბოლო",
+      "date": {
+        "format": "${label} თარიღის ფორმატი არასწორია",
+        "parse": "${label} თარიღში კონვერტირება არ არის შესაძლებელი",
+        "invalid": "${label} არასწორი თარიღია"
+      },
+      "types": {
+        "string": "${label} არ არის სწორი ${type}",
+        "method": "${label} არ არის სწორი ${type}",
+        "array": "${label} არ არის სწორი ${type}",
+        "object": "${label} არ არის სწორი ${type}",
+        "number": "${label} არ არის სწორი ${type}",
+        "date": "${label} არ არის სწორი ${type}",
+        "boolean": "${label} არ არის სწორი ${type}",
+        "integer": "${label} არ არის სწორი ${type}",
+        "float": "${label} არ არის სწორი ${type}",
+        "regexp": "${label} არ არის სწორი ${type}",
+        "email": "${label} არ არის სწორი ${type}",
+        "url": "${label} არ არის სწორი ${type}",
+        "hex": "${label} არ არის სწორი ${type}"
+      },
+      "string": {
+        "len": "${label} უნდა იყოს ${len} სიმბოლო",
+        "min": "${label} უნდა იყოს სულ მცირე ${min} სიმბოლო",
+        "max": "${label} უნდა იყოს მაქსიმუმ ${max} სიმბოლო",
+        "range": "${label} უნდა იყოს ${min}-${max} სიმბოლოს შორის"
+      },
+      "number": {
+        "len": "${label} უნდა იყოს ${len} ტოლი",
+        "min": "${label} უნდა იყოს მინუმიმ ${min}",
+        "max": "${label} უნდა იყოს მაქსიმუმ ${max}",
+        "range": "${label} უნდა იყოს ${min}-${max} შორის"
+      },
+      "array": {
+        "len": "უნდა იყოს ${len} ${label}",
+        "min": "სულ მცირე ${min} ${label}",
+        "max": "არაუმეტეს ${max} ${label}",
+        "range": "${label}-ის რაოდენობა უნდა იყოს ${min}-${max} შორის"
+      },
+      "pattern": {
+        "mismatch": "${label} არ ერგება შაბლონს ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "გადახედვა"
+  }
 }

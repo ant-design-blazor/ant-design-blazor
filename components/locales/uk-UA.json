@@ -123,5 +123,58 @@
   },
   "Empty": {
     "description": "Даних немає"
+  },
+  "Form": {
+    "optional": "(опціонально)",
+    "defaultValidateMessages": {
+      "default": "Помилка валідації для поля ${label}",
+      "required": "Будь ласка, заповніть ${label}",
+      "enum": "Лише одне зі значень [${enum}] доступне для ${label}",
+      "whitespace": "Значення у полі ${label} не може бути пробілом",
+      "date": {
+        "format": "Не валідний формат дати у ${label}",
+        "parse": "Значення ${label} не може бути приведене до дати",
+        "invalid": "Не валідна дата у ${label}"
+      },
+      "types": {
+        "string": "${label} не є типом ${type}",
+        "method": "${label} не є типом ${type}",
+        "array": "${label} не є типом ${type}",
+        "object": "${label} не є типом ${type}",
+        "number": "${label} не є типом ${type}",
+        "date": "${label} не є типом ${type}",
+        "boolean": "${label} не є типом ${type}",
+        "integer": "${label} не є типом ${type}",
+        "float": "${label} не є типом ${type}",
+        "regexp": "${label} не є типом ${type}",
+        "email": "${label} не є типом ${type}",
+        "url": "${label} не є типом ${type}",
+        "hex": "${label} не є типом ${type}"
+      },
+      "string": {
+        "len": "${label} має містити ${len} символів",
+        "min": "${label} має містити не менш, ніж ${min} символів",
+        "max": "${label} має містити не більш, ніж ${max} символів",
+        "range": "${label} має містити ${min}-${max} символів"
+      },
+      "number": {
+        "len": "${label} має дорівнювати ${len}",
+        "min": "${label} має бути не менш, ніж ${min}",
+        "max": "${label} має бути не більш, ніж ${max}",
+        "range": "${label} має бути в межах ${min}-${max}"
+      },
+      "array": {
+        "len": "${label} має містити ${len} елементи",
+        "min": "${label} має містити не менш, ніж ${min} елементи",
+        "max": "${label} має містити не більш, ніж ${max} елементи",
+        "range": "Кількість елементів в ${label} має бути в межах ${min}-${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} не відповідає шаблону ${pattern}"
+      }
+    },
+    "Image": {
+      "preview": "Попередній перегляд"
+    }
   }
 }

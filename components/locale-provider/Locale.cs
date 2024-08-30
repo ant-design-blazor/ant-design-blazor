@@ -1,15 +1,29 @@
-﻿using System.Globalization;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Globalization;
 using System.Text.Json.Serialization;
 using AntDesign.Form.Locale;
 
 namespace AntDesign.Locales
 {
-    public class Locale
+    public record Locale
     {
-        [JsonPropertyName("locale")]
-        public string LocaleName { get; set; }
+        private CultureInfo _currentCulture;
 
-        public CultureInfo CurrentCulture => new CultureInfo(LocaleName);
+        internal void SetCultureInfo(string cultureName)
+        {
+            LocaleName = cultureName;
+            _currentCulture = new(cultureName);
+            this.DatePicker.GetCultureInfo = () => _currentCulture;
+            this.DatePicker.Lang.GetCultureInfo = () => _currentCulture;
+        }
+
+        [JsonPropertyName("locale")]
+        public string LocaleName { get; private set; }
+
+        public CultureInfo CurrentCulture => _currentCulture;
 
         public PaginationLocale Pagination { get; set; } = new();
 

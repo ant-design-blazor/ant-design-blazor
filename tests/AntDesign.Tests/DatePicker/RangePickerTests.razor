@@ -1,18 +1,19 @@
-﻿@using System.Globalization
+@using System.Globalization
 @using AntDesign.Core.JsInterop.Modules.Components
 @inherits AntDesignTestBase
 
 @code {
-    [Fact]
-    public void Renders_custom_placeholder()
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.NullData), MemberType = typeof(RangePickerTestData))]
+    public void Renders_custom_placeholder<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         string[] placeholders = new[] { "This is awesome", "Yeah, it is." };
 
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-                    (@<RangePicker TValue="DateTime?[]" Placeholder="@(placeholders)" />);
+        var cut = Render<AntDesign.RangePicker<T>>
+                    (@<RangePicker TValue="T" @bind-Value="value" Placeholder="@(placeholders)" />);
 
         //Assert
         var inputs = cut.FindAll("input");
@@ -24,24 +25,29 @@
         }
     }
 
-    [Fact]
-    public void Preserves_placeholder_after_clear()
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.NullableData), MemberType = typeof(RangePickerTestData))]
+    public void Preserves_placeholder_after_clear<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         string[] placeholders = new[] { "This is awesome", "Yeah, it is." };
-        var valueAfterClear = new DateTime?[] { null, null };
-        var rangeValue = new DateTime?[] { new DateTime(2022, 6, 8), new DateTime(2022, 7, 8) };
+
 
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-                  (@<RangePicker @bind-Value="rangeValue" Placeholder="@(placeholders)" />);
+        var cut = Render<AntDesign.RangePicker<T>>
+                  (@<RangePicker @bind-Value="value" Placeholder="@(placeholders)" />);
 
         cut.Instance.ClearValue();
 
         //Assert
-        cut.Instance.Value.Should().BeEquivalentTo(valueAfterClear);
+
         var inputs = cut.FindAll("input");
+
+        var arrayValue = cut.Instance.Value as Array;
+
+        arrayValue!.GetValue(0).Should().BeNull();
+        arrayValue.GetValue(1).Should().BeNull();
 
         for (var i = 0; i < inputs.Count; i++)
         {
@@ -49,9 +55,83 @@
             input.GetAttribute("placeholder").Should().Be(placeholders[i]);
         }
     }
-
+    
+    [Theory]
+    [InlineData("11", "11/")]
+    [InlineData("111", "11/1")]
+    [InlineData("1111", "11/11/")]
+    [InlineData("11112111", "11/11/2111", true)]
+    [InlineData("111121111", "11/11/2111", true)]
+    [InlineData("11/11/2111", "11/11/2111", true)]
+    [InlineData("11/11/21111", "11/11/2111", true)]
+    public async Task Mask_is_applied(string inputValue, string expectedValue, bool validateValue = false)
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Format="dd/MM/yyyy" Mask="dd/MM/yyyy" AllowClear="false"/>
+            );
+        
+        //Act
+        var inputs = cut.FindAll("input", true);
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            input.Input(inputValue);
+        }
+        
+        //Assert
+        inputs.Select(x => x.GetAttribute("value")).Should().AllBe(expectedValue);
+        
+        if (validateValue)
+        {
+            foreach (var input in inputs)
+            {
+                await input.KeyDownAsync(new KeyboardEventArgs { Key = "ENTER" });
+            }
+            
+            cut.Instance.Value.Should().AllBeEquivalentTo(DateTime.ParseExact(expectedValue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+        }
+    }
+    
     [Fact]
-    public async Task Sets_disabled_time_when_range_dates_are_the_same()
+    public async Task Enter_Full_Mask_Should_Apply_Date()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+        
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Mask="dd/MM/yyyy" Format="dd/MM/yyyy"/>
+            );
+        
+        //Act
+        var inputs = cut.FindAll("input");
+
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            await input.InputAsync(new ChangeEventArgs { Value = "01012020" });
+            input.KeyDown("ENTER");
+        }
+
+        //Assert
+        inputs = cut.FindAll("input");
+        inputs.Select(x => x.GetAttribute("value")).Should().AllBe("01/01/2020");
+        cut.Instance.Value.Should().BeEquivalentTo(new[] { new DateTime(2020, 01, 01), new DateTime(2020, 01, 01) });
+    }
+
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.SameDateRanges), MemberType = typeof(RangePickerTestData))]
+    public async Task Sets_disabled_time_when_range_dates_are_the_same<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -59,10 +139,6 @@
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
             .SetResult(new OverlayPosition());
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
-
-        var startValue = new DateTime(2022, 6, 8, 20, 20, 0);
-        var endValue = new DateTime(2022, 6, 8, 20, 20, 30);
-        var rangeValue = new DateTime?[] { startValue, endValue };
 
         var expectedDisabledStartHours = new int[] { 21, 22, 23 };
         var expectedDisabledStartMinutes = Enumerable.Range(21, 39).ToArray();
@@ -73,12 +149,16 @@
         var expectedDisabledEndSeconds = Enumerable.Range(31, 29).ToArray();
 
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-                  (@<RangePicker @bind-Value="rangeValue" ShowTime="true" />);
+        var cut = Render<AntDesign.RangePicker<T>>
+                  (@<RangePicker @bind-Value="value" ShowTime="true" />);
 
         var inputs = cut.FindAll("input").ToList();
 
         //Assert
+
+        var arrayValue = cut.Instance.Value as Array;
+        var startValue = AntDesign.Internal.InternalConvert.ToDateTime(arrayValue!.GetValue(0))!.Value;
+        var endValue = AntDesign.Internal.InternalConvert.ToDateTime(arrayValue!.GetValue(1))!.Value;
 
         await inputs[0].ClickAsync(new MouseEventArgs());
         cut.Instance.DisabledHours.Invoke(startValue).Should().BeEquivalentTo(expectedDisabledStartHours);
@@ -91,8 +171,9 @@
         cut.Instance.DisabledSeconds.Invoke(endValue).Should().BeEmpty();
     }
 
-    [Fact]
-    public async Task Sets_empty_disabled_time_when_range_dates_are_not_the_same()
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.NotSameDateRanges), MemberType = typeof(RangePickerTestData))]
+    public async Task Sets_empty_disabled_time_when_range_dates_are_not_the_same<T>(T value)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -101,103 +182,275 @@
             .SetResult(new OverlayPosition());
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
 
-        var rangeValue = new DateTime?[]
-        {
-            new DateTime(2022, 6, 8, 20, 20, 0),
-            new DateTime(2022, 6, 9, 20, 20, 30)
-        };
-
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
-                  (@<RangePicker @bind-Value="rangeValue" ShowTime="true" /> );
+        var cut = Render<AntDesign.RangePicker<T>>
+                  (@<RangePicker @bind-Value="value" ShowTime="true" /> );
 
         var inputs = cut.FindAll("input").ToList();
+
+        var arrayValue = value as Array;
+        var startValue = AntDesign.Internal.InternalConvert.ToDateTime(arrayValue!.GetValue(0))!.Value;
+        var endValue = AntDesign.Internal.InternalConvert.ToDateTime(arrayValue!.GetValue(1))!.Value;
+        var range = new[] { startValue, endValue };
 
         //Assert
         for (var i = 0; i < inputs.Count; i++)
         {
             await inputs[i].ClickAsync(new MouseEventArgs());
-            cut.Instance.DisabledHours.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
-            cut.Instance.DisabledMinutes.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
-            cut.Instance.DisabledSeconds.Invoke(rangeValue[i]!.Value).Should().BeEmpty();
+
+
+            cut.Instance.DisabledHours.Invoke(range[i]).Should().BeEmpty();
+            cut.Instance.DisabledMinutes.Invoke(range[i]).Should().BeEmpty();
+            cut.Instance.DisabledSeconds.Invoke(range[i]).Should().BeEmpty();
         }
     }
 
-    [Fact]
-    public void Ignores_keyboard_input_when_start_is_later_than_end()
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.InvalidKeyedInput), MemberType = typeof(RangePickerTestData))]
+    public void Ignores_keyboard_input_when_start_is_later_than_end_or_end_is_earlier_than_start<T>(int pickerIndex, T range, string keyboardInput, string format, bool showTime)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
-        var range = new DateTime[]
-        {
-            new DateTime(2022, 6, 8, 20, 20, 0),
-            new DateTime(2022, 6, 8, 20, 20, 30)
-        };
-         
-        var expectedStart = range[0];
-        var expectedEnd = range[1];
+        var expectedArray = range as Array;
 
-        var format = "yyyy-MM-dd HH:mm:ss";
-        string startValueAsString = expectedStart.ToString(format);
-        string endValueAsString = expectedEnd.ToString(format);
+        var expectedStart = expectedArray!.GetValue(0);
+        var expectedEnd = expectedArray!.GetValue(1);
 
-        string keyboardInput = "2022-06-08 20:25:35";
+        string startValueAsString = (expectedStart as IFormattable)!.ToString(format, null);
+        string endValueAsString = (expectedEnd as IFormattable)!.ToString(format, null);
 
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime[]>>
-                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
- 
+        var cut = Render<AntDesign.RangePicker<T>>
+                  (@<RangePicker @bind-Value="range" ShowTime="showTime" />);
+
         //Act
         var input = cut.FindAll("input");
-        input[0].Input(keyboardInput);
-        input[0].KeyDown("ENTER");
+        input[pickerIndex].Input(keyboardInput);
+        input[pickerIndex].KeyDown("ENTER");
 
         //Assert
-        cut.Instance.Value[0].Should().Be(expectedStart);
+
+        var valueArray = cut.Instance.Value as Array;
+
+        valueArray!.GetValue(0).Should().Be(expectedStart);
         input[0].GetAttribute("value").Should().Be(startValueAsString);
 
-        cut.Instance.Value[1].Should().Be(expectedEnd);
+        valueArray!.GetValue(1).Should().Be(expectedEnd);
         input[1].GetAttribute("value").Should().Be(endValueAsString);
     }
 
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.ValidKeyedInput), MemberType = typeof(RangePickerTestData))]
+    public async Task Key_applies_input_to_value<T>(string key, T initialValue, T expectedValue, string format, bool showTime)
+    {
+       //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+
+        var expectedArray = expectedValue as Array;
+
+        string startValueAsString = (expectedArray!.GetValue(0) as IFormattable)!.ToString(format, null);
+        string endValueAsString = (expectedArray.GetValue(1) as IFormattable)!.ToString(format, null);
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<T>>
+                  (@<RangePicker @bind-Value="initialValue" ShowTime="showTime" Format=@format />);
+
+        //Act
+        var input = cut.FindAll("input");
+
+        await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
+        await input[0].KeyDownAsync(new KeyboardEventArgs { Key = key });
+        await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
+        await input[1].KeyDownAsync(new KeyboardEventArgs { Key = key });
+
+        //Assert
+        AntDesign.Internal.InternalConvert.SequenceEqual(initialValue, expectedValue).Should().BeTrue();
+
+        input = cut.FindAll("input");
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+	}
+    
+    
     [Fact]
-    public void Ignores_keyboard_input_when_end_is_earlier_than_start()
+    public async Task Enter_Date_Before_Blur_Should_Change_Value_When_ChangeOnClose()
+    {
+                //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var range = new DateTime[]
+        {
+            DateTime.Now.Date,
+            DateTime.Now.Date.AddDays(1)
+        };
+
+        var expectedStart = DateTime.Now.Date.AddDays(-10);
+        var expectedEnd = DateTime.Now.Date.AddDays(10);
+
+        var format = "yyyy-MM-dd";
+        var startValueAsString = expectedStart.ToString(format);
+        var endValueAsString = expectedEnd.ToString(format);
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>
+            (@<RangePicker @bind-Value="range" ChangeOnClose Format="@format" />  );
+
+        //Act
+        var input = cut.FindAll("input");
+        input[0].Click();
+        await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
+        input[0].Blur();
+        
+        input[1].Click();
+        await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
+        input[1].Blur();
+
+        //Assert
+        cut.WaitForState(() =>
+        {
+            input = cut.FindAll("input");
+            return input[0].GetAttribute("value") == startValueAsString &&
+                   input[1].GetAttribute("value") == endValueAsString;
+        }, TimeSpan.FromSeconds(2));
+        
+        cut.WaitForAssertion(() =>
+        {
+            range[0].Should().Be(expectedStart);
+            range[1].Should().Be(expectedEnd);
+        });
+    }
+    
+    [Fact]
+    public async Task Enter_Empty_Date_Should_Clear_Value_When_AllowClear_And_ChangeOnClose()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true);
+
+        var range = new DateTime?[]
+        {
+            DateTime.Now.Date,
+            DateTime.Now.Date.AddDays(1)
+        };
+        
+        var startValueAsString = string.Empty;
+        var endValueAsString = string.Empty;
+
+        //Act
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>
+            (@<RangePicker @bind-Value="range" ChangeOnClose AllowClear/>  );
+
+        //Act
+        var input = cut.FindAll("input");
+        await input[0].ClickAsync(new MouseEventArgs());
+        await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
+        await input[0].BlurAsync(new FocusEventArgs());
+        
+        await input[1].ClickAsync(new MouseEventArgs());
+        await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
+        await input[1].BlurAsync(new FocusEventArgs());
+
+        //Assert
+        input = cut.FindAll("input");
+        input[0].GetAttribute("value").Should().Be(startValueAsString);
+        range[0].Should().Be(null);
+        input[1].GetAttribute("value").Should().Be(endValueAsString);
+        range[1].Should().Be(null);
+    }
+
+    [Fact]
+    public void ItShouldUseCustomSuffixIcon()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var range = new DateTime[]
+    {
+            new DateTime(2022, 12, 5),
+            new DateTime(2022, 12, 8)
+    };
+
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>(
+    @<RangePicker TValue="DateTime[]" @bind-Value="range">
+        <SuffixIcon>
+            <Icon Type="ant-design" />
+        </SuffixIcon>
+    </RangePicker>
+    );
+
+        cut.Find(".ant-picker-suffix").MarkupMatches(
+    @<span class="ant-picker-suffix">
+        <span role="img" class=" anticon anticon-ant-design" id:ignore>
+            <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+                <path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 0 0 0 76.4L474.6 944a54.14 54.14 0 0 0 76.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 0 0-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 1 0 212.6 0 106.3 106.2 0 1 0-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 0 0 0 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 0 0 0 68.6 48.7 48.7 0 0 0 68.7 0l121.8-121.7a53.93 53.93 0 0 0-.1-76.4z"></path>
+            </svg>
+        </span>
+    </span>
+        );
+    }
+
+    [Fact]
+    public void ItShouldUseDefaultSuffixIcon_WhenNoCustomSuffix()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var range = new DateTime[]
+        {
+            new DateTime(2022, 12, 5),
+            new DateTime(2022, 12, 8)
+        };
+
+        var cut = Render<AntDesign.RangePicker<DateTime[]>>(@<RangePicker TValue="DateTime[]" @bind-Value="range" />);
+
+        cut.Find(".ant-picker-suffix").MarkupMatches(
+    @<span class="ant-picker-suffix">
+        <span role="img" class=" anticon anticon-calendar" id:ignore>
+            <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+                <path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path>
+            </svg>
+        </span>
+    </span>
+        );
+    }
+
+    [Theory]
+    [MemberData(nameof(RangePickerTestData.DateTimeOffsetKeyedInput), MemberType = typeof(RangePickerTestData))]
+    public async Task Preserves_DateTimeOffset<T>(DateTimeOffset[] range, string format, bool showTime)
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
-        var range = new DateTime[]
-       {
-            new DateTime(2022, 6, 8, 20, 20, 0),
-            new DateTime(2022, 6, 8, 20, 20, 30)
-       };
+        var newStartValue = range[0].AddDays(1);
+        var newEndValue = range[1].AddDays(1);
 
-        var expectedStart = range[0];
-        var expectedEnd = range[1];
-
-        var format = "yyyy-MM-dd HH:mm:ss";
-        string startValueAsString = expectedStart.ToString(format);
-        string endValueAsString = expectedEnd.ToString(format);
-
-        string keyboardInput = "2022-06-07 12:25:35";
+        string startValueAsString = newStartValue.ToString(format);
+        string endValueAsString = newEndValue.ToString(format);
 
         //Act
-        var cut = Render<AntDesign.RangePicker<DateTime[]>>
-                  (@<RangePicker @bind-Value="range" ShowTime="true" />);
+        var cut = Render<AntDesign.RangePicker<DateTimeOffset[]>>
+                  (@<RangePicker @bind-Value="range" ShowTime="showTime" />);
 
         //Act
         var input = cut.FindAll("input");
-        input[1].Input(keyboardInput);
-        input[1].KeyDown("ENTER");
+        await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
+        await input[0].KeyDownAsync(new KeyboardEventArgs() { Key = "Enter" });
+        await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
+        await input[1].KeyDownAsync(new KeyboardEventArgs() { Key = "Enter" });
 
         //Assert
-        cut.Instance.Value[0].Should().Be(expectedStart);
-        input[0].GetAttribute("value").Should().Be(startValueAsString);
-
-        cut.Instance.Value[1].Should().Be(expectedEnd);
-        input[1].GetAttribute("value").Should().Be(endValueAsString);
+        cut.Instance.Value[0].Should().Be(newStartValue);
+        cut.Instance.Value[1].Should().Be(newEndValue);
     }
 }

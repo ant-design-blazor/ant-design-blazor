@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Linq.Expressions;
 using AntDesign.TableModels;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -10,11 +14,15 @@ namespace AntDesign
 
         public string FieldName { get; }
 
-        public string Format { get; }
+        public string Format { get; set; }
 
-        public bool Sortable { get; }
+        public bool Sortable { get; set; }
 
-        public int SorterMultiple { get; }
+        public bool Filterable { get; set; }
+
+        public int SorterMultiple { get; set; }
+
+        public bool Grouping { get; set; }
 
         public ITableSortModel SortModel { get; }
 
@@ -27,5 +35,7 @@ namespace AntDesign
         internal void SetFilterModel(ITableFilterModel filterModel);
 
         internal void SetSortModel(ITableSortModel sortModel);
+
+        internal Expression<Func<TItem, object>> GetGroupByExpression<TItem>();
     }
 }

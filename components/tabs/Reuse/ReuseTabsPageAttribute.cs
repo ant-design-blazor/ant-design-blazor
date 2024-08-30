@@ -3,9 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -18,5 +15,11 @@ namespace AntDesign
         public bool Closable { get; set; } = true;
 
         public bool Pin { get; set; } = false;
+
+        public string PinUrl { get; set; }
+
+        public bool KeepAlive { get; set; } = true;
+
+        public int Order { get; set; } = 999;
     }
 }

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -90,6 +94,7 @@ namespace AntDesign
             // fallback to 'en-US'
             TryGetSpecifiedLocale("en-US", out locale);
             AddClonedLocale(cultureName, ref locale);
+
             return locale;
         }
 
@@ -98,15 +103,25 @@ namespace AntDesign
             return GetLocale(cultureInfo.Name);
         }
 
-        private static void AddClonedLocale(string cultureName, ref Locale locale)
+        public static void SetLocale(string cultureName, Locale locale = null)
         {
-            locale = JsonSerializer.Deserialize<Locale>(
-                JsonSerializer.Serialize(locale, new JsonSerializerOptions { IgnoreReadOnlyProperties = true }));
-            locale.LocaleName = cultureName;
-            _localeCache.TryAdd(cultureName, locale);
+            var culture = CultureInfo.GetCultureInfo(cultureName);
+
+            if (culture != null)
+            {
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
+            }
+
+            if (locale != null)
+            {
+                locale.SetCultureInfo(cultureName);
+                _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
+            }
         }
 
-        public static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
+        private static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
         {
             if (!_availableResources.ContainsKey(cultureName)) return _localeCache.TryGetValue(cultureName, out locale);
             locale = _localeCache.GetOrAdd(cultureName, key =>
@@ -123,25 +138,17 @@ namespace AntDesign
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
-                result.LocaleName = key;
+                result.SetCultureInfo(key);
                 return result;
             });
             return true;
         }
 
-        public static void SetLocale(string cultureName, Locale locale = null)
+        private static void AddClonedLocale(string cultureName, ref Locale locale)
         {
-            var culture = CultureInfo.GetCultureInfo(cultureName);
-
-            if (culture != null)
-            {
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
-            }
-
-            if (locale != null)
-            {
-                _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
-            }
+            locale = locale with { };
+            locale.SetCultureInfo(cultureName);
+            _localeCache.TryAdd(cultureName, locale);
         }
 
         private static string GetParentCultureName(string name)

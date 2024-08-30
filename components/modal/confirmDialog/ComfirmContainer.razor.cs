@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -11,6 +16,9 @@ namespace AntDesign
 
         [Inject]
         private ConfirmService ConfirmService { get; set; }
+
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
 
         private readonly List<ConfirmRef> _confirmRefs = new List<ConfirmRef>();
 
@@ -27,9 +35,17 @@ namespace AntDesign
             ModalService.OnConfirmUpdateEvent += OnConfirmUpdate;
 
             ConfirmService.OnOpenEvent += OnConfirmOpen;
+
+            NavigationManager.LocationChanged += OnLocationChanged;
         }
 
         #endregion
+
+        private void OnLocationChanged(object sender, EventArgs e)
+        {
+            _confirmRefs.Clear();
+            InvokeStateHasChanged();
+        }
 
         /// <summary>
         /// create and open a Confirm dialog
@@ -116,6 +132,7 @@ namespace AntDesign
             ModalService.OnConfirmUpdateEvent -= OnConfirmUpdate;
 
             ConfirmService.OnOpenEvent -= OnConfirmOpen;
+            NavigationManager.LocationChanged -= OnLocationChanged;
 
             base.Dispose(disposing);
         }

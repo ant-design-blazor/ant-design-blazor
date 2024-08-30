@@ -1,0 +1,30 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@{
+    var cancelProps = ModalProps.CancelButtonProps ?? new ButtonProps();
+}
+
+<div>
+    <Button OnClick="@HandleCancel"
+            Block="@cancelProps.Block"
+            Ghost="@cancelProps.Ghost"
+            Loading="@cancelProps.Loading"
+            Type="@cancelProps.Type"
+            Shape="@cancelProps.Shape"
+            Size="@cancelProps.Size"
+            Icon="@cancelProps.Icon"
+            Disabled="@cancelProps.Disabled"
+            Danger="@cancelProps.IsDanger">
+        @{
+            if (ModalProps.CancelText.IsT0)
+            {
+                @(ModalProps.CancelText.AsT0)
+            }
+            else
+            {
+                @(ModalProps.CancelText.AsT1)
+            }
+        }
+    </Button>
+</div>

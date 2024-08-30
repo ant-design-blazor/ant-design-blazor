@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,7 +17,7 @@ namespace AntDesign.JsInterop
 
         void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false);
 
-        void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false);
+        void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false);
 
         ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback);
 

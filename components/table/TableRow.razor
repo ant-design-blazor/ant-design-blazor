@@ -1,20 +1,47 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@typeparam TItem
 @using AntDesign.TableModels
+
+@{
+    Dictionary<string, object> attributes = null;
+    if (RowAttributes?.Any() != true)
+    {
+        attributes = AdditionalAttributes;
+    }
+    else if (AdditionalAttributes?.Any() != true)
+    {
+        attributes = RowAttributes;
+    }
+    else
+    {
+        attributes = new Dictionary<string, object>();
+        foreach (var (key, value) in RowAttributes)
+        {
+            attributes[key] = value;
+        }
+        foreach (var (key, value) in AdditionalAttributes)
+        {
+            attributes[key] = value;
+        }
+    }
+}
 
 @if (IsBody)
 {
-    <tr @attributes="RowAttributes"
+    <tr @attributes="attributes"
         data-row-key="@(RowData.RowIndex-1)" 
-        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @RowClassName @RowAttributes?.GetValueOrDefault("class")">
+        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @(RowData.IsGrouping? "ant-table-row-grouping":"") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
         @ChildContent
     </tr>
 }
 else if (IsHeader)
 {
-    <tr @attributes="RowAttributes">
+    <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
         @ChildContent
+        @if (ScrollY != null)
+        {
+            <th class="ant-table-cell @(HasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(HasFixRight?"position: sticky; right: 0px;":"")"></th>
+        }
     </tr>
 }
 
@@ -29,11 +56,20 @@ else if (IsHeader)
     public bool IsBody { get; set; }
 
     [CascadingParameter(Name = "RowData")]
-    public RowData<TItem> RowData { get; set; }
+    public RowData RowData { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowAttributes")]
     public Dictionary<string, object> RowAttributes { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.RowClassName")]
     public string RowClassName { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.ScrollY")]
+    public string ScrollY { get; set; }
+
+    [CascadingParameter(Name = "AntDesign.TableRow.HasFixRight")]
+    public bool HasFixRight { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> AdditionalAttributes { get; set; }
 }

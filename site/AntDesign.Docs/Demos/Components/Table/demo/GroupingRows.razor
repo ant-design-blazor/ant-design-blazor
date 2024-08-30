@@ -1,0 +1,85 @@
+﻿@using System.ComponentModel
+
+<Table DataSource="data" Bordered>
+    <GroupTitleTemplate Context="group">
+        <span style="min-width: 120px;">
+            @(group.Level == 1 ? "Name" : "Grade") : @group.Key
+        </span>
+    </GroupTitleTemplate>
+    <GroupFooterTemplate Context="group">
+        @if (group.Level == 1)
+        {
+            <span style="padding: 8px; float: right; ">
+                Total: @group.Items.Sum(x => x.Score)
+            </span>
+        }
+    </GroupFooterTemplate>
+    <ColumnDefinitions>
+        <Selection />
+        <PropertyColumn Property="c=>c.Name" Grouping />
+        <PropertyColumn Property="c=>c.Age" Width="12%"   />
+        <PropertyColumn Property="c=>c.Subject" Width="30%"  />
+        <PropertyColumn Property="c=>c.Score" Width="30%" Grouping GroupBy="GradeGroupBy" Sortable />
+    </ColumnDefinitions>
+ </Table>
+
+ @code {
+    string GradeGroupBy(int score)
+       => score switch
+       {
+            >= 95 => "A",
+            >= 90 => "B",
+            _ => "C"
+       };
+
+    Data[] data =
+    {
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Score = 95,
+            Subject= "Language"
+        },
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Score = 90,
+            Subject= "Math"
+        },
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Score = 85,
+            Subject="Science"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 9,
+            Score = 95,
+            Subject="Science"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 9,
+            Score = 90,
+            Subject= "Language"
+        },
+        new() {
+            Name = "Harry Potter",
+            Age = 9,
+            Score = 89,
+            Subject= "Math"
+        },
+    };
+
+    public class Data
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public int Score { get; set; }
+
+        public string Subject { get; set; }
+    }
+}

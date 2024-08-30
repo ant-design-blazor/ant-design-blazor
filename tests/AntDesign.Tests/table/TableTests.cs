@@ -1,14 +1,16 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using Bunit;
-using Microsoft.AspNetCore.Components;
-using Xunit;
 
 namespace AntDesign.Tests.Table
 {
     public class TableTests : AntDesignTestBase
     {
-        private class Person
+        private sealed class Person
         {
             public int Id { get; set; }
             public string Name { get; set; } = default!;

@@ -1,22 +1,22 @@
 ﻿[
   {
-    "title": "Show case highlight - Azure Design Studio",
-    "description": "A web app which helps you create the architecture design diagram for your Azure solutions and automatically generate IaC code from it.",
-    "img": "/docs/assets/news/AzureDesignStudio.gif",
-    "href": "https://github.com/chunliu/AzureDesignStudio",
+    "title": "Power query by Ant Design Blazor and Efcore",
+    "description": "Ant Design table can seamlessly interact with Efcore for queries of pagination, sorting and filtering.",
+    "img": "/docs/assets/news/blazoref.png",
+    "href": "https://dev.to/yongquan/ant-design-blazor-table-4963",
     "popularize": false
   },
   {
-    "title": "Blast off with Blazor! 🚀 - Supercharged Enterprise UIs using AntDesign with Luke Parker",
-    "description": "In this talk, Luke demonstrates how the popular open-source component libraries work, with insightful comparisons and demonstrations.AntBlazor is fully supported by the .NET Foundation and boasts an impressive following. The best part is the awesome documentation and code samples to get you up and running in no time!",
-    "img": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F146529479%2F55525066651%2F1%2Foriginal.20210903-062701?w=800&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=01e8a457183827b661d145dbaded77a8",
-    "href": "https://www.youtube.com/watch?v=lJojMo9RpoA",
+    "title": "Show case highlight - Azure Design Studio",
+    "description": "A web app which helps you create the architecture design diagram for your Azure solutions and automatically generate IaC code from it.",
+    "img": "/docs/assets/news/AzureDesignStudio.png",
+    "href": "https://github.com/chunliu/AzureDesignStudio",
     "popularize": false
   },
   {
     "title": "Ant Design Blazor Reuse Tabs",
     "description": "The Blazor community has been clamouring for multiple tabs for over a year now, and it's been quite an achievement to finally implement a ReuseTabs component based on the Tabs component in conjunction with Blazor's built-in routing component in the last few days.",
-    "img": "/docs/assets/news/reuse-tabs-demo.gif",
-    "href": "https://github.com/ant-design-blazor/demo-reuse-tabs"
+    "img": "/docs/assets/news/reuse-tabs-demo.png",
+    "href": "https://antblazor.com/en-US/experimental/reusetabs"
   }
 ]

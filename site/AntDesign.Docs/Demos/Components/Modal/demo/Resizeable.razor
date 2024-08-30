@@ -1,0 +1,15 @@
+﻿<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    Open Modal
+</Button>
+<Modal Title="BasicModal"
+       @bind-Visible="@_visible"
+       Resizable="@true"
+       >
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+@code{
+    bool _visible = false;
+}

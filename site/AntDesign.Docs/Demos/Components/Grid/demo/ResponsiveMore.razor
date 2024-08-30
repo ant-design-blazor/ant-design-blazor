@@ -1,13 +1,13 @@
-﻿<Row>
-    <Col Xs="@Property(5,1)" Lg="@Property(6,2)">
-      Col
-    </Col>
-    <Col Xs="@Property(11,1)" Lg="@Property(6,2)">
-      Col
-    </Col>
-    <Col Xs="@Property(5,1)" Lg="@Property(6,2)">
-      Col
-    </Col>
-</Row>
+﻿<GridRow>
+    <GridCol Xs="@Property(5,1)" Lg="@Property(6,2)">
+      GridCol
+    </GridCol>
+    <GridCol Xs="@Property(11,1)" Lg="@Property(6,2)">
+      GridCol
+    </GridCol>
+    <GridCol Xs="@Property(5,1)" Lg="@Property(6,2)">
+      GridCol
+    </GridCol>
+</GridRow>
 
 @code{ EmbeddedProperty Property(int span, int offset) => new() { Span = span, Offset = offset }; }

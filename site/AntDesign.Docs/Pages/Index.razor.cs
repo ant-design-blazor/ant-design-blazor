@@ -1,43 +1,79 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Pages
 {
     public partial class Index : ComponentBase, IDisposable
     {
+        [Parameter]
+        public string Locale { get; set; }
+
         private Recommend[] _recommends = { };
 
         private Product[] _products = { };
 
         private MoreProps[] _moreArticles = { };
 
+        private Sponsor[] _sponsors = { };
         [Inject] private DemoService DemoService { get; set; }
-        [Inject] private ILanguageService Language { get; set; }
+        [Inject] private ILocalizationService Language { get; set; }
+
+        [Inject] private IStringLocalizer Localizer { get; set; }
+
+        private bool _rendered;
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+        }
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             await FetchData();
+            await base.OnInitializedAsync();
 
             Language.LanguageChanged += HandleLanguageChanged;
         }
 
-        private async void HandleLanguageChanged(object _, CultureInfo culture)
+        private void HandleLanguageChanged(object _, CultureInfo culture)
         {
-            await FetchData();
-            await InvokeAsync(StateHasChanged);
+            _rendered = true;
+            _ = FetchData();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            if (firstRender)
+            {
+                _rendered = true;
+                StateHasChanged();
+                return;
+            }
+
+            //if (_rendered)
+            //{
+            //    _rendered = false;
+            //    _ = FetchData();
+            //}
         }
 
         private async Task FetchData()
         {
             _recommends = await DemoService.GetRecommend();
-
             _products = await DemoService.GetProduct();
-            _moreArticles = await DemoService.GetMore();
+            //_moreArticles = await DemoService.GetMore();
+            _sponsors = await DemoService.GetSponsors();
+            await InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()

@@ -64,7 +64,7 @@
       "quarterSelect": "Selecteer kwartaal",
       "week": "Week",
       "monthFormat": "MMM",
-      "shortWeekDays": [ "Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo" ]
+      "shortWeekDays": [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
     },
     "timePickerLocale": {
       "placeholder": "Selecteer tijd",
@@ -191,6 +191,7 @@
   },
   "PageHeader": { "back": "Terug" },
   "Form": {
+    "optional": "(optioneel)",
     "defaultValidateMessages": {
       "default": "Validatiefout ${label}",
       "required": "${label} is verplicht",
@@ -238,6 +239,6 @@
     }
   },
   "Image": {
-    "preview": "Preview"
+    "preview": "Voorbeeld"
   }
 }

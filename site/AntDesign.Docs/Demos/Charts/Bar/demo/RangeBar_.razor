@@ -5,13 +5,13 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <RangeBar Data="data1" Config="config1"/>
+            <Bar Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <TabTemplate>示例2</TabTemplate>
         <ChildContent>
-            <RangeBar Data="data2" Config="config2"/>
+            <Bar Data="data2" Config="config2"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -32,7 +32,7 @@
         new {type = "分类八", values = new[] {18, 34}}
     };
 
-    readonly RangeBarConfig config1 = new RangeBarConfig
+    readonly BarConfig config1 = new BarConfig
     {
         Title = new Title
         {
@@ -59,7 +59,7 @@
         new {type = "分类八", values = new[] {18, 34}}
     };
 
-    readonly RangeBarConfig config2 = new RangeBarConfig
+    readonly BarConfig config2 = new BarConfig
     {
         Title = new Title
         {
@@ -74,22 +74,34 @@
         XField = "values",
         YField = "type",
         Color = new[] {"l(0) 0:#3e5bdb 1:#dd3121"},
-        ColumnStyle = new
+        IsRange = true,
+        Label = new BarViewConfigLabel()
         {
-            FillOpacity = 0.8
-        },
-        Label = new RangeBarLabelConfig
-        {
-            Visible = true,
-            LeftStyle = new
+            Position = "middle",
+            Layout = new []
             {
-                Fill = "#3e5bdb"
-            },
-            RightStyle = new
-            {
-                Fill = "#dd3121"
+                new LayoutType()
+                {
+                    Type = "adjust-color"
+                }
             }
         }
+        // ColumnStyle = new
+        // {
+        //     FillOpacity = 0.8
+        // },
+        // Label = new BarViewConfigLabel
+        // {
+        //     Visible = true,
+        //     LeftStyle = new
+        //     {
+        //         Fill = "#3e5bdb"
+        //     },
+        //     RightStyle = new
+        //     {
+        //         Fill = "#dd3121"
+        //     }
+        // }
     };
 
     #endregion 示例2

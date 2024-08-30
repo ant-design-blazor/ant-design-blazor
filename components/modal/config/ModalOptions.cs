@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -7,7 +11,7 @@ using OneOf;
 namespace AntDesign
 {
     /// <summary>
-    /// the options of Modal dialog box
+    /// The options of Modal dialog box
     /// </summary>
     public class ModalOptions : DialogOptionsBase
     {
@@ -134,9 +138,19 @@ namespace AntDesign
         /// </summary>
         public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
 
+        /// <summary>
+        /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
+        /// </summary>
+        public bool DefaultMaximized { get; set; } = false;
+
+        /// <summary>
+        /// Resizable
+        /// </summary>
+        public bool Resizable { get; set; }
+
         #region internal
 
-        internal async Task DefaultOnCancelOrOk(MouseEventArgs e)
+        public async Task DefaultOnCancelOrOk(MouseEventArgs e)
         {
             await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }

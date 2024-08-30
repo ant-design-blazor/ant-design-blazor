@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,8 +12,19 @@ using AntDesign.Core.Reflection;
 
 namespace AntDesign.Core.Helpers
 {
+#if NETSTANDARD2_1
+
     internal static class Formatter<T>
+#else
+    internal static class Formatter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>
+#endif
     {
+        // For run tests with another culture. Need to refactor this
+#if DEBUG
+        private static CultureInfo CurrentCulture = CultureInfo.InvariantCulture;
+#else
+        private static CultureInfo CurrentCulture = CultureInfo.CurrentCulture;
+#endif
         private static readonly Lazy<Func<T, string, string>> _formatFunc = new Lazy<Func<T, string, string>>(GetFormatLambda, true);
 
         public static string Format(T source, string format)
@@ -39,10 +55,10 @@ namespace AntDesign.Core.Helpers
                 variable = Expression.Condition(hasValueExpression, Expression.Property(sourceProperty, "Value"), Expression.Default(sourceType));
             }
 
-            if (sourceType.IsSubclassOf(typeof(IFormattable)))
+            if (typeof(IFormattable).IsAssignableFrom(sourceType))
             {
-                var method = sourceType.GetMethod(nameof(ToString), new[] { typeof(string), typeof(IFormatProvider) });
-                body = Expression.Call(Expression.Convert(variable, sourceType), method, parsedFormatString, Expression.Constant(null));
+                var method = typeof(IFormattable).GetMethod(nameof(ToString), new[] { typeof(string), typeof(IFormatProvider) });
+                body = Expression.Call(Expression.Convert(variable, sourceType), method, parsedFormatString, Expression.Constant(CurrentCulture));
             }
             else
             {

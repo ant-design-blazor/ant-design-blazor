@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AntDesign
 {
@@ -12,7 +10,7 @@ namespace AntDesign
     {
         public static string GetBackgroundStyle(Color color) => _colors[color];
 
-        private static Dictionary<Color, string> _colors = new Dictionary<Color, string>()
+        private static readonly Dictionary<Color, string> _colors = new()
         {
             { Color.None, "" },
             { Color.Red1, "background-color: #fff1f0; border-color: #fff1f0; color: rgba(0,0,0,0.85);" },

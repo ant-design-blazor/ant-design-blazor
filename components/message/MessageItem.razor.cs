@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Globalization;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -13,11 +14,9 @@ namespace AntDesign
 
         protected const string PrefixCls = "ant-message";
 
-        private CultureInfo _cultureInfo = new CultureInfo("en-us", false);
-
         private string GetClassName()
         {
-            var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(_cultureInfo)}";
+            var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(CultureInfo.InvariantCulture)}";
 
             if (RTL)
             {

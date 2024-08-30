@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 
 namespace AntDesign
 {
     /// <summary>
-    /// 
+    /// The reference of the modal instance
     /// </summary>
     public class ModalRef : FeedbackRefWithOkCancelBase
     {
@@ -50,6 +52,20 @@ namespace AntDesign
         public override async Task UpdateConfigAsync()
         {
             await _service.UpdateModalAsync(this);
+        }
+
+        /// <summary>
+        /// Set the loading state of the confirm button
+        /// </summary>
+        /// <param name="loading"></param>
+        public void SetConfirmLoading(bool loading)
+        {
+            if (Config.ConfirmLoading == loading)
+            {
+                return;
+            }
+            Config.ConfirmLoading = loading;
+            _service.UpdateModal(this);
         }
     }
 

@@ -1,18 +1,36 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace AntDesign
 {
     public class DatePickerLocale
     {
-        public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
+        private DayOfWeek? _firstDayOfWeek;
 
-        public DateLocale Lang { get; set; } = new DateLocale();
+        public DayOfWeek FirstDayOfWeek { get => _firstDayOfWeek ?? GetCultureInfo()?.DateTimeFormat.FirstDayOfWeek ?? DayOfWeek.Sunday; set => _firstDayOfWeek = value; }
 
-        public TimePickerLocale TimePickerLocale { get; set; } = new TimePickerLocale();
+        [JsonPropertyName("lang")]
+        public DateLocale Lang { get; set; } = new();
+
+        public DateLocale DateLocale { get => Lang; set => Lang = value; }
+
+        public TimePickerLocale TimePickerLocale { get; set; } = new();
+
+        internal Func<CultureInfo> GetCultureInfo { get; set; } = () => null;
     }
 
     public class DateLocale
     {
+        private string[] _shortWeekDays;
+
+        private static string[] _defaultShortestDayNames = { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+
+        internal Func<CultureInfo> GetCultureInfo { get; set; } = () => null;
         public string Placeholder { get; set; } = "Select date";
         public string YearPlaceholder { get; set; } = "Select year";
         public string QuarterPlaceholder { get; set; } = "Select quarter";
@@ -64,7 +82,13 @@ namespace AntDesign
         public string EndQuarter { get; set; } = "End quarter";
         public string QuarterSelect { get; set; } = "Select quarter";
         public string Week { get; set; } = "Week";
-        public string[] ShortWeekDays { get; set; } = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+
+        public string[] ShortWeekDays
+        {
+            get => _shortWeekDays ?? GetCultureInfo()?.DateTimeFormat.ShortestDayNames ?? _defaultShortestDayNames;
+            set => _shortWeekDays = value;
+        }
+
         public string TimeFormat12Hour { get; set; } = "hh:mm:ss tt";
         public string DateTimeFormat12Hour { get; set; } = "yyyy-MM-dd hh:mm:ss tt";
     }

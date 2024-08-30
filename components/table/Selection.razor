@@ -6,6 +6,10 @@
 {
 	return;
 }
+else if (Hidden)
+{
+    return;
+}
 else if (IsPlaceholder)
 {
 	<td style="padding: 0px; border: 0px; height: 0px;"></td>
@@ -30,7 +34,7 @@ else if (IsHeader && HeaderColSpan != 0)
 	<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
 		@if (Type == "checkbox")
 		{
-			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCkeckedChange" Indeterminate="Indeterminate" />
+			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
 		}
 	</th>
 }
@@ -49,13 +53,15 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 		}
 		else
 		{
+            HandleSelected();
+
 			@if (Type == "checkbox")
 			{
-				<Checkbox Checked="RowData.Selected" Disabled="Disabled" CheckedChange="OnCkeckedChange" />
+				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" />
 			}
 			else if (Type == "radio")
 			{
-				<Radio Checked="RowData.Selected" Disabled="Disabled" CheckedChange="OnCkeckedChange" TValue="bool" />
+                <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
 			}
 		}
 	</td>

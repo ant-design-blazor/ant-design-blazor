@@ -10,8 +10,25 @@
 		TItemValue="string"
 		TItem="LabeledValue"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		EnableSearch>
+		EnableSearch
+        EnableVirtualization>
 </Select>
+
+<Select Mode="default"
+        Placeholder="Please select"
+        DataSource="@_options"
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(LabeledValue.Label)"
+        ValueName="@nameof(LabeledValue.Value)"
+        DisabledName="@nameof(LabeledValue.Disabled)"
+        TItemValue="string"
+        TItem="LabeledValue"
+        OnSelectedItemChanged="OnSelectedItemChangedHandler"
+        EnableSearch
+        EnableVirtualization
+        Style="width: 100%; margin-top: 8px;">
+</Select>
+
 @code
 {
 	class LabeledValue
@@ -31,10 +48,11 @@
 	
     List<LabeledValue> _options;
 	IEnumerable<string> _selectedValues = new List<string> { "0a10", "0c12" };
+    string _selectedValue = "000";
     protected override void OnInitialized()
     {
         const int min = 0;
-        const int max = 200;
+        const int max = 2000;
         _options = new List<LabeledValue>();
 
         for (var i = min; max > i; i++)
@@ -48,5 +66,9 @@
     private void OnSelectedItemsChangedHandler(IEnumerable<LabeledValue> values)
     {
         Console.WriteLine($"selected: ${string.Join(",", values.Select(x => x.Label))}");
+    }
+    private void OnSelectedItemChangedHandler(LabeledValue value)
+    {
+        Console.WriteLine($"selected: ${value.Label}");
     }
 }

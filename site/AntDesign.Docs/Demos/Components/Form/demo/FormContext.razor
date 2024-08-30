@@ -71,7 +71,7 @@
     {
         [Required]
         public string GroupName { get; set; }
-        [ValidateComplexType]
+        // [ValidateComplexType]
         public List<User> Users { get; set; } = new List<User>();
     }
 
@@ -103,7 +103,7 @@
 
     private void HandleOk(MouseEventArgs args)
     {
-        _userForm.Submit();
+        _userForm?.Submit();
     }
 
     private void ShowUserModal()
@@ -114,7 +114,7 @@
     private void HideUserModal()
     {
         _modelVisible = false;
-        _userForm.Reset();
+        _userForm?.Reset();
     }
 }
 

@@ -4,9 +4,7 @@
     Open Modal
 </Button>
 <Modal Title="@title"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
+       @bind-Visible="@_visible">
     <b>Select:</b><br />
 
     <Form Model="_formModal">
@@ -58,7 +56,7 @@
     <div style="margin: 64px" />
 
     <b>Tooltip:</b><br />
-    <Tooltip Title="@("prompt text")">
+    <Tooltip Title="prompt text">
         <span>Tooltip will show on mouse enter.</span>
     </Tooltip>
 
@@ -108,17 +106,5 @@
             new Person {Id = 3, Name = "Yaoming"}, 
             new Person {Id = 4, Name = "Frieda"}, 
         };
-    }
-
-    private void HandleOk(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
     }
 }

@@ -1,7 +1,11 @@
-﻿using System.Diagnostics;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -20,8 +24,8 @@ namespace AntDesign
         private DotNetObjectReference<TextArea> _reference;
 
         /// <summary>
-        /// Will adjust (grow or shrink) the `TextArea` according to content.
-        /// Can work in connection with `MaxRows` and `MinRows`.
+        /// Will adjust (grow or shrink) the <c>TextArea</c> according to content.
+        /// Can work in connection with <see cref="MaxRows"/> and <see cref="MinRows"/>.
         /// Sets resize attribute of the textarea HTML element to: none.
         /// </summary>
         [Parameter]
@@ -43,17 +47,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When `false`, value will be set to `null` when content is empty
-        /// or whitespace. When `true`, value will be set to empty string.
+        /// When true, value will be set to empty string.
+        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool DefaultToEmptyString { get; set; }
 
         /// <summary>
-        /// `TextArea` will allow growing, but it will stop when visible
-        /// rows = MaxRows (will not grow further).
-        /// Default value = uint.MaxValue
+        /// Allow growing, but stop when visible rows = MaxRows (will not grow further).
         /// </summary>
+        /// <default value="uint.MaxValue"/>
         [Parameter]
         public uint MaxRows
         {
@@ -79,10 +83,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// `TextArea` will allow shrinking, but it will stop when visible
-        /// rows = MinRows (will not shrink further).
-        /// Default value = DEFAULT_MIN_ROWS = 1
+        /// Allow shrinking, but stop when visible rows = MinRows (will not shrink further).
         /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public uint MinRows
         {
@@ -110,26 +113,16 @@ namespace AntDesign
 
         /// <summary>
         /// Sets the height of the TextArea expressed in number of rows.
-        /// Default value is 3.
         /// </summary>
+        /// <default value="3"/>
         [Parameter]
-        public uint Rows { get; set; } = 3;
+        public uint Rows { get; set; } = 2;
 
         /// <summary>
-        /// Callback when the size changes
+        /// Callback executed when the size changes
         /// </summary>
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
-
-        /// <summary>
-        /// Show character counting.
-        /// </summary>
-        [Parameter]
-        public bool ShowCount
-        {
-            get => _showCount && MaxLength >= 0;
-            set => _showCount = value;
-        }
 
         /// <inheritdoc/>
         [Parameter]
@@ -141,25 +134,53 @@ namespace AntDesign
                 if (base.Value != value)
                 {
                     _valueHasChanged = true;
+                    _inputString = value;
                 }
                 base.Value = value;
             }
         }
 
         private uint InnerMinRows => _hasMinSet ? MinRows : Rows;
+        private string Count => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
 
-        private bool _showCount;
+        private string _inputString;
 
-        private ClassMapper _warpperClassMapper = new ClassMapper();
+        private ClassMapper _warpperClassMapper = new();
+        private ClassMapper _textareaClassMapper = new();
+
+        private bool _afterFirstRender = false;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             _warpperClassMapper
-                .Get(() => $"{PrefixCls}-affix-wrapper")
-                .Get(() => $"{PrefixCls}-affix-wrapper-textarea-with-clear-btn")
-                .GetIf(() => $"{PrefixCls}-affix-wrapper-rtl", () => RTL);
+                .Add($"{PrefixCls}-affix-wrapper")
+                .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
+                .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
+                ;
+
+            ClassMapper
+                .Add("ant-input-textarea ")
+                .If("ant-input-textarea-show-count", () => ShowCount)
+                .If("ant-input-textarea-in-form-item", () => FormItem != null)
+                .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"ant-input-textarea-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                ;
+
+            _textareaClassMapper
+                .Add("ant-input")
+                .If("ant-input-borderless", () => !Bordered)
+                .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                ;
+        }
+
+        protected override void SetClasses()
+        {
+            //  override the classmapper setting
         }
 
         protected override void OnParametersSet()
@@ -187,33 +208,48 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (AutoSize && _valueHasChanged)
+            if (firstRender)
             {
-                _valueHasChanged = false;
-                if (_isInputing)
-                {
-                    _isInputing = false;
-                }
-                else
-                {
-                    await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
-                }
+                _afterFirstRender = true;
             }
-            if (_styleHasChanged)
+
+            if (_afterFirstRender)
             {
-                _styleHasChanged = false;
-                if (AutoSize && !string.IsNullOrWhiteSpace(Style))
+                if (AutoSize && _valueHasChanged)
                 {
-                    await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    _valueHasChanged = false;
+                    if (_isInputing)
+                    {
+                        _isInputing = false;
+                    }
+                    else if (_afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.InputComponentHelper.ResizeTextArea, Ref, InnerMinRows, MaxRows);
+                    }
+                }
+                if (_styleHasChanged)
+                {
+                    _styleHasChanged = false;
+                    if (AutoSize && !string.IsNullOrWhiteSpace(Style) && _afterFirstRender)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.StyleHelper.SetStyle, Ref, Style);
+                    }
                 }
             }
         }
 
         /// <inheritdoc/>
-        protected override void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
             _isInputing = true;
-            base.OnInputAsync(args);
+            _inputString = args.Value.ToString();
+            await base.OnInputAsync(args);
+        }
+
+        protected override void OnCurrentValueChange(string value)
+        {
+            base.OnCurrentValueChange(value);
+            _inputString = value;
         }
 
         protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
@@ -292,16 +328,6 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
-        }
-
-        internal class TextAreaInfo
-        {
-            public double ScrollHeight { get; set; }
-            public double LineHeight { get; set; }
-            public double PaddingTop { get; set; }
-            public double PaddingBottom { get; set; }
-            public double BorderTop { get; set; }
-            public double BorderBottom { get; set; }
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -78,6 +81,7 @@ namespace AntDesign
         /// <summary>
         /// Set the danger status of button
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Danger
         {
@@ -92,6 +96,7 @@ namespace AntDesign
         /// <summary>
         /// Used in situations with complex background, home pages usually.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Ghost
         {
@@ -109,6 +114,7 @@ namespace AntDesign
         /// Icon that will be rendered in the right
         /// button.
         /// </summary>
+        /// <default value="ellipsis" />
         [Parameter]
         public string Icon
         {
@@ -124,6 +130,7 @@ namespace AntDesign
         /// Indicates if loading icon is going to be included.
         /// If set to true, then dropdown will not be active.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Loading
         {
@@ -140,6 +147,7 @@ namespace AntDesign
         /// <summary>
         /// Button size.
         /// </summary>
+        /// <default value="AntSizeLDSType.Default" />
         [Parameter]
         public string Size
         {
@@ -155,6 +163,7 @@ namespace AntDesign
         /// Allows to set each button's type either to the same string
         /// or separately. Use AntDesign.ButtonType helper class.
         /// </summary>
+        /// <default value="ButtonType.Default" />
         [Parameter]
         public OneOf<string, (string LeftButton, string RightButton)> Type
 

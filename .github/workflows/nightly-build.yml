@@ -21,34 +21,51 @@ jobs:
           persist-credentials: false
 
       - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.300
 
       - name: Setup .NET 5
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.100
 
       - name: Setup .NET 6
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.101
 
+      - name: Setup .NET 7.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.100
+
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.100
+
       - uses: actions/setup-node@v1
         with:
-          node-version: "10.x"
+          node-version: "16.x"
+
+      - name: Check Building ⚙
+        run: |
+          npm install
+          dotnet build
 
       - name: Test 📝
         run: |
-          dotnet build
-          dotnet test --collect:"XPlat Code Coverage"
-          find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage"
+          npm install ./tests/AntDesign.Tests.Js
+          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
+          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
-          files: ./coverage.cobertura.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
           fail_ci_if_error: false
 
       - name: "Get Last Release"
@@ -91,8 +108,8 @@ jobs:
           echo "::set-output name=package_version::${FULL_VERSION}"
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
-          dotnet pack src/AntDesign.Components.Authentication/AntDesign.Components.Authentication.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
           next_version: ${{ steps.get_next_version.outputs.next_version }}
 
@@ -106,19 +123,11 @@ jobs:
       - name: Push to MyGet package registry
         run: dotnet nuget push './publish/*.nupkg' --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
 
-      - name: Sync to Gitee 💕
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
-
       - name: Publish Docs 🎉
         run: |
           npm install
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 

@@ -12,4 +12,13 @@
 
         Assert.NotNull(spanNode);
     }
+
+    [Fact]
+    public void Renders_with_disabled()
+    {
+        var cut = Context.Render(@<AntDesign.Cascader Disabled />);
+        var spanNode = cut.Nodes.QuerySelector($".ant-select-disabled");
+
+        Assert.NotNull(spanNode);
+    }
 }

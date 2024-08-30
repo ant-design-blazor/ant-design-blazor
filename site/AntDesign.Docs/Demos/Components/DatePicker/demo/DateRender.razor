@@ -1,5 +1,5 @@
-﻿<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" DateRender="CustomRender"/><br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Date" DateRender="CustomRender" />
+﻿<DatePicker TValue="DateOnly?" Picker="@DatePickerType.Date" DateRender="CustomRender"/><br />
+<RangePicker TValue="DateOnly?[]" Picker="@DatePickerType.Date" DateRender="CustomRender" />
 
 @code
 {
@@ -8,7 +8,7 @@
         string style = "";
         if (currentViewDate.Day == 1)
         {
-            style = "border: 1px solid #1890ff; borderRadius: 50%";
+            style = "border: 1px solid #1890ff; border-radius: 50%";
         }
 
         return @<div class="ant-picker-cell-inner" style="@style">

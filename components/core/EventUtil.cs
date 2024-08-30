@@ -31,13 +31,12 @@ namespace AntDesign
 
         // By implementing IHandleEvent, we can override the event handling logic on a per-handler basis
         // The logic here just calls the callback without triggering any re-rendering
-        class ReceiverBase : IHandleEvent
+        private class ReceiverBase : IHandleEvent
         {
             public Task HandleEventAsync(EventCallbackWorkItem item, object arg) => item.InvokeAsync(arg);
         }
 
-
-        class SyncReceiver : ReceiverBase
+        private sealed class SyncReceiver : ReceiverBase
         {
             private Action callback;
 
@@ -49,7 +48,7 @@ namespace AntDesign
             public void Invoke() => callback();
         }
 
-        class SyncReceiver<T> : ReceiverBase
+        private sealed class SyncReceiver<T> : ReceiverBase
         {
             private Action<T> callback;
 
@@ -61,7 +60,7 @@ namespace AntDesign
             public void Invoke(T arg) => callback(arg);
         }
 
-        class AsyncReceiver : ReceiverBase
+        private sealed class AsyncReceiver : ReceiverBase
         {
             private Func<Task> callback;
 
@@ -73,7 +72,7 @@ namespace AntDesign
             public Task Invoke() => callback();
         }
 
-        class AsyncReceiver<T>: ReceiverBase
+        private sealed class AsyncReceiver<T> : ReceiverBase
         {
             private Func<T, Task> callback;
 

@@ -2,53 +2,55 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal;
 
-<Row class="@ClassMapper.Class" style="@Style" id="@Id">
-    @if (!string.IsNullOrEmpty(Label) || LabelTemplate != null)
-    {
-        <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
-            @if (LabelTemplate != null)
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+    <Row Class="ant-form-item-row">
+        @if (!NoStyle && ( !string.IsNullOrEmpty(DisplayName) || LabelTemplate != null))
+        {
+            <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
+                @if (LabelTemplate != null)
+                {
+                    @LabelTemplate
+                }
+                else
+                {
+                    <label class=@GetLabelClass() style="@LabelStyle">
+                        @DisplayName
+                        @if (Form?.RequiredMark == FormRequiredMark.Optional && !IsRequired)
+                        {
+                            <span class="ant-form-item-optional">@Form.Locale.Optional</span>
+                        }
+                    </label>
+                }
+            </AntDesign.Col>
+        }
+
+        <AntDesign.Col @attributes="GetWrapperColAttributes()" Class=@($"{_prefixCls}-control")>
+            <div class=@($"{_prefixCls}-control-input")>
+                <div class=@($"{_prefixCls}-control-input-content")>
+                    <CascadingValue Value="this" Name="FormItem" TValue="IFormItem" IsFixed="@true">
+                        @ChildContent
+                    </CascadingValue>
+                </div>
+            </div>
+
+            @if (!NoStyle)
             {
-                @LabelTemplate
-            }
-            else
-            {
-                <label class=@GetLabelClass() style="@LabelStyle">@(Label)</label>
+                @foreach (var message in _validationMessages)
+                {
+                    <div style="display: flex; flex-wrap: nowrap;">
+                        <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
+                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLower()}")>
+                                @message
+                            </div>
+                        </div>
+                        <div style="width: 0px; height: 24px;"></div>
+                    </div>
+                }
             }
         </AntDesign.Col>
+    </Row>
+    @if (!NoStyle && _validationMessages.Any())
+    {
+        <div class="ant-form-item-margin-offset" style="margin-bottom: -24px;"></div>
     }
-
-    <AntDesign.Col @attributes="GetWrapperColAttributes()" Class=@($"{_prefixCls}-control")>
-        <div class=@($"{_prefixCls}-control-input")>
-            <div class=@($"{_prefixCls}-control-input-content")>
-                <CascadingValue Value="this" Name="FormItem" TValue="IFormItem" IsFixed="@true">
-                    @ChildContent
-                </CascadingValue>
-            </div>
-            @if (IsShowIcon || IsShowFeedbackOnError)
-            {
-                <span class=@($"{_prefixCls}-children-icon")><Icon Type="@(_iconMap[ValidateStatus].type)" Theme="@(_iconMap[ValidateStatus].theme)" /></span>
-            }
-        </div>
-
-        @foreach (var message in _validationMessages)
-        {
-            if (_isValid)
-            {
-                <div class=@($"{_prefixCls}-explain {_prefixCls}-explain-default")>
-                    <div role="alert">
-                        @message
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class=@($"{_prefixCls}-explain-error")>
-                    <div role="alert">
-                        @message
-                    </div>
-                </div>
-            }
-
-        }
-    </AntDesign.Col>
-</Row>
+</div>

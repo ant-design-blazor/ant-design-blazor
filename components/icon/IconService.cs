@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,20 +35,33 @@ namespace AntDesign
             return iconImg;
         }
 
-        internal static string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
+        internal static string GetStyledSvg(Icon icon)
         {
-            if (!string.IsNullOrEmpty(svgImg))
-            {
-                string svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? $"style=\"pointer-events: none;\"" : $"style=\"pointer-events: none;transform: rotate({rotate}deg);\"")}";
-                if (!string.IsNullOrEmpty(svgClass))
-                {
-                    svgStyle += $" class=\"{svgClass}\"";
-                }
+            string svgClass = icon.Spin || icon.Type == "loading" ? "anticon-spin" : null;
 
-                return svgImg.Insert(svgImg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
+            var svg = !string.IsNullOrEmpty(icon.IconFont) ?
+                $"<svg><use xlink:href=#{icon.IconFont} /></svg>"
+                : GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme.ToLowerInvariant());
+
+            if (string.IsNullOrEmpty(svg))
+            {
+                return null;
             }
 
-            return null;
+            string svgStyle = $"focusable=\"false\" width=\"{icon.Width}\" height=\"{icon.Height}\" fill=\"{icon.Fill}\" {(icon.Rotate == 0 ? $"style=\"pointer-events: none;\"" : $"style=\"pointer-events: none;transform: rotate({icon.Rotate}deg);\"")}";
+            if (!string.IsNullOrEmpty(svgClass))
+            {
+                svgStyle += $" class=\"{svgClass}\"";
+            }
+
+            var iconSvg = svg.Insert(svg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
+
+            if (icon.Theme == IconThemeType.Twotone)
+            {
+                return GetTwoToneIconSvg(iconSvg, icon.TwotoneColor, icon.SecondaryColor);
+            }
+
+            return iconSvg;
         }
 
         public async ValueTask CreateFromIconfontCN(string scriptUrl)
@@ -57,42 +74,49 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
-        public IDictionary<string, string[]> GetAllIcons()
-        {
-            return IconStore.GetAllIconNames();
-        }
+        public static IDictionary<string, string[]> GetAllIcons()
+            => IconStore.AllIconsByTheme.Value;
 
-        public bool IconExists(string theme = "", string type = "")
+        public static bool IconExists(string iconTheme = "", string iconName = "")
         {
-            var icon = IconStore.GetIcon(type, theme);
+            var icon = IconStore.GetIcon(iconName, iconTheme);
 
             return !string.IsNullOrEmpty(icon);
         }
 
-        public async Task<string> GetTwotoneSvgIcon(string svgImg, string twotoneColor)
+        public async Task<string> GetSecondaryColor(string primaryColor)
         {
-            svgImg = svgImg.Replace("fill=\"#333\"", "fill=\"primaryColor\"")
-                .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
-                .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
-                .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
+            var secondaryColors = await _js.InvokeAsync<string[]>(JSInteropConstants.GenerateColor, primaryColor);
+            return secondaryColors[0];
+        }
 
-            var secondaryColors = await _js.InvokeAsync<string[]>(JSInteropConstants.GenerateColor, twotoneColor);
+        private static string GetTwoToneIconSvg(string iconSvg, string primaryColor, string secondaryColor)
+        {
+            if (string.IsNullOrWhiteSpace(secondaryColor))
+            {
+                return iconSvg.Replace("fill=\"#333\"", $"fill=\"{primaryColor}\"");
+            }
 
-            var document = XDocument.Load(new StringReader(svgImg));
-            var svg = document.Root;
-            foreach (var path in svg.Nodes().OfType<XElement>())
+            iconSvg = iconSvg.Replace("fill=\"#333\"", "fill=\"primaryColor\"")
+           .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
+           .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
+           .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
+
+            var document = XDocument.Load(new StringReader(iconSvg));
+            var svgRoot = document.Root;
+            foreach (var path in svgRoot.Nodes().OfType<XElement>())
             {
                 if (path.Attribute("fill")?.Value == "secondaryColor")
                 {
-                    path.SetAttributeValue("fill", secondaryColors[0]);
+                    path.SetAttributeValue("fill", secondaryColor);
                 }
                 else
                 {
-                    path.SetAttributeValue("fill", twotoneColor);
+                    path.SetAttributeValue("fill", primaryColor);
                 }
             }
 
-            return svg.ToString();
+            return svgRoot.ToString();
         }
     }
 }

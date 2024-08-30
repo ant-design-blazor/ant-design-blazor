@@ -1,16 +1,39 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>To select or input a date.</para>
+
+    <h2>When To Use</h2>
+
+    <para>By clicking the input box, you can select a date from a popup calendar.</para>
+    </summary>
+    <seealso cref="MonthPicker{TValue}"/>
+    <seealso cref="RangePicker{TValue}"/>
+    <seealso cref="WeekPicker{TValue}"/>
+    <seealso cref="YearPicker{TValue}"/>
+    <seealso cref="QuarterPicker{TValue}"/>
+    <seealso cref="TriggerBoundaryAdjustMode"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
+        /// <summary>
+        /// Callback executed when the selected value changes
+        /// </summary>
         [Parameter]
-        public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
 
         private DateTime _pickerValuesAfterInit;
 
@@ -24,7 +47,7 @@ namespace AntDesign
         private void ProcessDefaults()
         {
             UseDefaultPickerValue[0] = true;
-            if (DefaultPickerValue.Equals(default(TValue)))
+            if (DefaultPickerValue?.Equals(default(TValue)) == true)
             {
                 if ((IsNullable && Value != null) || (!IsNullable && !Value.Equals(default(TValue))))
                 {
@@ -47,9 +70,9 @@ namespace AntDesign
                     UseDefaultPickerValue[0] = false;
                 }
             }
-            if (UseDefaultPickerValue[0])
+            if (UseDefaultPickerValue[0] && DefaultPickerValue is not null)
             {
-                PickerValues[0] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
+                PickerValues[0] = InternalConvert.ToDateTime(DefaultPickerValue).Value;
             }
         }
 
@@ -63,7 +86,7 @@ namespace AntDesign
 
             AutoFocus = true;
             //Reset Picker to default in case it the picker value was changed
-            //but no value was selected (for example when a user clicks next 
+            //but no value was selected (for example when a user clicks next
             //month but does not select any value)
             if (!_pickerStatus[0].IsValueSelected && UseDefaultPickerValue[0] && DefaultPickerValue != null)
             {
@@ -73,53 +96,37 @@ namespace AntDesign
 
             if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
-                GetIfNotNull(Value, notNullValue =>
+                GetIfNotNull(Value, 0, notNullValue =>
                 {
                     ChangePickerValue(notNullValue);
                 });
             }
         }
 
-        private TValue _cacheDuringInput;
-
-        protected void OnInput(ChangeEventArgs args, int index = 0)
+        protected override void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
-            if (args == null)
-            {
-                return;
-            }
-            if (!_duringManualInput)
-            {
-                _duringManualInput = true;
-                _cacheDuringInput = Value;
-            }
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
-            {
-                CurrentValue = changeValue;
-                _cacheDuringInput = changeValue;
-            }
+
+            base.OnInput(args, index);
         }
 
         protected override async Task OnBlur(int index)
         {
+            await base.OnBlur(index);
+
             if (_openingOverlay)
                 return;
 
-            if (_duringManualInput)
+            AutoFocus = false;
+
+            if (!_dropDown.IsOverlayShow())
             {
-                if (!Value.Equals(_cacheDuringInput))
-                {
-                    //reset picker to Value         
-                    CurrentValue = _cacheDuringInput;
-                }
-                _duringManualInput = false;
+                _pickerStatus[0].SelectedValue = null;
             }
 
-            AutoFocus = false;
             await Task.Yield();
         }
 
@@ -131,57 +138,49 @@ namespace AntDesign
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
+
+            var isEnter = key == "ENTER";
+            var isTab = key == "TAB";
+            var isEscape = key == "ESCAPE";
+            var isOverlayShown = _dropDown.IsOverlayShow();
+
+            if (isEnter || isTab || isEscape)
             {
                 _duringManualInput = false;
-                if (string.IsNullOrWhiteSpace(_inputStart.Value))
-                    ClearValue();
-                else
-                    await TryApplyInputValue();
 
-                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                if (isEscape && isOverlayShown)
                 {
                     Close();
                     await Js.FocusAsync(_inputStart.Ref);
-                    return;
                 }
-                if (key == "ENTER")
+                else if (isEnter || isTab)
                 {
-                    //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
-                    await Task.Yield();
-                    await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
+                    if (HasTimeInput && _pickerStatus[0].SelectedValue is not null)
+                    {
+                        await OnOkClick();
+                    }
+                    else if (_pickerStatus[0].SelectedValue is not null)
+                    {
+                        await OnSelect(_pickerStatus[0].SelectedValue.Value, 0);
+                    }
+                    else if (isOverlayShown)
+                    {
+                        Close();
+                    }
+                    else if (!isTab)
+                    {
+                        await _dropDown.Show();
+                    }
                 }
-                Close();
-                AutoFocus = false;
-                return;
             }
-
-            if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
+            else if (key == "ARROWUP")
+            {
+                if (isOverlayShown)
+                    Close();
+            }
+            else if (!isOverlayShown)
             {
                 await _dropDown.Show();
-                return;
-            }
-            if (key == "ARROWUP" && _dropDown.IsOverlayShow())
-            {
-                Close();
-                return;
-            }
-        }
-
-        private async Task TryApplyInputValue()
-        {
-            if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
-            {
-                CurrentValue = changeValue;
-
-                if (OnChange.HasDelegate)
-                {
-                    await OnChange.InvokeAsync(new DateTimeChangedEventArgs
-                    {
-                        Date = Convert.ToDateTime(changeValue, this.CultureInfo),
-                        DateString = GetInputValue(0)
-                    });
-                }
             }
         }
 
@@ -196,6 +195,12 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
+
+            if (_pickerStatus[index].SelectedValue is not null)
+            {
+                return _pickerStatus[index].SelectedValue.Value;
+            }
+
             if (_pickerStatus[0].IsValueSelected)
             {
                 if (Value == null)
@@ -203,38 +208,43 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(Value, CultureInfo);
+                return InternalConvert.ToDateTime(Value);
             }
-            else if (DefaultValue != null)
+
+            if (DefaultValue != null)
             {
-                return Convert.ToDateTime(DefaultValue, CultureInfo);
+                return InternalConvert.ToDateTime(DefaultValue);
             }
 
             return null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0)
+        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (index != 0)
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
+
             UseDefaultPickerValue[0] = false;
 
-            CurrentValue = THelper.ChangeType<TValue>(value);
-
-            if (!IsShowTime && Picker != DatePickerType.Time)
+            if (closeDropdown && !IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
             }
 
-            if (OnChange.HasDelegate)
+            if (IsDisabledDate(value))
             {
-                OnChange.InvokeAsync(new DateTimeChangedEventArgs
-                {
-                    Date = value,
-                    DateString = GetInputValue(0)
-                });
+                return;
+            }
+
+            ToDateTimeOffset(FormatDateTime(value), out DateTimeOffset? currentValue, out DateTimeOffset newValue);
+
+            if (currentValue != newValue)
+            {
+                CurrentValue = InternalConvert.FromDateTimeOffset<TValue>(newValue);
+
+                InvokeOnChange();
             }
         }
 
@@ -244,7 +254,7 @@ namespace AntDesign
 
             _pickerStatus[0].IsValueSelected = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
 
-            GetIfNotNull(CurrentValue, (notNullValue) => PickerValues[0] = notNullValue);
+            GetIfNotNull(CurrentValue, 0, (notNullValue) => PickerValues[0] = notNullValue);
 
             _dropDown?.SetShouldRender(true);
         }
@@ -262,26 +272,23 @@ namespace AntDesign
 
             if (closeDropdown)
                 Close();
-            if (OnClearClick.HasDelegate)
-                OnClearClick.InvokeAsync(null);
+
+            OnClear.InvokeAsync(null);
+            OnClearClick.InvokeAsync(null);
+
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
+            {
+                Date = Value,
+                DateString = GetInputValue(0)
+            });
 
             _dropDown.SetShouldRender(true);
-        }
 
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
-        {
-            if (!IsNullable)
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (IsNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
+                Date = Value,
+                DateString = GetInputValue(0)
+            });
         }
 
         private void OverlayVisibleChange(bool visible)
@@ -295,6 +302,15 @@ namespace AntDesign
         {
             await Focus();
             await OnInputClick();
+        }
+
+        protected override void InvokeOnChange()
+        {
+            OnChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
+            {
+                Date = Value,
+                DateString = GetInputValue(0)
+            });
         }
     }
 }

@@ -1,12 +1,29 @@
-﻿using System.Text.RegularExpressions;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System;
-using System.Text;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Tag for categorizing or markup.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>It can be used to tag by dimension or property.</item>
+        <item>When categorizing.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg")]
     public partial class Tag : AntDomComponentBase
     {
         /// <summary>
@@ -18,18 +35,21 @@ namespace AntDesign
         /// <summary>
         /// Whether the Tag can be closed
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Closable { get; set; }
 
         /// <summary>
         /// Whether the Tag can be checked
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Checkable { get; set; }
 
         /// <summary>
         /// Checked status of Tag
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Checked { get; set; }
 
@@ -43,6 +63,7 @@ namespace AntDesign
         /// Tag color. Can either be a predefined color (string)
         /// or hex color.
         /// </summary>
+        /// <default value="default" />
         [Parameter]
         public string Color
         {
@@ -51,14 +72,20 @@ namespace AntDesign
             {
                 if (_color != value)
                 {
-                    _color = value;
+                    _color = string.IsNullOrWhiteSpace(value)
+                        ? "default"
+                        : value.ToLowerInvariant();
                     _isPresetColor = IsPresetColor(_color);
                     _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
                 }
             }
         }
 
+        /// <summary>
+        /// Tag color from the PresetColor list
+        /// </summary>
         [Parameter]
+        [Obsolete($"Use {nameof(Color)} instead by passing the string of the enum value")]
         public PresetColor? PresetColor
         {
             get
@@ -84,7 +111,14 @@ namespace AntDesign
         [Parameter]
         public string Icon { get; set; }
 
+        /// <summary>
+        /// 'fill' | 'outline' | 'twotone';
+        /// </summary>
         [Parameter]
+        public string IconTheme { get; set; } = IconThemeType.Outline;
+
+        [Parameter]
+        [Obsolete("Parameter is not used and does not affect functionality")]
         public bool NoAnimation { get; set; }
 
         /// <summary>
@@ -109,14 +143,14 @@ namespace AntDesign
         /// <summary>
         /// Whether the Tag is closed or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Visible { get; set; } = true;
 
-
-        private bool _isPresetColor;
+        private bool _isPresetColor = true;
         private bool _isCustomColor;
         private bool _closed;
-        private string _color;
+        private string _color = "default";
         private string _style;
 
         protected override void OnParametersSet()
@@ -133,15 +167,11 @@ namespace AntDesign
 
         private static bool IsPresetColor(string color)
         {
-            if (string.IsNullOrEmpty(color))
-            {
-                return false;
-            }
-
-            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
-            return result;
+            return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
         }
+
         private string _prefix = "ant-tag";
+
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)
@@ -157,7 +187,7 @@ namespace AntDesign
 
         private string GetStyle()
         {
-            StringBuilder styleBuilder = new StringBuilder();
+            var styleBuilder = new StringBuilder();
 
             styleBuilder.Append(Style);
 

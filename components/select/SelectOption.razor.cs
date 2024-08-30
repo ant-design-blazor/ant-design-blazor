@@ -3,12 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 using AntDesign.Select.Internal;
-using System.Globalization;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -20,7 +20,7 @@ namespace AntDesign
         [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
         [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
-        [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
+        [CascadingParameter] internal SelectBase<TItemValue, TItem> SelectParent { get; set; }
 
         /// <summary>
         /// Disable this option
@@ -65,7 +65,24 @@ namespace AntDesign
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
         [Parameter] public TItemValue Value { get; set; }
+        /// <summary>
+        /// Item of the SelectOption
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
 
+        private bool _itemSet;
+        private TItem _item;
+
+        [Parameter]
+        public TItem Item
+        {
+            get => _item;
+            set
+            {
+                _item = value;
+                _itemSet = true;
+            }
+        }
         #endregion
 
         # region Properties
@@ -196,7 +213,7 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
+                    Item = _itemSet ? Item : THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
                     ChildComponent = this
                 };
 
@@ -234,7 +251,7 @@ namespace AntDesign
                 .If($"{ClassPrefix}-disabled", () => IsDisabled)
                 .If($"{ClassPrefix}-selected", () => IsSelected)
                 .If($"{ClassPrefix}-active", () => IsActive)
-                .If($"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
+                .If($"{ClassPrefix}-grouped", () => (SelectParent as Select<TItemValue, TItem>)?.IsGroupingEnabled ?? false);
 
             StateHasChanged();
         }

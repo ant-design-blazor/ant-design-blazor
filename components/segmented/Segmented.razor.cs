@@ -5,25 +5,72 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Segmented Controls. This component is available since `v0.12.0`.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When displaying multiple options and user can select a single option</item>
+        <item>When switching the selected option, the content of the associated area changes.</item>
+    </list>
+    </summary>
+    <seealso cref="SegmentedItem{TValue}"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg")]
+#if NET6_0_OR_GREATER
+    [CascadingTypeParameter(nameof(TValue))]
+#endif
     public partial class Segmented<TValue> : AntDomComponentBase
     {
+        /// <summary>
+        /// Default selected value
+        /// </summary>
         [Parameter]
-        public TValue DefaultValue { get; set; }
+        public TValue DefaultValue
+        {
+            get => _defaultValue;
+            set
+            {
+                _defaultValueSet = true;
+                _defaultValue = value;
+            }
+        }
 
+        /// <summary>
+        /// Disable all segments
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled == value)
+                    return;
 
+                _disabled = value;
+                _items.ForEach(item => item.MarkStateHasChanged());
+            }
+        }
+
+        /// <summary>
+        /// The callback function that is triggered when the state changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        /// <summary>
+        /// Options for the segments. Takes priority over <see cref="Labels"/>
+        /// </summary>
         [Parameter]
         public IEnumerable<SegmentedOption<TValue>> Options
         {
@@ -40,6 +87,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Labels for the segments
+        /// </summary>
         [Parameter]
         public IEnumerable<TValue> Labels
         {
@@ -56,29 +106,48 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Size of the UI element
+        /// </summary>
         [Parameter]
         public SegmentedSize Size { get; set; }
 
+        /// <summary>
+        /// Currently selected value
+        /// </summary>
         [Parameter]
         public TValue Value
         {
             get => _value;
             set
             {
-                if (value != null && !value.Equals(_value))
-                {
-                    _value = value;
-                    ChangeValue(_value);
-                }
+                if (_value is null && value is null)
+                    return;
+
+                _valueSet = true;
+                if (_value?.Equals(value) == true)
+                    return;
+
+                _value = value;
+                ChangeValue(_value);
             }
         }
 
+        /// <summary>
+        /// Callback executed when the selected segment changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> ValueChanged { get; set; }
 
+        /// <summary>
+        /// Segments. Takes priority over <see cref="Labels"/> and <see cref="Options"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Make the component the width of the parent
+        /// </summary>
         [Parameter]
         public bool Block { get; set; }
 
@@ -101,6 +170,10 @@ namespace AntDesign
         private bool _firstRendered;
 
         private TValue _value;
+        private bool _valueSet;
+        private bool _disabled;
+        private TValue _defaultValue;
+        private bool _defaultValueSet;
 
         protected override void OnInitialized()
         {
@@ -114,7 +187,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-rtl", () => RTL)
                 ;
 
-            if (DefaultValue != null)
+            if (_defaultValueSet)
             {
                 _value = DefaultValue;
                 ChangeValue(_value);
@@ -125,7 +198,6 @@ namespace AntDesign
         {
             _items ??= new List<SegmentedItem<TValue>>();
 
-            item.Index = _items.Count;
             _items.Add(item);
 
             if (Labels == null && Options == null)
@@ -134,9 +206,14 @@ namespace AntDesign
                 _optionsChanged = true;
             }
 
-            if (_value == null && _optionValues?.Any() == true)
+            if (!_valueSet && _optionValues?.Any() == true)
             {
                 _value = _optionValues[0];
+                _valueSet = true;
+            }
+
+            if (_valueSet)
+            {
                 ChangeValue(_value);
             }
         }
@@ -156,27 +233,23 @@ namespace AntDesign
             if (_firstRendered && _optionsChanged)
             {
                 _optionsChanged = false;
+                ChangeValue(_value, true);
                 await GetItemElememt();
             }
 
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private void ChangeValue(TValue value)
+        private void ChangeValue(TValue value, bool noAnimation = false)
         {
-            if (Disabled)
-            {
-                return;
-            }
-
             var item = _items.FirstOrDefault(x => x.Value.Equals(value));
             if (item != null)
             {
-                Select(item);
+                Select(item, noAnimation);
             }
         }
 
-        internal async void Select(SegmentedItem<TValue> item)
+        internal async void Select(SegmentedItem<TValue> item, bool noAnimation = false)
         {
             _items[_activeIndex].SetSelected(false);
             _value = item.Value;
@@ -191,8 +264,12 @@ namespace AntDesign
                 await ValueChanged.InvokeAsync(_value);
             }
 
-            await ThumbAnimation(item);
+            if (!noAnimation)
+            {
+                await ThumbAnimation(item);
+            }
 
+            _activeIndex = _items.IndexOf(item);
             _items.ForEach(x => x.SetSelected(false));
             item.SetSelected(true);
         }
@@ -213,7 +290,6 @@ namespace AntDesign
             _sliding = true;
             _slidingCls = "ant-segmented-thumb ant-segmented-thumb-motion ant-segmented-thumb-motion-appear ant-segmented-thumb-motion-appear-start";
             _slidingStyle = $"transform: translateX({_itemRefs[_items[_activeIndex].Id].OffsetLeft}px); width: {_itemRefs[_items[_activeIndex].Id].ClientWidth}px;";
-            _activeIndex = item.Index;
 
             StateHasChanged();
             await Task.Delay(100);

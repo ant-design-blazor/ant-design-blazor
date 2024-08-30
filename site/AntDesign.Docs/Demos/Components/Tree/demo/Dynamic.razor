@@ -1,12 +1,16 @@
 <div>
-    <Tree DataSource="_datas"
+    <Tree TItem="Data"
+          DataSource="_datas" @ref="_tree"
           TitleExpression="x => x.DataItem.Title"
           ChildrenExpression="x => x.DataItem.Childs"
           IsLeafExpression="x => x.TreeLevel > 2"
-          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync" TItem="Data"></Tree>
+          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"></Tree>
 </div>
 
-@code{
+<Button OnClick="ExpandAll">Expand All</Button>
+<Button OnClick="ExpandAllChild">Expand Node "C" And Expand All Child Nodes</Button>
+
+@code {
     public record Data(string Title)
     {
         public List<Data> Childs { get; set; } = new List<Data>();
@@ -14,14 +18,27 @@
 
     List<Data> _datas = new() { new("A"), new("B"), new("C") };
 
+    Tree<Data> _tree;
+
+    private void ExpandAll()
+    {
+        _tree.ExpandAll();
+    }
+
+    private void ExpandAllChild()
+    {
+        _tree.ExpandAll(n => n.Title == "C");
+    }
+
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
     {
+        if (args.Node.TreeLevel < 3)
+        {
+            await Task.Delay(2000);//模拟异步执行
 
-        await Task.Delay(2000);//模拟异步执行
-
-        var dataItem = ((Data)args.Node.DataItem);
-        dataItem.Childs.Clear();
-        dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
-        dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
+            var dataItem = ((Data)args.Node.DataItem);
+            dataItem.Childs.Clear();
+            dataItem.Childs.AddRange(new List<Data>() { new Data($"{dataItem.Title}-1"), new Data($"{dataItem.Title}-2") });
+        }
     }
 }

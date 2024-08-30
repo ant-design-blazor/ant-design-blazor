@@ -68,6 +68,7 @@
 		);
         //Act
 		cut.InvokeAsync(() =>  cut.Instance.Validate());
+
 		//Assert		
 		cut.Invoking(c => cut.Find("div.ant-form-item-explain-error"))
 			.Should().Throw<ElementNotFoundException>();

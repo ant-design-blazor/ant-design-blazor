@@ -21,7 +21,7 @@ GitHub: https://github.com/ant-design-blazor/ant-design-charts-blazor
   - Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.razor` (Server)
 
   ```html
-  <script src="https://unpkg.com/@antv/g2plot@1.1.28/dist/g2plot.js"></script>
+  <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
   ```
   
@@ -36,37 +36,26 @@ GitHub: https://github.com/ant-design-blazor/ant-design-charts-blazor
   ```razor
   <Line Data="data" Config="config" />
 
-  @code{
+  @code {
       object[] data = new object[] {
-          new  { year= "1991", value= 3 },
-          new  { year= "1992", value= 4 },
-          new  { year= "1993", value= 3.5 },
-          new  { year= "1994", value= 5 },
-          new  { year= "1995", value= 4.9 },
-          new  { year= "1996", value= 6 },
-          new  { year= "1997", value= 7 },
-          new  { year= "1998", value= 9 },
-          new  { year= "1999", value= 13 },
-  };
+          new  { year = "1991", value = 3 },
+          new  { year = "1992", value = 4 },
+          new  { year = "1993", value = 3.5 },
+          new  { year = "1994", value = 5 },
+          new  { year = "1995", value = 4.9 },
+          new  { year = "1996", value = 6 },
+          new  { year = "1997", value = 7 },
+          new  { year = "1998", value = 9 },
+          new  { year = "1999", value = 13 },
+      };
 
       LineConfig config = new LineConfig()
-      {
-          title = new Title()
           {
-              visible = true,
-              text = "Line Graph",
-          },
-          description = new Description()
-          {
-              visible = true,
-              text = "Replace broken lines with smooth curves。",
-          },
-          padding = "auto",
-          forceFit = true,
-          xField = "year",
-          yField = "value",
-          smooth = true,
-      };
+              Padding = "auto",
+              XField = "year",
+              YField = "value",
+              Smooth = true,
+          };
   }
   ```
   

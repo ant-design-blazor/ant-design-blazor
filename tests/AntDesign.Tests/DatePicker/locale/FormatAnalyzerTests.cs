@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using AntDesign.Datepicker.Locale;
@@ -14,7 +18,7 @@ namespace AntDesign.Tests.DatePicker.Locale
             string dateFormat, string possibleDate, bool expectedResult)
         {
             //Arrange
-            var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new());
+            var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new(), CultureInfo.InvariantCulture);
             //Act
             var actual1 = details.IsFullString(possibleDate);
             var actual2 = details.IsFullString(possibleDate);
@@ -145,10 +149,10 @@ namespace AntDesign.Tests.DatePicker.Locale
             string dateFormat, string possibleDate, bool expectedResult, DateTime expectedParsedDate)
         {
             //Arrange
-            var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new());
+            var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new(), CultureInfo.InvariantCulture);
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -292,10 +296,10 @@ namespace AntDesign.Tests.DatePicker.Locale
             string dateFormat, string possibleDate, bool expectedResult, DateTime expectedParsedDate)
         {
             //Arrange
-            var details = new FormatAnalyzer(dateFormat, DatePickerType.Year, new());
+            var details = new FormatAnalyzer(dateFormat, DatePickerType.Year, new(), CultureInfo.InvariantCulture);
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -321,10 +325,10 @@ namespace AntDesign.Tests.DatePicker.Locale
         {
             //Arrange            
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Week,
-                new() { Lang = new() { YearFormat = yearFormat } });
+                new() { Lang = new() { YearFormat = yearFormat } }, CultureInfo.InvariantCulture);
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -366,10 +370,10 @@ namespace AntDesign.Tests.DatePicker.Locale
         {
             //Arrange            
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Quarter,
-                new() { Lang = new() { YearFormat = yearFormat } });
+                new() { Lang = new() { YearFormat = yearFormat } }, CultureInfo.InvariantCulture);
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);

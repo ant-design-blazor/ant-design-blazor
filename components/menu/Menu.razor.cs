@@ -1,26 +1,61 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A versatile menu for navigation.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+    Navigation is an important part of any website, as a good navigation setup allows users to move around the site quickly and efficiently. 
+    Ant Design offers top and side navigation options. 
+    Top navigation provides all the categories and functions of the website. 
+    Side navigation provides the multi-level structure of the website.
+    </para>
+
+    <para>See Layouts for more layouts with navigation.</para>
+    </summary>
+    <seealso cref="MenuItem" />
+    <seealso cref="SubMenu" />
+    <seealso cref="MenuItemGroup" />
+    <seealso cref="MenuDivider" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg", Columns = 1)]
     public partial class Menu : AntDomComponentBase
     {
         [CascadingParameter(Name = "PrefixCls")]
-        public string PrefixCls { get; set; } = "ant-menu";
+        internal string PrefixCls { get; set; } = "ant-menu";
 
         [CascadingParameter]
-        public Sider Parent { get; set; }
+        private Sider Parent { get; set; }
 
         [CascadingParameter(Name = "Overlay")]
         private Overlay Overlay { get; set; }
 
+        /// <summary>
+        /// Color theme of the menu
+        /// </summary>
+        /// <default value="MenuTheme.Light" />
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         internal MenuMode? InitialMode { get; private set; }
+
+        /// <summary>
+        /// Type of menu
+        /// </summary>
+        /// <default value="MenuMode.Vertical" />
         [Parameter]
         public MenuMode Mode
         {
@@ -35,24 +70,49 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Content of menu. Should contain MenuItem elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Callback when submenu is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<SubMenu> OnSubmenuClicked { get; set; }
 
+        /// <summary>
+        /// Callback when a main menu item is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MenuItem> OnMenuItemClicked { get; set; }
 
+        /// <summary>
+        /// Accordion mode. When true only one submenu can be open at a time.
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Accordion { get; set; }
 
+        /// <summary>
+        /// Allows selecting menu items. When it is false the menu item is not selected after OnClick.
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Selectable { get; set; } = true;
 
+        /// <summary>
+        /// Allows selection of multiple items	
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Multiple { get; set; }
 
+        /// <summary>
+        /// Specifies the collapsed status when menu is inline mode	
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool InlineCollapsed
         {
@@ -67,20 +127,37 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Indent (in pixels) of inline menu items on each level	
+        /// </summary>
+        /// <default value="24" />
         [Parameter]
         public int InlineIndent { get; set; } = 24;
 
+        /// <summary>
+        /// Close dropdown when clicking an item
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
 
+        /// <summary>
+        /// Array with the keys of default selected menu items	
+        /// </summary>
         [Parameter]
         public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Array with the keys of default opened sub menus	
+        /// </summary>
         [Parameter]
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
-
         private string[] _openKeysCopy = Array.Empty<string>();
+
+        /// <summary>
+        /// Array with the keys of currently opened sub-menus
+        /// </summary>
         [Parameter]
         public string[] OpenKeys
         {
@@ -96,12 +173,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback when the open sub menus change. Passed the array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> OpenKeysChanged { get; set; }
 
+        /// <summary>
+        /// Callback when the open sub menus change. Passed the array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> OnOpenChange { get; set; }
 
+        /// <summary>
+        /// Array with the keys of currently selected menu items
+        /// </summary>
         [Parameter]
         public string[] SelectedKeys
         {
@@ -109,15 +195,29 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
-                MenuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
+        /// <summary>
+        /// Callback when the selected items change. Passed array of open keys.
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
+        /// <summary>
+        /// Which action can trigger submenu open/close	
+        /// </summary>
+        /// <default value="Trigger.Hover" />
         [Parameter]
         public Trigger TriggerSubMenuAction { get; set; } = Trigger.Hover;
+
+        [Parameter]
+        public bool ShowCollapsedTooltip { get; set; } = true;
+
+        [Parameter]
+        public bool Animation { get; set; }
+
+        [Inject] private MenuService MenusService { get; set; }
 
         internal MenuMode InternalMode { get; private set; }
 
@@ -126,20 +226,41 @@ namespace AntDesign
         private bool _inlineCollapsed;
         private MenuMode _mode = MenuMode.Vertical;
 
-        public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
-        public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
+        private List<SubMenu> _submenus = [];
+        private List<MenuItem> _menuItems = [];
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
+            {
+                _menuItems.ForEach(x => x.UpdateStelected());
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
+
+        internal void HideOverlay()
+        {
+            if (Overlay != null && AutoCloseDropdown)
+            {
+                _ = Overlay.Hide(true);
+            }
+        }
 
         public void SelectItem(MenuItem item)
         {
+            HideOverlay();
+
             if (item == null || item.IsSelected)
             {
                 return;
             }
+
             var selectedKeys = new List<string>();
             bool skipParentSelection = false;
             if (!Multiple)
             {
-                foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+                foreach (MenuItem menuitem in _menuItems.Where(x => x != item))
                 {
                     if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
                     {
@@ -166,11 +287,6 @@ namespace AntDesign
 
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
-
-            if (Overlay != null && AutoCloseDropdown)
-            {
-                Overlay.Hide(true);
-            }
         }
 
         public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
@@ -182,7 +298,7 @@ namespace AntDesign
 
             if (Accordion)
             {
-                foreach (SubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
+                foreach (SubMenu item in _submenus.Where(x => x != menu && x != menu.Parent))
                 {
                     item.Close();
                 }
@@ -200,7 +316,7 @@ namespace AntDesign
             if (OnSubmenuClicked.HasDelegate)
                 OnSubmenuClicked.InvokeAsync(menu);
 
-            var openKeys = Submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
+            var openKeys = _submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
             HandleOpenChange(openKeys);
 
             StateHasChanged();
@@ -226,7 +342,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (InternalMode != MenuMode.Inline && _inlineCollapsed)
+            if (Mode != MenuMode.Inline && _inlineCollapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
@@ -236,6 +352,32 @@ namespace AntDesign
             OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
 
             SetClass();
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            MenusService.SetMenuItems(_menuItems);
+            return base.OnFirstAfterRenderAsync();
+        }
+
+        internal void AddSubmenu(SubMenu menu)
+        {
+            _submenus.Add(menu);
+        }
+
+        internal void AddMenuItem(MenuItem item)
+        {
+            _menuItems.Add(item);
+        }
+
+        internal void RemoveSubmenu(SubMenu menu)
+        {
+            _submenus.Remove(menu);
+        }
+
+        internal void RemoveMenuItem(MenuItem item)
+        {
+            _menuItems.Remove(item);
         }
 
         public void CollapseUpdated(bool collapsed)
@@ -250,7 +392,7 @@ namespace AntDesign
             if (_inlineCollapsed)
             {
                 InternalMode = MenuMode.Vertical;
-                foreach (SubMenu item in Submenus)
+                foreach (SubMenu item in _submenus)
                 {
                     item.Close();
                 }
@@ -274,12 +416,12 @@ namespace AntDesign
 
         private void HandleOpenKeySet()
         {
-            foreach (SubMenu item in Submenus.Where(x => x.Key.IsIn(this.OpenKeys)))
+            foreach (SubMenu item in _submenus.Where(x => x.Key.IsIn(this.OpenKeys)))
             {
                 item.Open();
             }
 
-            foreach (SubMenu item in Submenus.Where(x => !x.Key.IsIn(this.OpenKeys)))
+            foreach (SubMenu item in _submenus.Where(x => !x.Key.IsIn(this.OpenKeys)))
             {
                 item.Close();
             }

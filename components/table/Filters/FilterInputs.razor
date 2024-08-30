@@ -1,0 +1,56 @@
+﻿@namespace AntDesign.Filters
+
+@using AntDesign
+@using AntDesign.Core.Helpers
+
+@implements IHandleEvent
+
+@{
+    // This is a utility .razor page, and it should not be used as a component.
+    throw new InvalidOperationException();
+}
+
+@code {
+
+    // Unfortunately, the razor compiler currently doesn't allow setting EventCallbacks (e.g. ValueChanged) in static fields/properties
+    // (see https://github.com/dotnet/aspnetcore/issues/24655 and https://github.com/dotnet/aspnetcore/issues/18919)
+    // Therefore, we need to implement them as instance properties and use a singleton pattern
+    public static FilterInputs Instance { get; } = new();
+
+    public readonly RenderFragment<TableFilterInputRenderOptions> GuidInput;
+
+    private FilterInputs() {
+        GuidInput = filter =>
+            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
+    }
+
+    public RenderFragment<TableFilterInputRenderOptions> GetDatePicker<TData>() => filter =>
+    {
+        if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
+        {
+            return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+        }
+        return @<DatePicker Value="(TData)filter.Value" TValue="TData" ValueChanged="value => filter.Value = value"
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+    };
+
+    public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
+        @<text>
+            <EnumSelect TEnum="TData" Mode="multiple"
+                Value="(TData)filter.Value"
+                Style="width:180px;"
+                ValueChanged="value => filter.Value = value"
+                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"  @attributes="filter.Attributes" />
+         </text>
+    ;
+
+    public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
+         @<InputNumber Value="(TData?)filter.Value" TValue="TData?" ValueChanged="value => filter.Value = (object)value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
+
+    public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
+        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
+
+    // https://github.com/dotnet/aspnetcore/issues/24655
+    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);
+}

@@ -2,34 +2,58 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using System.Text;
 
 namespace AntDesign
 {
     public class CssStyleBuilder
     {
-        private readonly List<string> _styles = new();
+        // An example below:
+        // "font-size: 10px; color: red; background-color: white; "
+        private const string StyleKeyValuePairSplitString = ": ";
 
-        public void AddStyle(string style)
-        {
-            _styles.Add(style.Trim().TrimEnd(';'));
-        }
+        private const string StyleItemSplitString = "; ";
 
-        public void AddStyle(string styleName, string styleValue)
-        {
-            _styles.Add($"{styleName}: {styleValue}");
-        }
+        private readonly StringBuilder _stringBuilder = new();
 
-        public string Build()
+        public CssStyleBuilder AddStyle(string style)
         {
-            StringBuilder totalStyle = new StringBuilder();
-            foreach (string style in _styles)
+            if (style.EndsWith(StyleItemSplitString[0]))
             {
-                totalStyle.Append(style).Append("; ");
+                _stringBuilder.Append(style)
+                    .Append(StyleItemSplitString[1]);
             }
+            else if (style.EndsWith(StyleItemSplitString, System.StringComparison.Ordinal))
+            {
+                _stringBuilder.Append(style);
+            }
+            else
+            {
+                _stringBuilder.Append(style.Trim().TrimEnd(';'))
+                    .Append(StyleItemSplitString);
+            }
+            return this;
+        }
 
-            return totalStyle.ToString();
+        public CssStyleBuilder AddStyle(string styleName, string styleValue)
+        {
+            if (string.IsNullOrWhiteSpace(styleValue))
+                return this;
+
+            _stringBuilder.Append(styleName)
+                .Append(StyleKeyValuePairSplitString)
+                .Append(styleValue)
+                .Append(StyleItemSplitString);
+
+            return this;
+        }
+
+        public string Build() => _stringBuilder.ToString();
+
+        public CssStyleBuilder Clear()
+        {
+            _stringBuilder.Clear();
+            return this;
         }
     }
 }

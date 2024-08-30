@@ -10,37 +10,47 @@ export class eventHelper {
     return element.dispatchEvent(evt);
   }
 
-  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any) {
+  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
     const callback = args => {
       const obj = {};
-      for (let k in args) {
+      for (const k in args) {
         if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
           obj[k] = args[k];
         }
       }
+      const cache = new Set();
       const json = JSON.stringify(obj, (k, v) => {
+        if (typeof v === 'object' && v !== null) {
+          if (cache.has(v)) {
+            return;
+          }
+          cache.add(v);
+        }
         if (v instanceof Node) return 'Node';
         if (v instanceof Window) return 'Window';
         return v;
       }, ' ');
+
       setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
       if (preventDefault === true) {
         args.preventDefault();
       }
+      if (stopPropagation) {
+        args.stopPropagation();
+      }
     };
 
-    if (element === 'window') {
-      if (eventName === 'resize') {
-        window.addEventListener(eventName, this.debounce(() => callback({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }), 200, false));
-      } else {
-        window.addEventListener(eventName, callback);
-      }
+    const dom = domInfoHelper.get(element);
+    const key = `${eventName}-${invoker._id}`;
+
+    if (eventName === 'resize') {
+      dom[`e_${key}`] = this.debounce(() => callback({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }), 200, false);
     } else {
-      const dom = domInfoHelper.get(element);
-      if (dom) {
-        (dom as HTMLElement).addEventListener(eventName, callback);
-      }
+      dom[`e_${key}`] = callback;
     }
+
+    dom[`i_${key}`] = invoker;
+    (dom as HTMLElement).addEventListener(eventName, dom[`e_${key}`]);
   }
 
   static addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
@@ -48,6 +58,16 @@ export class eventHelper {
 
     if (dom && dom.firstElementChild) {
       this.addDomEventListener(dom.firstElementChild, eventName, preventDefault, invoker);
+    }
+  }
+
+  static removeDomEventListener(element, eventName: string, invoker) {
+    const dom = domInfoHelper.get(element);
+    const key = `${eventName}-${invoker._id}`;
+
+    if (dom) {
+      dom.removeEventListener(eventName, dom[`e_${key}`]);
+      //dom[`i_${key}`].dispose();
     }
   }
 
@@ -78,8 +98,9 @@ export class eventHelper {
   }
 
   private static debounce(func, wait, immediate) {
-    var timeout;
+    let timeout;
     return (...args) => {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this;
       const later = () => {
         timeout = null;
@@ -90,7 +111,7 @@ export class eventHelper {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
-  };
+  }
 
   private static preventKeys(e: KeyboardEvent, keys: string[]) {
     if (keys.indexOf(e.key.toUpperCase()) !== -1) {

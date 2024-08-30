@@ -1,14 +1,20 @@
 ﻿<div>
-    <div>
-        <Avatar Size="64" Icon="user" />
-        <Avatar Size="large" Icon="user" />
-        <Avatar Icon="user" />
-        <Avatar Size="small" Icon="user" />
-    </div>
-    <div>
-        <Avatar Shape="square" Size="64" Icon="user" />
-        <Avatar Shape="square" Size="large" Icon="user" />
-        <Avatar Shape="square" Icon="user" />
-        <Avatar Shape="square" Size="small" Icon="user" />
-    </div>
+  <div>
+    <Avatar Size="5rem" Icon="user" />
+    <Avatar Size="large" Icon="user" />
+    <Avatar Icon="user" />
+    <Avatar Size="small" Icon="user" />
+  </div>
+  <div>
+    <span @onclick="()=> size++ ">
+      <Avatar Shape="@AvatarShape.Square" Size="@size.ToString()" Icon="user" />
+    </span>
+    <Avatar Shape="@AvatarShape.Square" Size="large" Icon="user" />
+    <Avatar Shape="@AvatarShape.Square" Icon="user" />
+    <Avatar Shape="@AvatarShape.Square" Size="small" Icon="user" />
+  </div>
 </div>
+
+@code {
+  int size = 64;
+}

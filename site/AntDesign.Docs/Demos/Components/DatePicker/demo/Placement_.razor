@@ -1,0 +1,18 @@
+﻿<div>
+    <RadioGroup @bind-Value="placement">
+        <Radio RadioButton Value="Placement.TopLeft">topLeft</Radio>
+        <Radio RadioButton Value="Placement.TopRight">topRight</Radio>
+        <Radio RadioButton Value="Placement.BottomLeft">bottomLeft</Radio>
+        <Radio RadioButton Value="Placement.BottomRight">bottomRight</Radio>
+    </RadioGroup>
+    <br />
+    <br />
+    <DatePicker TValue="DateTime?" Placement="@placement" />
+    <br />
+    <br />
+    <RangePicker TValue="DateTime?[]" Placement="@placement" />
+</div>
+
+@code {
+    Placement placement = Placement.TopLeft;
+}

@@ -2,7 +2,7 @@
 
 <div id="react-content">
     <MainHeader OnMobileModeChanged="isMobile=> _isMobile=isMobile" />
-    @if (LanguageService.CurrentCulture.Name == "zh-CN")
+    @if (LocalizationService.CurrentCulture.Name == "zh-CN")
     {
         <Alert Banner Type="@AlertType.Warning">
             <Icon>

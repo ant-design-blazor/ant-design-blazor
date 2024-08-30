@@ -1,142 +1,80 @@
-﻿import { state } from "../stateProvider";
+﻿export class mentionsHelper {
 
-export class mentionsHelper {
+  private static isPopShowFlag: boolean;
 
-  static getCursorXY(element, objReference) {
-    state.objReferenceDict["mentions"] = objReference;
-    window.addEventListener("click", this.mentionsOnWindowClick);
-
-    const offset = this.getOffset(element);
-
-    return [offset.left, offset.top + offset.height + 14];
+  public static setPopShowFlag = function (show: boolean): void {
+    mentionsHelper.isPopShowFlag = show;
   }
 
-  private static getOffset(elem) {
-    return (new InputCaret(elem)).getOffset();
-  }
+  public static setEditorKeyHandler = function (Mentions: any, element: HTMLTextAreaElement): void {
 
-  private static mentionsOnWindowClick(e) {
-    let mentionsObj = state.objReferenceDict["mentions"];
-    if (mentionsObj) {
-      mentionsObj.invokeMethodAsync("CloseMentionsDropDown");
-    } else {
-      window.removeEventListener("click", this.mentionsOnWindowClick);
+    const textArea = mentionsHelper.getTextarea(element);
+    textArea.onkeydown = async (ev): Promise<any> => {
+            //判断isPopShow不能用异步方法
+      if (!mentionsHelper.isPopShowFlag) return;
+      if (ev.key == "ArrowUp") {
+        ev.preventDefault();
+        await Mentions.invokeMethodAsync("PrevOption");
+      } else if (ev.key == "ArrowDown") {
+        ev.preventDefault();
+        await Mentions.invokeMethodAsync("NextOption");
+      }
+      else if (ev.key == "Enter") {
+        ev.preventDefault();
+        await Mentions.invokeMethodAsync("EnterOption");
+      }
+            //其他按键在c#中处理
     }
   }
 
-}
+  public static getProp = function (e: HTMLElement, propName: string): any {
+    const textArea = mentionsHelper.getTextarea(e);
 
-class InputCaret {
-  domInputor: any;
-
-  constructor(inputor) {
-    this.domInputor = inputor;
+    return textArea[propName];
   }
 
-  getPos = function () {
-    return this.domInputor.selectionStart;
-  };
-
-  getPosition = function (pos) {
-    var domInputor, end_range, format, html, mirror, start_range;
-    domInputor = this.domInputor;
-
-    format = function (value) {
-      value = value.replace(/<|>|`|"|&/g, '?').replace(/\r\n|\r|\n/g, "<br/>");
-      if (/firefox/i.test(navigator.userAgent)) {
-        value = value.replace(/\s/g, '&nbsp;');
-      }
+  public static getCursorXY = function (element: HTMLElement) {
+    const textArea = mentionsHelper.getTextarea(element);
+    const format = function (value) {
+      value = value.replace(/<|>|`|"|&/g, '?');
       return value;
     };
-    if (!pos) {
-      pos = this.getPos();
+    const inputorValue = textArea.value;
+    const pos = textArea.selectionStart;
+    let start_range = inputorValue.slice(0, pos);
+    if (start_range.length > 0) start_range = start_range.substring(0, start_range.length - 1);
+    const end_range = inputorValue.slice(pos);
+    let html = format(start_range);
+    html += "<span>@</span>";
+    html += format(end_range);
+
+    const div_mirror = document.createElement("div");
+    div_mirror.className = "ant-mentions-measure"
+    div_mirror.innerHTML = html;
+    textArea.parentNode.append(div_mirror);
+
+    const flag: HTMLSpanElement = div_mirror.querySelector("span");
+        //  let flagPos = flag.getBoundingClientRect();
+        //  let textAreaPos = textArea.getBoundingClientRect();
+        //  let bodyPos = document.body.getBoundingClientRect();
+    const left = flag.offsetLeft - textArea.scrollLeft + 16;
+    const top = flag.offsetTop - textArea.scrollTop + 16;
+
+    div_mirror.remove();
+    return [left, top];
+  };
+
+  private static getTextarea(element: HTMLElement) {
+    const textAreaTag = "TEXTAREA";
+    let textarea = element;
+    if (element.tagName != textAreaTag) {
+      const allTextareas = element.getElementsByTagName(textAreaTag);
+      if (allTextareas.length == 0) {
+        throw "Mentions requires a textarea to be rendered, but none were found.";
+      }
+      textarea = allTextareas[0] as HTMLTextAreaElement;
     }
-    let inputorValue = domInputor.value;
-    start_range = inputorValue.slice(0, pos);
-    end_range = inputorValue.slice(pos);
-    html = "<span style='position: relative; display: inline;'>" + format(start_range) + "</span>";
-    html += "<span id='caret' style='position: relative; display: inline;'>|</span>";
-    html += "<span style='position: relative; display: inline;'>" + format(end_range) + "</span>";
-    mirror = new Mirror(domInputor);
-    return mirror.create(html).rect();
-  };
 
-  getOffset = function (pos = null) {
-    var offset, position, domInputor;
-    domInputor = this.domInputor;
-
-    var rect = domInputor.getBoundingClientRect();
-
-    offset = {
-      left: rect.left,
-      top: rect.top
-    };
-
-    position = this.getPosition(pos);
-    return offset = {
-      left: offset.left + position.left - domInputor.scrollLeft,
-      top: offset.top + position.top - domInputor.scrollTop,
-      height: position.height
-    };
-  };
-
-}
-
-class Mirror {
-  domInputor: any;
-  css_attr: any;
-  constructor(inputor) {
-    this.domInputor = inputor;
-    this.css_attr = [];
+    return textarea as HTMLTextAreaElement;
   }
-
-  create = function (html) {
-    this.$mirror = document.createElement("div");
-    //TODO: hard coded reference, try to make it more relative
-    (<any>window).AntDesign.interop.styleHelper.css(this.$mirror, this.mirrorCss());
-
-    this.$mirror.innerHTML = html;
-    this.domInputor.parentElement.append(this.$mirror);
-
-    return this;
-  };
-
-  mirrorCss = function () {
-    var css, _this = this;
-    css = {
-      position: 'absolute',
-      left: -9999,
-      top: 0,
-      zIndex: -20000
-    };
-
-    this.css_attr.push('width');
-
-    this.css_attr.forEach((p) => {
-      return css[p] = _this.domInputor.style[p]//_this.$inputor.css(p);
-    })
-
-    return css;
-  };
-
-  rect = function () {
-    var flag, pos, rect;
-    flag = this.$mirror.querySelector("#caret");
-    var oRect = flag.getBoundingClientRect();
-
-    pos = {
-      left: flag.offsetLeft,
-      top: flag.offsetTop
-    }; //$flag.position();
-
-    rect = {
-      left: pos.left,
-      top: pos.top,
-      height: oRect.height
-    };
-
-    this.$mirror.parentElement.removeChild(this.$mirror)
-    return rect;
-  };
-
 }

@@ -1,19 +1,26 @@
 ﻿@using System.ComponentModel.DataAnnotations
 
-<EnumRadioGroup TEnum="Fruits" @bind-Value="_radioValue"></EnumRadioGroup>
+<EnumRadioGroup TEnum="Fruits" @bind-Value="_radioValue" Disabled="_disabled" Name="group1"></EnumRadioGroup>
+<br />
+<EnumRadioGroup TEnum="Fruits" @bind-Value="_radioValue" Disabled="_disabled" ButtonStyle="RadioButtonStyle.Solid" Name="group2"></EnumRadioGroup>
 <br />
 Value: @_radioValue
 
+<div style="margin-top: 20px">
+    <Button Type="primary" OnClick="_=>_disabled=!_disabled">Toggle Disabled</Button>
+</div>
+
 @code {
-	Fruits _radioValue = Fruits.Apple;
+    Fruits _radioValue = Fruits.Apple;
+    bool _disabled;
 
-	enum Fruits
-	{
-		[Display(Name = "🍎 Apple")]
-		Apple,
+    enum Fruits
+    {
+        [Display(Name = "🍎 Apple")]
+        Apple,
 
-		Pear,
+        Pear,
 
-		Orange
-	}
+        Orange
+    }
 }

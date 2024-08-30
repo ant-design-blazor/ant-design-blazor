@@ -42,7 +42,8 @@
       "nextDecade": "下一年代",
       "previousCentury": "上一世紀",
       "nextCentury": "下一世紀",
-      "monthFormat": "M月"
+      "monthFormat": "M月",
+      "shortWeekDays": [ "日", "一", "二", "三", "四", "五", "六" ]
     },
     "timePickerLocale": { "placeholder": "請選擇時間" }
   },
@@ -85,7 +86,27 @@
     "filterConfirm": "確 定",
     "filterReset": "重 置",
     "selectAll": "全部選取",
-    "selectInvert": "反向選取"
+    "selectInvert": "反向選取",
+    "filterOptions": {
+      "true": "是",
+      "false": "否",
+      "and": "且",
+      "or": "或",
+      "equals": "等於",
+      "notEquals": "不等於",
+      "contains": "包含",
+      "notContains": "不包含",
+      "startsWith": "開頭為",
+      "endsWith": "結尾為",
+      "greaterThan": "大於",
+      "lessThan": "小於",
+      "greaterThanOrEquals": "大於或等於",
+      "lessThanOrEquals": "小於或對於",
+      "isNull": "為 Null",
+      "isNotNull": "不為 Null",
+      "theSameDateWith": "等於該日期",
+      "between": "在區間"
+    }
   },
   "Modal": {
     "okText": "確 定",
@@ -117,5 +138,58 @@
     "downloadFile": "下载文件"
   },
   "Empty": { "description": "無此資料" },
-  "PageHeader": { "back": "返回" }
+  "PageHeader": { "back": "返回" },
+  "Form": {
+    "optional": "（可選）",
+    "defaultValidateMessages": {
+      "default": "字段驗證錯誤${label}",
+      "required": "請輸入${label}",
+      "enum": "${label}必須是其中一個[${enum}]",
+      "whitespace": "${label}不能為空字符",
+      "date": {
+        "format": "${label}日期格式無效",
+        "parse": "${label}不能轉換為日期",
+        "invalid": "${label}是一個無效日期"
+      },
+      "types": {
+        "string": "${label}不是一個有效的${type}",
+        "method": "${label}不是一個有效的${type}",
+        "array": "${label}不是一個有效的${type}",
+        "object": "${label}不是一個有效的${type}",
+        "number": "${label}不是一個有效的${type}",
+        "date": "${label}不是一個有效的${type}",
+        "boolean": "${label}不是一個有效的${type}",
+        "integer": "${label}不是一個有效的${type}",
+        "float": "${label}不是一個有效的${type}",
+        "regexp": "${label}不是一個有效的${type}",
+        "email": "${label}不是一個有效的${type}",
+        "url": "${label}不是一個有效的${type}",
+        "hex": "${label}不是一個有效的${type}"
+      },
+      "string": {
+        "len": "${label}須為${len}個字符",
+        "min": "${label}最少${min}個字符",
+        "max": "${label}最多${max}個字符",
+        "range": "${label}須在${min}-${max}字符之間"
+      },
+      "number": {
+        "len": "${label}必須等於${len}",
+        "min": "${label}最小值為${min}",
+        "max": "${label}最大值為${max}",
+        "range": "${label}須在${min}-${max}之間"
+      },
+      "array": {
+        "len": "須為${len}個${label}",
+        "min": "最少${min}個${label}",
+        "max": "最多${max}個${label}",
+        "range": "${label}數量須在${min}-${max}之間"
+      },
+      "pattern": {
+        "mismatch": "${label}與模式不匹配${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "預覽"
+  }
 }

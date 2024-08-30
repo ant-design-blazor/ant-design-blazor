@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -10,7 +12,7 @@ namespace AntDesign
     /// <summary>
     /// show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef, but ConfirmService return ConfirmResult
     /// </summary>
-    public class ConfirmService
+    public class ConfirmService : IConfirmService
     {
         internal event Func<ConfirmRef, Task> OnOpenEvent;
 
@@ -38,6 +40,7 @@ namespace AntDesign
                 Content = content,
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
+                CreateByService = true,
             };
 
             if (autoFocusButton != null)
@@ -71,7 +74,7 @@ namespace AntDesign
 
             var confirmRef = new ConfirmRef(confirmOptions)
             {
-                TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
+                TaskCompletionSource = new TaskCompletionSource<ConfirmResult>(),
             };
             if (OnOpenEvent != null)
             {

@@ -122,5 +122,58 @@
   },
   "Empty": {
     "description": "Nema podataka"
+  },
+  "Form": {
+    "optional": "(optional)",
+    "defaultValidateMessages": {
+      "default": "Greška pri proveri valjanosti za ${label}",
+      "required": "Unesi ${label}",
+      "enum": "${label} mora da bude nešto od [${enum}]",
+      "whitespace": "${label} ne može biti prazan znak",
+      "date": {
+        "format": "${label} format datuma je nevažeći",
+        "parse": "${label} se ne može konvertovati u datum",
+        "invalid": "${label} je nevažeći datum"
+      },
+      "types": {
+        "string": "${label} nije važeći ${type}",
+        "method": "${label} nije važeći ${type}",
+        "array": "${label} nije važeći ${type}",
+        "object": "${label} nije važeći ${type}",
+        "number": "${label} nije važeći ${type}",
+        "date": "${label} nije važeći ${type}",
+        "boolean": "${label} nije važeći ${type}",
+        "integer": "${label} nije važeći ${type}",
+        "float": "${label} nije važeći ${type}",
+        "regexp": "${label} nije važeći ${type}",
+        "email": "${label} nije važeći ${type}",
+        "url": "${label} nije važeći ${type}",
+        "hex": "${label} nije važeći ${type}"
+      },
+      "string": {
+        "len": "${label} mora da sadrži ${len} znakova",
+        "min": "${label} mora da sadrži bar ${min} znakova",
+        "max": "${label} mora da sadrži do ${max} znakova",
+        "range": "${label} mora da sadrži između ${min} i ${max} znakova"
+      },
+      "number": {
+        "len": "${label} mora biti jednak ${len}",
+        "min": "${label} mora biti najmanje ${min}",
+        "max": "${label} mora biti najviše ${max}",
+        "range": "${label} mora biti između ${min} i ${max}"
+      },
+      "array": {
+        "len": "Mora biti ${len} ${label}",
+        "min": "Najmanje ${min} ${label}",
+        "max": "najviše ${max} ${label}",
+        "range": "Iznos ${label} mora biti između ${min} i ${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} ne odgovara obrascu ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Pregled"
   }
 }

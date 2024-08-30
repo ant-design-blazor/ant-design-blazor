@@ -1,12 +1,16 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Localization;
 
 namespace AntDesign.Docs.Shared
 {
@@ -31,36 +35,41 @@ namespace AntDesign.Docs.Shared
 
         [Inject] public NavigationManager Navigation { get; set; }
 
-        [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private IStringLocalizer Localizer { get; set; }
 
         private AvatarInfo[] _avatarList;
         private List<string> _filePaths;
         private bool _waitForRefresh;
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            await GetContributors();
-            await base.OnInitializedAsync();
-
             Navigation.LocationChanged += OnLocationChanged;
+            base.OnInitialized();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                _waitForRefresh = true;
+                StateHasChanged();
+                return;
+            }
+
             if (_waitForRefresh)
             {
                 _waitForRefresh = false;
-                await GetContributors();
+                _ = GetContributors();
             }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async void OnLocationChanged(object _, LocationChangedEventArgs e)
+        private void OnLocationChanged(object _, LocationChangedEventArgs e)
         {
             if (_waitForRefresh)
             {
-                _waitForRefresh = false;
-                await GetContributors();
+                _waitForRefresh = true;
             }
         }
 
@@ -68,11 +77,8 @@ namespace AntDesign.Docs.Shared
         {
             if (FilePaths?.Any() != true)
                 return;
-            var taskList = new List<Task<AvatarInfo[]>>();
-            foreach (var filePath in FilePaths)
-            {
-                taskList.Add(HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor"));
-            }
+
+            var taskList = FilePaths.Select(filePath => HttpClient.GetFromJsonAsync<AvatarInfo[]>($"https://proapi.azurewebsites.net/doc/getAvatarList?filename={filePath}&owner=ant-design-blazor&repo=ant-design-blazor")).ToArray();
             await Task.WhenAll(taskList);
             _avatarList = taskList.SelectMany(x => x.Result).Distinct().ToArray();
             StateHasChanged();

@@ -1,13 +1,13 @@
-﻿<Row OnBreakpoint="HandleBreakpoint">
+﻿<GridRow OnBreakpoint="HandleBreakpoint">
     Current break point: 
     @foreach (var type in types)
     {
         if ((int)type <= (int)current)
         {
-            <Tag PresetColor="@PresetColor.Blue">@type</Tag>
+            <Tag Color="@PresetColor.Blue.ToString()">@type</Tag>
         }
     }
-</Row>
+</GridRow>
 
 @code{
 

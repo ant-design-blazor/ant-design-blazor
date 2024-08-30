@@ -133,6 +133,7 @@
   },
   "PageHeader": { "back": "برگشت" },
   "Form": {
+    "optional": "(اختیاری)",
     "defaultValidateMessages": {
       "default": "خطا در ${label}",
       "required": "فیلد ${label} اجباریست",
@@ -178,5 +179,8 @@
       },
       "pattern": { "mismatch": "الگوی ${label} با ${pattern} برابری نمی‌کند" }
     }
+  },
+  "Image": {
+    "preview": "نمایش"
   }
 }

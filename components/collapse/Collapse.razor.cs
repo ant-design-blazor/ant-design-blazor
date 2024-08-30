@@ -1,39 +1,92 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>A content area which can be collapsed and expanded.</para>
+
+        <h2>When To Use</h2>
+
+        <list type="bullet">
+            <item>Can be used to group or hide complex regions to keep the page clean.</item>
+            <item><c>Accordion</c> is a special kind of <c>Collapse</c>, which allows only one panel to be expanded at a time.</item>
+        </list>
+    </summary>
+    <seealso cref="Panel"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg", Columns = 1)]
     public partial class Collapse : AntDomComponentBase
     {
         #region Parameter
 
+        /// <summary>
+        /// Enable/disable accordion mode. When true, only one panel can be open at once. When opening another the rest collapse.
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Accordion { get; set; }
 
+        /// <summary>
+        /// Enable/disable border
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Expand icon position
+        /// </summary>
+        /// <default value="CollapseExpandIconPosition.Left"/>
         [Parameter]
         public string ExpandIconPosition { get; set; } = CollapseExpandIconPosition.Left;
 
+        /// <summary>
+        /// Default <see cref="Panel"/> element's <see cref="Panel.Key"/>
+        /// </summary>
         [Parameter]
         public string[] DefaultActiveKey { get; set; } = Array.Empty<string>();
 
+        /// <summary>
+        /// Callback executed when open panels change
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
 
+        /// <summary>
+        /// Icon to display in <see cref="ExpandIconPosition"/>
+        /// </summary>
+        /// <default value="right"/>
         [Parameter]
         public string ExpandIcon { get; set; } = "right";
 
+        /// <summary>
+        /// Expand icon content to display in <see cref="ExpandIconPosition"/>. Takes priority over <see cref="ExpandIcon"/>
+        /// </summary>
         [Parameter]
         public RenderFragment<bool> ExpandIconTemplate { get; set; }
 
+
+        /// <summary>
+        /// Whether enable the expand/collapse animation
+        /// </summary>
+        [Parameter]
+        public bool Animation { get; set; }
+
+
         #endregion Parameter
 
+        /// <summary>
+        /// Content of the collapse. Typically contains <see cref="Panel"/> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

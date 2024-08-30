@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -12,6 +13,7 @@ namespace AntDesign
         public AutoCompleteSearch()
         {
             AutoComplete = false;
+            BindOnInput = true;
         }
 
         [CascadingParameter]
@@ -40,7 +42,6 @@ namespace AntDesign
             if (Component != null) await Component?.InputFocus(e);
 
             await base.OnFocusAsync(e);
-
         }
 
         protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
@@ -50,14 +51,19 @@ namespace AntDesign
             if (Component != null) await Component?.InputKeyDown(args);
         }
 
-
-        protected override async void OnInputAsync(ChangeEventArgs args)
+        protected override async Task OnInputAsync(ChangeEventArgs args)
         {
-            base.OnInputAsync(args);
+            await base.OnInputAsync(args);
 
-            if (Component != null) await Component?.InputInput(args);
+            await Component?.InputInput(args);
         }
 
+        protected override void OnValueChange(string value)
+        {
+            base.OnValueChange(value);
+
+            Component?.InputValueChange(value);
+        }
 
         #region IAutoCompleteInput
 
@@ -66,6 +72,6 @@ namespace AntDesign
             this.CurrentValue = value?.ToString();
         }
 
-        #endregion
+        #endregion IAutoCompleteInput
     }
 }

@@ -1,5 +1,5 @@
 ﻿@inject DrawerService DrawerService
-@inject ConfirmService confirmService
+@inject IConfirmService confirmService
 
 <Space Direction="DirectionVHType.Vertical">
     <SpaceItem>
@@ -41,7 +41,7 @@
         var options = new DrawerOptions()
         {
             Title = "Component",
-            Width = 350,
+            Width = "350",
         };
 
         var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);

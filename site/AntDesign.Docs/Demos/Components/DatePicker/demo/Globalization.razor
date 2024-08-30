@@ -1,60 +1,27 @@
 ﻿@using System.Globalization
 <Row>
     <Col Span="12">
-        <Text>en-US</Text>
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@EN" CultureInfo="CiEn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@EN" CultureInfo="CiEn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@EN" CultureInfo="CiEn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@EN" CultureInfo="CiEn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@EN" CultureInfo="CiEn" />
-        <br />
+    <Text>Japanese with Era</Text>
+    <br />
+    <DatePicker TValue="DateTimeOffset?" Locale="jaJP.DatePicker" />
+    <br />
     </Col>
 
     <Col Span="12">
-        <Text>zh-CN</Text>
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@CN" CultureInfo="CiCn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@CN" CultureInfo="CiCn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@CN" CultureInfo="CiCn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@CN" CultureInfo="CiCn" />
-        <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@CN" CultureInfo="CiCn" />
-        <br />
+    <Text>Chinese</Text>
+    <br />
+    <DatePicker TValue="DateTimeOffset?" Locale="CN" CultureInfo="@CultureInfo.GetCultureInfo("zh-CN")" />
+    <br />
     </Col>
 </Row>
 
-@code{
-    CultureInfo CiEn = CultureInfo.GetCultureInfo("en-US");
-    CultureInfo CiCn = CultureInfo.GetCultureInfo("zh-CN");
+@code {
+    AntDesign.Locales.Locale jaJP;
 
-
-    DatePickerLocale EN = new DatePickerLocale
-    {
-        FirstDayOfWeek = DayOfWeek.Monday,
-        Lang = new DateLocale
-        {
-            YearFormat = "yyyy",
-            MonthFormat = "MMM",
-            DateSelect = "Select date",
-            WeekSelect = "Select week",
-            MonthSelect = "Select month",
-            YearSelect = "Select year",
-            QuarterSelect = "Select quarter",
-            Today = "Today"
-        }
-    };
     DatePickerLocale CN = new DatePickerLocale
     {
-        FirstDayOfWeek = DayOfWeek.Sunday,
-        Lang = new DateLocale
+        FirstDayOfWeek = DayOfWeek.Sunday, // it's Monday by default in built-in locale.
+        DateLocale = new DateLocale
         {
             YearFormat = "yyyy年",
             MonthFormat = "M月",
@@ -66,4 +33,13 @@
             Today = "今天"
         }
     };
+
+    protected override void OnInitialized()
+    {
+        // update an exist locale
+        jaJP = LocaleProvider.GetLocale("ja-JP");
+        jaJP.DatePicker.DateLocale.DateFormat = "ggy年M月d日";
+        jaJP.CurrentCulture.DateTimeFormat.Calendar = new JapaneseCalendar();
+    }
+
 }

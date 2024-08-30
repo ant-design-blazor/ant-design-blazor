@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
@@ -14,7 +15,6 @@ namespace AntDesign
         internal event Func<DrawerRef, Task> OnCloseEvent;
 
         internal event Func<DrawerRef, Task> OnUpdateEvent;
-
 
         /// <summary>
         /// Create and open a simple drawer without result
@@ -58,7 +58,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Update a drawer 
+        /// Update a drawer
         /// </summary>
         /// <param name="drawerRef"></param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Create and open a drawer 
+        /// Create and open a drawer
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
         /// <typeparam name="TComponentOptions"></typeparam>
@@ -96,12 +96,11 @@ namespace AntDesign
             return await drawerRef.TaskCompletionSource.Task;
         }
 
-
         public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(TComponentOptions options,
             bool closable = true,
             bool maskClosable = true,
             string title = null,
-            int width = 256,
+            string width = "256",
             bool mask = true,
              string placement = "right") where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {

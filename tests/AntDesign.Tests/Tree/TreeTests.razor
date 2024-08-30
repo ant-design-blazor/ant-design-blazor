@@ -1,0 +1,104 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+
+    record Item(string Name)
+    {
+        public List<Item> Children { get; set; } = new();
+    };
+
+    [Fact]
+    public async Task Parent_MoveDown_item_mutate_datasource()
+    {
+        var data = new List<Item>
+        {
+            new Item("Item 1"),
+            new Item("Item 2"),
+        };
+
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data"/>);
+        var firstItem = cut.FindComponent<TreeNode<Item>>();
+
+        var firstItemIndex = data.IndexOf(firstItem.Instance.DataItem) + 1;
+        firstItem.Instance.MoveDown();
+
+        var resultList = firstItem.Instance.GetParentChildDataItems();
+        resultList.Should().HaveElementAt(firstItemIndex, firstItem.Instance.DataItem, "DataSource should be mutated");
+    }
+
+    [Fact]
+    public async Task Parent_Remove_item_mutate_datasource()
+    {
+        var data = new List<Item>
+        {
+            new Item("Item 1"),
+            new Item("Item 2"),
+        };
+
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data"/>);
+        var firstItem = cut.FindComponent<TreeNode<Item>>();
+        firstItem.Instance.Remove();
+
+        data.Should().NotContain(firstItem.Instance.DataItem, "Item should be removed in DataSource");
+    }
+
+    [Fact]
+    public async Task Children_MoveDown_item_mutate_datasource()
+    {
+        var data = new List<Item>
+        {
+            new Item("Item 1")
+            {
+                Children = new List<Item>
+                {
+                    new Item("Child 1-1"),
+                    new Item("Child 1-2"),
+                }
+            },
+        };
+
+        var cut = Render<Tree<Item>>(
+            @<Tree TItem="Item"
+                   DataSource="data"
+                   ChildrenExpression="node => node.DataItem.Children">
+            </Tree>);
+
+        var treeNodes = cut.FindComponents<TreeNode<Item>>();
+        var childComponent = treeNodes.First(component => component.Instance.DataItem.Name.Equals("Child 1-1"));
+
+        var childItemIndex = data[0].Children.IndexOf(childComponent.Instance.DataItem) + 1;
+        childComponent.Instance.MoveDown();
+
+        var resultList = childComponent.Instance.GetParentChildDataItems();
+        resultList.Should().HaveElementAt(childItemIndex, childComponent.Instance.DataItem, "DataSource should be mutated");
+    }
+
+    [Fact]
+    public async Task Children_Remove_item_mutate_datasource()
+    {
+        var data = new List<Item>
+        {
+            new Item("Item 1")
+            {
+                Children = new List<Item>
+                {
+                    new Item("Child 1-1"),
+                    new Item("Child 1-2"),
+                }
+            },
+        };
+
+        var cut = Render<Tree<Item>>(
+            @<Tree TItem="Item"
+                   DataSource="data"
+                   ChildrenExpression="node => node.DataItem.Children">
+            </Tree>);
+
+        var treeNodes = cut.FindComponents<TreeNode<Item>>();
+        var childComponent = treeNodes.First(component => component.Instance.DataItem.Name.Equals("Child 1-2"));
+        childComponent.Instance.Remove();
+
+        data[0].Children.Should().NotContain(childComponent.Instance.DataItem, "Item should be removed in DataSource");
+    }
+
+}

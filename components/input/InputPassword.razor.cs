@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,8 +21,9 @@ namespace AntDesign
         public RenderFragment IconRender { get; set; }
 
         /// <summary>
-        ///  Whether to show password
+        /// Whether to show password or not
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowPassword
         {
@@ -34,8 +39,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Whether show toggle button
+        /// Whether to show password visibility toggle button or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
 
@@ -61,8 +67,6 @@ namespace AntDesign
             {
                 Suffix = new RenderFragment((builder) =>
                 {
-                    builder.OpenElement(0, "span");
-                    builder.AddAttribute(1, "class", $"{PrefixCls}-suffix");
                     if (IconRender is null)
                     {
                         builder.OpenComponent<Icon>(2);
@@ -80,7 +84,6 @@ namespace AntDesign
                     {
                         builder.AddContent(6, IconRender);
                     }
-                    builder.CloseElement();
                 });
             }
         }
@@ -96,8 +99,8 @@ namespace AntDesign
             await base.Focus(behavior, preventScroll);
             //delay enforces focus - it counters the js blur that is called on button pressed
             await Task.Delay(5);
-            //An ugly solution for InputPassword in wasm to receive focus and keep 
-            //cursor at the last character. Any improvements are very welcome. 
+            //An ugly solution for InputPassword in wasm to receive focus and keep
+            //cursor at the last character. Any improvements are very welcome.
             if (Js.IsBrowser())
             {
                 await base.Focus(behavior, preventScroll);

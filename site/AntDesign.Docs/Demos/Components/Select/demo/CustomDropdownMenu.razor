@@ -6,10 +6,23 @@
         LabelName="@nameof(Person.Name)"
         Placeholder="custom dropdown render"
         OnSelectedItemChanged="OnSelectedItemChangedHandler"
-        Style="width: 240px;"
-        DropdownRender="@DropdownRender">
+        Style="width: 240px;">
+    <DropdownRender Context="originNode">
+        <div>
+            @originNode
+            <Divider Style="margin: 4px 0"></Divider>
+            <div style="display: flex; flex-wrap: nowrap; padding: 8px">
+                <Input Style="flex: auto" @bind-Value="@_name" />
+                <a style="flex: none; padding: 8px; display: block; cursor: pointer" @onclick="AddItem">
+                    <Icon Type="plus" Theme="outline"></Icon>
+                    Add Item
+                </a>
+            </div>
+        </div>
+    </DropdownRender>
 </Select>
-<br /><br />
+<br />
+<br />
 <p>
     Selected Value: @_selectedValue <br />
     Selected Item Name: @_selectedItem?.Name
@@ -33,7 +46,7 @@
         _list = new List<Person>
         {
             new Person {Id = 1, Name = "Jack"},
-            new Person {Id = 2, Name = "Lucy"}            
+            new Person {Id = 2, Name = "Lucy"}
         };
     }
 
@@ -42,33 +55,13 @@
         _selectedItem = value;
     }
 
-    private RenderFragment DropdownRender(RenderFragment originNode)
-    {
-        RenderFragment customDropdownRender =
-            @<Template>
-                <div>
-                    @originNode
-                    <Divider Style="margin: 4px 0"></Divider>
-                    <div style="display: flex; flex-wrap: nowrap; padding: 8px">
-                        <Input Style="flex: auto" @bind-Value="@_name"/>
-                        <a style="flex: none; padding: 8px; display: block; cursor: pointer" @onclick="AddItem">
-                            <Icon Type="plus" Theme="outline"></Icon>
-                            Add Item
-                        </a>
-                    </div>
-                </div>
-            </Template>;
-
-        return customDropdownRender;
-    }
-
     private void AddItem(MouseEventArgs args)
     {
-		if (!string.IsNullOrWhiteSpace(_name))
-		{
+        if (!string.IsNullOrWhiteSpace(_name))
+        {
             int newId = _list.Count() + 1;
-		    _list.Add(new Person {Id = newId, Name = _name});
-		    _name = string.Empty;
-	   }
+            _list.Add(new Person { Id = newId, Name = _name });
+            _name = string.Empty;
+        }
     }
 }

@@ -1,57 +1,57 @@
 ﻿@inherits AntDesignTestBase
 @code {
-	  public TabsTests()
-	  {
-	  		  JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-	  			  .SetResult(new HtmlElement());
+    public TabsTests()
+    {
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+      .SetResult(new HtmlElement());
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true);
+    }
 
-	  		  JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);	
-	  			JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true);	
-	  }
+    [Fact]
+    public void Render_tab_pane_without_forceRender()
+    {
+        var cut = Context.Render(
+    @<Tabs>
+        <TabPane Key="tab1" Tab="Tab 1">Tab Content 1</TabPane>
+        <TabPane Key="tab2" Tab="Tab 2">Tab Content 2</TabPane>
+    </Tabs>);
 
-	  [Fact]
-	  public void Render_tab_pane_without_forceRender()
-	  {
-		  var cut = Context.Render(
-          @<Tabs>
-              <TabPane Key="tab1" Tab="Tab 1">Tab Content 1</TabPane>
-						  <TabPane Key="tab2" Tab="Tab 2">Tab Content 2</TabPane>
-          </Tabs>);
+        var paneElements = cut.FindAll(".ant-tabs-tabpane");
+        paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
+        paneElements[1].TextContent.Trim().Should().Be("");
 
-		  var paneElements = cut.FindAll(".ant-tabs-tabpane");
-		  paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
-		  paneElements[1].TextContent.Trim().Should().Be("");
+        cut.FindAll("div.ant-tabs-tab")[1].Click();
+        var paneElements2 = cut.FindAll(".ant-tabs-tabpane");
+        paneElements2[0].TextContent.Trim().Should().Be("Tab Content 1");
+        paneElements2[1].TextContent.Trim().Should().Be("Tab Content 2");
+    }
 
-		  cut.FindAll("div.ant-tabs-tab")[1].Click();
-		  var paneElements2 = cut.FindAll(".ant-tabs-tabpane");
-		  paneElements2[0].TextContent.Trim().Should().Be("Tab Content 1");
-		  paneElements2[1].TextContent.Trim().Should().Be("Tab Content 2");
-	  }
+    [Fact]
+    public void Render_tab_pane_wit_forceRender()
+    {
+        var cut = Context.Render(
+    @<Tabs>
+        <TabPane Key="tab1" Tab="Tab 1" ForceRender>Tab Content 1</TabPane>
+        <TabPane Key="tab2" Tab="Tab 2" ForceRender>Tab Content 2</TabPane>
+    </Tabs>);
 
-	  [Fact]
-	  public void Render_tab_pane_wit_forceRender()
-	  {
-		  var cut = Context.Render(
-          @<Tabs>
-              <TabPane Key="tab1" Tab="Tab 1" ForceRender>Tab Content 1</TabPane>
-						  <TabPane Key="tab2" Tab="Tab 2" ForceRender>Tab Content 2</TabPane>
-          </Tabs>);
-
-		  var paneElements = cut.FindAll(".ant-tabs-tabpane");
-		  paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
-		  paneElements[1].TextContent.Trim().Should().Be("Tab Content 2");
-	  }
+        var paneElements = cut.FindAll(".ant-tabs-tabpane");
+        paneElements[0].TextContent.Trim().Should().Be("Tab Content 1");
+        paneElements[1].TextContent.Trim().Should().Be("Tab Content 2");
+    }
 
     [Fact]
     public void Render_tab_pane_with_tabTemplate()
     {
         var cut = Context.Render(
-          @<Tabs>
-              <TabPane Key="tab1">
-                  <TabTemplate>Tab 1</TabTemplate>
-              </TabPane>
-          </Tabs>
-			  );
+    @<Tabs>
+        <TabPane Key="tab1">
+            <TabTemplate>Tab 1</TabTemplate>
+        </TabPane>
+    </Tabs>
+    );
 
         var tabElement = cut.Find(".ant-tabs-tab-btn");
         tabElement.InnerHtml.Trim().Should().Be("Tab 1");
@@ -59,20 +59,70 @@
 
     [Fact]
     public void Bind_OnClose_event()
-	  {
-	      var closeTab = "";
-	      Action<string> OnClose = (string key) => closeTab = key;
+    {
+        var closeTab = "";
+        Action<string> OnClose = (string key) => closeTab = key;
 
-	      var cut = Context.Render(
-	        @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
-	            <TabPane Key="tab1" Tab="Tab 1">
-	            </TabPane>
-	        </Tabs>
-	      );
+        var cut = Context.Render(
+    @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
+        <TabPane Key="tab1" Tab="Tab 1">
+        </TabPane>
+        </Tabs>
+    );
 
-	      var removeElement = cut.Find(".ant-tabs-tab-remove");
-	      removeElement.Click();
+        var removeElement = cut.Find(".ant-tabs-tab-remove");
+        removeElement.Click();
 
-	      closeTab.Should().Be("tab1");
+        closeTab.Should().Be("tab1");
+    }
+
+    [Fact]
+    public async Task Render_tab_pane_with_aniamted()
+    {
+        var activeKey = "tab1";
+        var cut = Context.Render<Tabs>( 
+            @<Tabs Animated @bind-ActiveKey="activeKey">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+            </Tabs>
+    );
+        cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-active");
+        cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
+
+        cut.FindAll("div.ant-tabs-tab")[1].Click();
+     
+        activeKey.Should().Be("tab2");
+        cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
+        cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-active");
+    }
+
+    [Fact]
+    public async Task Render_tab_bar_style_sets()
+    {
+        var activeKey = "tab1";
+        var style = "color:red";
+        var cut = Context.Render( 
+            @<Tabs Animated @bind-ActiveKey="activeKey" TabBarStyle="@style">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+        </Tabs>
+        );
+        var paneElements = cut.FindAll(".ant-tabs-nav");
+        paneElements[0].Attributes["style"]?.Value.Should().Be(style);
+    }
+
+    [Fact]
+    public async Task Render_tab_bar_class_sets()
+    {
+        var activeKey = "tab1";
+        var classList = "test1 test2";
+        var cut = Context.Render( 
+            @<Tabs Animated @bind-ActiveKey="activeKey" TabBarClass="@classList">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+        </Tabs>
+        );
+        var paneElements = cut.FindAll(".ant-tabs-nav");
+            paneElements[0].Attributes["class"]?.Value.Should().Be($"ant-tabs-nav {classList}");
     }
 }

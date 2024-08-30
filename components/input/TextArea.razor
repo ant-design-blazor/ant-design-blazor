@@ -4,7 +4,7 @@
 @{
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
-        {
+                                        {
             //{ "onchange", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnChangeAsync(e)) },
             //{ "onblur", EventUtil.AsNonRenderingEventHandler<FocusEventArgs>(e => OnBlurAsync(e)) },
             //{ "oninput", EventUtil.AsNonRenderingEventHandler<ChangeEventArgs>(e => OnInputAsync(e)) },
@@ -23,50 +23,51 @@
             { "placeholder", Placeholder },
             { "id", Id },
             //{ "style", Style },
-            { "class", ClassMapper.Class },
+            //{ "class", ClassMapper.Class },
             { "disabled", Disabled },
             { "readonly", ReadOnly },
-         };
+    };
 
     if (AutoSize == false)
     {
         attributes.Add("style", _heightStyle + Style);
+        attributes.Add("rows", Rows);
     }
 
     if (Attributes != null)
     {
         Attributes.Keys.ForEach(key => { attributes[key] = Attributes[key]; });
     }
+
+    if (!string.IsNullOrEmpty(NameAttributeValue))
+    {
+        attributes.Add("name", NameAttributeValue);
+    }
 }
 
-@if (ShowCount)
+@if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
-	<div class="ant-input=textarea ant-input-textarea-show-count" data-count="@(Value?.Length ?? 0)">
-		@if (Suffix != null)
-		{
-			<span class="@_warpperClassMapper.Class">
-				<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
-				@Suffix
-			</span>
-		}
-		else
-		{
-			<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
-		}
-		<AntDesign.Text Style="float: right; pointer-events: none; white-space: nowrap; color: rgba(0, 0, 0, 0.45)">&nbsp;@($"/ {MaxLength}")</AntDesign.Text>
-	</div>
+    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
+        <span class="@_warpperClassMapper.Class">
+            <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+            @if (AllowClear)
+            {
+                @ClearIcon
+            }
+        </span>
+        <span class="ant-input-textarea-suffix">
+            @if (Suffix != null)
+            {
+                @Suffix
+            }
+            @if (FormItem?.FeedbackIcon != null)
+            {
+                @FormItem.FeedbackIcon
+            }
+        </span>
+    </div>
 }
 else
 {
-	@if (Suffix != null)
-	{
-		<span class="@_warpperClassMapper.Class">
-			<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>
-			@Suffix				
-		</span>
-	}
-	else
-	{
-		<textarea @ref="Ref" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation"/>	
-	}
+    <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
 }

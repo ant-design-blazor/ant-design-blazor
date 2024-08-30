@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace AntDesign
 {
@@ -62,10 +66,17 @@ namespace AntDesign
 
         #endregion upload
 
+        #region download
+
+        public static string TriggerFileDownload => DownloadComponentHelper.TriggerFileDownload;
+
+        #endregion download
+
         #region event
 
         public static string TriggerEvent => EventHelper.TriggerEvent;
         public static string AddDomEventListener => EventHelper.AddDomEventListener;
+        public static string RemoveDomEventListener => EventHelper.RemoveDomEventListener;
         public static string AddDomEventListenerToFirstChild => EventHelper.AddDomEventListenerToFirstChild;
         public static string AddPreventKeys => EventHelper.AddPreventKeys;
         public static string RemovePreventKeys => EventHelper.RemovePreventKeys;
@@ -84,6 +95,12 @@ namespace AntDesign
 
         #endregion icon
 
+        #region image
+
+        public static string ImgDragAndDrop => ImageComponentHelper.ImgDragAndDrop;
+
+        #endregion
+
         #region input
 
         public static string RegisterResizeTextArea => InputComponentHelper.RegisterResizeTextArea;
@@ -95,6 +112,10 @@ namespace AntDesign
         #region mentions
 
         public static string GetCursorXY => MentionsComponentHelper.GetCursorXY;
+        public static string SetEditorKeyHandler => MentionsComponentHelper.SetEditorKeyHandler;
+        public static string GetProp => MentionsComponentHelper.GetProp;
+        public static string SetPopShowFlag => MentionsComponentHelper.SetPopShowFlag;
+
 
         #endregion mentions
 
@@ -148,6 +169,7 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "eventHelper.";
             public static string TriggerEvent => $"{FUNC_PREFIX}triggerEvent";
             public static string AddDomEventListener => $"{FUNC_PREFIX}addDomEventListener";
+            public static string RemoveDomEventListener => $"{FUNC_PREFIX}removeDomEventListener";
             public static string AddDomEventListenerToFirstChild => $"{FUNC_PREFIX}addDomEventListenerToFirstChild";
             public static string AddPreventKeys => $"{FUNC_PREFIX}addPreventKeys";
             public static string RemovePreventKeys => $"{FUNC_PREFIX}removePreventKeys";
@@ -168,11 +190,12 @@ namespace AntDesign
 #endif
             public static string Focus => $"{FUNC_PREFIX}focus";
             public static string Blur => $"{FUNC_PREFIX}blur";
-            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo"; 
+            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
             public static string SmoothScrollTo => $"{FUNC_PREFIX}smoothScrollTo";
             public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
             public static string DisableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
             public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
+            public static string GetScrollBarSize => $"{FUNC_PREFIX}getScrollBarSize";
         }
 
         public static class StyleHelper
@@ -215,6 +238,12 @@ namespace AntDesign
             public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
         }
 
+        public static class ImageComponentHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "imageHelper.";
+            public static string ImgDragAndDrop => $"{FUNC_PREFIX}imgDragAndDrop";
+        }
+
         public static class InputComponentHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "inputHelper.";
@@ -229,6 +258,9 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "mentionsHelper.";
             public static string GetCursorXY => $"{FUNC_PREFIX}getCursorXY";
+            public static string SetEditorKeyHandler => $"{FUNC_PREFIX}setEditorKeyHandler";
+            public static string GetProp => $"{FUNC_PREFIX}getProp";
+            public static string SetPopShowFlag => $"{FUNC_PREFIX}setPopShowFlag";
         }
 
         public static class ModalComponentHelper
@@ -266,6 +298,19 @@ namespace AntDesign
             public static string ClearFile => $"{FUNC_PREFIX}clearFile";
             public static string UploadFile => $"{FUNC_PREFIX}uploadFile";
             public static string GetFileInfo => $"{FUNC_PREFIX}getFileInfo";
+        }
+
+        public static class DownloadComponentHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "downloadHelper.";
+            public static string TriggerFileDownload => $"{FUNC_PREFIX}triggerFileDownload";
+        }
+
+        public static class WatermarkHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";
+
+            public static string GenerateBase64Url => $"{FUNC_PREFIX}generateBase64Url";
         }
     }
 }

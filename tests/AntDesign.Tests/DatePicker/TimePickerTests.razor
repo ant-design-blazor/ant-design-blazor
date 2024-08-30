@@ -1,0 +1,36 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.TimePickerData), MemberType = typeof(DatePickerTestData))]
+    public void DefaultValue_applied_to_value<T>(T defaultValue)
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var cut = Render<AntDesign.TimePicker<T>>(
+			@<TimePicker TValue="T" DefaultValue="@defaultValue" />);
+
+        cut.Instance.Value.Should().Be(defaultValue);
+    }
+
+#if NET6_0_OR_GREATER
+    [Theory]
+    [MemberData(nameof(DatePickerTestData.TimePickerData), MemberType = typeof(DatePickerTestData))]
+    public async Task Nullable_TimePicker_Accepts_Input<T>(T inputValue)
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var cut = Render<AntDesign.TimePicker<TimeOnly?>>(
+			@<TimePicker TValue="TimeOnly?" />);
+
+        var input = cut.Find("input");
+        var inputAsString = $"{inputValue:HH:mm:ss}";
+        await input.InputAsync(new ChangeEventArgs() { Value = inputAsString });
+        await input.KeyDownAsync(new KeyboardEventArgs() { Key = "Enter" });
+
+        $"{cut.Instance.Value:HH:mm:ss}".Should().Be(inputAsString);
+    }
+#endif
+}
