@@ -130,11 +130,6 @@ namespace AntDesign
                 ;
         }
 
-        internal void SetKey(string key)
-        {
-            Key = key;
-        }
-
         internal void SetActive(bool isActive)
         {
             if (_isActive != isActive)
@@ -165,32 +160,7 @@ namespace AntDesign
 
         internal void ExchangeWith(TabPane other)
         {
-            var otherTabIndex = other._tabIndex;
-            other._tabIndex = _tabIndex;
-            _tabIndex = otherTabIndex;
-        }
-
-        private TabPane Clone()
-        {
-            return new TabPane
-            {
-                Key = Key,
-                Tab = this.Tab,
-                TabTemplate = this.TabTemplate,
-                Disabled = this.Disabled,
-                Closable = this.Closable,
-            };
-        }
-
-        private void SetPane(TabPane tabPane)
-        {
-            Key = tabPane.Key;
-            Tab = tabPane.Tab;
-            TabTemplate = tabPane.TabTemplate;
-            Disabled = tabPane.Disabled;
-            Closable = tabPane.Closable;
-
-            StateHasChanged();
+            (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
         private Task HandleKeydown(KeyboardEventArgs e)
