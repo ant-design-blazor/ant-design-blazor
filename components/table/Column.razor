@@ -135,7 +135,20 @@ else if (IsRowTemplate)
     {
         return builder =>
         {
-         
+            var cellAttributes = new Dictionary<string, object>();
+
+            var fieldValue = !rowData.IsGrouping && GetValue != null ? GetValue(rowData) : default;
+            var fieldText = !rowData.IsGrouping && !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue?.ToString();
+            var title = Title;
+            var cellData = new CellData<TData>(rowData, fieldValue, Format);
+
+            if (!rowData.IsGrouping)
+            {
+                cellData = new CellData<TData>(rowData, fieldValue, Format);
+                cellAttributes = OnCell?.Invoke(cellData);
+                fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue is string text ? text : string.Empty;
+            }
+
             if (AppendExpandColumn)
             {
                 builder.AddContent(1, 
@@ -150,20 +163,6 @@ else if (IsRowTemplate)
                     );
             }
 
-            var cellAttributes = new Dictionary<string, object>();
-  
-            var fieldValue = GetValue != null ? GetValue(rowData) : default;
-            var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue?.ToString();
-            var title = Context.Columns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-            var cellData = new CellData<TData>(rowData, fieldValue, Format);
-
-            @if (!rowData.IsGrouping)
-            {
-                cellData = new CellData<TData>(rowData, fieldValue, Format);
-                cellAttributes = OnCell?.Invoke(cellData);
-                fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(fieldValue, Format) : fieldValue is string text ? text : string.Empty;
-            }
-        
             builder.AddContent(2,
         
             @<td class="@ClassMapper.Class" style="@CalcFixedStyle() @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" data-label="@title" @attributes="cellAttributes">

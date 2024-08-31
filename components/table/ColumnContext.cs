@@ -20,10 +20,11 @@ namespace AntDesign
 
         public ITable Table { get; }
 
-        private bool _collectingColumns = true;
+        private bool _collectingColumns;
 
         public ColumnContext(ITable table)
         {
+            _collectingColumns = true;
             Table = table;
         }
 
