@@ -256,7 +256,6 @@ namespace AntDesign
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
-        private bool _complted = false;
 
         protected override void OnInitialized()
         {
@@ -345,7 +344,8 @@ namespace AntDesign
                 AfterTabCreated.InvokeAsync(_activeKey);
             }
 
-            _needUpdateScrollListPosition = true;
+            // Only update scroll list position once the tabs have not been rendered
+            _needUpdateScrollListPosition = !_afterFirstRender;
         }
 
         public async Task RemoveTab(TabPane tab)
@@ -447,6 +447,10 @@ namespace AntDesign
             TryRenderInk();
 
             Card?.SetBody(_activeTab.ChildContent);
+
+            // render the classname of the actived tab
+            // Needs to be optimized to render only one tab instead all the tabs
+            StateHasChanged();
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
@@ -481,6 +485,11 @@ namespace AntDesign
         {
             base.OnParametersSet();
             _shouldRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return _shouldRender || _renderedActivePane != _activeTab;
         }
 
         private async Task ResetSizes()
@@ -581,13 +590,6 @@ namespace AntDesign
 
         private void TryRenderInk()
         {
-            if (!_afterFirstRender)
-            {
-                _needUpdateScrollListPosition = true;
-                StateHasChanged();
-                return;
-            }
-
             if (_itemRefs is not { Count: > 0 })
             {
                 return;
@@ -596,14 +598,19 @@ namespace AntDesign
             {
                 return;
             }
+
+            // the tabs maybe inside other components like modal, it can't get the element info at the first time
+            // so here is retrying to get the element info again.
+            // Fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/4061
+            if (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0)
+            {
+                _needUpdateScrollListPosition = true;
+                StateHasChanged();
+                return;
+            }
+
             if (IsHorizontal)
             {
-                if (_activeTabElement.ClientWidth <= 0)
-                {
-                    _needUpdateScrollListPosition = true;
-                    StateHasChanged();
-                    return;
-                }
 
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
@@ -629,13 +636,6 @@ namespace AntDesign
             }
             else
             {
-                if (_activeTabElement.ClientHeight <= 0)
-                {
-                    _needUpdateScrollListPosition = true;
-                    StateHasChanged();
-                    return;
-                }
-
                 _inkStyle = $"top: {_activeTabElement.OffsetTop}px; height: {_activeTabElement.ClientHeight}px;";
 
                 if (_activeTabElement.OffsetTop > _scrollOffset + _activeTabElement.ClientHeight
@@ -655,13 +655,8 @@ namespace AntDesign
             {
                 _shouldRender = true;
                 StateHasChanged();
-                _renderedActivePane = _activeTab;
             }
-        }
-
-        protected override bool ShouldRender()
-        {
-            return _shouldRender || _renderedActivePane != _activeTab;
+            _renderedActivePane = _activeTab;
         }
 
         internal void UpdateTabsPosition()
