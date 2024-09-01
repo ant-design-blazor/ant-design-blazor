@@ -35,8 +35,6 @@ namespace AntDesign
 
     public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
-        [Parameter] public bool ShowExpand { get; set; } = true;
-
         /// <summary>
         /// Whether to allow multiple selections or not
         /// </summary>
@@ -85,6 +83,9 @@ namespace AntDesign
         [Parameter]
         public TreeCheckedStrategy ShowCheckedStrategy { get; set; } = TreeCheckedStrategy.ShowChild;
 
+        /// <summary>
+        /// Whether to check the checkbox when user click the tree node.  
+        /// </summary>
         [Parameter] public bool CheckOnClickNode { get; set; } = true;
 
         /// <summary>
@@ -93,6 +94,9 @@ namespace AntDesign
         [Parameter]
         public Action OnBlur { get; set; }
 
+        /// <summary>
+        /// Get or set the template to render the title of the tree node
+        /// </summary>
         [Parameter] public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
 
         /// <summary>
@@ -101,6 +105,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
 
+        /// <summary>
+        /// Nodes to render in the tree. Use either this or <see cref="DataSource"/>
+        /// </summary>
         [Parameter] public TreeNode<TItem>[] Nodes { get; set; }
 
         /// <summary>
@@ -109,26 +116,55 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
 
+        /// <summary>
+        /// Use this to set the content of the tree. Use either this or <see cref="DataSource"/>
+        /// </summary>
         [Parameter] public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Whether to expand all nodes by default
+        /// </summary>
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
 
+        /// <summary>
+        /// Whether to expand parent nodes by default
+        /// </summary>
         [Parameter]
         public bool TreeDefaultExpandParent { get; set; }
 
+        /// <summary>
+        /// Set the keys of the default expanded tree nodes
+        /// </summary>
         [Parameter]
         public string[] TreeDefaultExpandedKeys { get; set; }
 
+        /// <summary>
+        /// Whether to expand the parent node when clicking on a tree node
+        /// </summary>
         [Parameter] public bool ExpandOnClickNode { get; set; } = false;
 
+        /// <inheritdoc cref="Tree{TItem}.SearchExpression"/>
         [Parameter] public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
+        /// <summary>
+        /// Callback executed when the user searches for a value
+        /// </summary>
         [Parameter] public EventCallback<string> OnSearch { get; set; }
 
+        /// <summary>
+        /// Set the style of the matched text
+        /// </summary>
         [Parameter] public string MatchedStyle { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Set the class of the matched text
+        /// </summary>
         [Parameter] public string MatchedClass { get; set; }
 
+        /// <summary>
+        /// The value of the root node
+        /// </summary>
+        /// <default value="0"/>
         [Parameter] public string RootValue { get; set; } = "0";
 
         /// <summary>
@@ -155,12 +191,24 @@ namespace AntDesign
         [Parameter]
         public bool ShowIcon { get; set; }
 
+        /// <summary>
+        /// Whether to show leaf icon
+        /// </summary>
         [Parameter] public bool ShowLeafIcon { get; set; }
 
+        /// <summary>
+        /// Set the attributes of the tree
+        /// </summary>
         [Parameter] public IDictionary<string, object> TreeAttributes { get; set; }
 
+        /// <summary>
+        /// Callback executed when the tree node is loaded
+        /// </summary>
         [Parameter] public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
 
+        /// <summary>
+        /// Callback executed when the tree node is selected
+        /// </summary>
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnTreeNodeSelect { get; set; }
 
@@ -169,7 +217,7 @@ namespace AntDesign
         public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
         /// <summary>
-        /// 
+        /// Set the style of the dropdown menu
         /// </summary>
         [Parameter]
         public string DropdownStyle { get; set; }
@@ -226,12 +274,15 @@ namespace AntDesign
         private bool _checkedEventDisabled = false;
 
         /// <summary>
-        /// 树控件本身
+        /// 
         /// </summary>
-        public Tree<TItem> TreeComponent { get => _tree; }
+        internal Tree<TItem> TreeComponent { get => _tree; }
 
         private TItemValue _cachedValue;
 
+        /// <summary>
+        /// The selected value
+        /// </summary>
         [Parameter]
         public override TItemValue Value
         {
@@ -250,6 +301,9 @@ namespace AntDesign
         private TItemValue[] _cachedValues;
         private List<TItemValue> _newValues = [];
 
+        /// <summary>
+        /// The selected values
+        /// </summary>
         [Parameter]
         public override IEnumerable<TItemValue> Values
         {

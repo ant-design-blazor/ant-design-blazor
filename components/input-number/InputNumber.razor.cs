@@ -55,6 +55,9 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Specifies the value extracted from formatter
+        /// </summary>
         [Parameter]
         public Func<string, string> Parser { get; set; }
 
@@ -107,12 +110,15 @@ namespace AntDesign
         public TValue Min { get; set; }
 
         /// <summary>
-        /// Disable the input or not
+        ///  Max length of input
         /// </summary>
         /// <default value="false"/>
         [Parameter]
         public int? MaxLength { get; set; }
 
+        /// <summary>
+        /// Disable the input or not
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
@@ -134,13 +140,21 @@ namespace AntDesign
         [Parameter]
         public string PlaceHolder { get; set; }
 
+        /// <summary>
+        /// Whether to show border
+        /// </summary>
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Setting prefix content to the input
+        /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
 
-
+        /// <summary>
+        /// The width of the input
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 

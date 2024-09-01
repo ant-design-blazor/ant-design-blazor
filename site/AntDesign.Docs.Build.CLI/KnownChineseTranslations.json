@@ -4375,5 +4375,59 @@
   },
   "Display mode. See <code>CalendarMode</code> for valid options": {
     "Translated": "显示模式。请参阅 <code>CalendarMode</code> 了解有效选项"
+  },
+  "Specific the name of the form item. It also can used as the Member Path for binding the property of the Model.": {
+    "Translated": "指定表单项的名称。它也可以用作 Member Path 来绑定 Model 的属性。"
+  },
+  "Whether to show feedback icon on error. If set to false, it will not show the icon even if the field is in error state.": {
+    "Translated": "是否在出错时显示反馈图标。如果设置为 false，则即使字段处于错误状态，它也不会显示图标。"
+  },
+  "Validate the value is in the specified range": {
+    "Translated": "验证值是否在指定范围内"
+  },
+  "Validate the value is in specified enum type.": {
+    "Translated": "验证该值是否在指定的枚举类型中。"
+  },
+  "Validate the value using the specified attribute.": {
+    "Translated": "使用指定的属性验证值。"
+  },
+  "Default validation message for the Enum rule": {
+    "Translated": "Enum 规则的默认验证消息"
+  },
+  "Default validation message for the Whitespace rule": {
+    "Translated": "空白规则的默认验证消息"
+  },
+  "Messages for date type": {
+    "Translated": "日期类型的消息"
+  },
+  "Specifies the value extracted from formatter": {
+    "Translated": "指定从 formatter 中提取的值"
+  },
+  "Max length of input": {
+    "Translated": "最大输入长度"
+  },
+  "Whether to show border": {
+    "Translated": "是否显示边框"
+  },
+  "Setting prefix content to the input": {
+    "Translated": "将前缀内容设置为输入"
+  },
+  "The width of the input": {
+    "Translated": "输入的宽度"
+  },
+  "Show count of characters in the input": {
+    "Translated": "显示输入中的字符计数"
+  },
+  "Gets or sets the value of the TextArea.": {
+    "Translated": "获取或设置 TextArea 的值。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Callback function that is called when open state changes.": {
+    "Translated": "打开状态更改时调用的回调函数。"
+  },
+  "Auto focus.": {
+    "Translated": "自动对焦。"
   }
 }

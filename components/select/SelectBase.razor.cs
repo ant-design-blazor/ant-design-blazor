@@ -132,6 +132,9 @@ namespace AntDesign
         [Parameter]
         public bool Open { get; set; }
 
+        /// <summary>
+        /// Callback function that is called when open state changes.
+        /// </summary>
         [Parameter] public EventCallback<bool> OpenChanged { get; set; }
 
         /// <summary>
@@ -146,6 +149,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnFocus { get; set; }
 
+        /// <summary>
+        /// Auto focus.
+        /// </summary>
         [Parameter] public bool AutoFocus { get; set; }
 
         /// <summary>

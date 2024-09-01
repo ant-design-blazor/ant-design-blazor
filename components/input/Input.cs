@@ -243,15 +243,21 @@ namespace AntDesign
         [Parameter]
         public string WrapperStyle { get; set; }
 
+        /// <summary>
+        /// Show count of characters in the input
+        /// </summary>
         [Parameter]
         public bool ShowCount { get; set; }
 
+        /// <summary>
+        /// The width of the input
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 
-        public Dictionary<string, object> Attributes { get; set; }
+        protected Dictionary<string, object> Attributes { get; set; }
 
-        public ForwardRef WrapperRefBack { get; set; }
+        protected ForwardRef WrapperRefBack { get; set; }
 
         /// <summary>
         /// Focus behavior for input component with optional behaviors.

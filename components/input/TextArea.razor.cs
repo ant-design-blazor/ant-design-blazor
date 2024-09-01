@@ -124,7 +124,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the value of the TextArea.
+        /// </summary>
         [Parameter]
         public override string Value
         {
@@ -298,7 +300,7 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
         [JSInvokable]
-        public void ChangeSizeAsyncJs(float width, float height)
+        private void ChangeSizeAsyncJs(float width, float height)
         {
             if (OnResize.HasDelegate)
                 OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });

@@ -139,6 +139,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment FooterTemplate { get; set; }
 
+        /// <summary>
+        /// Child content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
