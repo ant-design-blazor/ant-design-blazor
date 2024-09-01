@@ -112,10 +112,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Extra { get; set; }
 
-        /// <summary>
-        /// Tab content rendered below title
-        /// </summary>
-        [Parameter]
         public RenderFragment CardTabs { get; set; }
 
         private bool _hasGrids;
@@ -145,6 +141,16 @@ namespace AntDesign
         {
             _hasGrids = true;
             StateHasChanged();
+        }
+
+        internal void InvokeStateHasChagned()
+        {
+            StateHasChanged();
+        }
+
+        internal void SetTabs(RenderFragment tabs)
+        {
+            this.CardTabs = tabs;
         }
 
         internal void SetBody(RenderFragment body)

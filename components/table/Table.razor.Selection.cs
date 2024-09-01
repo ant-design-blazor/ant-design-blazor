@@ -1,6 +1,9 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -29,6 +32,16 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
+
+        /// <summary>
+        /// Callback executed when the SelectAll button is clicked. <br/>
+        /// This is useful for selecting all rows when the table is virtualized or not only shown on current page.
+        /// <para>
+        /// The argument is true when selecting all rows, false when unselecting all rows.
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnSelectAll { get; set; }
 
         private ISelectionColumn _selection;
         private readonly HashSet<TItem> _selectedRows;
@@ -66,6 +79,11 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
+            if (OnSelectAll.HasDelegate)
+            {
+                OnSelectAll.InvokeAsync(true);
+            }
+
             foreach (var select in _rootRowDataCache.Values)
             {
                 if (select.DataItem.Disabled)
@@ -87,6 +105,11 @@ namespace AntDesign
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
 
+            if (OnSelectAll.HasDelegate)
+            {
+                OnSelectAll.InvokeAsync(false);
+            }
+
             foreach (var select in _rootRowDataCache.Values)
             {
                 if (select.DataItem.Disabled)
@@ -95,7 +118,7 @@ namespace AntDesign
                 select.SetSelected(false, _selection.CheckStrictly);
             }
 
-             _preventRowDataTriggerSelectedRowsChanged = false;
+            _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
             SelectionChanged();

@@ -325,17 +325,20 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (OnFieldChanged.HasDelegate)
-                _editContext.OnFieldChanged -= OnFieldChangedHandler;
-            if (OnValidationRequested.HasDelegate)
-                _editContext.OnValidationRequested -= OnValidationRequestedHandler;
-            if (OnValidationStateChanged.HasDelegate)
-                _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
-
-            if (UseRulesValidator)
+            if (_editContext != null)
             {
-                _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
-                _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+                if (OnFieldChanged.HasDelegate)
+                    _editContext.OnFieldChanged -= OnFieldChangedHandler;
+                if (OnValidationRequested.HasDelegate)
+                    _editContext.OnValidationRequested -= OnValidationRequestedHandler;
+                if (OnValidationStateChanged.HasDelegate)
+                    _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
+
+                if (UseRulesValidator)
+                {
+                    _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
+                    _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+                }
             }
 
             base.Dispose(disposing);
@@ -487,11 +490,11 @@ namespace AntDesign
         /// </summary>
         public EditContext EditContext => _editContext;
 
-        bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
+        private bool UseLocaleValidateMessage => Locale.DefaultValidateMessages != null;
 
         bool IForm.UseLocaleValidateMessage => UseLocaleValidateMessage;
 
-        bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
+        private bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
 
         private void BuildEditContext()
         {

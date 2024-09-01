@@ -10,12 +10,6 @@ namespace AntDesign
 {
     public partial class TabPane : AntDomComponentBase
     {
-        [CascadingParameter(Name = "IsTab")]
-        internal bool IsTab { get; set; }
-
-        [CascadingParameter(Name = "IsPane")]
-        internal bool IsPane { get; set; }
-
         [CascadingParameter]
         private Tabs Parent { get; set; }
 
@@ -70,6 +64,8 @@ namespace AntDesign
 
         private bool HasTabTitle => Tab != null || TabTemplate != null;
 
+        internal int TabIndex => _tabIndex;
+
         internal ElementReference TabRef => _tabRef;
 
         internal string TabId => $"rc-tabs-{Id}-tab-{Key}";
@@ -88,6 +84,7 @@ namespace AntDesign
         private bool _hasClosed;
 
         private bool _hasRendered;
+        private int _tabIndex;
 
         protected override void OnInitialized()
         {
@@ -102,7 +99,7 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            if (IsTab && HasTabTitle)
+            if (HasTabTitle)
             {
                 _hasRendered = true;
             }
@@ -133,11 +130,6 @@ namespace AntDesign
                 ;
         }
 
-        internal void SetKey(string key)
-        {
-            Key = key;
-        }
-
         internal void SetActive(bool isActive)
         {
             if (_isActive != isActive)
@@ -145,6 +137,11 @@ namespace AntDesign
                 _isActive = isActive;
                 InvokeAsync(StateHasChanged);
             }
+        }
+
+        internal void SetIndex(int index)
+        {
+            _tabIndex = index;
         }
 
         internal void Close()
@@ -163,32 +160,7 @@ namespace AntDesign
 
         internal void ExchangeWith(TabPane other)
         {
-            var temp = other.Clone();
-            other.SetPane(this);
-            this.SetPane(temp);
-        }
-
-        private TabPane Clone()
-        {
-            return new TabPane
-            {
-                Key = Key,
-                Tab = this.Tab,
-                TabTemplate = this.TabTemplate,
-                Disabled = this.Disabled,
-                Closable = this.Closable,
-            };
-        }
-
-        private void SetPane(TabPane tabPane)
-        {
-            Key = tabPane.Key;
-            Tab = tabPane.Tab;
-            TabTemplate = tabPane.TabTemplate;
-            Disabled = tabPane.Disabled;
-            Closable = tabPane.Closable;
-
-            StateHasChanged();
+            (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
         private Task HandleKeydown(KeyboardEventArgs e)

@@ -1,9 +1,13 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
@@ -112,7 +116,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="target">Element that will receive focus.</param>
         /// <param name="preventScroll">Whether to scroll to focused element</param>
-        protected async Task FocusAsync(ElementReference target, bool preventScroll = false) 
+        protected async Task FocusAsync(ElementReference target, bool preventScroll = false)
             => await Js.FocusAsync(target, preventScroll);
 
         /// <summary>

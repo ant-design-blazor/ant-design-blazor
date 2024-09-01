@@ -1,74 +1,78 @@
 ﻿@namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
-@if (_hasClosed)
-{
-    return;
-}
+@code{
+    internal void RenderTab(RenderTreeBuilder __builder)
+    {
+        if (_hasClosed)
+            return;
 
-@if (IsTab)
-{
-    var ondragoverPreventDefault = _isActive;
-    var onclickStopPropagation = !_isActive;
+        var ondragoverPreventDefault = _isActive;
+        var onclickStopPropagation = !_isActive;
 
-    <div @key="Key"
-     @ref="_tabRef"
-     @onclick:stopPropagation="@onclickStopPropagation"
-     @onclick="@(e => Parent.HandleTabClick(this))"
-     @ondragover:preventDefault="@ondragoverPreventDefault"
-     @ondragstart="@(e => Parent.HandleDragStart(e, this))"
-     @ondrop="@(_ => Parent.HandleDrop(this))"
-     class="@ClassMapper.Class"
-     draggable="@Parent.Draggable.ToString()"
-     id="@TabId"
-     ondragover="event.preventDefault();">
-        <div @onkeydown="@HandleKeydown"
-             @ref="_tabBtnRef"
-             role="tab"
-             aria-selected="@(_isActive ? "true" : "false")"
-             class="ant-tabs-tab-btn"
-             aria-controls="@($"rc-tabs-{Id}-panel-{Key}")"
-             tabindex="0">
-            @if (TabTemplate != null)
+        <div @key="Key"
+             @ref="_tabRef"
+             @onclick:stopPropagation="@onclickStopPropagation"
+             @onclick="@(() => Parent.HandleTabClick(this))"
+             @ondragover:preventDefault="@ondragoverPreventDefault"
+             @ondragstart="@(EventUtil.AsNonRenderingEventHandler<DragEventArgs>(e => Parent.HandleDragStart(e, this)))"
+             @ondrop="@(()=> Parent.HandleDrop(this))"
+             class="@ClassMapper.Class"
+             draggable="@Parent.Draggable.ToString()"
+             id="@TabId"
+             ondragover="event.preventDefault();">
+            <div @onkeydown="@HandleKeydown"
+                 @ref="_tabBtnRef"
+                 role="tab"
+                 aria-selected="@(_isActive ? "true" : "false")"
+                 class="ant-tabs-tab-btn"
+                 aria-controls="@($"rc-tabs-{Id}-panel-{Key}")"
+                 tabindex="0">
+                @if (TabTemplate != null)
+                {
+                    @TabTemplate
+                }
+                else
+                {
+                    @Tab
+                }
+            </div>
+            @if (Parent.Type == TabType.EditableCard && Closable)
             {
-                @TabTemplate
-            }
-            else
-            {
-                @Tab
+                <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
+                    <Icon Type="close" />
+                </button>
             }
         </div>
-        @if (Parent.Type == TabType.EditableCard && Closable)
-        {
-            <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
-                <Icon Type="close" />
-            </button>
-        }
-    </div>
 
-    @if (TabContextMenu != null)
-    {
-        <Dropdown Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
-            <Overlay>
-                @TabContextMenu
-            </Overlay>
-        </Dropdown>
-    }
-}
-else if (IsPane)
-{
-    <div @key="Key"
-     tabindex="@(_isActive ? "0" : "-1")"
-     class="@_tabPaneClassMapper.Class"
-     id="@($"rc-tabs-{Id}-panel-{Key}")"
-     role="tabpanel" 
-     aria-hidden="@(_isActive ? "false" : "true")"
-     aria-labelledby="@($"rc-tabs-{Id}-tab-{Key}")"
-     >
-        @if (_isActive || _hasRendered || ForceRender)
+        @if (TabContextMenu != null)
         {
-            _hasRendered = true;
-            @ChildContent
+            <Dropdown Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
+                <Overlay>
+                    @TabContextMenu
+                </Overlay>
+            </Dropdown>
         }
-    </div>
+    }
+
+    internal void RenderPane(RenderTreeBuilder __builder)
+    {
+        if (_hasClosed)
+            return;
+
+        <div @key="Key"
+             tabindex="@(_isActive ? "0" : "-1")"
+             class="@_tabPaneClassMapper.Class"
+             id="@($"rc-tabs-{Id}-panel-{Key}")"
+             role="tabpanel"
+             aria-hidden="@(_isActive ? "false" : "true")"
+             aria-labelledby="@($"rc-tabs-{Id}-tab-{Key}")">
+            @if (_isActive || _hasRendered || ForceRender)
+            {
+                _hasRendered = true;
+                @ChildContent
+            }
+        </div>
+    }
 }

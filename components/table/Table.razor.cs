@@ -4,23 +4,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.core.Services;
 using AntDesign.Core.HashCodes;
+using AntDesign.Core.Reflection;
 using AntDesign.Filters;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
+using AntDesign.Table.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
-using System.Reflection;
-using AntDesign.core.Services;
-using AntDesign.Table.Internal;
-using AntDesign.Core.Reflection;
-using System.Diagnostics.CodeAnalysis;
-using AntDesign.Internal;
 
 
 #if NET5_0_OR_GREATER
@@ -1073,6 +1073,9 @@ namespace AntDesign
             if (add && !_hasInitialized) return false;
             // avoid rerender again when the column are cleared
             if (!add && ColumnContext.Columns.Count == 0) return false;
+
+            if (!_afterFirstRender) return false;
+            if (IsDisposed || _isReloading) return false;
 
             _childContent = ChildContent;
 

@@ -34,18 +34,16 @@
         JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
         var cut = Render<AntDesign.Card>(
             @<Card Title=@("Card title")>        
-                <CardTabs>
-                    <Tabs DefaultActiveKey="1">
-                        <TabPane Key="1">
-                            <TabTemplate>Tab 1</TabTemplate>
-                            <ChildContent>Content of Tab Pane 1</ChildContent>
-                        </TabPane>
-                        <TabPane Key="2">
-                            <TabTemplate>Tab 2</TabTemplate>
-                            <ChildContent>Content of Tab Pane 2</ChildContent>
-                        </TabPane>
-                    </Tabs>
-                </CardTabs>
+                <Tabs DefaultActiveKey="1">
+                    <TabPane Key="1">
+                        <TabTemplate>Tab 1</TabTemplate>
+                        <ChildContent>Content of Tab Pane 1</ChildContent>
+                    </TabPane>
+                    <TabPane Key="2">
+                        <TabTemplate>Tab 2</TabTemplate>
+                        <ChildContent>Content of Tab Pane 2</ChildContent>
+                    </TabPane>
+                </Tabs>
             </Card>
     );
         //Act
@@ -95,21 +93,19 @@
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetInfo, _ => true).SetResult(new());
         JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
         var cut = Render<AntDesign.Card>(
-            @<Card Title=@("Card title")>        
-                <CardTabs>
-                    <Tabs DefaultActiveKey="1">
-                        <TabPane Key="1">
-                            <TabTemplate>Tab 1</TabTemplate>
-                            <ChildContent>Content of Tab Pane 1</ChildContent>
-                        </TabPane>
-                        <TabPane Key="2">
-                            <TabTemplate>Tab 2</TabTemplate>
-                            <ChildContent>Content of Tab Pane 2</ChildContent>
-                        </TabPane>
-                    </Tabs>
-                </CardTabs>
-    </Card>
-    );
+            @<Card Title=@("Card title")>
+                <Tabs DefaultActiveKey="1">
+                    <TabPane Key="1">
+                        <TabTemplate>Tab 1</TabTemplate>
+                        <ChildContent>Content of Tab Pane 1</ChildContent>
+                    </TabPane>
+                    <TabPane Key="2">
+                        <TabTemplate>Tab 2</TabTemplate>
+                        <ChildContent>Content of Tab Pane 2</ChildContent>
+                    </TabPane>
+                </Tabs>
+            </Card>
+        );
         //Act
         var tab2 = cut.FindAll("div.ant-tabs-tab")[1];
         tab2.Click();

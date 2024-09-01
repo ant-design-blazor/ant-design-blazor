@@ -25,15 +25,17 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>./LocalizedIntellisenseFiles/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <TfmSpecificPackageFile Include="LocalizedIntellisenseFiles\**\*.xml" Exclude="LocalizedIntellisenseFiles/$(AssemblyName).xml" PackagePath="/lib/$(TargetFramework)" />
+    <Content Include="LocalizedIntellisenseFiles\**\*.xml" Exclude="LocalizedIntellisenseFiles/$(AssemblyName).xml" PackagePath="/content/LocalizedIntellisenseFiles" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <!-- The nuget package icon -->
     <None Include="..\README.md" Pack="true" PackagePath="" />
     <None Include="logo.png" Pack="true" PackagePath="" />
+
+    <Content Include="AntDesign.targets" PackagePath="build\$(PackageId).targets" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,7 +85,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="OneOf" Version="2.1.155" />
   </ItemGroup>
