@@ -189,7 +189,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public override DateTime? GetIndexValue(int index = 0)
+        internal override DateTime? GetIndexValue(int index = 0)
         {
             if (index != 0)
             {
@@ -219,7 +219,7 @@ namespace AntDesign
             return null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
+        internal override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (index != 0)
             {
@@ -259,7 +259,7 @@ namespace AntDesign
             _dropDown?.SetShouldRender(true);
         }
 
-        public override void ClearValue(int index = 0, bool closeDropdown = true)
+        protected override void ClearValue(int index = 0, bool closeDropdown = true)
         {
             _isSetPicker = false;
 

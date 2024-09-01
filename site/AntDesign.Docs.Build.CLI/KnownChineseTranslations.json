@@ -1112,9 +1112,6 @@
   "Validate range of dates or selection": {
     "Translated": "验证日期范围或选择"
   },
-  "Display mode. See <code>DatePickerType</code> for valid options": {
-    "Translated": "显示模式。请参阅 <code>DatePickerType</code> 以获取有效选项"
-  },
   "Whether the calendar should take up all available space or not": {
     "Translated": "日历是否应占用所有可用空间"
   },
@@ -1183,9 +1180,6 @@
   },
   "Content to render in the top-right corner of the card": {
     "Translated": "要在卡片右上角呈现的内容"
-  },
-  "Tab content rendered below title": {
-    "Translated": "标题下方呈现的选项卡内容"
   },
   "Content for that section of the grid": {
     "Translated": "网格该部分的内容"
@@ -1403,12 +1397,6 @@
   "CultureInfo to use for localization": {
     "Translated": "用于本地化的 CultureInfo"
   },
-  "If time should be shown or not. Contains the boolean decision made from setting <code>AntDesign.DatePickerBase`1.ShowTime</code>": {
-    "Translated": "是否应该显示时间。包含通过设置 <code>AntDesign.DatePickerBase`1.ShowTime</code> 做出的布尔决定"
-  },
-  "Time format when showing time. Contains the string format from setting <code>AntDesign.DatePickerBase`1.ShowTime</code> with a string": {
-    "Translated": "显示时间时的时间格式。包含使用字符串设置 <code>AntDesign.DatePickerBase`1.ShowTime</code> 的字符串格式"
-  },
   "Show time or not. <p>When boolean, it sets ShowTime to the boolean.</p><p>When string, it sets ShowTime to true and uses the string value as the time format.</p>": {
     "Translated": "是否显示时间。 <p>当为布尔值时，它将 ShowTime 设置为布尔值。</p><p>当为字符串时，它将 ShowTime 设置为 true 并使用字符串值作为时间格式。</p>"
   },
@@ -1478,32 +1466,8 @@
   "Custom rendering for month cells": {
     "Translated": "月份单元格的自定义渲染"
   },
-  "Date used for \"Today\"": {
-    "Translated": "用于“今天”的日期"
-  },
-  "If picker is a range picker or not": {
-    "Translated": "选择器是否是范围选择器"
-  },
-  "Get value of the picker": {
-    "Translated": "获取选择器的值"
-  },
-  "Close the popover": {
-    "Translated": "关闭弹出框"
-  },
-  "Add focus to picker": {
-    "Translated": "将焦点添加到选择器"
-  },
-  "Remove focus from picker": {
-    "Translated": "从选择器中移除焦点"
-  },
-  "Get index of picker which is currently focused": {
-    "Translated": "获取当前聚焦的选择器的索引"
-  },
   "Callback executed when range selected changes": {
     "Translated": "范围选择改变时执行的回调"
-  },
-  "Get value by picker index": {
-    "Translated": "通过选择器索引获取值"
   },
   "Whether to display the border": {
     "Translated": "是否显示边框"
@@ -4178,9 +4142,6 @@
   "Toggle the border style.": {
     "Translated": "切换边框样式。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Use ItemLabel instead": {
     "Translated": "请改用 ItemLabel"
   },
@@ -4411,5 +4372,8 @@
   },
   "Keyboard style": {
     "Translated": "键盘样式"
+  },
+  "Display mode. See <code>CalendarMode</code> for valid options": {
+    "Translated": "显示模式。请参阅 <code>CalendarMode</code> 了解有效选项"
   }
 }

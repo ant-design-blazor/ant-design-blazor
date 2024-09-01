@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -58,11 +57,11 @@ namespace AntDesign
         public DateTime[] ValidRange { get; set; }
 
         /// <summary>
-        /// Display mode. See <see cref="DatePickerType"/> for valid options
+        /// Display mode. See <see cref="CalendarMode"/> for valid options
         /// </summary>
-        /// <default value="DatePickerType.Month"/>
+        /// <default value="CalendarMode.Month"/>
         [Parameter]
-        public string Mode { get; set; } = DatePickerType.Month;
+        public CalendarMode Mode { get; set; } = CalendarMode.Month;
 
         /// <summary>
         /// Whether the calendar should take up all available space or not
@@ -138,9 +137,9 @@ namespace AntDesign
         [Parameter]
         public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
-        protected string _picker;
+        protected DatePickerType _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
-        protected Stack<string> _prePickerStack = new Stack<string>();
+        protected Stack<DatePickerType> _prePickerStack = new Stack<DatePickerType>();
 
         internal readonly string PrefixCls = "ant-picker-calendar";
 
@@ -161,10 +160,10 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _picker = Mode switch
+            _picker = Mode.Name switch
             {
-                DatePickerType.Month => DatePickerType.Date,
-                DatePickerType.Year => DatePickerType.Month,
+                CalendarMode.MONTH => DatePickerType.Date,
+                CalendarMode.YEAR => DatePickerType.Month,
                 _ => DatePickerType.Date,
             };
 
@@ -197,52 +196,50 @@ namespace AntDesign
                ;
         }
 
-        protected async Task OnSelectValue(DateTime date)
+        protected void OnSelectValue(DateTime date)
         {
             Value = date;
 
-            await OnSelect.InvokeAsync(date);
-            await OnChange.InvokeAsync(date);
+            OnSelect.InvokeAsync(date);
+            OnChange.InvokeAsync(date);
             StateHasChanged();
         }
 
-        public async Task ChangeValue(DateTime date)
+        internal void ChangeValue(DateTime date)
         {
-            await OnSelectValue(date);
-            StateHasChanged();
+            OnSelectValue(date);
         }
 
-        public void ChangePickerType(string type, int index)
+        internal void OnSelectValue(DateTime date, int index)
         {
-            Mode = type;
+            OnSelectValue(date);
+        }
 
-            string mode = type switch
+        internal void ChangeMode(CalendarMode mode)
+        {
+            Mode = mode;
+
+            DatePickerType picker = mode.Name switch
             {
-                DatePickerType.Year => DatePickerType.Month,
-                DatePickerType.Month => DatePickerType.Date,
+                DatePickerType.YEAR => DatePickerType.Month,
+                DatePickerType.MONTH => DatePickerType.Date,
                 _ => DatePickerType.Date,
             };
 
             _prePickerStack.Push(_picker);
-            _picker = mode;
+            _picker = picker;
 
-            OnPanelChange?.Invoke(PickerValues[index], _picker);
+            OnPanelChange?.Invoke(PickerValues[0], _picker.Name);
 
             StateHasChanged();
         }
 
-        public void ChangePickerType(string type)
-        {
-            ChangePickerType(type, 0);
-        }
-
-        public void Close()
+        public void ChangePickerType(DatePickerType type, int index)
         {
         }
 
-        public int GetOnFocusPickerIndex()
+        public void ChangePickerType(DatePickerType type)
         {
-            return 0;
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
@@ -254,10 +251,21 @@ namespace AntDesign
         {
         }
 
-        public void ResetPlaceholder(int rangePickerIndex = -1)
+        int IDatePicker.GetOnFocusPickerIndex()
         {
+            return 0;
         }
 
-        public string Picker { get { return _picker; } }
+        void IDatePicker.ResetPlaceholder(int index)
+        {
+
+        }
+
+        void IDatePicker.Close()
+        {
+
+        }
+
+        internal DatePickerType Picker { get { return _picker; } }
     }
 }

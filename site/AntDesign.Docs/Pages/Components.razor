@@ -100,13 +100,13 @@
                         var leftList = _demos.Where((_, i) => i % 2 == 0);
                         var rightList = _demos.Where((_, i) => i % 2 != 0);
 
-                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
-                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
