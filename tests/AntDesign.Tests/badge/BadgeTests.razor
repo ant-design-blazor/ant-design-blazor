@@ -20,15 +20,21 @@
   {
     var cut = Render<Badge>(@<Badge Color="@color"></Badge> );
     cut.MarkupMatches(@<span class="ant-badge ant-badge-status ant-badge-not-a-wrapper" id:ignore>
-        <span class="ant-badge-status-dot ant-badge-status-" style="background: @color; "></span>
+        <span class="ant-badge-status-dot" style="background: @color; "></span>
       </span>);
   }
 
-  public void ItShouldRenderBadgeWithPresetColors(string color)
+  [Theory]
+  [MemberData(nameof(inlineData))]
+  public void ItShouldRenderBadgeWithPresetColors(PresetColor color)
   {
-    var cut = Render<Badge>(@<Badge Color="@color"></Badge> );
+    var cut = Render<Badge>(@<Badge PresetColor="@color"></Badge> );
+    var persetColor = Enum.GetName(typeof(PresetColor), color).ToLowerInvariant();
     cut.MarkupMatches(@<span class="ant-badge ant-badge-status ant-badge-not-a-wrapper" id:ignore>
-        <span class="ant-badge-status-dot ant-badge-status-" style="background: @color; "></span>
-      </span>);
-  }
+        <span class="ant-badge-status-dot ant-badge-status-@persetColor" style=""></span>
+      </span>
+        );
+    }
+
+    public static IEnumerable<object[]> inlineData => Enum.GetValues<PresetColor>().Select(x => new object[] { x });
 }
