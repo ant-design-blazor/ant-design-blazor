@@ -62,7 +62,8 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                 Style = x.DescriptionContent.Style,
                 Debug = x.DescriptionContent.Meta.Debug,
                 Docs = x.DescriptionContent.Meta.Docs,
-                Type = x.Type
+                Type = x.Type,
+                Link = x.DescriptionContent.Meta.Link,
             }).ToList();
 
             return new DemoComponent()
