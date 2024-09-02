@@ -259,7 +259,7 @@ namespace AntDesign
             _dropDown?.SetShouldRender(true);
         }
 
-        protected override void ClearValue(int index = 0, bool closeDropdown = true)
+        internal override void ClearValue(int index = 0, bool closeDropdown = true)
         {
             _isSetPicker = false;
 

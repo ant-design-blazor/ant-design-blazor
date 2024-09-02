@@ -537,7 +537,7 @@ namespace AntDesign
             }
         }
 
-        protected override void ClearValue(int index = -1, bool closeDropdown = true)
+        internal override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
 

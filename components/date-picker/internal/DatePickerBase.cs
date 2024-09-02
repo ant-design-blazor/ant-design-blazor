@@ -1137,7 +1137,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index">Index of the picker panel to clear</param>
         /// <param name="closeDropdown">Close the panel when cleared or not</param>
-        protected abstract void ClearValue(int index = 0, bool closeDropdown = true);
+        internal abstract void ClearValue(int index = 0, bool closeDropdown = true);
 
         /// <summary>
         /// Get value of picker panel at index
