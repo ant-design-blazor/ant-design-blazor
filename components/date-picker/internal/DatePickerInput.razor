@@ -144,9 +144,9 @@ else
     [Parameter]
     public bool Active { get; set; }
 
-    public bool IsOnFocused { get; set; } = false;
+    internal bool IsOnFocused { get; set; } = false;
 
-    public bool ShowClear()
+    internal bool ShowClear()
     {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }

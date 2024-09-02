@@ -33,14 +33,22 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Customize the style of the label
+        /// </summary>
         [Parameter]
         public string LabelStyle { get; set; }
 
+        /// <summary>
+        /// Customize the style of the content
+        /// </summary>
         [Parameter]
         public string ContentStyle { get; set; }
 
         [CascadingParameter]
-        public Descriptions Descriptions { get; set; }
+        private Descriptions Descriptions { get; set; }
+
+        ElementReference IDescriptionsItem.Ref { get => base.Ref; set => base.Ref = value; }
 
         protected override void Dispose(bool disposing)
         {

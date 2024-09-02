@@ -33,10 +33,10 @@ namespace AntDesign
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
+        internal bool Blocked { get; set; }
 
         [CascadingParameter(Name = "ItemType")]
-        public Type ItemType { get; set; }
+        internal Type ItemType { get; set; }
 
         /// <summary>
         /// Expression to get the data for the field
@@ -170,9 +170,15 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether the column is used for grouping or not
+        /// </summary>
         [Parameter]
         public bool Grouping { get; set; }
 
+        /// <summary>
+        /// Specifies the grouping function for the column
+        /// </summary>
         [Parameter]
         public virtual Func<TData, object> GroupBy { get; set; }
 
@@ -180,6 +186,9 @@ namespace AntDesign
 
         private bool _hasFiltersAttribute;
 
+        /// <summary>
+        /// Filter options for the column
+        /// </summary>
         [Parameter]
         public IEnumerable<TableFilter<TData>> Filters
         {
@@ -198,9 +207,15 @@ namespace AntDesign
         [Parameter]
         public IEnumerable<TableFilter> DefaultFilters { get; set; }
 
+        /// <summary>
+        /// Whether to allow multiple filters or not
+        /// </summary>
         [Parameter]
         public bool FilterMultiple { get; set; } = true;
 
+        /// <summary>
+        /// Filter type for the column
+        /// </summary>
         [Parameter]
         public IFieldFilterType FieldFilterType { get; set; }
 
@@ -222,6 +237,9 @@ namespace AntDesign
         [Parameter]
         public bool Filtered { get; set; }
 
+        /// <summary>
+        /// Set the column content to be displayed in the table
+        /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 

@@ -25,13 +25,13 @@ namespace AntDesign
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree<TItem> TreeComponent { get; set; }
+        private Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode<TItem> SelfNode { get; set; }
+        private TreeNode<TItem> SelfNode { get; set; }
 
         private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
 

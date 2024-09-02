@@ -25,14 +25,18 @@ namespace AntDesign
     <seealso cref="Title"/>
     <seealso cref="Paragraph"/>
     */
-    [Documentation(DocumentationCategory.Components, 
-        DocumentationType.General, 
-        "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg", 
-        Columns = 1, 
+    [Documentation(DocumentationCategory.Components,
+        DocumentationType.General,
+        "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg",
+        Columns = 1,
         Title = "Typography",
         OutputApi = false)]
     public abstract class TypographyBase : AntDomComponentBase
     {
+        /// <summary>
+        /// Code style
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Code { get; set; } = false;
 
@@ -111,7 +115,7 @@ namespace AntDesign
         /// Callback executed when the user edits the content
         /// </summary>
         [Parameter]
-        public Action OnChange { get; set; }
+        public EventCallback<string> OnChange { get; set; }
 
         /// <summary>
         /// Content type - styles text. Possible values: secondary, warning, danger
@@ -291,6 +295,11 @@ namespace AntDesign
             }
             EditConfig.Text = value;
             EditConfig.OnChange?.Invoke(value);
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(value);
+            }
         }
     }
 

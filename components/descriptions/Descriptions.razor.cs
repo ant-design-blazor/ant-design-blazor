@@ -64,6 +64,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// Change default props <c>Colon</c> value of <see cref="DescriptionsItem"/>.
+        /// </summary>
         [Parameter]
         public bool Colon { get; set; }
 

@@ -6,9 +6,8 @@ using System.Collections.Generic;
 
 namespace AntDesign
 {
-    public interface IAnchor
+    internal interface IAnchor
     {
-        //List<AnchorLink> Links { get; }
         void Add(AnchorLink anchorLink);
         void Remove(AnchorLink anchorLink);
 

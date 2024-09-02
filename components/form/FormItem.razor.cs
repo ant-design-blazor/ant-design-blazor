@@ -33,6 +33,9 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         private IFormItem ParentFormItem { get; set; }
 
+        /// <summary>
+        /// Specific the name of the form item. It also can used as the Member Path for binding the property of the Model.
+        /// </summary>
         [Parameter]
         public string Name
         {
@@ -178,6 +181,9 @@ namespace AntDesign
         [Parameter]
         public bool HasFeedback { get; set; }
 
+        /// <summary>
+        /// Whether to show feedback icon on error. If set to false, it will not show the icon even if the field is in error state.
+        /// </summary>
         [Parameter]
         public bool ShowFeedbackOnError { get; set; }
 

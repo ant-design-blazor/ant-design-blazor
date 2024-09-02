@@ -23,7 +23,7 @@ namespace AntDesign.Datepicker.Locale
         private List<string> _separators = new();
         private List<DateTimePartialType> _partialsOrder = new();
         private Dictionary<DateTimePartialType, int> _parsedMap;
-        private readonly string _analyzerType;
+        private readonly DatePickerType _analyzerType;
         private bool _hasPrefix;
         private int _startPosition;
         private int _separatorPrefixOffset;
@@ -42,7 +42,7 @@ namespace AntDesign.Datepicker.Locale
             AmPmDesignator
         }
 
-        public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
+        public FormatAnalyzer(string format, DatePickerType analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
         {
             _formatLength = format.Length;
             _analyzerType = analyzerType;
@@ -278,17 +278,17 @@ namespace AntDesign.Datepicker.Locale
             {
                 if (_converter is null)
                 {
-                    switch (_analyzerType)
+                    switch (_analyzerType.Name)
                     {
-                        case DatePickerType.Year:
+                        case DatePickerType.YEAR:
                             _converter = (pickerString) => TryParseYear(pickerString);
                             break;
 
-                        case DatePickerType.Quarter:
+                        case DatePickerType.QUARTER:
                             _converter = (pickerString) => TryParseQuarterString(pickerString);
                             break;
 
-                        case DatePickerType.Week:
+                        case DatePickerType.WEEK:
                             _converter = (pickerString) => TryParseWeekString(pickerString);
                             break;
 

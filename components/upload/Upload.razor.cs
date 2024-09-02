@@ -120,12 +120,21 @@ namespace AntDesign
         [Parameter]
         public bool ShowDownloadIcon { get; set; } = true;
 
+        /// <summary>
+        /// Show the preview icon or not
+        /// </summary>
         [Parameter]
         public bool ShowPreviewIcon { get; set; } = true;
 
+        /// <summary>
+        /// Show the remove icon or not
+        /// </summary>
         [Parameter]
         public bool ShowRemoveIcon { get; set; } = true;
 
+        /// <summary>
+        /// Get or set the list of files that have been uploaded
+        /// </summary>
         [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 

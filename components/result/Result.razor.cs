@@ -77,7 +77,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Inject]
-        public IconService IconService { get; set; }
+        private IconService IconService { get; set; }
 
         private const string PrefixCls = "ant-result";
         private string _svgImage;

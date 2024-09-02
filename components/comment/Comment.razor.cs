@@ -80,6 +80,10 @@ namespace AntDesign
         [Parameter]
         public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
 
+        /// <summary>
+        /// Sets the direction of the comment. <c>left</c> or <c>right</c>.
+        /// </summary>
+        /// <default value="left"/>
         [Parameter]
         public string Placement { get; set; } = "left";
 

@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// The sidebar of <see cref="Layout" />
+    /// </summary>
     public partial class Sider : AntDomComponentBase
     {
         private static readonly string _prefixCls = "ant-layout-sider";
@@ -103,6 +106,10 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> OnBreakpoint { get; set; }
 
+        /// <summary>
+        /// To set the initial status
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool DefaultCollapsed { get; set; }
 
@@ -188,7 +195,7 @@ namespace AntDesign
             OptimizeSize(window.InnerWidth);
         }
 
-        public void ToggleCollapsed()
+        private void ToggleCollapsed()
         {
             _isCollapsed = !_isCollapsed;
             _menu?.CollapseUpdated(_isCollapsed);

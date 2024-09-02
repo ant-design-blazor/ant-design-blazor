@@ -20,6 +20,7 @@ namespace AntDesign
     </summary>
     <seealso cref="CardGrid"/>
     <seealso cref="CardMeta"/>
+    <seealso cref="CardAction"/>
      */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg", Columns = 1)]
     public partial class Card : AntDomComponentBase
@@ -112,7 +113,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Extra { get; set; }
 
-        public RenderFragment CardTabs { get; set; }
+        private RenderFragment _cardTabs;
 
         private bool _hasGrids;
         internal IList<CardAction> _cardActions;
@@ -127,7 +128,7 @@ namespace AntDesign
                 .If("ant-card-small", () => Size == "small")
                 .If("ant-card-contain-grid", () => _hasGrids)
                 .If("ant-card-type-inner", () => Type == "inner")
-                .If("ant-card-contain-tabs", () => CardTabs != null)
+                .If("ant-card-contain-tabs", () => _cardTabs != null)
                 ;
         }
 
@@ -150,7 +151,7 @@ namespace AntDesign
 
         internal void SetTabs(RenderFragment tabs)
         {
-            this.CardTabs = tabs;
+            this._cardTabs = tabs;
         }
 
         internal void SetBody(RenderFragment body)

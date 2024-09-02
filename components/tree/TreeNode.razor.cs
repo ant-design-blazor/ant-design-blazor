@@ -20,13 +20,13 @@ namespace AntDesign
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree<TItem> TreeComponent { get; set; }
+        private Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 上一级节点
         /// </summary>
         [CascadingParameter(Name = "Node")]
-        public TreeNode<TItem> ParentNode { get; set; }
+        internal TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
         ///
@@ -47,7 +47,7 @@ namespace AntDesign
         /// <summary>
         /// Current Node Level
         /// </summary>
-        public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
+        internal int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
         /// <summary>
         /// record the index in children nodes list of parent node.
@@ -108,6 +108,10 @@ namespace AntDesign
                 return TreeComponent.ChildNodes;
         }
 
+        /// <summary>
+        /// Get the previous node
+        /// </summary>
+        /// <returns></returns>
         public TreeNode<TItem> GetPreviousNode()
         {
             var parentNodes = GetParentNodes();
@@ -116,6 +120,10 @@ namespace AntDesign
             else return parentNodes[index - 1];
         }
 
+        /// <summary>
+        /// Get the next node 
+        /// </summary>
+        /// <returns></returns>
         public TreeNode<TItem> GetNextNode()
         {
             var parentNodes = GetParentNodes();
@@ -184,6 +192,9 @@ namespace AntDesign
             set => _selected = value;
         }
 
+        /// <summary>
+        /// Triggered when the selected state changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> SelectedChanged { get; set; }
 
@@ -258,7 +269,7 @@ namespace AntDesign
         /// Sets the node to release the target location
         /// </summary>
         /// <param name="value"></param>
-        public void SetTargetBottom(bool value = false)
+        internal void SetTargetBottom(bool value = false)
         {
             if (DragTargetBottom == value) return;
             DragTargetBottom = value;
@@ -502,7 +513,7 @@ namespace AntDesign
             set => _checkable = value;
         }
 
-        public bool Indeterminate { get; set; }
+        internal bool Indeterminate { get; set; }
 
         private bool _disableCheckbox;
 
@@ -571,6 +582,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Checks all child nodes
+        /// </summary>
         public void CheckAllChildren()
         {
             DoCheckAllChildren();
@@ -583,6 +597,9 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Unchecks all child nodes
+        /// </summary>
         public void UnCheckAllChildren()
         {
             DoUnCheckAllChildren();
@@ -711,6 +728,9 @@ namespace AntDesign
 
         #region Title
 
+        /// <summary>
+        /// Whether the node is draggable
+        /// </summary>
         [Parameter]
         public bool Draggable { get; set; }
 
@@ -735,17 +755,29 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Customize the icon template
+        /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> IconTemplate { get; set; }
 
+        /// <summary>
+        /// Specific the icon of the switcher
+        /// </summary>
         [Parameter]
         public string SwitcherIcon { get; set; }
 
+        /// <summary>
+        /// Customize the switcher icon template
+        /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
         private string _title;
 
+        /// <summary>
+        /// The title of the node
+        /// </summary>
         [Parameter]
         public string Title
         {
@@ -762,15 +794,18 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Customize the title template
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
         /// <summary>
         /// title是否包含SearchValue(搜索使用)
         /// </summary>
-        public bool Matched { get; set; }
+        internal bool Matched { get; set; }
 
-        public bool Hidden { get; set; }
+        internal bool Hidden { get; set; }
 
         /// <summary>
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
@@ -781,6 +816,9 @@ namespace AntDesign
 
         #region data binding
 
+        /// <summary>
+        /// The data of the node, it's the data item in the data source
+        /// </summary>
         [Parameter]
         public TItem DataItem { get; set; }
 
@@ -806,7 +844,7 @@ namespace AntDesign
         /// 获得上级数据集合
         /// </summary>
         /// <returns></returns>
-        public IList<TItem> GetParentChildDataItems()
+        internal IList<TItem> GetParentChildDataItems()
         {
             if (ParentNode != null)
                 return ParentNode.ChildDataItems;
@@ -822,7 +860,7 @@ namespace AntDesign
         /// Add child node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddChildNode(TItem dataItem)
+        internal void AddChildNode(TItem dataItem)
         {
             ChildDataItems.Add(dataItem);
         }
@@ -831,7 +869,7 @@ namespace AntDesign
         /// Add a node next the node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddNextNode(TItem dataItem)
+        internal void AddNextNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -844,7 +882,7 @@ namespace AntDesign
         /// Add a node before the node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddPreviousNode(TItem dataItem)
+        internal void AddPreviousNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -856,7 +894,7 @@ namespace AntDesign
         /// <summary>
         /// remove
         /// </summary>
-        public void Remove()
+        internal void Remove()
         {
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(DataItem);
@@ -866,7 +904,7 @@ namespace AntDesign
         /// The node moves into the child node
         /// </summary>
         /// <param name="treeNode">target node</param>
-        public void MoveInto(TreeNode<TItem> treeNode)
+        internal void MoveInto(TreeNode<TItem> treeNode)
         {
             if (treeNode == this || DataItem.Equals(treeNode.DataItem)) return;
             var parentChildDataItems = GetParentChildDataItems();
@@ -877,7 +915,7 @@ namespace AntDesign
         /// <summary>
         /// Move up the nodes
         /// </summary>
-        public void MoveUp()
+        internal void MoveUp()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -889,7 +927,7 @@ namespace AntDesign
         /// <summary>
         /// Move down the node
         /// </summary>
-        public void MoveDown()
+        internal void MoveDown()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -901,7 +939,7 @@ namespace AntDesign
         /// <summary>
         ///
         /// </summary>
-        public void Downgrade()
+        internal void Downgrade()
         {
             var previousNode = GetPreviousNode();
             if (previousNode == null) return;
@@ -913,7 +951,7 @@ namespace AntDesign
         /// <summary>
         /// Upgrade nodes
         /// </summary>
-        public void Upgrade()
+        internal void Upgrade()
         {
             if (ParentNode == null) return;
             var parentChildDataItems = ParentNode.GetParentChildDataItems();

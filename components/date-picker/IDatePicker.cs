@@ -6,9 +6,9 @@ using System;
 
 namespace AntDesign
 {
-    public interface IDatePicker
+    internal interface IDatePicker
     {
-        public DateTime CurrentDate { get; set; }
+        internal DateTime CurrentDate { get; set; }
         internal DateTime? HoverDateTime { get; set; }
 
         internal event EventHandler<bool> OverlayVisibleChanged;
@@ -16,8 +16,8 @@ namespace AntDesign
         void ChangePlaceholder(string placeholder, int index = 0);
         void ResetPlaceholder(int index = -1);
         string GetFormatValue(DateTime value, int index);
-        void ChangePickerType(string type);
-        void ChangePickerType(string type, int index);
+        void ChangePickerType(DatePickerType type);
+        void ChangePickerType(DatePickerType type, int index);
         void Close();
     }
 }

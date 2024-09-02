@@ -50,18 +50,18 @@ namespace AntDesign
         private ImageRef _imageRef;
         private bool _previewVisible = true;
 
-        public void AddImage(Image image)
+        internal void AddImage(Image image)
         {
             _images ??= new List<Image>();
             _images.Add(image);
         }
 
-        public void Remove(Image image)
+        internal void Remove(Image image)
         {
             _images.Remove(image);
         }
 
-        public void HandleVisibleChange(bool visible)
+        internal void HandleVisibleChange(bool visible)
         {
             if (visible)
             {

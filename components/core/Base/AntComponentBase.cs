@@ -13,6 +13,9 @@ namespace AntDesign
 {
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
+        /// <summary>
+        /// A <see cref="ForwardRef" /> instance. Used to get a reference to the internal DOM. 
+        /// </summary>
         [Parameter]
         public ForwardRef RefBack { get; set; } = new ForwardRef();
 

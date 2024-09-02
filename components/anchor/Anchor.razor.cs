@@ -60,6 +60,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The content of the component.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -188,22 +191,7 @@ namespace AntDesign
             }
         }
 
-        public void Remove(AnchorLink anchorLink)
-        {
-            _links.Remove(anchorLink);
-        }
-
-        public void Add(AnchorLink anchorLink)
-        {
-            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
-                .Select(l => l.Href)
-                .Contains(anchorLink.Href))
-            {
-                _links.Add(anchorLink);
-            }
-        }
-
-        public void Clear()
+        internal void Clear()
         {
             foreach (IAnchor link in _links)
             {
@@ -212,7 +200,7 @@ namespace AntDesign
             _links.Clear();
         }
 
-        public List<AnchorLink> FlatChildren()
+        internal List<AnchorLink> FlatChildren()
         {
             List<AnchorLink> results = new List<AnchorLink>();
 
@@ -291,7 +279,7 @@ namespace AntDesign
             }
         }
 
-        public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
+        internal async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
             await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
 
@@ -316,6 +304,31 @@ namespace AntDesign
         {
             DomEventListener?.Dispose();
             base.Dispose(disposing);
+        }
+
+        void IAnchor.Add(AnchorLink anchorLink)
+        {
+            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
+                   .Select(l => l.Href)
+                   .Contains(anchorLink.Href))
+            {
+                _links.Add(anchorLink);
+            }
+        }
+
+        void IAnchor.Remove(AnchorLink anchorLink)
+        {
+            _links.Remove(anchorLink);
+        }
+
+        void IAnchor.Clear()
+        {
+            Clear();
+        }
+
+        List<AnchorLink> IAnchor.FlatChildren()
+        {
+            return FlatChildren();
         }
     }
 }

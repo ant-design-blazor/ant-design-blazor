@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
@@ -11,17 +12,34 @@ namespace AntDesign
 {
     public partial class Selection : ColumnBase, ISelectionColumn
     {
+        /// <summary>
+        /// Type of selection column, checkbox or radio.
+        /// </summary>
+        /// <default value="checkbox"/>
         [Parameter]
         public string Type { get; set; } = "checkbox";
 
+        /// <summary>
+        /// Whether the selection column is disabled.
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// No use now.
+        /// </summary>
+        [Obsolete("Please use the RowKey of Table instead.")]
         [Parameter]
         public string Key { get; set; }
 
+        /// <summary>
+        /// Check table row precisely; parent row and children rows are not associated
+        /// </summary>
         [Parameter] public bool CheckStrictly { get; set; }
 
+        /// <summary>
+        /// Customize the content of the cell.
+        /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 

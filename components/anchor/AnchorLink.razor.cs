@@ -30,12 +30,12 @@ namespace AntDesign
         #region Parameters
 
         [CascadingParameter(Name = "Root")]
-        public Anchor Root { get; set; }
+        private Anchor Root { get; set; }
 
         private IAnchor _parent;
 
         [CascadingParameter(Name = "Parent")]
-        public IAnchor Parent
+        private IAnchor Parent
         {
             get => _parent;
             set
@@ -106,12 +106,12 @@ namespace AntDesign
             catch { }
         }
 
-        public void Remove(AnchorLink anchorLink)
+        internal void Remove(AnchorLink anchorLink)
         {
             _links.Remove(anchorLink);
         }
 
-        public void Add(AnchorLink anchorLink)
+        internal void Add(AnchorLink anchorLink)
         {
             if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
                 .Select(l => l.Href)
@@ -121,7 +121,7 @@ namespace AntDesign
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
             foreach (IAnchor link in _links)
             {
@@ -131,7 +131,7 @@ namespace AntDesign
             _links.Clear();
         }
 
-        public List<AnchorLink> FlatChildren()
+        internal List<AnchorLink> FlatChildren()
         {
             List<AnchorLink> results = new List<AnchorLink>();
 
@@ -167,6 +167,26 @@ namespace AntDesign
         private async void OnClick(MouseEventArgs args)
         {
             await Root.OnLinkClickAsync(args, this);
+        }
+
+        void IAnchor.Add(AnchorLink anchorLink)
+        {
+            Add(anchorLink);
+        }
+
+        void IAnchor.Remove(AnchorLink anchorLink)
+        {
+           Remove(anchorLink);
+        }
+
+        void IAnchor.Clear()
+        {
+            Clear();
+        }
+
+        List<AnchorLink> IAnchor.FlatChildren()
+        {
+            return FlatChildren();
         }
     }
 }

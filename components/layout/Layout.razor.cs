@@ -77,9 +77,12 @@ namespace AntDesign
     <seealso cref="Content"/>
     <seealso cref="Sider"/>
      */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg", Columns = 1)]
     public partial class Layout : AntDomComponentBase
     {
+        /// <summary>
+        /// The inner content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

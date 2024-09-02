@@ -73,7 +73,7 @@ namespace AntDesign
         public bool Animated { get; set; }
 
         /// <summary>
-        /// 
+        /// Whether the ink bar is animated
         /// </summary>
         /// <default value="true" />
         [Parameter]
@@ -206,7 +206,7 @@ namespace AntDesign
         public bool Centered { get; set; }
 
         [CascadingParameter]
-        public Card Card { get; set; }
+        private Card Card { get; set; }
 
         #endregion Parameters
 
@@ -348,7 +348,7 @@ namespace AntDesign
             _needUpdateScrollListPosition = !_afterFirstRender;
         }
 
-        public async Task RemoveTab(TabPane tab)
+        internal async Task RemoveTab(TabPane tab)
         {
             if (await OnEdit.Invoke(tab.Key, "remove"))
             {

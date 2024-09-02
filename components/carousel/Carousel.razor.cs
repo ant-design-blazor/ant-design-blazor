@@ -102,13 +102,23 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] 
-        public IDomEventListener DomEventListener { get; set; }
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
+        /// <summary>
+        /// Slides the carousel to the next slide
+        /// </summary>
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
+        /// <summary>
+        /// Slides the carousel to the previous slide
+        /// </summary>
         public void Previous() => GoTo(_slicks.IndexOf(ActiveSlick) - 1);
 
+        /// <summary>
+        /// Slides the carousel to the specified slide
+        /// </summary>
+        /// <param name="index"></param>
         public void GoTo(int index)
         {
             if (index >= _slicks.Count)

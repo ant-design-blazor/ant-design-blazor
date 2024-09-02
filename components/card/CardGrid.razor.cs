@@ -22,7 +22,7 @@ namespace AntDesign
         public bool Hoverable { get; set; }
 
         [CascadingParameter]
-        public Card Parent { get; set; }
+        private Card Parent { get; set; }
 
         protected override void OnInitialized()
         {
