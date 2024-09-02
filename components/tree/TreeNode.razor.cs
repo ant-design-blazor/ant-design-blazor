@@ -844,7 +844,7 @@ namespace AntDesign
         /// 获得上级数据集合
         /// </summary>
         /// <returns></returns>
-        public IList<TItem> GetParentChildDataItems()
+        internal IList<TItem> GetParentChildDataItems()
         {
             if (ParentNode != null)
                 return ParentNode.ChildDataItems;

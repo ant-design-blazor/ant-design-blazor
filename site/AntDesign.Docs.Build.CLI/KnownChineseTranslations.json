@@ -689,9 +689,6 @@
   "Specifies the unique identifier name of the current node。": {
     "Translated": "指定当前节点的唯一标识符名称。"
   },
-  "获得上级数据集合": {
-    "Translated": "获得上级数据集合"
-  },
   "<p>Basic text writing, including headings, body text, lists, and more.</p><h2>When To Use</h2><ul><li>When need to display a title or paragraph contents in Articles/Blogs/Notes.</li><li>When you need copyable/editable/ellipsis texts.</li></ul>": {
     "Translated": "<p>基本文本书写，包括标题、正文、列表等。</p><h2>何时使用</h2><ul><li>当需要在文章中显示标题或段落内容时/博客/笔记。</li><li>当您需要可复制/可编辑/省略号文本时。</li></ul>"
   },
