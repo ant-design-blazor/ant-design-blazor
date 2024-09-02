@@ -689,9 +689,6 @@
   "Specifies the unique identifier name of the current node。": {
     "Translated": "指定当前节点的唯一标识符名称。"
   },
-  "title是否包含SearchValue(搜索使用)": {
-    "Translated": "title是否包含SearchValue(搜索使用)"
-  },
   "获得上级数据集合": {
     "Translated": "获得上级数据集合"
   },
@@ -1618,9 +1615,6 @@
   },
   "Content displayed after the empty view": {
     "Translated": "空视图后显示的内容"
-  },
-  "Description for the view": {
-    "Translated": "视图说明"
   },
   "Description content for the view. Takes priority over <code>AntDesign.Empty.Description</code>": {
     "Translated": "视图的描述内容。优先于 <code>AntDesign.Empty.Description</code>"
@@ -3302,9 +3296,6 @@
   "Data to display in table": {
     "Translated": "要在表格中显示的数据"
   },
-  "Template for a row": {
-    "Translated": "一行模板"
-  },
   "Template use for what to display when a row is expanded": {
     "Translated": "用于展开行时显示内容的模板"
   },
@@ -3818,9 +3809,6 @@
   "(Controlled) expands the specified tree node": {
     "Translated": "(controlled) 展开指定的树节点"
   },
-  "Deselect all selections": {
-    "Translated": "取消选择所有选择"
-  },
   "Unchecks all nodes": {
     "Translated": "取消选中所有节点"
   },
@@ -3832,9 +3820,6 @@
   },
   "Collapse all nodes": {
     "Translated": "折叠所有节点"
-  },
-  "Current Node Level": {
-    "Translated": "当前节点级别"
   },
   "The disabled state is subject to the parent node": {
     "Translated": "禁用状态以父节点为准"
@@ -3860,9 +3845,6 @@
   "Setting Selection State": {
     "Translated": "设置选择状态"
   },
-  "Sets the node to release the target location": {
-    "Translated": "设置节点释放目标位置"
-  },
   "Remove the current node": {
     "Translated": "删除当前节点"
   },
@@ -3871,27 +3853,6 @@
   },
   "Set the checkbox state": {
     "Translated": "设置复选框状态"
-  },
-  "Add child node": {
-    "Translated": "添加子节点"
-  },
-  "Add a node next the node": {
-    "Translated": "在节点旁边添加一个节点"
-  },
-  "Add a node before the node": {
-    "Translated": "在节点前添加一个节点"
-  },
-  "remove": {
-    "Translated": "消除"
-  },
-  "Move up the nodes": {
-    "Translated": "上移节点"
-  },
-  "Move down the node": {
-    "Translated": "下移节点"
-  },
-  "Upgrade nodes": {
-    "Translated": "升级节点"
   },
   "If the text can be copied or not. Will add a copy icon to end of text if true.": {
     "Translated": "文本是否可以复制。如果为真，将在文本末尾添加一个复制图标。"
@@ -4426,5 +4387,272 @@
   },
   "Auto focus.": {
     "Translated": "自动对焦。"
+  },
+  "Template for content": {
+    "Translated": "内容模板"
+  },
+  "The content of the component.": {
+    "Translated": "组件的内容。"
+  },
+  "The child content": {
+    "Translated": "子内容"
+  },
+  "Max avatars to show": {
+    "Translated": "要显示的最大头像数"
+  },
+  "The style of excess avatar style": {
+    "Translated": "超额头像样式的样式"
+  },
+  "The placement of excess avatar Popover": {
+    "Translated": "超额头像 Popover 的放置"
+  },
+  "The action of the card.": {
+    "Translated": "卡片的操作。"
+  },
+  "Slides the carousel to the next slide": {
+    "Translated": "将轮播滑动到下一张幻灯片"
+  },
+  "Slides the carousel to the previous slide": {
+    "Translated": "将轮播滑动到上一张幻灯片"
+  },
+  "Slides the carousel to the specified slide": {
+    "Translated": "将轮播滑动到指定的幻灯片"
+  },
+  "Activate the specified panels": {
+    "Translated": "激活指定的面板"
+  },
+  "Deactivate the specified panels": {
+    "Translated": "停用指定的面板"
+  },
+  "Set the active state of the panel": {
+    "Translated": "设置面板的活动状态"
+  },
+  "Toggle the active state of the panel": {
+    "Translated": "切换面板的活动状态"
+  },
+  "Sets the direction of the comment. <code>left</code> or <code>right</code>.": {
+    "Translated": "设置注释的方向。<code>left</code> 或 <code>right</code>。"
+  },
+  "Change default props <code>Colon</code> value of <code>DescriptionsItem</code>.": {
+    "Translated": "更改 <code>DescriptionsItem</code> 的默认 props <code>冒号</code>值。"
+  },
+  "Customize the style of the label": {
+    "Translated": "自定义标签的样式"
+  },
+  "Customize the style of the content": {
+    "Translated": "自定义内容的样式"
+  },
+  "The content of Drawer.": {
+    "Translated": "Drawer 的内容。"
+  },
+  "The content of Drawer. <p>If <code>AntDesign.Drawer.Content</code> is a string, it will be rendered as HTML.</p>": {
+    "Translated": "Drawer 的内容。<p>如果 <code>AntDesign.Drawer.Content</code> 是字符串，则它将呈现为 HTML。</p>"
+  },
+  "Locale configuration for the empty view": {
+    "Translated": "空视图的区域设置"
+  },
+  "Child content": {
+    "Translated": "子内容"
+  },
+  "Specifies the culture to use for formatting the number.": {
+    "Translated": "指定用于设置数字格式的区域性。"
+  },
+  "Reset the countdown": {
+    "Translated": "重置倒计时"
+  },
+  "Template for the header of grouping blocks": {
+    "Translated": "分组块的标题模板"
+  },
+  "Template for the footer of grouping blocks": {
+    "Translated": "分组块的页脚模板"
+  },
+  "Template for Rows": {
+    "Translated": "行模板"
+  },
+  "Template for column definitions": {
+    "Translated": "列定义的模板"
+  },
+  "Template for the header": {
+    "Translated": "页眉模板"
+  },
+  "Customize the empty template when the table is empty": {
+    "Translated": "自定义表为空时的空模板"
+  },
+  "Specify the identifier of each row": {
+    "Translated": "指定每行的标识符"
+  },
+  "Set the field filter type resolver": {
+    "Translated": "设置字段筛选条件类型解析程序"
+  },
+  "Whether the column is used for grouping or not": {
+    "Translated": "该列是否用于分组"
+  },
+  "Specifies the grouping function for the column": {
+    "Translated": "指定列的分组函数"
+  },
+  "Filter options for the column": {
+    "Translated": "列的筛选选项"
+  },
+  "Filter type for the column": {
+    "Translated": "列的筛选器类型"
+  },
+  "Set the column content to be displayed in the table": {
+    "Translated": "设置表中显示的列内容"
+  },
+  "Type of selection column, checkbox or radio.": {
+    "Translated": "选择列、复选框或单选按钮的类型。"
+  },
+  "Whether the selection column is disabled.": {
+    "Translated": "选择列是否被禁用。"
+  },
+  "Please use the RowKey of Table instead.": {
+    "Translated": "请改用 Table 的 RowKey。"
+  },
+  "No use now.": {
+    "Translated": "现在没用了。"
+  },
+  "Check table row precisely; parent row and children rows are not associated": {
+    "Translated": "精确检查表格行;父行和子行未关联"
+  },
+  "Customize the content of the cell.": {
+    "Translated": "自定义单元格的内容。"
+  },
+  "Whether the ink bar is animated": {
+    "Translated": "墨栏是否为动画"
+  },
+  "The content of the timeline item.": {
+    "Translated": "时间线项的内容。"
+  },
+  "The dot of the timeline item.": {
+    "Translated": "时间线项的点。"
+  },
+  "The color of the timeline item.": {
+    "Translated": "时间线项的颜色。"
+  },
+  "The label of the timeline item.": {
+    "Translated": "时间线项的标签。"
+  },
+  "Whether to check the checkbox when user click the tree node.": {
+    "Translated": "是否在用户单击树节点时选中复选框。"
+  },
+  "Get or set the template to render the title of the tree node": {
+    "Translated": "获取或设置模板以呈现树节点的标题"
+  },
+  "Nodes to render in the tree. Use either this or <code>AntDesign.TreeSelect`2.DataSource</code>": {
+    "Translated": "要在树中渲染的节点。使用 this 或 <code>AntDesign.TreeSelect'2.DataSource</code>"
+  },
+  "Use this to set the content of the tree. Use either this or <code>AntDesign.TreeSelect`2.DataSource</code>": {
+    "Translated": "使用此选项可设置树的内容。使用 this 或 <code>AntDesign.TreeSelect'2.DataSource</code>"
+  },
+  "Whether to expand all nodes by default": {
+    "Translated": "是否默认展开所有节点"
+  },
+  "Whether to expand parent nodes by default": {
+    "Translated": "是否默认展开父节点"
+  },
+  "Set the keys of the default expanded tree nodes": {
+    "Translated": "设置默认展开树节点的键"
+  },
+  "Whether to expand the parent node when clicking on a tree node": {
+    "Translated": "单击树状节点时是否展开父节点"
+  },
+  "Callback executed when the user searches for a value": {
+    "Translated": "用户搜索值时执行的回调"
+  },
+  "Set the style of the matched text": {
+    "Translated": "设置匹配文本的样式"
+  },
+  "Set the class of the matched text": {
+    "Translated": "设置匹配文本的类"
+  },
+  "The value of the root node": {
+    "Translated": "根节点的值"
+  },
+  "Whether to show leaf icon": {
+    "Translated": "是否显示叶图标"
+  },
+  "Set the attributes of the tree": {
+    "Translated": "设置树的属性"
+  },
+  "Callback executed when the tree node is loaded": {
+    "Translated": "加载 Tree 节点时执行的 Callback"
+  },
+  "Callback executed when the tree node is selected": {
+    "Translated": "选择树节点时执行的回调"
+  },
+  "Set the style of the dropdown menu": {
+    "Translated": "设置下拉菜单的样式"
+  },
+  "The selected value": {
+    "Translated": "所选值"
+  },
+  "The selected values": {
+    "Translated": "所选值"
+  },
+  "@bind-SelectedKeys": {
+    "Translated": "@bind-SelectedKeys"
+  },
+  "@bind-SelectedData": {
+    "Translated": "@bind-SelectedData"
+  },
+  "The selected keys": {
+    "Translated": "所选键"
+  },
+  "@bind-SelectedNodes": {
+    "Translated": "@bind - 选定节点"
+  },
+  "@bind-SelectedDatas": {
+    "Translated": "@bind-SelectedDatas"
+  },
+  "Select all nodes": {
+    "Translated": "选择所有节点"
+  },
+  "Deselect all nodes": {
+    "Translated": "取消选择所有节点"
+  },
+  "Triggered when the selected state changes": {
+    "Translated": "当所选状态发生变化时触发"
+  },
+  "Whether the node is draggable": {
+    "Translated": "节点是否可拖动"
+  },
+  "Customize the icon template": {
+    "Translated": "自定义图标模板"
+  },
+  "Specific the icon of the switcher": {
+    "Translated": "指定切换器的图标"
+  },
+  "Customize the switcher icon template": {
+    "Translated": "自定义切换器图标模板"
+  },
+  "The title of the node": {
+    "Translated": "节点的标题"
+  },
+  "Customize the title template": {
+    "Translated": "自定义标题模板"
+  },
+  "The data of the node, it's the data item in the data source": {
+    "Translated": "节点的数据，它是数据源中的数据项"
+  },
+  "Get the previous node": {
+    "Translated": "获取上一个节点"
+  },
+  "Get the next node": {
+    "Translated": "获取下一个节点"
+  },
+  "Checks all child nodes": {
+    "Translated": "检查所有子节点"
+  },
+  "Unchecks all child nodes": {
+    "Translated": "取消选中所有子节点"
+  },
+  "Show the preview icon or not": {
+    "Translated": "是否显示预览图标"
+  },
+  "Show the remove icon or not": {
+    "Translated": "是否显示删除图标"
+  },
+  "Get or set the list of files that have been uploaded": {
+    "Translated": "获取或设置已上传的文件列表"
   }
 }
