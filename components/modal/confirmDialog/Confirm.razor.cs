@@ -18,7 +18,7 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Parameter]
         public ConfirmOptions Config { get; set; }

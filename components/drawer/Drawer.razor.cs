@@ -36,9 +36,15 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// The content of Drawer.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The content of Drawer. <para>If <see cref="Content"/> is a string, it will be rendered as HTML.</para>
+        /// </summary>
         [Parameter]
         public OneOf<RenderFragment, string> Content
         {

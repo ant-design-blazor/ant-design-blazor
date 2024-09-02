@@ -80,6 +80,9 @@ namespace AntDesign
         [Parameter]
         public PopconfirmLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Popconfirm;
 
+        /// <summary>
+        /// Properties to pass through to the okay button
+        /// </summary>
         [Parameter]
         public ButtonProps OkButtonProps { get; set; }
 

@@ -9,6 +9,9 @@ namespace AntDesign
 {
     public partial class MessageItem : AntDomComponentBase
     {
+        /// <summary>
+        /// The message config
+        /// </summary>
         [Parameter]
         public MessageConfig Config { get; set; }
 

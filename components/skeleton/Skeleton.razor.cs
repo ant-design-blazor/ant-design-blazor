@@ -150,7 +150,7 @@ namespace AntDesign
             }
         }
 
-        public void SetAvatarProps()
+        private void SetAvatarProps()
         {
             if (Avatar == false) return;
 

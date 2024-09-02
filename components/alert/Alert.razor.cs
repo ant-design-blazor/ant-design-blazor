@@ -64,6 +64,9 @@ namespace AntDesign
         [Parameter]
         public string Message { get; set; }
 
+        /// <summary>
+        /// Template for content
+        /// </summary>
         [Parameter]
         public RenderFragment MessageTemplate { get; set; }
 
