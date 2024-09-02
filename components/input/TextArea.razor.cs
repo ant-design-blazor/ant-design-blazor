@@ -300,7 +300,7 @@ namespace AntDesign
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
         [JSInvokable]
-        private void ChangeSizeAsyncJs(float width, float height)
+        public void ChangeSizeAsyncJs(float width, float height)
         {
             if (OnResize.HasDelegate)
                 OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
