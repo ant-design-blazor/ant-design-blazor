@@ -15,6 +15,30 @@ timeline: true
 
 ---
 
+### 0.20.3
+
+`2024-09-03`
+
+- 🐞 修复 Tabs 拖动排序。[#4147](https://github.com/ant-design-blazor/ant-design-blazor/pull/4147) [@ElderJames](https://github.com/ElderJames)
+- Table
+  - 🆕 新增 Table SelectAll 事件回调。[#4142](https://github.com/ant-design-blazor/ant-design-blazor/pull/4142) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 重构 Table 在动态调整列时减少渲染。[#4138](https://github.com/ant-design-blazor/ant-design-blazor/pull/4138) [@ElderJames](https://github.com/ElderJames)
+- Form
+  - 🐞 修复 Form 检查disposing时 _editContext 是否存在。[#4136](https://github.com/ant-design-blazor/ant-design-blazor/pull/4136) [@ogix](https://github.com/ogix)
+  - 🐞 修复 Form 在验证可空类型的时候抛异常。[#4137](https://github.com/ant-design-blazor/ant-design-blazor/pull/4137) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 drawer 关闭动画效果。[#4122](https://github.com/ant-design-blazor/ant-design-blazor/pull/4122) [@ElderJames](https://github.com/ElderJames)
+- 🛠 优化 全局服务依赖注册的生命周期，WebAssembly 使用单例。[#4123](https://github.com/ant-design-blazor/ant-design-blazor/pull/4123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 当 values 某些场景下被修改时抛异常。[#4117](https://github.com/ant-design-blazor/ant-design-blazor/pull/4117) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Menu 在处理 OnClick 事件前关闭overlay。[#4121](https://github.com/ant-design-blazor/ant-design-blazor/pull/4121) [@pankey888](https://github.com/pankey888)
+- 🛠 重构 Drawer 的 Height 和 Width 属性改为字符串，以支持百分比等单位。[#4120](https://github.com/ant-design-blazor/ant-design-blazor/pull/4120) [@kx500](https://github.com/kx500)
+- 🐞 修复 语言包文件反序列化异常。[#4116](https://github.com/ant-design-blazor/ant-design-blazor/pull/4116) [@ogix](https://github.com/ogix)
+- 🐞 修复 Reusetabs 当 Menu 加载后刷新标签。[#4112](https://github.com/ant-design-blazor/ant-design-blazor/pull/4112) [@ElderJames](https://github.com/ElderJames)
+- 🛠 启用 <code class="notranslate">CA1852</code>/<code class="notranslate">IDE0040</code>/<code class="notranslate">IDE0005</code> 代码分析规则。[#4126](https://github.com/ant-design-blazor/ant-design-blazor/pull/4126) [@WeihanLi](https://github.com/WeihanLi)
+- 🛠 构建目标项目的时候才复制智能提醒xml文件，以减少打包体系。[#4129](https://github.com/ant-design-blazor/ant-design-blazor/pull/4129) [@stratosblue](https://github.com/stratosblue)
+- 📖 文档现在是从代码文件生成的，因此该站点应该更接近于库。删除了一些不应该公开的公共属性、方法等。有些什么都没做，有些是为了内部组件功能。有关详细列表，请参阅完整的更新日志。[#3013](https://github.com/ant-design-blazor/ant-design-blazor/pull/3013) [@kooliokey](https://github.com/kooliokey)
+- 🛠 移除重复的 InternalsVisibleTo 设置。[#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
+- 🛠 移除 <code class="notranslate">Microsoft.SourceLink.GitHub</code> 包引用。[#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 0.20.2
 
 `2024-08-20`

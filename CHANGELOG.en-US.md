@@ -15,6 +15,30 @@ timeline: true
 
 ---
 
+### 0.20.3
+
+`2024-09-03`
+
+- 🐞 fix(module: tabs): dnd and reorder. [#4147](https://github.com/ant-design-blazor/ant-design-blazor/pull/4147) [@ElderJames](https://github.com/ElderJames)
+- Table
+  - 🆕 feat(module: table): add SelectAll event callback. [#4142](https://github.com/ant-design-blazor/ant-design-blazor/pull/4142) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 refactor(module: table): reduce rendering for dynamic columns. [#4138](https://github.com/ant-design-blazor/ant-design-blazor/pull/4138) [@ElderJames](https://github.com/ElderJames)
+- Form
+  - 🐞 fix(module: form): check if _editContext exists when disposing. [#4136](https://github.com/ant-design-blazor/ant-design-blazor/pull/4136) [@ogix](https://github.com/ogix)
+  - 🐞 fix(module: form): exception during validation for some nullable types. [#4137](https://github.com/ant-design-blazor/ant-design-blazor/pull/4137) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module: drawer): closing animation effect. [#4122](https://github.com/ant-design-blazor/ant-design-blazor/pull/4122) [@ElderJames](https://github.com/ElderJames)
+- 🛠 refactor: let the service register with WebAssembly and server using …. [#4123](https://github.com/ant-design-blazor/ant-design-blazor/pull/4123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module: select): An exception is raised when values change in some cases. [#4117](https://github.com/ant-design-blazor/ant-design-blazor/pull/4117) [@pankey888](https://github.com/pankey888)
+- 🐞 refactor(module: menu): Hide overlay before handling OnClick event. [#4121](https://github.com/ant-design-blazor/ant-design-blazor/pull/4121) [@pankey888](https://github.com/pankey888)
+- 🛠 refactor(module: drawer): Change the Height and Width of the Drawer to the string type to support the percentage argument. [#4120](https://github.com/ant-design-blazor/ant-design-blazor/pull/4120) [@kx500](https://github.com/kx500)
+- 🐞 remove comments from lt locale json file. [#4116](https://github.com/ant-design-blazor/ant-design-blazor/pull/4116) [@ogix](https://github.com/ogix)
+- 🐞 fix(module: reusetabs): update title after menus were loaded. [#4112](https://github.com/ant-design-blazor/ant-design-blazor/pull/4112) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Enable <code class="notranslate">CA1852</code>/<code class="notranslate">IDE0040</code>/<code class="notranslate">IDE0005</code> code analyzer rules. [#4126](https://github.com/ant-design-blazor/ant-design-blazor/pull/4126) [@WeihanLi](https://github.com/WeihanLi)
+- 🛠 chore: reduce nuget package size by copying intellisense files before build. [#4129](https://github.com/ant-design-blazor/ant-design-blazor/pull/4129) [@stratosblue](https://github.com/stratosblue)
+- 📖 Documentation is generated from the code files now so the site should match the library much closer. Removed a handful of public properties, methods, etc that should not have been public. Some never did anything and some were for internal component functionality. See full changelog for detailed list. [#3013](https://github.com/ant-design-blazor/ant-design-blazor/pull/3013) [@kooliokey](https://github.com/kooliokey)
+- 🛠 Remove duplicated InternalsVisibleTo. [#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
+- 🛠 Remove  <code class="notranslate">Microsoft.SourceLink.GitHub</code> package reference. [#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 0.20.2
 
 `2024-08-20`
