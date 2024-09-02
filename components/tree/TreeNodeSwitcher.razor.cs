@@ -11,16 +11,16 @@ namespace AntDesign
     public partial class TreeNodeSwitcher<TItem> : ComponentBase
     {
         /// <summary>
-        /// 树控件本身
+        /// 
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree<TItem> TreeComponent { get; set; }
+        private Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode<TItem> SelfNode { get; set; }
+        private TreeNode<TItem> SelfNode { get; set; }
 
         /// <summary>
         /// 节点是否处于展开状态
@@ -49,6 +49,9 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        /// <summary>
+        /// Trigger when the switcher is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnSwitcherClick { get; set; }
 

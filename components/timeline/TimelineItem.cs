@@ -9,20 +9,32 @@ namespace AntDesign
 {
     public partial class TimelineItem : AntDomComponentBase
     {
+        /// <summary>
+        /// The content of the timeline item.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The dot of the timeline item.
+        /// </summary>
         [Parameter]
         public RenderFragment Dot { get; set; }
 
+        /// <summary>
+        /// The color of the timeline item.
+        /// </summary>
         [Parameter]
         public string Color { get; set; } = "blue";
 
+        /// <summary>
+        /// The label of the timeline item.
+        /// </summary>
         [Parameter]
         public string Label { get; set; }
 
         [CascadingParameter]
-        public Timeline ParentTimeline { get; set; }
+        private Timeline ParentTimeline { get; set; }
 
         internal ClassMapper _headClassMapper = new ClassMapper();
 

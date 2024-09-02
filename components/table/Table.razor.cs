@@ -98,20 +98,32 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         /// <summary>
-        /// Template for a row
+        /// Template for the header of grouping blocks
         /// </summary>
         [Parameter]
         public RenderFragment<GroupResult<TItem>> GroupTitleTemplate { get; set; }
 
+        /// <summary>
+        /// Template for the footer of grouping blocks
+        /// </summary>
         [Parameter]
         public RenderFragment<GroupResult<TItem>> GroupFooterTemplate { get; set; }
 
+        /// <summary>
+        /// Template for Rows
+        /// </summary>
         [Parameter]
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
+        /// <summary>
+        /// Template for column definitions
+        /// </summary>
         [Parameter]
         public RenderFragment<TItem> ColumnDefinitions { get; set; }
 
+        /// <summary>
+        /// Template for the header
+        /// </summary>
         [Parameter]
         public RenderFragment<TItem> HeaderTemplate { get; set; }
 
@@ -312,9 +324,15 @@ namespace AntDesign
         [Parameter]
         public bool Responsive { get; set; }
 
+        /// <summary>
+        /// Customize the empty template when the table is empty
+        /// </summary>
         [Parameter]
         public RenderFragment EmptyTemplate { get; set; }
 
+        /// <summary>
+        /// Specify the identifier of each row
+        /// </summary>
         [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
 
         /// <summary>
@@ -322,6 +340,9 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool Resizable { get; set; }
 
+        /// <summary>
+        /// Set the field filter type resolver
+        /// </summary>
         [Parameter]
         public IFieldFilterTypeResolver FieldFilterTypeResolver { get; set; }
 
@@ -752,7 +773,7 @@ namespace AntDesign
         }
 #endif
 
-        public void GroupItems()
+        private void GroupItems()
         {
             if (_groupedColumns.Count == 0)
             {
@@ -765,12 +786,12 @@ namespace AntDesign
             _groups = DynamicGroupByHelper.DynamicGroupBy(_showItems, selectedKeys);
         }
 
-        public void AddGroupColumn(IFieldColumn column)
+        internal void AddGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Add(column);
         }
 
-        public void RemoveGroupColumn(IFieldColumn column)
+        internal void RemoveGroupColumn(IFieldColumn column)
         {
             this._groupedColumns.Remove(column);
         }

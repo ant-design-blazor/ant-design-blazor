@@ -22,8 +22,8 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg", Columns = 1)]
     public partial class Empty : AntDomComponentBase
     {
-        [Parameter]
-        public string PrefixCls { get; set; } = "ant-empty";
+        [CascadingParameter(Name = "PrefixCls")]
+        private string PrefixCls { get; set; } = "ant-empty";
 
         /// <summary>
         /// Style for the wrapper of the image. Always used regardless of image type.
@@ -50,7 +50,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Description for the view
+        /// Locale configuration for the empty view
         /// </summary>
         /// <default value="No Data (in current locale)" />
         [Parameter]

@@ -210,7 +210,7 @@ namespace AntDesign
             }
         }
 
-        public void ShowPreview()
+        private void ShowPreview()
         {
             var images = Group?.Images ?? new List<Image>() { this };
             var index = images.IndexOf(this);
@@ -225,7 +225,7 @@ namespace AntDesign
             }
         }
 
-        public void OnPreviewClose()
+        private void OnPreviewClose()
         {
             if (PreviewVisibleChanged.HasDelegate)
             {

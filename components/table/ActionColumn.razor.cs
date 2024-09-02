@@ -10,7 +10,7 @@ namespace AntDesign
     public partial class ActionColumn : ColumnBase
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
+        internal bool Blocked { get; set; }
 
         /// <summary>
         /// Column content for a row. Takes priority over <see cref="ColumnBase.ChildContent"/>

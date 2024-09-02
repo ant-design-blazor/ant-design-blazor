@@ -35,7 +35,7 @@ namespace AntDesign
     public partial class Tree<TItem> : AntDomComponentBase
     {
         [CascadingParameter(Name = "TreeSelect")]
-        public ITreeSelect TreeSelect { get; set; }
+        private ITreeSelect TreeSelect { get; set; }
 
         #region fields
 
@@ -124,7 +124,7 @@ namespace AntDesign
         [Parameter]
         public string SwitcherIcon { get; set; }
 
-        public bool Directory { get; set; }
+        internal bool Directory { get; set; }
 
         private void SetClassMapper()
         {
@@ -243,6 +243,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Select all nodes
+        /// </summary>
         public void SelectAll()
         {
             if (!Selectable || !Multiple)
@@ -256,7 +259,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Deselect all selections
+        /// Deselect all nodes
         /// </summary>
         public void DeselectAll()
         {
@@ -288,7 +291,7 @@ namespace AntDesign
         private string _selectedKey;
 
         /// <summary>
-        ///
+        /// @bind-SelectedKeys
         /// </summary>
         [Parameter]
         public EventCallback<string> SelectedKeyChanged { get; set; }
@@ -305,6 +308,9 @@ namespace AntDesign
 
         private TreeNode<TItem> _selectedNode;
 
+        /// <summary>
+        /// @bind-SelectedNode
+        /// </summary>
         [Parameter]
         public EventCallback<TreeNode<TItem>> SelectedNodeChanged { get; set; }
 
@@ -320,11 +326,14 @@ namespace AntDesign
 
         private TItem _selectedData;
 
+        /// <summary>
+        /// @bind-SelectedData
+        /// </summary>
         [Parameter]
         public EventCallback<TItem> SelectedDataChanged { get; set; }
 
         /// <summary>
-        ///
+        /// The selected keys
         /// </summary>
         [Parameter]
         public string[] SelectedKeys
@@ -335,6 +344,9 @@ namespace AntDesign
 
         private string[] _selectedKeys;
 
+        /// <summary>
+        /// @bind-SelectedKeys
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
@@ -352,6 +364,9 @@ namespace AntDesign
 
         private TreeNode<TItem>[] _selectedNodes;
 
+        /// <summary>
+        /// @bind-SelectedNodes
+        /// </summary>
         [Parameter]
         public EventCallback<TreeNode<TItem>[]> SelectedNodesChanged { get; set; }
 
@@ -367,6 +382,9 @@ namespace AntDesign
 
         private TItem[] _selectedDatas;
 
+        /// <summary>
+        /// @bind-SelectedDatas
+        /// </summary>
         [Parameter]
         public EventCallback<TItem[]> SelectedDatasChanged { get; set; }
 

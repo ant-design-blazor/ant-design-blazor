@@ -4214,9 +4214,6 @@
   "Specifies a method to return a checkable node": {
     "Translated": "指定返回可检查节点的方法"
   },
-  "树控件本身": {
-    "Translated": "树控件本身"
-  },
   "Check or uncheck the node by click TreeNodeTitle if checkable": {
     "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
   },

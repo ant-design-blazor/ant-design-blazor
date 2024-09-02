@@ -145,6 +145,10 @@ namespace AntDesign
             panel.OnActiveChange.InvokeAsync(panel.Active);
         }
 
+        /// <summary>
+        /// Activate the specified panels
+        /// </summary>
+        /// <param name="activeKeys"></param>
         public void Activate(params string[] activeKeys)
         {
             var selectedKeys = new List<string>(activeKeys.Length);
@@ -165,6 +169,10 @@ namespace AntDesign
             OnChange.InvokeAsync(selectedKeys.ToArray());
         }
 
+        /// <summary>
+        /// Deactivate the specified panels
+        /// </summary>
+        /// <param name="inactiveKeys"></param>
         public void Deactivate(params string[] inactiveKeys)
         {
             var selectedKeys = new List<string>();

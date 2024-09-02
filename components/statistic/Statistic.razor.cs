@@ -46,6 +46,9 @@ namespace AntDesign
         [Parameter]
         public int Precision { get; set; }
 
+        /// <summary>
+        /// Specifies the culture to use for formatting the number.
+        /// </summary>
         [Parameter] public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
         protected override void OnInitialized()

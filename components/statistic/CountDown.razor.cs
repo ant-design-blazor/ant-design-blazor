@@ -102,6 +102,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Reset the countdown
+        /// </summary>
         public void Reset()
         {
             _ = StartCountDownForTimeSpan();
