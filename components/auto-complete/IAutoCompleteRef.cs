@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public interface IAutoCompleteRef
+    internal interface IAutoCompleteRef
     {
         void SetInputComponent(IAutoCompleteInput input);
 

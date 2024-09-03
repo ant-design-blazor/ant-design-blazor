@@ -10,6 +10,14 @@ namespace AntDesign
 {
     public partial class ActionColumn : ColumnBase, IRenderColumn
     {
+
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        internal bool Blocked { get; set; }
+
+        /// <summary>
+        /// Column content for a row. Takes priority over <see cref="ColumnBase.ChildContent"/>
+        /// </summary>
+
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 

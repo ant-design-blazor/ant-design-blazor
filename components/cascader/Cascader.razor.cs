@@ -28,7 +28,7 @@ namespace AntDesign
     <seealso cref="CascaderNode"/>
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg",Title = "Cascader",SubTitle = "日历")]
     public partial class Cascader : AntInputComponentBase<string>
     {
         /// <summary>
@@ -139,6 +139,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Placement of the overlay
+        /// </summary>
         [Parameter]
         public Placement Placement { get; set; }
 

@@ -25,16 +25,13 @@ namespace AntDesign
     <seealso cref="ConfirmService" />
     <seealso cref="ConfirmOptions" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg", Title = "Modal")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg", Title = "Modal", SubTitle = "对话框")]
     public partial class Modal
     {
         #region Parameter
 
-        /// <summary>
-        ///
-        /// </summary>
-        [Parameter]
-        public ModalRef ModalRef { get; set; }
+        [CascadingParameter(Name = "ModalRef")]
+        internal ModalRef ModalRef { get; set; }
 
         /// <summary>
         /// Specify a function that will be called when modal is closed
@@ -191,7 +188,7 @@ namespace AntDesign
         /// Width of the modal dialog, the default value is 520
         /// </summary>
         /// <default value="520" />
-        [Parameter] 
+        [Parameter]
         public OneOf<string, double> Width { get; set; } = 520;
 
         private string GetWidth()
@@ -244,7 +241,7 @@ namespace AntDesign
         public ButtonProps CancelButtonProps { get; set; }
 
         /// <summary>
-        ///
+        /// Child content
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }

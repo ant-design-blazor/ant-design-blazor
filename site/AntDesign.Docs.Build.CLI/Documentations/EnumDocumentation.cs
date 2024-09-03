@@ -4,12 +4,17 @@
 
 using static AntDesign.Docs.Build.CLI.Command.GenerateDemoJsonCommand;
 
-namespace AntDesign.Docs.Build.CLI
+namespace AntDesign.Docs.Build.CLI.Documentations
 {
-    internal class MethodDocumentation : IApiDocumentation
+    internal class EnumDocumentation : IApiDocumentation
     {
-        public string Signature { get; set; }
-        public string ReturnType { get; set; }
+        public EnumDocumentation()
+        {
+        }
+
+        public string Name { get; set; }
         public string Summary { get; set; }
+        public string ObsoleteMessage { get; set; }
+        public string UnderlyingType { get; internal set; }
     }
 }

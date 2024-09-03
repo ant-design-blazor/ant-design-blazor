@@ -39,6 +39,10 @@ namespace AntDesign
         /// Custom error message. Will be auto generated if not provided.
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Validate the value is in the specified range
+        /// </summary>
         public (double Min, double Max)? Range { get; set; }
 
         /// <summary>
@@ -50,6 +54,10 @@ namespace AntDesign
         /// Whether the value is in specified values
         /// </summary>
         public object[] OneOf { get; set; }
+
+        /// <summary>
+        /// Validate the value is in specified enum type.
+        /// </summary>
         public Type Enum { get; set; }
 
         /// <summary>
@@ -72,6 +80,9 @@ namespace AntDesign
         /// </summary>
         public FormFieldType? Type { get; set; }
 
+        /// <summary>
+        /// Validate the value using the specified attribute.
+        /// </summary>
         public ValidationAttribute ValidationAttribute { get; set; }
     }
 }

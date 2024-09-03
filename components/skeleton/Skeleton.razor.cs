@@ -23,7 +23,7 @@ namespace AntDesign
     </summary>
     <seealso cref="SkeletonElement"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg", Columns = 1, Title = "Skeleton", SubTitle = "骨架屏")]
     public partial class Skeleton : AntDomComponentBase
     {
         #region Parameters
@@ -150,7 +150,7 @@ namespace AntDesign
             }
         }
 
-        public void SetAvatarProps()
+        private void SetAvatarProps()
         {
             if (Avatar == false) return;
 

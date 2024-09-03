@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using AntDesign.Docs.Build.CLI.Services.Translation;
 
-namespace AntDesign.Docs.Build.CLI.Command
+namespace AntDesign.Docs.Build.CLI.Documentations
 {
     public class GenerateApiDocumentation
     {
@@ -62,7 +62,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                 Style = x.DescriptionContent.Style,
                 Debug = x.DescriptionContent.Meta.Debug,
                 Docs = x.DescriptionContent.Meta.Docs,
-                Type = x.Type
+                Type = x.Type,
+                Link = x.DescriptionContent.Meta.Link,
             }).ToList();
 
             return new DemoComponent()

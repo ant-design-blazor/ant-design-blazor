@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace AntDesign
 {
-    public class AnchorLinkEqualityComparer : IEqualityComparer<AnchorLink>
+    internal class AnchorLinkEqualityComparer : IEqualityComparer<AnchorLink>
     {
         public bool Equals(AnchorLink x, AnchorLink y)
         {

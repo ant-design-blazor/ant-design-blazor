@@ -23,7 +23,7 @@ namespace AntDesign
     </summary>
     <seealso cref="Panel"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg", Columns = 1, Title ="Collapse",SubTitle = "折叠面板")]
     public partial class Collapse : AntDomComponentBase
     {
         #region Parameter
@@ -145,6 +145,10 @@ namespace AntDesign
             panel.OnActiveChange.InvokeAsync(panel.Active);
         }
 
+        /// <summary>
+        /// Activate the specified panels
+        /// </summary>
+        /// <param name="activeKeys"></param>
         public void Activate(params string[] activeKeys)
         {
             var selectedKeys = new List<string>(activeKeys.Length);
@@ -165,6 +169,10 @@ namespace AntDesign
             OnChange.InvokeAsync(selectedKeys.ToArray());
         }
 
+        /// <summary>
+        /// Deactivate the specified panels
+        /// </summary>
+        /// <param name="inactiveKeys"></param>
         public void Deactivate(params string[] inactiveKeys)
         {
             var selectedKeys = new List<string>();

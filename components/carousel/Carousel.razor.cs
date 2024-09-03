@@ -26,7 +26,7 @@ namespace AntDesign
     </summary>
     <seealso cref="CarouselSlick"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg", Title="Carousel", SubTitle = "走马灯")]
     public partial class Carousel : AntDomComponentBase
     {
         private const string PrefixCls = "ant-carousel";
@@ -102,13 +102,23 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] 
-        public IDomEventListener DomEventListener { get; set; }
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
+        /// <summary>
+        /// Slides the carousel to the next slide
+        /// </summary>
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
+        /// <summary>
+        /// Slides the carousel to the previous slide
+        /// </summary>
         public void Previous() => GoTo(_slicks.IndexOf(ActiveSlick) - 1);
 
+        /// <summary>
+        /// Slides the carousel to the specified slide
+        /// </summary>
+        /// <param name="index"></param>
         public void GoTo(int index)
         {
             if (index >= _slicks.Count)

@@ -23,7 +23,7 @@ namespace AntDesign
     /// <item>Suitable for preventing information theft.</item>
     /// </list>
     /// </summary>
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*wr1ISY50SyYAAAAAAAAAAAAADrJ8AQ/original", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*wr1ISY50SyYAAAAAAAAAAAAADrJ8AQ/original", Columns = 1, Title = "Watermark", SubTitle = "水印")]
     public partial class Watermark : AntDomComponentBase
     {
         /// <summary>

@@ -39,6 +39,9 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        /// <summary>
+        /// Trigger on checkbox click
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnCheckBoxClick { get; set; }
 

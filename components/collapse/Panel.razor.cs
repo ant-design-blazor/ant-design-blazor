@@ -180,6 +180,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Set the active state of the panel
+        /// </summary>
+        /// <param name="active"></param>
         public void SetActive(bool active)
         {
             if (!active || this.Collapse is null)
@@ -192,6 +196,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Toggle the active state of the panel
+        /// </summary>
         public void Toggle() => SetActive(!this.Active);
 
         private async Task UpdateHeight()

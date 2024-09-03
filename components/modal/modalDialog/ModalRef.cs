@@ -12,6 +12,9 @@ namespace AntDesign
     /// </summary>
     public class ModalRef : FeedbackRefWithOkCancelBase
     {
+        /// <summary>
+        /// The modal options
+        /// </summary>
         public ModalOptions Config { get; private set; }
         private readonly ModalService _service;
 

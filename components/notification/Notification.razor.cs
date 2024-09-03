@@ -33,7 +33,7 @@ namespace AntDesign
     <seealso cref="NotificationConfig"/>
     <seealso cref="NotificationRef"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg", Title = "Notification")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg", Title = "Notification", SubTitle = "通知提醒框")]
     public partial class Notification
     {
         [Inject]

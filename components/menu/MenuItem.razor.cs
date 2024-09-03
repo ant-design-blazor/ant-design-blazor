@@ -142,7 +142,7 @@ namespace AntDesign
             }
         }
 
-        public async Task HandleOnClick(MouseEventArgs args)
+        private async Task HandleOnClick(MouseEventArgs args)
         {
             if (Disabled)
                 return;
@@ -182,7 +182,7 @@ namespace AntDesign
             }
         }
 
-        public void Select(bool skipParentSelection = false, bool isInitializing = false)
+        internal void Select(bool skipParentSelection = false, bool isInitializing = false)
         {
             IsSelected = true;
             FirstRun = false;
@@ -193,7 +193,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void Deselect(bool sameParentAsSelected = false)
+        internal void Deselect(bool sameParentAsSelected = false)
         {
             RootMenu?.HideOverlay();
             IsSelected = false;

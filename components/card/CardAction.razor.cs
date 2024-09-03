@@ -6,11 +6,17 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Easy way to set the action of the card.
+    /// </summary>
     public partial class CardAction : AntDomComponentBase
     {
         [CascadingParameter]
         private Card Card { get; set; }
 
+        /// <summary>
+        /// The action of the card.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 

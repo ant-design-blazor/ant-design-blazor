@@ -124,7 +124,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the value of the TextArea.
+        /// </summary>
         [Parameter]
         public override string Value
         {

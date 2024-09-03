@@ -25,7 +25,7 @@ namespace AntDesign
     <seealso cref="IMessageService" />
     <seealso cref="MessageConfig" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg", Title = "Message", SubTitle = "全局提示")]
     public partial class Message : AntDomComponentBase
     {
         [Inject]

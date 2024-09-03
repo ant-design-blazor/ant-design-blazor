@@ -28,7 +28,7 @@ namespace AntDesign
         /// <summary>
         /// Returned ElementRef reference for DOM element.
         /// </summary>
-        public virtual ElementReference Ref
+        internal virtual ElementReference Ref
         {
             get => _ref;
             set

@@ -22,7 +22,7 @@ namespace AntDesign
     <seealso cref="CountDown"/>
     <inheritdoc/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg", Title = "Statistic", SubTitle = "统计数值")]
     public partial class Statistic<TValue> : StatisticComponentBase<TValue>
     {
         /// <summary>
@@ -46,6 +46,9 @@ namespace AntDesign
         [Parameter]
         public int Precision { get; set; }
 
+        /// <summary>
+        /// Specifies the culture to use for formatting the number.
+        /// </summary>
         [Parameter] public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
         protected override void OnInitialized()

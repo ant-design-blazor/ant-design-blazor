@@ -9,15 +9,27 @@ namespace AntDesign
 {
     public partial class AvatarGroup : AntDomComponentBase
     {
+        /// <summary>
+        /// The child content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Max avatars to show
+        /// </summary>
         [Parameter]
         public int MaxCount { get; set; }
 
+        /// <summary>
+        /// The style of excess avatar style
+        /// </summary>
         [Parameter]
         public string MaxStyle { get; set; }
 
+        /// <summary>
+        /// The placement of excess avatar Popover
+        /// </summary>
         [Parameter]
         public Placement MaxPopoverPlacement { get; set; } = Placement.Top;
 

@@ -31,14 +31,20 @@ namespace AntDesign
     <seealso cref="DrawerOptions" />
     <seealso cref="DrawerRef" />
      */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg", Title ="Drawer", SubTitle = "分割线")]
     public partial class Drawer : AntDomComponentBase
     {
         #region Parameters
 
+        /// <summary>
+        /// The content of Drawer.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The content of Drawer. <para>If <see cref="Content"/> is a string, it will be rendered as HTML.</para>
+        /// </summary>
         [Parameter]
         public OneOf<RenderFragment, string> Content
         {

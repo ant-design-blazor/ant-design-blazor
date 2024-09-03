@@ -74,11 +74,28 @@ namespace AntDesign
         /// <summary>
         /// Validate all fields.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> true if all fields are valid, otherwise false. </returns>
         bool Validate();
 
         /// <summary>
         /// Set validation messages for a specific field.
+        /// <code>
+        /// <![CDATA[
+        /// <Form @ref="form">
+        ///     <FormItem>
+        ///         <Input @bind-value="model.Name" />
+        ///     </FormItem>
+        /// </Form>
+        ///
+        /// @code {
+        ///     private IForm _form;
+        ///     private void SetError()
+        ///     {
+        ///         _form.SetValidationMessages("name", new[] { "error message" });
+        ///     }
+        /// }
+        /// ]]>
+        /// </code>
         /// </summary>
         /// <param name="field"></param>
         /// <param name="errorMessages"></param>

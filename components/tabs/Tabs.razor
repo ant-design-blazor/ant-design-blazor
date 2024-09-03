@@ -1,78 +1,100 @@
 @namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-	<div class="@ClassMapper.Class" style="@Style" id="@Id">
-		<!--Tab bar-->
-		<div role="tablist" class="@_tabBarClassMapper.Class" style="@TabBarStyle">
 
-			@if (TabBarExtraContentLeft != null)
-			{
-				<div class="ant-tabs-extra-content">
-					  @TabBarExtraContentLeft
-				</div>
-			}
+    @ChildContent
 
-			<div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
-				<div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
-					<CascadingValue Value="true" Name="IsTab" IsFixed="true">
-						@ChildContent
-					</CascadingValue>
-					@if (HasAddButton)
-					{
-						<button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
-							<Icon Type="plus" />
-						</button>
-					}
-					<div class="@_inkClassMapper.Class" style="@_inkStyle"></div>
-				</div>
-			</div>
-			<Dropdown OnVisibleChange="OnVisibleChange">
-				<Overlay>
-					<ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
-						@foreach (var pane in _invisibleTabs)
-						{
-							<li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
-							    @onclick="(e)=>HandleTabClick(pane)">
-                                @if (pane.TabTemplate != null)
-                                {
-                                    @pane.TabTemplate
-                                }
-                                else
-                                {
-                                    @pane.Tab
-                                }
-                            </li>
-						}
-					</ul>
-				</Overlay>
-				<Unbound>
-					<div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
-						<button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
-								style="@_operationStyle" type="button">
-							<Icon Type="ellipsis" />
-						</button>
-					</div>
-				</Unbound>
-			</Dropdown>
-
-	  		@if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
-			{
-				<div class="ant-tabs-extra-content">
-					@(TabBarExtraContent ?? TabBarExtraContentRight ?? Card?.Extra)
-				</div>
-			}
-		</div>
-		<!--Tab content-->
-		@if (Card == null)
-		{
-			<div class="ant-tabs-content-holder ">
-				<div class="@_contentClassMapper.Class">
-					<CascadingValue Value="true" Name="IsPane" IsFixed="true">
-						@ChildContent
-					</CascadingValue>
-				</div>
-			</div>
-		}
-	</div>
+    <Template>
+        @{
+            this.Complete();
+            if (Card is null)
+            {
+                @RenderTabs
+            }
+        }
+    </Template>
 </CascadingValue>
+
+@code {
+    internal void RenderTabs(RenderTreeBuilder __builder)
+    {
+        <div class="@ClassMapper.Class" style="@Style" id="@Id">
+            <!--Tab bar-->
+            <div role="tablist" class="@_tabBarClassMapper.Class" style="@TabBarStyle">
+
+                @if (TabBarExtraContentLeft != null)
+                {
+                    <div class="ant-tabs-extra-content">
+                        @TabBarExtraContentLeft
+                    </div>
+                }
+
+                <div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
+                    <div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
+                        @foreach (var tab in _tabs.OrderBy(x => x.TabIndex))
+                        {
+                            @tab.RenderTab
+                        }
+                        @if (HasAddButton)
+                        {
+                            <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
+                                <Icon Type="plus" />
+                            </button>
+                        }
+                        <div class="@_inkClassMapper.Class" style="@_inkStyle"></div>
+                    </div>
+                </div>
+                <Dropdown OnVisibleChange="OnVisibleChange">
+                    <Overlay>
+                        <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
+                            @foreach (var pane in _invisibleTabs)
+                            {
+                                <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
+                                    @onclick="(e)=>HandleTabClick(pane)">
+                                    @if (pane.TabTemplate != null)
+                                    {
+                                        @pane.TabTemplate
+                                    }
+                                    else
+                                    {
+                                        @pane.Tab
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </Overlay>
+                    <Unbound>
+                        <div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
+                            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
+                                    style="@_operationStyle" type="button">
+                                <Icon Type="ellipsis" />
+                            </button>
+                        </div>
+                    </Unbound>
+                </Dropdown>
+
+                @if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
+                {
+                    <div class="ant-tabs-extra-content">
+                        @(TabBarExtraContent ?? TabBarExtraContentRight ?? Card?.Extra)
+                    </div>
+                }
+            </div>
+            <!--Tab content-->
+            @if (Card == null)
+            {
+                <div class="ant-tabs-content-holder ">
+                    <div class="@_contentClassMapper.Class">
+                        @foreach (var pane in _tabs)
+                        {
+                            @pane.RenderPane
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+    }
+}

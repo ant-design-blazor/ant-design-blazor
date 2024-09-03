@@ -24,11 +24,11 @@ namespace AntDesign
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
-        public const int START_PICKER_INDEX = 0;
-        public const int END_PICKER_INDEX = 0;
+        internal const int START_PICKER_INDEX = 0;
+        internal const int END_PICKER_INDEX = 0;
 
-        [Parameter]
-        public string PrefixCls { get; set; } = "ant-picker";
+        [CascadingParameter(Name = "PrefixCls")]
+        internal string PrefixCls { get; set; } = "ant-picker";
 
         /// <summary>
         /// Saving the input value after blur
@@ -36,7 +36,7 @@ namespace AntDesign
         [Parameter]
         public bool ChangeOnClose { get; set; }
 
-        protected string _picker;
+        protected DatePickerType _picker;
         protected bool _isSetPicker = false;
         private bool _isNullableEvaluated;
         private bool _isNullable;
@@ -61,7 +61,7 @@ namespace AntDesign
         /// Set picker type
         /// </summary>
         [Parameter]
-        public string Picker
+        public DatePickerType Picker
         {
             get => _picker;
             set
@@ -175,12 +175,12 @@ namespace AntDesign
         /// <summary>
         /// If time should be shown or not. Contains the boolean decision made from setting <see cref="ShowTime" />
         /// </summary>
-        public bool IsShowTime { get; protected set; }
+        internal bool IsShowTime { get; set; }
 
         /// <summary>
         /// Time format when showing time. Contains the string format from setting <see cref="ShowTime" /> with a string
         /// </summary>
-        public string ShowTimeFormat { get; protected set; }
+        internal string ShowTimeFormat { get; set; }
 
         protected OneOf<bool, string> _showTime = null;
 
@@ -398,14 +398,14 @@ namespace AntDesign
         /// <summary>
         /// Date used for "Today"
         /// </summary>
-        public DateTime CurrentDate { get; set; } = DateTime.Today;
+        DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Today;
 
         protected DateTime[] PickerValues { get; } = { DateTime.Today, DateTime.Today };
 
         /// <summary>
         /// If picker is a range picker or not
         /// </summary>
-        public bool IsRange { get; protected set; }
+        internal bool IsRange { get; set; }
 
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
@@ -416,7 +416,7 @@ namespace AntDesign
 
         internal DatePickerStatus[] _pickerStatus = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
 
-        protected Stack<string> _prePickerStack = new Stack<string>();
+        protected Stack<DatePickerType> _prePickerStack = new Stack<DatePickerType>();
         protected bool _isClose = true;
         protected bool _needRefresh;
         protected bool _duringManualInput;
@@ -817,13 +817,13 @@ namespace AntDesign
             }
         }
 
-        protected void InitPicker(string picker)
+        protected void InitPicker(DatePickerType picker)
         {
-            if (string.IsNullOrEmpty(_pickerStatus[0].InitPicker))
+            if (_pickerStatus[0].InitPicker == null)
             {
                 _pickerStatus[0].InitPicker = picker;
             }
-            if (string.IsNullOrEmpty(_pickerStatus[1].InitPicker))
+            if (_pickerStatus[1].InitPicker == null)
             {
                 _pickerStatus[1].InitPicker = picker;
             }
@@ -855,7 +855,7 @@ namespace AntDesign
         /// <summary>
         /// Close the popover
         /// </summary>
-        public void Close()
+        internal void Close()
         {
             _duringManualInput = false;
             _dropDown?.Hide();
@@ -866,7 +866,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public async Task Focus(int index = 0)
+        protected async Task Focus(int index = 0)
         {
             DatePickerInput input = null;
 
@@ -892,7 +892,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public async Task Blur(int index = 0)
+        protected async Task Blur(int index = 0)
         {
             DatePickerInput input = null;
             _duringManualInput = false;
@@ -917,7 +917,7 @@ namespace AntDesign
         /// Get index of picker which is currently focused
         /// </summary>
         /// <returns>Index of picker. 0 can also mean neither is focused.</returns>
-        public int GetOnFocusPickerIndex()
+        internal int GetOnFocusPickerIndex()
         {
             if (_inputStart != null && _inputStart.IsOnFocused)
             {
@@ -963,22 +963,22 @@ namespace AntDesign
 
         internal DateTime GetClosingDate(DateTime pickerValue, int offset = 1)
         {
-            return Picker switch
+            return Picker.Name switch
             {
-                DatePickerType.Year => pickerValue.AddYears(offset * 10),
-                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
+                DatePickerType.YEAR => pickerValue.AddYears(offset * 10),
+                DatePickerType.QUARTER or DatePickerType.DECADE or DatePickerType.MONTH => pickerValue.AddYears(offset),
                 _ => pickerValue.AddMonths(offset)
             };
         }
 
-        public void ChangePlaceholder(string placeholder, int index = 0)
+        protected void ChangePlaceholder(string placeholder, int index = 0)
         {
             _placeholders[index] = placeholder;
 
             StateHasChanged();
         }
 
-        public void ResetPlaceholder(int rangePickerIndex = -1)
+        protected void ResetPlaceholder(int rangePickerIndex = -1)
         {
             _placeholder.Switch(single =>
             {
@@ -1032,15 +1032,15 @@ namespace AntDesign
                     if (!string.IsNullOrEmpty(Format))
                         _internalFormat = Format;
                     else
-                        _internalFormat = _pickerStatus[0].InitPicker switch
+                        _internalFormat = _pickerStatus[0].InitPicker.Name switch
                         {
-                            DatePickerType.Date => GetTimeFormat(),
-                            DatePickerType.Month => Locale.Lang.YearMonthFormat,
-                            DatePickerType.Year => Locale.Lang.YearFormat,
-                            DatePickerType.Time when Use12Hours => Locale.Lang.TimeFormat12Hour,
-                            DatePickerType.Time => Locale.Lang.TimeFormat,
-                            DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
-                            DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
+                            DatePickerType.DATE => GetTimeFormat(),
+                            DatePickerType.MONTH => Locale.Lang.YearMonthFormat,
+                            DatePickerType.YEAR => Locale.Lang.YearFormat,
+                            DatePickerType.TIME when Use12Hours => Locale.Lang.TimeFormat12Hour,
+                            DatePickerType.TIME => Locale.Lang.TimeFormat,
+                            DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
+                            DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
                 }
@@ -1064,14 +1064,14 @@ namespace AntDesign
         private FormatAnalyzer _formatAnalyzer;
         protected FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale, CultureInfo);
 
-        public string GetFormatValue(DateTime value, int index)
+        protected string GetFormatValue(DateTime value, int index)
         {
             string format;
             if (string.IsNullOrEmpty(Format))
-                format = _pickerStatus[index].InitPicker switch
+                format = _pickerStatus[index].InitPicker.Name switch
                 {
-                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
-                    DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
+                    DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
+                    DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };
             else
@@ -1109,12 +1109,12 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void ChangePickerType(string type)
+        internal void ChangePickerType(DatePickerType type)
         {
             ChangePickerType(type, 0);
         }
 
-        public virtual void ChangePickerType(string type, int index)
+        internal virtual void ChangePickerType(DatePickerType type, int index)
         {
             _prePickerStack.Push(_picker);
             _picker = type;
@@ -1130,21 +1130,21 @@ namespace AntDesign
         /// <param name="value">Value to change to</param>
         /// <param name="index">Index of the picker panel to change</param>
         /// <param name="closeDropdown">Close the panel when set or not</param>
-        public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
+        internal abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
         /// <summary>
         /// Clear the value for the given picker panel index
         /// </summary>
         /// <param name="index">Index of the picker panel to clear</param>
         /// <param name="closeDropdown">Close the panel when cleared or not</param>
-        public abstract void ClearValue(int index = 0, bool closeDropdown = true);
+        internal abstract void ClearValue(int index = 0, bool closeDropdown = true);
 
         /// <summary>
         /// Get value of picker panel at index
         /// </summary>
         /// <param name="index">Index of picker panel to get value of</param>
         /// <returns>DateTime value of panel</returns>
-        public abstract DateTime? GetIndexValue(int index);
+        internal abstract DateTime? GetIndexValue(int index);
 
         protected TValue SortValue(TValue value)
         {
@@ -1317,22 +1317,22 @@ namespace AntDesign
             OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
                 Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
-                DateString = _picker
+                DateString = _picker.Name
             });
         }
 
         protected DateTime FormatDateTime(DateTime dateTime)
         {
-            switch (Picker)
+            switch (Picker.Name)
             {
-                case DatePickerType.Time:
+                case DatePickerType.TIME:
                     return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
-                case DatePickerType.Year:
+                case DatePickerType.YEAR:
                     return new DateTime(dateTime.Year, 1, 1);
 
-                case DatePickerType.Month:
-                case DatePickerType.Quarter:
+                case DatePickerType.MONTH:
+                case DatePickerType.QUARTER:
                     return new DateTime(dateTime.Year, dateTime.Month, 1);
             }
 
@@ -1362,6 +1362,41 @@ namespace AntDesign
             }
 
             return dateTime.Date;
+        }
+
+        int IDatePicker.GetOnFocusPickerIndex()
+        {
+            return GetOnFocusPickerIndex();
+        }
+
+        void IDatePicker.ChangePlaceholder(string placeholder, int index)
+        {
+            ChangePlaceholder(placeholder, index);
+        }
+
+        void IDatePicker.ResetPlaceholder(int index)
+        {
+            ResetPlaceholder(index);
+        }
+
+        string IDatePicker.GetFormatValue(DateTime value, int index)
+        {
+            return GetFormatValue(value, index);
+        }
+
+        void IDatePicker.ChangePickerType(DatePickerType type)
+        {
+            ChangePickerType(type);
+        }
+
+        void IDatePicker.ChangePickerType(DatePickerType type, int index)
+        {
+            ChangePickerType(type, index);
+        }
+
+        void IDatePicker.Close()
+        {
+            Close();
         }
     }
 }

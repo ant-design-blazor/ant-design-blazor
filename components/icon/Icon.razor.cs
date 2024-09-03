@@ -15,7 +15,7 @@ namespace AntDesign
     Semantic vector graphics. Before use icons。
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg", Title = "Icon",SubTitle = "图标")]
     public partial class Icon : AntDomComponentBase
     {
         /// <summary>
@@ -27,13 +27,20 @@ namespace AntDesign
         /// <summary>
         /// Rotate icon with animation
         /// </summary>
-        /// <default value="false" />
+        /// <default value="img" />
         [Parameter]
         public string Role { get; set; } = "img";
 
+        /// <summary>
+        /// Sets the value of the aria-label attribute
+        /// </summary>
         [Parameter]
         public string AriaLabel { get; set; }
 
+        /// <summary>
+        /// Rotate icon with animation
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Spin { get; set; }
 
@@ -74,6 +81,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The type of <see cref="AntDesign.IconFont" />
+        /// </summary>
         [Parameter]
         public string IconFont { get; set; }
 
@@ -110,9 +120,6 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool StopPropagation { get; set; }
-
-        [CascadingParameter]
-        public Button Button { get; set; }
 
         /// <summary>
         /// OnClick event for the icon

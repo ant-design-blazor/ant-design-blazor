@@ -17,9 +17,20 @@ namespace AntDesign
         /// Default validation message for the Required rule
         /// </summary>
         public string Required { get; set; } = "'{0}' is required";
+
+        /// <summary>
+        /// Default validation message for the Enum rule
+        /// </summary>
         public string Enum { get; set; } = "'{0}' must be one of [{1}]";
+
+        /// <summary>
+        /// Default validation message for the Whitespace rule
+        /// </summary>
         public string Whitespace { get; set; } = "'{0}' cannot be empty";
 
+        /// <summary>
+        /// Messages for date type
+        /// </summary>
         public DateMessage Date { get; set; } = new()
         {
             Format = "'{0}' date format is invalid",

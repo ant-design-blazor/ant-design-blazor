@@ -27,7 +27,7 @@ namespace AntDesign
     <seealso cref="AutoCompleteOption" />
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg", Title = "AutoComplete", SubTitle = "自动完成")]
     public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef
     {
         /// <summary>
@@ -204,20 +204,13 @@ namespace AntDesign
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
-        private OverlayTrigger _overlayTrigger;
-
-        public object SelectedValue { get; set; }
-
         /// <summary>
         /// Selected item from dropdown
         /// </summary>
         [Parameter]
         public AutoCompleteOption SelectedItem { get; set; }
 
-        /// <summary>
-        /// Active item
-        /// </summary>
-        public object ActiveValue { get; set; }
+
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening). Check 
@@ -234,6 +227,8 @@ namespace AntDesign
         public bool ShowPanel { get; set; } = false;
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
+        object IAutoCompleteRef.SelectedValue { get => _selectedValue; set => _selectedValue = value; }
+        object IAutoCompleteRef.ActiveValue { get => _activeValue; set => _activeValue = value; }
 
         private bool _isOptionsZero = true;
 
@@ -244,14 +239,19 @@ namespace AntDesign
         private string _minWidth = "";
         private bool _parPanelVisible = false;
 
-        public void SetInputComponent(IAutoCompleteInput input)
+        private OverlayTrigger _overlayTrigger;
+
+        private object _selectedValue;
+        private object _activeValue;
+
+        void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
         }
 
         #region 子控件触发事件 / Child controls trigger events
 
-        public Task InputFocus(FocusEventArgs e)
+        Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
         {
             if (!_isOptionsZero)
             {
@@ -261,19 +261,19 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        public async Task InputInput(ChangeEventArgs args)
+        async Task IAutoCompleteRef.InputInput(ChangeEventArgs args)
         {
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
         }
 
-        public async Task InputValueChange(string value)
+        async Task IAutoCompleteRef.InputValueChange(string value)
         {
-            SelectedValue = value;
+            _selectedValue = value;
             UpdateFilteredOptions();
             await ResetActiveItem();
         }
 
-        public async Task InputKeyDown(KeyboardEventArgs args)
+        async Task IAutoCompleteRef.InputKeyDown(KeyboardEventArgs args)
         {
             var key = args.Key;
 
@@ -283,7 +283,7 @@ namespace AntDesign
                 {
                     this.ClosePanel();
                 }
-                else if (key == "Enter" && this.ActiveValue != null)
+                else if (key == "Enter" && this._activeValue != null)
                 {
                     await SetSelectedItem(GetActiveItem());
                 }
@@ -318,23 +318,23 @@ namespace AntDesign
             await base.OnFirstAfterRenderAsync();
         }
 
-        public void AddOption(AutoCompleteOption option)
+        void IAutoCompleteRef.AddOption(AutoCompleteOption option)
         {
             AutoCompleteOptions.Add(option);
         }
 
-        public void RemoveOption(AutoCompleteOption option)
+        void IAutoCompleteRef.RemoveOption(AutoCompleteOption option)
         {
             if (AutoCompleteOptions?.Contains(option) == true)
                 AutoCompleteOptions?.Remove(option);
         }
 
-        public IList<AutoCompleteDataItem<TOption>> GetOptionItems()
+        private IList<AutoCompleteDataItem<TOption>> GetOptionItems()
         {
             if (_optionDataItems != null)
             {
-                if (FilterExpression != null && AllowFilter == true && SelectedValue != null)
-                    return _optionDataItems.Where(x => FilterExpression(x, SelectedValue?.ToString())).ToList();
+                if (FilterExpression != null && AllowFilter == true && _selectedValue != null)
+                    return _optionDataItems.Where(x => FilterExpression(x, _selectedValue?.ToString())).ToList();
                 else
                     return _optionDataItems;
             }
@@ -347,7 +347,7 @@ namespace AntDesign
         /// <summary>
         /// Open panel
         /// </summary>
-        public void OpenPanel()
+        private void OpenPanel()
         {
             if (this.ShowPanel == false)
             {
@@ -363,7 +363,7 @@ namespace AntDesign
         /// <summary>
         /// Close panel
         /// </summary>
-        public void ClosePanel()
+        private void ClosePanel()
         {
             if (this.ShowPanel == true)
             {
@@ -375,23 +375,23 @@ namespace AntDesign
             }
         }
 
-        public AutoCompleteOption GetActiveItem()
+        private AutoCompleteOption GetActiveItem()
         {
-            return AutoCompleteOptions.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
+            return AutoCompleteOptions.FirstOrDefault(x => CompareWith(x.Value, this._activeValue));
         }
 
         //设置高亮的对象
         //Set the highlighted object
-        public void SetActiveItem(AutoCompleteOption item)
+        private void SetActiveItem(AutoCompleteOption item)
         {
-            this.ActiveValue = item == null ? default(TOption) : item.Value;
+            this._activeValue = item == null ? default(TOption) : item.Value;
             if (OnActiveChange.HasDelegate) OnActiveChange.InvokeAsync(item);
             StateHasChanged();
         }
 
         //设置下一个激活
         //Set the next activation
-        public void SetNextItemActive()
+        private void SetNextItemActive()
         {
             var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
             var nextItem = opts.IndexOf(GetActiveItem());
@@ -401,12 +401,12 @@ namespace AntDesign
                 SetActiveItem(opts[nextItem + 1]);
 
             if (Backfill)
-                _inputComponent.SetValue(this.ActiveValue);
+                _inputComponent.SetValue(this._activeValue);
         }
 
         //设置上一个激活
         //Set last activation
-        public void SetPreviousItemActive()
+        private void SetPreviousItemActive()
         {
             var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
             var nextItem = opts.IndexOf(GetActiveItem());
@@ -416,10 +416,10 @@ namespace AntDesign
                 SetActiveItem(opts[nextItem - 1]);
 
             if (Backfill)
-                _inputComponent.SetValue(this.ActiveValue);
+                _inputComponent.SetValue(this._activeValue);
         }
 
-        public void UpdateFilteredOptions()
+        private void UpdateFilteredOptions()
         {
             _filteredOptions = GetOptionItems();
             _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
@@ -429,21 +429,21 @@ namespace AntDesign
         {
             var items = _filteredOptions;
 
-            if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
+            if (items.Any(x => CompareWith(x.Value, this._activeValue)) == false)
             {
                 // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
                 // If the current activation item does not exist in the list, then we need to do some processing
-                if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))
+                if (items.Any(x => CompareWith(x.Value, this._selectedValue)))
                 {
-                    this.ActiveValue = this.SelectedValue;
+                    this._activeValue = this._selectedValue;
                 }
                 else if (DefaultActiveFirstOption == true && items.Count > 0)
                 {
-                    this.ActiveValue = items.FirstOrDefault()?.Value.ToString();
+                    this._activeValue = items.FirstOrDefault()?.Value.ToString();
                 }
                 else
                 {
-                    this.ActiveValue = null;
+                    this._activeValue = null;
                 }
             }
 
@@ -462,11 +462,11 @@ namespace AntDesign
             }
         }
 
-        public async Task SetSelectedItem(AutoCompleteOption item)
+        private async Task SetSelectedItem(AutoCompleteOption item)
         {
             if (item != null)
             {
-                this.SelectedValue = item.Value;
+                this._selectedValue = item.Value;
                 this.SelectedItem = item;
                 _inputComponent?.SetValue(this.SelectedItem.Label);
 
@@ -505,6 +505,16 @@ namespace AntDesign
         {
             DomEventListener.RemoveResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             base.Dispose(disposing);
+        }
+
+        void IAutoCompleteRef.SetActiveItem(AutoCompleteOption item)
+        {
+            SetActiveItem(item);
+        }
+
+        async Task IAutoCompleteRef.SetSelectedItem(AutoCompleteOption item)
+        {
+            await SetSelectedItem(item);
         }
     }
 

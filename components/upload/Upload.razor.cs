@@ -27,7 +27,7 @@ namespace AntDesign
     <seealso cref="UploadInfo"/>
     <seealso cref="UploadFileItem"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg", Title = "Upload", SubTitle = "上传")]
     public partial class Upload : AntDomComponentBase
     {
         /// <summary>
@@ -120,12 +120,21 @@ namespace AntDesign
         [Parameter]
         public bool ShowDownloadIcon { get; set; } = true;
 
+        /// <summary>
+        /// Show the preview icon or not
+        /// </summary>
         [Parameter]
         public bool ShowPreviewIcon { get; set; } = true;
 
+        /// <summary>
+        /// Show the remove icon or not
+        /// </summary>
         [Parameter]
         public bool ShowRemoveIcon { get; set; } = true;
 
+        /// <summary>
+        /// Get or set the list of files that have been uploaded
+        /// </summary>
         [Parameter]
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 

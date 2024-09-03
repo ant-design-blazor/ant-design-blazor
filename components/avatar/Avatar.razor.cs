@@ -10,10 +10,13 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// <para>Avatars can be used to represent people or objects. It supports images, icons, or letters.</para>
-    /// </summary>
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg")]
+    /**
+    <summary>
+    <para>Avatars can be used to represent people or objects. It supports images, icons, or letters.</para>
+    </summary>
+    <seealso cref="AvatarGroup" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg", Title = "Avatar", SubTitle = "头像")]
     public partial class Avatar : AntDomComponentBase
     {
         /// <summary>
@@ -106,7 +109,7 @@ namespace AntDesign
         public AvatarGroup Group { get; set; }
 
         [CascadingParameter(Name = "position")]
-        public string Position { get; set; }
+        internal string Position { get; set; }
 
         /// <summary>
         /// more than group max count

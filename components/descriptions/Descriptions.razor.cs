@@ -21,7 +21,7 @@ namespace AntDesign
     </summary>
     <seealso cref="DescriptionsItem"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg", Columns = 1, Title = "Descriptions", SubTitle = "描述列表")]
     public partial class Descriptions : AntDomComponentBase
     {
         #region Parameters
@@ -64,6 +64,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// Change default props <c>Colon</c> value of <see cref="DescriptionsItem"/>.
+        /// </summary>
         [Parameter]
         public bool Colon { get; set; }
 

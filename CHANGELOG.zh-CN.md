@@ -15,6 +15,44 @@ timeline: true
 
 ---
 
+### 0.20.3
+
+`2024-09-03`
+
+- 🔥 文档 API 改为从公开方法注释生成，补齐所有属性的注释。[#3013](https://github.com/ant-design-blazor/ant-design-blazor/pull/3013) [@kooliokey](https://github.com/kooliokey)
+
+- Table
+  - 🆕 新增 Table SelectAll 事件回调。[#4142](https://github.com/ant-design-blazor/ant-design-blazor/pull/4142) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 Table 在动态调整列时减少渲染。[#4138](https://github.com/ant-design-blazor/ant-design-blazor/pull/4138) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 修复 Tabs 拖动排序。[#4147](https://github.com/ant-design-blazor/ant-design-blazor/pull/4147) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Reusetabs 当 Menu 加载后刷新标签。[#4112](https://github.com/ant-design-blazor/ant-design-blazor/pull/4112) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🐞 修复 Form 检查disposing时 _editContext 是否存在。[#4136](https://github.com/ant-design-blazor/ant-design-blazor/pull/4136) [@ogix](https://github.com/ogix)
+  - 🐞 修复 Form 在验证可空类型的时候抛异常。[#4137](https://github.com/ant-design-blazor/ant-design-blazor/pull/4137) [@ElderJames](https://github.com/ElderJames)
+
+- Drawer
+  - 🛠 重构 Drawer 的 Height 和 Width 属性改为字符串，以支持百分比等单位。[#4120](https://github.com/ant-design-blazor/ant-design-blazor/pull/4120) [@kx500](https://github.com/kx500)
+  - 🐞 修复 drawer 关闭动画效果。[#4122](https://github.com/ant-design-blazor/ant-design-blazor/pull/4122) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Select 当 values 某些场景下被修改时抛异常。[#4117](https://github.com/ant-design-blazor/ant-design-blazor/pull/4117) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Menu 在处理 OnClick 事件前关闭overlay。[#4121](https://github.com/ant-design-blazor/ant-design-blazor/pull/4121) [@pankey888](https://github.com/pankey888)
+- 🛠 优化 全局服务依赖注册的生命周期，WebAssembly 使用单例。[#4123](https://github.com/ant-design-blazor/ant-design-blazor/pull/4123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 语言包文件反序列化异常。[#4116](https://github.com/ant-design-blazor/ant-design-blazor/pull/4116) [@ogix](https://github.com/ogix)
+
+- Codebase
+  - 🛠 启用 CA1852/IDE0040/IDE0005 代码分析规则。[#4126](https://github.com/ant-design-blazor/ant-design-blazor/pull/4126) [@WeihanLi](https://github.com/WeihanLi)
+  - 🛠 优化 构建目标项目的时候才复制智能提醒 xml 文件，以减少打包体积。[#4129](https://github.com/ant-design-blazor/ant-design-blazor/pull/4129) [@stratosblue](https://github.com/stratosblue)
+  - 🛠 移除 重复的 InternalsVisibleTo 设置。[#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
+  - 🛠 移除 Microsoft.SourceLink.GitHub 包引用。[#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
+
+**不兼容变更**
+
+- Card 中的 CardTabs 属性已删除, 应直接将 Tabs 放到 Card 的 ChildContent 中。
+- Darwer 中的 Height 和 Width 属性改为字符串，因此您原来绑定的 int 类型变量需要转换后赋值。
+
 ### 0.20.2
 
 `2024-08-20`

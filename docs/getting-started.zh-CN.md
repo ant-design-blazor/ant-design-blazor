@@ -90,6 +90,8 @@ public void ConfigureServices(IServiceCollection services)
 
 ### 指定样式/脚本自动引入位置
 
+注意：目前 静态 和 Auto 模式不支持自动引入，请手动引入。
+
 自 0.17.0 本版开始，AntDesign Blazor 组件库利用 [`JavaScript initializers`](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) 支持自动引入样式和脚本。其中 CSS 默认引入到 页面原有 `<link>` 元素的之前，而 JS 默认引入到所有 `<script>` 元素之前。如果需要指定位置，只需在 html 或者 App.razor 中指定位置加入 `<link  antblazor-css>` 或 `<script antblazor-js></script>`，会自动引入到这两个元素之前。
 
 ```html

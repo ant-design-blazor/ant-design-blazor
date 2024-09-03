@@ -10,7 +10,9 @@ using Microsoft.JSInterop;
 
 namespace AntDesign
 {
-    [Documentation(DocumentationCategory.Components, DocumentationType.General, null)]
+    /// <summary>
+    /// Use to download a file. inherits <see cref="Button"/>
+    /// </summary>
     public partial class DownloadButton : Button
     {
         /// <summary>
@@ -30,9 +32,9 @@ namespace AntDesign
 
         #region Hidden properties/methods of the parent
 
-        public new EventCallback<MouseEventArgs> OnClick { get; set; }
+        //public new EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        public new bool OnClickStopPropagation { get; set; }
+        //public new bool OnClickStopPropagation { get; set; }
 
         #endregion Hidden properties/methods of the parent
 

@@ -26,7 +26,7 @@ namespace AntDesign
     <seealso cref="QuarterPicker{TValue}"/>
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg",Title = "DatePicker", SubTitle = "日期选择框")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         /// <summary>
@@ -189,7 +189,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public override DateTime? GetIndexValue(int index = 0)
+        internal override DateTime? GetIndexValue(int index = 0)
         {
             if (index != 0)
             {
@@ -219,7 +219,7 @@ namespace AntDesign
             return null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
+        internal override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (index != 0)
             {
@@ -259,7 +259,7 @@ namespace AntDesign
             _dropDown?.SetShouldRender(true);
         }
 
-        public override void ClearValue(int index = 0, bool closeDropdown = true)
+        internal override void ClearValue(int index = 0, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
