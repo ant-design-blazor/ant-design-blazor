@@ -866,7 +866,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        protected async Task Focus(int index = 0)
+        public async Task Focus(int index = 0)
         {
             DatePickerInput input = null;
 
