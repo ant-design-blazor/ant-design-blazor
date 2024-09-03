@@ -18,7 +18,7 @@ namespace AntDesign
     <para>When data is in the form of dates, such as schedules, timetables, prices calendar, lunar calendar. This component also supports Year/Month switch.</para>
     </summary>
      */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg", Columns = 1,Title = "Calendar", SubTitle = "日历")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg", Columns = 1, Title = "Calendar", SubTitle = "日历")]
     public partial class Calendar : AntDomComponentBase, IDatePicker
     {
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;

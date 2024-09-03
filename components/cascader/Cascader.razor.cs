@@ -28,7 +28,7 @@ namespace AntDesign
     <seealso cref="CascaderNode"/>
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg",Title = "Cascader",SubTitle = "级联选择")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg", Title = "Cascader", SubTitle = "级联选择")]
     public partial class Cascader : AntInputComponentBase<string>
     {
         /// <summary>

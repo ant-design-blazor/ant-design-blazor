@@ -13,7 +13,10 @@ namespace AntDesign
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TValue))]
 #endif
-
+    /// <summary>
+    /// A group of radio buttons
+    /// </summary>
+    /// <typeparam name="TValue"> The type of <see cref="Radio{TValue}.Value" />, should have the same type with <see cref="Radio{TValue}" />s'. </typeparam>
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
         [Inject]

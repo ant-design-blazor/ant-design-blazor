@@ -26,7 +26,7 @@ namespace AntDesign
 
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*SMzgSJZE_AwAAAAAAAAAAAAADrJ8AQ/original", Columns = 1, Title = "Flex",SubTitle = "弹性布局")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*SMzgSJZE_AwAAAAAAAAAAAAADrJ8AQ/original", Columns = 1, Title = "Flex", SubTitle = "弹性布局")]
     public partial class Flex : AntDomComponentBase
     {
         /// <summary>

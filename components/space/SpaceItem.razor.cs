@@ -7,11 +7,17 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <see cref="Space"/> item, use to set item style
+    /// </summary>
     public partial class SpaceItem : AntDomComponentBase
     {
         [CascadingParameter]
-        public Space Parent { get; set; }
+        private Space Parent { get; set; }
 
+        /// <summary>
+        /// Child content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
