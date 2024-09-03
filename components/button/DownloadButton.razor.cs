@@ -13,7 +13,6 @@ namespace AntDesign
     /// <summary>
     /// Use to download a file. inherits <see cref="Button"/>
     /// </summary>
-    [Documentation(DocumentationCategory.Components, DocumentationType.General, null)]
     public partial class DownloadButton : Button
     {
         /// <summary>
