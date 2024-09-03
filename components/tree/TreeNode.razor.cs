@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -17,13 +18,13 @@ namespace AntDesign
         #region Node
 
         /// <summary>
-        /// 树控件本身
+        /// Tree
         /// </summary>
         [CascadingParameter(Name = "Tree")]
         private Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
-        /// 上一级节点
+        /// Parent Node
         /// </summary>
         [CascadingParameter(Name = "Node")]
         internal TreeNode<TItem> ParentNode { get; set; }
@@ -47,7 +48,8 @@ namespace AntDesign
         /// <summary>
         /// Current Node Level
         /// </summary>
-        internal int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
+        [PublicApi("1.0.0")]
+        public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
         /// <summary>
         /// record the index in children nodes list of parent node.
@@ -76,6 +78,7 @@ namespace AntDesign
         /// <param name="predicate">Predicate</param>
         /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
@@ -97,10 +100,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Obtain the parent data set
+        /// Get the sibling nodes
         /// </summary>
         /// <returns></returns>
-        public List<TreeNode<TItem>> GetParentNodes()
+        [PublicApi("1.0.0")]
+        public List<TreeNode<TItem>> GetSiblingNodes()
         {
             if (ParentNode != null)
                 return ParentNode.ChildNodes;
@@ -112,9 +116,10 @@ namespace AntDesign
         /// Get the previous node
         /// </summary>
         /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> GetPreviousNode()
         {
-            var parentNodes = GetParentNodes();
+            var parentNodes = GetSiblingNodes();
             var index = parentNodes.IndexOf(this);
             if (index == 0) return null;
             else return parentNodes[index - 1];
@@ -124,9 +129,10 @@ namespace AntDesign
         /// Get the next node 
         /// </summary>
         /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> GetNextNode()
         {
-            var parentNodes = GetParentNodes();
+            var parentNodes = GetSiblingNodes();
             var index = parentNodes.IndexOf(this);
             if (index == parentNodes.Count - 1) return null;
             else return parentNodes[index + 1];
@@ -202,6 +208,7 @@ namespace AntDesign
         /// Setting Selection State
         /// </summary>
         /// <param name="value"></param>
+        [PublicApi("1.0.0")]
         public void SetSelected(bool value)
         {
             if (!TreeComponent.Selectable) return;
@@ -299,14 +306,6 @@ namespace AntDesign
         private List<TreeNode<TItem>> GetParentChildNodes()
         {
             return ParentNode?.ChildNodes ?? TreeComponent.ChildNodes;
-        }
-
-        /// <summary>
-        /// Remove the current node
-        /// </summary>
-        public void RemoveNode()
-        {
-            GetParentChildNodes().Remove(this);
         }
 
         private void SetTreeNodeClassMapper()
@@ -549,6 +548,7 @@ namespace AntDesign
         /// Set the checkbox state
         /// </summary>
         /// <param name="check"></param>
+        [PublicApi("1.0.0")]
         public void SetChecked(bool check)
         {
             if (!DoCheck(check, false, true)) return;
@@ -585,6 +585,7 @@ namespace AntDesign
         /// <summary>
         /// Checks all child nodes
         /// </summary>
+        [PublicApi("1.0.0")]
         public void CheckAllChildren()
         {
             DoCheckAllChildren();
@@ -600,6 +601,7 @@ namespace AntDesign
         /// <summary>
         /// Unchecks all child nodes
         /// </summary>
+        [PublicApi("1.0.0")]
         public void UnCheckAllChildren()
         {
             DoUnCheckAllChildren();
