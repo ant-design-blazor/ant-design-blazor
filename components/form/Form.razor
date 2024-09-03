@@ -19,9 +19,13 @@
         {
             <FormRulesValidator @ref="_rulesValidator" />
         }
-        else
+        else if (Validate != null)
         {
             @Validator
+        }
+        else
+        {
+            <DataAnnotationsValidator />
         }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
             @if (!string.IsNullOrEmpty(Size))
