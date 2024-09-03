@@ -383,7 +383,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     Category = docAttribute.Category.ToString(),
                     Title = docAttribute.Title ?? component.Name,
-                    SubTitle = docAttribute.SubTitle,
+                    // SubTitle = docAttribute.SubTitle,
                     Type = GetDescription(typeof(DocumentationType), docAttribute.Type),
                     Desc = string.Empty,
                     ApiDoc = string.Empty,
