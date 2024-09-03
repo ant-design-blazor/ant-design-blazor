@@ -595,8 +595,11 @@ namespace AntDesign.Docs.Build.CLI.Command
             // Does not need translation - the demo should have each language currently
 
             var demoDirectoryInfo = new DirectoryInfo(_demoDirectory);
-            var componentDemoDirectory = new DirectoryInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\demo"));
-            if (componentDemoDirectory.Exists)
+            var componentDemoDirectory = demoDirectoryInfo.GetDirectories().FirstOrDefault(x => x.Name == "Components")
+                ?.GetDirectories().FirstOrDefault(x => x.Name == componentName)?
+                .GetDirectories().FirstOrDefault(x => x.Name == "demo");
+
+            if (componentDemoDirectory?.Exists == true)
             {
                 var demoFiles = componentDemoDirectory.GetFileSystemInfos().GroupBy(x => x.Name
                     .Replace(x.Extension, "")
