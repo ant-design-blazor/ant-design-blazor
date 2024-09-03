@@ -22,7 +22,7 @@ namespace AntDesign
     <seealso cref="CardMeta"/>
     <seealso cref="CardAction"/>
      */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg", Columns = 1, Title = "Card",SubTitle = "卡片")]
     public partial class Card : AntDomComponentBase
     {
         /// <summary>

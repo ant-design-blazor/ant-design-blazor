@@ -16,7 +16,7 @@ namespace AntDesign
     </summary>
     <seealso cref="AvatarGroup" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg", Title = "Avatar", SubTitle = "头像")]
     public partial class Avatar : AntDomComponentBase
     {
         /// <summary>

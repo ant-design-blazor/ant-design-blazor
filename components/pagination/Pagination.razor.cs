@@ -25,7 +25,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg", Columns = 1, Title = "Pagination", SubTitle = "分页")]
     public partial class Pagination : AntDomComponentBase
     {
         /// <summary>

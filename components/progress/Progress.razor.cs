@@ -26,7 +26,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg", Title = "Progress", SubTitle = "进度条")]
     public partial class Progress : AntDomComponentBase
     {
         private const string PrefixCls = "ant-progress";

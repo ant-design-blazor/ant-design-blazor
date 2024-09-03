@@ -37,7 +37,7 @@ namespace AntDesign
     </summary>
     <seealso cref="DropdownButton"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg", Title = "Dropdown", SubTitle = "下拉菜单")]
     public partial class Dropdown : OverlayTrigger
     {
         /// <summary>

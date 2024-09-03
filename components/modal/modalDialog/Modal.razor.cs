@@ -25,7 +25,7 @@ namespace AntDesign
     <seealso cref="ConfirmService" />
     <seealso cref="ConfirmOptions" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg", Title = "Modal")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg", Title = "Modal", SubTitle = "对话框")]
     public partial class Modal
     {
         #region Parameter

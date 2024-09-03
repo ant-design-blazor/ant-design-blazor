@@ -20,7 +20,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg", Title = "Switch", SubTitle = "开关")]
     public partial class Switch : AntInputBoolComponentBase
     {
         /// <summary>

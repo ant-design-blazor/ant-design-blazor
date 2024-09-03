@@ -21,7 +21,7 @@ namespace AntDesign
     </summary>
     <seealso cref="ImagePreviewGroup"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg", Columns = 2)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg", Columns = 2, Title = "Image", SubTitle = "图片")]
     public partial class Image : AntDomComponentBase
     {
         /// <summary>

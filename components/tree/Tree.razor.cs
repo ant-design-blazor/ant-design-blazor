@@ -28,7 +28,7 @@ namespace AntDesign
     </summary>
     <seealso cref="TreeNode{TItem}" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg", Title = "Tree", SubTitle = "树形控件")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif

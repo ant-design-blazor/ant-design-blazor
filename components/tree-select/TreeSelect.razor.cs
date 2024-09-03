@@ -27,7 +27,7 @@ namespace AntDesign
     </para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg", Title = "TreeSelect", SubTitle = "树选择")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]

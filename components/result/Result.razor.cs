@@ -17,7 +17,7 @@ namespace AntDesign
     <para>Use when important operations need to inform the user to process the results and the feedback is more complicated.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/9nepwjaLa/Result.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/9nepwjaLa/Result.svg", Columns = 1, Title ="Result", SubTitle = "结果")]
     public partial class Result : AntDomComponentBase
     {
         /// <summary>

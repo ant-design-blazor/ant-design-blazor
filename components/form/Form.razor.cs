@@ -33,7 +33,7 @@ namespace AntDesign
     <seealso cref="FormValidationRule"/>
     <seealso cref="FormValidateErrorMessages"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg", Columns = 1, Title = "Form",SubTitle = "表单")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TModel))]
 #endif

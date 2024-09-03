@@ -30,7 +30,7 @@ namespace AntDesign
     <seealso cref="InputGroup"/>
     <seealso cref="InputPassword"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg", Title="Input", SubTitle = "输入框")]
     public class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";

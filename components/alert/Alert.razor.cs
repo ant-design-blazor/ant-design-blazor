@@ -17,7 +17,7 @@ namespace AntDesign
     /// <item>When you need a persistent static container which is closable by user actions.</item>
     /// </list>
     /// </summary>
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg", Title = "Alert", SubTitle = "警告提示")]
     public partial class Alert : AntDomComponentBase
     {
         /// <summary>
