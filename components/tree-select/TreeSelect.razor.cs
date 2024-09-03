@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
@@ -333,6 +334,24 @@ namespace AntDesign
 
                 UpdateValuesSelection();
             }
+        }
+
+        /// <summary>
+        /// Check all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CheckAll()
+        {
+            TreeComponent.CheckAll();
+        }
+
+        /// <summary>
+        /// Uncheck all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void UncheckAll()
+        {
+            TreeComponent.UncheckAll();
         }
 
         private void ClearOptions()
