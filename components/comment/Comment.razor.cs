@@ -17,7 +17,7 @@ namespace AntDesign
     <para>Comments can be used to enable discussions on an entity such as a page, blog post, issue or other.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/ILhxpGzBO/Comment.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/ILhxpGzBO/Comment.svg", Columns = 1, Title = "Comment", SubTitle = "评论")]
     public partial class Comment : AntDomComponentBase
     {
         /// <summary>

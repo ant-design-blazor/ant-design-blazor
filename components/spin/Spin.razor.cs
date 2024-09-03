@@ -16,7 +16,7 @@ namespace AntDesign
         <para>When part of the page is waiting for asynchronous data or during a rendering process, an appropriate loading animation can effectively alleviate users' inquietude.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/LBcJqCPRv/Spin.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/LBcJqCPRv/Spin.svg", Title = "Spin", SubTitle = "加载中")]
     public partial class Spin : AntDomComponentBase
     {
         /// <summary>

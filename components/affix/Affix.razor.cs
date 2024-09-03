@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -20,7 +21,7 @@ namespace AntDesign
     <para><strong>Important</strong>: Children of <c>Affix</c> must not have the property <c>position: absolute</c>, but you can set <c>position: absolute</c> on <c>Affix</c> itself</para>
     </summary> 
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg", Title = "Affix", SubTitle = "图钉")]
     public partial class Affix : AntDomComponentBase
     {
         private const string PrefixCls = "ant-affix";

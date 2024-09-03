@@ -22,7 +22,7 @@ namespace AntDesign
     </summary>
     <seealso cref="BreadcrumbItem" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg", Title = "Breadcrumb", SubTitle = "面包屑")]
     public partial class Breadcrumb : AntDomComponentBase
     {
         /// <summary>

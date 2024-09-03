@@ -23,7 +23,7 @@ namespace AntDesign
     <para>When need to mention someone or something.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg", Title = "Mentions", SubTitle = "提及")]
     public partial class Mentions
     {
         [Parameter]

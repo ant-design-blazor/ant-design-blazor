@@ -37,7 +37,7 @@ namespace AntDesign
     <para>Please ensure that the child node of <c>Tooltip</c> accepts <c>onMouseEnter</c>, <c>onMouseLeave</c>, <c>onFocus</c>, <c>onClick</c> events.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg", Title= "Tooltip",SubTitle = "文字提示")]
     public partial class Tooltip : OverlayTrigger
     {
         /// <summary>

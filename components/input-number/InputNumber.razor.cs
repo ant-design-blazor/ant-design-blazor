@@ -33,7 +33,7 @@ namespace AntDesign
     <para>Nullable types of the above types are also supported. For example, <c>ushort?</c>, <c>int?</c>, etc.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg", Title = "InputNumber", SubTitle = "数字输入框")]
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
         /// <summary>

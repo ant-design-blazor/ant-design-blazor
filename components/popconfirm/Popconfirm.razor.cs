@@ -38,7 +38,7 @@ namespace AntDesign
     </summary>
     <inheritdoc/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg", Title = "Popconfirm", SubTitle = "气泡确认框")]
     public partial class Popconfirm : OverlayTrigger
     {
         /// <summary>

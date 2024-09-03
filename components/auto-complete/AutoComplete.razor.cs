@@ -27,7 +27,7 @@ namespace AntDesign
     <seealso cref="AutoCompleteOption" />
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg", Title = "AutoComplete", SubTitle = "自动完成")]
     public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef
     {
         /// <summary>

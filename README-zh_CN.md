@@ -131,10 +131,10 @@ WebAssembly 静态托管页面示例
 
 - 适当的位置引入 CSS 和 JS 文件。WebApp 项目在App.razor 中引入，WebAssembly 项目在 index.html 中引入
 
-```html
-  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-```
+  ```html
+    <link href="_content/AntDesign/css/ant-design-blazor.css"   rel="stylesheet">
+    < src="_content/AntDesign/js/ant-design-blazor.js"></ script>
+  ```
 
 - 为了动态地显示弹出组件，需要在 `App.razor` 中添加一个 `<AntContainer />` 组件。
 

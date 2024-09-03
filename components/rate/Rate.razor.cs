@@ -22,7 +22,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg",Title = "Rate", SubTitle = "评分")]
     public partial class Rate : AntDomComponentBase
     {
         /// <summary>

@@ -46,6 +46,7 @@
         "https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg",
         Columns = 1,
         Title = "Grid",
+        SubTitle = "栅格",
         OutputApi = false)]
     internal class Grid
     {

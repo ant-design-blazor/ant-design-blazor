@@ -48,6 +48,12 @@ timeline: true
   - 🛠 Remove duplicated InternalsVisibleTo. [#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
   - 🛠 Remove Microsoft.SourceLink.GitHub package reference. [#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
 
+**Breaking Changes**
+
+- Card: The CardTabs parameter has been removed, and Tabs should be placed directly in the Card's ChildContent.
+- Darwer: The type of `Height` and `Width` parameters are changed to string, so the int variable you originally bound needs to be converted and assigned.
+
+
 ### 0.20.2
 
 `2024-08-20`

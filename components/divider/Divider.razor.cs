@@ -18,7 +18,7 @@ namespace AntDesign
         </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg",Title = "Divider",SubTitle = "分割线")]
     public partial class Divider : AntDomComponentBase
     {
         /// <summary>

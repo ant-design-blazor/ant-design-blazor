@@ -21,7 +21,7 @@
                 {
                         <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
                             <span>@menu.Title</span>
-                            @if (menu.SubTitle != null)
+                            @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
                             {
                                 <span class="chinese">@menu.SubTitle</span>
                             }

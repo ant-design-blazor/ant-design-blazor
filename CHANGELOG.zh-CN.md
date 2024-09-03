@@ -48,6 +48,11 @@ timeline: true
   - 🛠 移除 重复的 InternalsVisibleTo 设置。[#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
   - 🛠 移除 Microsoft.SourceLink.GitHub 包引用。[#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
 
+**不兼容变更**
+
+- Card 中的 CardTabs 属性已删除, 应直接将 Tabs 放到 Card 的 ChildContent 中。
+- Darwer 中的 Height 和 Width 属性改为字符串，因此您原来绑定的 int 类型变量需要转换后赋值。
+
 ### 0.20.2
 
 `2024-08-20`

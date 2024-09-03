@@ -20,7 +20,7 @@ namespace AntDesign
     <seealso cref="PaginationOptions"/>
     <seealso cref="ListGridType"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg", Columns = 1, Title = "List")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg", Columns = 1, Title = "List", SubTitle = "列表")]
     public partial class AntList<TItem> : AntDomComponentBase, IAntList
     {
         internal string PrefixName { get; set; } = "ant-list";
