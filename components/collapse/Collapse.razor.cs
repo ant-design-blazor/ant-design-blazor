@@ -23,7 +23,7 @@ namespace AntDesign
     </summary>
     <seealso cref="Panel"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg", Columns = 1, Title ="Collapse",SubTitle = "折叠面板")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg", Columns = 1, Title = "Collapse", SubTitle = "折叠面板")]
     public partial class Collapse : AntDomComponentBase
     {
         #region Parameter

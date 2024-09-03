@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// A step in a Steps component
+    /// </summary>
     public partial class Step : AntDomComponentBase
     {
         private string _status = "wait";
