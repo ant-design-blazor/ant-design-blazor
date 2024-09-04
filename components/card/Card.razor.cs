@@ -114,7 +114,7 @@ namespace AntDesign
         public RenderFragment Extra { get; set; }
 
         private RenderFragment _cardTabs;
-
+        private RenderFragment _cardTabPanels;
         private bool _hasGrids;
         internal IList<CardAction> _cardActions;
 
@@ -153,7 +153,10 @@ namespace AntDesign
         {
             this._cardTabs = tabs;
         }
-
+        internal void SetTabPanels(RenderFragment tabPanels)
+        {
+            this._cardTabPanels = tabPanels;
+        }
         internal void SetBody(RenderFragment body)
         {
             this.Body = body;

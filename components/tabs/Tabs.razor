@@ -96,5 +96,12 @@
             }
         </div>
 
+    }    
+    internal void RenderTabPanels(RenderTreeBuilder __builder)
+    {             
+        @foreach (var tab in _tabs.OrderBy(x => x.TabIndex))
+        {
+            @tab.RenderPane
+        }
     }
 }
