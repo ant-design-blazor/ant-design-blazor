@@ -16,10 +16,12 @@
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnSelectAll="OnSelectAll" >
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowSelectable="@(x => x.Name!="Disabled User")" Quick>
+        <Selection Key="@context.Name" Type="@selectionType" />
         <PropertyColumn Property="c=>c.Name">
-            <a>@context.Name</a>
+            <CellRender Context="cell">
+                <a>@cell.FieldValue</a>
+            </CellRender>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Age" />
         <PropertyColumn Property="c=>c.Address" />
@@ -69,10 +71,6 @@
 
     IEnumerable<Column> selectedRows;
     string selectionType = "checkbox";
-
-    protected override void OnInitialized()
-    {
-    }
 
     public void RemoveSelection(string key)
     {

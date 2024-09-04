@@ -16,15 +16,17 @@ Dynamic columns:
         <Column TData="object" DataIndex="@column"></Column>
     }
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </PropertyColumn>
   <ActionColumn Title="Action">
     <Space Size=@("middle")>

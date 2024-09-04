@@ -347,8 +347,9 @@ namespace AntDesign
         /// <summary>
         /// Whether to enable the quick mode
         /// </summary>
+        /// <default value="true" />
         [Parameter]
-        public bool Quick { get; set; }
+        public bool Quick { get; set; } = true;
 
         /// Specify the identifier of each row
         /// </summary>

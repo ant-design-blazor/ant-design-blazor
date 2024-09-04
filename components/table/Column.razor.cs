@@ -33,9 +33,6 @@ namespace AntDesign
     /// </typeparam>
     public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
-        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        internal bool Blocked { get; set; }
-
         [CascadingParameter(Name = "ItemType")]
         internal Type ItemType { get; set; }
 

@@ -1,8 +1,10 @@
 @using System.ComponentModel
 
-<Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
+<Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true" Quick>
   <PropertyColumn Property="c=>c.Name">
-    <a>@context.Name</a>
+    <CellRender Context="cell">
+        @cell.FieldValue
+    </CellRender>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Money" Style="text-align: right"></PropertyColumn>
   <PropertyColumn Property="c=>c.Address"></PropertyColumn>

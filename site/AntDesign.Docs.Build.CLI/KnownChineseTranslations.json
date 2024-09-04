@@ -4250,9 +4250,6 @@
   "Use @bind-Field to bind to a property of TItem, we recommend using <code>PropertyColumn</code> instead": {
     "Translated": "使用 @bind-Field 绑定到 TItem 的属性，建议使用 <code>PropertyColumn</code> 代替"
   },
-  "Only used for @bind-Field and get the expression, no other purpose": {
-    "Translated": "仅用于 @bind-Field 并获取表达式，无其他用途"
-  },
   "Please use StartIndex": {
     "Translated": "请使用 StartIndex"
   },
@@ -4261,9 +4258,6 @@
   },
   "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
     "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
-  },
-  "Use to download a file. inherits <a href=\"/en-US/components/button\"><code>Button</code></a>": {
-    "Translated": "用于下载文件。继承 <a href=“/en-US/components/button”><code>Button</code></a>"
   },
   "Placement of the overlay": {
     "Translated": "叠加层的放置"
@@ -4465,9 +4459,6 @@
   },
   "Customize the empty template when the table is empty": {
     "Translated": "自定义表为空时的空模板"
-  },
-  "Specify the identifier of each row": {
-    "Translated": "指定每行的标识符"
   },
   "Set the field filter type resolver": {
     "Translated": "设置字段筛选条件类型解析程序"

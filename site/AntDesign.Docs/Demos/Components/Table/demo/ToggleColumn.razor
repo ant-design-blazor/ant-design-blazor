@@ -2,7 +2,9 @@
 
 <Table TItem="Data" DataSource="@data">
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age" Hidden="@hidden"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address">
@@ -11,15 +13,17 @@
         </TitleTemplate>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </PropertyColumn>
 </Table>
 

@@ -15,13 +15,13 @@ namespace AntDesign
         internal ColumnContext Context { get; set; }
 
         [CascadingParameter(Name = "IsHeaderTemplate")]
-        public bool IsHeaderTemplate { get; set; }
+        internal bool IsHeaderTemplate { get; set; }
 
         [CascadingParameter(Name = "IsRowTemplate")]
-        public bool IsRowTemplate { get; set; }
+        internal bool IsRowTemplate { get; set; }
 
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
+        internal bool Blocked { get; set; }
 
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }

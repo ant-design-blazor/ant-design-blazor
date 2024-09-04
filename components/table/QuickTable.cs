@@ -4,11 +4,12 @@
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Quick Table
-    /// </summary>
-    /// <typeparam name="TItem"></typeparam>
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1)]
+    /**
+    <summary>
+    
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1, Title = "Quick Table", SubTitle = "快速表格")]
     public class QuickTable<TItem> : Table<TItem>
     {
         public QuickTable()
