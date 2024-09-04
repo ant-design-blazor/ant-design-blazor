@@ -164,7 +164,7 @@ namespace AntDesign
         [Parameter]
         public virtual Func<TData, object> GroupBy { get; set; }
 
-        private IEnumerable<TableFilter> _filters;
+        private IEnumerable<TableFilter> _filters = [];
 
         private bool _hasFiltersAttribute;
 
