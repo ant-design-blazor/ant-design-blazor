@@ -16,6 +16,7 @@ namespace AntDesign
 
     <para>Avoid components clinging together and set a unified space.</para>
     </summary>
+    <seealso cref="SpaceItem"/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://gw.alipayobjects.com/zos/antfincdn/wc6%263gJ0Y8/Space.svg", Columns = 1, Title = "Space", SubTitle = "间距")]
     public partial class Space : AntDomComponentBase

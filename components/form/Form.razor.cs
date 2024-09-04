@@ -33,7 +33,7 @@ namespace AntDesign
     <seealso cref="FormValidationRule"/>
     <seealso cref="FormValidateErrorMessages"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg", Columns = 1, Title = "Form",SubTitle = "表单")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg", Columns = 1, Title = "Form", SubTitle = "表单")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TModel))]
 #endif
@@ -202,7 +202,7 @@ namespace AntDesign
         /// Validator to use in the form. Used when <see cref="ValidateMode"/> is <c>FormValidateMode.Default</c> or <c>FormValidateMode.Complex</c>
         /// </summary>
         [Parameter]
-        public RenderFragment Validator { get; set; } = _defaultValidator;
+        public RenderFragment Validator { get; set; }
 
         /// <summary>
         /// Enable validation when component values change
@@ -213,15 +213,10 @@ namespace AntDesign
         /// <summary>
         /// Which mode of validation the form should use
         /// </summary>
-        /// <default value="FormValidateMode.Default"/>
+        /// <default value="FormValidateMode.Complex"/>
         [Parameter]
-        public FormValidateMode ValidateMode { get; set; } = FormValidateMode.Default;
-
-        private static readonly RenderFragment _defaultValidator = builder =>
-        {
-            builder.OpenComponent<DataAnnotationsValidator>(0);
-            builder.CloseComponent();
-        };
+        [Obsolete("Will use both attributes and rules in the same time.")]
+        public FormValidateMode ValidateMode { get; set; } = FormValidateMode.Complex;
 
         /// <summary>
         /// If enabled, form submission is performed without fully reloading the page. This is equivalent to adding data-enhance to the form.
@@ -494,7 +489,7 @@ namespace AntDesign
 
         bool IForm.UseLocaleValidateMessage => UseLocaleValidateMessage;
 
-        private bool UseRulesValidator => UseLocaleValidateMessage || ValidateMode != FormValidateMode.Default;
+        private bool UseRulesValidator => UseLocaleValidateMessage && Validator == null;
 
         private void BuildEditContext()
         {

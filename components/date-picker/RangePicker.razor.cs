@@ -5,6 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -70,6 +71,28 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs<TValue>> OnChange { get; set; }
+
+        /// <summary>
+        /// Add focus to picker input
+        /// </summary>
+        /// <param name="index">Panel index, 0 for start, 1 for end</param>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task FocusAsync(int index = 0)
+        {
+            await base.Focus(index);
+        }
+
+        /// <summary>
+        /// Remove focus from picker input
+        /// </summary>
+        /// <param name="index">Panel index, 0 for start, 1 for end</param>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task BlurAsync(int index = 0)
+        {
+            await base.Blur(index);
+        }
 
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 

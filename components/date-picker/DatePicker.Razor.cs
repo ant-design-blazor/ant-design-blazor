@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -26,7 +27,7 @@ namespace AntDesign
     <seealso cref="QuarterPicker{TValue}"/>
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg",Title = "DatePicker", SubTitle = "日期选择框")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg", Title = "DatePicker", SubTitle = "日期选择框")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         /// <summary>
@@ -42,6 +43,27 @@ namespace AntDesign
             base.OnInitialized();
             ProcessDefaults();
             _pickerValuesAfterInit = PickerValues[0];
+        }
+
+
+        /// <summary>
+        /// Add focus to picker input
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task FocusAsync()
+        {
+            await base.Focus();
+        }
+
+        /// <summary>
+        /// Remove focus from picker input
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task BlurAsync()
+        {
+            await base.Blur();
         }
 
         private void ProcessDefaults()

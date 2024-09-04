@@ -15,7 +15,7 @@ namespace AntDesign
     Semantic vector graphics. Before use icons。
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg", Title = "Icon",SubTitle = "图标")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg", Title = "Icon", SubTitle = "图标")]
     public partial class Icon : AntDomComponentBase
     {
         /// <summary>

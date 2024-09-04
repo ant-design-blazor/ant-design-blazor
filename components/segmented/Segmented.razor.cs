@@ -24,7 +24,7 @@ namespace AntDesign
     </summary>
     <seealso cref="SegmentedItem{TValue}"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg",Title = "Segmented",SubTitle = "分段控制器")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg", Title = "Segmented", SubTitle = "分段控制器")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TValue))]
 #endif
