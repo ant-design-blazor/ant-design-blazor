@@ -19,7 +19,7 @@ namespace AntDesign
     </summary>
     <seealso cref="AntDesign.BadgeRibbon" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg", Title = "Badge", SubTitle = "徽标数")]
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>

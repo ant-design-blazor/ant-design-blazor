@@ -32,7 +32,7 @@ namespace AntDesign
     </para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg", Columns = 1, Title = "Transfer", SubTitle = "穿梭框")]
     public partial class Transfer : AntDomComponentBase
     {
         private const string PrefixName = "ant-transfer";

@@ -20,7 +20,7 @@ namespace AntDesign
     /// <para>For displaying anchor hyperlinks on page and jumping between them.</para>
     /// </summary>
     /// <seealso cref="AnchorLink" />
-    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg", Title = "Anchor", SubTitle = "锚点")]
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
         private string _ballClass = "ant-anchor-ink-ball";

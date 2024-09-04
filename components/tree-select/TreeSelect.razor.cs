@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
@@ -27,7 +28,7 @@ namespace AntDesign
     </para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg", Title = "TreeSelect", SubTitle = "树选择")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]
@@ -333,6 +334,24 @@ namespace AntDesign
 
                 UpdateValuesSelection();
             }
+        }
+
+        /// <summary>
+        /// Check all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CheckAll()
+        {
+            TreeComponent.CheckAll();
+        }
+
+        /// <summary>
+        /// Uncheck all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void UncheckAll()
+        {
+            TreeComponent.UncheckAll();
         }
 
         private void ClearOptions()

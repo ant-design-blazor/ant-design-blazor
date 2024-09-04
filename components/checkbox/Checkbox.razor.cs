@@ -27,7 +27,7 @@ namespace AntDesign
     </summary>
     <seealso cref="CheckboxGroup"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg", Title = "Checkbox", SubTitle = "多选框")]
     public partial class Checkbox : AntInputBoolComponentBase
     {
         /// <summary>

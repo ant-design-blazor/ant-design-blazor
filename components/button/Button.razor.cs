@@ -35,7 +35,7 @@ namespace AntDesign
     </summary>
     <seealso cref="DownloadButton" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg", Title = "Button", SubTitle = "按钮")]
     public partial class Button : AntDomComponentBase
     {
         private string _formSize;

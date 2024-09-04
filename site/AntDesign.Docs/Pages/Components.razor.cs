@@ -122,9 +122,10 @@ namespace AntDesign.Docs.Pages
             {
                 var menus = await DemoService.GetMenuAsync();
                 var current = menus.FirstOrDefault(x => x.Url == fullPageName.ToLowerInvariant());
+                var subPath = current.Children[0].Type == "menuItem" ? current.Children[0].Url : current.Children[0].Children[0].Url;
                 if (current != null)
                 {
-                    NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Children[0].Url}");
+                    NavigationManager.NavigateTo($"{CurrentLanguage}/{subPath}");
                 }
             }
             else

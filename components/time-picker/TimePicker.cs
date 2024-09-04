@@ -14,7 +14,7 @@ namespace AntDesign
     </summary>
     <inheritdoc />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg", Title = "TimePicker", SubTitle = "时间选择框")]
 
     public class TimePicker<TValue> : DatePicker<TValue>
     {

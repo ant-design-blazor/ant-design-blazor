@@ -21,7 +21,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg", Title = "BackTop", SubTitle = "回到顶部")]
     public partial class BackTop : AntDomComponentBase
     {
         /// <summary>

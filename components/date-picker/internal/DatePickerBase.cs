@@ -27,7 +27,7 @@ namespace AntDesign
         internal const int START_PICKER_INDEX = 0;
         internal const int END_PICKER_INDEX = 0;
 
-        [CascadingParameter(Name = "PrefixCls")]
+        //[CascadingParameter(Name = "PrefixCls")]
         internal string PrefixCls { get; set; } = "ant-picker";
 
         /// <summary>

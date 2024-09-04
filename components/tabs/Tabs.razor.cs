@@ -29,7 +29,7 @@ namespace AntDesign
     </summary>
     <seealso cref="TabPane" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg", Columns = 1, Title = "Tabs", SubTitle = "标签页")]
     public partial class Tabs : AntDomComponentBase
     {
         [Inject]

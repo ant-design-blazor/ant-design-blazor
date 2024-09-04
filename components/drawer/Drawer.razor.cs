@@ -31,7 +31,7 @@ namespace AntDesign
     <seealso cref="DrawerOptions" />
     <seealso cref="DrawerRef" />
      */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg", Title = "Drawer", SubTitle = "抽屉")]
     public partial class Drawer : AntDomComponentBase
     {
         #region Parameters

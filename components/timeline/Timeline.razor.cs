@@ -23,7 +23,7 @@ namespace AntDesign
     </summary>
     <seealso cref="TimelineItem" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg", Title = "Timeline", SubTitle = "时间轴")]
     public partial class Timeline : AntDomComponentBase
     {
         /// <summary>

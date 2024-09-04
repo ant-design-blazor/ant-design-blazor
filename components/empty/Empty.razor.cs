@@ -19,7 +19,7 @@ namespace AntDesign
         </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg", Columns = 1, Title = "Empty", SubTitle = "空状态")]
     public partial class Empty : AntDomComponentBase
     {
         [CascadingParameter(Name = "PrefixCls")]

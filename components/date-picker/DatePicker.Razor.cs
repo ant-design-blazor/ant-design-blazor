@@ -26,7 +26,7 @@ namespace AntDesign
     <seealso cref="QuarterPicker{TValue}"/>
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg", Title = "DatePicker", SubTitle = "日期选择框")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         /// <summary>

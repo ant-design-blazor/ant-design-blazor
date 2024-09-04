@@ -26,7 +26,7 @@ namespace AntDesign
     </summary>
     <seealso cref="SliderMark"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg", Title = "Slider", SubTitle = "滑动输入条")]
     public partial class Slider<TValue> : AntInputComponentBase<TValue>
     {
         private const string PreFixCls = "ant-slider";

@@ -30,6 +30,7 @@ namespace AntDesign
         "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg",
         Columns = 1,
         Title = "Typography",
+        SubTitle = "排版",
         OutputApi = false)]
     public abstract class TypographyBase : AntDomComponentBase
     {

@@ -11,15 +11,21 @@ namespace AntDesign
     public partial class MentionsOption
     {
         [CascadingParameter]
-        public Mentions Mentions { get; set; }
+        private Mentions Mentions { get; set; }
 
+        /// <summary>
+        /// The value of option.
+        /// </summary>
         [Parameter]
         public string Value { get; set; }
 
+        /// <summary>
+        /// The content of option.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public bool Active => Mentions?.ActiveOptionValue == Value;
+        internal bool Active => Mentions?.ActiveOptionValue == Value;
 
         protected override async Task OnInitializedAsync()
         {

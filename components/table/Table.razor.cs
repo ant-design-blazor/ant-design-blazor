@@ -47,7 +47,7 @@ namespace AntDesign
     <seealso cref="Selection"/>
     <seealso cref="QueryModel{TItem}" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1, Title = "Table", SubTitle = "表格")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif

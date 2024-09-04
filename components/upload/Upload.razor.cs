@@ -27,7 +27,7 @@ namespace AntDesign
     <seealso cref="UploadInfo"/>
     <seealso cref="UploadFileItem"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg", Title = "Upload", SubTitle = "上传")]
     public partial class Upload : AntDomComponentBase
     {
         /// <summary>

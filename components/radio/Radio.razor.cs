@@ -19,7 +19,7 @@ namespace AntDesign
     </summary>
     <seealso cref="RadioGroup{TValue}"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg", Title = "Radio", SubTitle = "单选框")]
     public partial class Radio<TValue> : AntDomComponentBase
     {
         /// <summary>

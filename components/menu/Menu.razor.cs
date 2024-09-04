@@ -31,7 +31,7 @@ namespace AntDesign
     <seealso cref="MenuItemGroup" />
     <seealso cref="MenuDivider" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg", Columns = 1, Title = "Menu", SubTitle = "导航菜单")]
     public partial class Menu : AntDomComponentBase
     {
         [CascadingParameter(Name = "PrefixCls")]

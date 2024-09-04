@@ -19,7 +19,7 @@ namespace AntDesign
     <para>PageHeader can be used to highlight the page topic, display important information about the page, and carry the action items related to the current page (including page-level operations, inter-page navigation, etc.) It can also be used as inter-page navigation.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg", Columns = 1, Title = "PageHeader", SubTitle = "页头")]
     public partial class PageHeader
     {
         /// <summary>

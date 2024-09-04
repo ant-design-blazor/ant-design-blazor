@@ -26,7 +26,7 @@ namespace AntDesign
     </summary>
     <seealso cref="CarouselSlick"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg", Title = "Carousel", SubTitle = "走马灯")]
     public partial class Carousel : AntDomComponentBase
     {
         private const string PrefixCls = "ant-carousel";

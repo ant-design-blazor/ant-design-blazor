@@ -20,7 +20,7 @@ namespace AntDesign
     </summary>
     <seealso cref="Step"/>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg", Columns = 1)]
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg", Columns = 1, Title = "Steps", SubTitle = "步骤条")]
     public partial class Steps : AntDomComponentBase
     {
         private bool _showProgressDot;

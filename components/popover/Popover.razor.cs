@@ -35,7 +35,7 @@ namespace AntDesign
     <para>Please ensure that the child node of <c>Popover</c> accepts <c>onMouseEnter</c>, <c>onMouseLeave</c>, <c>onFocus</c>, <c>onClick</c> events.</para>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg", Title = "Popover", SubTitle = "气泡卡片")]
     public partial class Popover : OverlayTrigger
     {
         /// <summary>
