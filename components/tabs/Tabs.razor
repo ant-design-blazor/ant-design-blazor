@@ -87,7 +87,10 @@
             {
                 <div class="ant-tabs-content-holder ">
                     <div class="@_contentClassMapper.Class">
-                        @RenderTabPanels
+                        @foreach (var pane in _tabs)
+                        {
+                            @pane.RenderPane
+                        }
                     </div>
                 </div>
             }
