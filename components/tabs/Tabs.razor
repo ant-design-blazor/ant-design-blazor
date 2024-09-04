@@ -99,7 +99,7 @@
     }    
     internal void RenderTabPanels(RenderTreeBuilder __builder)
     {             
-        @foreach (var tab in _tabs.OrderBy(x => x.TabIndex))
+        @foreach (var tab in _tabs)
         {
             @tab.RenderPane
         }
