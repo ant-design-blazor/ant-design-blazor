@@ -4,27 +4,30 @@
 @foreach (DrawerRef drawerRef in _drawerRefs)
 {
     var drawerConfig = drawerRef.Options;
-    <Drawer @ref="@drawerRef.Drawer"
-            @key="@drawerConfig"
-            Content="@drawerConfig.Content"
-            Closable="@drawerConfig.Closable"
-            MaskClosable="@drawerConfig.MaskClosable"
-            Mask="@drawerConfig.Mask"
-            Keyboard="@drawerConfig.Keyboard"
-            Title="@drawerConfig.Title"
-            Placement="@drawerConfig.Placement"
-            MaskStyle="@drawerConfig.MaskStyle"
-            BodyStyle="@drawerConfig.BodyStyle"
-            HeaderStyle="@drawerConfig.HeaderStyle"
-            WrapClassName="@drawerConfig.WrapClassName"
-            Width="@drawerConfig.Width"
-            Height="@drawerConfig.Height"
-            ZIndex="@drawerConfig.ZIndex"
-            OffsetX="@drawerConfig.OffsetX"
-            OffsetY="@drawerConfig.OffsetY"
-            Visible="@drawerConfig.Visible"
-            OnOpen="@drawerRef.OnOpen"
-            OnClose="@drawerRef.CloseAsync">
-        @drawerConfig.ChildContent
-    </Drawer>
+
+    <CascadingValue Value="drawerRef" Name="FromContainer" IsFixed @key="@drawerConfig">
+        <Drawer @ref="@drawerRef.Drawer"
+                @key="@drawerConfig"
+                Content="@drawerConfig.Content"
+                Closable="@drawerConfig.Closable"
+                MaskClosable="@drawerConfig.MaskClosable"
+                Mask="@drawerConfig.Mask"
+                Keyboard="@drawerConfig.Keyboard"
+                Title="@drawerConfig.Title"
+                Placement="@drawerConfig.Placement"
+                MaskStyle="@drawerConfig.MaskStyle"
+                BodyStyle="@drawerConfig.BodyStyle"
+                HeaderStyle="@drawerConfig.HeaderStyle"
+                WrapClassName="@drawerConfig.WrapClassName"
+                Width="@drawerConfig.Width"
+                Height="@drawerConfig.Height"
+                ZIndex="@drawerConfig.ZIndex"
+                OffsetX="@drawerConfig.OffsetX"
+                OffsetY="@drawerConfig.OffsetY"
+                Visible="@drawerConfig.Visible"
+                OnOpen="@drawerRef.OnOpen"
+                OnClose="@drawerRef.CloseAsync">
+            @drawerConfig.ChildContent
+        </Drawer>
+    </CascadingValue>
 }

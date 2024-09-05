@@ -36,6 +36,9 @@ namespace AntDesign
     {
         #region Parameters
 
+        [CascadingParameter(Name = "FromContainer")]
+        private DrawerRef DrawerRef { get; set; }
+
         /// <summary>
         /// The content of Drawer.
         /// </summary>
@@ -356,8 +359,6 @@ namespace AntDesign
             {
                 case ComponentStatus.Opening:
                     {
-                        _status = ComponentStatus.Opened;
-
                         if (OnOpen != null)
                         {
                             await OnOpen.Invoke();
@@ -368,7 +369,7 @@ namespace AntDesign
                             await VisibleChanged.InvokeAsync(true);
                         }
 
-                        _hasInvokeClosed = false;
+                        _hasInvokeClosed = true;// avoid closing again
                         if (string.IsNullOrWhiteSpace(Style))
                         {
                             await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
@@ -380,22 +381,22 @@ namespace AntDesign
 
                         CalcDrawerStyle();
                         StateHasChanged();
-                        await Task.Delay(3000);
                         _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
                             ? $"transform: {OffsetTransform};"
                             : string.Empty;
                         StateHasChanged();
+                        _status = ComponentStatus.Opened;
                         break;
                     }
                 case ComponentStatus.Closing:
                     {
-                        await Task.Delay(3000);
-                        _status = ComponentStatus.Closed;
                         StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
                             await HandleClose(true);
                         }
+
+                        _status = ComponentStatus.Closed;
                         break;
                     }
             }
@@ -409,11 +410,11 @@ namespace AntDesign
         /// trigger when mask is clicked
         /// </summary>
         /// <returns></returns>
-        private async Task MaskClick(MouseEventArgs _)
+        private void MaskClick(MouseEventArgs _)
         {
             if (MaskClosable && Mask)
             {
-                await HandleClose();
+                CloseClick();
             }
         }
 
@@ -421,9 +422,10 @@ namespace AntDesign
         /// trigger when Closer is clicked
         /// </summary>
         /// <returns></returns>
-        private async Task CloseClick()
+        private void CloseClick()
         {
-            await HandleClose();
+            _hasInvokeClosed = false;
+            _status = ComponentStatus.Closing;
         }
 
         /// <summary>
@@ -442,7 +444,13 @@ namespace AntDesign
             {
                 await VisibleChanged.InvokeAsync(false);
             }
+            _isOpen = false;
             await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+
+            if (DrawerRef != null)
+            {
+                await DrawerRef.CloseAsync();
+            }
         }
 
         private void CalcDrawerStyle()
