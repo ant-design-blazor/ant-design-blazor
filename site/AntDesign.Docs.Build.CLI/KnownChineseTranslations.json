@@ -3836,14 +3836,8 @@
   "The icon in front of the node": {
     "Translated": "节点前的图标"
   },
-  "Obtain the parent data set": {
-    "Translated": "获取父数据集"
-  },
   "Setting Selection State": {
     "Translated": "设置选择状态"
-  },
-  "Remove the current node": {
-    "Translated": "删除当前节点"
   },
   "Expand the node": {
     "Translated": "展开节点"
@@ -4271,9 +4265,6 @@
   "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
     "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
   },
-  "Use to download a file. inherits <a href=\"/en-US/components/button\"><code>Button</code></a>": {
-    "Translated": "用于下载文件。继承 <a href=“/en-US/components/button”><code>Button</code></a>"
-  },
   "Placement of the overlay": {
     "Translated": "叠加层的放置"
   },
@@ -4375,9 +4366,6 @@
   },
   "Gets or sets the value of the TextArea.": {
     "Translated": "获取或设置 TextArea 的值。"
-  },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
   },
   "Callback function that is called when open state changes.": {
     "Translated": "打开状态更改时调用的回调函数。"
