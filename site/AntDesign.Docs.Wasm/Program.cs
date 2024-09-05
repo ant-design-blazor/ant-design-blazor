@@ -33,7 +33,7 @@ namespace AntDesign.Docs.Wasm
 
         private static void ConfigureServices(IServiceCollection services, string baseAddress)
         {
-            services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+            services.AddTransient(sp => sp.GetService<HttpClient>() ?? new HttpClient { BaseAddress = new Uri(baseAddress) });
             services.AddAntDesignDocs();
         }
     }
