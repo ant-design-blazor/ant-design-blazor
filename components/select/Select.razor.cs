@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,6 +18,19 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Select component to select value from options.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>A dropdown menu for displaying choices - an elegant alternative to the native HTML <c>select</c> element.</item>
+        <item>Utilizing <see cref="Radio{TValue}"/> is recommended when there are fewer total options (less than 5).</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg", Title= "Select", SubTitle = "选择器")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]
@@ -31,12 +43,15 @@ namespace AntDesign
         /// <summary>
         /// Toggle the border style.
         /// </summary>
-        [Parameter] public bool Bordered { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool Bordered { get; set; } = true;
 
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool EnableVirtualization { get; set; }
 #endif
@@ -44,18 +59,6 @@ namespace AntDesign
         private bool _dataSourceHasChanged = false;
         private IEnumerable<TItem> _dataSourceCopy;
         private IEnumerable<TItem> _dataSourceShallowCopy;
-        //private bool? _isTItemPrimitive;
-        //private bool IsTItemPrimitive
-        //{
-        //    get
-        //    {
-        //        if (_isTItemPrimitive is null)
-        //        {
-        //            _isTItemPrimitive = IsSimpleType(typeof(TItem));
-        //        }
-        //        return _isTItemPrimitive!.Value;
-        //    }
-        //}
 
         /// <summary>
         /// MethodInfo will contain attached MemberwiseClone protected
@@ -126,26 +129,23 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Will match drowdown width:
-        /// - for boolean: true - with widest item in the dropdown list
-        /// - for string: with value (e.g.: "256px")
+        /// Will match dropdown width. If <c>true</c>, matches width of the widest item in the dropdown. If <c>string</c>, matches width of the string's value (ex: 250px)
         /// </summary>
-        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
 
         /// <summary>
         /// Will not allow dropdown width to grow above stated in here value (eg. "768px")
         /// </summary>
-        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
-
-        /// <summary>
-        /// Customize dropdown content. The context is the original content.
-        /// </summary>
-        [Parameter] public RenderFragment<RenderFragment> DropdownRender { get; set; }
+        /// <default value="auto"/>
+        [Parameter]
+        public string DropdownMaxWidth { get; set; } = "auto";
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
         /// If the value is set, the entries are displayed in groups.
-        /// Use additional SortByGroup and SortByLabel.
+        /// Use additional <see cref="SelectBase{TItemValue, TItem}.SortByGroup"/> and <see cref="SelectBase{TItemValue, TItem}.SortByLabel"/>.
         /// </summary>
         [Parameter]
         public string GroupName
@@ -162,84 +162,66 @@ namespace AntDesign
         /// Is used to increase the speed. If you expect changes to the label name,
         /// group name or disabled indicator, disable this property.
         /// </summary>
-        [Parameter] public bool IgnoreItemChanges { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool IgnoreItemChanges { get; set; } = true;
 
         /// <summary>
         /// Is used to customize the item style.
         /// </summary>
-        [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
-
-  
-        /// <summary>
-        /// Is used to customize the label style.
-        /// </summary>
-        [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
-
-        /// <summary>
-        /// Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.
-        /// </summary>
-        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
+        [Parameter]
+        public RenderFragment<TItem> ItemTemplate { get; set; }
 
         /// <summary>
         /// Specify content to show when no result matches.
         /// </summary>
-        [Parameter] public RenderFragment NotFoundContent { get; set; }
+        [Parameter]
+        public RenderFragment NotFoundContent { get; set; }
 
         /// <summary>
         /// Called when blur.
         /// </summary>
-        [Parameter] public Action OnBlur { get; set; }
+        [Parameter]
+        public Action OnBlur { get; set; }
 
         /// <summary>
         /// Called when custom tag is created.
         /// </summary>
 
-        [Parameter] public Action<string> OnCreateCustomTag { get; set; }
+        [Parameter]
+        public Action<string> OnCreateCustomTag { get; set; }
 
         /// <summary>
-        /// Called when the datasource changes. From null to <see cref="IEnumerable{TItem}"/>,
-        /// from <see cref="IEnumerable{TItem}"/> to <see cref="IEnumerable{TItem}"/>
-        /// or from <see cref="IEnumerable{TItem}"/> to null.
-        /// It does not trigger if a value inside the <see cref="IEnumerable{TItem}"/> changes.
+        /// Called when the datasource object/reference changes.
+        /// It does not trigger if a value inside the datasource changes.
         /// </summary>
-        [Parameter] public Action OnDataSourceChanged { get; set; }
+        [Parameter]
+        public Action OnDataSourceChanged { get; set; }
 
         /// <summary>
         /// Called when the dropdown visibility changes.
         /// </summary>
-        [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
-
-        /// <summary>
-        /// Called when mouse enter.
-        /// </summary>
-        [Parameter] public Action OnMouseEnter { get; set; }
-
-        /// <summary>
-        /// Called when mouse leave.
-        /// </summary>
-        [Parameter] public Action OnMouseLeave { get; set; }
+        [Parameter]
+        public Action<bool> OnDropdownVisibleChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when input changed.
         /// </summary>
-        [Parameter] public Action<string> OnSearch { get; set; }
+        [Parameter]
+        public Action<string> OnSearch { get; set; }
 
         [Parameter] public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; } = (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
-
-        /// <summary>
-        /// Use this to fix overlay problems e.g. #area
-        /// </summary>
-        [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
         private bool _showArrowIconChanged;
 
         /// <summary>
         /// Whether to show the drop-down arrow
         /// </summary>
+        /// <default value="true"/>
         [Parameter]
-        public bool ShowArrowIcon
+        public override bool ShowArrowIcon
         {
             get { return _showArrowIcon; }
             set
@@ -250,20 +232,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Whether show search input in single mode.
-        /// </summary>
-        [Parameter] public bool ShowSearchIcon { get; set; } = true;
-
-        /// <summary>
         /// Define what characters will be treated as token separators for newly created tags.
         /// Useful when creating new tags using only keyboard.
         /// </summary>
-        [Parameter] public char[] TokenSeparators { get; set; }
+        [Parameter]
+        public char[] TokenSeparators { get; set; }
 
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+        [Parameter]
+        public override EventCallback<TItemValue> ValueChanged { get; set; }
 
         private bool _valueHasChanged;
 
@@ -326,11 +305,10 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] private IDomEventListener DomEventListener { get; set; }
+        [Inject] 
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
-
-        private const string ClassPrefix = "ant-select";
 
         /// <summary>
         /// Indicates if the GroupName is used. When this value is True, the SelectOptions will be rendered in group mode.
@@ -343,7 +321,7 @@ namespace AntDesign
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
 
-        private string _dropdownStyle = string.Empty;
+
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
@@ -388,6 +366,11 @@ namespace AntDesign
                 ;
         }
 
+        protected override bool IsSelectFixed()
+        {
+            return !IsGroupingEnabled;
+        }
+
         protected override void OnInitialized()
         {
             if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
@@ -412,7 +395,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
             if (SelectOptions == null)
@@ -433,9 +416,9 @@ namespace AntDesign
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
 
-                OnValueChange(_selectedValue);
+                await OnValueChangeAsync(_selectedValue);
             }
-            base.OnParametersSet();
+            await base.OnParametersSetAsync();
         }
 
         private void EvaluateDataSourceChange()
@@ -514,7 +497,7 @@ namespace AntDesign
         /// is added that is also marked as selected.
         /// </summary>
         /// <returns></returns>
-        internal async Task ProcessSelectedSelectOptions()
+        internal override async Task ProcessSelectedSelectOptions()
         {
             if (_isInitialized && _afterFirstRender)
             {
@@ -522,12 +505,12 @@ namespace AntDesign
                 {
                     if (LastValueBeforeReset is not null)
                     {
-                        OnValueChange(LastValueBeforeReset);
+                        await OnValueChangeAsync(LastValueBeforeReset);
                         LastValueBeforeReset = default;
                     }
                     else
                     {
-                        OnValueChange(Value);
+                        await OnValueChangeAsync(Value);
                     }
                 }
                 else
@@ -801,7 +784,7 @@ namespace AntDesign
             _dropdownStyle = minWidth + definedWidth + maxWidth;
         }
 
-        protected async Task OnOverlayVisibleChangeAsync(bool visible)
+        protected override async Task OnOverlayVisibleChangeAsync(bool visible)
         {
             OnDropdownVisibleChange?.Invoke(visible);
 
@@ -1069,26 +1052,14 @@ namespace AntDesign
 
         #region Events
 
-        /// <summary>
-        /// When newly set Value is not found in SelectOptionItems, it is reset to
-        /// default. This property holds the value before reset. It may be needed
-        /// to be reaplied (for example when new Value is set at the same time
-        /// as new SelectOption is added, but Value in the component is set
-        /// before new SelectOptionItem has been created).
-        /// </summary>
-        internal TItemValue LastValueBeforeReset { get; set; }
-
-        /// <summary>
-        /// The Method is called every time if the value of the @bind-Value was changed by the two-way binding.
-        /// </summary>
-        protected override void OnValueChange(TItemValue value)
+        protected override async Task OnValueChangeAsync(TItemValue value)
         {
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
             if (!_isValueEnum && !TypeDefaultExistsAsSelectOption && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                await InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
             }
 
@@ -1103,21 +1074,20 @@ namespace AntDesign
 
                 if (!AllowClear)
                 {
-                    _ = TrySetDefaultValueAsync();
+                    await TrySetDefaultValueAsync();
                 }
                 else
                 {
                     //Reset value if not found - needed if value changed
                     //outside of the component
-                    _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                    await InvokeAsync(() => OnInputClearClickAsync(new()));
                 }
                 return;
             }
 
             if (result.IsDisabled)
             {
-                _ = TrySetDefaultValueAsync();
-
+                await TrySetDefaultValueAsync();
                 return;
             }
 
@@ -1128,7 +1098,7 @@ namespace AntDesign
             if (HideSelected)
                 result.IsHidden = true;
 
-            ValueChanged.InvokeAsync(result.Value);
+            await ValueChanged.InvokeAsync(result.Value);
         }
 
         /// <summary>
@@ -1168,7 +1138,7 @@ namespace AntDesign
         /// Method is called via EventCallBack if the value of the Input element was changed by keyboard
         /// </summary>
         /// <param name="e">Contains the value of the Input element</param>
-        protected async void OnInputAsync(ChangeEventArgs e)
+        protected override async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)
@@ -1359,7 +1329,7 @@ namespace AntDesign
             if (activeCanditate is null)
             {
                 //label has to be cast-able to value
-                TItemValue value = CustomTagLabelToValue.Invoke(searchValue);
+                TItemValue value = GetItemValueFromLabel(searchValue);
                 if (CustomTagSelectOptionItem is null)
                 {
                     CustomTagSelectOptionItem = CreateSelectOptionItem(searchValue, true);
@@ -1387,9 +1357,12 @@ namespace AntDesign
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
-        protected async Task OnKeyUpAsync(KeyboardEventArgs e)
+        protected override async Task OnKeyUpAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
             var overlayFirstOpen = false;
@@ -1745,21 +1718,16 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Method is called via EventCallBack if the Input element get the focus
-        /// </summary>
-        protected async Task OnInputFocusAsync(FocusEventArgs _)
-        {
-            await SetInputFocusAsync();
-        }
-
-        /// <summary>
         /// Method is called via EventCallback if a key is pressed inside Input element.
         /// The method is used to get the TAB event if the user press TAB to cycle trough elements.
         /// If a TAB is received, the overlay will be closed and the Input element blures.
         /// </summary>
-        protected async Task OnKeyDownAsync(KeyboardEventArgs e)
+        protected override async Task OnKeyDownAsync(KeyboardEventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            if (e?.Key == null)
+            {
+                return;
+            }
 
             var key = e.Key.ToUpperInvariant();
 
@@ -1779,19 +1747,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Method is called via EventCallBack if the Input element loses the focus
-        /// </summary>
-        protected async Task OnInputBlurAsync(FocusEventArgs _)
-        {
-            await SetInputBlurAsync();
-        }
-
-        /// <summary>
         /// Check if Focused property is true;  Set the Focused property to false, change the
         /// style and blures the Input element via DOM. It also invoke the OnBlur Action.
         /// </summary>
         /// <returns></returns>
-        protected async Task SetInputBlurAsync()
+        protected override async Task SetInputBlurAsync()
         {
             if (Focused)
             {
@@ -1843,7 +1803,7 @@ namespace AntDesign
         /// <summary>
         /// Method is called via EventCallBack if the user clicked on the Close icon of a Tag.
         /// </summary>
-        protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
+        protected override async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);

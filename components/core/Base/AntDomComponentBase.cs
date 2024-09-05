@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -7,6 +11,10 @@ namespace AntDesign
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
+        /// <summary>
+        /// ID for the component's HTML
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Id { get; set; }
 
@@ -15,15 +23,12 @@ namespace AntDesign
 
         protected bool RTL => ConfigProvider?.Direction == "RTL";
 
-        //[Parameter(CaptureUnmatchedValues = true)]
-        //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
-
         private ElementReference _ref;
 
         /// <summary>
         /// Returned ElementRef reference for DOM element.
         /// </summary>
-        public virtual ElementReference Ref
+        internal virtual ElementReference Ref
         {
             get => _ref;
             set
@@ -73,7 +78,6 @@ namespace AntDesign
                 {
                     _style += ";";
                 }
-                //this.StateHasChanged();
             }
         }
 

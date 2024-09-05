@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
@@ -10,9 +14,23 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Base class for input type components.
-    /// </summary>
+    /**
+    <summary>
+    <para>A basic widget for getting the user input is a text field. Keyboard and mouse can be used for providing or changing data.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>A user input in a form field is needed.</item>
+        <item>A search input is required.</item>
+    </list>
+    </summary>
+    <seealso cref="TextArea"/>
+    <seealso cref="Search"/>
+    <seealso cref="InputGroup"/>
+    <seealso cref="InputPassword"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg", Title = "Input", SubTitle = "输入框")]
     public class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
@@ -23,7 +41,6 @@ namespace AntDesign
 
         protected virtual string InputType => "input";
 
-        //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
         protected virtual bool IgnoreOnChangeAndBlur { get; }
@@ -64,6 +81,10 @@ namespace AntDesign
         [Parameter]
         public bool AutoComplete { get; set; } = true;
 
+        /// <summary>
+        /// Autofocus on the input or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool AutoFocus
         {
@@ -222,12 +243,21 @@ namespace AntDesign
         [Parameter]
         public string WrapperStyle { get; set; }
 
+        /// <summary>
+        /// Show count of characters in the input
+        /// </summary>
         [Parameter]
         public bool ShowCount { get; set; }
 
-        public Dictionary<string, object> Attributes { get; set; }
+        /// <summary>
+        /// The width of the input
+        /// </summary>
+        [Parameter]
+        public string Width { get; set; }
 
-        public ForwardRef WrapperRefBack { get; set; }
+        protected Dictionary<string, object> Attributes { get; set; }
+
+        protected ForwardRef WrapperRefBack { get; set; }
 
         /// <summary>
         /// Focus behavior for input component with optional behaviors.
@@ -285,6 +315,8 @@ namespace AntDesign
 
         private string CountString => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
 
+        private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -315,12 +347,6 @@ namespace AntDesign
         {
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
-
-            if (!string.IsNullOrWhiteSpace(Class))
-            {
-                AffixWrapperClass = string.Join(" ", Class, AffixWrapperClass);
-                ClassMapper.OriginalClass = "";
-            }
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
@@ -624,7 +650,7 @@ namespace AntDesign
                 container = "groupWrapper";
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", GroupWrapperClass);
-                builder.AddAttribute(3, "style", WrapperStyle);
+                builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
                 builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
             }
@@ -645,12 +671,15 @@ namespace AntDesign
 
             if (_hasAffixWrapper)
             {
+                AffixWrapperClass = string.Join(" ", Class ?? "", AffixWrapperClass);
+                ClassMapper.OriginalClass = "";
+
                 builder.OpenElement(21, "span");
                 builder.AddAttribute(22, "class", AffixWrapperClass);
                 if (container == "input")
                 {
                     container = "affixWrapper";
-                    builder.AddAttribute(23, "style", WrapperStyle);
+                    builder.AddAttribute(23, "style", $"{WidthStyle} {WrapperStyle}");
                 }
                 if (WrapperRefBack != null)
                 {
@@ -670,7 +699,7 @@ namespace AntDesign
             // input
             builder.OpenElement(41, "input");
             builder.AddAttribute(42, "class", ClassMapper.Class);
-            builder.AddAttribute(43, "style", Style);
+            builder.AddAttribute(43, "style", $"{WidthStyle} {Style}");
 
             bool needsDisabled = Disabled;
             if (Attributes != null)
@@ -698,7 +727,7 @@ namespace AntDesign
 
             builder.AddAttribute(50, "id", Id);
             builder.AddAttribute(51, "type", Type);
-            if (!String.IsNullOrWhiteSpace(Placeholder))
+            if (!string.IsNullOrWhiteSpace(Placeholder))
             {
                 builder.AddAttribute(60, "placeholder", Placeholder);
             }
@@ -711,7 +740,7 @@ namespace AntDesign
                 builder.AddAttribute(64, "autocomplete", "off");
             }
 
-            if (FormItem?.IsRequiredByValidation ?? false)
+            if (FormItem?.IsRequired ?? false)
             {
                 builder.AddAttribute(65, "aria-required", true);
             }

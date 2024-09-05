@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
 
 namespace AntDesign
@@ -167,7 +171,7 @@ namespace AntDesign
             return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second, date.Kind);
         }
 
-        public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)
+        public static DateTime? FormatDateByPicker(DateTime? dateTime, DatePickerType picker)
         {
             if (dateTime == null)
             {
@@ -177,14 +181,14 @@ namespace AntDesign
             return FormatDateByPicker((DateTime)dateTime, picker);
         }
 
-        public static DateTime FormatDateByPicker(DateTime dateTime, string picker)
+        public static DateTime FormatDateByPicker(DateTime dateTime, DatePickerType picker)
         {
-            switch (picker)
+            switch (picker.Name)
             {
-                case DatePickerType.Date: return dateTime.Date;
-                case DatePickerType.Year: return new DateTime(dateTime.Year, 1, 1);
-                case DatePickerType.Month: return new DateTime(dateTime.Year, dateTime.Month, 1);
-                case DatePickerType.Quarter: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.DATE: return dateTime.Date;
+                case DatePickerType.YEAR: return new DateTime(dateTime.Year, 1, 1);
+                case DatePickerType.MONTH: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.QUARTER: return new DateTime(dateTime.Year, dateTime.Month, 1);
             }
 
             return dateTime;
@@ -279,28 +283,28 @@ namespace AntDesign
             return num1 == num2;
         }
 
-        public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, string picker)
+        public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker switch
+            return picker.Name switch
             {
-                DatePickerType.Date => AddDaysSafely(dateTime, -1),
-                DatePickerType.Year => AddYearsSafely(dateTime, -1),
-                DatePickerType.Month => AddMonthsSafely(dateTime, -1),
-                DatePickerType.Quarter => AddMonthsSafely(dateTime, -3),
-                DatePickerType.Decade => AddYearsSafely(dateTime, -10),
+                DatePickerType.DATE => AddDaysSafely(dateTime, -1),
+                DatePickerType.YEAR => AddYearsSafely(dateTime, -1),
+                DatePickerType.MONTH => AddMonthsSafely(dateTime, -1),
+                DatePickerType.QUARTER => AddMonthsSafely(dateTime, -3),
+                DatePickerType.DECADE => AddYearsSafely(dateTime, -10),
                 _ => dateTime,
             };
         }
 
-        public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, string picker)
+        public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker switch
+            return picker.Name switch
             {
-                DatePickerType.Date => AddDaysSafely(dateTime, 1),
-                DatePickerType.Year => AddYearsSafely(dateTime, 1),
-                DatePickerType.Month => AddMonthsSafely(dateTime, 1),
-                DatePickerType.Quarter => AddMonthsSafely(dateTime, 3),
-                DatePickerType.Decade => AddYearsSafely(dateTime, 10),
+                DatePickerType.DATE => AddDaysSafely(dateTime, 1),
+                DatePickerType.YEAR => AddYearsSafely(dateTime, 1),
+                DatePickerType.MONTH => AddMonthsSafely(dateTime, 1),
+                DatePickerType.QUARTER => AddMonthsSafely(dateTime, 3),
+                DatePickerType.DECADE => AddYearsSafely(dateTime, 10),
                 _ => dateTime,
             };
         }

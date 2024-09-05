@@ -33,6 +33,10 @@ public class DefaultFieldFilterTypeResolver : IFieldFilterTypeResolver
             _ when underlyingType == typeof(uint)     => new NumberFieldFilterType<uint>(),
             _ when underlyingType == typeof(ulong)    => new NumberFieldFilterType<ulong>(),
             _ when underlyingType == typeof(DateTime) => new DateTimeFieldFilterType(),
+#if NET6_0_OR_GREATER
+            _ when underlyingType == typeof(DateOnly) => new DateTimeFieldFilterType<T>(),
+            _ when underlyingType == typeof(TimeOnly) => new DateTimeFieldFilterType<T>() { InputAttributes = { [nameof(DatePicker<T>.Picker)]= DatePickerType.Time } },
+#endif
             _ when underlyingType == typeof(string)   => new StringFieldFilterType(),
             _ when underlyingType == typeof(Guid)     => new GuidFieldFilterType(),
             _                                         => throw new NotSupportedException()

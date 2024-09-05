@@ -14,29 +14,29 @@
 
        bool visible1 = false;
        bool visible2 = false;
-       int wdFirstLayer = 520;
+        string wdFirstLayer = "520";
 
-       void open()
-       {
-           this.visible1 = true;
-       }
+        void open()
+        {
+            this.visible1 = true;
+        }
 
-       void ShowDrawer()
-       {
+        void ShowDrawer()
+        {
 
-           this.visible2 = true;
-           wdFirstLayer += 260;
-       }
+            this.visible2 = true;
+            wdFirstLayer = $"{int.Parse(wdFirstLayer) + 260}";
+        }
 
-       void close()
-       {
-           this.visible1 = false;
-       }
+        void close()
+        {
+            this.visible1 = false;
+        }
 
-       void CloseDrawer()
-       {
-           wdFirstLayer -= 260;
-           this.visible2 = false;
-       }
+        void CloseDrawer()
+        {
+            wdFirstLayer = $"{int.Parse(wdFirstLayer) - 260}";
+            this.visible2 = false;
+        }
 
 }

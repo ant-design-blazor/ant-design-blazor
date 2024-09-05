@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -70,8 +74,14 @@ namespace AntDesign
                 return;
             }
             base.OnInitialized();
+
+            Navmgr.LocationChanged += OnLocationChanged;
+        }
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
             ReuseTabsService.Init(true);
-            ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
+            ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
 
             if (RouteData != null)
             {
@@ -82,14 +92,14 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            Navmgr.LocationChanged += OnLocationChanged;
+            return base.OnFirstAfterRenderAsync();
         }
 
         protected override bool ShouldRender() => !InReusePageContent;
 
         protected override void Dispose(bool disposing)
         {
-            ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
+            ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
             Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
         }
@@ -113,12 +123,7 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            StateHasChanged();
-        }
-
-        private void OnStateHasChanged()
-        {
-            _ = InvokeStateHasChangedAsync();
+            InvokeStateHasChanged();
         }
     }
 }

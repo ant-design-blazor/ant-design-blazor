@@ -6,22 +6,36 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A hierarchical list structure component.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+        Almost anything can be represented in a tree structure. 
+        Examples include directories, organization hierarchies, biological classifications, countries, etc. 
+        The `Tree` component is a way of representing the hierarchical relationship between these things. 
+        You can also expand, collapse, and select a treeNode within a `Tree`.
+    </para>
+    </summary>
+    <seealso cref="TreeNode{TItem}" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg", Title = "Tree", SubTitle = "树形控件")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
     public partial class Tree<TItem> : AntDomComponentBase
     {
         [CascadingParameter(Name = "TreeSelect")]
-        public ITreeSelect TreeSelect { get; set; }
+        private ITreeSelect TreeSelect { get; set; }
 
         #region fields
 
@@ -110,7 +124,7 @@ namespace AntDesign
         [Parameter]
         public string SwitcherIcon { get; set; }
 
-        public bool Directory { get; set; }
+        internal bool Directory { get; set; }
 
         private void SetClassMapper()
         {
@@ -121,7 +135,7 @@ namespace AntDesign
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)
-                .If("ant-tree-unselectable", () => !Selectable)
+                .If("ant-tree-unselectable", () => !Selectable && !CheckOnClickNode)
                 .If("ant-tree-rtl", () => RTL);
         }
 
@@ -129,9 +143,15 @@ namespace AntDesign
 
         #region Node
 
+        /// <summary>
+        /// Nodes for the tree. Use either this, <see cref="DataSource"/>, or <see cref="ChildContent"/>
+        /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        /// <summary>
+        /// Nodes for the tree. Use either this, <see cref="DataSource"/>, or <see cref="Nodes"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -224,7 +244,22 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Deselect all selections
+        /// Select all nodes
+        /// </summary>
+        public void SelectAll()
+        {
+            if (!Selectable || !Multiple)
+                return;
+            foreach (var item in _allNodes)
+            {
+                item.DoSelect(true, true, true);
+            }
+            UpdateSelectedKeys();
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Deselect all nodes
         /// </summary>
         public void DeselectAll()
         {
@@ -256,7 +291,7 @@ namespace AntDesign
         private string _selectedKey;
 
         /// <summary>
-        ///
+        /// @bind-SelectedKeys
         /// </summary>
         [Parameter]
         public EventCallback<string> SelectedKeyChanged { get; set; }
@@ -273,6 +308,9 @@ namespace AntDesign
 
         private TreeNode<TItem> _selectedNode;
 
+        /// <summary>
+        /// @bind-SelectedNode
+        /// </summary>
         [Parameter]
         public EventCallback<TreeNode<TItem>> SelectedNodeChanged { get; set; }
 
@@ -288,11 +326,14 @@ namespace AntDesign
 
         private TItem _selectedData;
 
+        /// <summary>
+        /// @bind-SelectedData
+        /// </summary>
         [Parameter]
         public EventCallback<TItem> SelectedDataChanged { get; set; }
 
         /// <summary>
-        ///
+        /// The selected keys
         /// </summary>
         [Parameter]
         public string[] SelectedKeys
@@ -303,6 +344,9 @@ namespace AntDesign
 
         private string[] _selectedKeys;
 
+        /// <summary>
+        /// @bind-SelectedKeys
+        /// </summary>
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
@@ -320,6 +364,9 @@ namespace AntDesign
 
         private TreeNode<TItem>[] _selectedNodes;
 
+        /// <summary>
+        /// @bind-SelectedNodes
+        /// </summary>
         [Parameter]
         public EventCallback<TreeNode<TItem>[]> SelectedNodesChanged { get; set; }
 
@@ -335,6 +382,9 @@ namespace AntDesign
 
         private TItem[] _selectedDatas;
 
+        /// <summary>
+        /// @bind-SelectedDatas
+        /// </summary>
         [Parameter]
         public EventCallback<TItem[]> SelectedDatasChanged { get; set; }
 
@@ -388,6 +438,12 @@ namespace AntDesign
         public bool Checkable { get; set; }
 
         /// <summary>
+        /// Check or uncheck the node by click TreeNodeTitle if checkable
+        /// </summary>
+        [Parameter]
+        public bool CheckOnClickNode { get; set; } = true;
+
+        /// <summary>
         /// Check treeNode precisely; parent treeNode and children treeNodes are not associated
         /// </summary>
         [Parameter]
@@ -423,10 +479,9 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.DoCheck(true, false, true);
+                item.DoCheckAllChildren();
             }
             UpdateCheckedKeys();
-            StateHasChanged();
         }
 
         /// <summary>
@@ -436,22 +491,9 @@ namespace AntDesign
         {
             foreach (var item in ChildNodes)
             {
-                item.DoCheck(false, false, true);
+                item.DoUnCheckAllChildren();
             }
             UpdateCheckedKeys();
-            StateHasChanged();
-        }
-
-        public void SelectAll()
-        {
-            if (!Selectable || !Multiple)
-                return;
-            foreach (var item in ChildNodes)
-            {
-                item.DoSelect(true, true, true);
-            }
-            UpdateSelectedKeys();
-            StateHasChanged();
         }
 
         /// <summary>
@@ -490,15 +532,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Function used to indicate if a node matches the search
+        /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         /// <summary>
-        /// Search for matching text styles
+        /// Style for the piece of a node that matches search
         /// </summary>
         [Parameter]
         public string MatchedStyle { get; set; } = "";
 
+        /// <summary>
+        /// Class name for the piece of a node that matches search
+        /// </summary>
         [Parameter]
         public string MatchedClass { get; set; }
 
@@ -522,7 +570,7 @@ namespace AntDesign
             }
             else if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                searchDatas = allList.Where(x => x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                searchDatas = allList.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
 
             if (searchDatas != null && searchDatas.Any())
@@ -562,7 +610,8 @@ namespace AntDesign
         #region DataBind
 
         /// <summary>
-        ///
+        /// Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <see cref="ChildContent"/>
+        /// Use either this, <see cref="Nodes"/>, or <see cref="ChildContent"/>
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
@@ -592,7 +641,7 @@ namespace AntDesign
         public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
         /// <summary>
-        /// Specifies a method  to return a child node
+        /// Specifies a method to return the children of a node
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
@@ -907,8 +956,15 @@ namespace AntDesign
         #region Expand
 
         /// <summary>
-        /// All tree nodes are expanded by default
+        /// Expand or collapse the node by click TreeNodeTitle
         /// </summary>
+        [Parameter]
+        public bool ExpandOnClickNode { get; set; } = false;
+
+        /// <summary>
+        /// Whether to default to all nodes expanded or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool DefaultExpandAll { get; set; }
 

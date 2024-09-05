@@ -7,25 +7,25 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <StackedArea @ref="chart1" TItem="OilItem" Config="config1" />
+            <Area @ref="chart1" Config="config1" />
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <TabTemplate>示例2</TabTemplate>
         <ChildContent>
-            <StackedArea @ref="chart2" TItem="OilItem" Config="config2" />
+            <Area @ref="chart2" Config="config2" />
         </ChildContent>
     </TabPane>
     <TabPane Key="3">
         <TabTemplate>示例3</TabTemplate>
         <ChildContent>
-            <StackedArea @ref="chart3" TItem="OilItem" Config="config3" />
+            <Area @ref="chart3" Config="config3" />
         </ChildContent>
     </TabPane>
     <TabPane Key="4">
         <TabTemplate>示例4</TabTemplate>
         <ChildContent>
-            <StackedArea @ref="chart4" TItem="EmissionsItem" Config="config4" />
+            <Area @ref="chart4" Config="config4" />
         </ChildContent>
     </TabPane>
 
@@ -71,7 +71,7 @@
 
     #region 示例1
 
-    readonly StackedAreaConfig config1 = new StackedAreaConfig
+    readonly AreaConfig config1 = new AreaConfig
     {
         Title = new Title
         {
@@ -80,13 +80,13 @@
         },
         XField = "date",
         YField = "value",
-        StackField = "country",
+        SeriesField = "country",
         Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
-        XAxis = new ValueCatTimeAxis
-        {
-            Type = "dateTime",
-            TickCount = 5
-        },
+        // XAxis = new ValueCatTimeAxis
+        // {
+        //     Type = "dateTime",
+        //     TickCount = 5
+        // },
         Legend = new Legend
         {
             Visible = true,
@@ -99,7 +99,7 @@
 
     #region 示例2
 
-    readonly StackedAreaConfig config2 = new StackedAreaConfig
+    readonly AreaConfig config2 = new AreaConfig
     {
         Title = new Title
         {
@@ -115,13 +115,13 @@
 
         XField = "date",
         YField = "value",
-        StackField = "country",
+        SeriesField = "country",
         Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
-        XAxis = new ValueCatTimeAxis
-        {
-            Type = "dateTime",
-            TickCount = 5
-        },
+        // XAxis = new ValueCatTimeAxis
+        // {
+        //     Type = "dateTime",
+        //     TickCount = 5
+        // },
         Legend = new Legend
         {
             Visible = true,
@@ -133,7 +133,7 @@
 
     #region 示例3
 
-    readonly StackedAreaConfig config3 = new StackedAreaConfig
+    readonly AreaConfig config3 = new AreaConfig
     {
         Title = new Title
         {
@@ -147,14 +147,14 @@
         },
         XField = "date",
         YField = "value",
-        StackField = "country",
+        SeriesField = "country",
         Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
-        XAxis = new ValueCatTimeAxis
-        {
-            Type = "dateTime",
-            TickCount = 5
-        },
-        Label = new StackedAreaLabel
+        // XAxis = new ValueCatTimeAxis
+        // {
+        //     Type = "dateTime",
+        //     TickCount = 5
+        // },
+        Label = new AreaLabel
         {
             Visible = true,
             Type = "line",
@@ -169,7 +169,7 @@
 
     #region 示例4
 
-    readonly StackedAreaConfig config4 = new StackedAreaConfig
+    readonly AreaConfig config4 = new AreaConfig
     {
         Title = new Title
         {

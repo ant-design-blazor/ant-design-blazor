@@ -2,17 +2,45 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>To trigger an operation.</para>
+
+        <h2>When To Use</h2>
+
+        <para>A button means an operation (or a series of operations). Clicking a button will trigger corresponding business logic.</para>
+        <para>In Ant Design we provide 4 types of button.</para>
+
+        <list type="bullet">
+            <item>Primary button: indicate the main action, one primary button at most in one section.</item>
+            <item>Default button: indicate a series of actions without priority.</item>
+            <item>Dashed button: used for adding action commonly.</item>
+            <item>Link button: used for external links.</item>
+        </list>
+
+        <para>And 4 other properties additionally.</para>
+
+        <list type="bullet">
+            <item><c>Danger</c>: used for actions of risk, like deletion or authorization.</item>
+            <item><c>Ghost</c>: used in situations with complex background, home pages usually.</item>
+            <item><c>Disabled</c>: when actions is not available.</item>
+            <item><c>Loading</c>: add loading spinner in button, avoiding multiple submits too.</item>
+        </list>
+    </summary>
+    <seealso cref="DownloadButton" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg", Title = "Button", SubTitle = "按钮")]
     public partial class Button : AntDomComponentBase
     {
         private string _formSize;
-        public static readonly int RemoveAnimationAfter = 500;
+
+        private const int RemoveAnimationAfter = 500;
 
         [CascadingParameter(Name = "FormSize")]
         public string FormSize
@@ -37,12 +65,14 @@ namespace AntDesign
         /// <summary>
         /// Set the color of the button.
         /// </summary>
+        /// <default value="Color.None" />
         [Parameter]
         public Color Color { get; set; } = Color.None;
 
         /// <summary>
         /// Option to fit button width to its parent width
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Block { get; set; } = false;
 
@@ -55,24 +85,28 @@ namespace AntDesign
         /// <summary>
         /// Set the danger status of button.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Danger { get; set; }
 
         /// <summary>
         /// Whether the `Button` is disabled.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
         /// <summary>
         /// Make background transparent and invert text and border colors
         /// </summary>
+        /// <default value="false" />
         [Parameter]
-        public bool Ghost { get; set; } = false;
+        public bool Ghost { get; set; }
 
         /// <summary>
         /// Set the original html type of the button element.
         /// </summary>
+        /// <default value="button" />
         [Parameter]
         public string HtmlType { get; set; } = "button";
 
@@ -85,6 +119,7 @@ namespace AntDesign
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Loading { get; set; }
 
@@ -103,18 +138,21 @@ namespace AntDesign
         /// <summary>
         /// Can set button shape: `circle` | `round` or `null` (default, which is rectangle).
         /// </summary>
+        /// <default value="null" />
         [Parameter]
         public string Shape { get; set; } = null;
 
         /// <summary>
         /// Set the size of button.
         /// </summary>
+        /// <default value="AntSizeLDSType.Default" />
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
         /// Type of the button.
         /// </summary>
+        /// <default value="ButtonType.Default" />
         [Parameter]
         public string Type { get; set; } = ButtonType.Default;
 
@@ -123,9 +161,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool NoSpanWrap { get; set; }
-
-        public IList<Icon> Icons { get; set; } = new List<Icon>();
-
 
         private bool _animating = false;
 

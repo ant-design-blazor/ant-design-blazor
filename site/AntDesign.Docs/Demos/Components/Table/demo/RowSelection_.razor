@@ -12,11 +12,11 @@
             {
                 <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+            <Button Danger Size="small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name">
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnSelectAll="OnSelectAll" >
         <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
@@ -78,5 +78,10 @@
     {
         var selected = selectedRows.Where(x => x.Name != key).ToList();
         table.SetSelection(selected.Select(x => x.Name).ToArray());
+    }
+
+    void OnSelectAll(bool selectAll)
+    {
+        Console.WriteLine($"select all row? {selectAll}");
     }
 }

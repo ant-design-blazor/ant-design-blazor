@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.Json.Serialization;
 using AntDesign.Filters;
 
@@ -62,21 +61,29 @@ namespace AntDesign.TableModels
             this._fieldFilterType = fieldFilterType;
         }
 
-public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
+        public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
         {
             if (Filters?.Any() != true)
             {
                 return source;
             }
+            return source.Where(FilterExpression<TItem>());
+        }
 
+        public Expression<Func<TItem, bool>> FilterExpression<TItem>()
+        {
             var sourceExpression = _getFieldExpression.Parameters[0];
+            if (Filters?.Any() != true)
+            {
+                return Expression.Lambda<Func<TItem, bool>>(Expression.Constant(false, typeof(bool)), sourceExpression);
+            }
 
             Expression lambda = null;
             if (this.FilterType == TableFilterType.List)
             {
                 lambda = Expression.Constant(false, typeof(bool));
             }
-            
+
             foreach (var filter in Filters)
             {
                 if (this.FilterType == TableFilterType.List)
@@ -86,7 +93,7 @@ public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
                 else // TableFilterType.FieldType
                 {
                     if (filter.Value == null
-                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull)) 
+                     && filter.FilterCompareOperator is not (TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull))
                         continue;
 
                     Expression constantExpression = Expression.Constant(
@@ -112,14 +119,8 @@ public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
                     }
                 }
             }
-            if (lambda == null)
-            {
-                return source;
-            }
-            else
-            {
-                return source.Where(Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression));
-            }
+
+            return Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression);
         }
     }
 }

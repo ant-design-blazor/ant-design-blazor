@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Markdig;
 using Markdig.Extensions.Yaml;
-using Markdig.Renderers;
 using Markdig.Syntax;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -45,7 +48,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 }
 
                 using var writer = new StringWriter();
-                var renderer = new HtmlRenderer(writer);
+                var renderer = new Markdig.Renderers.HtmlRenderer(writer);
                 pipeline.Setup(renderer);
 
                 var blockHtml = renderer.Render(block);
@@ -115,7 +118,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
                     continue;
 
                 using var writer = new StringWriter();
-                var renderer = new HtmlRenderer(writer);
+                var renderer = new Markdig.Renderers.HtmlRenderer(writer);
 
                 var blockHtml = renderer.Render(block);
 
@@ -148,7 +151,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 .Build();
 
             var writer = new StringWriter();
-            var renderer = new HtmlRenderer(writer);
+            var renderer = new Markdig.Renderers.HtmlRenderer(writer);
             pipeline.Setup(renderer);
 
             var document = Markdown.Parse(input, pipeline);
@@ -173,7 +176,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 .Build();
 
             StringWriter writer = new StringWriter();
-            var renderer = new HtmlRenderer(writer);
+            var renderer = new Markdig.Renderers.HtmlRenderer(writer);
             pipeline.Setup(renderer);
 
             MarkdownDocument document = Markdown.Parse(input, pipeline);

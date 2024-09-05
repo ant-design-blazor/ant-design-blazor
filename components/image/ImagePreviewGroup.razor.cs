@@ -1,15 +1,25 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public partial class ImagePreviewGroup : IDisposable
     {
+        /// <summary>
+        /// Content for group. Typically contains <see cref="Image"/> elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Whether to open the preview image. Two-way binding.	
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool PreviewVisible
         {
@@ -24,6 +34,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when <see cref="PreviewVisible"/> changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> PreviewVisibleChanged { get; set; }
 
@@ -37,22 +50,26 @@ namespace AntDesign
         private ImageRef _imageRef;
         private bool _previewVisible = true;
 
-        public void AddImage(Image image)
+        internal void AddImage(Image image)
         {
             _images ??= new List<Image>();
             _images.Add(image);
         }
 
-        public void Remove(Image image)
+        internal void Remove(Image image)
         {
             _images.Remove(image);
         }
 
-        public void HandleVisibleChange(bool visible)
+        internal void HandleVisibleChange(bool visible)
         {
             if (visible)
             {
                 _imageRef = ImageService.OpenImages(_images);
+                if (_imageRef == null)
+                {
+                    return;
+                }
                 _imageRef.SwitchTo(0);
                 _imageRef.OnClosed += OnPreviewClose;
             }

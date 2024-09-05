@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
@@ -28,6 +30,7 @@ namespace AntDesign
 
             ModalRef modalRef = new ModalRef(options, this);
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -43,6 +46,7 @@ namespace AntDesign
             }
             var modalRef = new ModalRef<TResult>(options, this);
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -72,6 +76,7 @@ namespace AntDesign
             }
             options.Content = Child;
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -102,6 +107,7 @@ namespace AntDesign
             }
             options.Content = Child;
             options.ModalRef = modalRef;
+            options.CreateByService = true;
             return CreateOrOpenModal(modalRef);
         }
 
@@ -163,12 +169,14 @@ namespace AntDesign
         /// <returns></returns>
         internal Task<ModalRef> CreateOrOpenModalAsync(ModalRef modalRef)
         {
+            modalRef.Config.Visible = true;
             OnModalOpenEvent?.Invoke(modalRef);
             return Task.FromResult(modalRef);
         }
 
         internal ModalRef CreateOrOpenModal(ModalRef modalRef)
         {
+            modalRef.Config.Visible = true;
             OnModalOpenEvent?.Invoke(modalRef);
             return modalRef;
         }
@@ -180,12 +188,14 @@ namespace AntDesign
         /// <returns></returns>
         internal Task<ModalRef<TResult>> CreateOrOpenModalAsync<TResult>(ModalRef<TResult> modalRef)
         {
+            modalRef.Config.Visible = true;
             OnModalOpenEvent?.Invoke(modalRef);
             return Task.FromResult(modalRef);
         }
 
         internal ModalRef<TResult> CreateOrOpenModal<TResult>(ModalRef<TResult> modalRef)
         {
+            modalRef.Config.Visible = true;
             OnModalOpenEvent?.Invoke(modalRef);
             return modalRef;
         }

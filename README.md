@@ -98,7 +98,7 @@ Options for the template：
 | Options           | Description                                                        | Type                           | Default |
 | ----------------- | ------------------------------------------------------------------ | ------------------------------ | ------- |
 | `-f` \| `--full`  | If specified, generates all pages of Ant Design Pro                | bool                           | false   |
-| `-ho` \| `--host` | Specify the hosting model                                          | 'wasm' \| 'server' \| 'hosted' | 'wasm'  |
+| `-ho` \| `--host` | Specify the hosting model                                          | 'webapp' \| 'wasm' \| 'server' | 'webapp' |
 | `--styles`        | Whether use NodeJS and Less to compile your custom themes.         | `css` \| `less`                | `css`   |
 | `--no-restore`    | If specified, skips the automatic restore of the project on create | bool                           | false   |
 
@@ -126,6 +126,13 @@ Options for the template：
 
   ```csharp
   @using AntDesign
+  ```
+
+- Introduce CSS and JS files in appropriate places. The WebApp project was introduced in App.razor, and the WebAssembly project was introduced in index.html
+
+  ```html
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.

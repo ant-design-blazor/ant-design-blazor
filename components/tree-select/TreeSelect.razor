@@ -6,100 +6,65 @@
 @using AntDesign.Internal
 @using AntDesign.Select.Internal
 
-<CascadingValue Value="this" IsFixed>
-  <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
-      <OverlayTrigger @ref="@_dropDown"
-                      Visible="Open"
-                      Disabled="Disabled"
-                      Trigger="new[] { Trigger.Click }"
-                      HiddenMode
-                      OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
-                      OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
-                      OnVisibleChange="@OnOverlayVisibleChangeAsync"
-                      PopupContainerSelector="@PopupContainerSelector"
-                      BoundaryAdjustMode="BoundaryAdjustMode"
-                      OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                      OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
-        <Overlay>
-          <div style="@_dropdownStyle">
-            <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
-              <div>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code
+{
+    protected override RenderFragment RenderOptionDropdown()
+    {
+        return @<div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
+            <div>
                 <div class="" role="listbox" style="display: flex; flex-direction: column;">
                   <CascadingValue Name="TreeSelect" Value="this" IsFixed="true">
-                    <Tree @ref="_tree"
-                        TItem="TItem"
-                        BlockNode
-                        DataSource="DataSource"
-                        Multiple="Multiple"
-                        Selectable="!TreeCheckable"                       
-                        Checkable="TreeCheckable"
-                        CheckStrictly="true"
-                        OnClick="OnTreeNodeClick"
-                        OnUnselect="OnTreeNodeUnSelect"
-                        CheckedKeysChanged="OnTreeCheckedKeysChanged"
-                        ShowLeafIcon="ShowLeafIcon"
-                        ShowIcon="ShowIcon"
-                        ShowLine="ShowTreeLine"
-                        TitleExpression="TitleExpression"
-                        TitleTemplate="TitleTemplate"
-                        TitleIconTemplate="TitleIconTemplate"
-                        KeyExpression="KeyExpression"
-                        IconExpression="IconExpression"
-                        IsLeafExpression="IsLeafExpression"
-                        ChildrenExpression="ChildrenExpression"
-                        DisabledExpression="DisabledExpression"
-                        CheckableExpression="CheckableExpression"
-                        DefaultExpandAll="TreeDefaultExpandAll"
-                        SearchExpression="SearchExpression"
-                        ExpandedKeys="ExpandedKeys"
-                        MatchedStyle="@MatchedStyle"
-                        MatchedClass="@MatchedClass"
-                        SearchValue="@_searchValue"
-                        OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"
-                        @attributes="TreeAttributes">
-                      <Nodes>
-                        @if (IsTemplatedNodes)
-                        {
-                          <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
-                            @ChildContent
-                          </CascadingValue>
-                        }
-                      </Nodes>
-                    </Tree>
-                  </CascadingValue>
+                      <Tree @ref="_tree"
+                          TItem="TItem"
+                          BlockNode
+                          DataSource="DataSource"
+                          Multiple="Multiple"
+                          Selectable="!TreeCheckable || !CheckOnClickNode"
+                          Checkable="TreeCheckable"
+                          CheckStrictly="TreeCheckStrictly"
+                          CheckOnClickNode="CheckOnClickNode"
+                          ExpandOnClickNode="ExpandOnClickNode"
+                          OnClick="DoTreeNodeClick"
+                          OnSelect="OnTreeNodeSelect"
+                          CheckedKeysChanged="DoTreeCheckedKeysChanged"
+                          ShowLeafIcon="ShowLeafIcon"
+                          ShowIcon="ShowIcon"
+                          ShowLine="ShowTreeLine"
+                          TitleExpression="TitleExpression"
+                          TitleTemplate="TitleTemplate"
+                          TitleIconTemplate="TitleIconTemplate"
+                          KeyExpression="KeyExpression"
+                          IconExpression="IconExpression"
+                          IsLeafExpression="IsLeafExpression"
+                          ChildrenExpression="ChildrenExpression"
+                          DisabledExpression="DisabledExpression"
+                          CheckableExpression="CheckableExpression"
+                          DefaultExpandAll="TreeDefaultExpandAll"
+                          DefaultExpandParent="TreeDefaultExpandParent"
+                          DefaultExpandedKeys="TreeDefaultExpandedKeys"
+                          SearchExpression="SearchExpression"
+                          ExpandedKeys="ExpandedKeys"
+                          MatchedStyle="@MatchedStyle"
+                          MatchedClass="@MatchedClass"
+                          SearchValue="@_searchValue"
+                          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"
+                          @attributes="TreeAttributes">
+                        <Nodes>
+                          @if (IsTemplatedNodes)
+                          {
+                            <CascadingValue Name="Tree" Value="_tree" IsFixed="true">
+                              @ChildContent
+                            </CascadingValue>
+                          }
+                        </Nodes>
+                      </Tree>
+                    </CascadingValue>
                 </div>
-              </div>
             </div>
-          </div>
-        </Overlay>
-        <Unbound>
-          <CascadingValue Value="this" Name=@("ParentSelect") IsFixed>
-            <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
-              <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
-                <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                  <SelectContent Prefix="@ClassPrefix"
-                                 RefBack="@context"
-                                 @ref="_selectContent"
-                                 TItemValue="TItemValue"
-                                 TItem="TItem"
-                                 SearchValue="@_searchValue"
-                                 SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
-                                 IsOverlayShow="@_dropDown.IsOverlayShow()"
-                                 OnInput="@OnInputAsync"
-                                 OnKeyUp="@OnKeyUpAsync"
-                                 OnKeyDown="@OnKeyDownAsync"
-                                 OnFocus="@OnInputFocusAsync"
-                                 OnBlur="@OnInputBlurAsync"
-                                 OnClearClick="@OnInputClearClickAsync"
-                                 OnRemoveSelected="@OnRemoveSelectedAsync"
-                                 Placeholder="@Placeholder" />
-                </CascadingValue>
-              </CascadingValue>
-            </CascadingValue>
-          </CascadingValue>
-        </Unbound>
-      </OverlayTrigger>
-    </div>
-  </CascadingValue>
-</CascadingValue>
+        </div>;
+    }
+}

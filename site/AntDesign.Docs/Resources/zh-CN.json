@@ -47,6 +47,9 @@
   "app.home.global-style": "全局样式",
   "app.home.design-patterns": "设计模式",
   "app.home.more": "更多内容",
+  "app.home.sponsors": "赞助商",
+  "app.home.sponsor-us": "成为赞助商",
+  "app.home.sponsor-us-href": "https://jamesyeung.cn/qrcode/wepay.jpg",
   "app.home.play-video": "播放视频",
   "app.home.qr": "4.0 正式版发布",
   "app.home.qr.desc": "扫描上方二维码查看",
@@ -145,5 +148,7 @@
   "app.docs.components.icon.pic-searcher.result-tip": "为您匹配到以下图标：",
   "app.docs.components.icon.pic-searcher.th-icon": "图标",
   "app.docs.components.icon.pic-searcher.th-score": "匹配度",
-  "app.components.overview.search": "搜索组件"
+  "app.components.overview": "组件总览",
+  "app.components.overview.search": "搜索组件",
+  "app.components.overview.description": "<code>Ant Design Blazor</code> 提供了丰富的 UI 组件来丰富您的 Web 应用，我们将持续改进组件体验。 我们还额外推荐了一些很棒的第三方库。"
 }

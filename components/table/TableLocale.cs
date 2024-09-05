@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace AntDesign
 {
@@ -71,6 +73,8 @@ namespace AntDesign
 
         public string TheSameDateWith { get; set; } = "The Same Date With";
 
+        public string Between { get; set; } = "Between";
+
         public string Operator(TableFilterCompareOperator compareOperator)
             => compareOperator switch
             {
@@ -87,6 +91,7 @@ namespace AntDesign
                 TableFilterCompareOperator.IsNotNull => IsNotNull,
                 TableFilterCompareOperator.NotContains => NotContains,
                 TableFilterCompareOperator.TheSameDateWith => TheSameDateWith,
+                TableFilterCompareOperator.Between => Between,
                 _ => throw new ArgumentOutOfRangeException(nameof(compareOperator), compareOperator, null)
             };
     }

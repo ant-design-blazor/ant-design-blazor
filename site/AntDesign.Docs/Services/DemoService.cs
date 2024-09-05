@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,7 +12,6 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Utils;
 using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign.Docs.Services
 {
@@ -160,6 +163,11 @@ namespace AntDesign.Docs.Services
         public async Task<MoreProps[]> GetMore()
         {
             return await _httpClient.GetFromJsonAsync<MoreProps[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/more-list.{CurrentLanguage}.json").ToString());
+        }
+
+        public async Task<Sponsor[]> GetSponsors()
+        {
+            return await _httpClient.GetFromJsonAsync<Sponsor[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/sponsors.{CurrentLanguage}.json").ToString());
         }
     }
 }

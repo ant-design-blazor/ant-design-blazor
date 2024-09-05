@@ -28,6 +28,7 @@ export class infoHelper {
       domElement = {};
     }
     const absolutePosition = this.getElementAbsolutePos(domElement);
+    const style = window.getComputedStyle(domElement);
     const result: domTypes.domInfo = {
       offsetTop: domElement.offsetTop || 0,
       offsetLeft: domElement.offsetLeft || 0,
@@ -43,7 +44,11 @@ export class infoHelper {
       clientWidth: domElement.clientWidth || 0,
       selectionStart: domElement.selectionStart || 0,
       absoluteTop: Math.round(absolutePosition.y),
-      absoluteLeft: Math.round(absolutePosition.x)
+      absoluteLeft: Math.round(absolutePosition.x),
+      marginTop: parseFloat(style.marginTop),
+      marginBottom: parseFloat(style.marginBottom),
+      marginLeft: parseFloat(style.marginLeft),
+      marginRight: parseFloat(style.marginRight)
     };
     return result;
   }

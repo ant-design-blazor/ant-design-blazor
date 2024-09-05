@@ -20,6 +20,9 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
 
+        /// <summary>
+        /// Left indent level of current node
+        /// </summary>
         [Parameter]
         public int TreeLevel { get; set; }
 

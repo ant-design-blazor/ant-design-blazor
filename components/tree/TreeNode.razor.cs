@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -17,16 +18,16 @@ namespace AntDesign
         #region Node
 
         /// <summary>
-        /// 树控件本身
+        /// Tree
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree<TItem> TreeComponent { get; set; }
+        private Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
-        /// 上一级节点
+        /// Parent Node
         /// </summary>
         [CascadingParameter(Name = "Node")]
-        public TreeNode<TItem> ParentNode { get; set; }
+        internal TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
         ///
@@ -47,6 +48,7 @@ namespace AntDesign
         /// <summary>
         /// Current Node Level
         /// </summary>
+        [PublicApi("1.0.0")]
         public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace AntDesign
         /// <param name="predicate">Predicate</param>
         /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
@@ -97,10 +100,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Obtain the parent data set
+        /// Get the sibling nodes
         /// </summary>
         /// <returns></returns>
-        public List<TreeNode<TItem>> GetParentNodes()
+        [PublicApi("1.0.0")]
+        public List<TreeNode<TItem>> GetSiblingNodes()
         {
             if (ParentNode != null)
                 return ParentNode.ChildNodes;
@@ -108,17 +112,27 @@ namespace AntDesign
                 return TreeComponent.ChildNodes;
         }
 
+        /// <summary>
+        /// Get the previous node
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> GetPreviousNode()
         {
-            var parentNodes = GetParentNodes();
+            var parentNodes = GetSiblingNodes();
             var index = parentNodes.IndexOf(this);
             if (index == 0) return null;
             else return parentNodes[index - 1];
         }
 
+        /// <summary>
+        /// Get the next node 
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
         public TreeNode<TItem> GetNextNode()
         {
-            var parentNodes = GetParentNodes();
+            var parentNodes = GetSiblingNodes();
             var index = parentNodes.IndexOf(this);
             if (index == parentNodes.Count - 1) return null;
             else return parentNodes[index + 1];
@@ -184,6 +198,9 @@ namespace AntDesign
             set => _selected = value;
         }
 
+        /// <summary>
+        /// Triggered when the selected state changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> SelectedChanged { get; set; }
 
@@ -191,6 +208,7 @@ namespace AntDesign
         /// Setting Selection State
         /// </summary>
         /// <param name="value"></param>
+        [PublicApi("1.0.0")]
         public void SetSelected(bool value)
         {
             if (!TreeComponent.Selectable) return;
@@ -258,7 +276,7 @@ namespace AntDesign
         /// Sets the node to release the target location
         /// </summary>
         /// <param name="value"></param>
-        public void SetTargetBottom(bool value = false)
+        internal void SetTargetBottom(bool value = false)
         {
             if (DragTargetBottom == value) return;
             DragTargetBottom = value;
@@ -288,14 +306,6 @@ namespace AntDesign
         private List<TreeNode<TItem>> GetParentChildNodes()
         {
             return ParentNode?.ChildNodes ?? TreeComponent.ChildNodes;
-        }
-
-        /// <summary>
-        /// Remove the current node
-        /// </summary>
-        public void RemoveNode()
-        {
-            GetParentChildNodes().Remove(this);
         }
 
         private void SetTreeNodeClassMapper()
@@ -368,6 +378,7 @@ namespace AntDesign
         {
             await DoExpand(expanded);
             await TreeComponent?.UpdateExpandedKeys();
+            StateHasChanged();
         }
 
         internal async Task DoExpand(bool expanded)
@@ -501,7 +512,7 @@ namespace AntDesign
             set => _checkable = value;
         }
 
-        public bool Indeterminate { get; set; }
+        internal bool Indeterminate { get; set; }
 
         private bool _disableCheckbox;
 
@@ -537,6 +548,7 @@ namespace AntDesign
         /// Set the checkbox state
         /// </summary>
         /// <param name="check"></param>
+        [PublicApi("1.0.0")]
         public void SetChecked(bool check)
         {
             if (!DoCheck(check, false, true)) return;
@@ -545,9 +557,12 @@ namespace AntDesign
 
         internal bool DoCheck(bool check, bool strict, bool isManual)
         {
-            if (!Checkable) return false;
-            else if (TreeComponent.CheckStrictly || strict)
+            if (TreeComponent.CheckStrictly || strict)
             {
+                if (!Checkable)
+                {
+                    return false;
+                }
                 _actualChecked = (!Disabled || !DisableCheckbox || !isManual) ? check : _actualChecked;
                 Indeterminate = false;
                 NotifyCheckedChanged();
@@ -561,35 +576,85 @@ namespace AntDesign
             return true;
         }
 
+        internal void DoCheckAllChildren()
+        {
+            SetChildChecked(this, true, true, true);
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Checks all child nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CheckAllChildren()
+        {
+            DoCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
+        }
+
+        internal void DoUnCheckAllChildren()
+        {
+            SetChildChecked(this, false, true, true);
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Unchecks all child nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void UnCheckAllChildren()
+        {
+            DoUnCheckAllChildren();
+            TreeComponent?.UpdateCheckedKeys();
+        }
+
         /// <summary>
         /// Sets the checkbox status of child nodes
         /// </summary>
         /// <param name="subnode"></param>
         /// <param name="check"></param>
         /// <param name="isManual"></param>
-        private bool SetChildChecked(TreeNode<TItem> subnode, bool check, bool isManual)
+        /// <param name="forceRecursive"></param>
+        private void SetChildChecked(TreeNode<TItem> subnode, bool check, bool isManual, bool forceRecursive = false)
         {
-            _actualChecked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _actualChecked;
+            if (!Checkable && !forceRecursive)
+            {
+                return;
+            }
+            var isChecked = ((!Disabled && !DisableCheckbox) || !isManual) ? check : _actualChecked;
             var hasChecked = false;
             var hasUnChecked = false;
+            var childIndeterminate = false;
             if (subnode.HasChildNodes)
             {
                 foreach (var child in subnode.ChildNodes)
                 {
-                    if (!child.Checkable) continue;
-                    if (child.SetChildChecked(child, check, isManual))
+                    child.SetChildChecked(child, check, isManual, forceRecursive);
+                    if (!child.Checkable)
+                        continue;
+                    if (child.Checked)
                         hasChecked = true;
                     else
                         hasUnChecked = true;
+                    if (child.Indeterminate)
+                        childIndeterminate = true;
                 }
                 if (hasChecked || hasUnChecked)
-                    _actualChecked = !hasUnChecked;
+                    isChecked = !hasUnChecked;
             }
-            Indeterminate = hasChecked && hasUnChecked;
-            if (Indeterminate)
-                _actualChecked = false;
+            if (Checkable)
+            {
+                Indeterminate = childIndeterminate || (hasChecked && hasUnChecked);
+                if (Indeterminate)
+                    isChecked = false;
+            }
+            else
+            {
+                Indeterminate = false;
+                isChecked = false;
+            }
+            _actualChecked = isChecked;
             NotifyCheckedChanged();
-            return _actualChecked;
         }
 
         /// <summary>
@@ -665,6 +730,9 @@ namespace AntDesign
 
         #region Title
 
+        /// <summary>
+        /// Whether the node is draggable
+        /// </summary>
         [Parameter]
         public bool Draggable { get; set; }
 
@@ -689,17 +757,29 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Customize the icon template
+        /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> IconTemplate { get; set; }
 
+        /// <summary>
+        /// Specific the icon of the switcher
+        /// </summary>
         [Parameter]
         public string SwitcherIcon { get; set; }
 
+        /// <summary>
+        /// Customize the switcher icon template
+        /// </summary>
         [Parameter]
         public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
         private string _title;
 
+        /// <summary>
+        /// The title of the node
+        /// </summary>
         [Parameter]
         public string Title
         {
@@ -716,15 +796,18 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Customize the title template
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
         /// <summary>
         /// title是否包含SearchValue(搜索使用)
         /// </summary>
-        public bool Matched { get; set; }
+        internal bool Matched { get; set; }
 
-        public bool Hidden { get; set; }
+        internal bool Hidden { get; set; }
 
         /// <summary>
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
@@ -735,6 +818,9 @@ namespace AntDesign
 
         #region data binding
 
+        /// <summary>
+        /// The data of the node, it's the data item in the data source
+        /// </summary>
         [Parameter]
         public TItem DataItem { get; set; }
 
@@ -760,7 +846,7 @@ namespace AntDesign
         /// 获得上级数据集合
         /// </summary>
         /// <returns></returns>
-        public IList<TItem> GetParentChildDataItems()
+        internal IList<TItem> GetParentChildDataItems()
         {
             if (ParentNode != null)
                 return ParentNode.ChildDataItems;
@@ -776,7 +862,7 @@ namespace AntDesign
         /// Add child node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddChildNode(TItem dataItem)
+        internal void AddChildNode(TItem dataItem)
         {
             ChildDataItems.Add(dataItem);
         }
@@ -785,7 +871,7 @@ namespace AntDesign
         /// Add a node next the node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddNextNode(TItem dataItem)
+        internal void AddNextNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -798,7 +884,7 @@ namespace AntDesign
         /// Add a node before the node
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddPreviousNode(TItem dataItem)
+        internal void AddPreviousNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -810,7 +896,7 @@ namespace AntDesign
         /// <summary>
         /// remove
         /// </summary>
-        public void Remove()
+        internal void Remove()
         {
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(DataItem);
@@ -820,7 +906,7 @@ namespace AntDesign
         /// The node moves into the child node
         /// </summary>
         /// <param name="treeNode">target node</param>
-        public void MoveInto(TreeNode<TItem> treeNode)
+        internal void MoveInto(TreeNode<TItem> treeNode)
         {
             if (treeNode == this || DataItem.Equals(treeNode.DataItem)) return;
             var parentChildDataItems = GetParentChildDataItems();
@@ -831,7 +917,7 @@ namespace AntDesign
         /// <summary>
         /// Move up the nodes
         /// </summary>
-        public void MoveUp()
+        internal void MoveUp()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -843,7 +929,7 @@ namespace AntDesign
         /// <summary>
         /// Move down the node
         /// </summary>
-        public void MoveDown()
+        internal void MoveDown()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(DataItem);
@@ -855,7 +941,7 @@ namespace AntDesign
         /// <summary>
         ///
         /// </summary>
-        public void Downgrade()
+        internal void Downgrade()
         {
             var previousNode = GetPreviousNode();
             if (previousNode == null) return;
@@ -867,7 +953,7 @@ namespace AntDesign
         /// <summary>
         /// Upgrade nodes
         /// </summary>
-        public void Upgrade()
+        internal void Upgrade()
         {
             if (ParentNode == null) return;
             var parentChildDataItems = ParentNode.GetParentChildDataItems();
@@ -979,13 +1065,18 @@ namespace AntDesign
             if (Checkable)
             {
                 var isChecked = false;
+                var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
+                var ancestorKeys = GetAncestorKeys();
                 if (_checked)
+                {
+                    isChecked = true;
+                }
+                else if (!TreeComponent.CheckStrictly && (checkedKeys != null) && ancestorKeys.Any(k => checkedKeys.Contains(k)))
                 {
                     isChecked = true;
                 }
                 else
                 {
-                    var checkedKeys = TreeComponent.CachedCheckedKeys ?? TreeComponent.DefaultCheckedKeys;
                     if (checkedKeys != null)
                         isChecked = checkedKeys.Any(k => k == Key);
                 }
@@ -1008,6 +1099,19 @@ namespace AntDesign
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
             base.OnInitialized();
+        }
+
+        private IEnumerable<string> GetAncestorKeys()
+        {
+            var ancestorKeys = new List<string>();
+            var parentNode = ParentNode;
+            while (parentNode != null)
+            {
+                ancestorKeys.Add(parentNode.Key);
+                parentNode = parentNode.ParentNode;
+            }
+
+            return ancestorKeys;
         }
     }
 }

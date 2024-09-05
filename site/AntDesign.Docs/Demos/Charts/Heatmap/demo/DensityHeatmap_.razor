@@ -6,7 +6,7 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <DensityHeatmap @ref="chart1" Data="data1" Config="config1"/>
+            <Heatmap @ref="chart1" Config="config1" OnFirstRender="onChart1_FirstRender" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -14,40 +14,37 @@
 @code{
 
     IChartComponent chart1;
-    JobpayingItem[] data1;
+    HeatMapItem[] data1;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task onChart1_FirstRender(IChartComponent chart)
     {
-        if (firstRender)
-        {
-            data1 = await ChartsDemoData.JobpayingItemAsync(NavigationManager, HttpClient);
-            await chart1.ChangeData(data1);
-        }
+        data1 = await ChartsDemoData.HeadMapDataAsync(NavigationManager, HttpClient);
+        await chart1.ChangeData(data1);
     }
 
     #region 示例1
 
-    readonly DensityHeatmapConfig config1 = new DensityHeatmapConfig
-    {
-        XField = "prob",
-        YField = "average_annual_wage",
-        ColorField = "numbEmployed",
-        Color = new[] {"#295599", "#3e94c0", "#78c6d0", "#b4d9e4", "#fffef0", "#f9cdac", "#ec7d92", "#bc448c"},
-        Radius = 15,
-        Intensity = 2,
-        XAxis = new Axis
+    HeatmapConfig config1 = new HeatmapConfig()
         {
-            Visible = true,
-            Min = -0.05,
-            Max = 1.05,
-            Nice = false
-        },
-        YAxis = new Axis
-        {
-            Visible = true,
-            Min = -1000
+            HeatMapType = "density",
+            XField = "g",
+            YField = "l",
+            ColorField = "tmp",
+            Color = new string[] { "#F51D27", "#FA541C", "#FF8C12", "#FFC838", "#FAFFA8", "#80FF73", "#12CCCC", "#1890FF", "#6E32C2" },
+            Legend = new MatrixLegendConfig()
+            {
+                Position = "bottom"
+            },
+            Annotation = new[]
+            {
+            new ImageAnnotation()
+            {
+                Start = new[]{"min","max"},
+                End = new[]{"max","min"},
+                Src = "https://gw.alipayobjects.com/zos/rmsportal/NeUTMwKtPcPxIFNTWZOZ.png"
+            }
         }
-    };
+        };
 
     #endregion 示例1
 

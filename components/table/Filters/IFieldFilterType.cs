@@ -13,7 +13,7 @@ namespace AntDesign.Filters
         TableFilterCompareOperator DefaultCompareOperator { get; }
         RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
         IEnumerable<TableFilterCompareOperator> SupportedCompareOperators { get; set; }
-
+        Dictionary<string, object> InputAttributes { get; }
         Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr);
     }
 }

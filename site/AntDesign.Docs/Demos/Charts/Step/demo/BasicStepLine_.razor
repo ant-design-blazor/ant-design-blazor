@@ -3,55 +3,68 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-    <Tabs>
+<Tabs ActiveKeyChanged="OnTabChanged">
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <StepLine @ref="@chart1" Config="config1" Data="data1" />
+                <Line @ref="@chart1" Config="config1" Data="data1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <StepLine Config="config2" Data="data2" />
+                <Line Config="config2" Data="data2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
             <TabTemplate>示例3</TabTemplate>
             <ChildContent>
-                <StepLine Config="config3" Data="data3" />
+            <Line @ref="@chart3" Config="config3" Data="data3" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="4">
             <TabTemplate>示例4</TabTemplate>
             <ChildContent>
-                <StepLine Config="config4" Data="data4" />
+                <Line @ref="@chart4" Config="config4" Data="data4" />
             </ChildContent>
         </TabPane>
     </Tabs>
 
 @code{
     IChartComponent chart1;
+    IChartComponent chart2;
+    IChartComponent chart3;
+    IChartComponent chart4;
     FireworksSalesItem[] data1;
 
     SalesItem[] data3;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
+        await base.OnInitializedAsync();
+        OnTabChanged("1");
+    }
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
         {
             data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
             await chart1.ChangeData(data1);
+        }
+        else if (activeKey == "3")
+        {
             data3 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+            await chart3.ChangeData(data3);
         }
     }
 
     #region 示例1
 
-    readonly StepLineConfig config1 = new StepLineConfig
+    readonly LineConfig config1 = new LineConfig
     {
         Title = new Title
         {
@@ -63,15 +76,10 @@
             Visible = true,
             Text = "最基础简单的阶梯图使用方式，显示一个指标的趋势和变化"
         },
-        ForceFit = true,
+        StepType = LineConfig.StepTypeHV,
         Padding = "auto",
         XField = "Date",
         YField = "scales",
-        XAxis = new ValueCatTimeAxis
-        {
-            Type = "dateTime",
-            TickCount = 5
-        }
     };
 
     #endregion 示例1
@@ -92,7 +100,7 @@
     };
 
 
-    readonly StepLineConfig config2 = new StepLineConfig
+    readonly LineConfig config2 = new LineConfig
     {
         Title = new Title
         {
@@ -131,7 +139,7 @@
 
     #region 示例3
 
-    readonly StepLineConfig config3 = new StepLineConfig
+    readonly LineConfig config3 = new LineConfig
     {
         Title = new Title
         {
@@ -146,6 +154,7 @@
         ForceFit = true,
         Padding = "auto",
         XField = "城市",
+        StepType = LineConfig.StepTypeHVH,
         XAxis = new ValueCatTimeAxis
         {
             Visible = true,
@@ -194,7 +203,7 @@
           new { year =  "1999", value =  13 },
     };
 
-    readonly StepLineConfig config4 = new StepLineConfig
+    readonly LineConfig config4 = new LineConfig
     {
         Title = new Title
         {
@@ -210,7 +219,7 @@
         Padding = "auto",        
         XField = "year",
         YField = "value",
-        Step = "hvh", // 可以选择 hv, vh, hvh, vhv
+        StepType = LineConfig.StepTypeHVH, // 可以选择 hv, vh, hvh, vhv
         Point = new LineViewConfigPoint
         {
             Visible = true,        

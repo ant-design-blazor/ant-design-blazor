@@ -9,9 +9,17 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Small numerical value or status descriptor for UI elements.
-    /// </summary>
+    /**
+    <summary>
+        <para>Small numerical value or status descriptor for UI elements.</para>
+
+        <h2>When To Use</h2>
+
+        <para>Badge normally appears in proximity to notifications or user avatars with eye-catching appeal, typically displaying unread messages count.</para>
+    </summary>
+    <seealso cref="AntDesign.BadgeRibbon" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg", Title = "Badge", SubTitle = "徽标数")]
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>
@@ -58,6 +66,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to display a dot instead of count
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Dot { get; set; }
 
@@ -70,6 +79,7 @@ namespace AntDesign
         /// <summary>
         /// Max count to show
         /// </summary>
+        /// <default value="99"/>
         [Parameter]
         public int OverflowCount
         {
@@ -93,6 +103,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to show badge when count is zero
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool ShowZero { get; set; } = false;
 

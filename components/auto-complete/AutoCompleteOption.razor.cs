@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -10,12 +11,24 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// Label for the option. Takes priority over Label
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// Value for the option
+        /// </summary>
         [Parameter]
         public object Value { get; set; }
 
         private string _label;
+        
+        /// <summary>
+        /// Label for the option
+        /// </summary>
+        /// <default value="Value.ToString()" />
         [Parameter]
         public string Label
         {
@@ -23,13 +36,15 @@ namespace AntDesign
             set { _label = value; }
         }
 
+        /// <summary>
+        /// If option is disabled or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; } = false;
 
-        [Parameter]
-
         [CascadingParameter]
-        public IAutoCompleteRef AutoComplete { get; set; }
+        internal IAutoCompleteRef AutoComplete { get; set; }
 
         #endregion Parameters
 
@@ -55,12 +70,12 @@ namespace AntDesign
                 .If("ant-select-item-option-disabled", () => this.Disabled);
         }
 
-        public void OnMouseEnter()
+        private void OnMouseEnter()
         {
             AutoComplete.SetActiveItem(this);
         }
 
-        public async Task OnClick()
+        private async Task OnClick()
         {
             if (Disabled) return;
             await AutoComplete.SetSelectedItem(this);
