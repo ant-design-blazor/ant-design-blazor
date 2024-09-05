@@ -84,21 +84,21 @@
             </div>
             <!--Tab content-->
             @if (Card == null)
-            {
-                <div class="ant-tabs-content-holder ">
-                    <div class="@_contentClassMapper.Class">
-                        @RenderTabPanels
-                    </div>
-                </div>
+            {                
+                @RenderTabPanels                  
             }
         </div>
 
     }    
     internal void RenderTabPanels(RenderTreeBuilder __builder)
     {             
-        @foreach (var tab in _tabs)
-        {
-            @tab.RenderPane
-        }
+        <div class="ant-tabs-content-holder ">
+            <div class="@_contentClassMapper.Class">
+                @foreach (var tab in _tabs)
+                {
+                    @tab.RenderPane
+                }
+            </div>
+        </div>     
     }
 }

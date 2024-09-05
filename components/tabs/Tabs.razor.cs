@@ -450,6 +450,10 @@ namespace AntDesign
             {
                 Card?.SetBody(EmptyRenderFragment);
             }
+            else
+            {
+                Card?.InvokeStateHasChagned();
+            }
             
 
             // render the classname of the actived tab

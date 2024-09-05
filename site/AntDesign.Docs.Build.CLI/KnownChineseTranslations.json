@@ -4367,9 +4367,6 @@
   "Gets or sets the value of the TextArea.": {
     "Translated": "获取或设置 TextArea 的值。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Callback function that is called when open state changes.": {
     "Translated": "打开状态更改时调用的回调函数。"
   },
