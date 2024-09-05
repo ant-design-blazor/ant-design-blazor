@@ -49,7 +49,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorWasmPreRendering.Build" Version="2.0.0-preview.9" PrivateAssets="all" />
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="4.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyDocs" BeforeTargets="Build">
